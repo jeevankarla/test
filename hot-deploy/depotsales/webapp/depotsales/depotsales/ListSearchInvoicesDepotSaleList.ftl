@@ -692,7 +692,7 @@ function roundingInvoiceItems(invoiceId){
  		   	       <td></td>
               </#if>
               
-                <#if ( ((invoice.statusId == "INVOICE_IN_PROCESS") || (invoice.statusId == "INVOICE_READY")) && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
+                <#if ( ((invoice.statusId != "INVOICE_IN_PROCESS")) && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
               	  <#if (invoice.invoiceTypeId == "SALES_INVOICE")||(invoice.invoiceTypeId?exists) >
               		   <#if invoice.purposeTypeId?has_content>
               		  	 <#assign purposeTypeId=invoice.purposeTypeId>

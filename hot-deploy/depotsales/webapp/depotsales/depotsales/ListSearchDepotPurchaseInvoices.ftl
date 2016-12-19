@@ -390,7 +390,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
           <td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</td>
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
-          <td>Due Date</td>
+         <#-- <td>Due Date</td> -->
           <td>${uiLabelMap.CommonStatus}</td>
          <#--- <td>${uiLabelMap.CommonDescription}</td>
           <td>Reason For Cancellation</td>-->
@@ -399,6 +399,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
+          <td>Payment</td>
           <td>Edit Purchase Invoice</td>
           <td>Invoice voucher</td>
           <td>Cancel</td> 
@@ -418,17 +419,14 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><a class="buttontext" href="<@ofbizUrl>DepotTransAPInvoiceOverview?invoiceId=${invoice.invoiceId}&amp;subTabButtonValue=${tabButtonItem5}</@ofbizUrl>">${invoiceSequence}</a></td>
               <td>
                 <#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : invoice.invoiceTypeId}, true) />
-                
                 ${invoiceType.description?default(invoice.invoiceTypeId)}
               </td>
               <td>${(invoice.invoiceDate)?if_exists}</td>
-              <td>${(invoice.dueDate)?if_exists}</td>
+            <#--  <td>${(invoice.dueDate)?if_exists}</td> -->
               <td>
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : invoice.statusId}, true) />
                 ${statusItem.description?default(invoice.statusId)}
               </td>
- 		      
-			 
  			
              <#--- <td>${(invoice.description)?if_exists}</td>
  			  <td>${(invoice.cancelComments)?if_exists}</td>-->
@@ -445,24 +443,24 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${partyName}[${(invoice.partyIdFrom)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)?if_exists} [${(invoice.partyId)?if_exists}]</a></td>
-             <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
+              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>       
               <#--- <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>purchaseInvoiceDetails.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>-->
                <#--<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>processSalesInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Rise Sales Invoice</a></td>-->
                
-            <#--   <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
-              	  <#if (invoice.parentTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
-              		  <#if invoice.purposeTypeId?has_content>
-              		  	<#assign purposeTypeId=invoice.purposeTypeId>
-              		  </#if>
-              		  <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}','${purposeTypeId}');"/></td>
+                <#if ( ((invoice.statusId == "INVOICE_IN_PROCESS") || (invoice.statusId == "INVOICE_READY")) && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
+              	  <#if (invoice.invoiceTypeId == "SALES_INVOICE")||(invoice.invoiceTypeId?exists) >
+              		   <#if invoice.purposeTypeId?has_content>
+              		  	 <#assign purposeTypeId=invoice.purposeTypeId>
+              		   </#if>
+              		   <td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntryForInvoListing('${invoice.invoiceId}','${invoicePaymentInfo.amount}','${invoicePaymentInfo.outstandingAmount}','${invoice.partyId}','${invoice.partyIdFrom}','${vendorName}','${purposeTypeId}');"/></td>
                	    <#else>
                 	  <td align="center"></td>
                	  </#if>
                 <#else>
                 	<td align="center"></td>
-              </#if>-->
+              </#if>
                <#if invoice.statusId != "INVOICE_CANCELLED"><td><a class="buttontext" target='_blank' href="<@ofbizUrl>DepotpurchaseInvoiceEdit?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
                   <#else>
  		   	          <td></td>
