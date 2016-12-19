@@ -2871,14 +2871,12 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
                         	 billFromVendorRole.set("partyId", roPartyId);
                         	 billFromVendorRole.set("roleTypeId", "BILL_FROM_VENDOR");
 	                         delegator.createOrStore(billFromVendorRole);
-	                    	 Debug.log("billFromVendorRole======================="+billFromVendorRole);
 
 	                         GenericValue customerAgentRole = delegator.makeValue("InvoiceRole");
 	                         customerAgentRole.set("invoiceId", invoiceId);
 	                         customerAgentRole.set("partyId", partyId);
 	                         customerAgentRole.set("roleTypeId", "CUSTOMER_AGENT");
 	                         delegator.createOrStore(customerAgentRole);
-	                    	 Debug.log("customerAgentRole======================="+customerAgentRole);
 
 	                     } catch (GenericEntityException e) {
 	                         Debug.logError(e, module);
@@ -2903,7 +2901,6 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
                         	 billToCustomerRole.set("partyId", roPartyId);
                         	 billToCustomerRole.set("roleTypeId", "BILL_TO_CUSTOMER");
 	                         delegator.createOrStore(billToCustomerRole);
-	                    	 Debug.log("billToCustomerRole======================="+billToCustomerRole);
 	                     } catch (GenericEntityException e) {
 	                         Debug.logError(e, module);
 	                         return ServiceUtil.returnError(e.getMessage());
@@ -2916,7 +2913,6 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
                         	 billToCustRole.set("partyId", partyIdTo);
                         	 billToCustRole.set("roleTypeId", "SUPPLIER_AGENT");
 	                         delegator.createOrStore(billToCustRole);
-	                    	 Debug.log("billToCustRole======================="+billToCustRole);
 	                     } catch (GenericEntityException e) {
 	                         Debug.logError(e, module);
 	                         return ServiceUtil.returnError(e.getMessage());
