@@ -539,7 +539,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                <td><@ofbizCurrency amount=purchaseBasicAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
+              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>       
              
                <#--<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>processSalesInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Rise Sales Invoice</a></td>-->
                
