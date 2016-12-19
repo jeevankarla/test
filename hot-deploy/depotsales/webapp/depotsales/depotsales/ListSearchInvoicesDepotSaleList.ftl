@@ -601,6 +601,8 @@ function roundingInvoiceItems(invoiceId){
                 ${invoiceType.description?default(invoice.invoiceTypeId)}
               </td>-->
               
+              <#--<td>${(invoicePaymentInfo)?if_exists}</td> -->
+              
               <#--><td><input type="button" name="round" id="round" value="Rounding" onclick="javascript:roundingInvoiceItems('${invoice.invoiceId}');"/></td>-->
                <td>${(invoice.referenceNumber)?if_exists}</td>
               <td>${(invoice.invoiceDate)?if_exists}</td>
@@ -672,7 +674,7 @@ function roundingInvoiceItems(invoiceId){
               <td><@ofbizCurrency amount=saleBasicAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
+              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
                
                
         <#-->       <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >

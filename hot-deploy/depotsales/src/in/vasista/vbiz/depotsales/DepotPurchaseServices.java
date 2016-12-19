@@ -1766,6 +1766,63 @@ public class DepotPurchaseServices{
 			}
     	 }
     	 
+    	 
+    	 
+		   try{
+			   
+			  /* conditionList.clear();
+			   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
+			   EntityCondition condExpress = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
+			
+		   
+			   String actualOrderId = (EntityUtil.getFirst(orderAssocList)).getString("toOrderId");*/
+			   
+			    conditionList.clear();
+			   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+			   EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			   List<GenericValue> orderPreferenceList = delegator.findList("OrderPaymentPreference", condExpr, null, null, null, false);
+			   List orderPreferenceIdList = EntityUtil.getFieldListFromEntityList(orderPreferenceList, "orderPaymentPreferenceId", true);
+		   
+			   conditionList.clear();
+			   conditionList.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.IN, orderPreferenceIdList));
+			   EntityCondition condExpretion = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			   List<GenericValue> paymentList = delegator.findList("OrderPreferencePaymentApplication", condExpretion, null, null, null, false);
+
+			  //enericValue orderHeaderList = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryOrderId), false);
+			
+			  BigDecimal paidAmount = BigDecimal.ZERO;
+			
+			if (UtilValidate.isNotEmpty(paymentList)) {
+				for (GenericValue eachPayment : paymentList) {
+					
+					 BigDecimal eachAmount = (BigDecimal)eachPayment.get("amountApplied");
+					 paidAmount = paidAmount.add(eachAmount);
+					 Map newPayappl = UtilMisc.toMap("userLogin",userLogin);
+		            	newPayappl.put("invoiceId", invoiceId);
+		            	newPayappl.put("paymentId", eachPayment.get("paymentId"));
+		            	newPayappl.put("amountApplied", eachAmount);
+		            	
+		            Map<String, Object> paymentApplResult = dispatcher.runSync("createPaymentApplication",newPayappl);
+		            if(ServiceUtil.isError(paymentApplResult)){
+	           			Debug.logError("Unable to generate invoice: " + ServiceUtil.getErrorMessage(paymentApplResult), module);
+	           			//request.setAttribute("_ERROR_MESSAGE_", "Unable to Create Payment Application For :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(paymentApplResult));
+	           			return "error";
+	           		}
+		           	
+		           	
+				}
+			}
+			
+			
+		    
+		   }catch (Exception e) {
+				Debug.logError(e, "Problems while Calculating balance Amount for order: " + partyId, module);
+				//request.setAttribute("_ERROR_MESSAGE_", "Problems while Calculating balance Amount for order: " + partyId);
+				return "error";
+			}
+    	 
 	///	//Debug.loginvoiceId==================="+invoiceId);
 		
 		//=============================adjustment======================
