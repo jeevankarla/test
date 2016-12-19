@@ -151,6 +151,8 @@ for(productCategoryId in productCategoryIds){
 			totOrderQty=totOrderQty+orderQty;
 			totOrderValue=totOrderValue+orderValue;
 			String partyName = PartyHelper.getPartyName(delegator,partyId,false);
+			tempMap.put("productName", singleCatProductsOrdersDetail.itemDescription);
+			tempMap.put("prodcatName", prodCatName);			
 			tempMap.put("partyName", partyName);
 			tempMap.put("orderQty", orderQty);
 			tempMap.put("BdlWt", "");
