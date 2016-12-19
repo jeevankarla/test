@@ -507,8 +507,6 @@ function roundingInvoiceItems(invoiceId){
 	};
 		
 	
-	
-	
 </script>
 <#if invoices?has_content>
   <#assign invoiceList  =  invoices.getCompleteList() />

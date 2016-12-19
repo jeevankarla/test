@@ -1401,6 +1401,17 @@
          <response name="failed" type="view" value="DepotSalesInvoiceView"/>  
       </request-map>
       
+       <request-map uri="createDepotPurcahseInvoiceApplyPayment">
+          <security https="true" auth="true"/>
+        <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->
+           <event type="service" path="" invoke="createInvoiceApplyPayment"/>
+            <response name="success" type="request-redirect" value="DepotPurchaseInvoiceView">
+      	<redirect-parameter name="invoiceId"/>
+      	</response>
+         <response name="failed" type="view" value="DepotPurchaseInvoiceView"/>  
+      </request-map>
+      
+      
       <request-map uri="createBranchInvoiceApplyPayment">
           <security https="true" auth="true"/>
         <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->
