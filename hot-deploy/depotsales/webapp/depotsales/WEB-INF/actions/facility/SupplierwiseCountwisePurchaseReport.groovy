@@ -92,6 +92,7 @@ orderHeaderItemAndRoles = delegator.findList("OrderHeaderItemAndRoles", EntityCo
 finalCSVList=[];
 totalQty=0
 totalValue=0;
+totalRate=0;
 prodCatMap=[:];
 totalsMap=[:];
 for(productCategoryId in productCategoryIds){
@@ -118,6 +119,7 @@ for(productCategoryId in productCategoryIds){
 		prodPartiesList=[];
 		totOrderQty =0;
 		totOrderValue =0;
+		totRate=0
 		singleCatProductsOrdersDetails = EntityUtil.filterByCondition(orderHeaderItemAndRoles, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, singleProductId));
 		singleCatProductsOrdersDetail = EntityUtil.getFirst(singleCatProductsOrdersDetails);
 		partyIds=EntityUtil.getFieldListFromEntityList(singleCatProductsOrdersDetails, "partyId", true);
@@ -149,8 +151,11 @@ for(productCategoryId in productCategoryIds){
 			}
 			orderValue = orderQty*rate;
 			totOrderQty=totOrderQty+orderQty;
+			totRate=totRate+rate;
 			totOrderValue=totOrderValue+orderValue;
 			String partyName = PartyHelper.getPartyName(delegator,partyId,false);
+			tempMap.put("productName", singleCatProductsOrdersDetail.itemDescription);
+			tempMap.put("prodcatName", prodCatName);
 			tempMap.put("partyName", partyName);
 			tempMap.put("orderQty", orderQty);
 			tempMap.put("BdlWt", "");
@@ -158,6 +163,7 @@ for(productCategoryId in productCategoryIds){
 			tempMap.put("orderValue", orderValue);
 			totalQty=totalQty+orderQty
 			totalValue=totalValue+orderValue;
+			totalRate=totalRate+rate;
 			if(orderValue>0){
 				prodPartiesList.add(tempMap);
 				finalCSVList.add(tempMap)
@@ -169,7 +175,7 @@ for(productCategoryId in productCategoryIds){
 			tempTotMap.put("partyName", "SUB-TOTAL");
 			tempTotMap.put("orderQty", totOrderQty);
 			tempTotMap.put("BdlWt", "");
-			tempTotMap.put("rate", "");
+			tempTotMap.put("rate", totRate);
 			tempTotMap.put("orderValue", totOrderValue);
 			prodPartiesList.add(tempTotMap);
 			finalCSVList.add(tempTotMap);
@@ -186,6 +192,7 @@ for(productCategoryId in productCategoryIds){
 }
 totalsMap.put("orderQty", totalQty);
 totalsMap.put("orderValue", totalValue);
+totalsMap.put("rate", totalRate);
 context.totalsMap=totalsMap;
 context.prodCatMap=prodCatMap;
 context.finalCSVList=finalCSVList;
