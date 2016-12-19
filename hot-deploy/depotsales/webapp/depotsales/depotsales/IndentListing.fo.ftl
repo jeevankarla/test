@@ -53,12 +53,11 @@ under the License.
              		    <fo:table-column column-width="6%"/>
              		    <fo:table-column column-width="4%"/>
              		    <fo:table-column column-width="7%"/>
-             		    <fo:table-column column-width="4%"/>
+             		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="5%"/>
              		    <fo:table-column column-width="5%"/>
              		    <fo:table-column column-width="8%"/>
-             		    <fo:table-column column-width="5%"/>
-             		    <fo:table-column column-width="4%"/>
+             		    <fo:table-column column-width="6%"/>
              		    <fo:table-column column-width="5%"/>
 			             <fo:table-column column-width="5%"/>
 			            <fo:table-body>
@@ -107,9 +106,7 @@ under the License.
  								<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Mil Invoice</fo:block>	
 					            </fo:table-cell>
-					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Value</fo:block>
-					            </fo:table-cell>
+					           
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Payment Receipt</fo:block>
 					            </fo:table-cell>
@@ -131,10 +128,10 @@ under the License.
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.weaverName?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.Qty?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.Qty?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.unit?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.indentPrice?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.poDate?if_exists}</fo:block>
@@ -143,7 +140,7 @@ under the License.
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.poNo?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.poQty?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.poQty?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.supplierName?if_exists}</fo:block>
@@ -155,7 +152,7 @@ under the License.
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.salInv?if_exists}</fo:block>
 					            </fo:table-cell>					             
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${OrderIdList.salVal?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt" white-space-collapse="false">${OrderIdList.salVal?if_exists}</fo:block>
 					            </fo:table-cell>
  								<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.transporter?if_exists}</fo:block>
@@ -163,14 +160,12 @@ under the License.
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.milInv?if_exists}</fo:block>
 					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.value?if_exists}</fo:block>
-					            </fo:table-cell>
+					            
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.paymentReceipt?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.amount?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.amount?if_exists}</fo:block>
 					            </fo:table-cell>					            					            
 							</fo:table-row>
 							</#list>

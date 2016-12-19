@@ -135,12 +135,12 @@ BranchList=[];
 		branchBasedOrderIds = EntityUtil.getFieldListFromEntityList(custOrderRoles, "orderId", true);
 	}
 	
-		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, branchBasedOrderIds));
-		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
-		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
-		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
-		condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
-		condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
+	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, branchBasedOrderIds));
+	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
+	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
+	condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
+	condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
 
 	if(parameters.indentDateSort)
 	dateSort = parameters.indentDateSort;
@@ -200,10 +200,12 @@ BranchList=[];
 	orderList.add(headerData);
 	}
 	
+	
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
+		JSONObject tempData = new JSONObject();
 		orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-		
+	
 		custOrderRoles.clear();
 		partyId = "";
 		if(UtilValidate.isEmpty(partyId)){
@@ -223,7 +225,7 @@ BranchList=[];
 		
 		partyName = PartyHelper.getPartyName(delegator, partyId, false);
 		billFromVendor = PartyHelper.getPartyName(delegator, billFromVendorPartyId, false);
-		JSONObject tempData = new JSONObject();
+		
 		tempData.put("partyId", partyId);
 		tempData.put("weaverName", partyName);
 		tempData.put("partyName", partyName);
@@ -303,12 +305,15 @@ BranchList=[];
 			custCondList.add(EntityCondition.makeCondition("orderId",  EntityOperator.IN, UtilMisc.toList(orderId,poId)));
 			custCond2 = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
 			orderItemList = delegator.findList("OrderItem", custCond2, null, null, null, false);
+			indentPrice=0;
 			if(UtilValidate.isNotEmpty(orderItemList)){
 				orderItemList1 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-				if(UtilValidate.isNotEmpty(orderItemList)){
+				if(UtilValidate.isNotEmpty(orderItemList1)){
 					for(orderItem in orderItemList1){
 						ordQty=ordQty+orderItem.quantity;
+						indentPrice=indentPrice+orderItem.unitPrice;
 					}
+					indentPrice=indentPrice/orderItemList1.size()
 				}
 				orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
 				if(UtilValidate.isNotEmpty(orderItemList)){
@@ -316,10 +321,13 @@ BranchList=[];
 						poQty=poQty+orderItem.quantity;
 					}
 				}
+				
+				
 			}
 			tempData.put("poNo", poId);
 			tempData.put("poQty",poQty);
 			tempData.put("Qty", ordQty);
+			tempData.put("indentPrice", indentPrice);
 			orderHeader = delegator.findOne("OrderHeader",[orderId : poId] , false);
 			if(orderHeader){
 				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "MM/dd/yyyy"));
@@ -331,7 +339,7 @@ BranchList=[];
 				tempData.put("transporter", shipment.carrierName);
 			}
 			conditionList=[];
-			conditionList.add(EntityCondition.makeCondition("orderId",  EntityOperator.EQUALS, orderId));
+			conditionList.add(EntityCondition.makeCondition("orderId",  EntityOperator.EQUALS, poId));
 			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			cond3 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			OrderItemBillingList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond3, UtilMisc.toSet("quantity","invoiceId"), null, null, false);
@@ -346,16 +354,20 @@ BranchList=[];
 							salValue=salValue+invoiceItem.itemValue;
 						}
 					}
+					tempData.put("salVal", salValue);
+					tempData.put("salInv", OrderItemBilling.invoiceId);
+					Invoice = delegator.findOne("Invoice",[invoiceId : OrderItemBilling.invoiceId] , false);
+					tempData.put("salDate", UtilDateTime.toDateString(Invoice.invoiceDate, "MM/dd/yyyy"));
 				}
 			}
 			
-			tempData.put("salVal", salValue);
+		
 			tempData.put("value", "-");
 			tempData.put("paymentReceipt", "-");
 			tempData.put("amount", "-");
-			tempData.put("salDate", "-");
-			tempData.put("salInv", "-");
-			tempData.put("unit", "-");
+			
+			
+			
 			
 			
 			

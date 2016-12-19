@@ -9,6 +9,7 @@ to you under the Apache License, Version 2.0 (the
 with the License.  You may obtain a copy of the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
 "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,6 +17,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
 
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
@@ -46,16 +48,22 @@ under the License.
 		       
         		<fo:block>
              		<fo:table >
-             			
-             		    <fo:table-column column-width="40%"/>
-			            <fo:table-column column-width="15%"/>
-			            <fo:table-column column-width="15%"/>
-			            <fo:table-column column-width="15%"/>
-	                    <fo:table-column column-width="15%"/>
+             			<fo:table-column column-width="12%"/>
+             			<fo:table-column column-width="14%"/>
+             		    <fo:table-column column-width="20%"/>
+			            <fo:table-column column-width="12%"/>
+			            <fo:table-column column-width="12%"/>
+			            <fo:table-column column-width="12%"/>
+	                    <fo:table-column column-width="12%"/>
 			            <fo:table-body>
 		            		 
 			                 <fo:table-row>
-								
+								 <fo:table-cell border-style="solid">
+					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Category Name</fo:block>
+					            </fo:table-cell >
+					             <fo:table-cell border-style="solid">
+					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Product Name</fo:block>
+					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Supplier Name</fo:block>
 					            </fo:table-cell >
@@ -77,37 +85,35 @@ under the License.
 							<#list prodCatMapEntryList as prodCatMapEntry>
 							  <#assign productCategory = prodCatMapEntry.getKey()>
 							  <#assign prodWiseList = prodCatMapEntry.getValue()> 
-							   <fo:table-row>
-						            <fo:table-cell>
-						            	<fo:block  text-align="left" font-size="13pt"  font-weight="bold" white-space-collapse="false">${productCategory?if_exists}</fo:block>
-						            </fo:table-cell >
-								</fo:table-row>
+							  
 							
 								<#list prodWiseList as eachList>
 								<#assign eachEntryList = eachList.entrySet()>
 								
 								<#list eachEntryList as eachEntry>
 								<#assign eachEntryDetaislList = eachEntry.getValue()>
-								<fo:table-row>
-						            <fo:table-cell>
-						            	<fo:block  text-align="left" font-size="11pt"  font-weight="bold" white-space-collapse="false">${eachEntry.getKey()?if_exists}</fo:block>
-						            </fo:table-cell >
-								</fo:table-row> 
+								
 								<#list eachEntryDetaislList as eachEntry>
 										<fo:table-row>
-								            <fo:table-cell border-style="solid" >
+											 <fo:table-cell   <#if eachEntry.get("partyName")!="SUB-TOTAL"> border-style="solid"  </#if> >
+								            	<fo:block  text-align="left" font-size="9pt" <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("prodcatName")?if_exists}</fo:block>
+								            </fo:table-cell >
+								             <fo:table-cell  <#if eachEntry.get("partyName")!="SUB-TOTAL"> border-style="solid"  </#if> >
+								            	<fo:block  text-align="left" font-size="9pt" <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("productName")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="left" font-size="9pt" <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
+								            <fo:table-cell   border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${eachEntry.get("orderQty")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
+								            <fo:table-cell   border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false">${eachEntry.get("BdlWt")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt" <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("rate")?if_exists?string("##0.00")}</fo:block>
+								            <fo:table-cell   border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false"><#if eachEntry.get("rate")?has_content> ${eachEntry.get("rate")?if_exists?string("##0.00")} </#if> </fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
+								            <fo:table-cell    border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("orderValue")?if_exists?string("##0.00")}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
@@ -119,6 +125,12 @@ under the License.
 			                  
 							  </#list>
                                      <fo:table-row>
+                                        <fo:table-cell border-style="solid" >
+								            	<fo:block  text-align="left" font-size="9pt"  white-space-collapse="false"></fo:block>
+							            </fo:table-cell >
+							             <fo:table-cell border-style="solid" >
+							            	<fo:block  text-align="left" font-size="9pt"  white-space-collapse="false"></fo:block>
+							            </fo:table-cell >
 							            <fo:table-cell border-style="solid" >
 							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold"  white-space-collapse="false">TOTAL</fo:block>
 							            </fo:table-cell >
@@ -129,7 +141,7 @@ under the License.
 							            	<fo:block  text-align="right" font-size="10pt"   white-space-collapse="false"></fo:block>
 							            </fo:table-cell >
 							            <fo:table-cell  border-style="solid">
-							            	<fo:block  text-align="right" font-size="10pt" font-weight="bold"  white-space-collapse="false">${totalsMap.get("rate")?if_exists?string("##0.00")}</fo:block>
+							            	<fo:block  text-align="right" font-size="10pt"   white-space-collapse="false"></fo:block>
 							            </fo:table-cell >
 							            <fo:table-cell  border-style="solid">
 							            	<fo:block  text-align="right" font-size="10pt"  font-weight="bold"  white-space-collapse="false">${totalsMap.get("orderValue")?if_exists?string("##0.00")}</fo:block>
