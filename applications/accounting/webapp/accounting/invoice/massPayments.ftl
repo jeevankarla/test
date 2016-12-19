@@ -232,6 +232,7 @@
 		var message = "";
 		invoiceId = invoiceId;
 		
+		
 		//finalBal = grandTotal-balance;
 		//var paymentList = eachAdvancePaymentOrderMap[partyId];
 		
@@ -256,7 +257,7 @@
 		       }
 		  } */
 		  
-		            message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Weaver Code :</font></td><td align='left' width='60%'>"+partyIdFrom+"</td></tr>"+
+		            message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Supplier Code :</font></td><td align='left' width='60%'>"+partyIdFrom+"</td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Method Type :</font></td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
 						<#list PaymentMethodType as payment>
 						"<option value='${payment.paymentMethodTypeId}' <#if (payment.paymentMethodTypeId == 'CHEQUE')>selected='selected'</#if>>${payment.description}</option>"+
