@@ -507,8 +507,6 @@
           
     </form>
     
-    
-    
      <form name="ListOrdersForIssuance" type="list" list-name="orderList" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
         <field name="shipmentId"><display></display></field> 
@@ -525,16 +523,14 @@
           <field name="addContent" title="View" widget-style="buttontext" use-when="true">
            <hyperlink target-type="plain" description="View" target="javascript:fetchOrderInformation('${orderId}');"></hyperlink>
         </field>
-      <!--   
-         <field name="forPayment" title="IndentPayment" widget-style="buttontext" use-when="true">
+      
+        <!--  <field name="forPayment" title="IndentPayment" widget-style="buttontext" use-when="((&quot;${balance}&quot; != &quot;0&quot;))" >
            <hyperlink target-type="plain" description="IndentPayment" target="javascript:showPaymentEntryForDepotPayment('${orderId}','${partyId}','${partyName}','${orderTotal}','${balance}');"></hyperlink>
         </field>
         
-         <field name="forIssuance" title="Inssuance" widget-style="buttontext" use-when="(orderShipmentId.equals(&quot;N&quot;))">
+         <field name="forIssuance" title="Inssuance" widget-style="buttontext" use-when="(orderShipmentId.equals(&quot;N&quot;) &amp;&amp; ((&quot;${balance}&quot; == &quot;0&quot;)))">
            <hyperlink target-type="plain" description="Issue Indent" target="javascript:issueIndentItems('${orderId}','${partyId}');"></hyperlink>
-        </field>
-       -->   
-    
+        </field> -->
           
     </form>
     

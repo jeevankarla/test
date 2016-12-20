@@ -213,7 +213,6 @@ orderDetailsMap=[:];
 JSONObject eachPaymentOrderMap = new JSONObject();
 
 
-Set partyIdsSet=new HashSet();
 orderHeader.each{ eachHeader ->
 	orderId = eachHeader.orderId;
 	orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -229,7 +228,6 @@ orderHeader.each{ eachHeader ->
 	}
 	
 	//===================get ShipmentId=======================
-	
 	
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId));
@@ -290,10 +288,10 @@ orderHeader.each{ eachHeader ->
 	}else{
 		tempData.put("isCreditInstution", "N");
 	}*/
-	partyIdsSet.add(partyId);
+	//partyIdsSet.add(partyId);
 	
 	
-	isgeneratedPO="N";
+	/*isgeneratedPO="N";
 	// Also check if associated order is cancelled. If cancelled show generate PO button
 	exprCondList=[];
 	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
@@ -325,7 +323,7 @@ orderHeader.each{ eachHeader ->
 	}
 	tempMap.put("supplierPartyName", supplierPartyName);
 	tempMap.put("productStoreId", productStoreId);
-	orderDetailsMap.put(orderId,tempMap);
+	orderDetailsMap.put(orderId,tempMap);*/
 	
 	
 		
@@ -422,12 +420,17 @@ orderHeader.each{ eachHeader ->
 		
 	}
 	
-	
-	
 	orderList.add(tempData);
 	
 }
 context.orderDetailsMap=orderDetailsMap;
+
+condtList = [];
+condtList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS, "MONEY"));
+cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
+PaymentMethodType = delegator.findList("PaymentMethodType", cond, UtilMisc.toSet("paymentMethodTypeId","description"), null, null ,false);
+
+context.PaymentMethodType = PaymentMethodType;
 
 //obDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(UtilDateTime.nowTimestamp()), 1));
 
@@ -452,7 +455,7 @@ partyIdsSet.each{partyId->
  */
 
 //all suppliers shipping address Json
-JSONObject supplierAddrJSON = new JSONObject();
+/*JSONObject supplierAddrJSON = new JSONObject();
 
 shippingPartyList = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
 if(shippingPartyList){
@@ -523,23 +526,18 @@ statesList.each{ eachState ->
 		newObj.put("label",eachState.geoName);
 		stateListJSON.add(newObj);
 }
-context.stateListJSON = stateListJSON;
+context.stateListJSON = stateListJSON;*/
 
-orderIdsList = [];
+/*orderIdsList = [];
 orderPreferenceMap = [:];
 paymentSatusMap = [:];
 
-
-condtList = [];
-condtList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS, "MONEY"));
-cond = EntityCondition.makeCondition(condtList, EntityOperator.AND);
-PaymentMethodType = delegator.findList("PaymentMethodType", cond, UtilMisc.toSet("paymentMethodTypeId","description"), null, null ,false);
 
 
 //allOrderIds = eachPaymentOrderMap.keySet();
 
 statusConfirmMap = [:];
-
+*/
 /*
 for (eachOrderId in allOrderIds) {
 	preferenceList = eachPaymentOrderMap.get(eachOrderId);
@@ -560,14 +558,14 @@ for (eachOrderId in allOrderIds) {
 	}
 }*/
 
-paymentPreferenceCancellMap = [:];
+/*paymentPreferenceCancellMap = [:];
 context.statusConfirmMap = statusConfirmMap;
 context.eachPaymentOrderMap = eachPaymentOrderMap;
-context.PaymentMethodType = PaymentMethodType;
+
 context.orderPreferenceMap = orderPreferenceMap;
 context.paymentSatusMap = paymentSatusMap;
 context.paymentPreferenceCancellMap = paymentPreferenceCancellMap;
-/*
+
 sortedOrderMap =  [:]as TreeMap;
 for (eachList in orderList) {
 	sortedOrderMap.put(eachList.orderId, eachList);
