@@ -48,7 +48,7 @@ $(document).ready(function(){
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker("reimburcentTransporterFRO","reimburcentTransporterTHRU");
 	    makeDatePicker("depotReimburcentReportFRO","depotReimburcentReportTHRU");
-	    makeDatePicker3("stateWiseBranchWiseSaleReportFro","stateWiseBranchWiseSaleReportTHRU");
+	    makeDatePicker("stateWiseBranchWiseSaleReportFro","stateWiseBranchWiseSaleReportTHRU");
 	    makeDatePicker3("abstrctFromDate","abstrctThruDate");
 	    makeDatePicker3("salesPurchaseReportFRO","salesPurchaseReportTHRU");
 	    makeDatePicker("stockDate");

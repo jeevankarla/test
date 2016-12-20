@@ -1,24 +1,35 @@
 import java.math.BigDecimal;
 import java.util.*;
 import java.sql.Timestamp;
+
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.jdbc.JdbcValueHandler.BigDecimalJdbcValueHandler;
 import org.ofbiz.entity.util.*;
+import org.ofbiz.base.conversion.NumberConverters.BigDecimalToString;
 import org.ofbiz.base.util.*;
+
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.SortedMap;
  
+
+
 import javolution.util.FastMap;
 import javolution.util.FastList;
+
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.party.party.PartyHelper;
+
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
+
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
+
 import java.util.Map.Entry;
 
 
@@ -39,6 +50,7 @@ partythruDate=parameters.partythruDate;
 partyId=parameters.partyId;
 state=parameters.state;
 productCategory=parameters.productCategory;
+
 
 DateMap.put("partyfromDate", partyfromDate);
 DateMap.put("partythruDate", partythruDate);
@@ -251,7 +263,7 @@ for (eachInvoiceList in Invoice) {
 	
 	 tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoiceList.invoiceDate,"dd/MM/yyyy"));
 		   
-	 ////////Debug.log("eachInvoiceList.invoiceId================="+eachInvoiceList.invoiceId);
+	// Debug.log("eachInvoiceList.invoiceId================="+eachInvoiceList.invoiceId);
 	 
 	 
    
@@ -260,31 +272,46 @@ for (eachInvoiceList in Invoice) {
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
 	//condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-
-	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
+//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
 	InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
-	  
 	
-	//Debug.log("InvoiceItem================="+InvoiceItem.size());
-	
+	BigDecimal invoiceAMT = 0;
+	BigDecimal invoiceQTY = 0;
+	BigDecimal invoicprice=0;
+		
 	if(InvoiceItem){
 
 		productId = InvoiceItem[0].productId;
-	double invoiceAMT = 0;
-	double invoiceQTY = 0;
+	
+	//invoicprice=invoiceAMT.divide(invoiceQTY);
+	//invoiceAMT.divide(invoiceQTY);
 	for (eachInvoiceItem in InvoiceItem) {
 		
-		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
-		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
+		
+		
+		if(UtilValidate.isNotEmpty(eachInvoiceItem.itemValue)){
+			invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
+		}
+		
+		if(UtilValidate.isNotEmpty(eachInvoiceItem.quantity)){
+			invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
+		}
 		
 	}
-	  
+	  	}
 	tempMap.put("invoiceAmount", invoiceAMT);
 	tempMap.put("invoiceQTY", invoiceQTY);
+	if(invoiceQTY.compareTo(BigDecimal.ZERO)==1){
+		invoicprice=invoiceAMT.divide(invoiceQTY,4,BigDecimal.ROUND_HALF_UP);
+	}
+	tempMap.put("invoicprice", invoicprice);
+	context.invoicprice=invoicprice;
+	
 	
 	////////Debug.log("invoiceAMT================="+invoiceAMT);
+
 	condList.clear();
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
 	//conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
@@ -450,13 +477,13 @@ for (eachInvoiceList in Invoice) {
 		 tempMap.put("supplierInvoiceDate", "");
 		 
 		 }
-	}
+	
 	 finalList.add(tempMap);
 }
 
 context.finalList = finalList;
 
-
+//Debug.log("============invoicprice============================"+invoicprice);
 Debug.log("finalList============================"+finalList);
 
 
