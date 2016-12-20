@@ -46,18 +46,18 @@ under the License.
              			
              		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="9%"/>
+             		    <fo:table-column column-width="8%"/>
+             		    <fo:table-column column-width="5%"/>
+             		    <fo:table-column column-width="6%"/>
              		    <fo:table-column column-width="7%"/>
-             		    <fo:table-column column-width="6%"/>
-             		    <fo:table-column column-width="6%"/>
-             		    <fo:table-column column-width="7%"/>
-             		    <fo:table-column column-width="6%"/>
+             		    <fo:table-column column-width="5%"/>
              		    <fo:table-column column-width="4%"/>
              		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="5%"/>
-             		    <fo:table-column column-width="5%"/>
+             		    <fo:table-column column-width="4%"/>
              		    <fo:table-column column-width="8%"/>
-             		    <fo:table-column column-width="6%"/>
+             		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="5%"/>
 			             <fo:table-column column-width="5%"/>
 			            <fo:table-body>
@@ -74,7 +74,7 @@ under the License.
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Weaver Name</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Indent Qty(Kgs)</fo:block>	
+					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Indent Qty (Kgs)</fo:block>	
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Indent UnitPrice</fo:block>	
@@ -106,7 +106,6 @@ under the License.
  								<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Mil Invoice</fo:block>	
 					            </fo:table-cell>
-					           
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Payment Receipt</fo:block>
 					            </fo:table-cell>
@@ -149,7 +148,7 @@ under the License.
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.salDate?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.salInv?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.salInv?if_exists}</fo:block>
 					            </fo:table-cell>					             
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="8pt" white-space-collapse="false">${OrderIdList.salVal?if_exists}</fo:block>
@@ -159,10 +158,9 @@ under the License.
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.milInv?if_exists}</fo:block>
-					            </fo:table-cell>
-					            
+					            </fo:table-cell> 
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.paymentReceipt?if_exists}</fo:block>
+					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.paymentReceipt?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.amount?if_exists}</fo:block>
@@ -178,7 +176,7 @@ under the License.
     	<fo:page-sequence master-reference="main">
 	    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 	       		 <fo:block font-size="14pt">
- 	            	${uiLabelMap.NoOrdersFound}.
+ 	            	No Orders Found.
 	       		 </fo:block>
 	    	</fo:flow>
 		</fo:page-sequence>	
