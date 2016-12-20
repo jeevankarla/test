@@ -105,7 +105,7 @@ searchOrderIdList=[];
 
 shipmentId = parameters.shipmentId;
 
-Debug.log("shipmentId============"+shipmentId);
+//Debug.log("searchOrderId============"+searchOrderId);
 
 if(shipmentId){
 
@@ -156,7 +156,7 @@ if(UtilValidate.isNotEmpty(facilityStatusId)){
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.EQUALS, facilityStatusId));
 }
 else{
-	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED", "ORDER_CREATED")));
+	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.IN, UtilMisc.toList("ORDER_APPROVED")));
 }
 
 /*
@@ -210,6 +210,15 @@ custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUA
 billFromVendorOrderRoles = delegator.findList("OrderRole", EntityCondition.makeCondition(custCondList, EntityOperator.AND), null, null, null, false);
 
 vendorBasedOrderIds = EntityUtil.getFieldListFromEntityList(billFromVendorOrderRoles, "orderId", true);
+
+conditonList = [];
+conditonList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, vendorBasedOrderIds));
+conditonList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+OrderItemBillingList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
+
+vendorBasedOrderIds = EntityUtil.getFieldListFromEntityList(OrderItemBillingList, "orderId", true);
+
 orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId", EntityOperator.IN, vendorBasedOrderIds));
 
 orderDetailsMap=[:];
@@ -291,13 +300,71 @@ orderHeader.each{ eachHeader ->
 	
 	tempData.put("shipmentId", shipmentId);
 	
+	conditonList = [];
+	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, orderId));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+	double paidAmt = 0;
+	
+	paymentIdsOfIndentPayment = [];
+	
+	if(OrderPaymentPreference){
+	
+	orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+ 
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
+	conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+	
+	paymentIdsOfIndentPayment = EntityUtil.getFieldListFromEntityList(PaymentList,"paymentId", true);
+	
+	
+	for (eachPayment in PaymentList) {
+		paidAmt = paidAmt+eachPayment.get("amount");
+	}
+	
+  }
+	
+	/*conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	OrderItemBillingList = delegator.findList("OrderItemBilling", cond, null, null, null ,false);
+*/
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	conditonList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	OrderItemBillingList = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
+
+	
+	invoiceIds = EntityUtil.getFieldListFromEntityList(OrderItemBillingList,"invoiceId", true);
+	
+	if(invoiceIds){
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("invoiceId" ,EntityOperator.IN,invoiceIds));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	PaymentApplicationList = delegator.findList("PaymentApplication", cond, null, null, null ,false);
+	
+		for (eachList in PaymentApplicationList) {
+			 if(!paymentIdsOfIndentPayment.contains(eachList.paymentId))
+				paidAmt = paidAmt+eachList.amountApplied;
+		}
+	}
+	
+	
+	tempData.put("paidAmt", paidAmt);
+	grandTOT = eachHeader.getBigDecimal("grandTotal");
+	balance = grandTOT-paidAmt;
+	tempData.put("balance", balance);
 	
 	partyIdsSet.add(partyId);
 	orderList.add(tempData);
-	
+	productStoreId=eachHeader.productStoreId;
 	isgeneratedPO="N";
 	// Also check if associated order is cancelled. If cancelled show generate PO button
-	exprCondList=[];
+	/*exprCondList=[];
 	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
 	exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 	EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
@@ -317,10 +384,10 @@ orderHeader.each{ eachHeader ->
 	if(supplierDetails){
 		supplierPartyId=supplierDetails.get("partyId");
 	}
-	productStoreId=eachHeader.productStoreId;
+	
 	tempMap=[:];
-	tempMap.put("supplierPartyId", supplierPartyId);
-	tempMap.put("isgeneratedPO", isgeneratedPO);
+	//tempMap.put("supplierPartyId", supplierPartyId);
+	//tempMap.put("isgeneratedPO", isgeneratedPO);
 	supplierPartyName="";
 	if(supplierPartyId){
 		supplierPartyName = PartyHelper.getPartyName(delegator, supplierPartyId, false);
@@ -329,8 +396,12 @@ orderHeader.each{ eachHeader ->
 	tempMap.put("productStoreId", productStoreId);
 	orderDetailsMap.put(orderId,tempMap);
 	
+	*/
+	
+	
+	
 }
-context.orderDetailsMap=orderDetailsMap;
+//context.orderDetailsMap=orderDetailsMap;
 
 //obDate = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(UtilDateTime.nowTimestamp()), 1));
 

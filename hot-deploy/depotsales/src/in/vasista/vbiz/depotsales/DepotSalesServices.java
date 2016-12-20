@@ -7367,7 +7367,7 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
    				createInvDetail.put("inventoryItemId", inventoryItemId);
    				createInvDetail.put("itemIssuanceId", itemIssuanceId);
    				createInvDetail.put("quantityOnHandDiff", requestedQuantity.negate());
-   				createInvDetail.put("availableToPromiseDiff", requestedQuantity.negate());
+   				//createInvDetail.put("availableToPromiseDiff", requestedQuantity.negate());
    				if(UtilValidate.isNotEmpty(issuedDateTime)){
    					 itemIssueCtx.put("effectiveDate", issuedDateTime);
    				}
