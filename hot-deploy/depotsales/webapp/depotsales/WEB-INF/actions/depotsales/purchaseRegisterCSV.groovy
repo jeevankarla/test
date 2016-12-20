@@ -1,4 +1,4 @@
-import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilDateTime
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
@@ -47,28 +47,38 @@ BranchList=[];
 	screenFlag = parameters.screenFlag;
 	tallyRefNO = parameters.tallyRefNO;
 	
-	facilityDateStart = null;
-	facilityDateEnd = null;
-	if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
-		def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy");
+	dayend = null;
+	daystart = null;
+	Timestamp fromDate;
+	Timestamp thruDate;
+	
+	partyfromDate=parameters.fromDate;
+	partythruDate=parameters.thruDate;
+	
+	productCategory=parameters.categoryId;
+	context.partyfromDate=partyfromDate;
+	context.partythruDate=partythruDate;
+	daystart = null;
+	dayend = null;
+	if(UtilValidate.isNotEmpty(partyfromDate)){
 		try {
-			transDate = new java.sql.Timestamp(sdf.parse(facilityDeliveryDate+" 00:00:00").getTime());
-		} catch (ParseException e) {
-			Debug.logError(e, "Cannot parse date string: " + facilityDeliveryDate, "");
-		}
-		facilityDateStart = UtilDateTime.getDayStart(transDate);
-		facilityDateEnd = UtilDateTime.getDayEnd(transDate);
+			fromDate = new java.sql.Timestamp(sdf.parse(partyfromDate).getTime());
+			daystart = UtilDateTime.getDayStart(fromDate);
+			 } catch (ParseException e) {
+				 //////Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
+			}
 	}
-	transThruDate = null;
-	if(UtilValidate.isNotEmpty(facilityDeliveryThruDate)){
-		def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		try {
-			transThruDate = new java.sql.Timestamp(sdf.parse(facilityDeliveryThruDate+" 00:00:00").getTime());
-		} catch (ParseException e) {
-			Debug.logError(e, "Cannot parse date string: " + facilityDeliveryThruDate, "");
-		}
-		facilityDateEnd = UtilDateTime.getDayEnd(transThruDate);
+	if(UtilValidate.isNotEmpty(partythruDate)){
+	   try {
+		   thruDate = new java.sql.Timestamp(sdf.parse(partythruDate).getTime());
+		   dayend = UtilDateTime.getDayEnd(thruDate);
+	   } catch (ParseException e) {
+		   //////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
+			}
 	}
+	context.daystart=daystart
+	context.dayend=dayend
 	
 	JSONArray orderList=new JSONArray();
 	 List condList = [];
@@ -119,6 +129,8 @@ BranchList=[];
 		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, branchBasedOrderIds));
 		condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
 		condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
+		condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
+		condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
 		condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
 
 	if(parameters.indentDateSort)

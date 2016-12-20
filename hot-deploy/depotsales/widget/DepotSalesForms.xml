@@ -3088,9 +3088,9 @@
         <field name="unit" title="_"><display/></field>
         <field name="weaverName" title="_"><display/></field>
         <field name="poNo" title="-"><display/></field>
-        <field name="supplierName" title="-"><display/></field> 
-        <field name="poDate" title="_"><display/></field>
+        <field name="poDate" title="-"><display/></field> 
         <field name="poQty" title="_"><display/></field>
+        <field name="supplierName" title="_"><display/></field>
         <field name="salInv" title="_"><display/></field>
         <field name="salDate" title="_"><display/></field>
         <field name="salVal" title="_"><display/></field>
