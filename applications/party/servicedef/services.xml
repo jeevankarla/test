@@ -1418,7 +1418,8 @@ under the License.
         <attribute name="countryCode" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
-    </service>    
+    </service>  
+      
      <service name="createPartyInsurance" engine="java" auth="true" invoke="createPartyInsurance" 
         location="org.ofbiz.party.party.PartyServices" >
         <description>Create Party Insurance</description>
@@ -1430,6 +1431,15 @@ under the License.
         <attribute name="fromDate" mode="IN" type="Timestamp"/> 
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/> 
         <attribute name="insuranceId" mode="OUT" type="String"  optional="true"/> 
+    </service>
+     <service name="createOrUpdateWeaversPartyClassification" engine="java" auth="true" invoke="createOrUpdateWeaversPartyClassification" 
+        location="org.ofbiz.party.party.PartyServices" >
+        <description>Create Or Update  PartyClassification</description>
+        <attribute name="partyId" mode="IN" type="String" optional="false"/>
+        <attribute name="partyClassificationGroupId" mode="IN" type="String" optional="false"/> 
+        <attribute name="fromDate" mode="IN" type="String" optional="false"/>
+        <attribute name="thruDate" mode="IN" type="String"  optional="true"/>
+        <attribute name="actionType" mode="IN" type="String"  optional="true"/> 
     </service>
      <service name="updatePartyInsuranceDetails" engine="entity-auto" default-entity-name="PartyInsurance" invoke="update">
         <description>update Party Insurance entity</description>
