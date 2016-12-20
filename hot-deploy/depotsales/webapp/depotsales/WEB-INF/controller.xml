@@ -1340,6 +1340,12 @@
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
+     <request-map uri="createOrUpdateWeaversPartyClassification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createOrUpdateWeaversPartyClassification"/>
+        <response name="success" type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
     <request-map uri="updateWeaverPartyRelationShip">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateWeaverPartyRelationShip"/>
