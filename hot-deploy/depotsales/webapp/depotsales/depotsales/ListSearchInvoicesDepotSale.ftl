@@ -549,19 +549,22 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                   <#else>
  		   	          <td></td>
                </#if>
+               
+
+               
                <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
-              	  <#if (invoice.parentTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
+              	  <#if (invoice.invoiceTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
               		  <#if invoice.purposeTypeId?has_content>
               		  	<#assign purposeTypeId=invoice.purposeTypeId>
               		  </#if>
-              		  <td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntryBranchPurchaseForInvoListing('${invoice.invoiceId}','${invoicePaymentInfo.amount}','${invoicePaymentInfo.outstandingAmount}','${invoice.partyIdFrom}','${invoice.partyId}','${vendorName}','${invoice.purposeTypeId}');"/></td>
+              		    <td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntryBranchPurchaseForInvoListing('${invoice.invoiceId}','${invoicePaymentInfo.amount}','${invoicePaymentInfo.outstandingAmount}','${invoice.partyId}','${invoice.partyIdFrom}','${vendorName}','${invoice.purposeTypeId}');"/></td>
                	    <#else>
                 	  <td align="center"></td>
                	  </#if>
                 <#else>
                 	<td align="center"></td>
               </#if>
-              
+               
               
               <#--><td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>-->
             <#--<#if invoice.parentTypeId?has_content>
