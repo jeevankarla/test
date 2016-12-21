@@ -1097,6 +1097,7 @@
     <request-map uri="BranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="BranchSalesOrder"/></request-map>
     <request-map uri="SilkBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkBranchSalesOrder"/><response name="error" type="view" value="SilkBranchSalesOrder"/></request-map>
     <request-map uri="CottonBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="CottonBranchSalesOrder"/></request-map>
+    <request-map uri="DyesSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DyesSalesOrder"/></request-map>
     <request-map uri="OtherBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="OtherBranchSalesOrder"/></request-map>
     <request-map uri="MultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="MultiBranchSalesOrder"/></request-map>
     <request-map uri="SilkMultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkMultiBranchSalesOrder"/></request-map>
@@ -2586,6 +2587,7 @@
     
     
     <view-map name="CottonBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CottonBranchSalesOrder"/>
+    <view-map name="DyesSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DyesSalesOrder"/>
     <view-map name="OtherBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#OtherBranchSalesOrder"/>
     <view-map name="MultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MultiBranchSalesOrder"/>
     <view-map name="SilkMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SilkMultiBranchSalesOrder"/>
