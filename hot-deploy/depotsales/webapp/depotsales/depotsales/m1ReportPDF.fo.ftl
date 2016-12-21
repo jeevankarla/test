@@ -22,7 +22,7 @@ under the License.
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".2in" margin-top=".1in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left="0.5in" margin-right=".2in" margin-top=".1in">
                 <fo:region-body margin-top="0.1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1.5in"/>
@@ -48,13 +48,13 @@ under the License.
 		       
         		<fo:block>
              		<fo:table >
-             			<fo:table-column column-width="12%"/>
-             			<fo:table-column column-width="14%"/>
-             		    <fo:table-column column-width="20%"/>
+             			<fo:table-column column-width="15%"/>
+             			<fo:table-column column-width="18%"/>
+             		    <fo:table-column column-width="30%"/>
 			            <fo:table-column column-width="12%"/>
 			            <fo:table-column column-width="12%"/>
 			            <fo:table-column column-width="12%"/>
-	                    <fo:table-column column-width="12%"/>
+	                    <fo:table-column column-width="13%"/>
 			            <fo:table-body>
 		            		 
 			                 <fo:table-row>
@@ -68,11 +68,11 @@ under the License.
 					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Supplier Name</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Qty</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Bdl Wt</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Qty(Kgs)</fo:block>
 					            </fo:table-cell>
+					       		<#--<fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Bdl Wt</fo:block>
+					            </fo:table-cell>-->
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Rate</fo:block>
 					            </fo:table-cell>
@@ -107,9 +107,9 @@ under the License.
 								            <fo:table-cell   border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${eachEntry.get("orderQty")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell   border-style="solid">
+								            <#--<fo:table-cell   border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false">${eachEntry.get("BdlWt")?if_exists}</fo:block>
-								            </fo:table-cell >
+								            </fo:table-cell >-->
 								            <fo:table-cell   border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false"><#if eachEntry.get("rate")?has_content> ${eachEntry.get("rate")?if_exists?string("##0.00")} </#if> </fo:block>
 								            </fo:table-cell >

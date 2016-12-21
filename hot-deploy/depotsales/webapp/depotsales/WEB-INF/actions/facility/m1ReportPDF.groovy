@@ -105,7 +105,7 @@ for(productCategoryId in productCategoryIds){
 	}
 	tempCSVMap1.put("partyName", prodCatName);
 	tempCSVMap1.put("orderQty", "");
-	tempCSVMap1.put("BdlWt", "");
+	/*tempCSVMap1.put("BdlWt", "");*/
 	tempCSVMap1.put("rate", "");
 	tempCSVMap1.put("orderValue", "");
 	finalCSVList.add(tempCSVMap1);
@@ -127,7 +127,7 @@ for(productCategoryId in productCategoryIds){
 		if(UtilValidate.isNotEmpty(singleCatProductsOrdersDetail)){
 			tempCSVMap2.put("partyName", singleCatProductsOrdersDetail.itemDescription);
 			tempCSVMap2.put("orderQty", "");
-			tempCSVMap2.put("BdlWt", "");
+			/*tempCSVMap2.put("BdlWt", "");*/
 			tempCSVMap2.put("rate", "");
 			tempCSVMap2.put("orderValue", "");
 			finalCSVList.add(tempCSVMap2);
@@ -158,7 +158,7 @@ for(productCategoryId in productCategoryIds){
 			tempMap.put("prodcatName", prodCatName);
 			tempMap.put("partyName", partyName);
 			tempMap.put("orderQty", orderQty);
-			tempMap.put("BdlWt", "");
+			/*tempMap.put("BdlWt", "");*/
 			tempMap.put("rate", rate);
 			tempMap.put("orderValue", orderValue);
 			totalQty=totalQty+orderQty
@@ -174,7 +174,7 @@ for(productCategoryId in productCategoryIds){
 			
 			tempTotMap.put("partyName", "SUB-TOTAL");
 			tempTotMap.put("orderQty", totOrderQty);
-			tempTotMap.put("BdlWt", "");
+			/*tempTotMap.put("BdlWt", "");*/
 			tempTotMap.put("rate", totRate);
 			tempTotMap.put("orderValue", totOrderValue);
 			prodPartiesList.add(tempTotMap); 
