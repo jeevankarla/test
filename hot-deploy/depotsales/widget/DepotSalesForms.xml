@@ -1964,7 +1964,7 @@
         	<display-entity entity-name="Product" description="${description}"></display-entity>
         </field>
         <field name="quantityOnHandTotal" title="Stock Available"><display/></field>
-        <field name="bookedQuantity" title="Booked Quantity"><display/></field>
+        <!-- <field name="bookedQuantity" title="Booked Quantity"><display/></field> -->
         <field name="availbleQuantity" title="Available Quantity(Kgs)"><display/></field>
         <field name="unitCost" title="unintCost(Kgs)"><display/></field>
 <!--         <field name="Sale" title="Sale Indent" widget-style="buttontext">
@@ -1984,7 +1984,7 @@
 			<parameter param-name="bundleUnitPrice"/>
 			<parameter param-name="balancedQty"/>
 			<parameter param-name="unitCost"/>
-			 <parameter param-name="bookedQuantity"/>
+			<!--  <parameter param-name="bookedQuantity"/> -->
 			 <parameter param-name="inventoryItemId"/>
 			  <parameter param-name="productStoreId"/>
 			   <parameter param-name="branchName"/>

@@ -1843,8 +1843,8 @@
 	    <request-map uri="processIndentItemIssuance">
        <security https="true" auth="true"/>
        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/"  invoke="ProcessSalesItemIssuance.groovy"/>
-       <response name="success" type="view" value="DepotSalesIndentIssuance"/>
-       <response name="error" type="view" value="DepotSalesIndentIssuance"/> 
+       <response name="success" type="view" value="FindSalesIndentPayment"/>
+       <response name="error" type="view" value="FindSalesIndentPayment"/> 
        <!-- <response name="error" type="request" value="json"/> -->   
     </request-map>
     <request-map uri="createSalesIndentPayment">

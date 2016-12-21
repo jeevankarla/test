@@ -276,6 +276,11 @@ orderHeader.each{ eachHeader ->
 	tempData.put("orderId", eachHeader.orderId);
 	tempData.put("orderDate", eachHeader.estimatedDeliveryDate);
 	
+	if(eachHeader.shipmentId)
+	tempData.put("orderShipmentId", "Y");
+	else
+	tempData.put("orderShipmentId", "N");
+	
 	////////Debug.log("statusId============"+eachHeader.statusId);
 	tempData.put("orderStatusId", eachHeader.statusId);
 	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
