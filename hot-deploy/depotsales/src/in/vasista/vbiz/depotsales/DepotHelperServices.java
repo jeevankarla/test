@@ -2833,8 +2833,21 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     LocalDispatcher dispatcher = dctx.getDispatcher();   
     Map<String, Object> result = new HashMap<String, Object>();
     GenericValue userLogin = (GenericValue) context.get("userLogin");
-    Timestamp fromDate = (Timestamp) context.get("fromDate");
-    Timestamp thruDate = (Timestamp) context.get("thruDate");
+    String fromDateStr = (String) context.get("fromDate");
+    String thruDateStr = (String) context.get("thruDate");
+	Timestamp fromDate=null;
+	Timestamp thruDate = null;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+  	if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
+  		try {
+  			fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+  			thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+	  	} catch (ParseException e) {
+	  		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	  	} catch (NullPointerException e) {
+  			Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	  	}
+  	}
 
     Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
     EntityCondition cond = null;
