@@ -162,7 +162,8 @@ BranchList=[];
 	headerData2.put("orderId", "_");
 	headerData2.put("orderNo", "_");
 	headerData2.put("Qty", "_");
-	headerData2.put("unit", "_");
+	headerData2.put("indentPrice", "_");
+	headerData2.put("IndentValue", "_");
 	headerData2.put("poQty", "_");
 	headerData2.put("salInv", "_");
 	headerData2.put("salDate", "_");
@@ -182,8 +183,9 @@ BranchList=[];
 	headerData.put("orderDate", "Indent Date");
 	headerData.put("orderId", "Cust Order");
 	headerData.put("orderNo", "IndentSeqId");
-	headerData.put("Qty", "Qty(Kgs)");
-	headerData.put("unit", "UnitPrice");
+	headerData.put("Qty", "Indent Qty(Kgs)");
+	headerData.put("indentPrice", "Indent UnitPrice");
+	headerData.put("IndentValue", "Indent Value");
 	headerData.put("poQty", "PO Qty");
 	headerData.put("salInv", "Sal Invoice");
 	headerData.put("salDate", "Sal Date");
@@ -194,7 +196,7 @@ BranchList=[];
 	headerData.put("paymentReceipt", "Payment Receipt");
 	headerData.put("amount", "Amount");
 	headerData.put("weaverName", "Weaver Name");
-	headerData.put("poNo", "PoSequenceId");
+	headerData.put("poSquenceNo", "PoSequenceId");
 	headerData.put("poDate", "PO Date");
 	headerData.put("supplierName", "Supplier Name");
 	orderList.add(headerData);
@@ -290,6 +292,7 @@ BranchList=[];
 			tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 		}
 		ordQty=0;
+		IndentValue=0;
 		poId="";
 		salValue=0;
 		poQty=0;
@@ -314,6 +317,7 @@ BranchList=[];
 						indentPrice=indentPrice+orderItem.unitPrice;
 					}
 					indentPrice=indentPrice/orderItemList1.size()
+					IndentValue=IndentValue+((ordQty)*indentPrice)
 				}
 				orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
 				if(UtilValidate.isNotEmpty(orderItemList)){
@@ -328,6 +332,7 @@ BranchList=[];
 			tempData.put("poQty",poQty);
 			tempData.put("Qty", ordQty);
 			tempData.put("indentPrice", indentPrice);
+			tempData.put("IndentValue", IndentValue);
 			orderHeader = delegator.findOne("OrderHeader",[orderId : poId] , false);
 			if(orderHeader){
 				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "MM/dd/yyyy"));

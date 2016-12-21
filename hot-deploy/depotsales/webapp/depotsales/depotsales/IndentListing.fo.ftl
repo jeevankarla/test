@@ -44,19 +44,19 @@ under the License.
         		<fo:block>
              		<fo:table >
              			
-             		    <fo:table-column column-width="7%"/>
+             		    <fo:table-column column-width="6%"/>
              		    <fo:table-column column-width="9%"/>
              		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="5%"/>
              		    <fo:table-column column-width="6%"/>
+             		    <fo:table-column column-width="6%"/>
+             		    <fo:table-column column-width="6%"/>
+             		    <fo:table-column column-width="9%"/>
              		    <fo:table-column column-width="7%"/>
-             		    <fo:table-column column-width="5%"/>
+             		    <fo:table-column column-width="6%"/>
+             		    <fo:table-column column-width="4%"/>
              		    <fo:table-column column-width="4%"/>
              		    <fo:table-column column-width="7%"/>
-             		    <fo:table-column column-width="7%"/>
-             		    <fo:table-column column-width="5%"/>
-             		    <fo:table-column column-width="4%"/>
-             		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="5%"/>
 			             <fo:table-column column-width="5%"/>
@@ -65,52 +65,55 @@ under the License.
 			                <fo:table-row>
 								
 			                    <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Indent Date</fo:block>	
+					            	<fo:block  text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Indent Date</fo:block>	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="9pt"  font-weight="bold" white-space-collapse="false">IndentSeqId</fo:block>
+					            	<fo:block  text-align="center" font-size="8pt"  font-weight="bold" white-space-collapse="false">IndentSeqId</fo:block>
 					            </fo:table-cell >
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Weaver Name</fo:block>
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Weaver Name</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Indent Qty (Kgs)</fo:block>	
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Indent Qty (Kgs)</fo:block>	
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Indent UnitPrice</fo:block>	
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Indent Unit Price</fo:block>	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">PO Date</fo:block>
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Indent Value</fo:block>	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">PoSeqId</fo:block>
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">PO Date</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">PoSeqId</fo:block>
+					            </fo:table-cell>
+					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">PO Qty</fo:block>	
+					            </fo:table-cell>-->
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Supplier Name</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Supplier Name</fo:block>
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Sal Date</fo:block>	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Sal Date</fo:block>	
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Sal Invoice</fo:block>	
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Sal Invoice</fo:block>	
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Sal Value</fo:block>
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Sal Value</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Transporter</fo:block>	
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Transporter</fo:block>	
 					            </fo:table-cell>
  								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Mil Invoice</fo:block>	
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Mil Invoice</fo:block>	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Payment Receipt</fo:block>
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Payment Receipt</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">Amount</fo:block>
+					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Amount</fo:block>
 					            </fo:table-cell>   
 							</fo:table-row>
 			                  <#list orderList as OrderIdList>
@@ -118,46 +121,49 @@ under the License.
 	                             <fo:table-row>
 								
 			                    <fo:table-cell border-style="solid"> 
-					            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${OrderIdList.orderDate?if_exists}</fo:block>
+					            	<fo:block  text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.orderDate?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.orderNo?if_exists}</fo:block>
+					            	<fo:block  text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.orderNo?if_exists}</fo:block>
 					            </fo:table-cell >
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.weaverName?if_exists}</fo:block>
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.weaverName?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.Qty?if_exists}</fo:block>
+					            	<fo:block   text-align="right" white-space-collapse="false" font-size="8pt">${OrderIdList.Qty?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.indentPrice?if_exists}</fo:block>
+					            	<fo:block   text-align="right" white-space-collapse="false" font-size="8pt">${OrderIdList.indentPrice?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.poDate?if_exists}</fo:block>
+					            	<fo:block   text-align="right" white-space-collapse="false" font-size="8pt">${OrderIdList.IndentValue?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.poNo?if_exists}</fo:block>
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.poDate?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.poSquenceNo?if_exists}</fo:block>
+					            </fo:table-cell>
+					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.poQty?if_exists}</fo:block>
+					            </fo:table-cell>-->
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.supplierName?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.supplierName?if_exists}</fo:block>
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.salDate?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.salDate?if_exists}</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.salInv?if_exists}</fo:block>
+					            	<fo:block   text-align="right" white-space-collapse="false" font-size="8pt">${OrderIdList.salInv?if_exists}</fo:block>
 					            </fo:table-cell>					             
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="8pt" white-space-collapse="false">${OrderIdList.salVal?if_exists}</fo:block>
+					            	<fo:block   text-align="right" white-space-collapse="false" font-size="8pt">${OrderIdList.salVal?if_exists}</fo:block>
 					            </fo:table-cell>
  								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.transporter?if_exists}</fo:block>
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.transporter?if_exists}</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="8pt"  white-space-collapse="false">${OrderIdList.milInv?if_exists}</fo:block>
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.milInv?if_exists}</fo:block>
 					            </fo:table-cell> 
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.paymentReceipt?if_exists}</fo:block>
