@@ -645,7 +645,7 @@
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:350, minWidth:350, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor,cssClass:"readOnlyColumnClass" ,focusable :false, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"quantityOnHandTotal", name:"Stock", field:"quantityOnHandTotal", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
-			{id:"bookedQuantity", name:"Booked Quantity", field:"bookedQuantity", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
+			<#-- {id:"bookedQuantity", name:"Booked Quantity", field:"bookedQuantity", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor}, -->
 			{id:"availableQuantity", name:"Available Quantity", field:"availableQuantity", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
 			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
