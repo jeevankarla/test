@@ -973,6 +973,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="StockStatementReportPDF"/>
     </request-map>
+    <request-map uri="MobileHitsReport.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MobileHitsReportCSV"/>
+    </request-map>
      <request-map uri="IndentVsDispatch.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentVsDispatchPDF"/>
@@ -2524,6 +2528,11 @@
         <response name="success" type="view" value="billWiseSalesReport"/>
         <response name="error" type="view" value="billWiseSalesReport"/>
     </request-map>
+    <request-map uri="CreateUserLogin">
+        <security auth="true" https="true"/>    
+        <response name="success" type="view" value="CreateUserLogin"/>
+        <response name="error" type="view" value="CreateUserLogin"/>
+    </request-map>
      <!-- View Mappings -->
      
      
@@ -2547,7 +2556,7 @@
 	<view-map name="StateWiseSchemeWiseSalesConsolidatedCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#StateWiseSchemeWiseSalesConsolidatedCSV" content-type="text/csv"/>
 	<view-map name="depotReimburcentReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReimbursement.xml#depotReimburcentReportPDF" content-type="application/pdf"/>
 	
-	
+	<view-map name="CreateUserLogin" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateUserLogin"/>
     <view-map name="CreateNewProduct" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewProduct"/>
     <view-map name="CreateNewWeaver" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewWeaver"/>
     <view-map name="Weaverviewprofile" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#Weaverviewprofile"/>
@@ -2715,6 +2724,7 @@
     <view-map name="EditProductPricesDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditProductPricesDepot"/>
     <view-map name="ProductPriceHistoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProductPriceHistoryDepot"/>
     <view-map name="StockStatementReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#StockStatementReportPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="MobileHitsReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#MobileHitsReportCSV" content-type="text/csv" />
     <view-map name="IndentVsDispatchPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentVsDispatchPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="FindSalesReturns" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindSalesReturns"/>
     <view-map name="SalesReturnItems" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SalesReturnItems"/>

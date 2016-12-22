@@ -41,6 +41,7 @@ $(document).ready(function(){
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
 	    makeDatePicker("stockFromDate","stockThruDate");
+	    makeDatePicker("mobileHitsFromDate","mobileHitsThruDate");
 	    makeDatePicker("ivdFromDate","ivdThruDate");
 	    makeDatePicker("eObFromDate");
 	    makeDatePicker3("subsidyFromDate","subsidyThruDate");
@@ -790,6 +791,18 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			<td width="10%"></td>
   			<td width="10%"></td>
 			<td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
+			<td width="10%"></td>
+		</form>	
+      </tr>
+      
+      <tr class="alternate-row">
+    	<form id="mobilehits" name="mobilehits" method="post"  target="_blank" action="<@ofbizUrl>MobileHitsReport.csv</@ofbizUrl>">	
+  			<td width="30%" nowrap>Mobile Hits Report</td>
+  			<td width="15%">From</br><input  type="text" size="18pt" id="mobileHitsFromDate" readonly  name="mobileHitsFromDate"/></td>
+  			<td width="15%">To</br><input  type="text" size="18pt" id="mobileHitsThruDate" readonly  name="mobileHitsThruDate"/></td>
+  			<td width="10%"></td>
+  			<td width="10%"></td>
+			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
 			<td width="10%"></td>
 		</form>	
       </tr>
