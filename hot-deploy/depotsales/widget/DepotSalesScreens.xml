@@ -9245,12 +9245,10 @@
 				<set field="balancedQty" from-field="parameters.balancedQty" />
 				<set field="unitCost" from-field="parameters.unitCost" />
 				<set field="bookedQuantity" from-field="parameters.bookedQuantity" />
+				<set field="availbleQuantity" from-field="parameters.availbleQuantity" />
 				<set field="inventoryItemId" from-field="parameters.inventoryItemId" />
 				<set field="productStoreId" from-field="parameters.branchId" />
 				<set field="submitFlag" value="YES"/>
-				
-				
-				
 				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelperDepot.groovy" />

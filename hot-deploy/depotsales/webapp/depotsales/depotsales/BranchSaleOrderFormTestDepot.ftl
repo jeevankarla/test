@@ -1031,6 +1031,7 @@ function fillPartyQuota(partyId){
 				               	<input type="hidden" name="unitCost" id="unitCost" value="${parameters.unitCost?if_exists}"/>
 				               	
 				               	<input type="hidden" name="bookedQuantity" id="bookedQuantity" value="${parameters.bookedQuantity?if_exists}"/>
+				                <input type="hidden" name="availbleQuantity" id="availbleQuantity" value="${parameters.availbleQuantity?if_exists}"/>
 				               	
 				               	<input type="hidden" name="inventoryItemId" id="inventoryItemId" value="${parameters.inventoryItemId?if_exists}"/>
 				               	
