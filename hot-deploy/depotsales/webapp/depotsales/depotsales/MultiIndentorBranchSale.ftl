@@ -1017,8 +1017,8 @@
 					       			<#else>      	         
 					          			<td valign='middle'>
 					          				<select name="salesChannel" id="salesChannel" class='h4' style="width:162px">
+					          				    <option value="WEB_SALES_CHANNEL">Web Channel</option>
 					          					<option value="WALKIN_SALES_CHANNEL">Walk-In Sales Channel</option>
-					          					<option value="WEB_SALES_CHANNEL">Web Channel</option>
 					          					<option value="POS_SALES_CHANNEL">POS Channel</option>
 					          					<option value="PHONE_SALES_CHANNEL">Phone Channel</option>
 					          					<option value="FAX_SALES_CHANNEL">Fax Channel</option>
