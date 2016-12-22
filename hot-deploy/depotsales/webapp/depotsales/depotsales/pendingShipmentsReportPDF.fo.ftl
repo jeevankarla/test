@@ -47,19 +47,18 @@ under the License.
         		<fo:block>
              		<fo:table >
              			
-             		    <fo:table-column column-width="8%"/>
+             		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="9%"/>
              		    <fo:table-column column-width="8%"/>
-             		    <fo:table-column column-width="8%"/>
-             		    <fo:table-column column-width="8%"/>
+             		    <fo:table-column column-width="10%"/>
+             		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="9%"/>
              		    <fo:table-column column-width="18%"/>
              		    <fo:table-column column-width="9%"/>
              		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="5%"/>
-             		    <fo:table-column column-width="5%"/>
-             		    
+             		              		    
 			            
 			            <fo:table-body>
 			            	
@@ -110,6 +109,9 @@ under the License.
 					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">AND SHIP</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
+						  <#assign totalIdnQty1 = 0>  
+							 <#assign totalindUnitPrice1 = 0>
+							<#assign totalshipQty1 = 0>  
 			                  <#list finalList as eachList>
 	                             <fo:table-row>
 								
@@ -147,7 +149,52 @@ under the License.
 					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.DurBwSoAndShip?if_exists}</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
+                             <#assign totalIdnQty = eachList.indQty>
+							<#assign totalindUnitPrice = eachList.indUnitPrice>	
+							<#assign totalshipQty = eachList.shipQty>
+
+                              	<#assign  totalIdnQty1= totalIdnQty1+totalIdnQty>
+								 <#assign  totalindUnitPrice1= totalindUnitPrice1+totalindUnitPrice>
+								<#assign  totalshipQty1= totalshipQty1+totalshipQty>
 							</#list>
+ 			 			 <fo:table-row>
+  								<fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">TOTAL</fo:block>
+					            </fo:table-cell>
+								<fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+								
+			                    <fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-corighe="false">${totalIdnQty1?if_exists}</fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-corighe="false">${totalindUnitPrice1?if_exists}</fo:block>
+					            </fo:table-cell>
+			
+					            <fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+								<fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-colleft="false">${totalshipQty1?if_exists}</fo:block>
+					            </fo:table-cell>				            
+								<fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+								<fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
+					            </fo:table-cell>
+							</fo:table-row>
+						
 						</fo:table-body>
 					</fo:table>
 				</fo:block>
