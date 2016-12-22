@@ -26,6 +26,14 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 fromDate = parameters.IndentRegisterFromDate;
 thruDate = parameters.IndentRegisterThruDate;
 
+entryFromDate = parameters.IndentRegisterEntryFromDate;
+entryThruDate = parameters.IndentRegisterEntryThruDate;
+
+salesChannelEnumId = parameters.salesChannel;
+
+Debug.log("entryFromDate==========="+entryFromDate);
+Debug.log("entryThruDate==========="+entryThruDate);
+
 context.fromDate=fromDate;
 context.thruDate=thruDate;
 
@@ -35,13 +43,36 @@ try {
 		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(fromDate).getTime()));
 		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(thruDate).getTime()));
 	}
+	if (UtilValidate.isNotEmpty(entryFromDate)) {
+		entryFromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(entryFromDate).getTime()));
+		entryThruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(entryThruDate).getTime()));
+	}
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: " + e, "");
 context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
+
+dayStart = null;
+dayEnd = null;
+
+entryDayStart = null;
+entryDayEnd = null;
+
+if (UtilValidate.isNotEmpty(fromDate)) {
 dayStart = UtilDateTime.getDayStart(fromDate);
 dayEnd = UtilDateTime.getDayEnd(thruDate);
+
+}
+if (UtilValidate.isNotEmpty(entryFromDate)) {
+entryDayStart = UtilDateTime.getDayStart(entryFromDate);
+entryDayEnd = UtilDateTime.getDayEnd(entryThruDate);
+
+}
+
+Debug.log("entryDayStart==========="+entryDayStart);
+Debug.log("entryDayEnd==========="+entryDayEnd);
+
 BranchList=[];
 	branchMap = [:];
 	branchName="";
@@ -136,8 +167,22 @@ BranchList=[];
 	}
 	
 	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, branchBasedOrderIds));
+	
+	if(dayStart){
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+	}
+	
+	if(UtilValidate.isNotEmpty(entryDayStart)){
+		condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.GREATER_THAN_EQUAL_TO, entryDayStart));
+		condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.LESS_THAN_EQUAL_TO, entryDayEnd));
+		
+	}
+	
+	if(UtilValidate.isNotEmpty(salesChannelEnumId)){
+		condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannelEnumId));
+	}
+	
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
 	condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
 	condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
