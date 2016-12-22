@@ -30,7 +30,27 @@ $(document).ready(function() {
 			{ "title": "Content Id" },
 			{ "title": "Time (ms)"}],	
 		"columnDefs": [{ type: 'date-eu', targets: [0] }],
-       	"iDisplayLength" : 100
+       	"iDisplayLength" : 100,
+       	"sDom": 'lfTrtip',
+       	"tableTools": {
+                "sSwfPath": "<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/swf/copy_csv_xls_pdf.swf</@ofbizContentUrl>",
+                "aButtons": [ 
+                { 
+                	"sExtends": "copy", 
+                	"oSelectorOpts": { filter: 'applied', order: 'current' }
+                },
+                { 
+                	"sExtends": "csv", 
+                	"oSelectorOpts": { filter: 'applied', order: 'current' },
+                	"sFileName": "MobileHits.csv"                 	
+                },
+                { 
+                	"sExtends": "pdf", 
+                	"oSelectorOpts": { filter: 'applied', order: 'current' },
+                	"sFileName": "MobileHits.pdf"   
+                } 
+                ]
+            }
 	} );	
 	datatable2.fnSort( [ [1,'desc'] ] );		 	
 } );
@@ -39,7 +59,11 @@ $(document).ready(function() {
 		
 <div class="screenlet">
 	<div class="screenlet-title-bar">
-      	<h3>Mobile Hits Details for ${hitsDate?date}</h3>	
+		<#if fromDate == thruDate>
+      		<h3>Mobile Hits Details for ${fromDate?date} </h3>
+      	<#else>
+      		<h3>Mobile Hits Details from ${fromDate?date} to ${thruDate?date}</h3>
+      	</#if>	
      </div>
     <div class="screenlet-body">
     	<div id="hitsTable"/>

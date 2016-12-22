@@ -220,7 +220,11 @@ public class paymentApiServices {
 		         GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
 		         if(UtilValidate.isNotEmpty(payment)){
 		        	 result.put("paymentMethodTypeId",payment.getString("paymentMethodTypeId"));
+	        		 payment.set("paymentRefNum", paymentRefNum);
+	        		 payment.store();
 		         }
+		         
+		         
 		  	} catch (Exception e) {
 					 Debug.logError(e, e.toString(), module);
 					  return ServiceUtil.returnError("AccountingTroubleCallingCreateOrderPaymentPreferenceService");	

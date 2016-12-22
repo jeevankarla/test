@@ -24,19 +24,30 @@
 
 $(document).ready(function(){
 currentDate = new Date();
-$("#hitsDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear());
+$("#fromDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear());
+$("#thruDate").val(currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear());
 
-$("#hitsDate").glDatePicker(
+$("#fromDate").glDatePicker(
 {
 	selectedDate: new Date(),
     onClick: function(target, cell, date, data) {
         target.val(date.getDate() + "/" + (date.getMonth() + 1) + "/" +date.getFullYear());
-
+		$("#thruDate").val(date.getDate() + "/" + (date.getMonth() + 1) + "/" +date.getFullYear());
         if(data != null) {
             alert(data.message + '\n' + date);
         }
     }
-});		
+});
+$("#thruDate").glDatePicker(
+{
+	selectedDate: new Date(),
+    onClick: function(target, cell, date, data) {
+        target.val(date.getDate() + "/" + (date.getMonth() + 1) + "/" +date.getFullYear());
+        if(data != null) {
+            alert(data.message + '\n' + date);
+        }
+    }
+});			
 
 // enter event handle
 	$("input").keypress(function(e){
@@ -51,7 +62,8 @@ $("#hitsDate").glDatePicker(
      		$('#result').hide(); 
 	        $.get(  
             "${ajaxUrl}",  
-            { hitsDate: $("#hitsDate").val()},  
+            { fromDate: $("#fromDate").val(),
+              thruDate: $("#thruDate").val()},  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -71,7 +83,8 @@ $("#hitsDate").glDatePicker(
   	    
         $.get(  
             "${ajaxUrl}",  
-            { hitsDate: $("#hitsDate").val()},  
+            { fromDate: $("#fromDate").val(),
+              thruDate: $("#thruDate").val()},  
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -97,8 +110,10 @@ $("#hitsDate").glDatePicker(
 	  <form name="hits">
 		<table class="basic-table" cellspacing="0">
         	<tr>
-        		<td align="right" width="10%"><span class='h3'>Select Date: </span></td>
-            	<td width="20%"><input class="mycalendar" type="text" id="hitsDate" name="hitsDate"/></td>
+        		<td align="right" width="10%"><span class='h3'>From Date: </span></td>
+            	<td width="20%"><input class="mycalendar" type="text" id="fromDate" name="hitsDate"/></td>
+            	<td align="right" width="10%"><span class='h3'>Thru Date: </span></td>
+            	<td width="20%"><input class="mycalendar" type="text" id="thruDate" name="hitsDate"/></td>
 				<td><input type="submit" value="Submit" id="getHitsTable" class="smallSubmit" /></td>
 			</tr>
     	</table>    	
