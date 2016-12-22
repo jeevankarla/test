@@ -36,11 +36,9 @@ context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
 
-Debug.log("aaaaaaaaaaaaa");
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("groupId", EntityOperator.EQUALS, "MOB_RETAILER"));
-UserLoginSecurityGroup = delegator.findList("UserLoginSecurityGroup", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, ["userLoginId"], null, false);
-Debug.log("bbbbbbbbbbbbbbbbbb");
+UserLoginSecurityGroup = delegator.findList("UserLoginSecurityGroup", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("userLoginId"), null, null, false);
 ApiHits = [];
 if(UtilValidate.isNotEmpty(UserLoginSecurityGroup)){
 	userLoginIdList = EntityUtil.getFieldListFromEntityList(UserLoginSecurityGroup, "userLoginId", true);
@@ -48,8 +46,45 @@ if(UtilValidate.isNotEmpty(UserLoginSecurityGroup)){
 	conditionList.add(EntityCondition.makeCondition("startDateTime", EntityOperator.GREATER_THAN_EQUAL_TO , fromDate));
 	conditionList.add(EntityCondition.makeCondition("startDateTime", EntityOperator.LESS_THAN_EQUAL_TO , thruDate));
 	conditionList.add(EntityCondition.makeCondition("userLoginId", EntityOperator.IN, userLoginIdList));
-	ApiHits = delegator.findList("ApiHit", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
+	EntityFindOptions findOptions = new EntityFindOptions();
+	findOptions.setDistinct(true);
+	ApiHits = delegator.findList("ApiHit", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("userLoginId"), null, findOptions, false);
+	userLoginIdList = EntityUtil.getFieldListFromEntityList(ApiHits, "userLoginId", true);
+	Debug.log("userLoginIdList==============="+userLoginIdList);
 }
-context.apiHits = ApiHits;
-Debug.log("ccccccccccccccccccc");
-Debug.log("ApiHits============"+ApiHits);
+mobileHitsCSVList = [];
+if(ApiHits){
+	for (GenericValue hit : ApiHits) {
+		String userLoginId= hit.getString("userLoginId");
+		String partyId = "";
+		if (userLoginId) {
+			userLogin = delegator.findByPrimaryKey("UserLogin", [userLoginId : userLoginId]);
+			if (userLogin) {
+				partyId = userLogin.partyId;
+			}
+		}
+		tempMap = [:];
+		tempMap["userLoginId"] = userLoginId;
+		tempMap["partyId"] = partyId;
+		partyNameView = delegator.findByPrimaryKey("PartyNameView", [partyId : partyId]);
+		if(UtilValidate.isNotEmpty(partyNameView.getString("groupName"))){
+			tempMap["partyName"] = partyNameView.getString("groupName");
+		}
+		else{
+			String partyName = "";
+			if(partyNameView.getString("firstName")){
+				partyName = partyNameView.getString("firstName");
+			}
+			if(partyNameView.getString("middleName")){
+				partyName = " "+partyNameView.getString("middleName");
+			}
+			if(partyNameView.getString("lastName")){
+				partyName = " "+partyNameView.getString("lastName");
+			}
+			tempMap["partyName"] = partyName;
+		}
+		mobileHitsCSVList.add(tempMap);
+	}
+}
+context.apiHits = mobileHitsCSVList;
+
