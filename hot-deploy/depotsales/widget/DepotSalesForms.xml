@@ -3696,10 +3696,9 @@
 		   <set field="partyId" from-field="userDetails.partyId"/> 
 		</row-actions>
      
-        <field name="partyId"><display/></field>
         <field name="userLoginId" title="passbook/userName"><display/></field>
-        <field name="partyName" title="Customer Name">
-            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        <field name="partyId" title="Customer Name">
+            <display-entity entity-name="PartyNameView" description="${groupName} [${partyId}]"/>
         </field>
     </form>
         
