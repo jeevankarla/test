@@ -31,8 +31,8 @@ entryThruDate = parameters.IndentRegisterEntryThruDate;
 
 salesChannelEnumId = parameters.salesChannel;
 
-Debug.log("entryFromDate==========="+entryFromDate);
-Debug.log("entryThruDate==========="+entryThruDate);
+//////Debug.log("entryFromDate==========="+entryFromDate);
+//////Debug.log("entryThruDate==========="+entryThruDate);
 
 context.fromDate=fromDate;
 context.thruDate=thruDate;
@@ -48,7 +48,7 @@ try {
 		entryThruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(entryThruDate).getTime()));
 	}
 } catch (ParseException e) {
-	Debug.logError(e, "Cannot parse date string: " + e, "");
+	//////Debug.logError(e, "Cannot parse date string: " + e, "");
 context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
@@ -70,8 +70,8 @@ entryDayEnd = UtilDateTime.getDayEnd(entryThruDate);
 
 }
 
-Debug.log("entryDayStart==========="+entryDayStart);
-Debug.log("entryDayEnd==========="+entryDayEnd);
+//////Debug.log("entryDayStart==========="+entryDayStart);
+//////Debug.log("entryDayEnd==========="+entryDayEnd);
 
 BranchList=[];
 	branchMap = [:];
@@ -104,7 +104,7 @@ BranchList=[];
 		try {
 			transDate = new java.sql.Timestamp(sdf1.parse(facilityDeliveryDate+" 00:00:00").getTime());
 		} catch (ParseException e) {
-			Debug.logError(e, "Cannot parse date string: " + facilityDeliveryDate, "");
+			//////Debug.logError(e, "Cannot parse date string: " + facilityDeliveryDate, "");
 		}
 		facilityDateStart = UtilDateTime.getDayStart(transDate);
 		facilityDateEnd = UtilDateTime.getDayEnd(transDate);
@@ -115,7 +115,7 @@ BranchList=[];
 		try {
 			transThruDate = new java.sql.Timestamp(sdf2.parse(facilityDeliveryThruDate+" 00:00:00").getTime());
 		} catch (ParseException e) {
-			Debug.logError(e, "Cannot parse date string: " + facilityDeliveryThruDate, "");
+			//////Debug.logError(e, "Cannot parse date string: " + facilityDeliveryThruDate, "");
 		}
 		facilityDateEnd = UtilDateTime.getDayEnd(transThruDate);
 	}
@@ -474,7 +474,7 @@ BranchList=[];
 		try {
 			resultList.close();
 		} catch (Exception e) {
-			Debug.logWarning(e, module);
+			//////Debug.logWarning(e, module);
 		}
 	}
 	context.orderList=orderList;
