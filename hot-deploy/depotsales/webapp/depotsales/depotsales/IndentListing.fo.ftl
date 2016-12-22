@@ -20,7 +20,7 @@ under the License.
 <#escape x as x?xml> 
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="11in"  margin-left=".1in" margin-right=".05in" margin-top=".1in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="11in"  margin-left="0.5in" margin-right="0.5in" margin-top=".1in">
                 <fo:region-body margin-top="0.1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1.5in"/>
@@ -44,14 +44,15 @@ under the License.
         		<fo:block>
              		<fo:table >
              			
-             		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="11%"/>
-             		    <fo:table-column column-width="8%"/>
-             		    <fo:table-column column-width="5%"/>
-             		    <fo:table-column column-width="6%"/>
-             		    <fo:table-column column-width="6%"/>
-             		    <fo:table-column column-width="7%"/>
+             		    <fo:table-column column-width="14%"/>
+             		    <fo:table-column column-width="15%"/>
+             		    <fo:table-column column-width="13%"/>
+             		    <fo:table-column column-width="10%"/>
+             		    <fo:table-column column-width="10%"/>
              		    <fo:table-column column-width="11%"/>
+             		    <fo:table-column column-width="15%"/>
+             		    <#--<fo:table-column column-width="9%"/>
              		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="6%"/>
              		    <fo:table-column column-width="4%"/>
@@ -59,42 +60,45 @@ under the License.
              		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="5%"/>
-			             <fo:table-column column-width="5%"/>
+			             <fo:table-column column-width="5%"/>-->
 			            <fo:table-body>
 			            	
 			                <fo:table-row>
 								
 			                    <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Indent Date</fo:block>	
+					            	<fo:block  text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Indent Date</fo:block>	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="8pt"  font-weight="bold" white-space-collapse="false">IndentSeqId</fo:block>
+					            	<fo:block  text-align="center" font-size="11pt"  font-weight="bold" white-space-collapse="false">IndentSeqId</fo:block>
 					            </fo:table-cell >
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Product Name</fo:block>	
+					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Weaver Name</fo:block>
+					            	<fo:block   text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Weaver Name</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Indent Qty (Kgs)</fo:block>	
+					            	<fo:block   text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Indent Qty(Kgs)</fo:block>	
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Indent Unit Price</fo:block>	
+					            	<fo:block   text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Indent UnitPrice</fo:block>	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Indent Value</fo:block>	
+					            	<fo:block   text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Indent Value</fo:block>	
 					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
+					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">PO Date</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">PoSeqId</fo:block>
 					            </fo:table-cell>
-					            <#--<fo:table-cell border-style="solid">
+					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="9pt" font-weight="bold" white-space-collapse="false">PO Qty</fo:block>	
 					            </fo:table-cell>-->
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Supplier Name</fo:block>
+					            	<fo:block   text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Supplier Name</fo:block>
 					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
+					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Sal Date</fo:block>	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
@@ -109,48 +113,58 @@ under the License.
  								<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Mil Invoice</fo:block>	
 					            </fo:table-cell>
-					          <#--  <fo:table-cell border-style="solid">
+					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Payment Receipt</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Amount</fo:block>
-					            </fo:table-cell> -->  
+					            </fo:table-cell>-->   
 							</fo:table-row>
 			                  <#list orderList as OrderIdList>
 			              
 	                             <fo:table-row>
 								
 			                    <fo:table-cell border-style="solid"> 
-					            	<fo:block  text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.orderDate?if_exists}</fo:block>
+					            	<fo:block  text-align="left" white-space-collapse="false" font-size="11pt">${OrderIdList.orderDate?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.orderNo?if_exists}</fo:block>
+					            	<fo:block  text-align="left" white-space-collapse="false" font-size="11pt">${OrderIdList.orderNo?if_exists}</fo:block>
 					            </fo:table-cell >
+					            <fo:table-cell border-style="solid">
+					            <#assign productIds = orderPrepMap.get(OrderIdList.orderId)>
+					            <#list productIds as productId>
+					            <#assign productDetails = delegator.findOne("Product", {"productId" :productId}, true)>
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="11pt">
+					            	${productDetails.get("productName")?if_exists}
+					            	</fo:block>
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="11pt">&#160;</fo:block>
+					            </#list>
+					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.weaverName?if_exists}</fo:block>
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="11pt">${OrderIdList.weaverName?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" white-space-collapse="false" font-size="8pt">${OrderIdList.Qty?if_exists}</fo:block>
+					            	<fo:block   text-align="right" white-space-collapse="false" font-size="11pt">${OrderIdList.Qty?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" white-space-collapse="false" font-size="8pt">${OrderIdList.indentPrice?if_exists}</fo:block>
+					            	<fo:block   text-align="right" white-space-collapse="false" font-size="11pt">${OrderIdList.indentPrice?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" white-space-collapse="false" font-size="8pt">${OrderIdList.IndentValue?if_exists}</fo:block>
+					            	<fo:block   text-align="right" white-space-collapse="false" font-size="11pt">${OrderIdList.IndentValue?if_exists}</fo:block>
 					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
+					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.poDate?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.poSquenceNo?if_exists}</fo:block>
 					            </fo:table-cell>
-					            <#--<fo:table-cell border-style="solid">
+					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.poQty?if_exists}</fo:block>
 					            </fo:table-cell>-->
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.supplierName?if_exists}</fo:block>
+					            	<fo:block   text-align="left" white-space-collapse="false" font-size="11pt">${OrderIdList.supplierName?if_exists}</fo:block>
 					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
+					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.salDate?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
@@ -165,12 +179,12 @@ under the License.
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.milInv?if_exists}</fo:block>
 					            </fo:table-cell> 
-					          <#--  <fo:table-cell border-style="solid">
+					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.paymentReceipt?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.amount?if_exists}</fo:block>
-					            </fo:table-cell> -->					            					            
+					            </fo:table-cell>-->					            					            
 							</fo:table-row>
 							</#list>
 						</fo:table-body>
