@@ -56,6 +56,7 @@ $(document).ready(function(){
 	    makeDatePicker("CASHFromDateId","");
 	    makeDatePicker3("billWiseSalesReportFrom","billWiseSalesReportThru");
 	    makeDatePicker("IndentRegisterFromDate","IndentRegisterThruDate");
+	    makeDatePicker("IndentRegisterEntryFromDate","IndentRegisterEntryThruDate");
 	     makeDatePicker("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
@@ -132,7 +133,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			<form id="indentListing" name="indentListing" method="post" action="<@ofbizUrl>IndentPDF.pdf</@ofbizUrl>" target="_blank">	
 				<td width="30%">Indent Register Report</td>
 				<td width="15%">From</br><input  type="text" size="18pt" id="IndentRegisterFromDate" readonly  name="IndentRegisterFromDate"/></br>
-  			To</br><input  type="text" size="18pt" id="IndentRegisterThruDate" readonly  name="IndentRegisterThruDate"/></td>
+  			    To</br><input  type="text" size="18pt" id="IndentRegisterThruDate" readonly  name="IndentRegisterThruDate"/></td>
+  			    <td width="15%">Entry From Date</br><input  type="text" size="18pt" id="IndentRegisterEntryFromDate" readonly  name="IndentRegisterEntryFromDate"/></br>
+  			    Entry To Date</br><input  type="text" size="18pt" id="IndentRegisterEntryThruDate" readonly  name="IndentRegisterEntryThruDate"/></td>
+  			    
 			    <td width="15%">Customer<@htmlTemplate.lookupField size="10" maxlength="22" formName="indentListing" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
 			    <td width="15%"><span class='h3'>Branch
 							    <select name="branchId" id="branchId">
@@ -142,6 +146,19 @@ function makeDatePicker3(fromDateId ,thruDateId){
 							        </#list> 
 							    </select>    								
 					  	 </span></td>
+					  	 
+				 <td width="15%"><span class='h3'>Sales Channel
+			          <select name="salesChannel" id="salesChannel" class='h4' style="width:162px">
+			                    <option value=""></option>
+	          					<option value="WALKIN_SALES_CHANNEL">Walk-In Sales Channel</option>
+	          					<option value="MOBILE_SALES_CHANNEL">e-Dhaga Channel</option>
+	          					<option value="WEB_SALES_CHANNEL">Web Channel</option>
+	          					<option value="POS_SALES_CHANNEL">POS Channel</option>
+	          					<option value="PHONE_SALES_CHANNEL">Phone Channel</option>
+	          					<option value="FAX_SALES_CHANNEL">Fax Channel</option>
+	          					<option value="EMAIL_SALES_CHANNEL">E-Mail Channel</option>	          					
+	          				</select> 								
+					  	 </span></td>	  	 
 					  	 <td width="10%"></td>
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('indentListing', '<@ofbizUrl>IndentPDF.pdf</@ofbizUrl>');" class="buttontext"/></td>         			
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('indentListing', '<@ofbizUrl>IndentCSV.csv?header=required</@ofbizUrl>');" class="buttontext"/></td>        			

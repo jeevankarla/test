@@ -44,14 +44,14 @@ under the License.
         		<fo:block>
              		<fo:table >
              			
-             		    <fo:table-column column-width="6%"/>
-             		    <fo:table-column column-width="9%"/>
+             		    <fo:table-column column-width="7%"/>
+             		    <fo:table-column column-width="11%"/>
              		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="5%"/>
              		    <fo:table-column column-width="6%"/>
              		    <fo:table-column column-width="6%"/>
-             		    <fo:table-column column-width="6%"/>
-             		    <fo:table-column column-width="9%"/>
+             		    <fo:table-column column-width="7%"/>
+             		    <fo:table-column column-width="11%"/>
              		    <fo:table-column column-width="7%"/>
              		    <fo:table-column column-width="6%"/>
              		    <fo:table-column column-width="4%"/>
@@ -109,12 +109,12 @@ under the License.
  								<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Mil Invoice</fo:block>	
 					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
+					          <#--  <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Payment Receipt</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="8pt" font-weight="bold" white-space-collapse="false">Amount</fo:block>
-					            </fo:table-cell>   
+					            </fo:table-cell> -->  
 							</fo:table-row>
 			                  <#list orderList as OrderIdList>
 			              
@@ -165,12 +165,12 @@ under the License.
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.milInv?if_exists}</fo:block>
 					            </fo:table-cell> 
-					            <fo:table-cell border-style="solid">
+					          <#--  <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.paymentReceipt?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="8pt"  white-space-collapse="false">${OrderIdList.amount?if_exists}</fo:block>
-					            </fo:table-cell>					            					            
+					            </fo:table-cell> -->					            					            
 							</fo:table-row>
 							</#list>
 						</fo:table-body>
