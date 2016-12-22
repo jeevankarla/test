@@ -1986,6 +1986,7 @@
 			<parameter param-name="unitCost"/>
 			<!--  <parameter param-name="bookedQuantity"/> -->
 			 <parameter param-name="inventoryItemId"/>
+			  <parameter param-name="availbleQuantity"/>
 			  <parameter param-name="productStoreId"/>
 			   <parameter param-name="branchName"/>
 			   <parameter param-name="submitFlag" value="NO"/>

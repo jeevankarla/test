@@ -14,6 +14,8 @@ import org.ofbiz.party.party.PartyHelper;
 List finalList=[];
 List conditionList=[];
 
+noConditionFind = parameters.noConditionFind;
+
 //if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noConditionFind=="Y"){
 	/*if(UtilValidate.isNotEmpty(parameters.shipmentId)){
 		conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,parameters.shipmentId));
@@ -31,6 +33,9 @@ List conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("shipmentTypeId",EntityOperator.EQUALS,"MATERIAL_SHIPMENT"));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	shipmentList=delegator.findList("Shipment",condition,null,UtilMisc.toList("-estimatedShipDate"),null,false);*/
+
+ if(noConditionFind == "Y"){
+
 	shipmentList = [];
 	if(UtilValidate.isNotEmpty(result.listIt)){
 	    shipmentList=result.listIt.getCompleteList();
@@ -228,4 +233,4 @@ List conditionList=[];
 	}else{
 		context.listIt=finalList;
 	}
-	
+ }

@@ -502,10 +502,10 @@ balancedQty = parameters.balancedQty;
 unitCost = parameters.unitCost;
 bookedQuantity = parameters.bookedQuantity;
 
-bookedQuantity1 = Double.valueOf(bookedQuantity);
+//bookedQuantity1 = Double.valueOf(bookedQuantity);
 quantityOnHandTotal1 = Double.valueOf(quantityOnHandTotal);
 
-availableQuantity = quantityOnHandTotal1-bookedQuantity1;
+availableQuantity = parameters.availbleQuantity;
 
 /*if(quantityOnHandTotal && bookedQuantity)
 availableQuantity = Integer.valueOf(quantityOnHandTotal)-Integer.ValueOf(bookedQuantity);
@@ -525,7 +525,6 @@ else
 newObj.put("unitPrice", unitCost);*/
 
 newObj.put("unitPrice", unitCost);
-
 
 newObj.put("balancedQty", balancedQty);
 newObj.put("KgunitPrice", unitCost);
