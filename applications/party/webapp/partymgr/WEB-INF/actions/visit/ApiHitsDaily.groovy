@@ -13,23 +13,36 @@ dctx = dispatcher.getDispatchContext();
 //SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
 def sdf = new SimpleDateFormat("dd/MM/yyyy");
-Timestamp hitsDate = null;
+Timestamp fromDate = null;
 try {
-	if (parameters.hitsDate) {
-		context.hitsDate = parameters.hitsDate;
-		hitsDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.hitsDate).getTime()));
+	if (parameters.fromDate) {
+		context.fromDate = parameters.fromDate;
+		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime()));
 	}
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: " + e, "");
 }
-if (hitsDate == null) {
-	hitsDate = UtilDateTime.nowTimestamp();
+if (fromDate == null) {
+	fromDate = UtilDateTime.nowTimestamp();
 }
 
-String hitsDateStr = UtilDateTime.toDateString(hitsDate, "dd/MM/yyyy");			
+Timestamp thruDate = null;
+try {
+	if (parameters.thruDate) {
+		context.thruDate = parameters.thruDate;
+		thruDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.thruDate).getTime()));
+	}
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: " + e, "");
+}
+if (thruDate == null) {
+	thruDate = UtilDateTime.nowTimestamp();
+}
 
-Timestamp timePeriodStart = UtilDateTime.getDayStart(hitsDate);
-Timestamp timePeriodEnd = UtilDateTime.getDayEnd(hitsDate);
+//String hitsDateStr = UtilDateTime.toDateString(hitsDate, "dd/MM/yyyy");			
+
+Timestamp timePeriodStart = UtilDateTime.getDayStart(fromDate);
+Timestamp timePeriodEnd = UtilDateTime.getDayEnd(thruDate);
 JSONArray hitsListJSON = new JSONArray();
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("startDateTime", EntityOperator.GREATER_THAN_EQUAL_TO , timePeriodStart));
@@ -80,5 +93,6 @@ for (GenericValue hit : hitList) {
 }
 
 //Debug.logError("hitsListJSON="+hitsListJSON,"");
-context.hitsDate = hitsDate
+context.fromDate = fromDate;
+context.thruDate = thruDate;
 context.hitsListJSON = hitsListJSON;
