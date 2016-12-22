@@ -465,14 +465,14 @@
 				   </link>
 				</menu-item>
 				<menu-item name="DyesIndent" title="${uiLabelMap.DyesIndent}">
-				  <!--    <link target="DyesSalesOrder">
+				     <!--  <link target="DyesSalesOrder">
 						<parameter param-name="menuName" value="DyesIndent"/>
-				   </link>  -->
+				   </link>  --> 
 				</menu-item>
 				<menu-item name="ChemicalIndent" title="${uiLabelMap.ChemicalIndent}">
-				    <!--  <link target="ChemicalBranchSalesOrder">
+				     <!--  <link target="ChemicalSalesOrder">
 						<parameter param-name="menuName" value="ChemicalIndent"/>
-				   </link>  -->
+				   </link>  --> 
 				</menu-item>
 				<menu-item name="FebricIndent" title="Fabric Indent">
 				    <link target="FebricBranchSalesOrder">
@@ -645,7 +645,34 @@
 				   </link>
 				</menu-item>
         	   <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
-        	<link target="CottonMultiBranchSalesOrder">
+        	<link target="DyesMultiBranchSalesOrder">
+        		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+        	</link>
+	        </menu-item> 
+	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
+	        	<link target="FindDepotBranchSalesShipment" />
+	        </menu-item> -->
+       </menu>
+       
+       
+        <menu name="ChemicalIndentBranchIndentPortalTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem4">
+			<actions> 
+	           <!--  <script location="component://product/webapp/facility/WEB-INF/actions/facility/GetFacilityUIPermissions.groovy"/>		
+	            <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/PaymentPermissions.groovy"/> -->
+			</actions>		          
+			 <!-- <menu-item name="BranchSalesOrder" title="Indent Entry">
+        		<link target="BranchSalesOrder"/>
+        	 </menu-item> -->
+        	   	 <menu-item name="DirectIndent" title="${uiLabelMap.DirectIndent}">
+				    <link target="ChemicalSalesOrder">
+					<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL" />
+					<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT" />
+				   </link>
+				</menu-item>
+        	   <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
+        	<link target="ChemicalMultiBranchSalesOrder">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
         	</link>
