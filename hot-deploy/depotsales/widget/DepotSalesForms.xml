@@ -3686,5 +3686,21 @@
         <field name="availbleQuantity" title="Available Quantity"><display/></field>
         <field name="unitCost"><display/></field>
     </form>
+    
+    <form name="mobileHitsCSV" type="list" list-name="apiHits" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+        <row-actions>
+        	<entity-one value-field="userDetails" entity-name="UserLogin">
+				<field-map field-name="userLoginId" from-field="userLoginId"/>
+		   </entity-one>
+		   <set field="partyId" from-field="userDetails.partyId"/> 
+		</row-actions>
+     
+        <field name="partyId"><display/></field>
+        <field name="userLoginId" title="passbook/userName"><display/></field>
+        <field name="partyName" title="Customer Name">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+    </form>
         
 </forms>
