@@ -22,7 +22,7 @@ under the License.
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".2in" margin-top=".1in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left="1.1in" margin-right=".2in" margin-top=".1in">
                 <fo:region-body margin-top="0.1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1.5in"/>
@@ -42,7 +42,7 @@ under the License.
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOAddress?if_exists}</fo:block>
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                 <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
-				<fo:block text-align="center" font-size="12pt" font-weight="bold" >Lifting Of Yarn </fo:block>
+				<fo:block text-align="center" font-size="13pt" font-weight="bold" >Mill Wise Count Wise Report</fo:block>
 				<fo:block text-align="center" font-size="12pt" font-weight="bold" >FOR THE PERIOD ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:block>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		       
@@ -72,9 +72,9 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Qty</fo:block>
 					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Bdl Wt</fo:block>
-					            </fo:table-cell>
+					            <#--<fo:table-cell border-style="solid">      
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Bdl Wt</fo:block>    
+					            </fo:table-cell>-->        
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Rate</fo:block>
 					            </fo:table-cell>
@@ -117,9 +117,9 @@ under the License.
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${eachEntry.get("orderQty")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
+								            <#--<fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false">${eachEntry.get("BdlWt")?if_exists}</fo:block>
-								            </fo:table-cell >
+								            </fo:table-cell >-->
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false"><#if eachEntry.get("rate")?has_content> ${eachEntry.get("rate")?if_exists?string("##0.00")} </#if> </fo:block>
 								            </fo:table-cell >
@@ -147,9 +147,9 @@ under the License.
 							            <fo:table-cell  border-style="solid">
 							            	<fo:block  text-align="right" font-size="10pt" font-weight="bold"  white-space-collapse="false">${totalsMap.get("orderQty")?if_exists}</fo:block>
 							            </fo:table-cell >
-							            <fo:table-cell  border-style="solid">
+							            <#--<fo:table-cell  border-style="solid">
 							            	<fo:block  text-align="right" font-size="10pt"   white-space-collapse="false"></fo:block>
-							            </fo:table-cell >
+							            </fo:table-cell >-->
 							            <fo:table-cell  border-style="solid">
 							            	<fo:block  text-align="right" font-size="10pt"   white-space-collapse="false"></fo:block>
 							            </fo:table-cell >
