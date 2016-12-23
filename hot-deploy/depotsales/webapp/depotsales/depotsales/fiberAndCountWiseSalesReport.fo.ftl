@@ -22,7 +22,7 @@ under the License.
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".2in" margin-top=".1in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left="0.5in" margin-right=".2in" margin-top=".1in">
                 <fo:region-body margin-top="0.1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1.5in"/>
@@ -48,25 +48,31 @@ under the License.
 		       
         		<fo:block>
              		<fo:table >
-             			
-             		    <fo:table-column column-width="40%"/>
-			            <fo:table-column column-width="15%"/>
-			            <fo:table-column column-width="15%"/>
-			            <fo:table-column column-width="15%"/>
+             			<fo:table-column column-width="10%"/>
+			            <fo:table-column column-width="18%"/>
+             		    <fo:table-column column-width="32%"/>
+			            <fo:table-column column-width="12%"/>
+			            <#--<fo:table-column column-width="15%"/>-->  
+			            <fo:table-column column-width="13%"/>
 	                    <fo:table-column column-width="15%"/>
 			            <fo:table-body>
 		            		 
 			                 <fo:table-row>
-								
+								<fo:table-cell border-style="solid">
+					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Category Name</fo:block>
+					            </fo:table-cell >
+					             <fo:table-cell border-style="solid">
+					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Product Name</fo:block>
+					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Customer Name</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Qty</fo:block>
 					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
+					            <#--<fo:table-cell border-style="solid">   
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Bdl Wt</fo:block>
-					            </fo:table-cell>
+					            </fo:table-cell>-->					                 
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Rate</fo:block>
 					            </fo:table-cell>
@@ -79,33 +85,35 @@ under the License.
 							<#list prodCatMapEntryList as prodCatMapEntry>
 							  <#assign productCategory = prodCatMapEntry.getKey()>
 							  <#assign prodWiseList = prodCatMapEntry.getValue()> 
-							   <fo:table-row>
-						            <fo:table-cell>
-						            	<fo:block  text-align="left" font-size="13pt"  font-weight="bold" white-space-collapse="false">${productCategory?if_exists}</fo:block>
-						            </fo:table-cell >
-								</fo:table-row>
+							   
 							
 								<#list prodWiseList as eachList>
 								<#assign eachEntryList = eachList.entrySet()>
 								
 								<#list eachEntryList as eachEntry>
 								<#assign eachEntryDetaislList = eachEntry.getValue()>
-								<fo:table-row>
+								<#--<fo:table-row>
 						            <fo:table-cell>
 						            	<fo:block  text-align="left" font-size="11pt"  font-weight="bold" white-space-collapse="false">${eachEntry.getKey()?if_exists}</fo:block>
 						            </fo:table-cell >
-								</fo:table-row> 
+								</fo:table-row> -->
 								<#list eachEntryDetaislList as eachEntry>
 										<fo:table-row>
+											<fo:table-cell   <#if eachEntry.get("partyName")!="SUB-TOTAL"> border-style="solid"  </#if> >    
+								            	<fo:block  text-align="left" font-size="9pt" <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("prodcatName")?if_exists}</fo:block>
+								            </fo:table-cell >
+								             <fo:table-cell  <#if eachEntry.get("partyName")!="SUB-TOTAL"> border-style="solid"  </#if> >
+								            	<fo:block  text-align="left" font-size="9pt" <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("productName")?if_exists}</fo:block>
+								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
 								            	<fo:block  text-align="left" font-size="9pt" <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${eachEntry.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  <#if eachEntry.get("partyName")=="SUB-TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${eachEntry.get("orderQty")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
+								            </fo:table-cell > 
+								            <#--<fo:table-cell  border-style="solid">   
 								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false">${eachEntry.get("BdlWt")?if_exists}</fo:block>
-								            </fo:table-cell >
+								            </fo:table-cell >-->    
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   white-space-collapse="false"><#if eachEntry.get("rate")?has_content> ${eachEntry.get("rate")?if_exists?string("##0.00")} </#if> </fo:block>
 								            </fo:table-cell >
@@ -121,15 +129,21 @@ under the License.
 			                  
 							  </#list>
 	                                  <fo:table-row>
+	                                  	<fo:table-cell border-style="solid" >
+								            	<fo:block  text-align="left" font-size="9pt"  white-space-collapse="false"></fo:block>
+							            </fo:table-cell >
+							             <fo:table-cell border-style="solid" >
+							            	<fo:block  text-align="left" font-size="9pt"  white-space-collapse="false"></fo:block>
+							            </fo:table-cell >
 							            <fo:table-cell border-style="solid" >
 							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold"  white-space-collapse="false">TOTAL</fo:block>
 							            </fo:table-cell >
 							            <fo:table-cell  border-style="solid">
 							            	<fo:block  text-align="right" font-size="10pt" font-weight="bold"  white-space-collapse="false">${totalsMap.get("orderQty")?if_exists}</fo:block>
 							            </fo:table-cell >
-							            <fo:table-cell  border-style="solid">
+							            <#--<fo:table-cell  border-style="solid">  
 							            	<fo:block  text-align="right" font-size="10pt"   white-space-collapse="false"></fo:block>
-							            </fo:table-cell >
+							            </fo:table-cell >-->
 							            <fo:table-cell  border-style="solid">
 							            	<fo:block  text-align="right" font-size="10pt"   white-space-collapse="false"></fo:block>
 							            </fo:table-cell >
