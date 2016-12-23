@@ -1702,13 +1702,24 @@
         	<link target="FindDepotReimbursementBilling">
         	</link>
         </menu-item>
-        
+         <menu-item name="FindTenPerSubAndSerchrgReimbursementBilling" title="Generate Ten Per And Ser charg Reimbursement Bill">
+        	<link target="FindTenPerSubAndSerchrgReimbursementBilling">
+        	</link>
+        </menu-item>
         <menu-item name="ReimbursementReports" title="Reimbursement Reports">
         	<link target="ReimbursementReports">
         	</link>
         </menu-item>
         
       </menu>
+       <menu name="BillingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem8">
+       	<menu-item name="prodConvBilling" title="Billing Generation">
+        	<link target="ProdConvBilling"/>
+        </menu-item>
+       	<menu-item name="PowderConversionBillingPeriod" title="Billing Periods">
+      		<link target="PowderConversionBillingPeriod"/>
+      	</menu-item>      
+    </menu>  
 	  <menu name="SubReportsTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="MANAGEMENT_REPORTS" title="Management Reports">
