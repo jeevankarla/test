@@ -155,6 +155,10 @@ BranchList=[];
 	resultList = [];
 	forIndentsCount = [];
 	int totalIndents = 0
+	totalIndQty=0;
+	totalIndVal=0;
+	totalPoQty=0;
+	totalSalVal=0;
 	orderHeader = delegator.findList("OrderHeader", cond, null, payOrderBy, null, false);
 	orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 	
@@ -166,7 +170,7 @@ BranchList=[];
 	headerData2.put("Qty", " ");
 	headerData2.put("productNameCSV", " ");
 	headerData2.put("indentPrice", " ");
-	headerData2.put("IndentValue", " ");
+	headerData2.put("indentValue", " ");
 	headerData2.put("poQty", " ");
 	headerData2.put("salInv", " ");
 	headerData2.put("salDate", " ");
@@ -190,7 +194,7 @@ BranchList=[];
 	headerData1.put("Qty", " ");
 	headerData1.put("productNameCSV", " ");
 	headerData1.put("indentPrice", " ");
-	headerData1.put("IndentValue", " ");
+	headerData1.put("indentValue", " ");
 	headerData1.put("poQty", " ");
 	headerData1.put("salInv", " ");
 	headerData1.put("salDate", " ");
@@ -215,7 +219,7 @@ BranchList=[];
 	headerData3.put("Qty", " ");
 	headerData3.put("productNameCSV", " ");
 	headerData3.put("indentPrice", " ");
-	headerData3.put("IndentValue", " ");
+	headerData3.put("indentValue", " ");
 	headerData3.put("poQty", " ");
 	headerData3.put("salInv", " ");
 	headerData3.put("salDate", " ");
@@ -238,11 +242,11 @@ BranchList=[];
 	headerData.put("orderNo", "Indent No");
 	headerData.put("productNameCSV", "Count");
 	headerData.put("Qty", "Qty");
-	headerData.put("indentPrice", "Unit");
-	headerData.put("IndentValue", "Indent Value");
+	headerData.put("indentPrice", "Indent Rate");
+	headerData.put("indentValue", "Indent Value");
 	headerData.put("poQty", "Qty");
 	headerData.put("salInv", "Sale Inv");
-	headerData.put("salDate", "Date");
+	headerData.put("salDate", "Sal Date");
 	headerData.put("salVal", "Sale Value");
 	headerData.put("transporter", "Transporter");
 	headerData.put("milInv", "Mill Inv");
@@ -257,7 +261,8 @@ BranchList=[];
 	orderList.add(headerData);
 	}
 	Map orderPrepMap=[:];
-	
+	//totalsMap=[:];
+	tempTotMap=[:];
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
 		JSONObject tempData = new JSONObject();
@@ -348,11 +353,12 @@ BranchList=[];
 		}
 		
 		ordQty=0;
-		IndentValue=0;
+		indentValue=0;
 		poId="";
 		salValue=0;
 		poQty=0;
 		productId="";
+		
 		custCondList.clear();
 		custCondList.add(EntityCondition.makeCondition("toOrderId",  EntityOperator.EQUALS, orderId));
 		custCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
@@ -368,6 +374,7 @@ BranchList=[];
 			indentPrice=0;
 			productName="";
 			productNameCSV="";
+			
 			if(UtilValidate.isNotEmpty(orderItemList)){
 				orderItemList1 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 				productIdList=[];
@@ -376,10 +383,12 @@ BranchList=[];
 						orderId=orderItem.orderId;
 						ordQty=ordQty+orderItem.quantity;
 						indentPrice=indentPrice+orderItem.unitPrice;
+						totalIndQty=totalIndQty+orderItem.quantity;
 						productIds=orderItem.productId;
 						productIdList.add(productIds);
 						
 						}
+					
 					for(productId in productIdList){
 					product = delegator.findOne("Product",[productId : productId] , false)
 					if(UtilValidate.isNotEmpty(product)){
@@ -388,32 +397,35 @@ BranchList=[];
 						//Debug.log("productName===@@============"+productName);
 						tempData.put("productNameCSV", productNameCSV.substring(0,productNameCSV.length()-1));
 					}
-					}
-					//Debug.log(orderId+"productIdList====================== ####### "+productIdList);
 					
+					}					
 					orderPrepMap.put(orderId, productIdList);
 					
 					indentPrice=indentPrice/orderItemList1.size()
-					IndentValue=IndentValue+((ordQty)*indentPrice)
-					
+					indentValue=indentValue+((ordQty)*indentPrice)
+					totalIndVal=totalIndVal+indentValue;
 					
 				}
+				
 				orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
 				if(UtilValidate.isNotEmpty(orderItemList)){
 					for(orderItem in orderItemList2){
 						poQty=poQty+orderItem.quantity;
+						totalPoQty=totalPoQty+orderItem.quantity;
+						
 					}
 				}
 				
 			}
-			//Debug.log("productId====================== ####### "+productId);			
-			//Debug.log("ProductName====================== ####### "+ProductName);
+			
 			tempData.put("productName", productName);
 			tempData.put("poNo", poId);
 			tempData.put("poQty",poQty);
 			tempData.put("Qty", ordQty.setScale(2, rounding));
 			tempData.put("indentPrice", indentPrice.setScale(2, rounding));
-			tempData.put("IndentValue", IndentValue.setScale(2, rounding));
+			tempData.put("indentValue", indentValue.setScale(2, rounding));
+			
+					
 			orderHeader = delegator.findOne("OrderHeader",[orderId : poId] , false);
 			if(orderHeader){
 				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "MM/dd/yyyy"));
@@ -438,6 +450,7 @@ BranchList=[];
 					for(invoiceItem in invoiceItemList){
 						if(UtilValidate.isNotEmpty(invoiceItem.itemValue)){
 							salValue=salValue+invoiceItem.itemValue;
+							totalSalVal=totalSalVal+invoiceItem.itemValue;
 						}
 					}
 					tempData.put("salVal", salValue);
@@ -498,7 +511,9 @@ BranchList=[];
 		grandTOT = eachHeader.getBigDecimal("grandTotal");
 		balance = grandTOT-paidAmt;
 		tempData.put("balance", balance);
+		
 		orderList.add(tempData);
+		
 	}
 	context.orderPrepMap=orderPrepMap;
 	if (UtilValidate.isNotEmpty(resultList)) {
@@ -508,4 +523,14 @@ BranchList=[];
 			Debug.logWarning(e, module);
 		}
 	}
+	
+	tempTotMap.put("orderNo", "TOTAL");
+	tempTotMap.put("Qty", totalIndQty);
+	tempTotMap.put("indentValue", totalIndVal.setScale(2, rounding));
+	tempTotMap.put("poQty", totalPoQty);
+	tempTotMap.put("salVal", totalSalVal);
+	orderList.add(tempTotMap);
 	context.orderList=orderList;
+	
+	
+	
