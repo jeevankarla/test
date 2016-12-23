@@ -53,6 +53,34 @@ if(UtilValidate.isNotEmpty(partythruDate)){
 }
 context.daystart=daystart
 context.dayend=dayend
+branchContext=[:];
+branchContext.put("branchId","INT15");
+
+BOAddress="";
+BOEmail="";
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in BO Header ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+	}
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
+
 conditionList = [];
 productIds = [];
 purchaseOrderIds =[];
@@ -98,7 +126,7 @@ productId=EntityUtil.getFieldListFromEntityList(invoiceItems, "productId", true)
 headerData2=[:];
 headerData2.put("partyName", "______");
 headerData2.put("orderQty", "___");
-headerData2.put("BdlWt", "___Fiberand___");
+/*headerData2.put("BdlWt", "___Fiberand___");*/
 headerData2.put("rate", "_ Countwise");
 headerData2.put("orderValue", "____ SalesReport_______");
 finalCSVList.add(headerData2);
@@ -106,7 +134,7 @@ finalCSVList.add(headerData2);
 headerData=[:];
 headerData.put("partyName", "partyName");
 headerData.put("orderQty", "orderQty");
-headerData.put("BdlWt", "BdlWt");
+/*headerData.put("BdlWt", "BdlWt");*/
 headerData.put("rate", "rate");
 headerData.put("orderValue", "orderValue");
 finalCSVList.add(headerData);
@@ -120,7 +148,7 @@ for(productCategoryId in productCategoryIds){
 	}
 	tempCSVMap1.put("partyName", prodCatName);
 	tempCSVMap1.put("orderQty", "");
-	tempCSVMap1.put("BdlWt", "");
+	/*tempCSVMap1.put("BdlWt", "");*/
 	tempCSVMap1.put("rate", "");
 	tempCSVMap1.put("orderValue", "");
 	finalCSVList.add(tempCSVMap1);
@@ -143,7 +171,7 @@ for(productCategoryId in productCategoryIds){
 			productDetails = delegator.findOne("Product",[productId : singleCatProductsOrdersDetail.productId] , false);
 			tempCSVMap2.put("partyName", productDetails.productName);
 			tempCSVMap2.put("orderQty", "");
-			tempCSVMap2.put("BdlWt", "");
+			/*tempCSVMap2.put("BdlWt", "");*/
 			tempCSVMap2.put("rate", "");
 			tempCSVMap2.put("orderValue", "");
 			finalCSVList.add(tempCSVMap2);
@@ -171,9 +199,11 @@ for(productCategoryId in productCategoryIds){
 			totalQty=totalQty+orderQty;
 			totalValue=totalValue+orderValue;
 			String partyName = PartyHelper.getPartyName(delegator,partyId,false);
+			tempMap.put("productName", productDetails.productName);
+			tempMap.put("prodcatName", prodCatName);
 			tempMap.put("partyName", partyName);
 			tempMap.put("orderQty", orderQty);
-			tempMap.put("BdlWt", "");
+			/*tempMap.put("BdlWt", "");*/
 			tempMap.put("rate", rate);
 			tempMap.put("orderValue", orderValue);
 			if(orderValue>0){
@@ -186,7 +216,7 @@ for(productCategoryId in productCategoryIds){
 			
 			tempTotMap.put("partyName", "SUB-TOTAL");
 			tempTotMap.put("orderQty", totOrderQty);
-			tempTotMap.put("BdlWt", "");
+			/*tempTotMap.put("BdlWt", "");*/
 			tempTotMap.put("rate", "");
 			tempTotMap.put("orderValue", totOrderValue);
 			prodPartiesList.add(tempTotMap);
