@@ -81,7 +81,7 @@ under the License.
 					            	<fo:block   text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Indent Qty(Kgs)</fo:block>	
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Indent UnitPrice</fo:block>	
+					            	<fo:block   text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Indent Rate</fo:block>	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="11pt" font-weight="bold" white-space-collapse="false">Indent Value</fo:block>	
@@ -128,9 +128,10 @@ under the License.
 					            	<fo:block  text-align="left" white-space-collapse="false" font-size="11pt">${OrderIdList.orderDate?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="left" white-space-collapse="false" font-size="11pt">${OrderIdList.orderNo?if_exists}</fo:block>
+					            	<fo:block  text-align="left"  <#if OrderIdList.orderNo=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false" font-size="11pt">${OrderIdList.orderNo?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
+					             <#assign productIds=[]>
 					            <#assign productIds = orderPrepMap.get(OrderIdList.orderId)>
 					            <#list productIds as productId>
 					            <#assign productDetails = delegator.findOne("Product", {"productId" :productId}, true)>
@@ -144,13 +145,13 @@ under the License.
 					            	<fo:block   text-align="left" white-space-collapse="false" font-size="11pt">${OrderIdList.weaverName?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" white-space-collapse="false" font-size="11pt">${OrderIdList.Qty?if_exists}</fo:block>
+					            	<fo:block   text-align="right" <#if OrderIdList.orderNo=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false" font-size="11pt">${OrderIdList.Qty?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" white-space-collapse="false" font-size="11pt">${OrderIdList.indentPrice?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" white-space-collapse="false" font-size="11pt">${OrderIdList.IndentValue?if_exists}</fo:block>
+					            	<fo:block   text-align="right" <#if OrderIdList.orderNo=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false" font-size="11pt">${OrderIdList.indentValue?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" white-space-collapse="false" font-size="8pt">${OrderIdList.poDate?if_exists}</fo:block>

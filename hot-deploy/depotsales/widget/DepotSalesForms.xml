@@ -3454,7 +3454,7 @@
         <field name="productNameCSV" title="_"><display/></field>
          <field name="Qty" title="_"><display/></field>
           <field name="indentPrice" title="_"><display/></field>
-        <!-- <field name="IndentValue" title=" "><display/></field> -->
+        <field name="indentValue" title="_"><display/></field>
         <field name="weaverName" title="_"><display/></field>
         <field name="poSequenceNo" title="_"><display/></field>
          <field name="poDate" title="_"><display/></field>
