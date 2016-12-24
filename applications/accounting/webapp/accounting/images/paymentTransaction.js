@@ -13,29 +13,3 @@ function setPaymentType(){
 	}
 
 }
-
-
-function saveContent(element, finAccountId){
-	var isBalConfirmed = element.value;
-	var finAccountId = finAccountId;
-	
-	if(isBalConfirmed != "" && finAccountId != ""){
-		jQuery.ajax({
-	        url: 'setBankAccountDetails',
-	        type: 'POST',
-	        async: false,
-	        data: {"isBalConfirmed" : isBalConfirmed,
-	        		"finAccountId": finAccountId,
-	        		"setBankAccountDetails": "Y"},
-	        success: function(json) {
-	           alert("All is well");
-	            result = true;
-	        },
-	        error: function(error) {
-	            alert("problem setting balance confirmation.!");
-	            result = false;
-	        } 
-	    });
-	    return result;
-	}
-}
