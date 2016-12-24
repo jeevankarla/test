@@ -14420,5 +14420,9 @@
     </property>
      <property key="BoothRoute">
         <value xml:lang="en">Retailer /Route Id</value>        
+    </property>
+    <property key="BankAccountDetail">
+        <value xml:lang="en">Bank Account Details</value>        
     </property> 
+    
 </resource>

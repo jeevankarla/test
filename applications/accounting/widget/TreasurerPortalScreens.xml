@@ -741,6 +741,7 @@
             <widgets>
                     <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
                     <decorator-section name="body">
+                    <include-menu name="BankAccountSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<section>
 							<widgets>
@@ -5988,5 +5989,62 @@
             </widgets>
         </section>
     </screen>
+    
+    
+    <screen name="BankAccountDetail">
+        <section>
+            <actions>
+            	<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="${uiLabelMap.BankAccountDetail}"/>
+                <set field="tabButtonItem" value="FindFinAccountAlt"/>
+                <set field="tabButtonItem2" value="BankAccountDetail"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="noConditionFind" value="N"/>
+                <set field="screenFlag" value="BANKACCOUNT" /> 
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/> -->
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/BankAccountDetail.groovy"/>
+            </actions>
+            <widgets>
+                    <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+                    <decorator-section name="body">
+                    <include-menu name="BankAccountSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                  <decorator-section name="search-options">
+                                      <include-form name="FindBankAccountDetails" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                  </decorator-section>
+								</decorator-screen>
+								
+								<screenlet title="Bank Accounts List">				
+								  <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/BankAccountDetails.ftl"/></html>
+                                  </platform-specific> 
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="PrintBankAccountDetails">
+		<section>
+			<actions>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/BankAccountDetail.groovy"/>
+            </actions>
+			<widgets>
+				<platform-specific> 
+					<xsl-fo><html-template location="component://accounting/webapp/accounting/reports/BankAccountDetails.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
 	  
 </screens>
