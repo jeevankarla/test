@@ -5,7 +5,7 @@
         <menu-item name="BranchTransactions" title="Branch Transactions"><link target="FindIndents"/></menu-item>
         <menu-item name="DepotTransMain" title="Depot Transactions"><link target="FindDepotTransPO"/></menu-item>
    		<menu-item name="SupplierPortal" title="Supplier Transactions"><link target="SupplierPortal"/></menu-item>
-		<menu-item name="IndentPortal" title="Indentor Transactions"><link target="processIndentPortalBranchSales"/></menu-item>
+		<menu-item name="IndentPortal" title="Indentor Transactions"><link target="SilkIndentorSalesOrder"/></menu-item>
 		
 	</menu>
     
