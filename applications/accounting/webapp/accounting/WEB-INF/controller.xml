@@ -4269,6 +4269,16 @@ under the License.
         <response name="success" type="view" value="implGrantReportPDF"/>
     </request-map>
     
+    <request-map uri="BankAccountDetail">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankAccountDetail"/>
+    </request-map>
+    <request-map uri="printBankAccountDetails">
+       <security https="true" auth="true"/>
+       <!-- <event type="groovy" path="component://accounting/webapp/accounting/WEB-INF/actions/"  invoke="BankAccountDetail.groovy"/> -->
+       <response name="success" type="view" value="PrintBankAccountDetails"/>
+       <response name="error" type="view" value="BankAccountDetail"/>    
+    </request-map>
 
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
@@ -4858,11 +4868,13 @@ under the License.
    <view-map name="DepRctAcctgTransReportPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#DepRctAcctgTransReportPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="FindGrantDevelopmentalBankAccountTab" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGrantDevelopmentalBankAccountTab"/>
    <view-map name="FindGrantImplementationBankAccountTab" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGrantImplementationBankAccountTab"/>
-    <view-map name="EditGrantFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditGrantFinAccountAlt"/>
+   <view-map name="EditGrantFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditGrantFinAccountAlt"/>
    <view-map name="FindApGrantInvoices" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindApGrantInvoices"/>
    <view-map name="CreateAPGrantInvoice" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateAPGrantInvoice"/>
    <view-map name="ContraAcctgTransDetailReportPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#ContraAcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="devGrantReportPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#devGrantReportPDF" content-type="application/pdf" encoding="none"/>
-	<view-map name="implGrantReportPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#implGrantReportPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="implGrantReportPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#implGrantReportPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="BankAccountDetail" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankAccountDetail"/>
+   <view-map name="PrintBankAccountDetails" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintBankAccountDetails" content-type="application/pdf" encoding="none"/>
    <!-- end of view mappings -->
 </site-conf>

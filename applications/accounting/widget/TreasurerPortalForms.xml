@@ -3063,6 +3063,28 @@ under the License.
 	            <submit button-type="button"/>
 	        </field>
     </form>  
-    
+    <form name="FindBankAccountDetails" type="single" target="BankAccountDetail" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="finAccountId" position="1" tooltip="contains"><text/></field>
+        <field name="finAccountName" position="1" tooltip="contains"><text/></field>
+        <field name="finAccountTypeId"><hidden value="BANK_ACCOUNT"/></field>
+        <field name="ownerPartyId" position="1"><lookup target-form-name="LookupPartyName"/></field> 
+        <field name="asOnDate" required-field="true"><date-time type="date"/></field>       
+        <field name="searchButton" widget-style="smallSubmit"><submit/></field>
+    </form>
+    <form name="ListBankAccountDetails" type="list" list-name="bankAccountDetailList" paginate="false"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="finAccountId" title="AccountId"><display/></field>
+        <field name="finAccountName" title="Name of Bank"><display/></field>
+        <field name="finAccountCode" title="Bank Acc No"><display/></field>
+        <field name="isOperative" title="Is Operative"><display/></field>
+        <field name="balance" title="Bank Balance (as on date)"><display type="currency"/></field>
+        <field name="balanceConfirmation" title="Balance confirmation is on record Yes/No" action="javascript:saveContent(this, '${finAccountId}');" event="onblur"><text size="10"/></field>
+        <field name="realisationDate" title="BRS available as on"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(realisationDate, &quot;MMMM&quot;);}"/></field>
+      
+        
+        <!-- <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field> -->
+        <!-- <field name="actualBalance" title="Acc Balance"><display/></field> -->
+    </form>
     
 </forms>
