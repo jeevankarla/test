@@ -3694,5 +3694,18 @@
         <field name="partyId"><display/></field>
         <field name="partyName" title="Customer Name"><display/></field>
     </form>
-        
+    <form name="pendingShipmentsReportHeading" type="list" list-name="finalList" view-size="99999">
+         <field name="IndentNo" title="__"><display/></field>
+         <field name="IndentDate" title="__"><display/></field>
+         <field name="indQty" title="__"><display/></field>
+         <field name="indUnitPrice" title="__"><display/></field>
+         <field name="PoNo" title="__"><display/></field>
+         <field name="PoDate" title="__pending_"><display/></field>
+         <field name="supplier" title="__Shipments__"><display/></field>
+         <field name="shipmentDate" title="__Report"><display/></field>
+         <field name="shipQty" title="__"><display/></field>
+         <field name="DurBWSoAndPo" title="__"><display/></field>
+         <field name="DurBwSoAndShip" title="__"><display/></field>
+     </form>
+    
 </forms>

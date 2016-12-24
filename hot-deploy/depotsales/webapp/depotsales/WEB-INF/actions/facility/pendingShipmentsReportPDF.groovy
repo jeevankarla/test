@@ -25,7 +25,6 @@ import java.util.Map.Entry;
 SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
 dayend = null;
 daystart = null;
-
 Timestamp fromDate;
 Timestamp thruDate;
 partyfromDate=parameters.partyfromDate;
@@ -148,12 +147,52 @@ shipmentDetailsForOrders = delegator.findList("ShipmentAndReceipt", EntityCondit
 
 finalList=[];
 orderIdsCheck=[];
+
+headerData2=[:];
+headerData2.put("IndentNo", "IndentNo");
+headerData2.put("IndentDate", "IndentDate");
+headerData2.put("indQty", "indQty");
+headerData2.put("indUnitPrice", "indUnitPrice");
+headerData2.put("indentValue", "indentValue");
+headerData2.put("PoNo", "PoNo");
+headerData2.put("PoDate", "PoDate");
+headerData2.put("supplier", "supplier");
+headerData2.put("shipmentDate", "shipmentDate");
+headerData2.put("shipQty", "shipQty");
+headerData2.put("DurBWSoAndPo", "DurBWSoAndPo");
+headerData2.put("DurBwSoAndShip", "DurBwSoAndShip");
+finalList.add(headerData2);
 for(saleOrder in salesOrderDetailsList){
 	Map tempMap = FastMap.newInstance();
 	indQty=0;
 	indUnitPrice=0;
+	indentValue=0;
 	shipQty=0;
-	tempMap.put("IndentNo", saleOrder.orderId);
+	
+	orderNo ="NA";
+	orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , saleOrder.orderId)  , null, null, null, false );
+	if(UtilValidate.isNotEmpty(orderHeaderSequences)){
+		orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
+		orderNo = orderSeqDetails.orderNo;
+	}
+	exprCondList=[];
+	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, saleOrder.orderId));
+	exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+	EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
+	OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
+	POorder="NA";
+	isgeneratedPO="N";
+	if(OrderAss){
+		POorder=OrderAss.get("orderId");
+		isgeneratedPO = "Y";
+	}
+	poSequenceNo="NA";
+	poOrderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , POorder)  , null, null, null, false );
+	if(UtilValidate.isNotEmpty(poOrderHeaderSequences)){
+		poOrderSeqDetails = EntityUtil.getFirst(poOrderHeaderSequences);
+		poSequenceNo = poOrderSeqDetails.orderNo;
+	}
+	tempMap.put("IndentNo", orderNo);
 	tempMap.put("IndentDate", UtilDateTime.toDateString(saleOrder.orderDate,"dd-MM-yyyy"));
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,saleOrder.orderId));
@@ -169,14 +208,16 @@ for(saleOrder in salesOrderDetailsList){
 		indQty=saleOrder.quantity;
 		indUnitPrice=saleOrder.unitPrice;
 	}
+	indentValue=indentValue+((indQty)*indUnitPrice);
 	tempMap.put("indUnitPrice", indUnitPrice);
 	tempMap.put("indQty", indQty);
+	tempMap.put("indentValue", indentValue);
 	purchaseOrderDetails =EntityUtil.filterByCondition(purchaseOrdersList, EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS,saleOrder.orderId));
 	purchaseOrderDetail=EntityUtil.getFirst(purchaseOrderDetails);
 	if(UtilValidate.isNotEmpty(purchaseOrderDetail)){
 		orderHeader = delegator.findOne("OrderHeader",[orderId : purchaseOrderDetail.orderId] , false);
 		tempMap.put("PoDate", UtilDateTime.toDateString(orderHeader.orderDate,"dd-MM-yyyy"));
-		tempMap.put("PoNo",orderHeader.orderId);
+		tempMap.put("PoNo",poSequenceNo);
 		soPoIntvlDays=UtilDateTime.getIntervalInDays(saleOrder.orderDate,orderHeader.orderDate)+1;
 		tempMap.put("DurBWSoAndPo", soPoIntvlDays);
 		shipmentDetails =EntityUtil.filterByCondition(shipmentDetailsForOrders, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderHeader.orderId));
