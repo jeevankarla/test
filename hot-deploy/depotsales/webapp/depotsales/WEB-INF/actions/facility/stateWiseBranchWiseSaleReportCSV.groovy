@@ -32,13 +32,9 @@ import org.ofbiz.service.ServiceUtil;
 
 import java.util.Map.Entry;
 
-
-
-
-
-SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
-dayend = null;
-daystart = null;
+//SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
+//dayend = null;
+//daystart = null;
 
 Timestamp fromDate;
 Timestamp thruDate;
@@ -130,16 +126,33 @@ if(!partyId){
 	productIds = EntityUtil.getFieldListFromEntityList(ProductCategoryMember, "productId", true);
 	
 }
-//////Debug.log("productIds================"+productIds.size());
-  
 daystart = null;
 dayend = null;
-if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
+def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+try {
+	if (UtilValidate.isNotEmpty(parameters.partyfromDate)) {
+		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime()));
+		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.partythruDate).getTime()));
+	}
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: " + e, "");
+context.errorMessage = "Cannot parse date string: " + e;
+	return;
+}
+
+daystart = UtilDateTime.getDayStart(fromDate);
+dayend = UtilDateTime.getDayEnd(thruDate);
+//Debug.log("daystart================="+daystart);
+//Debug.log("dayend================="+dayend);
+//////Debug.log("productIds================"+productIds.size());
   
+/*daystart = null;
+dayend = null;
+if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
+	
 	try {
-		//daystart = UtilDateTime.toTimestamp(sdf.parse(parameters.partyfromDate));
-		
 		fromDate = new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime());
+		//Debug.log("fromDate================"+fromDate);
 		daystart = UtilDateTime.getDayStart(fromDate);
 		 } catch (ParseException e) {
 			 //////////Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
@@ -158,8 +171,8 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
    } catch (ParseException e) {
 	   //////////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
-}
-  
+}*/
+
 reimbursmentPercentage = [:];
 reimbursmentPercentage.put("SILK", 1);
 reimbursmentPercentage.put("JUTE_YARN", 10);
@@ -239,7 +252,9 @@ partyIds=EntityUtil.getFieldListFromEntityList(Invoice, "partyId", true);
 
 finalList = [];
 dupliInvoices = []as Set;
-
+totInvQTY = 0;
+totInvAMT = 0;
+tempTotMap=[:];
 for (eachInvoiceList in Invoice) {
 	
 	
@@ -280,6 +295,8 @@ for (eachInvoiceList in Invoice) {
 	BigDecimal invoiceAMT = 0;
 	BigDecimal invoiceQTY = 0;
 	BigDecimal invoicprice=0;
+	
+	
 		
 	if(InvoiceItem){
 
@@ -293,10 +310,15 @@ for (eachInvoiceList in Invoice) {
 		
 		if(UtilValidate.isNotEmpty(eachInvoiceItem.itemValue)){
 			invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
+			totInvAMT=totInvAMT+eachInvoiceItem.itemValue;
+			
 		}
 		
 		if(UtilValidate.isNotEmpty(eachInvoiceItem.quantity)){
 			invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
+			//Debug.log("invoiceQTY================="+invoiceQTY);
+			totInvQTY=totInvQTY+eachInvoiceItem.quantity;
+			
 		}
 		
 	}
@@ -307,7 +329,7 @@ for (eachInvoiceList in Invoice) {
 		invoicprice=invoiceAMT.divide(invoiceQTY,4,BigDecimal.ROUND_HALF_UP);
 	}
 	tempMap.put("invoicprice", invoicprice);
-	context.invoicprice=invoicprice;
+	//context.invoicprice=invoicprice;
 	
 	
 	////////Debug.log("invoiceAMT================="+invoiceAMT);
@@ -480,10 +502,9 @@ for (eachInvoiceList in Invoice) {
 	
 	 finalList.add(tempMap);
 }
-
+tempTotMap.put("billno", "Total");
+tempTotMap.put("invoiceQTY", totInvQTY);
+tempTotMap.put("invoiceAmount", totInvAMT);
+finalList.add(tempTotMap);
 context.finalList = finalList;
-
-//Debug.log("============invoicprice============================"+invoicprice);
-Debug.log("finalList============================"+finalList);
-
 
