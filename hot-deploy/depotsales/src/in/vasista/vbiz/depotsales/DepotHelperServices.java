@@ -2859,6 +2859,7 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     }
     condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, branchId),EntityOperator.OR,
   			 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId)));
+	condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.NOT_EQUAL, "OBINVOICE_IN"));
 	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
     cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
     Debug.log("cond=============================="+cond);
