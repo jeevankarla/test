@@ -981,6 +981,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentVsDispatchPDF"/>
     </request-map>
+    <request-map uri="IndentVsDispatchCSV.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IndentVsDispatchCSV"/>
+    </request-map>    
     <request-map uri="DepotPurchaseInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotPurchaseInvoice"/>
@@ -2725,7 +2729,9 @@
     <view-map name="ProductPriceHistoryDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProductPriceHistoryDepot"/>
     <view-map name="StockStatementReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#StockStatementReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="MobileHitsReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#MobileHitsReportCSV" content-type="text/csv" />
+       
     <view-map name="IndentVsDispatchPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentVsDispatchPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="IndentVsDispatchCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentVsDispatchCSV" content-type="text/csv" />
     <view-map name="FindSalesReturns" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindSalesReturns"/>
     <view-map name="SalesReturnItems" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SalesReturnItems"/>
     <view-map name="ProcessOrdersSuppliersDepotSales" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessOrderAndShipmentGeneration"/>

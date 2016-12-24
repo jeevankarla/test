@@ -3487,7 +3487,16 @@
         <field name="poSquenceNo" title="PO Squence No"><display/></field>
         <field name="statusId" title="Status Id"><display/></field>
         <field name="orderTotal" title="Order Total"><display/></field> -->
-    </form> 
+    </form>    
+    <form name="IndentVsDispatchCSV" type="list" list-name="finalCSVList" view-size="99999"> 
+       <field name="orderNo" title="_"><display/></field>
+       <field name="orderDate" title="_" ><display /></field>
+       <field name="partyName" title=" NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD."><display/></field>
+       <field name="productName" title="_"><display/></field>        
+        <field name="initialQty" title="_"><display/></field>
+         <field name="finalQty" title="_"><display/></field>
+          <field name="diffQty" title="_"><display/></field>   
+    </form>   
         <form name="IndentCSVDetails" type="list"  view-size="99999" list-name="BranchList">
        <!--   <field name="sNo" title="Sr.NO"><display/></field> -->
          <field name="QualizedCOTTON_40ABOVE" title="_"><display/></field>

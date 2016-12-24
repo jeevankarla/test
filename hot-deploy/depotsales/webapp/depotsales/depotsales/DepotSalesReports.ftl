@@ -202,11 +202,13 @@ function makeDatePicker3(fromDateId ,thruDateId){
  	<tr class="alternate-row">
     	<form id="indentVsDispatch" name="indentVsDispatch" method="post"  target="_blank" action="<@ofbizUrl>IndentVsDispatch.pdf</@ofbizUrl>">	
   			<td width="30%" nowrap>Indent Vs Dispatch Report</td>
-  			<td width="15%">From</br><input  type="text" size="18pt" id="ivdFromDate" readonly  name="ivdFromDate"/></td>
-  			<td width="15%">To</br><input  type="text" size="18pt" id="ivdThruDate" readonly  name="ivdThruDate"/></td>
-  			<td width="15%"></td>
-  			<td width="15%"></td>
-			<td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
+  			<td width="10%">From</br><input  type="text" size="18pt" id="ivdFromDate" readonly  name="ivdFromDate"/></td>
+  			<td width="10%">To</br><input  type="text" size="18pt" id="ivdThruDate" readonly  name="ivdThruDate"/></td>
+  			<td width="10%"></td>
+  			<td width="10%"></td>
+  			<td width="10%">
+			<input type="submit" value="PDF" onClick="javascript:appendParams('indentVsDispatch', '<@ofbizUrl>IndentVsDispatch.pdf</@ofbizUrl>');" class="buttontext"/>        			
+			<input type="submit" value="CSV" onClick="javascript:appendParams('indentVsDispatch', '<@ofbizUrl>IndentVsDispatchCSV.csv</@ofbizUrl>');" class="buttontext"/></td>        			
 		</form>	
       </tr>
 		</#if>
