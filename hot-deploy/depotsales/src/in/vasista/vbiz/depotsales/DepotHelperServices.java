@@ -2835,6 +2835,7 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     GenericValue userLogin = (GenericValue) context.get("userLogin");
     String fromDateStr = (String) context.get("fromDate");
     String thruDateStr = (String) context.get("thruDate");
+    String branchId = (String) context.get("partyId");
 	Timestamp fromDate=null;
 	Timestamp thruDate = null;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -2856,8 +2857,11 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
     	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
     }
+    condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, branchId),EntityOperator.OR,
+  			 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId)));
 	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
     cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+    Debug.log("cond=============================="+cond);
     EntityListIterator invoiceItr = null;
     try {
     	    invoiceItr = delegator.find("Invoice", cond, null,  UtilMisc.toSet("invoiceId","invoiceTypeId","partyIdFrom","partyId"), null, null);
