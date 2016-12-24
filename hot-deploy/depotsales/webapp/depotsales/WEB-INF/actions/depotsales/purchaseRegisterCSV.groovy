@@ -147,49 +147,49 @@ BranchList=[];
 	orderHeader = delegator.findList("OrderHeader", cond, null, payOrderBy, null, false);
 	orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 	
-	
+	/*
 	headerData2=[:];
-	headerData2.put("orderDate", "_");
-	headerData2.put("orderId", "_");
-	headerData2.put("orderNo", "_");
-	headerData2.put("Qty", "_");
-	headerData2.put("unit", "_");
-	headerData2.put("poQty", "_");
-	headerData2.put("salInv", "_");
-	headerData2.put("salDate", "_");
-	headerData2.put("salVal", "_");
-	headerData2.put("transporter", "_");
-	headerData2.put("milInv", "_");
-	headerData2.put("value", "_");
-	headerData2.put("paymentReceipt", "_");
-	headerData2.put("amount", "_");
-	headerData2.put("weaverName", "_");
-	headerData2.put("poNo", "____PURCHASE ");
-	headerData2.put("poDate", "_");
-	headerData2.put("supplierName", "R E G I S T E R");
+	headerData2.put("orderDate", "INDENT DATE");
+	//headerData2.put("orderId", "_");
+	headerData2.put("orderNo", "SEQUENCE ID");
+	headerData2.put("Qty", "QTY");
+	headerData2.put("unit", "UNIT");
+	headerData2.put("poQty", "PO QTY");
+	headerData2.put("salInv", "SAL INVOICE");
+	headerData2.put("salDate", "SAL DATE");
+	headerData2.put("salVal", "SAL VALUE");
+	headerData2.put("transporter", "TRANSPORTER");
+	headerData2.put("milInv", "MIL INVOICE");
+	headerData2.put("value", "VALUE");
+	headerData2.put("paymentReceipt", "PAYMENT RECEIPT");
+	headerData2.put("amount", "AMOUNT");
+	headerData2.put("weaverName", "WEAVER NAME");
+	headerData2.put("poNo", "PO NO");
+	headerData2.put("poDate", "PO DATE");
+	headerData2.put("supplierName", "SUPPLIER NAME");
 	orderList.add(headerData2);
 	
 	headerData=[:];
-	headerData.put("orderDate", "Indent Date");
-	headerData.put("orderId", "Cust Order");
-	headerData.put("orderNo", "Sequence Id");
-	headerData.put("Qty", "Qty");
-	headerData.put("unit", "Unit");
-	headerData.put("poQty", "PO Qty");
-	headerData.put("salInv", "Sal Invoice");
-	headerData.put("salDate", "Sal Date");
-	headerData.put("salVal", "Sal Value");
-	headerData.put("transporter", "Transporter");
-	headerData.put("milInv", "Mil Invoice");
-	headerData.put("value", "Value");
-	headerData.put("paymentReceipt", "Payment Receipt");
-	headerData.put("amount", "Amount");
-	headerData.put("weaverName", "Weaver Name");
-	headerData.put("poNo", "Po No");
-	headerData.put("poDate", "PO Date");
-	headerData.put("supplierName", "Supplier Name");
+	headerData.put("orderDate", "________");
+	//headerData.put("orderId", "Cust Order");
+	headerData.put("orderNo", "________");
+	headerData.put("Qty", "________");
+	headerData.put("unit", "________");
+	headerData.put("poQty", "________");
+	headerData.put("salInv", "________");
+	headerData.put("salDate", "________");
+	headerData.put("salVal", "________");
+	headerData.put("transporter", "________");
+	headerData.put("milInv", "________");
+	headerData.put("value", "________");
+	headerData.put("paymentReceipt", "________");
+	headerData.put("amount", "________");
+	headerData.put("weaverName", "________");
+	headerData.put("poNo", "________");
+	headerData.put("poDate", "________");
+	headerData.put("supplierName", "________");
 	orderList.add(headerData);
-	
+	*/
 	
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
@@ -202,8 +202,9 @@ BranchList=[];
 			custCondList.add(EntityCondition.makeCondition("orderId",  EntityOperator.EQUALS, orderId));
 			custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
 			custCond = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
-			custOrderRoles = delegator.findList("OrderRole", custCond, null, null, null, false);
-		}
+			 custOrderRoles = delegator.findList("OrderRole", custCond, null, null, null, false);
+													
+			 }
 			custBasededOrderIds = EntityUtil.getFieldListFromEntityList(custOrderRoles, "partyId", true);
 			partyId = EntityUtil.getFirst(custOrderRoles).get("partyId");
 		
@@ -212,12 +213,12 @@ BranchList=[];
 		if(billFromOrderParty){
 			billFromVendorPartyId = billFromOrderParty.get(0).get("partyId");
 		}
-		
+				
 		partyName = PartyHelper.getPartyName(delegator, partyId, false);
 		billFromVendor = PartyHelper.getPartyName(delegator, billFromVendorPartyId, false);
 		JSONObject tempData = new JSONObject();
 		tempData.put("partyId", partyId);
-		tempData.put("weaverName", billFromVendor);
+		tempData.put("weaverName", partyName);
 		tempData.put("partyName", partyName);
 		
 		if(eachHeader.tallyRefNo)
@@ -252,7 +253,7 @@ BranchList=[];
 		tempData.put("POorder", POorder);
 		tempData.put("poSquenceNo", poSquenceNo);
 		tempData.put("isgeneratedPO", isgeneratedPO);
-	
+		
 		exprList=[];
 		exprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 		exprList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
@@ -278,11 +279,15 @@ BranchList=[];
 		tempData.put("statusId", eachHeader.statusId);
 		if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 			tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
-		}
+			}
 		ordQty=0;
 		poId="";
 		salValue=0;
 		poQty=0;
+	unitPrice=0;
+		unitpricetotalamount=0;
+		totalamount1=0;
+		salquantity1=0;
 		custCondList.clear();
 		custCondList.add(EntityCondition.makeCondition("toOrderId",  EntityOperator.EQUALS, orderId));
 		custCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
@@ -300,8 +305,19 @@ BranchList=[];
 				if(UtilValidate.isNotEmpty(orderItemList)){
 					for(orderItem in orderItemList1){
 						ordQty=ordQty+orderItem.quantity;
+						
+						
+						
+						unitpricetotalamount=unitpricetotalamount+orderItem.unitPrice;
 					}
-				}
+					
+					
+					unitPrice=(unitpricetotalamount)/(orderItemList1.size());
+					
+					totalamount1=totalamount1+((unitPrice)*(ordQty));
+					//Debug.log("totAmt==="+unitpricetotalamount+"==size=="+orderItemList1.size()+"===avg==="+unitPrice);
+					}
+				
 				orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
 				if(UtilValidate.isNotEmpty(orderItemList)){
 					for(orderItem in orderItemList2){
@@ -312,9 +328,11 @@ BranchList=[];
 			tempData.put("poNo", poId);
 			tempData.put("poQty",poQty);
 			tempData.put("Qty", ordQty);
+		   // tempData.put("unit", indentPrice);
+			//salinvoice=0;
 			orderHeader = delegator.findOne("OrderHeader",[orderId : poId] , false);
 			if(orderHeader){
-				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "MMMM/dd/yyyy"));
+				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "dd/MM/yyyy"));
 			}
 			shipments = delegator.findList("Shipment", EntityCondition.makeCondition("primaryOrderId",  EntityOperator.EQUALS, poId), null, null, null, false);
 			if(shipments){
@@ -336,18 +354,29 @@ BranchList=[];
 					for(invoiceItem in invoiceItemList){
 						if(UtilValidate.isNotEmpty(invoiceItem.itemValue)){
 							salValue=salValue+invoiceItem.itemValue;
+							//salinvoice=OrderItemBilling.invoiceId
+							salquantity1=salquantity1+invoiceItem.quantity
+							
+							
+							
 						}
 					}
-				}
+			
+					Invoice = delegator.findOne("Invoice",[invoiceId : OrderItemBilling.invoiceId] , false);
+					tempData.put("salInv", OrderItemBilling.invoiceId);
+					tempData.put("salDate", UtilDateTime.toDateString(Invoice.invoiceDate, "dd/MM/yyyy"));
+					tempData.put("salquantity",salquantity1 );
+						}
 			}
 			
 			tempData.put("salVal", salValue);
 			tempData.put("value", "-");
 			tempData.put("paymentReceipt", "-");
 			tempData.put("amount", "-");
-			tempData.put("salDate", "-");
-			tempData.put("salInv", "-");
-			tempData.put("unit", "-");
+			
+			
+			tempData.put("unit", unitPrice);
+			tempData.put("amount",totalamount1);
 			
 			
 			

@@ -3082,30 +3082,44 @@
          <field name="orderValue" title="Value"><display/></field>
     </form>
     <form name="purchaseRegisterCSV" type="list" list-name="orderList" view-size="99999">
-        <field name="orderDate" title="_"><display/></field>
-        <field name="orderId" title="_" ><display /></field>
-        <field name="orderNo" title="_"><display/></field> -->
-        <field name="Qty" title="_"><display/></field>
-        <field name="unit" title="_"><display/></field>
-        <field name="weaverName" title="_"><display/></field>
-        <field name="poNo" title="-"><display/></field>
-        <field name="poDate" title="-"><display/></field> 
-        <field name="poQty" title="_"><display/></field>
-        <field name="supplierName" title="_"><display/></field>
-        <field name="salInv" title="_"><display/></field>
-        <field name="salDate" title="_"><display/></field>
-        <field name="salVal" title="_"><display/></field>
-        <field name="transporter" title="_"><display/></field>
-        <field name="milInv" title="_"><display/></field>
-        <field name="value" title="_"><display/></field>
-        <field name="paymentReceipt" title="_"><display/></field>
-        <field name="amount" title="_"><display/></field>
+        <field name="orderDate" title="INDENT DATE"><display/></field>
+       <!--  <field name="orderId" title="SEQUENCE ID" ><display /></field> -->
+        <field name="orderNo" title="SEQUENCE ID"><display/></field> -->
+        <field name="Qty" title="QTY"><display/></field>
+        <field name="unit" title="UNIT PRICE"><display/></field>
+           <field name="amount" title="Amount"><display/></field>
+        <field name="weaverName" title="WEAVER NAME"><display/></field>
+        <field name="poNo" title="PO NO"><display/></field>
+        <field name="poDate" title="PO DATE"><display/></field> 
+        <field name="poQty" title="PO QUANTITY"><display/></field>
+        <field name="supplierName" title="SUPPLIER NAME"><display/></field>
+        <field name="salInv" title="SALE INVOICE"><display/></field>
+        <field name="salDate" title="SALE DATE"><display/></field>
+          <field name="salquantity" title="SALE QUANTITY"><display/></field>
+        <field name="salVal" title="SALE VALUE"><display/></field>
+        <field name="transporter" title="TRANSPORTER"><display/></field>
+        <field name="milInv" title="MIL INVOICE"><display/></field>
+        <field name="value" title="VALUE"><display/></field>
+        <field name="paymentReceipt" title="PAYMENT RECEIPT"><display/></field>
+        <field name="amount" title="AMOUNT"><display/></field>
         <!-- <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
         <field name="storeName" title="Store Name"><display/></field>
         <field name="poSquenceNo" title="PO Squence No"><display/></field>
         <field name="statusId" title="Status Id"><display/></field>
         <field name="orderTotal" title="Order Total"><display/></field> -->
     </form>
+   
+   
+   
+    <form name="purchaseRegisterCSVheader" type="list"  view-size="99999999999999999">
+        <field name="purchaseRegisterCSVheader" title="-------------------------------------------------------------------------------------------------PURCHASE REGISTER---------------------------------------------------------------------------------"><display/></field>
+     
+    </form>
+   
+   
+   
+   
+   
     
     <form name="salePurchaseReport" type="list" list-name="salesAndPurchaseList" view-size="99999">
 			<field name="invoiceId" title="invoiceId"><display/></field>
@@ -3365,16 +3379,16 @@
      
       <form name="stateWiseBranchWiseSaleReportCSV" type="list" list-name="finalList" view-size="99999">
          <!--  <field name="billno" title="Sale Invo.No"><display/></field> -->
-          <field name="billno" title="Sale Invo.No"><display/></field>
-         <field name="invoiceDate" title="Invoice Date"><display/></field>
-         <field name="invoiceQTY" title="Quantity(Kg)"><display/></field>
-         <field name="invoicprice" title="RATE"><display/></field>
-         <field name="invoiceAmount" title="Amount"><display/></field>
-         <field name="supplierName" title="Name Of Supplier"><display/></field>
-         <field name="destAddr" title="Destination"><display/></field>
-         <field name="transporter" title="Transporter"><display/></field>
-         <field name="lrNumber" title="Lr Number"><display/></field>
-         <field name="lrDate" title="LR Date"><display/></field>
+          <field name="billno" title="SALE INVO NO"><display/></field>
+         <field name="invoiceDate" title="INVOICE DATE"><display/></field>
+         <field name="invoiceQTY" title="QUANTITY(KG)"><display/></field>
+         <field name="invoicprice" title=""><display/></field>
+         <field name="invoiceAmount" title="AMOUNT"><display/></field>
+         <field name="supplierName" title="NAME OF SUPPLIER"><display/></field>
+         <field name="destAddr" title="DESTINATION"><display/></field>
+         <field name="transporter" title="TRANSPORTER"><display/></field>
+         <field name="lrNumber" title="LR NUMBER"><display/></field>
+         <field name="lrDate" title="LR DATE"><display/></field>
      </form>
      <form name="stateWiseBranchWiseSaleHeader" type="list" view-size="99999999">
        <field name="stateWiseBranchWiseSaleHeader" title="_____________________________state Wise Branch Wise Sales___________________________________"><display/></field>
@@ -3382,29 +3396,29 @@
       
      
      <form name="depotReimburcentReportCSV" type="list" list-name="finalList" view-size="99999">
-         <field name="billno" title="Sale Invo.No"><display/></field>
-         <field name="invoiceDate" title="Invoice Date"><display/></field>
-         <field name="invoiceQTY" title="Quantity"><display/></field>
-         <field name="invoiceAmount" title="Amount"><display/></field>
+         <field name="billno" title="SALE INVO NO"><display/></field>
+         <field name="invoiceDate" title="INVOICE DATE"><display/></field>
+         <field name="invoiceQTY" title="QUANTITY"><display/></field>
+         <field name="invoiceAmount" title="AMOUNT"><display/></field>
          <field name="supplierName" title="Name Of Supplier"><display/></field>
-         <field name="partyName" title="Name Of Supplier"><display/></field>
-         <field name="destAddr" title="Destination"><display/></field>
-         <field name="transporter" title="Transporter"><display/></field>
-         <field name="depotCharges" title="Depot Charges"><display/></field>
+         <field name="partyName" title="PARTY NAME"><display/></field>
+         <field name="destAddr" title="DESTINATION"><display/></field>
+         <field name="transporter" title="TRANSPORTER"><display/></field>
+         <field name="depotCharges" title="DEPOT CHARGES"><display/></field>
          <!-- <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field> -->
-         <field name="lrNumber" title="Lr Number"><display/></field>
-         <field name="lrDate" title="LR Date"><display/></field>
+         <field name="lrNumber" title="LR NUMBER"><display/></field>
+         <field name="lrDate" title="LR DATE"><display/></field>
      </form> 
      <form name="ShipmentsDispatchReportCSV" type="list" list-name="receiptList" view-size="99999">
          <!-- <field name="receiptId" title=" GRN Item No "><display/></field> -->
-         <field name="productName" title=" product Name "><display/></field>
-         <field name="categoryName" title="Category Name"><display/></field>
-         <field name="datetimeReceived" title=" Received Date "><display/></field>
-         <field name="shipmentId" title=" GRN ShipmentId "><display/></field>
-         <field name="orderId" title=" PO No "><display/></field>
-         <field name="supplier" title="Supplier"><display/></field>
-         <field name="unitPrice" title="Unit Price"><display/></field>
-         <field name="quantityAccepted" title="Quantity"><display/></field>
+         <field name="productName" title=" PRODUCT NAME "><display/></field>
+         <field name="categoryName" title="CATEGORY NAME"><display/></field>
+         <field name="datetimeReceived" title=" RECEIVED DATE "><display/></field>
+         <field name="shipmentId" title=" GRN SHIPMENT ID "><display/></field>
+         <field name="orderId" title=" PO NO "><display/></field>
+         <field name="supplier" title="SUPPLIER"><display/></field>
+         <field name="unitPrice" title="UNIT PRICE"><display/></field>
+         <field name="quantityAccepted" title="QUANTITY"><display/></field>
         
      </form> 
        <form name="StateWiseSchemeWiseSalesConsolidatedHeaderCSV" type="list" list-name="finalCSVList2" view-size="99999">
