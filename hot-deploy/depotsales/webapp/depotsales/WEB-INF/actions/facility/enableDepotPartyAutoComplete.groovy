@@ -238,16 +238,29 @@
 	
 	//Debug.log("facilityDepoList========w3232======"+facilityDepoList);
 	
+	facilityDepoListIds = EntityUtil.getFieldListFromEntityList(facilityDepoList, "partyId", true);
 	
 	cond = [];
 	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.NOT_EQUAL, "INDIVIDUAL_WEAVERS"));
-	if(facilityDepoList && facilityDepoList.ownerPartyId){
-	cond.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, facilityDepoList.ownerPartyId));
+	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "CLUSTER_COOP_SOCIETY"));
+	conditionSociety=EntityCondition.makeCondition(cond,EntityOperator.AND);
+	clusterSocietyList=delegator.findList("PartyClassification",conditionSociety,null,null,null,false);
+	
+	clusterSocietyIds = EntityUtil.getFieldListFromEntityList(clusterSocietyList, "partyId", true);
+	
+	if(clusterSocietyIds)
+	facilityDepoListIds.addAll(clusterSocietyIds);
+	
+	cond.clear();
+	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.NOT_EQUAL, "INDIVIDUAL_WEAVERS"));
+	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "CLUSTER_COOP_SOCIETY"));
+	if(facilityDepoList && facilityDepoListIds){
+	cond.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, facilityDepoListIds));
 	}
+	//cond.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, clusterSocietyIds));
+	
 	conditionSociety=EntityCondition.makeCondition(cond,EntityOperator.AND);
 	societyList=delegator.findList("PartyClassification",conditionSociety,null,null,null,false);
-	
-	//Debug.log("societyList========w3232======"+societyList);
 	
 	
 	if(societyList){
@@ -330,6 +343,17 @@
 	parameters.isDepot = "NO";
 	facilityList = delegator.findList("Facility", EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , userPartyId), null, null, null, false);
 	if(UtilValidate.isNotEmpty(facilityList)){
+		parameters.isDepot = "YES";
+	}
+	
+	cond = [];
+	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.NOT_EQUAL, "INDIVIDUAL_WEAVERS"));
+	cond.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "CLUSTER_COOP_SOCIETY"));
+	cond.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userPartyId));
+	conditionSociety=EntityCondition.makeCondition(cond,EntityOperator.AND);
+	userPartyIdclusterSocietyList=delegator.findList("PartyClassification",conditionSociety,null,null,null,false);
+	
+	if(UtilValidate.isNotEmpty(userPartyIdclusterSocietyList)){
 		parameters.isDepot = "YES";
 	}
 	
