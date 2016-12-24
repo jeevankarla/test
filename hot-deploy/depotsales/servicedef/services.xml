@@ -722,9 +722,10 @@
         location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="finYearPopulationIndentSummaryDetails" transaction-timeout="10800000">
         <description>run populate Indent summary Orders</description>
     </service>
-    <service name="mappingInvoicesToRO" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="mappingInvoicesToRO" transaction-timeout="10800000">
+    <service name="mappingInvoicesToRO" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="mappingInvoicesToRO" transaction-timeout="6000000">
          <description>populating Bo roles </description>
-         <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
-         <attribute mode="IN" name="thruDate" optional="false" type="Timestamp"/>
+         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
+         <attribute mode="IN" name="partyId" optional="true" type="String"/>
     </service>
 </services>
