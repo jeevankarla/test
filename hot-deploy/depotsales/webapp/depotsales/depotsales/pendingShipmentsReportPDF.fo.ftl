@@ -47,16 +47,17 @@ under the License.
         		<fo:block>
              		<fo:table >
              			
-             		    <fo:table-column column-width="7%"/>
-             		    <fo:table-column column-width="9%"/>
+             		    <fo:table-column column-width="11.5%"/>
              		    <fo:table-column column-width="8%"/>
-             		    <fo:table-column column-width="10%"/>
-             		    <fo:table-column column-width="7%"/>
+             		    <fo:table-column column-width="6.5%"/>
+             		    <fo:table-column column-width="6.5%"/>
              		    <fo:table-column column-width="9%"/>
-             		    <fo:table-column column-width="18%"/>
+             		    <fo:table-column column-width="12%"/>
              		    <fo:table-column column-width="9%"/>
+             		    <fo:table-column column-width="12.5%"/>
              		    <fo:table-column column-width="8%"/>
-             		    <fo:table-column column-width="8%"/>
+             		    <fo:table-column column-width="5.5%"/>
+             		    <fo:table-column column-width="5%"/>
              		    <fo:table-column column-width="5%"/>
              		              		    
 			            
@@ -81,6 +82,10 @@ under the License.
 					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PRICE</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INDENT</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VALUE</fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PO NO</fo:block>
 					            	
 					            </fo:table-cell>
@@ -93,11 +98,13 @@ under the License.
 					            	
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SHIPMENT</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SHIP</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MENT</fo:block>
 					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DATE</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SHIPMENT</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SHIP</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MENT</fo:block>
 					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QTY</fo:block>
 					            </fo:table-cell>
  								<fo:table-cell border-style="solid">
@@ -110,7 +117,7 @@ under the License.
 					            </fo:table-cell>
 							</fo:table-row>
 						  <#assign totalIdnQty1 = 0>  
-							 <#assign totalindUnitPrice1 = 0>
+						<#assign totalindentValue1 = 0>
 							<#assign totalshipQty1 = 0>  
 			                  <#list finalList as eachList>
 	                             <fo:table-row>
@@ -126,6 +133,9 @@ under the License.
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indUnitPrice?if_exists?string("##0.00")}</fo:block>
+					            </fo:table-cell>
+								<fo:table-cell border-style="solid">
+					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indentValue?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="9pt"  white-space-collapse="false">${eachList.PoNo?if_exists}</fo:block>
@@ -150,11 +160,11 @@ under the License.
 					            </fo:table-cell>
 							</fo:table-row>
                              <#assign totalIdnQty = eachList.indQty>
-							<#assign totalindUnitPrice = eachList.indUnitPrice>	
+							<#assign totalindentValue= eachList.indentValue>
 							<#assign totalshipQty = eachList.shipQty>
 
                               	<#assign  totalIdnQty1= totalIdnQty1+totalIdnQty>
-								 <#assign  totalindUnitPrice1= totalindUnitPrice1+totalindUnitPrice>
+								 <#assign  totalindentValue1= totalindentValue1+totalindentValue>
 								<#assign  totalshipQty1= totalshipQty1+totalshipQty>
 							</#list>
  			 			 <fo:table-row>
@@ -166,12 +176,14 @@ under the License.
 					            </fo:table-cell>
 								
 			                    <fo:table-cell border-style="solid"> 
-					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-corighe="false">${totalIdnQty1?if_exists}</fo:block>
+					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-corighe="false">${totalIdnQty1?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid"> 
-					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-corighe="false">${totalindUnitPrice1?if_exists}</fo:block>
+					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-corighe="false"></fo:block>
 					            </fo:table-cell>
-			
+								<fo:table-cell border-style="solid"> 
+					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-corighe="false">${totalindentValue1?if_exists?string("##0.00")}</fo:block>
+					            </fo:table-cell>
 					            <fo:table-cell border-style="solid"> 
 					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
@@ -182,10 +194,10 @@ under the License.
 					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid"> 
-					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-colleft="false">${totalshipQty1?if_exists}</fo:block>
+					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-colleft="false"></fo:block>
 					            </fo:table-cell>				            
 								<fo:table-cell border-style="solid"> 
-					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
+					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-collapse="false">${totalshipQty1?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid"> 
 					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
