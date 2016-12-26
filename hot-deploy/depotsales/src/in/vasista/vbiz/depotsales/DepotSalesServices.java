@@ -183,9 +183,9 @@ public class DepotSalesServices{
               } 
               String contactNumberTo = (String) serviceResult.get("contactNumber");
               String countryCode = (String) serviceResult.get("countryCode");
+              
               if(UtilValidate.isEmpty(contactNumberTo)){
-              	contactNumberTo = "7330776928";
-              }
+              	//contactNumberTo = "7330776928";
               //contactNumberTo = "7330776928";
               if(UtilValidate.isNotEmpty(contactNumberTo)){
               	 if(UtilValidate.isNotEmpty(countryCode)){
@@ -199,6 +199,7 @@ public class DepotSalesServices{
                        Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
                        return serviceResult;
                    }
+              }
               }
               Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
               String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
@@ -226,6 +227,32 @@ public class DepotSalesServices{
 		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
 		String partyId=(String) context.get("partyId");
 		String orderId = (String) context.get("orderId");
+		Locale locale = (Locale) context.get("locale");
+		
+		String smsContent = "";
+  		String productDetails="";
+  		 String PurchaseOrderId="";
+  		try{
+  			List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+  			for (GenericValue item : items) {
+  				String productId = item.getString("productId");
+  				BigDecimal qty=item.getBigDecimal("quantity");
+  				String qtystrng="0";
+  				String desc="";
+  				if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(qty)) {
+  					qtystrng=String.valueOf(qty);                     
+  					GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
+  					desc=product.getString("description");
+  				}
+  				productDetails=productDetails+" "+desc+","+qtystrng;
+  				smsContent = smsContent + qtystrng + " KGs of " + desc + ",";
+  			}
+  		}catch(GenericEntityException ex){
+  			Debug.log("Problem in fetching orderItems");
+  		}
+		
+  		
+		
 		try{
 			
 			List<GenericValue> creditPartRoleList=delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId",partyId,"roleTypeId","CR_INST_CUSTOMER"));
@@ -266,6 +293,39 @@ public class DepotSalesServices{
 		   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
 		   String POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
 //           boolean POapproved = OrderChangeHelper.approveOrder(dispatcher, userLogin, POOrderId);
+		   
+		   
+		   String indentApprovalMessage = UtilProperties.getMessage("ProductUiLabels", "IndentApprovalMessage", locale);
+ 			indentApprovalMessage = indentApprovalMessage.replaceAll("orderId", orderId);
+ 			indentApprovalMessage = indentApprovalMessage.replaceAll("material", smsContent);
+ 			Map<String, Object> getTelParams = FastMap.newInstance();
+         	getTelParams.put("partyId", partyId);
+             getTelParams.put("userLogin", userLogin);                    	
+             Map serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+             if (ServiceUtil.isError(serviceResult)) {
+                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+             } 
+             String contactNumberTo = (String) serviceResult.get("contactNumber");
+             String countryCode = (String) serviceResult.get("countryCode");
+             
+            /* if(UtilValidate.isEmpty(contactNumberTo)){
+             	contactNumberTo = "9100662445";
+             }*/
+             //contactNumberTo = "7330776928";
+             if(UtilValidate.isNotEmpty(contactNumberTo)){
+             	 if(UtilValidate.isNotEmpty(countryCode)){
+             		 contactNumberTo = countryCode + contactNumberTo;
+             	 }
+             	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
+                  sendSmsParams.put("contactNumberTo", contactNumberTo);
+                  sendSmsParams.put("text", indentApprovalMessage); 
+                  serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
+                  if (ServiceUtil.isError(serviceResult)) {
+                      Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                      return serviceResult;
+                  }
+             }
+		   
 		   Map<String, Object> approvePOParams = FastMap.newInstance();
  	  		approvePOParams.put("orderId",POOrderId);
  	  		approvePOParams.put("partyId",partyId);
