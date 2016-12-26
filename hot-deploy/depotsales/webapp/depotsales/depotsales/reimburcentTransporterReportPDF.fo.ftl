@@ -64,7 +64,7 @@ under the License.
 				
 				<#assign partyWiseDetails = finalMap.get(eachParty)>
 				
-				<#assign partyWiseDetails = partyWiseDetails.entrySet()>
+				<#--<#assign partyWiseDetails = partyWiseDetails.entrySet()>-->
 				
 				<#assign finalAddresList = "">
 				<#list partyWiseDetails as eachList>
