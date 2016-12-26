@@ -86,7 +86,7 @@ if(UtilValidate.isNotEmpty(isInvoiceFind)){
 		}
 		thruDate = UtilDateTime.getDayEnd(thruDate);
 	}
-	conditionList.clear();
+	/*conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "TEN_SUB_REIMB_PERIOD"));
 	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(fromDate.getTime())));
 	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));
@@ -95,13 +95,13 @@ if(UtilValidate.isNotEmpty(isInvoiceFind)){
 	shemeId="";
 	if(UtilValidate.isNotEmpty(schemePeriod)){
 		shemeId=schemePeriod.schemeTimePeriodId;
-	}
+	}*/
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, ["SER_CHRG_REMB","TEN_PER_SUB_REMB"]));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-	if(UtilValidate.isNotEmpty(schemePeriod)){
-		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, shemeId));
+	if(UtilValidate.isNotEmpty(billingId)){
+		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, billingId));
 	}
 	invoicesListing = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	
@@ -127,6 +127,7 @@ if(UtilValidate.isNotEmpty(isInvoiceFind)){
 	}
 	context.rembInvoicesList=rembInvoicesList;
 	request.setAttribute("rembInvoicesList",rembInvoicesList);
+	return "success";
 }
 
 context.billingPeriodsList=openbillingPeriodsList;

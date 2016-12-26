@@ -64,6 +64,7 @@
                }else{
             	    var billingPeriodsList =   result["billingPeriodsList"];
             	    var closebillingPeriodsList =   result["closebillingPeriodsList"];
+            	    //var isInvoiceGen =   result["isInvoiceGen"];
 			 		var optionList = '';
 			 		var optionList2 = '';
 					optionList += "<option value = " + "" + " >" +" "+ "</option>";
@@ -83,8 +84,9 @@
 			      	$("#findbillingPeriod").html(optionList2);
 			      	$("#billingPeriod").html(optionList);
 			      	$('div#pastDues_spinner').hide();
-			      	 $('#responseMsg1').fadeIn('slow');
+			      	$('#responseMsg1').fadeIn('slow');
 		       		$('#responseMsg1').delay(3000).fadeOut('slow');
+			      	
                }
                
              } ,
@@ -146,7 +148,7 @@
                }
              } ,
              error: function() {
-            	 	alert("Error In getRembursmentInvoiceListing.groovy");
+            	 	alert("Error In generateBillForTenPerAndSerchrg.groovy");
 					$('div#pastDues_spinner').hide();
             	 }
             }); 
@@ -263,7 +265,11 @@
      		<td> <div align='center' name ='responseMsg1' id='responseMsg1' style="display:none"><h1 style="font-color:Green">Billing Successfully Generated For the Slected Period..<h1> </div> </td>
      		<td> </td>
      	</tr>
-      
+      	<tr>
+     		<td> </td>
+     		<td> <div align='center' name ='responseMsg2' id='responseMsg2' style="display:none"><h1 style="font-color:Green">Invoice Already Generated for Selected Period..<h1> </div> </td>
+     		<td> </td>
+     	</tr>
       </tbody>
     </table>
   </form>
