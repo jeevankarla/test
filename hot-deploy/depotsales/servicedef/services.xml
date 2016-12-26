@@ -464,6 +464,15 @@
         <attribute name="bonusDate" mode="IN" type="String" optional="true"/>
         <!-- <attribute name="periodBillingMap" mode="OUT" type="Map"></attribute> -->
     </service>
+     <service name="createSchemeTimePeriod"  engine="java"
+                location="in.vasista.vbiz.depotsales.ReimbursementService" invoke="createSchemeTimePeriod" auth="true">
+        <description>create Scheme Time Period For Billing</description>
+        <attribute name="periodName" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="periodTypeId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"></attribute>
+        <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"></attribute>
+        <attribute name="SchemeTimePeriodId" mode="OUT" type="String" optional="true"></attribute>
+    </service>
     <service name="cancelDepotReimbursementBilling"  engine="java"
                 location="in.vasista.vbiz.depotsales.ReimbursementService" invoke="cancelDepotReimbursementBilling" auth="true" transaction-timeout="3000">
         <description>Cancel Depot Reimbursement Billing</description>

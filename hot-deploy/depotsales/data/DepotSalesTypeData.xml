@@ -137,7 +137,13 @@
    <InvoiceType  description="Purchase_Invoice" hasTable="N" invoiceTypeId="PURCHASE_INVOICE"  parentTypeId="PURCHASE_INVOICE" /> 
    
    
+     <InvoiceItemType createdStamp="2016-06-09 20:26:03.0" createdTxStamp="2016-06-09 20:26:03.0" description="Service Charge reimbursement" invoiceItemTypeId="SER_CHRG_REMB" lastUpdatedStamp="2016-06-09 20:26:03.0" lastUpdatedTxStamp="2016-06-09 20:26:03.0"/>
+    <InvoiceItemType createdStamp="2016-06-09 20:26:03.0" createdTxStamp="2016-06-09 20:26:03.0" description="Ten Percent subsidy amount reimbursement" invoiceItemTypeId="TEN_PER_SUB_REMB" lastUpdatedStamp="2016-06-09 20:26:03.0" lastUpdatedTxStamp="2016-06-09 20:26:03.0"/>
    
+       <Party createdStamp="2016-01-27 12:41:50.0" createdTxStamp="2016-01-27 12:41:50.0" lastUpdatedStamp="2016-01-27 12:41:50.0" lastUpdatedTxStamp="2016-01-27 12:41:50.0" partyId="MIN_OF_TEXTILE" partyTypeId="PARTY_GROUP"/>
+
+    <PartyGroup createdStamp="2016-01-27 12:42:02.0" createdTxStamp="2016-01-27 12:42:02.0" groupName="Ministery of Textile" lastUpdatedStamp="2016-01-27 12:42:02.0" lastUpdatedTxStamp="2016-01-27 12:42:02.0" partyId="MIN_OF_TEXTILE"/>
+    
    <PaymentMethodType  description="PAYUBIZ_PAYMENT"  parentTypeId="MONEY" paymentMethodTypeId="PAYUBIZ_PAYMENT"/>
 
 </entity-engine-xml>
