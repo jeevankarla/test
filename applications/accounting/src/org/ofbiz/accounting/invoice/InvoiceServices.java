@@ -5348,7 +5348,7 @@ public class InvoiceServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         GenericValue tenantConfigEnableTaxInvSeq;
         
-        Debug.log("invoiceId============="+invoiceId);
+       // Debug.log("invoiceId============="+invoiceId);
         
         try {
         	
@@ -5364,7 +5364,7 @@ public class InvoiceServices {
 	       		}
        		}
        		
-       	 Debug.log("enableTaxInvSeq============="+enableTaxInvSeq);
+       	 //Debug.log("enableTaxInvSeq============="+enableTaxInvSeq);
        		Timestamp invDate=null;
        		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId)){
        			List<GenericValue> invoiceItems = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceTypeId", "dueDate", "invoiceDate","partyIdFrom","partyId","shipmentId"), null, null, false);
@@ -5376,7 +5376,7 @@ public class InvoiceServices {
        				invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("invoiceDate");
        			}
        			
-       		    Debug.log("invDate============="+invDate);
+       		   // Debug.log("invDate============="+invDate);
        			
        			String partyId ="";
        			String prefix ="";
@@ -5396,7 +5396,7 @@ public class InvoiceServices {
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");
 	        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
 	        			orderId = shipments.getString("primaryOrderId");
-	        			Debug.log("invDate============="+invDate);
+	        			//Debug.log("invDate============="+invDate);
 	        			try{
 	           			orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
 	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
@@ -5407,13 +5407,13 @@ public class InvoiceServices {
 	                	prefix="PI";
 	       			}
 	       			
-	       			Debug.log("prefix============="+prefix);
+	       			//Debug.log("prefix============="+prefix);
 	       			
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
 	       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
 	        			orderId = shipments.getString("primaryOrderId");
-	        			Debug.log("orderId============="+orderId);
+	        			//Debug.log("orderId============="+orderId);
 	        			try{
 	                	orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
 	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
@@ -5423,7 +5423,7 @@ public class InvoiceServices {
 	                	prefix="SI";
 	       			}
 	       			
-	       			Debug.log("prefix============="+prefix);
+	       			//Debug.log("prefix============="+prefix);
 	       			if(UtilValidate.isNotEmpty(shipmentId)){
 	       		    List condList = FastList.newInstance();
 	                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -5434,7 +5434,7 @@ public class InvoiceServices {
 	                	indentTypeId = "O";
 	                }
 	                
-	                Debug.log("indentTypeId============="+indentTypeId);
+	                //Debug.log("indentTypeId============="+indentTypeId);
 	       			GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
 	                boSequnce = partyBOs.getString("externalId");
 	       			List<GenericValue> partyRelations = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId), null, null, null, false);
@@ -5443,7 +5443,7 @@ public class InvoiceServices {
 	                roSequnce = partyROs.getString("externalId");
        			}
 	       			
-	       			Debug.log("roSequnce============="+roSequnce);
+	       			//Debug.log("roSequnce============="+roSequnce);
        			Map finYearContext = FastMap.newInstance();
    				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
    				finYearContext.put("organizationPartyId", "Company");
@@ -5491,7 +5491,7 @@ public class InvoiceServices {
        			if(invoiceItemTypeIds.contains("PURCHASE_INVOICE")){
        				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
        				
-       				Debug.log("billOfSale============="+billOfSale);
+       				//Debug.log("billOfSale============="+billOfSale);
        				
     				billOfSale.put("billOfSaleTypeId", "PUR_INV_SQUENCE");
     				billOfSale.put("invoiceId", invoiceId);
@@ -5510,7 +5510,7 @@ public class InvoiceServices {
    			    if(invoiceItemTypeIds.contains("SALES_INVOICE")){
        				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
        				
-       				Debug.log("billOfSale===sale=========="+billOfSale);
+       				//Debug.log("billOfSale===sale=========="+billOfSale);
     				billOfSale.put("billOfSaleTypeId", "SALE_INV_SQUENCE");
     				billOfSale.put("invoiceId", invoiceId);
     				billOfSale.put("partyId", partyId);
