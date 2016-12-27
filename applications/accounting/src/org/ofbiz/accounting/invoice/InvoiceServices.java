@@ -531,8 +531,8 @@ public class InvoiceServices {
                 // create the item adjustment as line items
                 List<GenericValue> itemAdjustments = OrderReadHelper.getOrderItemAdjustmentList(orderItem, orh.getAdjustments());
                 
-                Debug.log("inputAdjustmentsList==================="+inputAdjustmentsList);
-                Debug.log("ignoreAdjustmentsList==================="+ignoreAdjustmentsList);
+               // Debug.log("inputAdjustmentsList==================="+inputAdjustmentsList);
+               // Debug.log("ignoreAdjustmentsList==================="+ignoreAdjustmentsList);
                 
                 
                 
@@ -663,9 +663,9 @@ public class InvoiceServices {
                                     
                                      sourcePercentage = adj.getBigDecimal("sourcePercentage");
                                     
-                                    Debug.log("amount=======INNNNN3232323========"+amount);
+                                   // Debug.log("amount=======INNNNN3232323========"+amount);
                                     
-                                    Debug.log("sourcePercentage=======INNNNN3232323========"+sourcePercentage);
+                                   // Debug.log("sourcePercentage=======INNNNN3232323========"+sourcePercentage);
                                     
                                 }
                             } else if (adj.get("sourcePercentage") != null) {
