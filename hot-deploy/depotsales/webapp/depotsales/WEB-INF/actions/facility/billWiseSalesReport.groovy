@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.party.contact.ContactMechWorker;
  
-SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
+SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
 Timestamp fromDate;
 Timestamp thruDate;
  
@@ -197,7 +197,10 @@ partyIds=EntityUtil.getFieldListFromEntityList(Invoice, "partyId", true);
 partyPassMap= [:];
 finalMap = [:];
 partyWiseTotalsMap = [:];
- 
+totQty=0;
+totAmount=0;
+totsubquant=0;
+totsubAmount=0;
 finalList = [];
 for(int i=0;i < Invoice.size();i++){
 	eachInvoice = Invoice.get(i);
@@ -217,10 +220,7 @@ for(int i=0;i < Invoice.size();i++){
 	invoiceDetailMap.put("partyName",custPartyName);
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,eachInvoice.partyId));
-	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, eachInvoice.invoiceDate));
-	
-	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, eachInvoice.invoiceDate),
-		EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));	
+	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	
 	partyClassification = delegator.findList("PartyClassification",condition,null,null,null,false);
@@ -231,9 +231,11 @@ for(int i=0;i < Invoice.size();i++){
 		if(UtilValidate.isNotEmpty(partyClassificationGroupIdList)){
 			partyType = partyClassificationGroupIdList.get("description");
 		}
-	}
+	
+		}
 	
 	invoiceDetailMap.put("amount", eachInvoice.invoiceGrandTotal);
+	totAmount+= eachInvoice.invoiceGrandTotal;
 	invoiceDetailMap.put("partyType",partyType);
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS,eachInvoice.invoiceId));
@@ -244,7 +246,9 @@ for(int i=0;i < Invoice.size();i++){
 		invoiceItems.each{ eachInvoice->
 			qty = qty + eachInvoice.quantity;
 		}
+		totQty+=qty;
 	}
+	
 	invoiceDetailMap.put("qty", qty);
 	
 	conditionList.clear();
@@ -257,11 +261,14 @@ for(int i=0;i < Invoice.size();i++){
 	if(UtilValidate.isNotEmpty(subsidyItems)){
 		subsidyItems.each{ eachSubsidy->
 			subsidyAmount = subsidyAmount+eachSubsidy.amount;
+			
 		}
 		subsidyQty = qty;
 		scheme = "MGP 10% Scheme";
+		totsubquant+=subsidyQty;
 	}
 	invoiceDetailMap.put("subsidyAmount", (subsidyAmount*-1));
+	totsubAmount+=(subsidyAmount*-1);
 	invoiceDetailMap.put("subsidyQty", subsidyQty);
 	
 	conditionList.clear();
@@ -299,16 +306,16 @@ for(int i=0;i < Invoice.size();i++){
 		contactMechesDetails = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, orderBy2, null, false);
 	}
 	shipingAdd = [:];
+	address1="";
+	address2="";
+	state="";
+	city="";
+	postalCode="";
 	if(contactMechesDetails){
 		contactMec=contactMechesDetails.getFirst();
 		if(contactMec){
 			partyPostalAddress=contactMec;
 			if(partyPostalAddress){
-				address1="";
-				address2="";
-				state="";
-				city="";
-				postalCode="";
 				if(partyPostalAddress.get("address1")){
 					address1=partyPostalAddress.get("address1");
 				}
@@ -352,6 +359,13 @@ for(int i=0;i < Invoice.size();i++){
 	
 	finalList.add(invoiceDetailMap);
 }	
+context.totQty=totQty;
+Debug.log("total quantity======================================"+totAmount);
+context.totAmount=totAmount;
+Debug.log("total amount======================================"+totAmount);
 context.finalMap = finalMap;
+context.totsubquant=totsubquant;
+Debug.log("total ======================================"+totAmount);
+context.totsubAmount=totsubAmount;
 context.partyWiseTotalsMap = partyWiseTotalsMap;
 context.finalList = finalList;

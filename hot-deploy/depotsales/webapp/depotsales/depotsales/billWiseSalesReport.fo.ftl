@@ -49,21 +49,21 @@ under the License.
          		    <fo:table-column column-width="2%"/>
 		            <fo:table-column column-width="6%"/>
 		            <fo:table-column column-width="10%"/>
-		            <fo:table-column column-width="12%"/>
+		            <fo:table-column column-width="10%"/>
 		            
 		            <fo:table-column column-width="12%"/>
 		            <fo:table-column column-width="7%"/>
-		            <fo:table-column column-width="7%"/>
-		            
-		            <fo:table-column column-width="7%"/>
-		            <fo:table-column column-width="5%"/>
-		            <fo:table-column column-width="5%"/>
-		            <fo:table-column column-width="5%"/>
-		            
-		            <fo:table-column column-width="5%"/>
 		            <fo:table-column column-width="6%"/>
+		            
+		            <fo:table-column column-width="6%"/>
+		            <fo:table-column column-width="6%"/>
+		            <fo:table-column column-width="5%"/>
 		            <fo:table-column column-width="7%"/>
-		            <fo:table-column column-width="8%"/>
+		            
+		            <fo:table-column column-width="7%"/>
+		            <fo:table-column column-width="5%"/>
+		            <fo:table-column column-width="7%"/>
+		            <fo:table-column column-width="9%"/>
 		            
 		            <fo:table-body>
 		                <fo:table-row>
@@ -165,6 +165,59 @@ under the License.
 						</fo:table-row>
 						<#assign sr=sr+1>
 						</#list>
+						
+						
+						<fo:table-row>
+		                   <fo:table-cell border-style="solid">
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell >
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false">${totQty}</fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false">${totAmount}</fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false">${totsubquant}</fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false">${totsubAmount}</fo:block>
+				            </fo:table-cell>
+				            <fo:table-cell border-style="solid">
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            </fo:table-cell>
+					
+						</fo:table-row>
+						
+						
+						
 						
 					</fo:table-body>
 				</fo:table>
