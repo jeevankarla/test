@@ -317,7 +317,11 @@ under the License.
     </form>
      <form name="ListAdvDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="finAccountId" title="AccountId"><display/></field>
+        <field name="finAccountId" title="AccountId"><display/>
+         <hyperlink target="EditFinAccount" description="${finAccountId}" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
         <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
         <field name="finAccountName" title="Acc Name"><display/></field>
         <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
