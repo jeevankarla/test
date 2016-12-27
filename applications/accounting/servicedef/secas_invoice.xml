@@ -40,7 +40,7 @@ under the License.
         <action service="createInvoiceAttribute" mode="sync"/>
     </eca>
     <eca service="createInvoice" event="commit">
-        <!-- <action service="createTaxInvoiceSequence" mode="sync"/> -->
+        <action service="createTaxInvoiceSequence" mode="sync"/>
     </eca> 
     <!-- <eca service="createInvoice" event="commit">
         <condition field-name="billOfSaleTypeId" operator="is-not-empty"/>      
