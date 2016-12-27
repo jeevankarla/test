@@ -144,6 +144,7 @@ InvoiceItem = delegator.findList("InvoiceItem",condition, null, null, null, fals
 DecimalFormat df = new DecimalFormat("0.00");
 DistrictWiseMap=[:];
 totalsMap=[:];
+totMap = [:];
 totalQty=0
 totalvalue=0
 totalsubsidyAmt=0
@@ -308,6 +309,20 @@ desList.each{ eachdesc ->
 	totalList.add(temMap);
 	i=i+1;
 }
+if(UtilValidate.isNotEmpty(productCategory) && (productCategory.description) && UtilValidate.isNotEmpty(invoiceSubsidyDetails)){
+	totMap.put("sNo", "TOTAL");
+	totMap.put("districtName", " ");
+	totMap.put("userAgency", " ");
+	totMap.put("invoiceDate", " ");
+	totMap.put("productName", " ");
+	totMap.put("categoryname", " ");
+	totMap.put("quantity", totalQty);
+	totMap.put("value", totalvalue);
+	totMap.put("subsidyAmt", totalsubsidyAmt);
+	totMap.put("serviceCharg", totalserviceCharg);
+	totMap.put("claimTotal", totalclaimTotal);	
+}
+finalList.add(totMap);
 context.totalList = totalList;
 context.DistrictWiseList = DistrictWiseList;
 context.finalList = finalList;
