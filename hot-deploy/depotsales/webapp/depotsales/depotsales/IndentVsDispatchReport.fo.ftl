@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" margin-top=".5in" margin-left=".5in" margin-right=".5in" >
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" margin-top=".5in" margin-left=".25in" margin-right=".25in" >
                 <fo:region-body margin-top="1.25in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -49,24 +49,26 @@ under the License.
           			<fo:block text-align="left"  keep-together="always" font-family="Courier,monospace" white-space-collapse="false" font-size="8pt"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
           			
           			<fo:table>
-          					<fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="11.6%"/>
-		                    <fo:table-column column-width="18%"/>
-		                    <fo:table-column column-width="16%"/>
-		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="11.6%"/>
-		                    <fo:table-column column-width="11.6%"/>
+          					<fo:table-column column-width="13%"/>
+		                    <fo:table-column column-width="8%"/>
+		                    <fo:table-column column-width="14%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="9%"/>
 		                   
 		                    <fo:table-body>
 		                    	<fo:table-row>
 					                   <fo:table-cell border-style="solid">
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Order Id</fo:block>  
+							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Order Id</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell border-style="solid">
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Order Date</fo:block>  
+							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Order Date</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell border-style="solid">
-							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Party Name</fo:block>  
+							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Party Name</fo:block>  
 							            </fo:table-cell>
 							            <#--<fo:table-cell border-style="solid">
 							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Product Code</fo:block>  
@@ -75,10 +77,16 @@ under the License.
 							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Product Name</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">indent value</fo:block>  
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Indented Quantity</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell border-style="solid">
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Indent Value</fo:block>  
 							            </fo:table-cell>
 							           <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">dispatch value</fo:block>  
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Dispatched Quantity</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell border-style="solid">
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Dispatch Value</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
 							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Difference Quantity</fo:block>  
@@ -96,14 +104,15 @@ under the License.
           			<#assign orderWiseList = orderWiseMap.entrySet()>
           			<#--  <fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">Order: -->
           			<fo:table>
-          					<fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="11.6%"/>
-		                    <fo:table-column column-width="18%"/>
-		                    <fo:table-column column-width="16%"/>
-		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="11.6%"/>
-		                    <fo:table-column column-width="11.6%"/>
-		                    <fo:table-column column-width="11.6%"/>
+          					<fo:table-column column-width="13%"/>
+		                    <fo:table-column column-width="8%"/>
+		                    <fo:table-column column-width="14%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="9%"/>
 		                    <fo:table-body>
 		                    	
 							     <#list orderWiseList as orderWiseEntry>
@@ -130,7 +139,13 @@ under the License.
 							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("initialQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
+							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("indentValue")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell border-style="solid">
 							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("finalQty")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell border-style="solid">
+							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("dispatchValue")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
 							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("diffQty")?if_exists}</fo:block>  
@@ -143,14 +158,15 @@ under the License.
           			</#list>
           			 <#if tempTotMap?has_content>
           			<fo:table>
-          					<fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="11.6%"/>
-		                    <fo:table-column column-width="18%"/>
-		                    <fo:table-column column-width="16%"/>
-		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="11.6%"/>
-		                    <fo:table-column column-width="11.6%"/>
-		                    <fo:table-column column-width="11.6%"/>
+          					<fo:table-column column-width="13%"/>
+		                    <fo:table-column column-width="8%"/>
+		                    <fo:table-column column-width="14%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="9%"/>
 		                    <fo:table-body>
           			 <fo:table-row>
 					                   <fo:table-cell border-style="solid">
@@ -169,11 +185,18 @@ under the License.
 							            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("initialQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">																	
+							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("indentValue")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell border-style="solid">																	
 							            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("finalQty")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell border-style="solid">																	
+							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("dispatchValue")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">																	
 							            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("diffQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
+							            
 							     </fo:table-row>
           			</fo:table-body>
           			</fo:table>

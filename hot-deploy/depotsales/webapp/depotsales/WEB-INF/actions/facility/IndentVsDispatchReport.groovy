@@ -18,6 +18,7 @@ import in.vasista.vbiz.purchase.MaterialHelperServices;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.util.EntityUtil;
+import java.math.RoundingMode;
 
 fromDate = parameters.ivdFromDate;
 thruDate = parameters.ivdThruDate;
@@ -39,7 +40,7 @@ context.errorMessage = "Cannot parse date string: " + e;
 
 dayStart = UtilDateTime.getDayStart(fromDate);
 dayEnd = UtilDateTime.getDayEnd(thruDate);
-
+rounding = RoundingMode.HALF_UP;
 Map finalMap = FastMap.newInstance();
 tempTotMap=[:];
 finalCSVList=[];
@@ -59,7 +60,9 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 			headerData.put("partyName", "INDENT VS DISPATCH REPORT");
 			headerData.put("productName", " ");
 			headerData.put("initialQty", " ");
+			headerData.put("indentValue", " ");
 			headerData.put("finalQty", " ");
+			headerData.put("dispatchValue", " ");
 			headerData.put("diffQty", " ");
 			finalCSVList.add(headerData);
 			headerData1=[:];
@@ -68,24 +71,30 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 			headerData1.put("partyName", " ");
 			headerData1.put("productName", " ");
 			headerData1.put("initialQty", " ");
+			headerData1.put("indentValue", " ");
 			headerData1.put("finalQty", " ");
+			headerData1.put("dispatchValue", " ");
 			headerData1.put("diffQty", " ");
 			finalCSVList.add(headerData1);
 			headerData2=[:];
-			headerData2.put("orderNo", "Order Id");
-			headerData2.put("orderDate", "Order Date");
-			headerData2.put("partyName", "Party Name");
-			headerData2.put("productName", "Product Name");
-			headerData2.put("initialQty", "indent value");
-			headerData2.put("finalQty", "dispatch value");
-			headerData2.put("diffQty", "Difference Quantity");
+			headerData2.put("orderNo", "ORDER ID");
+			headerData2.put("orderDate", "ORDER DATE");
+			headerData2.put("partyName", "PARTY NAME");
+			headerData2.put("productName", "PRODUCT NAME");
+			headerData2.put("initialQty", "INDENTED QUANTITY");
+			headerData2.put("indentValue", "INDENT VALUE");
+			headerData2.put("finalQty", "DISPATCHED QUANTITY");
+			headerData2.put("dispatchValue", "DISPATCH VALUE");
+			headerData2.put("diffQty", "DIFFERENCE QUANTITY");
 			finalCSVList.add(headerData2);
 			
 			//}
 			
-			totinitialQty=0;
-			totfinalQty=0;
-			totdiffQty=0;
+			totInitialQty=BigDecimal.ZERO;
+			totFinalQty=BigDecimal.ZERO;
+			totDiffQty=BigDecimal.ZERO;
+			totIndentValue=BigDecimal.ZERO;
+			totDispatchValue=BigDecimal.ZERO;
 	if(UtilValidate.isNotEmpty(OrderIdList)){
 			
 			OrderIdList.each{orderId->
@@ -105,6 +114,10 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 						tempMap["diffQty"]=BigDecimal.ZERO;
 						tempMap["partyName"]="";
 						orderNo ="NA";
+						tempMap["indentPrice"]=BigDecimal.ZERO;
+						dispatchPrice=BigDecimal.ZERO;
+						tempMap["indentValue"]=BigDecimal.ZERO;
+						tempMap["dispatchValue"]=BigDecimal.ZERO;
 						orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId), null, null, null, false );
 						if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 							orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
@@ -124,8 +137,10 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 						//if(!(initial.compareTo(productEntry.quantity)==0)){
 							//initial=new BigDecimal(OrderItemAttr.attrValue);
 							tempMap["initialQty"]=productEntry.quantity;
+							tempMap["indentPrice"]=productEntry.unitPrice;
 							//Debug.log("initialQty======="+productEntry.quantity);
-							totinitialQty=totinitialQty+productEntry.quantity;
+							//Debug.log("indentPrice======="+productEntry.unitPrice);
+							totInitialQty=totInitialQty+productEntry.quantity;
 							//Debug.log("totinitialQty======="+totinitialQty);
 							orderAssocs = EntityUtil.getFirst(delegator.findList("OrderAssoc",EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS , orderId)  , null, null, null, false ));
 							shippedQty=0;
@@ -141,13 +156,25 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 								}	
 							}
 							tempMap["finalQty"]=shippedQty;
-							totfinalQty=totfinalQty+shippedQty;
+							dispatchPrice=productEntry.unitPrice;
+							totFinalQty=totFinalQty+shippedQty;
+							tempMap["indentPrice"]=(tempMap["indentPrice"])/productList.size();
+							dispatchPrice=dispatchPrice/productList.size();
 						if(tempMap["initialQty"]!=null && tempMap["finalQty"]!=null){
 							
 						tempMap["diffQty"] = (tempMap["initialQty"]).subtract(tempMap["finalQty"]);
-						totdiffQty=totdiffQty+tempMap["diffQty"];
+						totDiffQty=totDiffQty+tempMap["diffQty"];
 						}
 						
+						indentValue=(productEntry.quantity)*(tempMap["indentPrice"]);
+						//Debug.log("indentValue======="+indentValue);
+						totIndentValue=totIndentValue+indentValue.setScale(2, rounding);
+						//Debug.log("TOATALindentValue======="+totIndentValue);
+						dispatchValue=(shippedQty)*(dispatchPrice);
+						totDispatchValue=totDispatchValue+dispatchValue.setScale(2, rounding);
+						//Debug.log("productlistsize======="+productList.size());
+						tempMap["indentValue"]=indentValue.setScale(2, rounding);
+						tempMap["dispatchValue"]=dispatchValue.setScale(2, rounding);
 						if(UtilValidate.isNotEmpty(product)){
 							tempMap["productName"]=product.productName;
 							tempMap["productCode"]=(product.internalName).substring(0, 8);
@@ -164,14 +191,17 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 					
 					//}
 				  }
+						
 				}
 			}
 		}
 	}
 	tempTotMap.put("orderNo", "TOTAL");
-	tempTotMap.put("initialQty", totinitialQty);
-	tempTotMap.put("finalQty", totfinalQty);
-	tempTotMap.put("diffQty", totdiffQty);
+	tempTotMap.put("initialQty", totInitialQty);
+	tempTotMap.put("indentValue", totIndentValue);
+	tempTotMap.put("finalQty", totFinalQty);
+	tempTotMap.put("dispatchValue", totDispatchValue);
+	tempTotMap.put("diffQty", totDiffQty);
 	context.tempTotMap=tempTotMap;
 	finalCSVList.add(tempTotMap);
 	context.IndentVsDispatchMap=finalMap;
