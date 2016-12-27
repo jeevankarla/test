@@ -55,7 +55,7 @@ $(document).ready(function(){
 	    makeDatePicker("stockDate");
 	    makeDatePicker("AWIORDate");
 	    makeDatePicker("CASHFromDateId","");
-	    makeDatePicker3("billWiseSalesReportFrom","billWiseSalesReportThru");
+	    makeDatePicker("billWiseSalesReportFrom","billWiseSalesReportThru");
 	    makeDatePicker("IndentRegisterFromDate","IndentRegisterThruDate");
 	    makeDatePicker("IndentRegisterEntryFromDate","IndentRegisterEntryThruDate");
 	     makeDatePicker("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
