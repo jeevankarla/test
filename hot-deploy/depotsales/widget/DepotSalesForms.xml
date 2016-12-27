@@ -1634,7 +1634,7 @@
 	        		<option key="N" description="NO"/>
 	        	</drop-down>
         </field>
-        
+         <!--  <field title="Date" name="effectiveDate"><date-time/></field> -->
         <field name="satate" id-name="satate" title="State" event="onchange"  action="javascript:getCites();">
               <drop-down allow-empty="true">
                   <list-options key-name="value" list-name="stateListJSON" description="${label}"/>
@@ -1648,8 +1648,6 @@
         
               <field name="passbookNumber" title="Passbook Number"><text  size="15"></text></field>
               <field name="passGreater" title="Passbook Number Greater Than" position="1"><check></check></field>
-              
-              
               
               
               <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>

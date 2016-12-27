@@ -42,6 +42,28 @@ passGreater = parameters.passGreater;
 
 
 
+effectiveDate = parameters.effectiveDate;
+
+/*facilityDateStart = null;
+facilityDateEnd = null;
+if(UtilValidate.isNotEmpty(effectiveDate)){
+	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	try {
+		transDate = new java.sql.Timestamp(sdf.parse(effectiveDate+" 00:00:00").getTime());
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + effectiveDate, "");
+	}
+	facilityDateStart = UtilDateTime.getDayStart(transDate);
+	facilityDateEnd = UtilDateTime.getDayEnd(transDate);
+	
+}else{
+
+  facilityDateEnd = UtilDateTime.nowTimestamp()
+
+}
+
+
+*/
 
 uniqueOrderId = parameters.uniqueOrderId;
 
@@ -449,6 +471,70 @@ partyList.each{ partyList ->
 	tempData.put("state",shipingAdd.get("state"));
 	
 	tempData.put("district",shipingAdd.get("district"));
+	
+	/*//============PartyQuotabalance========================
+	
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+	if(facilityDateEnd)
+	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateEnd),
+		EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
+	
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	PartyLoomDetails = delegator.findList("PartyLoom",condition,null,null,null,false);
+	
+	resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId,"effectiveDate",facilityDateEnd));
+	productCategoryQuotasMap = resultCtx.get("schemesMap");
+	usedQuotaMap = resultCtx.get("usedQuotaMap");
+	eligibleQuota = resultCtx.get("eligibleQuota");
+	
+	
+	
+	//Debug.log("productCategoryQuotasMap=============="+productCategoryQuotasMap);
+	
+	//Debug.log("usedQuotaMap=============="+usedQuotaMap);
+	
+	//Debug.log("eligibleQuota=============="+eligibleQuota);
+	
+	
+	JSONArray partyLoomArrayJSON = new JSONArray();
+	if(PartyLoomDetails){
+		PartyLoomDetails.each{ eachPartyLoom ->
+			loomType="";
+			loomQuota="";
+			loomQty="";
+			Desc="";
+		loomQuota=eachPartyLoom.quotaPerLoom;
+		loomQty=eachPartyLoom.quantity;
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,eachPartyLoom.loomTypeId));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		LoomTypeDetails = EntityUtil.getFirst(delegator.findList("LoomType",condition,null,null,null,false));
+		////Debug.log("PartyLoomDetails======================"+PartyLoomDetails);
+		if(LoomTypeDetails){
+			type=LoomTypeDetails.loomTypeId;
+			if(LoomTypeDetails.description){
+			Desc=LoomTypeDetails.description
+			}
+			Desc +=type;
+		}
+		JSONObject partyLoomJSON = new JSONObject();
+		
+		partyLoomJSON.put("loomType",Desc);
+		partyLoomJSON.put("loomQuota",eligibleQuota.get(Desc));
+		partyLoomJSON.put("availableQuota",productCategoryQuotasMap.get(Desc));
+		partyLoomJSON.put("usedQuota",usedQuotaMap.get(Desc));
+		partyLoomJSON.put("loomQty",loomQty);
+		partyLoomArrayJSON.add(partyLoomJSON);
+		}
+	}
+	
+	
+	
+	Debug.log("partyLoomArrayJSON=============="+partyLoomArrayJSON);*/
+	
 	
 	weaverDetailsList.add(tempData);
 	}

@@ -5394,6 +5394,22 @@ public class InvoiceServices {
        			//if(UtilValidate.isNotEmpty(shipmentId)){
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");
+	       				
+	       			/*//=======================New Sequence from Role========================
+		       			 try {
+		 					List conditions = FastList.newInstance();
+		 					conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		 					conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+		 			    	List <GenericValue> InvoiceRole = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+		 			    	if(UtilValidate.isNotEmpty(InvoiceRole)){
+		 			    		partyId = (EntityUtil.getFirst(InvoiceRole)).getString("partyId");
+		 			    		
+		 			    	}
+		 			 } catch (Exception e) {
+		 				Debug.logError("Problem in Invoice Role", module);
+		 			 }*/
+      				//=========================================================================
+	       				
 	        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
 	        			orderId = shipments.getString("primaryOrderId");
 	        			//Debug.log("invDate============="+invDate);
@@ -5411,6 +5427,25 @@ public class InvoiceServices {
 	       			
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
+	       				/*
+	       				//=======================New Sequence from Role========================
+	       				
+			       			 try {
+			 					List conditions = FastList.newInstance();
+			 					conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			 					conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "CUSTOMER_AGENT"));
+			 			    	List <GenericValue> InvoiceRole = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+			 			    	if(UtilValidate.isNotEmpty(InvoiceRole)){
+			 			    		partyId = (EntityUtil.getFirst(InvoiceRole)).getString("partyId");
+			 			    		
+			 			    	}
+			 			 } catch (Exception e) {
+			 				Debug.logError("Problem in Invoice Role", module);
+			 			 }
+	       				
+	       				
+	       				//=========================================================================
+	       				*/
 	       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
 	        			orderId = shipments.getString("primaryOrderId");
 	        			//Debug.log("orderId============="+orderId);
