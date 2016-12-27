@@ -27,6 +27,11 @@ import java.math.RoundingMode;
 fromDate = parameters.IndentRegisterFromDate;
 thruDate = parameters.IndentRegisterThruDate;
 
+entryFromDate = parameters.IndentRegisterEntryFromDate;
+entryThruDate = parameters.IndentRegisterEntryThruDate;
+
+salesChannelEnumId = parameters.salesChannel;
+
 context.fromDate=fromDate;
 context.thruDate=thruDate;
 
@@ -36,13 +41,34 @@ try {
 		fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(fromDate).getTime()));
 		thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(thruDate).getTime()));
 	}
+	if (UtilValidate.isNotEmpty(entryFromDate)) {
+		entryFromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(entryFromDate).getTime()));
+		entryThruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(entryThruDate).getTime()));
+	}
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: " + e, "");
 context.errorMessage = "Cannot parse date string: " + e;
 	return;
 }
+
+dayStart = null;
+dayEnd = null;
+
+entryDayStart = null;
+entryDayEnd = null;
+
+if (UtilValidate.isNotEmpty(fromDate)) {
 dayStart = UtilDateTime.getDayStart(fromDate);
 dayEnd = UtilDateTime.getDayEnd(thruDate);
+
+}
+if (UtilValidate.isNotEmpty(entryFromDate)) {
+entryDayStart = UtilDateTime.getDayStart(entryFromDate);
+entryDayEnd = UtilDateTime.getDayEnd(entryThruDate);
+
+}
+
+
 BranchList=[];
 	branchMap = [:];
 	branchName="";
@@ -137,9 +163,26 @@ BranchList=[];
 		branchBasedOrderIds = EntityUtil.getFieldListFromEntityList(custOrderRoles, "orderId", true);
 	}
 	
+	if(branchBasedOrderIds)
 	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, branchBasedOrderIds));
+	
+  if(dayStart){
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
+	}
+	
+	if(UtilValidate.isNotEmpty(entryDayStart)){
+		condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.GREATER_THAN_EQUAL_TO, entryDayStart));
+		condList.add(EntityCondition.makeCondition("entryDate", EntityOperator.LESS_THAN_EQUAL_TO, entryDayEnd));
+		
+	}
+	
+	if(UtilValidate.isNotEmpty(salesChannelEnumId)){
+		condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannelEnumId));
+	}
+	
+	
+	
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
 	condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
 	condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
@@ -156,7 +199,7 @@ BranchList=[];
 	forIndentsCount = [];
 	int totalIndents = 0
 	totalIndQty=0;
-	totalIndVal=0;
+	BigDecimal totalIndVal=0;
 	totalPoQty=0;
 	totalSalVal=0;
 	orderHeader = delegator.findList("OrderHeader", cond, null, payOrderBy, null, false);
@@ -352,14 +395,14 @@ BranchList=[];
 			tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
 		}
 		
-		ordQty=0;
-		indentValue=0;
+		BigDecimal ordQty=0;
+		BigDecimal indentValue=0;
 		poId="";
 		salValue=0;
 		poQty=0;
 		productId="";
 		
-		custCondList.clear();
+		/*custCondList.clear();
 		custCondList.add(EntityCondition.makeCondition("toOrderId",  EntityOperator.EQUALS, orderId));
 		custCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 		custCond1 = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
@@ -367,11 +410,11 @@ BranchList=[];
 		if(UtilValidate.isNotEmpty(orderAssocList)){
 			orderAssoc = EntityUtil.getFirst(orderAssocList);
 			poId=orderAssoc.get("orderId");
-			custCondList.clear();
-			custCondList.add(EntityCondition.makeCondition("orderId",  EntityOperator.IN, UtilMisc.toList(orderId,poId)));
+*/			custCondList.clear();
+			custCondList.add(EntityCondition.makeCondition("orderId",  EntityOperator.EQUALS, orderId));
 			custCond2 = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
 			orderItemList = delegator.findList("OrderItem", custCond2, null, null, null, false);
-			indentPrice=0;
+			BigDecimal indentPrice=0;
 			productName="";
 			productNameCSV="";
 			
@@ -465,7 +508,7 @@ BranchList=[];
 			tempData.put("paymentReceipt", "-");
 			tempData.put("amount", "-");		
 			
-		}
+		//}
 		
 		productStoreId=eachHeader.productStoreId;
 		
