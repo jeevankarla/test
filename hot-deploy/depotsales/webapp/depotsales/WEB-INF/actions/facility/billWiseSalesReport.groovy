@@ -360,12 +360,9 @@ for(int i=0;i < Invoice.size();i++){
 	finalList.add(invoiceDetailMap);
 }	
 context.totQty=totQty;
-Debug.log("total quantity======================================"+totAmount);
 context.totAmount=totAmount;
-Debug.log("total amount======================================"+totAmount);
 context.finalMap = finalMap;
 context.totsubquant=totsubquant;
-Debug.log("total ======================================"+totAmount);
 context.totsubAmount=totsubAmount;
 context.partyWiseTotalsMap = partyWiseTotalsMap;
 context.finalList = finalList;
