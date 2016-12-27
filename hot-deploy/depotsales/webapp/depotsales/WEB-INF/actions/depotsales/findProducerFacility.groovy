@@ -105,6 +105,11 @@ passGreater = "";
 if(parameters.passGreater)
 passGreater = parameters.passGreater;
 
+effectiveDate = "";
+
+if(parameters.effectiveDate)
+effectiveDate = parameters.effectiveDate;
+
 /*partyClassification = "";
 if(parameters.partyClassificationId)
 partyClassification = parameters.partyClassificationId;
@@ -125,6 +130,7 @@ context.isDepot = isDepot;
 context.satate = satate;
 context.district = district;
 context.passGreater = passGreater;
+context.effectiveDate = effectiveDate;
 
 
 
