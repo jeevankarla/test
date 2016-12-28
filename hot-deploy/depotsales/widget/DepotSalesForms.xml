@@ -3066,9 +3066,10 @@
 
 	</form>
        <form name="SupplierwiseCountwisePurchaseReportCSV" type="list" list-name="finalCSVList" view-size="99999">
+    	 <field name="prodcatName" title="___"><display/></field>
+    	 <field name="productName" title="____"><display/></field>
     	 <field name="partyName" title="____"><display/></field>
-    	 <field name="orderQty" title="___"><display/></field>
-         <field name="BdlWt" title="____"><display/></field>
+    	 <field name="orderQty" title="___"><display/></field>         
          <field name="rate" title="_National Handloom__"><display/></field>
          <field name="orderValue" title="_Development Corporation LTD___ ___"><display/></field>
     </form>
