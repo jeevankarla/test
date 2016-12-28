@@ -3722,6 +3722,7 @@
          <field name="IndentDate" title="__"><display/></field>
          <field name="indQty" title="__"><display/></field>
          <field name="indUnitPrice" title="__"><display/></field>
+         <field name="indentValue" title="__"><display/></field>
          <field name="PoNo" title="__"><display/></field>
          <field name="PoDate" title="__pending_"><display/></field>
          <field name="supplier" title="__Shipments__"><display/></field>
