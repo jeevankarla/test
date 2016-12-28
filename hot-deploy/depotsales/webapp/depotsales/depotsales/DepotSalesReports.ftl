@@ -194,7 +194,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td> 
 			  
 			  	<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('pendingShipmentsReport', '<@ofbizUrl>pendingShipmentsReport.pdf</@ofbizUrl>');" class="buttontext"/></td>
-			  	<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('pendingShipmentsReport', '<@ofbizUrl>pendingShipmentsReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+			  	<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('pendingShipmentsReport', '<@ofbizUrl>pendingShipmentsReport.csv?header=required</@ofbizUrl>');" class="buttontext"/></td>
 				
            </form>
         </tr> 

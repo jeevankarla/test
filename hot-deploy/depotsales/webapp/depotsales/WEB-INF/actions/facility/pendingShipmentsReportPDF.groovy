@@ -148,20 +148,22 @@ shipmentDetailsForOrders = delegator.findList("ShipmentAndReceipt", EntityCondit
 finalList=[];
 orderIdsCheck=[];
 
-headerData2=[:];
-headerData2.put("IndentNo", "IndentNo");
-headerData2.put("IndentDate", "IndentDate");
-headerData2.put("indQty", "indQty");
-headerData2.put("indUnitPrice", "indUnitPrice");
-headerData2.put("indentValue", "indentValue");
-headerData2.put("PoNo", "PoNo");
-headerData2.put("PoDate", "PoDate");
-headerData2.put("supplier", "supplier");
-headerData2.put("shipmentDate", "shipmentDate");
-headerData2.put("shipQty", "shipQty");
-headerData2.put("DurBWSoAndPo", "DurBWSoAndPo");
-headerData2.put("DurBwSoAndShip", "DurBwSoAndShip");
-finalList.add(headerData2);
+if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
+headerData=[:];
+headerData.put("IndentNo", "IndentNo");
+headerData.put("IndentDate", "IndentDate");
+headerData.put("indQty", "indQty");
+headerData.put("indUnitPrice", "indUnitPrice");
+headerData.put("indentValue", "indentValue");
+headerData.put("PoNo", "PoNo");
+headerData.put("PoDate", "PoDate");
+headerData.put("supplier", "supplier");
+headerData.put("shipmentDate", "shipmentDate");
+headerData.put("shipQty", "shipQty");
+headerData.put("DurBWSoAndPo", "DurBWSoAndPo");
+headerData.put("DurBwSoAndShip", "DurBwSoAndShip");
+finalList.add(headerData);
+}
 for(saleOrder in salesOrderDetailsList){
 	Map tempMap = FastMap.newInstance();
 	indQty=0;
@@ -251,11 +253,8 @@ for(saleOrder in salesOrderDetailsList){
 		}
 	}
 	orderIdsCheck.add(saleOrder.orderId)
-context.finalList=finalList;
 }
-
-
-
+context.finalList=finalList;
 
 
 
