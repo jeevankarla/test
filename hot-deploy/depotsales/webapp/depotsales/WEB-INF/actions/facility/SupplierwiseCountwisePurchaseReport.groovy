@@ -97,17 +97,21 @@ prodCatMap=[:];
 totalsMap=[:];
 productId=EntityUtil.getFieldListFromEntityList(orderHeaderItemAndRoles, "productId", true);
 headerData2=[:];
+headerData2.put("prodcatName", "______");
+headerData2.put("productName", "______");
 headerData2.put("partyName", "______");
-headerData2.put("orderQty", "___");
-headerData2.put("BdlWt", "___Supplierwise___");
+headerData2.put("orderQty", "______Supplierwise___");
+/*headerData2.put("BdlWt", "____");*/
 headerData2.put("rate", "_ Countwise");
 headerData2.put("orderValue", "____ Purchase Report_______");
 finalCSVList.add(headerData2);
 
 headerData=[:];
+headerData.put("prodcatName", "Product category");
+headerData.put("productName", "product count");
 headerData.put("partyName", "partyName");
 headerData.put("orderQty", "orderQty");
-headerData.put("BdlWt", "BdlWt");
+/*headerData.put("BdlWt", "BdlWt");*/
 headerData.put("rate", "rate");
 headerData.put("orderValue", "orderValue");
 finalCSVList.add(headerData);
@@ -120,9 +124,9 @@ for(productCategoryId in productCategoryIds){
 	if(UtilValidate.isNotEmpty(productCategoryDetails)){
 		prodCatName=productCategoryDetails.description
 	}
-	tempCSVMap1.put("partyName", prodCatName);
+	tempCSVMap1.put("partyName", "");
 	tempCSVMap1.put("orderQty", "");
-	tempCSVMap1.put("BdlWt", "");
+	/*tempCSVMap1.put("BdlWt", "");*/
 	tempCSVMap1.put("rate", "");
 	tempCSVMap1.put("orderValue", "");
 	finalCSVList.add(tempCSVMap1);
@@ -142,9 +146,9 @@ for(productCategoryId in productCategoryIds){
 		partyIds=EntityUtil.getFieldListFromEntityList(singleCatProductsOrdersDetails, "partyId", true);
 		
 		if(UtilValidate.isNotEmpty(singleCatProductsOrdersDetail)){
-			tempCSVMap2.put("partyName", singleCatProductsOrdersDetail.itemDescription);
+			tempCSVMap2.put("partyName", "");
 			tempCSVMap2.put("orderQty", "");
-			tempCSVMap2.put("BdlWt", "");
+			/*tempCSVMap2.put("BdlWt", "");*/
 			tempCSVMap2.put("rate", "");
 			tempCSVMap2.put("orderValue", "");
 			finalCSVList.add(tempCSVMap2);
@@ -175,7 +179,7 @@ for(productCategoryId in productCategoryIds){
 			tempMap.put("prodcatName", prodCatName);
 			tempMap.put("partyName", partyName);
 			tempMap.put("orderQty", orderQty);
-			tempMap.put("BdlWt", "");
+			/*tempMap.put("BdlWt", "");*/
 			tempMap.put("rate", rate);
 			tempMap.put("orderValue", orderValue);
 			totalQty=totalQty+orderQty
@@ -191,7 +195,7 @@ for(productCategoryId in productCategoryIds){
 			
 			tempTotMap.put("partyName", "SUB-TOTAL");
 			tempTotMap.put("orderQty", totOrderQty);
-			tempTotMap.put("BdlWt", "");
+			/*tempTotMap.put("BdlWt", "");*/
 			tempTotMap.put("rate", totRate);
 			tempTotMap.put("orderValue", totOrderValue);
 			prodPartiesList.add(tempTotMap);
