@@ -89,7 +89,7 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 			finalCSVList.add(headerData2);
 			
 			//}
-			
+			BigDecimal initial=BigDecimal.ZERO;
 			totInitialQty=BigDecimal.ZERO;
 			totFinalQty=BigDecimal.ZERO;
 			totDiffQty=BigDecimal.ZERO;
@@ -106,7 +106,6 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 					productList.each{productEntry->
 						conditionList.clear();
 						tempMap =[:];
-						 BigDecimal initial=BigDecimal.ZERO;
 						tempMap["productCode"]="";
 						tempMap["productName"]="";
 						tempMap["initialQty"]=BigDecimal.ZERO;
