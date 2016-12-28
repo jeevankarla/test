@@ -237,8 +237,45 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		context.partyAddress = partyAddress;
 	}
 	
-	productListCtx = dispatcher.runSync("getSchemeApplicableProducts",UtilMisc.toMap("userLogin",userLogin, "schemeCategory", parameters.schemeCategory, "productCategoryId",parameters.screenFlag));
+	//Debug.log("parameters.screenFlag================"+parameters.screenFlag);
+	
 	prodList=[];
+	if(parameters.screenFlag == "ChemicalIndent" || parameters.screenFlag == "DyesIndent"){
+		
+		if(parameters.screenFlag == "DyesIndent" ){
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,"DYES"));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			
+		productIdsList = EntityUtil.getFieldListFromEntityList(delegator.findList("ProductCategoryAndMember",condition, UtilMisc.toSet("productId"), null, null, false), "productId", true);
+		
+		prodList = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList),null, null, null, false);
+		}
+		
+		if(parameters.screenFlag == "ChemicalIndent" ){
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,"CHEMICALS"));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			
+		productIdsList = EntityUtil.getFieldListFromEntityList(delegator.findList("ProductCategoryAndMember",condition, UtilMisc.toSet("productId"), null, null, false), "productId", true);
+		
+		prodList = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList),null, null, null, false);
+
+		}
+		
+		
+		
+	}else{
+	
+	productListCtx = dispatcher.runSync("getSchemeApplicableProducts",UtilMisc.toMap("userLogin",userLogin, "schemeCategory", parameters.schemeCategory, "productCategoryId",parameters.screenFlag));
+	
+	prodList = productListCtx.get("productList");
+	
+	}
+	
+	//Debug.log("prodList==================="+prodList);
+	
+	
 	/*exprList.clear();
 	//exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 	//exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
@@ -293,7 +330,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			  EntityCondition discontinuationDateCondition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
 	prodList =delegator.findList("Product", discontinuationDateCondition,null, null, null, false);*/
 	
-	prodList = productListCtx.get("productList");
+	
 	
 	if(UtilValidate.isNotEmpty(productCatageoryId)){
 		
