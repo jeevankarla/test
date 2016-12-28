@@ -313,9 +313,8 @@ BranchList=[];
 					
 					
 					unitPrice=(unitpricetotalamount)/(orderItemList1.size());
-					
+					unitPrice=Math.round(unitPrice * 100) / 100;
 					totalamount1=totalamount1+((unitPrice)*(ordQty));
-					//Debug.log("totAmt==="+unitpricetotalamount+"==size=="+orderItemList1.size()+"===avg==="+unitPrice);
 					}
 				
 				orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
@@ -326,6 +325,7 @@ BranchList=[];
 				}
 			}
 			tempData.put("poNo", poId);
+			tempData.put("poSquenceNo", poSquenceNo);
 			tempData.put("poQty",poQty);
 			tempData.put("Qty", ordQty);
 		   // tempData.put("unit", indentPrice);
