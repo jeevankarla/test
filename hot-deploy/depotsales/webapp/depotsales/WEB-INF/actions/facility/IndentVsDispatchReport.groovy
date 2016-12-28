@@ -90,11 +90,11 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 			
 			//}
 			
-			totInitialQty=BigDecimal.ZERO;
-			totFinalQty=BigDecimal.ZERO;
-			totDiffQty=BigDecimal.ZERO;
-			totIndentValue=BigDecimal.ZERO;
-			totDispatchValue=BigDecimal.ZERO;
+			BigDecimal totInitialQty=BigDecimal.ZERO;
+			BigDecimal totFinalQty=BigDecimal.ZERO;
+			BigDecimal totDiffQty=BigDecimal.ZERO;
+			BigDecimal totIndentValue=BigDecimal.ZERO;
+			BigDecimal totDispatchValue=BigDecimal.ZERO;
 	if(UtilValidate.isNotEmpty(OrderIdList)){
 			
 			OrderIdList.each{orderId->
@@ -106,9 +106,9 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 					productList.each{productEntry->
 						conditionList.clear();
 						tempMap =[:];
-						 BigDecimal initial=BigDecimal.ZERO;
 						tempMap["productCode"]="";
 						tempMap["productName"]="";
+						BigDecimal initial=BigDecimal.ZERO;
 						tempMap["initialQty"]=BigDecimal.ZERO;
 						tempMap["finalQty"]=BigDecimal.ZERO;
 						tempMap["diffQty"]=BigDecimal.ZERO;
@@ -168,10 +168,10 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 						
 						indentValue=(productEntry.quantity)*(tempMap["indentPrice"]);
 						//Debug.log("indentValue======="+indentValue);
-						totIndentValue=totIndentValue+indentValue.setScale(2, rounding);
+						totIndentValue=totIndentValue+indentValue;
 						//Debug.log("TOATALindentValue======="+totIndentValue);
 						dispatchValue=(shippedQty)*(dispatchPrice);
-						totDispatchValue=totDispatchValue+dispatchValue.setScale(2, rounding);
+						totDispatchValue=totDispatchValue+dispatchValue;
 						//Debug.log("productlistsize======="+productList.size());
 						tempMap["indentValue"]=indentValue.setScale(2, rounding);
 						tempMap["dispatchValue"]=dispatchValue.setScale(2, rounding);
@@ -197,11 +197,11 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 		}
 	}
 	tempTotMap.put("orderNo", "TOTAL");
-	tempTotMap.put("initialQty", totInitialQty);
-	tempTotMap.put("indentValue", totIndentValue);
-	tempTotMap.put("finalQty", totFinalQty);
-	tempTotMap.put("dispatchValue", totDispatchValue);
-	tempTotMap.put("diffQty", totDiffQty);
+	tempTotMap.put("initialQty", totInitialQty.setScale(2, rounding));
+	tempTotMap.put("indentValue", totIndentValue.setScale(2, rounding));
+	tempTotMap.put("finalQty", totFinalQty.setScale(2, rounding));
+	tempTotMap.put("dispatchValue", totDispatchValue.setScale(2, rounding));
+	tempTotMap.put("diffQty", totDiffQty.setScale(2, rounding));
 	context.tempTotMap=tempTotMap;
 	finalCSVList.add(tempTotMap);
 	context.IndentVsDispatchMap=finalMap;

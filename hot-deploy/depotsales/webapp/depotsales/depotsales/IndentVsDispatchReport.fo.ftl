@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" margin-top=".5in" margin-left=".25in" margin-right=".25in" >
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" margin-top=".5in" margin-left=".3in" margin-right=".3in" >
                 <fo:region-body margin-top="1.25in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -51,13 +51,13 @@ under the License.
           			<fo:table>
           					<fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="8%"/>
-		                    <fo:table-column column-width="14%"/>
+		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
 		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="9%"/>
+		                    <fo:table-column column-width="13%"/>
+		                    <fo:table-column column-width="10%"/>
 		                   
 		                    <fo:table-body>
 		                    	<fo:table-row>
@@ -106,13 +106,13 @@ under the License.
           			<fo:table>
           					<fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="8%"/>
-		                    <fo:table-column column-width="14%"/>
+		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
 		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="9%"/>
+		                    <fo:table-column column-width="13%"/>
+		                    <fo:table-column column-width="10%"/>
 		                    <fo:table-body>
 		                    	
 							     <#list orderWiseList as orderWiseEntry>
@@ -160,13 +160,13 @@ under the License.
           			<fo:table>
           					<fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="8%"/>
-		                    <fo:table-column column-width="14%"/>
+		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
 		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="9%"/>
+		                    <fo:table-column column-width="13%"/>
+		                    <fo:table-column column-width="10%"/>
 		                    <fo:table-body>
           			 <fo:table-row>
 					                   <fo:table-cell border-style="solid">
@@ -182,19 +182,19 @@ under the License.
 							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">																	
-							            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("initialQty")?if_exists}</fo:block>  
+							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("initialQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">																	
 							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("indentValue")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">																	
-							            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("finalQty")?if_exists}</fo:block>  
+							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("finalQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">																	
 							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("dispatchValue")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">																	
-							            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("diffQty")?if_exists}</fo:block>  
+							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">${tempTotMap.get("diffQty")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							            
 							     </fo:table-row>
