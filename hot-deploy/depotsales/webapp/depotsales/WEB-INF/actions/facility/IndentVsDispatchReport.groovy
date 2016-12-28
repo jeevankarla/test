@@ -89,12 +89,12 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 			finalCSVList.add(headerData2);
 			
 			//}
-			BigDecimal initial=BigDecimal.ZERO;
-			totInitialQty=BigDecimal.ZERO;
-			totFinalQty=BigDecimal.ZERO;
-			totDiffQty=BigDecimal.ZERO;
-			totIndentValue=BigDecimal.ZERO;
-			totDispatchValue=BigDecimal.ZERO;
+			
+			BigDecimal totInitialQty=BigDecimal.ZERO;
+			BigDecimal totFinalQty=BigDecimal.ZERO;
+			BigDecimal totDiffQty=BigDecimal.ZERO;
+			BigDecimal totIndentValue=BigDecimal.ZERO;
+			BigDecimal totDispatchValue=BigDecimal.ZERO;
 	if(UtilValidate.isNotEmpty(OrderIdList)){
 			
 			OrderIdList.each{orderId->
@@ -108,6 +108,7 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 						tempMap =[:];
 						tempMap["productCode"]="";
 						tempMap["productName"]="";
+						BigDecimal initial=BigDecimal.ZERO;
 						tempMap["initialQty"]=BigDecimal.ZERO;
 						tempMap["finalQty"]=BigDecimal.ZERO;
 						tempMap["diffQty"]=BigDecimal.ZERO;
