@@ -608,13 +608,22 @@
 		       	  				   var psbNo=contactDetails["psbNo"];
 		       	  				   var prodStoreId=contactDetails["productStoreId"];
 		       	  				   var partyType=contactDetails["partyType"];
-			       	  			   if( prodStoreId != undefined && prodStoreId != ""){
-			       	  					//$("#productStoreId").autocomplete("select", prodStoreId);
+			       	  			   var productStoreJSON=contactDetails["productStoreJSON"];
+			       	  			   
+			       	  			    var storeSize=contactDetails["storeSize"];
+			       	  			   
+			       	  			   if( storeSize != undefined && storeSize != "" && storeSize == 1){
 			       	  					$('#productStoreId').focus().val(prodStoreId);
 			       	  					jQuery("#branchName").html(prodStoreId);
 			       	  					$('#salesChannel').focus();
-	    								//$('#productStoreId').autocomplete('close');
+			       	  			   }else{
+			       	  			   
+				       	  			    $("#productStoreId").autocomplete({ source: productStoreJSON , select: function( event, ui ) {
+										$('span#branchName').html('<label>'+ui.item.label+'</label>');
+										} });
+			       	  			   
 			       	  			   }
+			       	  				
 			       	  				
 		       	  				   
 		       	  				   

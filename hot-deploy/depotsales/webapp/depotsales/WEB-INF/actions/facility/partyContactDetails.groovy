@@ -225,10 +225,24 @@ resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",us
 	//productStoreDetails = delegator.findList("ProductStore", EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_IN,UtilMisc.toList("1003","1012","9000","STORE") ), null,null,null, false);
 	productStoreIds = EntityUtil.getFieldListFromEntityList(productStoreDetails, "productStoreId", true);
 	
+	storeSize = 0;
 	if(productStoreIds.size() == 1){
 		partyJSON.put("productStoreId",productStoreIds.get(0));
-	}
+		storeSize = 1;
+	}else{
+	JSONArray productStoreJSON = new JSONArray();
+		productStoreIds.each{ productStore ->
+				JSONObject newObj = new JSONObject();
+				newObj.put("value",productStore);
+				newObj.put("label",productStore);
+				productStoreJSON.add(newObj);
+		}
+	storeSize = productStoreIds.size();
+	partyJSON.put("productStoreJSON",productStoreJSON);
 	
+	}
+
+partyJSON.put("storeSize",storeSize);
 partyJSON.put("psbNo",psbNo);
 
 partyJSON.put("address1",address1);
