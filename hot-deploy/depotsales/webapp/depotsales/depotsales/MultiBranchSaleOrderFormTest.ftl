@@ -854,6 +854,10 @@
 	<#assign changeRowTitle = "Changes">   
 	<#if parameters.formAction?has_content && (parameters.formAction=="SilkMultiBranchSalesOrder" || parameters.formAction=="OtherMultiBranchSalesOrder")>
 		<#include "SilkMultiBranchSalesOrderInternalForm.ftl"/>
+    <#elseif parameters.formAction?has_content && (parameters.formAction=="DyesSalesOrder") >
+	    <#include "MultiBranchSalesOrderInternalFormDYES.ftl"/>
+	<#elseif parameters.formAction?has_content && (parameters.formAction=="ChemicalSalesOrder") >
+	    <#include "MultiBranchSalesOrderInternalFormCHEMI.ftl"/>    		
 	<#else>
 		<#include "MultiBranchSalesOrderInternalForm.ftl"/>
 	</#if>

@@ -989,6 +989,10 @@ function fillPartyQuota(partyId){
 	<#assign changeRowTitle = "Changes">   
 	<#if parameters.formAction?has_content && (parameters.formAction=="SilkBranchSalesOrder" || parameters.formAction=="OtherBranchSalesOrder")>
 		<#include "SilkBranchSalesOrderInternalForm.ftl"/>
+	<#elseif parameters.formAction?has_content && (parameters.formAction=="DyesSalesOrder") >
+	    <#include "BranchSalesOrderInternalFormForDYES.ftl"/>
+	<#elseif parameters.formAction?has_content && (parameters.formAction=="ChemicalSalesOrder") >
+	    <#include "BranchSalesOrderInternalFormForCHEMI.ftl"/>    
 	<#else>
 		<#include "BranchSalesOrderInternalForm.ftl"/>
 	</#if>
