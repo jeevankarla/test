@@ -3087,7 +3087,10 @@
         <field name="unit" title="UNIT PRICE"><display/></field>
            <field name="amount" title="Amount"><display/></field>
         <field name="weaverName" title="WEAVER NAME"><display/></field>
-        <field name="poNo" title="PO NO"><display/></field>
+        
+        <field name="poSquenceNo" title=" PO SEQUENCE ID" ><display /></field>
+        <!-- <field name="poNo" title="PO NO"><display/></field> --> 
+          
         <field name="poDate" title="PO DATE"><display/></field> 
         <field name="poQty" title="PO QUANTITY"><display/></field>
         <field name="supplierName" title="SUPPLIER NAME"><display/></field>
