@@ -3114,10 +3114,6 @@
      
     </form>
    
-   
-   
-   
-   
     
     <form name="salePurchaseReport" type="list" list-name="salesAndPurchaseList" view-size="99999">
 			<field name="invoiceId" title="invoiceId"><display/></field>
@@ -3129,6 +3125,7 @@
 			<field name="allAdjWitOutTEN" title="Adjustment Amount"><display/></field>
 			<field name="invoiceNetAmt" title="Net Amount"><display/></field>
 			<field name="userAgency" title="userAgency"><display/></field>
+			<field name="partyClassification" title="partyClassification"><display/></field>
 			<field name="cluster" title="cluster"><display/></field>
 			<field name="District" title="District"><display/></field>
 			<field name="branch" title="branch"><display/></field>
