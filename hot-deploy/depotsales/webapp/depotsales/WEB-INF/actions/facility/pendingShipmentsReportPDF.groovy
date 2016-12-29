@@ -54,7 +54,7 @@ branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo",
 if(!branchList)
 branchList.add(branchId);
 }
-Debug.log("branchList=================="+branchList);
+/*Debug.log("branchList=================="+branchList);*/
 
 branchBasedWeaversList = [];
 condListb1 = [];
@@ -70,7 +70,7 @@ if(!branchBasedWeaversList)
 branchBasedWeaversList.add(branchId);
 }
 
-Debug.log("branchBasedWeaversList=================="+branchBasedWeaversList);
+/*Debug.log("branchBasedWeaversList=================="+branchBasedWeaversList);*/
 
 productCategory=parameters.productCategory;
 shipmentstate = parameters.shipmentstate;
