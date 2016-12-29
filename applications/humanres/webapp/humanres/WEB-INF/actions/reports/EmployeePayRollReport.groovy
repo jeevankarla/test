@@ -333,11 +333,19 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			if(UtilValidate.isNotEmpty(accountDetails)){
 				accDetails = EntityUtil.getFirst(accountDetails);
 				accNo=0;
+				ifscCode="";
+				finAccountBranch="";
+				finAccountName="";
 				if(UtilValidate.isNotEmpty(accDetails))	{
-					accNo= accDetails.get("finAccountCode");					
+					accNo = accDetails.get("finAccountCode");	
+					ifscCode = accDetails.get("ifscCode");
+					finAccountBranch = accDetails.get("finAccountBranch");
+					finAccountName = accDetails.get("finAccountName");
 				}		
 				bankAdviceDetailsMap.put("acNo",accNo);
-				
+				bankAdviceDetailsMap.put("ifscCode",ifscCode);
+				bankAdviceDetailsMap.put("finAccountBranch",finAccountBranch);
+				bankAdviceDetailsMap.put("finAccountName",finAccountName);
 			}
 			if(UtilValidate.isNotEmpty(partyDetails.employeeId)){
 				bankAdviceDetailsMap.put("emplNo",partyDetails.get("employeeId"));

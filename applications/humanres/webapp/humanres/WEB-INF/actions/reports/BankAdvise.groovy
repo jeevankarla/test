@@ -91,6 +91,7 @@ bankAdvPayrollMap= context.get("BankAdvicePayRollMap");
   companyBankAccountList= delegator.findList("FinAccount",condition,null,null,null,false);
   Map bankWiseEmplDetailsMap=FastMap.newInstance();
 Map CanaraBankMap=FastMap.newInstance();  
+AllPartyList = [];
 if(UtilValidate.isNotEmpty(companyBankAccountList)){
 	companyBankAccountList.each{ bankDetails->		
 		finAccountId= bankDetails.finAccountId;
@@ -106,13 +107,14 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 			conList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
 		}else{
 		  	conList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-			  conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
+			conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
 		}
 		conList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
 		EntityCondition cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
 		finAccountRoleList=delegator.findList("FinAccountRole",cond, null,null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
+			AllPartyList.addAll(partyIds);
 			//Debug.log("partyIds============="+partyIds);
 			if(UtilValidate.isNotEmpty(partyIds)){
 				emplPartyIds=[];
@@ -204,4 +206,6 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 }
 context.put("bankWiseEmplDetailsMap",bankWiseEmplDetailsMap);
 context.put("CanaraBankMap",CanaraBankMap);
+context.put("AllPartyList",AllPartyList);
+
 	

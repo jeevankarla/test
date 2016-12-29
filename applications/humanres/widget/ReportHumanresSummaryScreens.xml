@@ -1821,12 +1821,19 @@
 		<widgets>
 			<section>                                                      
 				<widgets>
-				<platform-specific>
+				<!-- <platform-specific>
 						<xsl-fo>
 							<html-template location="component://humanres/webapp/humanres/humanres/employeeBankDetails.fo.ftl" />
 						</xsl-fo>
+					</platform-specific> -->
+			
+ 					<platform-specific>
+						<xsl-fo>
+							<html-template location="component://humanres/webapp/humanres/humanres/employeeBankDetailsNew.fo.ftl" />
+						</xsl-fo>
 					</platform-specific>
-				</widgets>
+ 
+ 		</widgets>
 			</section>
 		</widgets>
 	</section>

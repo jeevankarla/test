@@ -1301,6 +1301,12 @@
         <value xml:lang="th">ชื่อธนาคาร</value>
         <value xml:lang="zh">银行名称</value>
     </property>
+    <property key="AccountingBranchName">
+        <value xml:lang="en">Branch Name</value>
+    </property>
+    <property key="AccountingIfscCode">
+        <value xml:lang="en">IFSC Code</value>
+    </property>
     <property key="AccountingBankNameMissing">
         <value xml:lang="de">Bankname fehlt</value>
         <value xml:lang="en">Bank Name is missing</value>
