@@ -90,7 +90,8 @@ under the License.
 <#else>
             <tr><td colspan="4"><hr /></td></tr>
             <tr>
-              <td class="label align-top">Current address</td>
+              <#assign contactTypeDesc = delegator.findOne("ContactMechType", {"contactMechTypeId" : contactMech.contactMechTypeId}, true)?if_exists/>
+              <td class="label align-top">${contactTypeDesc.description}</td>
               <td>
                 <#list contactMechMap.partyContactMechPurposes as partyContactMechPurpose>
                   <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
