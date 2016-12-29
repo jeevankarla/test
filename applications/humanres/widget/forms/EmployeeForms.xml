@@ -440,7 +440,7 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="caste" title="${uiLabelMap.Caste}">
+		<field name="caste" title="Category">
 			<drop-down allow-empty="true" no-current-selected-key="${partyClassificationGroupId}">
 				<entity-options entity-name="PartyClassificationGroup" key-field-name="partyClassificationGroupId" description="${description}">
 					<entity-constraint name="partyClassificationTypeId" value="PCG_REC_CA"/>
