@@ -183,11 +183,20 @@
 	context.branchPartyObj=branchPartyObj;
 	context.partyIdsListkkkk=partyIdsList;
 	//supplier json for supplier lookup.
+	
 	JSONArray supplierJSON = new JSONArray();
 	JSONObject supplierIdJson = new JSONObject();
 	
-	Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId", "SUPPLIER")],EntityOperator.AND);
+	if(parameters.screenFlag == "ChemicalIndent" || parameters.screenFlag == "DyesIndent"){
+		Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId", "DYS_CMLS_SUPPLIER")],EntityOperator.AND);
+		supplierList=delegator.findList("PartyRole",Condition,null,null,null,false);
+	}else{
+	condList.clear();
+	condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
+	condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.NOT_EQUAL, "DYS_CMLS_SUPPLIER"));
+	Condition = EntityCondition.makeCondition(condList,EntityOperator.AND);
 	supplierList=delegator.findList("PartyRole",Condition,null,null,null,false);
+	}
 	
 	partyIdsFromSuppList = EntityUtil.getFieldListFromEntityList(supplierList, "partyId", true);
 	
