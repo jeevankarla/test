@@ -38,7 +38,9 @@ dedTypeIds.each{ dedTypeId->
 	}
 }
 payheadTypeNames.add("Total Deductions");
-payheadTypeNames.add("Net Amount")
+payheadTypeNames.add("Net Amount");
+payheadTypeNames.add("Empl Contribution to CPF");
+payheadTypeNames.add("Gross Total");
 JSONArray benefitsTableJSON = new JSONArray();
 employeeDeptMap = [:];
 employments = [];
@@ -102,6 +104,19 @@ if (payRollEmployeeMap != null) {
 			employeePayrollJSON.add(amount);
 		}*/
 		employeePayrollJSON.add(netAmount);
+		empCPF = 0;
+		if(employeePayrollItems.get("PAYROL_BEN_SALARY")){
+			empCPF = employeePayrollItems.get("PAYROL_BEN_SALARY");
+		}
+		if(employeePayrollItems.get("PAYROL_BEN_DA")){
+			empCPF+=employeePayrollItems.get("PAYROL_BEN_DA");
+		}
+		empCPF*=0.12;
+		employeePayrollJSON.add(empCPF);
+		
+		employeePayrollJSON.add(totBenifit+empCPF);
+		
+		
 		employeesPayrollTableJSON.add(employeePayrollJSON);
 	}
 }
