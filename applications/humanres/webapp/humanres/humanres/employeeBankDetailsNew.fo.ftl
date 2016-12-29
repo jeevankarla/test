@@ -140,7 +140,7 @@ under the License.
               	<fo:table-cell />
               	<fo:table-cell/>
               	<fo:table-cell/>
-              	<fo:table-cell><fo:block text-align="center" font-weight="bold">${totalNetAmt?if_exists?string("#0.00")}</fo:block></fo:table-cell>
+              	<fo:table-cell><fo:block text-align="center" font-weight="bold"><@ofbizCurrency amount=totalNetAmt?if_exists/></fo:block></fo:table-cell>
               </fo:table-row>
           </fo:table-body>
         </fo:table> 
