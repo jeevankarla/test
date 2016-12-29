@@ -53,8 +53,8 @@ under the License.
              		    <fo:table-column column-width="6.5%"/>
              		    <fo:table-column column-width="9%"/>
              		    <fo:table-column column-width="12%"/>
-             		    <fo:table-column column-width="9%"/>
-             		    <fo:table-column column-width="11.5%"/>
+             		    <fo:table-column column-width="8.5%"/>
+             		    <fo:table-column column-width="12%"/>
              		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="6.5%"/>
              		    <fo:table-column column-width="5%"/>
@@ -118,9 +118,10 @@ under the License.
 							</fo:table-row>
 						  <#assign totalIdnQty1 = 0>  
 						<#assign totalindentValue1 = 0>
-						<#assign totalshipQty1 = 0>		                  
-							<#list finalList as eachList>  
-                             	<fo:table-row>								
+							<#assign totalshipQty1 = 0>  
+			                  <#list finalList as eachList>
+	                             <fo:table-row>
+								
 			                    <fo:table-cell border-style="solid"> 
 					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false">${eachList.IndentNo?if_exists}</fo:block>
 					            </fo:table-cell>
@@ -158,7 +159,7 @@ under the License.
 					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.DurBwSoAndShip?if_exists}</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
-                             <#assign totalIdnQty = eachList.indQty>  
+                             <#assign totalIdnQty = eachList.indQty>
 							<#assign totalindentValue= eachList.indentValue>
 							<#assign totalshipQty = eachList.shipQty>
 
@@ -172,7 +173,8 @@ under the License.
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid"> 
 					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
-					            </fo:table-cell>								
+					            </fo:table-cell>
+								
 			                    <fo:table-cell border-style="solid"> 
 					            	<fo:block  text-align="right" font-size="9pt" font-weight="bold" white-space-corighe="false">${totalIdnQty1?if_exists?string("##0.00")}</fo:block>
 					            </fo:table-cell>
@@ -203,7 +205,8 @@ under the License.
 								<fo:table-cell border-style="solid"> 
 					            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
-							</fo:table-row>					
+							</fo:table-row>
+						
 						</fo:table-body>
 					</fo:table>
 				</fo:block>
