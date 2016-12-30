@@ -256,8 +256,8 @@ function reportTypeChangeFunc() {
              <tr class="alternate-row">
 				<form id="SubLedgers" name="SubLedgers" method="post" action="<@ofbizUrl>SubLedgersReport.pdf</@ofbizUrl>" target="_blank">	
 					<td width="15%">Sub-Ledger Report</td>
-					<td width="10%">From<input  type="text" size="18pt" id="SubLedgersFromDate" readonly  name="fromDate"/></td>
-				    <td width="10%">To<input  type="text" size="18pt" id="SubLedgersThruDate" readonly  name="thruDate"/></td>
+					<td width="10%">From<input  type="text" size="18pt" id="SubLedgersFromDate" readonly  name="fromDate"/>
+				    To<input  type="text" size="18pt" id="SubLedgersThruDate" readonly  name="thruDate"/></td>
   					<td width="15%">Gl Account :<input type="text" name="glAccountId" id="glAccountId" size="11" maxlength="60"  required onblur='javascript:dispglAccountName(this);'/>
   					<span  class="tooltip" id="AccountName"></span>
                      </td>  
@@ -275,8 +275,8 @@ function reportTypeChangeFunc() {
               <tr class="alternate-row">
 				<form id="SalesAnalysis" name="SalesAnalysis" method="post" action="<@ofbizUrl>SalesAnalysisReport.pdf</@ofbizUrl>" target="_blank">	
 					<td width="15%">Sales Analysis Report</td>
-					<td width="15%">From<input  type="text" size="18pt" id="SaleAnalysisFromDate" readonly  name="fromDate"/></td>
-				    <td width="15%">To<input  type="text" size="18pt" id="SaleAnalysisThruDate" readonly  name="thruDate"/></td>
+					<td width="15%">From<input  type="text" size="18pt" id="SaleAnalysisFromDate" readonly  name="fromDate"/>
+					To<input  type="text" size="18pt" id="SaleAnalysisThruDate" readonly  name="thruDate"/></td>
   					<td width="15%">
                      </td>  
                       <td width="10%">
@@ -286,6 +286,154 @@ function reportTypeChangeFunc() {
 					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParameters('SalesAnalysis', '<@ofbizUrl>SalesAnalysisReport.csv</@ofbizUrl>');" class="buttontext"/></td>  
 				</form>
               </tr>
+              
+               <tr class="alternate-row"> 
+      	   		<form id="scheduleReport" name="scheduleReport" method="post" action="<@ofbizUrl>scheduleReport.pdf</@ofbizUrl>" target="_blank">	
+	      		  	<td width="30%">Schedule Report</td>
+	      		  	  <td width="50%">CustomTimePeriod
+				  	  	<select name='customTimePeriodId' id ="customTimePeriodId" onclick="javascript:setAccountCode(this.value);">	
+							<#list customTimePeriods as ctplist> 	
+								<option value='${ctplist.customTimePeriodId}'>${ctplist.periodName}: ${ctplist.fromDate} - ${ctplist.thruDate}</option>
+	          		   		</#list>
+					 	</select>
+				  	  </td>
+				  	  <td width="50%">GL Category Type
+				  	  	<select name='glAccountCategoryTypeId' id ="glAccountCategoryTypeId" onclick="javascript:setAccountCode(this.value);">	
+							<#list glAccountCategoryTypeList as eachGLAcctType> 	
+								<#if eachGLAcctType.glAccountCategoryTypeId !="RC">
+									<option value='${eachGLAcctType.glAccountCategoryTypeId}'>${eachGLAcctType.description}</option>
+								</#if>	
+	          		   		</#list>
+					 	</select>
+				  	  </td>
+				  	  <td width="15%">Report Type 
+						<select name='reportTypeFlag'>
+							<option value='abstract'>Abstract</option>
+							<option value='detailed'>Detailed</option>
+						</select>
+					 </td>
+				  	 <td width="25%"> &#160; <input type="hidden" name="organizationPartyId" value="${parameters.organizationPartyId}" /></td>
+				  	 <td width="25%"> &#160;</td>
+	          		 <td width="25%"><input type="submit" value="PDF" class="buttontext"/></td> 
+	          	</form>	 
+	          	<tr class="alternate-row"> 
+      	   		<form id="receiptsAndPayments" name="receiptsAndPayments" method="post" action="<@ofbizUrl>scheduleReport.pdf</@ofbizUrl>" target="_blank">	
+	      		  	<td width="30%">Receipts And Charges</td>
+	      		  	  <td width="50%">CustomTimePeriod
+				  	  	<select name='customTimePeriodId' id ="customTimePeriodId" onclick="javascript:setAccountCode(this.value);">	
+							<#list customTimePeriods as ctplist> 	
+								<option value='${ctplist.customTimePeriodId}'>${ctplist.periodName}: ${ctplist.fromDate} - ${ctplist.thruDate}</option>
+	          		   		</#list>
+					 	</select>
+				  	  </td>
+				  	  <td width="50%">
+				  	  			<input type="hidden" name="glAccountCategoryTypeId" value="RC" /> 			  	  	
+				  	  </td>
+				  	  <td width="15%">
+				  	  <input type="hidden" name="reportTypeFlag" value="detailed" /> 
+						
+					 </td>
+				  	 <td width="25%"> &#160; <input type="hidden" name="organizationPartyId" value="${parameters.organizationPartyId}" /></td>
+				  	 <td width="25%"> &#160;</td>
+	          		 <td width="25%"><input type="submit" value="PDF" class="buttontext"/></td> 
+	          	</form>	 
+			</tr>
+              <tr class="alternate-row"> 
+      	   		<form id="manufacturingAccntReport" name="manufacturingAccntReport" method="post" action="<@ofbizUrl>manufacturingAccntReport.pdf</@ofbizUrl>" target="_blank">	
+	      		  	<td width="30%">Manufacturing Accounts Report</td>
+	      		  	  <td width="50%">CustomTimePeriod
+				  	  	<select name='customTimePeriodId' id ="customTimePeriodId" onclick="javascript:setAccountCode(this.value);">	
+							<#list customTimePeriods as ctplist> 	
+								<option value='${ctplist.customTimePeriodId}'>${ctplist.periodName}: ${ctplist.fromDate} - ${ctplist.thruDate}</option>
+	          		   		</#list>
+					 	</select>
+				  	  </td>
+				  	  <td width="30%">
+				  	  <input type="hidden" name="glAccountCategoryTypeId" value="MFA" /> 	
+				  	  </td>
+				  	  <td width="35%">Report Type 
+						<select name='reportTypeFlag'>
+							<option value='abstract'>Abstract</option>
+							<option value='detailed'>Detailed</option>
+						</select>
+					 </td>
+				  	 <td width="25%"> &#160; <input type="hidden" name="organizationPartyId" value="${parameters.organizationPartyId}" /></td>
+				  	 <td width="25%"> &#160;</td>
+	          		 <td width="25%"><input type="submit" value="PDF" class="buttontext"/></td> 
+	          	</form>	 
+			</tr>
+			<tr class="alternate-row"> 
+      	   		<form id="tradingAccountReport" name="tradingAccountReport" method="post" action="<@ofbizUrl>tradingAccountReport.pdf</@ofbizUrl>" target="_blank">	
+	      		  	<td width="30%">Trading Accounts Report</td>
+	      		  	  <td width="50%">CustomTimePeriod
+				  	  	<select name='customTimePeriodId' id ="customTimePeriodId" onclick="javascript:setAccountCode(this.value);">	
+							<#list customTimePeriods as ctplist> 	
+								<option value='${ctplist.customTimePeriodId}'>${ctplist.periodName}: ${ctplist.fromDate} - ${ctplist.thruDate}</option>
+	          		   		</#list>
+					 	</select>
+				  	  </td>
+				  	  <td width="30%">
+				  	  <input type="hidden" name="glAccountCategoryTypeId" value="TRA" /> 	
+				  	  </td>
+				  	 <td width="35%">Report Type 
+						<select name='reportTypeFlag'>
+							<option value='abstract'>Abstract</option>
+							<option value='detailed'>Detailed</option>
+						</select>
+					 </td>
+				  	 <td width="25%"> &#160; <input type="hidden" name="organizationPartyId" value="${parameters.organizationPartyId}" /></td>
+				  	 <td width="25%"> &#160;</td>
+	          		 <td width="25%"><input type="submit" value="PDF" class="buttontext"/></td> 
+	          	</form>	 
+			</tr>
+			<tr class="alternate-row"> 
+      	   		<form id="profitAndLossAccountReport" name="profitAndLossAccountReport" method="post" action="<@ofbizUrl>profitAndLossAccountReport.pdf</@ofbizUrl>" target="_blank">	
+	      		  	<td width="30%">Profit And Loss Accounts Report</td>
+	      		  	  <td width="50%">CustomTimePeriod
+				  	  	<select name='customTimePeriodId' id ="customTimePeriodId" onclick="javascript:setAccountCode(this.value);">	
+							<#list customTimePeriods as ctplist> 	
+								<option value='${ctplist.customTimePeriodId}'>${ctplist.periodName}: ${ctplist.fromDate} - ${ctplist.thruDate}</option>
+	          		   		</#list>
+					 	</select>
+				  	  </td>
+				  	  <td width="30%">
+				  	  <input type="hidden" name="glAccountCategoryTypeId" value="PL" /> 	
+				  	  </td>
+				  	  <td width="35%">Report Type 
+						<select name='reportTypeFlag'>
+							<option value='abstract'>Abstract</option>
+							<option value='detailed'>Detailed</option>
+						</select>
+					 </td>
+				  	 <td width="25%"> &#160; <input type="hidden" name="organizationPartyId" value="${parameters.organizationPartyId}" /></td>
+				  	 <td width="25%"> &#160;</td>
+	          		 <td width="25%"><input type="submit" value="PDF" class="buttontext"/></td> 
+	          	</form>	 
+			</tr>
+			<tr class="alternate-row"> 
+      	   		<form id="balanceSheetReport" name="balanceSheetReport" method="post" action="<@ofbizUrl>balanceSheetReport.pdf</@ofbizUrl>" target="_blank">	
+	      		  	<td width="30%">Balance Sheet</td>
+	      		  	  <td width="50%">CustomTimePeriod
+				  	  	<select name='customTimePeriodId' id ="customTimePeriodId" onclick="javascript:setAccountCode(this.value);">	
+							<#list customTimePeriods as ctplist> 	
+								<option value='${ctplist.customTimePeriodId}'>${ctplist.periodName}: ${ctplist.fromDate} - ${ctplist.thruDate}</option>
+	          		   		</#list>
+					 	</select>
+				  	  </td>
+				  	  <td width="30%">
+				  	  <input type="hidden" name="glAccountCategoryTypeId" value="BS" /> 	
+				  	  </td>
+				  	  <td width="35%">Report Type 
+						<select name='reportTypeFlag'>
+							<option value='abstract'>Abstract</option>
+							<option value='detailed'>Detailed</option>
+						</select>
+					 </td>
+				  	 <td width="25%"> &#160; <input type="hidden" name="organizationPartyId" value="${parameters.organizationPartyId}" /></td>
+				  	 <td width="25%"> &#160;</td>
+	          		 <td width="25%"><input type="submit" value="PDF" class="buttontext"/></td> 
+	          	</form>	 
+			</tr>
 		</table>     			     
 	</div> 	
 </div>

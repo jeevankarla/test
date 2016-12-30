@@ -4035,6 +4035,29 @@ under the License.
 		<response name="success" type="view" value="ApPaymentRegister"></response>    
    </request-map> 
    
+   
+   //schedule reports
+    <request-map uri="scheduleReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="scheduleReportPdf"/>
+    </request-map>
+    <request-map uri="manufacturingAccntReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="manufacturingAccntReportPDF"/>
+    </request-map>
+    <request-map uri="tradingAccountReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="tradingAccountReportPDF"/>
+    </request-map>
+    <request-map uri="balanceSheetReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="balanceSheetReportPDF"/>
+    </request-map>
+    <request-map uri="profitAndLossAccountReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="profitAndLossAccountReportPDF"/>
+    </request-map>
+   
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -4876,5 +4899,12 @@ under the License.
    <view-map name="implGrantReportPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#implGrantReportPDF" content-type="application/pdf" encoding="none"/>
    <view-map name="BankAccountDetail" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankAccountDetail"/>
    <view-map name="PrintBankAccountDetails" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintBankAccountDetails" content-type="application/pdf" encoding="none"/>
+   
+   
+   <view-map name="manufacturingAccntReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#manufacturingAccntReportPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="tradingAccountReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#tradingAccountReportPDF" content-type="application/pdf" encoding="none"/>
+	<view-map name="balanceSheetReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#balanceSheetReportPDF" content-type="application/pdf" encoding="none"/>
+	<view-map name="scheduleReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#scheduleReportPdf" content-type="application/pdf" encoding="none"/>
+	<view-map name="profitAndLossAccountReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#profitAndLossAccountReportPDF" content-type="application/pdf" encoding="none"/>
    <!-- end of view mappings -->
 </site-conf>
