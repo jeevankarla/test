@@ -256,8 +256,8 @@ function reportTypeChangeFunc() {
              <tr class="alternate-row">
 				<form id="SubLedgers" name="SubLedgers" method="post" action="<@ofbizUrl>SubLedgersReport.pdf</@ofbizUrl>" target="_blank">	
 					<td width="15%">Sub-Ledger Report</td>
-					<td width="10%">From<input  type="text" size="18pt" id="SubLedgersFromDate" readonly  name="fromDate"/></td>
-				    <td width="10%">To<input  type="text" size="18pt" id="SubLedgersThruDate" readonly  name="thruDate"/></td>
+					<td width="10%">From<input  type="text" size="18pt" id="SubLedgersFromDate" readonly  name="fromDate"/>
+				    To<input  type="text" size="18pt" id="SubLedgersThruDate" readonly  name="thruDate"/></td>
   					<td width="15%">Gl Account :<input type="text" name="glAccountId" id="glAccountId" size="11" maxlength="60"  required onblur='javascript:dispglAccountName(this);'/>
   					<span  class="tooltip" id="AccountName"></span>
                      </td>  
@@ -275,8 +275,8 @@ function reportTypeChangeFunc() {
               <tr class="alternate-row">
 				<form id="SalesAnalysis" name="SalesAnalysis" method="post" action="<@ofbizUrl>SalesAnalysisReport.pdf</@ofbizUrl>" target="_blank">	
 					<td width="15%">Sales Analysis Report</td>
-					<td width="15%">From<input  type="text" size="18pt" id="SaleAnalysisFromDate" readonly  name="fromDate"/></td>
-				    <td width="15%">To<input  type="text" size="18pt" id="SaleAnalysisThruDate" readonly  name="thruDate"/></td>
+					<td width="15%">From<input  type="text" size="18pt" id="SaleAnalysisFromDate" readonly  name="fromDate"/>
+					To<input  type="text" size="18pt" id="SaleAnalysisThruDate" readonly  name="thruDate"/></td>
   					<td width="15%">
                      </td>  
                       <td width="10%">
