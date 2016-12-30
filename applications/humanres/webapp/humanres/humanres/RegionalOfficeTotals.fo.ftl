@@ -67,8 +67,11 @@ under the License.
 		<fo:table width="100%" table-layout="fixed">
 		    <fo:table-header height="14px">
 		       	<fo:table-row height="14px" space-start=".15in" text-align="center">
-                	<fo:table-cell number-columns-spanned="1" border-style="solid" width="20px">
+                	<fo:table-cell number-columns-spanned="1" border-style="solid" width="30px">
                     	<fo:block text-align="center" font-weight="bold" font-size="10pt">Sl.No</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="80px">
+                    	<fo:block text-align="center" font-weight="bold" font-size="10pt">Region</fo:block>
                     </fo:table-cell>
                     <#list columnKeys as columnKey>
                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="50px">
@@ -87,7 +90,7 @@ under the License.
          			<#assign slNo=1>
          			<#assign regionPaySheetMapKeys = finalRegionPaySheetMap.keySet()>
          			<#list regionPaySheetMapKeys as region>
-         				<fo:table-row>
+         				<#--><fo:table-row>
 		        			<fo:table-cell>
 	                    		<fo:block text-align="center"></fo:block>
 	                    	</fo:table-cell>
@@ -97,11 +100,14 @@ under the License.
 	                    	<fo:table-cell>
 	                    		<fo:block text-align="center" keep-together="always">${region}</fo:block>
 	                    	</fo:table-cell>
-	                    </fo:table-row>	
+	                    </fo:table-row>-->	
 	        			<#assign regionPaySheetEntry = finalRegionPaySheetMap.get(region)>
 	        			<fo:table-row>
 		        			<fo:table-cell border-style="solid">
 	                    		<fo:block text-align="center">${slNo}</fo:block>
+	                    	</fo:table-cell>
+	                    	<fo:table-cell border-style="solid">
+	                    		<fo:block text-align="left" font-weight="bold">${region}</fo:block>
 	                    	</fo:table-cell>
 	                    	<#list columnKeys as columnKey>
                     		<fo:table-cell border-style="solid">
@@ -116,6 +122,20 @@ under the License.
 	                    </fo:table-row>	
 	                    <#assign slNo = slNo+1>
 	        		</#list>
+	        		<fo:table-row><fo:table-cell></fo:table-cell></fo:table-row>
+	        		<fo:table-row border-style="solid">
+	        			<fo:table-cell>
+                    		<fo:block text-align="center" font-weight="bold">TOTAL</fo:block>
+                    	</fo:table-cell>
+                    	<fo:table-cell>
+                    		<fo:block text-align="center" font-weight="bold"></fo:block>
+                    	</fo:table-cell>
+                    	<#list columnKeys as columnKey>
+                    		<fo:table-cell border-style="solid">
+                    			<fo:block text-align="center" font-weight="bold">${sumMap.get(columnKey.getKey())}</fo:block>
+                    		</fo:table-cell>
+                		</#list>
+	        		</fo:table-row>
           </fo:table-body>
         </fo:table> 
      </fo:block>

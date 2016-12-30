@@ -185,6 +185,7 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 	//context.put("regionPaySheetMap",regionPaySheetMap);
 	context.put("finalRegionPaySheetMap",finalRegionPaySheetMap);
 	context.put("columnMap",columnMap);
+	context.put("sumMap",sumMap);
 	context.put("payheadTypeIds",payheadTypeIds);
 }
 else{
