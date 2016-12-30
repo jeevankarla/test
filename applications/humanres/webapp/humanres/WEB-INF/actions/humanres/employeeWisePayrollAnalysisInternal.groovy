@@ -177,6 +177,17 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 				//regionPayMap.remove(regionPayEntry.getKey());
 			}
 		}
+		empCpf = 0;
+		if(regionPayMap["PAYROL_BEN_SALARY"]){
+			empCpf = regionPayMap["PAYROL_BEN_SALARY"];
+		}
+		if(regionPayMap["PAYROL_BEN_DA"]){
+			empCpf += regionPayMap["PAYROL_BEN_DA"];
+		}
+		empCpf*=0.12;
+		regionPayMap.put("empCpf",empCpf);
+		grossTotal = regionPayMap["totalBenifit"]+empCpf;
+		regionPayMap.put("grossTotal",grossTotal);
 		regionPayMap.keySet().removeAll(zeroValueSet);
 		finalRegionPaySheetMap.put(regionKey, regionPayMap);
 		columnKeys = regionPayMap.keySet();
