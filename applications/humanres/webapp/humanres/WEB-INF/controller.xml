@@ -2648,6 +2648,10 @@ under the License.
         <response name="success" type="view" value="viewEmployeeProfile"/>
         <response name="error" type="view" value="viewEmployeeProfile"/>
     </request-map>
+    <request-map uri="RegionalOfficeTotals.pdf">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="RegionalOfficeTotalsPdf"></response>
+    </request-map>
     
     <!-- ===================Lookup Request===================== -->
     
@@ -3051,5 +3055,6 @@ under the License.
 	<view-map name="editJoiningDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditJoiningDate"/>
 	<view-map name="createOrChangeDepartment" type="screen" page="component://humanres/widget/EmployeeScreens.xml#createOrChangeDepartment"/>
 	<view-map name="editAppointmentDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditAppointmentDate"/> 
+	<view-map name="RegionalOfficeTotalsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#RegionalOfficeTotalsPdf" content-type="application/pdf" encoding="none"/>
 	 
 </site-conf>

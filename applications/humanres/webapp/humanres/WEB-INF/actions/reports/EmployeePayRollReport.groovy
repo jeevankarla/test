@@ -139,7 +139,7 @@ if(OrganizationId != "Company"){
 	}
 }
 
-Debug.log("employementIds================"+employementIds);
+//Debug.log("employementIds================"+employementIds);
 
 
 
@@ -196,7 +196,7 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	payRollHeaderList = delegator.findList("PayrollHeader", payCond, null, null, null, false);
 	
 	
-	Debug.log("payRollHeaderList=========================="+payRollHeaderList);
+	//Debug.log("payRollHeaderList=========================="+payRollHeaderList);
 	
 	if(UtilValidate.isNotEmpty(payRollHeaderList)){
 		payrollHeader = payRollHeaderList[0];
