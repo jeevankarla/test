@@ -2493,6 +2493,20 @@
 		</section>
 	</screen>
 	
+	<screen name="NoteSheetReportPdf">
+		<section>
+			<actions>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysisInternal.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/NoteSheetReportPdf.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	
 </screens>
 
     

@@ -2652,6 +2652,10 @@ under the License.
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="RegionalOfficeTotalsPdf"></response>
     </request-map>
+    <request-map uri="NoteSheetReport.pdf">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="NoteSheetReportPdf"></response>
+    </request-map>
     
     <!-- ===================Lookup Request===================== -->
     
@@ -3056,5 +3060,7 @@ under the License.
 	<view-map name="createOrChangeDepartment" type="screen" page="component://humanres/widget/EmployeeScreens.xml#createOrChangeDepartment"/>
 	<view-map name="editAppointmentDate" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditAppointmentDate"/> 
 	<view-map name="RegionalOfficeTotalsPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#RegionalOfficeTotalsPdf" content-type="application/pdf" encoding="none"/>
+	<view-map name="NoteSheetReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#NoteSheetReportPdf" content-type="application/pdf" encoding="none"/>
+	
 	 
 </site-conf>
