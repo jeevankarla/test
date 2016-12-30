@@ -106,6 +106,9 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 						amount = 0;
 					}
 				}
+				if(amount < 0){
+					amount *= -1;
+				}
 				tempMap.put(benefitMap.getKey(), amount);
 			}
 			dedDescMap.each { dedMap ->
@@ -120,6 +123,9 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 					if(amount == null){
 						amount = 0;
 					}
+				}
+				if(amount < 0){
+					amount *= -1;
 				}
 				tempMap.put(dedMap.getKey(), amount);
 			}
