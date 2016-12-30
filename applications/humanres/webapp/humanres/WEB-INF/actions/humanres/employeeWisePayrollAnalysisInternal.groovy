@@ -98,7 +98,11 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 				if(tempMap.containsKey(benefitMap.getKey())){
 					amount = tempMap[benefitMap.getKey()];
 					if(regionPaySheetEntry.get(benefitMap.getKey()) != null){
-						amount += regionPaySheetEntry.get(benefitMap.getKey());
+						tempAmt = regionPaySheetEntry.get(benefitMap.getKey());
+						if(tempAmt < 0){
+							tempAmt *= -1;
+						}
+						amount += tempAmt;
 					}
 				}else{
 					amount = regionPaySheetEntry.get(benefitMap.getKey());
@@ -116,7 +120,11 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 				if(tempMap.containsKey(dedMap.getKey())){
 					amount = tempMap[dedMap.getKey()];
 					if(regionPaySheetEntry.get(dedMap.getKey()) != null){
-						amount += regionPaySheetEntry.get(dedMap.getKey());
+						tempAmt = regionPaySheetEntry.get(dedMap.getKey());
+						if(tempAmt < 0){
+							tempAmt *= -1;
+						}
+						amount += tempAmt;
 					}
 				}else{
 					amount = regionPaySheetEntry.get(dedMap.getKey());
