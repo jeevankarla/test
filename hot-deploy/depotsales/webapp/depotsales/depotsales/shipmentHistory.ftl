@@ -53,7 +53,11 @@ under the License.
 		    makeDatePicker("ShipmentHistoryfromDate","ShipmentHistoryThruDate");
 			$('#ui-datepicker-div').css('clip', 'auto'); 
 			$("#SupplierId").autocomplete({ source: supplierJSON }).keydown(function(e){});
-			$("#cutomerId").autocomplete({ source: cutomerJSON }).keydown(function(e){});
+			$("#cutomerId").autocomplete({ source: cutomerJSON }).keydown(function(e){});3
+			var currentLocation=window.location;
+			if(currentLocation=='http://erp.nhdcltd.co.in/ViewShipmentHistory'){
+				$("#ShipmentHistory").submit();
+			}
 		});
 
     function getbrancheCustomers(state){
@@ -81,9 +85,17 @@ under the License.
         });	
 		
        }	
-	
+	   function checkFields()
+	   {	
+	        var branch=$("#branchId").val();
+	        if(branch==""){
+	        	$("#dispComField").show();
+	        	$("#dispComField").delay(1000).fadeOut('slow'); 
+	        }
+	   } 
 	   function displayName(state,flag){
        	var id=state.value;
+       	
        	if(flag=="customer"){
        	    if(id==""){
        		 	$("#customerName").html("");
@@ -110,54 +122,79 @@ under the License.
 <div class="screenlet">
   <div class="screenlet-body">
     <div id="findPartyParameters"  >
-      <form method="post" name="ShipmentHistory" action="<@ofbizUrl>ShipmentHistory</@ofbizUrl> " class="basic-form">
+      <form method="post" name="ShipmentHistory" id="ShipmentHistory" action="<@ofbizUrl>ShipmentHistory</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
-          <tr>
-	              <td>Branch <br><select name="branchId2" id="branchId" onchange="javascript:getbrancheCustomers(this);">
+          <tr>     
+          			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Branch</td>
+	              <td>
+					 <select name="branchId2" id="branchId" onchange="javascript:getbrancheCustomers(this);">
 	              <#if branchIdName?has_content>
 		 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
  	              </#if>
+				  <#if !branchIdName?has_content>
+						 <option value=''></option>
+				  </#if>
 			      <#list  formatList as formatList>
 					<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 				 </#list> 
 				  </select>  
-				  <input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/> </td> 
+				  <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+				  <input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/>
+				  
+				  </td>
+				   
+				   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agency/Depot  <input  type="text" size="25pt" id="cutomerId"   name="customer" value="${customerId?if_exists}" onkeypress="javascript:checkFields();" onblur="javascript:displayName(this,'customer');" />
+					   <div id="customerName"><#if customerName?has_content>${customerName?if_exists} </#if></div>
+				   </td>
+				   
+				   <td>Supplier <input  type="text" size="25pt" id="SupplierId"   name="Supplier"  value="${SupplierId?if_exists}" onblur="javascript:displayName(this,'supplier');" />
+						<div id="SupplierName"><#if SupplierIdName?has_content> ${SupplierIdName?if_exists} </#if> </div>
+				   </td>
 		  </tr> 
 		  <tr>
 				<#--  <#if customerName?has_content>
 		         	<td>Agency <br> <input  type="text" size="25pt"  id="cutomerId"  name="cutomerName"  onblur="javascript:displayName(this,'customer');" />
 		            <input  type="hidden" size="14pt"   name="customer" value="${customerId?if_exists}"/></td>
 				<#else> -->
-					<td>Agency/Depot <br> <input  type="text" size="25pt" id="cutomerId"   name="customer" value="${customerId?if_exists}" onblur="javascript:displayName(this,'customer');" />
-					<div id="customerName"><#if customerName?has_content>  ${customerName?if_exists} </#if></div>
-					</td>
+					
 				<#-- </#if> --> 
 
 				<#-- <#if SupplierIdName?has_content>
 					<td>Supplier <input  type="text" size="25pt"  id="SupplierId"  name="SupplierName" value="${SupplierIdName?if_exists}" onblur="javascript:displayName(this,'supplier');"  />
 					<input  type="hidden" size="14pt"    name="Supplier" value="${SupplierId?if_exists}"/></td>
 				<#else>  -->
-					<td>Supplier <input  type="text" size="25pt" id="SupplierId"   name="Supplier"  value="${SupplierId?if_exists}" onblur="javascript:displayName(this,'supplier');" />
-					<div id="SupplierName"><#if SupplierIdName?has_content> ${SupplierIdName?if_exists} </#if> </div></td>
+					
 				<#-- </#if> -->
            </tr> 
           <tr>
           		<#if fromDateStr?has_content>
-					<td >From Date <br><input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate" value="${fromDateStr?if_exists}"/></td>
+	                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From Date</td>
+					<td > <input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate" value="${fromDateStr?if_exists}"/></td>
 
 				<#else>
-					<td >From Date <br><input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate"/></td>
+	                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From Date</td>
+					<td > <input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate"/></td>
 				</#if>
 	            
 	            <#if thruDateStr?has_content>
-					<td >To Date<input  type="text" size="14pt" id="ShipmentHistoryThruDate" readonly  name="thruDate" value="${thruDateStr?if_exists}"/></td>
+					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To Date&nbsp;<input type="text" size="14pt" id="ShipmentHistoryThruDate" readonly  name="thruDate" value="${thruDateStr?if_exists}"/></td>
 	            <#else>
-					<td >To Date<input  type="text" size="14pt" id="ShipmentHistoryThruDate" readonly  name="thruDate"/></td>
+					<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To Date&nbsp;<input  type="text" size="14pt" id="ShipmentHistoryThruDate" readonly  name="thruDate"/></td>
 				</#if>
 			    
           </tr>
+           <tr>
+          		 <td> </td>
+		  </tr>
           <tr>
-				<td width="10%"><input type="submit" value="Search" class="buttontext"/>
+          	
+				<td width="10%"> <input type="submit" value="Search" class="buttontext"/> </td>
 		  </tr>
       </table>
    
