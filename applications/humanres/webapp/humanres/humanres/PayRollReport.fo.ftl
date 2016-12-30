@@ -138,7 +138,7 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Employee Name        : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">PF Account Number   : ${emplDetails.presentEpf?if_exists}</fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">PF Account Number   : <#if emplDetails.employeeId?has_content>${emplDetails.employeeId?if_exists}<#else>${partyId?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual Basic   : <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("basic")?if_exists}</#if></fo:block>
@@ -148,8 +148,9 @@ under the License.
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Employee No.            : <#if emplDetails.employeeId?has_content>${emplDetails.employeeId?if_exists}<#else>${partyId?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
+                     		 					
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c No.              : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</#if></fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c Name.         : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("finAccountName")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">ESI Number               : ${emplDetails.presentEsic?if_exists}</fo:block>
@@ -163,8 +164,9 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Office                         : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, (doj[0].partyIdFrom)?if_exists, false)}</fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN           : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("panNumber")?if_exists}</#if></fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c No.              : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
+                     		 					
                      		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Actual HRA    :  <#if EmplSalaryDetailsMap?has_content>${EmplSalaryDetailsMap.get(partyId).get("hraAmt")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>-->
@@ -178,8 +180,9 @@ under the License.
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;Designation               : <#if designationName?has_content>${designationName?if_exists}<#else><#if designation?has_content>${designation.description?if_exists}</#if></#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell>
-                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">D.O.J                          : <#if (doj[0].appointmentDate)?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((doj[0].appointmentDate?if_exists), "dd/MM/yyyy")}</#if></fo:block>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">IFSC Code                 : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("ifscCode")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
+                     		 					
                      		 					<fo:table-cell/>
                      		 				</fo:table-row>                     		 				
                      		 				<fo:table-row>
@@ -188,11 +191,20 @@ under the License.
                      		 					</fo:table-cell>-->
                      		 					<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;PayScale                   : <#if payGrade?has_content>${payGrade.get(0).payScale?if_exists}</#if></fo:block>
-                     		 					</fo:table-cell> 
+                     		 					</fo:table-cell>
+                     		 					<fo:table-cell>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Employee-PAN          : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("panNumber")?if_exists}</#if></fo:block>
+                     		 					</fo:table-cell>
+                     		 					 
                      		 					<#--<fo:table-cell>
                      		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">Bank A/c No.              : <#if BankAdvicePayRollMap?has_content>${BankAdvicePayRollMap.get(partyId).get("acNo")?if_exists}</#if></fo:block>
                      		 					</fo:table-cell>
                      		 					<fo:table-cell/>-->
+                     		 				</fo:table-row>
+                     		 				<fo:table-row>
+                     		 					<fo:table-cell>
+                     		 						<fo:block text-align="left" keep-together="always" white-space-collapse="false">&#160;D.O.J                         : <#if (doj[0].appointmentDate)?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString((doj[0].appointmentDate?if_exists), "dd/MM/yyyy")}</#if></fo:block>
+                     		 					</fo:table-cell>
                      		 				</fo:table-row>
                      		 				<#--<fo:table-row>
                      		 					<fo:table-cell>
