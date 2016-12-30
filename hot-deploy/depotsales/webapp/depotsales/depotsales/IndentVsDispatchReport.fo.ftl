@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" margin-top=".5in" margin-left=".3in" margin-right=".3in" >
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" margin-top=".5in" margin-left=".05in" margin-right=".25in" >
                 <fo:region-body margin-top="1.25in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -53,11 +53,12 @@ under the License.
 		                    <fo:table-column column-width="8%"/>
 		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="10%"/>
-		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="13%"/>
-		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="8%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="9%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="7%"/>
 		                   
 		                    <fo:table-body>
 		                    	<fo:table-row>
@@ -76,20 +77,23 @@ under the License.
 							           <fo:table-cell border-style="solid">
 							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Product Name</fo:block>  
 							            </fo:table-cell>
+							             <fo:table-cell border-style="solid">
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Supplier Name</fo:block>  
+							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Indented Quantity</fo:block>  
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Indented Qty</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
 							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Indent Value</fo:block>  
 							            </fo:table-cell>
 							           <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Dispatched Quantity</fo:block>  
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Dispatched Qty</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
 							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Dispatch Value</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Difference Quantity</fo:block>  
+							            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Diff Qty</fo:block>  
 							            </fo:table-cell>
 							     </fo:table-row>
 							     </fo:table-body>
@@ -108,11 +112,12 @@ under the License.
 		                    <fo:table-column column-width="8%"/>
 		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="10%"/>
-		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="13%"/>
-		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="8%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="9%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="7%"/>
 		                    <fo:table-body>
 		                    	
 							     <#list orderWiseList as orderWiseEntry>
@@ -134,6 +139,9 @@ under the License.
 							            </fo:table-cell>-->
 							             <fo:table-cell border-style="solid">
 							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("productName")?if_exists}</fo:block>  
+							            </fo:table-cell>
+							            <fo:table-cell border-style="solid">
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("supplierName")?if_exists}</fo:block>  
 							            </fo:table-cell>
 							             <fo:table-cell border-style="solid">
 							            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${orderWiseEntry.getValue().get("initialQty")?if_exists}</fo:block>  
@@ -162,11 +170,12 @@ under the License.
 		                    <fo:table-column column-width="8%"/>
 		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="10%"/>
-		                    <fo:table-column column-width="13%"/>
 		                    <fo:table-column column-width="11%"/>
-		                    <fo:table-column column-width="13%"/>
-		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="8%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="9%"/>
+		                    <fo:table-column column-width="11%"/>
+		                    <fo:table-column column-width="7%"/>
 		                    <fo:table-body>
           			 <fo:table-row>
 					                   <fo:table-cell border-style="solid">
@@ -179,6 +188,9 @@ under the License.
 							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">																	
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
+							            </fo:table-cell>
+							             <fo:table-cell border-style="solid">																	
 							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">																	

@@ -204,11 +204,25 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			<td width="30%" nowrap>Indent Vs Dispatch Report</td>
   			<td width="10%">From</br><input  type="text" size="18pt" id="ivdFromDate" readonly  name="ivdFromDate"/></td>
   			<td width="10%">To</br><input  type="text" size="18pt" id="ivdThruDate" readonly  name="ivdThruDate"/></td>
-  			<td width="10%"></td>
-  			<td width="10%"></td>
-  			<td width="10%">
-			<input type="submit" value="PDF" onClick="javascript:appendParams('indentVsDispatch', '<@ofbizUrl>IndentVsDispatch.pdf</@ofbizUrl>');" class="buttontext"/>        			
-			<input type="submit" value="CSV" onClick="javascript:appendParams('indentVsDispatch', '<@ofbizUrl>IndentVsDispatchCSV.csv</@ofbizUrl>');" class="buttontext"/></td>        			
+  			<td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId" required>
+					<option value=''></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
+			  <td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="indentVsDispatch" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>	
+  			<td width="15%"><span class='h3'>Category 
+				 <select name="productCategory" id="productCategory">
+				     <option value=''></option>
+				     <option value='SILK'>SILK</option>
+				     <option value='JUTE_YARN'>JUTE</option>
+				     <option value='OTHER'>OTHERS</option>
+				  </select>
+			</td>
+  			<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('indentVsDispatch', '<@ofbizUrl>IndentVsDispatch.pdf</@ofbizUrl>');" class="buttontext"/></td>        			
+			<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('indentVsDispatch', '<@ofbizUrl>IndentVsDispatchCSV.csv</@ofbizUrl>');" class="buttontext"/></td>        			
 		</form>	
       </tr>
 		</#if>

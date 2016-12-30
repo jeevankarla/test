@@ -3492,7 +3492,8 @@
        <field name="orderNo" title="_"><display/></field>
        <field name="orderDate" title="_" ><display /></field>
        <field name="partyName" title=" NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD."><display/></field>
-       <field name="productName" title="_"><display/></field>        
+       <field name="productName" title="_"><display/></field>
+       <field name="supplierName" title="_"><display/></field>        
         <field name="initialQty" title="_"><display/></field>
         <field name="indentValue" title="_"><display/></field>
          <field name="finalQty" title="_"><display/></field>
