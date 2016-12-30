@@ -67,9 +67,9 @@ under the License.
 		<fo:table width="100%" table-layout="fixed">
 		    <fo:table-header height="14px">
 		       	<fo:table-row height="14px" space-start=".15in" text-align="center">
-                	<fo:table-cell number-columns-spanned="1" border-style="solid" width="30px">
+                	<#--><fo:table-cell number-columns-spanned="1" border-style="solid" width="30px">
                     	<fo:block text-align="center" font-weight="bold" font-size="10pt">Sl.No</fo:block>
-                    </fo:table-cell>
+                    </fo:table-cell>-->
                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="80px">
                     	<fo:block text-align="center" font-weight="bold" font-size="10pt">Region</fo:block>
                     </fo:table-cell>
@@ -78,6 +78,15 @@ under the License.
                     	<fo:block text-align="center" font-weight="bold" font-size="10pt">${columnKey.getValue()}</fo:block>
                     </fo:table-cell>
                     </#list>
+                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="50px">
+                    	<fo:block text-align="center" font-weight="bold" font-size="10pt">Total Benefit</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="50px">
+                    	<fo:block text-align="center" font-weight="bold" font-size="10pt">Total Deduction</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="50px">
+                    	<fo:block text-align="center" font-weight="bold" font-size="10pt">Net Amt</fo:block>
+                    </fo:table-cell>
                    <#--><#list dedDescList as dedEntry>
                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="36px">
                     	<fo:block text-align="center" font-weight="bold" font-size="6pt">${dedEntry.getValue()}</fo:block>
@@ -89,6 +98,11 @@ under the License.
          <fo:table-body font-size="10pt">
          			<#assign slNo=1>
          			<#assign regionPaySheetMapKeys = finalRegionPaySheetMap.keySet()>
+         			<#assign totalBenefits = 0>
+         			<#assign totalDeductions = 0>
+         			<#assign netAmt = 0>
+         			<#assign totalNetAmt = 0>
+         			
          			<#list regionPaySheetMapKeys as region>
          				<#--><fo:table-row>
 		        			<fo:table-cell>
@@ -103,17 +117,30 @@ under the License.
 	                    </fo:table-row>-->	
 	        			<#assign regionPaySheetEntry = finalRegionPaySheetMap.get(region)>
 	        			<fo:table-row>
-		        			<fo:table-cell border-style="solid">
+		        			<#--><fo:table-cell border-style="solid">
 	                    		<fo:block text-align="center">${slNo}</fo:block>
-	                    	</fo:table-cell>
+	                    	</fo:table-cell>-->
 	                    	<fo:table-cell border-style="solid">
 	                    		<fo:block text-align="left" font-weight="bold">${region}</fo:block>
 	                    	</fo:table-cell>
 	                    	<#list columnKeys as columnKey>
                     		<fo:table-cell border-style="solid">
-                    			<fo:block text-align="center" >${regionPaySheetEntry.get(columnKey.getKey())}</fo:block>
+                    			<fo:block text-align="right" >${regionPaySheetEntry.get(columnKey.getKey())}</fo:block>
                     		</fo:table-cell>
                     		</#list>
+                    		<fo:table-cell border-style="solid">
+                    			<fo:block text-align="right" font-weight="bold">${regionPaySheetEntry.get("totalBenifit")}</fo:block>
+                    		</fo:table-cell>
+                    		<#assign totalBenefits = totalBenefits + regionPaySheetEntry.get("totalBenifit")>
+                    		<fo:table-cell border-style="solid">
+                    			<fo:block text-align="right" font-weight="bold">${regionPaySheetEntry.get("totalDeduction")}</fo:block>
+                    		</fo:table-cell>
+                    		<#assign totalDeductions = totalDeductions + regionPaySheetEntry.get("totalDeduction")>
+                    		<#assign netAmt = regionPaySheetEntry.get("totalBenifit") - regionPaySheetEntry.get("totalDeduction")>
+                    		<#assign totalNetAmt = totalNetAmt + netAmt>
+                    		<fo:table-cell border-style="solid">
+                    			<fo:block text-align="right" font-weight="bold">${netAmt}</fo:block>
+                    		</fo:table-cell>
                     		<#--><#list dedDescList as dedEntry>
                     		<fo:table-cell border-style="solid">
                     			<fo:block text-align="center" >${regionPaySheetEntry.get(dedEntry.getKey())}</fo:block>
@@ -124,17 +151,26 @@ under the License.
 	        		</#list>
 	        		<fo:table-row><fo:table-cell></fo:table-cell></fo:table-row>
 	        		<fo:table-row border-style="solid">
-	        			<fo:table-cell>
-                    		<fo:block text-align="center" font-weight="bold">TOTAL</fo:block>
-                    	</fo:table-cell>
-                    	<fo:table-cell>
+	        			<#--><fo:table-cell>
                     		<fo:block text-align="center" font-weight="bold"></fo:block>
+                    	</fo:table-cell>-->
+                    	<fo:table-cell>
+                    		<fo:block text-align="center" font-weight="bold">TOTAL</fo:block>
                     	</fo:table-cell>
                     	<#list columnKeys as columnKey>
                     		<fo:table-cell border-style="solid">
-                    			<fo:block text-align="center" font-weight="bold">${sumMap.get(columnKey.getKey())}</fo:block>
+                    			<fo:block text-align="right" font-weight="bold">${sumMap.get(columnKey.getKey())}</fo:block>
                     		</fo:table-cell>
                 		</#list>
+                		<fo:table-cell border-style="solid">
+                			<fo:block text-align="right" font-weight="bold">${totalBenefits}</fo:block>
+                		</fo:table-cell>
+                		<fo:table-cell border-style="solid">
+                			<fo:block text-align="right" font-weight="bold">${totalDeductions}</fo:block>
+                		</fo:table-cell>
+                		<fo:table-cell border-style="solid">
+                			<fo:block text-align="right" font-weight="bold">${totalNetAmt}</fo:block>
+                		</fo:table-cell>
 	        		</fo:table-row>
           </fo:table-body>
         </fo:table> 

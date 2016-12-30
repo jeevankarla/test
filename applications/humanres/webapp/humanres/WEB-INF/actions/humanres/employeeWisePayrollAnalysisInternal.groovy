@@ -93,6 +93,8 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 		regionPaySheetList = entry.getValue();
 		tempMap = [:];
 		for(Map regionPaySheetEntry : regionPaySheetList){
+			totalBenifit = 0;
+			totalDeduction = 0;
 			benefitDescMap.each { benefitMap ->
 				amount = 0;
 				if(tempMap.containsKey(benefitMap.getKey())){
@@ -114,7 +116,10 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 					amount *= -1;
 				}
 				tempMap.put(benefitMap.getKey(), amount);
+				totalBenifit += amount;
 			}
+			tempMap.put("totalBenifit", totalBenifit);
+			
 			dedDescMap.each { dedMap ->
 				amount = 0;
 				if(tempMap.containsKey(dedMap.getKey())){
@@ -136,7 +141,9 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 					amount *= -1;
 				}
 				tempMap.put(dedMap.getKey(), amount);
+				totalDeduction += amount;
 			}
+			tempMap.put("totalDeduction", totalDeduction);
 		}
 		regionPaySheetMap.put(region, tempMap);
 	}
