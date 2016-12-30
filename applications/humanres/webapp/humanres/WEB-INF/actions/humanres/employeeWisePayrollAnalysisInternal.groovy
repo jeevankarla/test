@@ -51,75 +51,191 @@ employments.each { employment ->
 }
 //Debug.logError("payRollEmployeeMap="+payRollEmployeeMap,"");
 JSONArray employeesPayrollTableJSON = new JSONArray();
-if (payRollEmployeeMap != null) {
-	payRollEmployeeMap.each { employeePayroll ->
-		netAmount = 0.0;
-		partyId = employeePayroll.getKey();
-		partyName = PartyHelper.getPartyName(delegator, partyId, false);
-		JSONArray employeePayrollJSON = new JSONArray();
-		employeePayrollJSON.add(partyId);
-		employeePayrollJSON.add(partyName);
-		employeePayrollJSON.add(employeeDeptMap.get(partyId));
-		employeePayrollItems = employeePayroll.getValue();
-		
-		totBenifit = 0;
-		benefitTypeIds.each{ benefitTypeId->
-			amount = 0;
-			if (payRollSummaryMap.containsKey(benefitTypeId)) {
-				if (employeePayrollItems.containsKey(benefitTypeId)) {
-					amount = employeePayrollItems.get(benefitTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
+
+if("Y".equals(parameters.isRegionalOfficeTotals)){
+	finalMap = [:];
+	if (payRollEmployeeMap != null) {
+		payRollEmployeeMap.each { employeePayroll ->
+			netAmount = 0.0;
+			tempMap = [:];
+			tempList = [];
+			partyId = employeePayroll.getKey();
+			partyName = PartyHelper.getPartyName(delegator, partyId, false);
+			grpName = employeeDeptMap.get(partyId);
+			employeePayrollItems = employeePayroll.getValue();
+			tempMap.put("partyId",partyId);
+			tempMap.put("partyName",partyName);
+			payheadTypeIds.each{ payheadTypeId->
+				amount = 0;
+				if (employeePayrollItems.containsKey(payheadTypeId)) {
+					amount = employeePayrollItems.get(payheadTypeId);
 					netAmount = netAmount + amount;
-					totBenifit=totBenifit+amount;
+				}
+				tempMap.put(payheadTypeId,amount);
+			}
+			tempMap.put("netAmount",netAmount);
+			tempList.add(tempMap);
+			
+			if(UtilValidate.isNotEmpty(finalMap[grpName])){
+				finalList = finalMap[grpName];
+				finalList.addAll(tempList);
+				finalMap.put(grpName, finalList);
+			}
+			else{
+				finalMap.put(grpName, tempList);
+			}
+		}
+	}
+	
+	regionPaySheetMap = [:];
+	for (Map.Entry entry : finalMap.entrySet()) {
+		region = entry.getKey();
+		regionPaySheetList = entry.getValue();
+		tempMap = [:];
+		for(Map regionPaySheetEntry : regionPaySheetList){
+			benefitDescMap.each { benefitMap ->
+				amount = 0;
+				if(tempMap.containsKey(benefitMap.getKey())){
+					amount = tempMap[benefitMap.getKey()];
+					if(regionPaySheetEntry.get(benefitMap.getKey()) != null){
+						amount += regionPaySheetEntry.get(benefitMap.getKey());
+					}
+				}else{
+					amount = regionPaySheetEntry.get(benefitMap.getKey());
+					if(amount == null){
+						amount = 0;
+					}
+				}
+				tempMap.put(benefitMap.getKey(), amount);
+			}
+			dedDescMap.each { dedMap ->
+				amount = 0;
+				if(tempMap.containsKey(dedMap.getKey())){
+					amount = tempMap[dedMap.getKey()];
+					if(regionPaySheetEntry.get(dedMap.getKey()) != null){
+						amount += regionPaySheetEntry.get(dedMap.getKey());
+					}
+				}else{
+					amount = regionPaySheetEntry.get(dedMap.getKey());
+					if(amount == null){
+						amount = 0;
+					}
+				}
+				tempMap.put(dedMap.getKey(), amount);
+			}
+		}
+		regionPaySheetMap.put(region, tempMap);
+	}
+	
+	sumMap = [:];
+	for(Map.Entry regionPaySheetEntry : regionPaySheetMap.entrySet()){
+		regionPayMap = regionPaySheetEntry.getValue();
+		regionPayMap.each { regionPayEntry ->
+			amount = 0;
+			if(sumMap.containsKey(regionPayEntry.getKey())){
+				amount = sumMap[regionPayEntry.getKey()];
+				amount += regionPayEntry.getValue();
+			}
+			else{
+				amount = regionPayEntry.getValue();
+			}
+			sumMap.put(regionPayEntry.getKey(), amount);
+		}
+	}
+	
+	finalRegionPaySheetMap = [:];
+	Set columnKeys = [];
+	Map columnMap = [:];
+	for(Map.Entry regionPaySheetEntry : regionPaySheetMap.entrySet()){
+		regionKey = regionPaySheetEntry.getKey();
+		regionPayMap = regionPaySheetEntry.getValue();
+		Set zeroValueSet = [];
+		regionPayMap.each { regionPayEntry ->
+			if(sumMap[regionPayEntry.getKey()] == 0){
+				zeroValueSet.add(regionPayEntry.getKey());
+				//regionPayMap.remove(regionPayEntry.getKey());
+			}
+		}
+		regionPayMap.keySet().removeAll(zeroValueSet);
+		finalRegionPaySheetMap.put(regionKey, regionPayMap);
+		columnKeys = regionPayMap.keySet();
+	}
+	columnKeys.each { columnKey ->
+		if(benefitDescMap.containsKey(columnKey)){
+			columnMap.put(columnKey, benefitDescMap[columnKey]);
+		}
+		if(dedDescMap.containsKey(columnKey)){
+			columnMap.put(columnKey, dedDescMap[columnKey]);
+		}
+	}
+	//context.put("regionPaySheetMap",regionPaySheetMap);
+	context.put("finalRegionPaySheetMap",finalRegionPaySheetMap);
+	context.put("columnMap",columnMap);
+	context.put("payheadTypeIds",payheadTypeIds);
+}
+else{
+	if (payRollEmployeeMap != null) {
+		payRollEmployeeMap.each { employeePayroll ->
+			netAmount = 0.0;
+			partyId = employeePayroll.getKey();
+			partyName = PartyHelper.getPartyName(delegator, partyId, false);
+			JSONArray employeePayrollJSON = new JSONArray();
+			employeePayrollJSON.add(partyId);
+			employeePayrollJSON.add(partyName);
+			employeePayrollJSON.add(employeeDeptMap.get(partyId));
+			employeePayrollItems = employeePayroll.getValue();
+			
+			totBenifit = 0;
+			benefitTypeIds.each{ benefitTypeId->
+				amount = 0;
+				if (payRollSummaryMap.containsKey(benefitTypeId)) {
+					if (employeePayrollItems.containsKey(benefitTypeId)) {
+						amount = employeePayrollItems.get(benefitTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
+						netAmount = netAmount + amount;
+						totBenifit=totBenifit+amount;
+					}
+					employeePayrollJSON.add(amount);
+				}
+			}
+			employeePayrollJSON.add(totBenifit);
+			totDeduction = 0;
+			dedTypeIds.each{ dedTypeId->
+				amount = 0;
+				if (payRollSummaryMap.containsKey(dedTypeId)) {
+					if (employeePayrollItems.containsKey(dedTypeId)) {
+						amount = employeePayrollItems.get(dedTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
+						netAmount = netAmount + amount;
+						totDeduction=totDeduction+amount;
+					}
+					employeePayrollJSON.add(amount);
+				}
+			}
+			employeePayrollJSON.add(totDeduction);
+			/*payheadTypeIds.each{ payheadTypeId->
+				amount = 0;
+				if (employeePayrollItems.containsKey(payheadTypeId)) {
+					amount = employeePayrollItems.get(payheadTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
+					netAmount = netAmount + amount;
 				}
 				employeePayrollJSON.add(amount);
+			}*/
+			employeePayrollJSON.add(netAmount);
+			empCPF = 0;
+			if(employeePayrollItems.get("PAYROL_BEN_SALARY")){
+				empCPF = employeePayrollItems.get("PAYROL_BEN_SALARY");
 			}
-		}
-		employeePayrollJSON.add(totBenifit);
-		
-		
-		totDeduction = 0;
-		dedTypeIds.each{ dedTypeId->
-			amount = 0;
-			if (payRollSummaryMap.containsKey(dedTypeId)) {
-				if (employeePayrollItems.containsKey(dedTypeId)) {
-					amount = employeePayrollItems.get(dedTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
-					netAmount = netAmount + amount;
-					totDeduction=totDeduction+amount;
-				}
-				employeePayrollJSON.add(amount);
+			if(employeePayrollItems.get("PAYROL_BEN_DA")){
+				empCPF+=employeePayrollItems.get("PAYROL_BEN_DA");
 			}
+			empCPF*=0.12;
+			employeePayrollJSON.add(empCPF);
+			employeePayrollJSON.add(totBenifit+empCPF);
+			employeesPayrollTableJSON.add(employeePayrollJSON);
 		}
-		employeePayrollJSON.add(totDeduction);
-		
-		
-		
-		
-		
-		/*payheadTypeIds.each{ payheadTypeId->
-			amount = 0;
-			if (employeePayrollItems.containsKey(payheadTypeId)) {
-				amount = employeePayrollItems.get(payheadTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
-				netAmount = netAmount + amount;
-			}
-			employeePayrollJSON.add(amount);
-		}*/
-		employeePayrollJSON.add(netAmount);
-		empCPF = 0;
-		if(employeePayrollItems.get("PAYROL_BEN_SALARY")){
-			empCPF = employeePayrollItems.get("PAYROL_BEN_SALARY");
-		}
-		if(employeePayrollItems.get("PAYROL_BEN_DA")){
-			empCPF+=employeePayrollItems.get("PAYROL_BEN_DA");
-		}
-		empCPF*=0.12;
-		employeePayrollJSON.add(empCPF);
-		
-		employeePayrollJSON.add(totBenifit+empCPF);
-		
-		
-		employeesPayrollTableJSON.add(employeePayrollJSON);
 	}
 }
+
+
 //Debug.logError("employeesPayrollTableJSON="+employeesPayrollTableJSON,"");
 
 context.payheadTypes = payheadTypeNames;
