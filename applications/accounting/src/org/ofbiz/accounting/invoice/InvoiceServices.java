@@ -6714,7 +6714,8 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	public static Map<String, Object> createAccountingRoleForAcctgTrans(DispatchContext dctx, Map<String, Object> context) {
 	    Delegator delegator = dctx.getDelegator();
 	    LocalDispatcher dispatcher = dctx.getDispatcher();  		
-		String acctgTransId = (String) context.get("acctgTransId");			
+		String acctgTransId = (String) context.get("acctgTransId");		
+		String orgPartyId=(String)context.get("organizationPartyId");
 		 GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map<String, Object> createRoleContext = FastMap.newInstance();
 		try{
@@ -6726,6 +6727,7 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	        if(UtilValidate.isNotEmpty(acctgTransId)){
 	        	createRoleContext.put("acctgTransId", acctgTransId);
 	        	GenericValue AcctgTrans = delegator.findOne("AcctgTrans", UtilMisc.toMap("acctgTransId",acctgTransId), true);
+	        	String acctgTransType=(String) AcctgTrans.getString("acctgTransTypeId");
 	        	String acctgPaymentId=null;
 	        	String acctgInvoiceId=null;
 	        	if(UtilValidate.isNotEmpty(AcctgTrans)){
@@ -6767,6 +6769,11 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	                Map<String, Object> createAcctgRoleResult = dispatcher.runSync("createAcctgTransRole", createRoleContext);
 	    	        if (ServiceUtil.isError(createAcctgRoleResult)) {
 	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
+	    	        }
+	    	        Debug.log("partyId==============="+partyId);
+	    	        Debug.log("orgPartyId==============="+orgPartyId);
+	    	        if(UtilValidate.isEmpty(partyId)&&"JOURNAL".equals(acctgTransType)&&!"Company".equals(orgPartyId)){
+	    	        	partyId=orgPartyId;
 	    	        }
 	    	        if(UtilValidate.isNotEmpty(partyId)){
 	    	        	createRoleContext.put("partyId",partyId);

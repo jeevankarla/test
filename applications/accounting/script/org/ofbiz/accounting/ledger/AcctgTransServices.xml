@@ -34,6 +34,8 @@ under the License.
         <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
 
         <create-value value-field="newEntity"/>
+         <set field="organizationPartyId" value="${parameters.organizationPartyId}"/>
+        <field-to-result field="organizationPartyId" result-name="organizationPartyId"/>
     </simple-method>
     <simple-method method-name="updateAcctgTrans" short-description="Update an AcctgTrans">
         <entity-one entity-name="AcctgTrans" value-field="lookedUpValue"/>

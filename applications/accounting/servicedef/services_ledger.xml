@@ -255,7 +255,8 @@ under the License.
         </required-permissions>
         <implements service="interfaceAcctgTrans"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
-        <attribute name="isPosted" mode="IN" type="String" optional="true"/>       
+        <attribute name="isPosted" mode="IN" type="String" optional="true"/>
+         <attribute name="organizationPartyId" mode="INOUT" type="String" optional="true"/> 
     </service>
     <service name="updateAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="updateAcctgTrans" auth="true">
