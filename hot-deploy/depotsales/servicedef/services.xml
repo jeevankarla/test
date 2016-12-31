@@ -736,5 +736,7 @@
          <attribute mode="IN" name="fromDate" optional="true" type="String"/>
          <attribute mode="IN" name="thruDate" optional="true" type="String"/>
          <attribute mode="IN" name="partyId" optional="true" type="String"/>
+         <attribute mode="IN" name="invoiceTypeId" optional="true" type="String"/>
     </service>
 </services>
+

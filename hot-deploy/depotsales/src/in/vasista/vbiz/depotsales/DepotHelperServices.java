@@ -2834,10 +2834,12 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     Map<String, Object> result = new HashMap<String, Object>();
     GenericValue userLogin = (GenericValue) context.get("userLogin");
     String fromDateStr = (String) context.get("fromDate");
-    String thruDateStr = (String) context.get("thruDate");
-    String branchId = (String) context.get("partyId");
+    String thruDateStr = (String) context.get("thruDate"); 
+    String roId = (String) context.get("partyId");
+    String invoiceTypeIdUi = (String) context.get("invoiceTypeId");
 	Timestamp fromDate=null;
 	Timestamp thruDate = null;
+	List branchIds = FastList.newInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
   	if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
   		try {
@@ -2849,7 +2851,13 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
   			Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
 	  	}
   	}
-
+  	try {
+  	  	EntityListIterator partyRelationshipItr = delegator.find("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId), null, UtilMisc.toSet("partyIdTo"), null, null);
+  	  	branchIds=EntityUtil.getFieldListFromEntityListIterator(partyRelationshipItr, "partyIdTo", true);
+  	}catch (GenericEntityException e) {
+        Debug.logError(e, module);
+        return ServiceUtil.returnError(e.getMessage());
+    }
     Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
     EntityCondition cond = null;
     List condList = FastList.newInstance();
@@ -2857,9 +2865,11 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
     	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
     }
-    condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, branchId),EntityOperator.OR,
-  			 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId)));
-	condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.NOT_EQUAL, "OBINVOICE_IN"));
+    condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchIds),EntityOperator.OR,
+  			 EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchIds)));
+	condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,invoiceTypeIdUi));
+	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_LIKE,"OB%"));
+	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("DEPOT_YARN_SALE","YARN_SALE")));
 	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
     cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
     Debug.log("cond=============================="+cond);
