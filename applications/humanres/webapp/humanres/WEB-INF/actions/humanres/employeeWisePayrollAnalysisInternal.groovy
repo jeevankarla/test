@@ -92,6 +92,7 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 		region = entry.getKey();
 		regionPaySheetList = entry.getValue();
 		tempMap = [:];
+		totalEmpPerRegion = 0;
 		for(Map regionPaySheetEntry : regionPaySheetList){
 			totalBenifit = 0;
 			totalDeduction = 0;
@@ -144,7 +145,10 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 				totalDeduction += amount;
 			}
 			tempMap.put("totalDeduction", totalDeduction);
+			totalEmpPerRegion += 1;
 		}
+		tempMap.put("totalEmpPerRegion", totalEmpPerRegion);
+		
 		regionPaySheetMap.put(region, tempMap);
 	}
 	
@@ -184,8 +188,13 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 		if(regionPayMap["PAYROL_BEN_DA"]){
 			empCpf += regionPayMap["PAYROL_BEN_DA"];
 		}
+		empFpf = empCpf;
+		empFpf = Math.min(empFpf, new Double(15000));
+		empFpf*=0.0833;
+		
 		empCpf*=0.12;
 		regionPayMap.put("empCpf",empCpf);
+		regionPayMap.put("empFpf",empFpf);
 		grossTotal = regionPayMap["totalBenifit"]+empCpf;
 		regionPayMap.put("grossTotal",grossTotal);
 		regionPayMap.keySet().removeAll(zeroValueSet);
@@ -205,6 +214,7 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 	context.put("columnMap",columnMap);
 	context.put("sumMap",sumMap);
 	context.put("payheadTypeIds",payheadTypeIds);
+	
 }
 else{
 	if (payRollEmployeeMap != null) {
