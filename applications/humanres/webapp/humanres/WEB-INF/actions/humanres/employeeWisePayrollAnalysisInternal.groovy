@@ -96,6 +96,7 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 		for(Map regionPaySheetEntry : regionPaySheetList){
 			totalBenifit = 0;
 			totalDeduction = 0;
+			empCpf = 0;
 			benefitDescMap.each { benefitMap ->
 				amount = 0;
 				if(tempMap.containsKey(benefitMap.getKey())){
@@ -118,8 +119,26 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 				}
 				tempMap.put(benefitMap.getKey(), amount);
 				totalBenifit += amount;
+				if("PAYROL_BEN_SALARY".equals(benefitMap.getKey())){
+					if(regionPaySheetEntry.get(benefitMap.getKey()) != null){
+						empCpf += regionPaySheetEntry.get(benefitMap.getKey());
+					}
+				}
+				if("PAYROL_BEN_DA".equals(benefitMap.getKey())){
+					if(regionPaySheetEntry.get(benefitMap.getKey()) != null){
+						empCpf += regionPaySheetEntry.get(benefitMap.getKey());
+					}
+				}
 			}
 			tempMap.put("totalBenifit", totalBenifit);
+			empFpf = empCpf;
+			empFpf = Math.min(empFpf, new Double(15000));
+			empFpf*=0.0833;
+			
+			if(tempMap.containsKey("empFpf")){
+				empFpf += tempMap["empFpf"]; 
+			}
+			tempMap.put("empFpf", empFpf);
 			
 			dedDescMap.each { dedMap ->
 				amount = 0;
@@ -188,13 +207,8 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 		if(regionPayMap["PAYROL_BEN_DA"]){
 			empCpf += regionPayMap["PAYROL_BEN_DA"];
 		}
-		empFpf = empCpf;
-		empFpf = Math.min(empFpf, new Double(15000));
-		empFpf*=0.0833;
-		
 		empCpf*=0.12;
 		regionPayMap.put("empCpf",empCpf);
-		regionPayMap.put("empFpf",empFpf);
 		grossTotal = regionPayMap["totalBenifit"]+empCpf;
 		regionPayMap.put("grossTotal",grossTotal);
 		regionPayMap.keySet().removeAll(zeroValueSet);
