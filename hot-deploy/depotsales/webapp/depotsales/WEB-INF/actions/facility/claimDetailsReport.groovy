@@ -236,7 +236,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 temMap.put("claimTotal", claimTotal);
 			 totalclaimTotal=totalclaimTotal+claimTotal
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
-				temMap.put("sNo", sNo);
+				temMap.put("sNo", String.valueOf(sNo));
 				sNo = sNo+1;
 			    finalList.add(temMap);
 				if(DistrictWiseMap.get(districtName)){
@@ -305,7 +305,7 @@ desList.each{ eachdesc ->
 	totalList.add(temMap);
 	i=i+1;
 }
-if(UtilValidate.isNotEmpty(productCategory) && (productCategory.description) && UtilValidate.isNotEmpty(invoiceSubsidyDetails)){
+//if(UtilValidate.isNotEmpty(productCategory) && (productCategory.description) && UtilValidate.isNotEmpty(invoiceSubsidyDetails)){
 	totMap.put("sNo", "TOTAL");
 	totMap.put("districtName", " ");
 	totMap.put("userAgency", " ");
@@ -316,8 +316,8 @@ if(UtilValidate.isNotEmpty(productCategory) && (productCategory.description) && 
 	totMap.put("value", totalvalue);
 	totMap.put("subsidyAmt", totalsubsidyAmt);
 	totMap.put("serviceCharg", totalserviceCharg);
-	totMap.put("claimTotal", totalclaimTotal);	
-}
+	totMap.put("claimTotal", String.valueOf(totalclaimTotal));	
+//}
 finalList.add(totMap);
 context.totalList = totalList;
 context.DistrictWiseList = DistrictWiseList;

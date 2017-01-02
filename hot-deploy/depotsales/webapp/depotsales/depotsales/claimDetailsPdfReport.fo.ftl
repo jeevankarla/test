@@ -148,40 +148,40 @@ under the License.
 						            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Total Claim For Yarn Subsidy And Claim Charges(in Rs)</fo:block>  
 						            </fo:table-cell>
 							  </fo:table-row>-->
-		                       <#list finalList as eachEntry>
+		                       <#list finalList as eachEntry>                     
 		                        <fo:table-row>
 				                    <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.sNo}</fo:block>  
+						            	<fo:block  text-align="left" font-size="10pt" <#if eachEntry.sNo=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachEntry.sNo?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.districtName}</fo:block>  
+						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.districtName?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.userAgency}</fo:block>  
+						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.userAgency?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${eachEntry.invoiceDate}</fo:block>  
+						            	<fo:block  text-align="center" font-size="10pt" white-space-collapse="false">${eachEntry.invoiceDate?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.productName}</fo:block>  
+						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.productName?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.categoryname}</fo:block>  
+						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">${eachEntry.categoryname?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${eachEntry.quantity}</fo:block>  
+						            	<fo:block  text-align="right" font-size="10pt" <#if eachEntry.sNo=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachEntry.quantity?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${eachEntry.value}</fo:block>  
+						            	<fo:block  text-align="right" font-size="10pt" <#if eachEntry.sNo=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachEntry.value?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${eachEntry.subsidyAmt}</fo:block>  
+						            	<fo:block  text-align="right" font-size="10pt" <#if eachEntry.sNo=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachEntry.subsidyAmt?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${eachEntry.serviceCharg}</fo:block>  
+						            	<fo:block  text-align="right" font-size="10pt" <#if eachEntry.sNo=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachEntry.serviceCharg?if_exists}</fo:block>  
 						            </fo:table-cell>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${eachEntry.claimTotal?if_exists?string("##0.00")}</fo:block>  
+						            	<fo:block  text-align="right" font-size="10pt" <#if eachEntry.sNo=="TOTAL"> font-weight="bold" </#if> white-space-collapse="false">${eachEntry.claimTotal?if_exists}</fo:block>  
 						            </fo:table-cell>
 							     </fo:table-row>
 							   </#list>
