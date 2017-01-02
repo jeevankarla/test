@@ -1655,6 +1655,54 @@
               <field name="submit" title="Find"><submit/></field>
               
        </form>
+       
+         <form name="FindQuotaProducer" odd-row-style="alternate-row" target="QuotaDashboard"
+      		 header-row-style="header-row" type="single"  default-table-style="basic-table hover-bar" separate-columns="true" >	
+              <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+              
+             <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field>
+              <!-- <field name="groupName" title="Weaver Name"><text  size="15"></text></field>  -->
+             
+           <field name="branchId" id-name="branchId" title="${uiLabelMap.Branch}">
+              <drop-down allow-empty="false">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
+        
+         <!--   <field name="partyClassificationId" title="Party Classification" event="onclick"  action="javascript:selectBranch();">
+              <drop-down allow-empty="true">
+                  <list-options key-name="partyClassificationGroupId" list-name="partyClassificationList" description="${description}"/>
+              </drop-down>
+        </field>
+        
+         <field name="isDepot" title="Depot Holder" event="onclick"  action="javascript:selectBranch();">
+	        	<drop-down allow-empty="true">
+	        		<option key="Y" description="YES"/>
+	        		<option key="N" description="NO"/>
+	        	</drop-down>
+        </field>
+          <field title="Date" name="effectiveDate"><date-time/></field>
+        <field name="satate" id-name="satate" title="State" event="onchange"  action="javascript:getCites();">
+              <drop-down allow-empty="true">
+                  <list-options key-name="value" list-name="stateListJSON" description="${label}"/>
+              </drop-down>
+        </field>
+        
+        <field name="district" id-name="district" title="District" >
+              <drop-down allow-empty="true">
+              </drop-down>
+        </field>
+        
+              <field name="passbookNumber" title="Passbook Number"><text  size="15"></text></field>
+              <field name="passGreater" title="Passbook Number Greater Than" position="1"><check></check></field>
+              
+              
+              <field name="roleTypeId" title="Role Type Id"><hidden value="EMPANELLED_CUSTOMER"/></field>
+ -->              
+              <field name="submit" title="Find"><submit/></field>
+              
+       </form>
+       
        <form name="ListDepotSalesProducer" type="list" list-name="listIt" odd-row-style="alternate-row" 
 				default-entity-name="PartyRoleDetailAndPartyDetail" default-table-style="basic-table hover-bar" >
 				

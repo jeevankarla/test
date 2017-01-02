@@ -176,6 +176,12 @@
             </condition>       
         	<link target="IndentAnalytics"/>
         </menu-item>
+         <menu-item name="quotaDashboard" title="Quota Dashboard">
+        	<condition>
+            	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
+            </condition>       
+        	<link target="QuotaDashboard"/>
+        </menu-item>
          <menu-item name="Transpoter" title="Transporters">
 		      <!--  <condition>
 		        	<if-has-permission permission="MM" action="_VENDOR_VIEW"/>
