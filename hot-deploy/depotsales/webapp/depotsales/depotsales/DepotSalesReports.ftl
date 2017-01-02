@@ -45,7 +45,7 @@ $(document).ready(function(){
 	    makeDatePicker("ivdFromDate","ivdThruDate");
 	    makeDatePicker("eObFromDate");
 	    makeDatePicker3("subsidyFromDate","subsidyThruDate");
-	    makeDatePicker3("claimFromDate","claimThruDate");
+	    makeDatePicker2("claimFromDate","claimThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker("reimburcentTransporterFRO","reimburcentTransporterTHRU");
 	    makeDatePicker("depotReimburcentReportFRO","depotReimburcentReportTHRU");
@@ -78,6 +78,32 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			}
 		});
 	}
+	
+	function makeDatePicker2(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'yy, MM dd',
+			changeMonth: true,
+			changeYear: true,
+			numberOfMonths: 1,
+			yearRange: "-20:+0",
+			onSelect: function(selectedDate) {
+			date = $(this).datepicker('getDate');
+			var maxDate = new Date(date.getTime());
+	        	maxDate.setDate(maxDate.getDate() + 31);
+				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'yy, MM dd',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+	}
+	
 </script>
 
 <div class="screenlet">
