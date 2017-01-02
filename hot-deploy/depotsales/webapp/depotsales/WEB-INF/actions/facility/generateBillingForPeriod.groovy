@@ -85,9 +85,8 @@ try {
 			totaltenPerSubAmount=totaltenPerSubAmount.add((eachRecord.itemValue)*(-1))
 		}
 		if(invoiceItemTypeId.equals("INV_FPROD_ITEM")){
-			totalInvoiceAmount=totalInvoiceAmount.add(eachRecord.amount*eachRecord.quantity)
+			totalInvoiceAmount=totalInvoiceAmount.add(eachRecord.itemValue)
 		}
-		
 	}
 	totalSerChrgAmount=totalInvoiceAmount.multiply(0.005);
 	Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin) 

@@ -212,7 +212,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 quantity = eachInvoiceItem.get("quantity");
 			 temMap.put("quantity", df.format(quantity.setScale(0, 0)));
 			 totalQty=totalQty+quantity;
-			 value= quantity*eachInvoiceItem.get("amount");
+			 value=eachInvoiceItem.get("itemValue");
 		
 			 temMap.put("value", df.format(value.setScale(2, 0)));
 			 totalvalue=totalvalue+value
@@ -225,7 +225,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 invoiceSubsidyDetails = delegator.findList("InvoiceItem",condition, null, null, null, false );
 			 invoiceSubsidyDetails= EntityUtil.getFirst(invoiceSubsidyDetails);
 			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetails) && (invoiceSubsidyDetails.amount)){
-				 subsidyAmt= (invoiceSubsidyDetails.amount)*(-1);
+				 subsidyAmt= (invoiceSubsidyDetails.itemValue)*(-1);
 			 }
 			 temMap.put("subsidyAmt", df.format(subsidyAmt.setScale(0, 0)));
 			 totalsubsidyAmt=totalsubsidyAmt+subsidyAmt
@@ -253,7 +253,6 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 					existingMap["serviceCharg"]=df.format(serviceCharg.add(new BigDecimal(existingMap.get("serviceCharg"))).setScale(0, 0));
 					existingMap["claimTotal"]=claimTotal.add(new BigDecimal(existingMap.get("claimTotal")));
 					DistrictWiseMap.put(districtName,existingMap);
-					
 				}else{
 				  fieldMap=[:];
 				  summarySNo=summarySNo+1;				  
@@ -270,11 +269,8 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 				  fieldMap["claimTotal"]=temMap.get("claimTotal");
 				  DistrictWiseMap.put(districtName,fieldMap);
 				}
-				
 			 } 
-			 
 		 }
-		
 	}
 }
 totalsMap.put("quantity", totalQty);
