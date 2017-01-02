@@ -5096,7 +5096,7 @@
 				<entity-condition entity-name="CustomTimePeriod" list="customTimePeriods">
 	            	<condition-list combine="and">
 	                    <condition-expr field-name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
-	                    <condition-expr field-name="organizationPartyId" operator="equals" value="Company"/>
+	                    <condition-expr field-name="organizationPartyId" operator="equals" value="${parameters.organizationPartyId}"/>
 	                </condition-list>
 	                <order-by field-name="customTimePeriodId"/>
 	            </entity-condition>
