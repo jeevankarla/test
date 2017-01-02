@@ -47,7 +47,7 @@ under the License.
 					    <fo:table-row>
 					      <fo:table-cell>
 					        <fo:block-container >
-	                           <fo:block text-align="left" font-size="13pt"><fo:external-graphic src="http://localhost:22080//vasista/complogos/aavin_logo.png" content-height="scale-to-fit" scaling="uniform" height="45" width="35"/></fo:block>
+	                           <fo:block text-align="left" font-size="13pt"><fo:external-graphic src="<@ofbizContentUrl>/vasista/complogos/logo_nhdc.png</@ofbizContentUrl>" content-height="scale-to-fit" scaling="uniform" height="50" width="45"/></fo:block>
 	                        </fo:block-container>
 					      </fo:table-cell>
 					      <fo:table-cell>
@@ -146,6 +146,7 @@ under the License.
 											  <fo:table-column column-width="128pt"/>
 											  <#assign liablitiesCategoryList = liablitiesChildWiseMap.entrySet()>
 											      <fo:table-body>
+											      <#assign categoryId ="">
 												     <#list liablitiesCategoryList as category>
 													 <#assign profitValues=category.getValue()>
 													 <#assign presentYearVal=0>
@@ -156,9 +157,26 @@ under the License.
 													 <#if profitValues.get(prevsYear)?has_content>
 													 <#assign prevsYearVal=profitValues.get(prevsYear)?if_exists>
 													 </#if>
+													 <#assign glCategry ={} >
+													 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",category.getKey(),"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+													 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",glCategry.parentCategoryId,"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+													 <#if categoryId=="" || categoryId!=glCategry.glAccountCategoryId>
+													 <#assign categoryId=glCategry.glAccountCategoryId>
+													 <fo:table-row >
+											             <fo:table-cell border="solid" >
+															 <fo:block text-align="left"  font-weight="bold">${glCategry.description?if_exists}</fo:block>
+														 </fo:table-cell>
+														 <fo:table-cell border="solid" >
+															 <fo:block text-align="center" keep-together="always" font-weight="bold"></fo:block>
+														 </fo:table-cell>
+							                             <fo:table-cell border="solid">
+							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold">&#160;</fo:block>
+														 </fo:table-cell>
+												 	</fo:table-row>
+													 </#if>
 												 	<fo:table-row >
 											             <fo:table-cell border="solid" >
-															 <fo:block text-align="left" keep-together="always" font-weight="bold">${profitValues.get("scheduleNo")} - ${profitValues.get("childCatName")}</fo:block>
+															 <fo:block text-align="left" font-weight="bold">${profitValues.get("scheduleNo")} - ${profitValues.get("childCatName")}</fo:block>
 														 </fo:table-cell>
 														 
 														 <fo:table-cell border="solid">
@@ -184,7 +202,7 @@ under the License.
 												 	</#if>
 												 	<fo:table-row >
 											             <fo:table-cell border="solid" >
-															 <fo:block text-align="left" keep-together="always" >${glAccountIdWise.get("glAccountId")} - ${glAccountIdWise.get("description")} </fo:block>
+															 <fo:block text-align="left"  >${glAccountIdWise.get("glAccountId")} - ${glAccountIdWise.get("description")} </fo:block>
 														 </fo:table-cell>
 														 <fo:table-cell border="solid">
 															 <fo:block text-align="right" keep-together="always" >${presentYrGlIdVal?if_exists?string("#0.00")}</fo:block>
@@ -228,6 +246,7 @@ under the License.
 											  <fo:table-column column-width="128pt"/>
 											      <fo:table-body>
 											            <#assign assetsCategoryList= assetsChildWiseMap.entrySet()>
+											            <#assign categoryId ="">
 											             <#list assetsCategoryList as category>
 														 <#assign values=category.getValue()>
 														 <#assign presentYearVal=0>
@@ -238,9 +257,26 @@ under the License.
 														 <#if values.get(prevsYear)?has_content>
 														 <#assign prevsYearVal=values.get(prevsYear)?if_exists>
 														 </#if>
+														 <#assign glCategry = {}>
+														 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",category.getKey(),"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+														 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",glCategry.parentCategoryId,"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+														 <#if categoryId=="" || categoryId!=glCategry.glAccountCategoryId>
+														 <#assign categoryId=glCategry.glAccountCategoryId>
+														 <fo:table-row >
+												             <fo:table-cell border="solid" >
+																 <fo:block text-align="left"  font-weight="bold">${glCategry.description?if_exists}</fo:block>
+															 </fo:table-cell>
+															 <fo:table-cell border="solid" >
+																 <fo:block text-align="center" keep-together="always" font-weight="bold"></fo:block>
+															 </fo:table-cell>
+								                             <fo:table-cell border="solid">
+								                             	 <fo:block text-align="right" keep-together="always" font-weight="bold">&#160;</fo:block>
+															 </fo:table-cell>
+													 	</fo:table-row>
+														 </#if>
 													 	<fo:table-row>
 												             <fo:table-cell border="solid" >
-																 <fo:block text-align="left" keep-together="always" font-weight="bold">${values.get("scheduleNo")} - ${values.get("childCatName")}</fo:block>
+																 <fo:block text-align="left"  font-weight="bold">${values.get("scheduleNo")} - ${values.get("childCatName")}</fo:block>
 															 </fo:table-cell>
 															 
 															 <fo:table-cell border="solid">
@@ -266,7 +302,7 @@ under the License.
 													 	</#if>
 													 	<fo:table-row >
 												             <fo:table-cell border="solid" >
-																 <fo:block text-align="left" keep-together="always" >${glAccountIdWise.get("glAccountId")} - ${glAccountIdWise.get("description")} </fo:block>
+																 <fo:block text-align="left"  >${glAccountIdWise.get("glAccountId")} - ${glAccountIdWise.get("description")} </fo:block>
 															 </fo:table-cell>
 															 <fo:table-cell border="solid">
 																 <fo:block text-align="right" keep-together="always" >${presentYrGlIdVal?if_exists?string("#0.00")}</fo:block>
