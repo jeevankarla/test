@@ -1947,6 +1947,9 @@ public class DepotPurchaseServices{
 		String shipmentId = (String) request.getParameter("shipmentId");
 		String purchaseInvoiceId = (String) request.getParameter("purchaseInvoiceId");
 		
+		String saleTitleTransferEnumId = (String) request.getParameter("saleTitleTransferEnumId");
+		String saleTaxType = (String) request.getParameter("saleTaxType");
+		
 		String purposeTypeId = "YARN_SALE";
 	  
 		Timestamp invoiceDate = null;
@@ -2028,6 +2031,48 @@ public class DepotPurchaseServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Error in fetching Order Item billing :" + invoiceId+"....! ");
 			return "error";
 		}
+		
+		
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		List<GenericValue> InvoiceAttributeList =null;
+		try{
+			InvoiceAttributeList = delegator.findList("InvoiceAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(InvoiceAttributeList)){
+				delegator.removeAll(InvoiceAttributeList);
+			}
+		} catch (Exception e) {
+   		  	Debug.logError(e, "Error in fetching InvoiceAttribute ", module);
+			request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceAttribute :" + invoiceId+"....! ");
+			return "error";
+		}
+		
+		
+	// Invoice Attributes (Taxes)
+			Map<String, Object> createInvAttribute = UtilMisc.toMap(
+	                "invoiceId", invoiceId,
+	                "invoiceAttrName", "saleTitleTransferEnumId",
+	                "invoiceAttrValue", saleTitleTransferEnumId, 
+	                "userLogin", userLogin);
+
+	        try {
+	        	dispatcher.runSync("createInvoiceAttribute", createInvAttribute);
+	        } catch (GenericServiceException gse) {
+	            Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
+	        }
+			
+	        createInvAttribute = UtilMisc.toMap(
+	                "invoiceId", invoiceId,
+	                "invoiceAttrName", "saleTaxType",
+	                "invoiceAttrValue", saleTaxType, 
+	                "userLogin", userLogin);
+
+	        try {
+	        	dispatcher.runSync("createInvoiceAttribute", createInvAttribute);
+	        } catch (GenericServiceException gse) {
+	            Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
+	        }
 		
 		List productQtyList = FastList.newInstance();
 		List<Map> invoiceAdjChargesList = FastList.newInstance();
@@ -2906,6 +2951,9 @@ public class DepotPurchaseServices{
 		String shipmentId = (String) request.getParameter("shipmentId");
 		String purchaseInvoiceId = (String) request.getParameter("purchaseInvoiceId");
 		
+		String saleTitleTransferEnumId = (String) request.getParameter("saleTitleTransferEnumId");
+		String saleTaxType = (String) request.getParameter("saleTaxType");
+		
 		String purposeTypeId = "DEPOT_YARN_SALE";
 	  
 		Timestamp invoiceDate = null;
@@ -2987,6 +3035,48 @@ public class DepotPurchaseServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Error in fetching Order Item billing :" + invoiceId+"....! ");
 			return "error";
 		}
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		List<GenericValue> InvoiceAttributeList =null;
+		try{
+			InvoiceAttributeList = delegator.findList("InvoiceAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(InvoiceAttributeList)){
+				delegator.removeAll(InvoiceAttributeList);
+			}
+		} catch (Exception e) {
+   		  	Debug.logError(e, "Error in fetching InvoiceAttribute ", module);
+			request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceAttribute :" + invoiceId+"....! ");
+			return "error";
+		}
+		
+		
+	// Invoice Attributes (Taxes)
+			Map<String, Object> createInvAttribute = UtilMisc.toMap(
+	                "invoiceId", invoiceId,
+	                "invoiceAttrName", "saleTitleTransferEnumId",
+	                "invoiceAttrValue", saleTitleTransferEnumId, 
+	                "userLogin", userLogin);
+
+	        try {
+	        	dispatcher.runSync("createInvoiceAttribute", createInvAttribute);
+	        } catch (GenericServiceException gse) {
+	            Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
+	        }
+			
+	        createInvAttribute = UtilMisc.toMap(
+	                "invoiceId", invoiceId,
+	                "invoiceAttrName", "saleTaxType",
+	                "invoiceAttrValue", saleTaxType, 
+	                "userLogin", userLogin);
+
+	        try {
+	        	dispatcher.runSync("createInvoiceAttribute", createInvAttribute);
+	        } catch (GenericServiceException gse) {
+	            Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
+    }
+		
+		
 		
 		List productQtyList = FastList.newInstance();
 		List<Map> invoiceAdjChargesList = FastList.newInstance();
@@ -3767,6 +3857,9 @@ public class DepotPurchaseServices{
 		String shipmentId = (String) request.getParameter("shipmentId");
 		String purchaseInvoiceId = (String) request.getParameter("purchaseInvoiceId");
 		
+		String purchaseTitleTransferEnumId = (String) request.getParameter("purchaseTitleTransferEnumId");
+		String purchaseTaxType = (String) request.getParameter("purchaseTaxType");
+		
 		String purposeTypeId = "YARN_SALE";
 	  
 		Timestamp invoiceDate = null;
@@ -3848,6 +3941,46 @@ public class DepotPurchaseServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Error in fetching Order Item billing :" + invoiceId+"....! ");
 			return "error";
 		}
+		
+		
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			List<GenericValue> InvoiceAttributeList =null;
+			try{
+				InvoiceAttributeList = delegator.findList("InvoiceAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				if(UtilValidate.isNotEmpty(InvoiceAttributeList)){
+					delegator.removeAll(InvoiceAttributeList);
+				}
+			} catch (Exception e) {
+	   		  	Debug.logError(e, "Error in fetching InvoiceAttribute ", module);
+				request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceAttribute :" + invoiceId+"....! ");
+				return "error";
+	         }
+
+              // Invoice Attributes (Taxes)
+				Map<String, Object> createInvAttribute = UtilMisc.toMap(
+                        "invoiceId", invoiceId,
+                        "invoiceAttrName", "purchaseTitleTransferEnumId",
+                        "invoiceAttrValue", purchaseTitleTransferEnumId, 
+                        "userLogin", userLogin);
+
+                try {
+                	dispatcher.runSync("createInvoiceAttribute", createInvAttribute);
+                } catch (GenericServiceException gse) {
+                    Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
+                }
+				
+                createInvAttribute = UtilMisc.toMap(
+                        "invoiceId", invoiceId,
+                        "invoiceAttrName", "purchaseTaxType",
+                        "invoiceAttrValue", purchaseTaxType, 
+                        "userLogin", userLogin);
+
+                try {
+                	dispatcher.runSync("createInvoiceAttribute", createInvAttribute);
+                } catch (GenericServiceException gse) {
+                    Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
+        }
 		
 		List productQtyList = FastList.newInstance();
 		List<Map> invoiceAdjChargesList = FastList.newInstance();
@@ -4668,6 +4801,9 @@ public class DepotPurchaseServices{
 		String shipmentId = (String) request.getParameter("shipmentId");
 		String purchaseInvoiceId = (String) request.getParameter("purchaseInvoiceId");
 		
+		String purchaseTitleTransferEnumId = (String) request.getParameter("purchaseTitleTransferEnumId");
+		String purchaseTaxType = (String) request.getParameter("purchaseTaxType");
+		
 		String purposeTypeId = "DEPOT_YARN_SALE";
 	  
 		Timestamp invoiceDate = null;
@@ -4749,6 +4885,47 @@ public class DepotPurchaseServices{
 			request.setAttribute("_ERROR_MESSAGE_", "Error in fetching Order Item billing :" + invoiceId+"....! ");
 			return "error";
 		}
+		
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		List<GenericValue> InvoiceAttributeList =null;
+		try{
+			InvoiceAttributeList = delegator.findList("InvoiceAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(InvoiceAttributeList)){
+				delegator.removeAll(InvoiceAttributeList);
+			}
+		} catch (Exception e) {
+   		  	Debug.logError(e, "Error in fetching InvoiceAttribute ", module);
+			request.setAttribute("_ERROR_MESSAGE_", "Error in fetching InvoiceAttribute :" + invoiceId+"....! ");
+			return "error";
+         }
+
+
+           // Invoice Attributes (Taxes)
+				Map<String, Object> createInvAttribute = UtilMisc.toMap(
+                        "invoiceId", invoiceId,
+                        "invoiceAttrName", "purchaseTitleTransferEnumId",
+                        "invoiceAttrValue", purchaseTitleTransferEnumId, 
+                        "userLogin", userLogin);
+
+                try {
+                	dispatcher.runSync("createInvoiceAttribute", createInvAttribute);
+                } catch (GenericServiceException gse) {
+                    Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
+                }
+				
+                createInvAttribute = UtilMisc.toMap(
+                        "invoiceId", invoiceId,
+                        "invoiceAttrName", "purchaseTaxType",
+                        "invoiceAttrValue", purchaseTaxType, 
+                        "userLogin", userLogin);
+
+                try {
+                	dispatcher.runSync("createInvoiceAttribute", createInvAttribute);
+                } catch (GenericServiceException gse) {
+                    Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
+        }
 		
 		List productQtyList = FastList.newInstance();
 		List<Map> invoiceAdjChargesList = FastList.newInstance();
