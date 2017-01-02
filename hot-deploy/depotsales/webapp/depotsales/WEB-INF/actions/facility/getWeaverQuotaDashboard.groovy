@@ -315,10 +315,23 @@ partyList.each{ partyList ->
 	tempData.put("isDepot", isDepots);*/
 	
 	
-	conditionListParty=[];
+	/*conditionListParty=[];
 	conditionListParty.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
 	Pcond = EntityCondition.makeCondition(conditionListParty, EntityOperator.AND);
 	List partyLoomDetails = delegator.findList("PartyLoom",Pcond,UtilMisc.toSet("partyId","loomTypeId","quantity"),null,null,false);
+	
+*/	
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()),
+		EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
+	
+	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	partyLoomDetails = delegator.findList("PartyLoom",condition,null,null,null,false);
+	
+	
 	
 	
 	int totalLooms = 0;
