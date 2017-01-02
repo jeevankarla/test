@@ -465,24 +465,26 @@ if(invoice){
 
 				//=================PartyClassification=========================
 
-				 conditionList = UtilMisc.toList(
-						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, orderDate));
-				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
-						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, orderDate)));
-				 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				 PartyClassificationList = delegator.findList("PartyClassification", condition, null, null, null, false);
-
-		      
+				  conditionList.clear();
+				 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
+				 conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, orderDate));
+				 conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, orderDate),
+					 EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
+				 
+				 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+				 PartyClassify = delegator.findList("PartyClassification",condition,null,null,null,false);
+				 
+				 
 				partyClassification = "";
-				if(partyClassificationList){
-					partyClassificationGroupId = partyClassificationList[0].get("partyClassificationGroupId");
+				if(PartyClassify){
+					partyClassificationGroupId = PartyClassify[0].get("partyClassificationGroupId");
 					PartyClassificationGroup = delegator.findOne("PartyClassificationGroup",[partyClassificationGroupId : partyClassificationGroupId] , false);
 					
 					if(PartyClassificationGroup)
 					partyClassification = PartyClassificationGroup.get("description");
 					
 				 }
+
 				//==============================================================
 
 			}
