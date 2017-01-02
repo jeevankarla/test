@@ -644,7 +644,7 @@
 				</entity-condition>
 				<set field="partyIds[]" from-field="organizationPartyId" />
 				<script
-					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceorgNames.groovy" />
+					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
 				<entity-condition entity-name="GlAccountAndHistoryTotals"
 					filter-by-date="false" list="grandTotalPosted">
 					<condition-list>

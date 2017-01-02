@@ -18,11 +18,18 @@
  *******************************************************************************/
 package org.ofbiz.accounting.ledger;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +38,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.Iterator;
+import java.util.Map.Entry;
+import java.text.ParseException;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
@@ -384,82 +393,343 @@ public class GeneralLedgerServices {
     }
     //reCalculateGlHistoryForPeriod
     public static Map<String, Object> reCalculateGlHistoryForPeriod(DispatchContext ctx, Map<String, Object> context) throws GenericEntityException {
+	    Delegator delegator = ctx.getDelegator();
+	    LocalDispatcher dispatcher = ctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    String customTimePeriodId = (String) context.get("customTimePeriodId");
+	    String organizationPartyId = (String)context.get("organizationPartyId");
+	    String glFiscalTypeId = (String)context.get("glFiscalTypeId");
+	    String partyWiseFlag = (String)context.get("partyWiseFlag");
+	    Map<String, Object> result = ServiceUtil.returnSuccess();
+	    try {
+	    	 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",customTimePeriodId), false);
+		     //emtpy or not a fiscal period then return
+	    	 if(UtilValidate.isNotEmpty(customTimePeriod.getString("organizationPartyId"))){
+	    		 organizationPartyId =  customTimePeriod.getString("organizationPartyId");
+	    	 }
+	    	 
+	    	 Map finYearContext = FastMap.newInstance();
+	 		finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList(customTimePeriod.getString("periodTypeId")));
+	 		finYearContext.put("organizationPartyId", organizationPartyId);
+	 		finYearContext.put("userLogin", userLogin);
+	 		finYearContext.put("findDate", UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate")));
+	 		finYearContext.put("excludeNoOrganizationPeriods", "Y");
+	 		List<GenericValue> customTimePeriodList = FastList.newInstance();
+	 		Map resultCtx = FastMap.newInstance();
+	 		try{
+	 			resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+	 			if(ServiceUtil.isError(resultCtx)){
+	 				Debug.logError("Problem in fetching financial year ", module);
+	 				return ServiceUtil.returnError("Problem in fetching financial year ");
+	 			}
+	 		}catch(GenericServiceException e){
+	 			Debug.logError(e, module);
+	 			return ServiceUtil.returnError(e.getMessage());
+	 		}
+	 		customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+	 		
+	    	 
+		     Timestamp fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate")));
+		     Timestamp thruDate = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate")));
+				
+		     if((UtilValidate.isEmpty(partyWiseFlag))||(UtilValidate.isNotEmpty(partyWiseFlag)&&!"Y".equals(partyWiseFlag))){
+		    	 if(UtilValidate.isEmpty(customTimePeriod) || !(customTimePeriod.getString("periodTypeId").contains("FISCAL")) || (customTimePeriod.getString("isClosed").equals("Y"))){
+	    	    	 return result;
+	    	     }
+	    	     List andExprs = FastList.newInstance();
+	    	     if(UtilValidate.isEmpty(organizationPartyId)){
+	    	    	 organizationPartyId = "Company";
+	    	     }
+	    	     andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
+	    	     if(UtilValidate.isNotEmpty(organizationPartyId)){
+	    	    	 //get internal orgs and do in query here
+	    	    	 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+	    	     }
+	    	     
+	    	     if(UtilValidate.isNotEmpty(glFiscalTypeId)){
+	    	    	 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
+	    	     }
+	    	     
+	    	     andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+	    	     andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+	    	     EntityCondition andCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
+	    	     Debug.log("andCond======="+andCond);
+	    	     EntityListIterator allPostedTransactionTotalItr = delegator.find("AcctgTransEntrySums", andCond, null, null, null, null);
+	    	     GenericValue transTotalEntry;
+	    	     Map<String ,Object> postedTransactionTotalsMap = FastMap.newInstance();
+	    	     
+	    	     while(allPostedTransactionTotalItr != null && (transTotalEntry = allPostedTransactionTotalItr.next()) != null) {
+	    	    	 String glAccountId = transTotalEntry.getString("glAccountId");
+	    	    	 Map accountMap = (Map)postedTransactionTotalsMap.get(transTotalEntry.getString("glAccountId"));
+	    	    	 if (UtilValidate.isEmpty(accountMap)) {
+	    	    		 accountMap = FastMap.newInstance();
+	    	    		 accountMap.put("glAccountId", glAccountId);
+		                 accountMap.put("D", BigDecimal.ZERO);
+		                 accountMap.put("C", BigDecimal.ZERO);
+		             }
+	    	    	 
+	    	         UtilMisc.addToBigDecimalInMap(accountMap , transTotalEntry.getString("debitCreditFlag"), transTotalEntry.getBigDecimal("amount"));
+	    	         postedTransactionTotalsMap.put(glAccountId, accountMap);
+	    	     }
+	    	     allPostedTransactionTotalItr.close();
+	    	     andExprs.clear();
+	    	     andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+	    	     andExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+	    	     List glHistoryList = delegator.findList("GlAccountHistory", EntityCondition.makeCondition(andExprs,EntityOperator.AND), null, null, null, false);
+	    	     delegator.removeAll(glHistoryList);
+	    	     for ( Map.Entry<String, Object> entry : postedTransactionTotalsMap.entrySet() ) {
+	    	    	  Map postedTotalEntry = (Map)entry.getValue();
+	    	    	 GenericValue glAccountHistory = delegator.makeValue("GlAccountHistory");
+	    	    	 glAccountHistory.set("glAccountId", (String)postedTotalEntry.get("glAccountId"));
+	    	    	 glAccountHistory.set("organizationPartyId",organizationPartyId);
+	    	    	 glAccountHistory.set("customTimePeriodId",customTimePeriodId);
+	    	    	 glAccountHistory.set("postedDebits",(BigDecimal)postedTotalEntry.get("D") );
+	    	    	 glAccountHistory.set("postedCredits", (BigDecimal)postedTotalEntry.get("C"));
+	    	    	 delegator.createOrStore(glAccountHistory);
+	    	    	 //Debug.log("glAccountHistory============="+glAccountHistory);
+	    	    	 
+	    	    	 
+	    	    	 
+	    	    	 //Let's populate child org histories
+	        	     for(GenericValue cstTimePeriod : customTimePeriodList){
+	        	    	 
+	        	    	 if(!customTimePeriodId.equals(cstTimePeriod.getString("customTimePeriodId"))){
+	        	    		 Map glMap = UtilMisc.toMap("customTimePeriodId",cstTimePeriod.getString("customTimePeriodId"),
+		        	    			 "glAccountId",(String)postedTotalEntry.get("glAccountId"),"organizationPartyId",organizationPartyId);
+		        	    	 GenericValue parentGlAccountHistory = delegator.findOne("GlAccountHistory",glMap , false);
+		        	    	 if(UtilValidate.isEmpty(parentGlAccountHistory)){
+		        	    		 GenericValue newEntity = delegator.makeValue("GlAccountHistory");
+		        	    		 newEntity.putAll(glMap);
+		        	    		 newEntity.set("postedDebits",BigDecimal.ZERO );
+		        	    		 newEntity.set("postedCredits", BigDecimal.ZERO);
+		    	    	    	 delegator.createOrStore(newEntity);
+		    	    	    	 parentGlAccountHistory = delegator.findOne("GlAccountHistory",glMap , false);
+		        	    	 }
+		        	    	 parentGlAccountHistory.set("postedDebits",parentGlAccountHistory.getBigDecimal("postedDebits").add((BigDecimal)postedTotalEntry.get("D")));
+		        	    	 parentGlAccountHistory.set("postedCredits", parentGlAccountHistory.getBigDecimal("postedCredits").add((BigDecimal)postedTotalEntry.get("C")));
+			    	    	 delegator.createOrStore(parentGlAccountHistory);
+			    	    	 
+	        	    	 }
+	        	    	 
+	        	     }
+	    	     }	 
+		     }
+		   
+		    
+		     
+		     //Lets Papulate GlAccountHistoryPartyWise entity	     	     
+		     
+		     List andExprs1 = FastList.newInstance();
+		     if(UtilValidate.isEmpty(organizationPartyId)){
+		    	 organizationPartyId = "Company";
+		     }
+		     andExprs1.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
+		     if(UtilValidate.isNotEmpty(organizationPartyId)){
+		    	 //get internal orgs and do in query here
+		    	 andExprs1.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+		     }
+		     
+		     if(UtilValidate.isNotEmpty(glFiscalTypeId)){
+		    	 andExprs1.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
+		     }
+		     
+		     andExprs1.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		     andExprs1.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+		     EntityCondition andCond1 = EntityCondition.makeCondition(andExprs1, EntityOperator.AND);
+		     //Debug.log("andCond======="+andCond);
+		     EntityListIterator allPostedTransactionTotalItr1 = delegator.find("AcctgTransAndEntries", andCond1, null, null, null, null);
+		     GenericValue transTotalEntry1;
+		     Map postedTransactionTotalsMap1 = FastMap.newInstance();
+		     
+		     while(allPostedTransactionTotalItr1 != null && (transTotalEntry1 = allPostedTransactionTotalItr1.next()) != null) {
+		    	 String glAccountId = transTotalEntry1.getString("glAccountId");
+		    	 String acctgTransTypeId = transTotalEntry1.getString("acctgTransTypeId");
+		    	 String partyId=transTotalEntry1.getString("partyId");
+		    	 String flag=transTotalEntry1.getString("debitCreditFlag");
+		    	 BigDecimal amtVal=BigDecimal.ZERO;
+		    	 if(UtilValidate.isNotEmpty(transTotalEntry1.getBigDecimal("amount"))){
+		    		 amtVal=transTotalEntry1.getBigDecimal("amount");
+		    	 }
+		    	 if(UtilValidate.isNotEmpty(partyId)){
+	    	    	 if(UtilValidate.isEmpty(postedTransactionTotalsMap1.get(partyId))){
+	    	    		 Map tempMapGlMap=FastMap.newInstance();
+	    	    		 Map tempMapTransTypeMap=FastMap.newInstance();
+	    	    		 Map tempMapDetails=FastMap.newInstance();
+	    	    		 	if(flag.equals("D")){
+	    	    		 		tempMapDetails.put("D", amtVal);
+	    	    		 	}else{
+	    	    		 		tempMapDetails.put("C", amtVal);
+	    	    		 	}
+	    	    		 	tempMapTransTypeMap.put(acctgTransTypeId, tempMapDetails);
+	    	    		 	tempMapGlMap.put(glAccountId, tempMapTransTypeMap);
+	    	    		 	postedTransactionTotalsMap1.put(partyId, tempMapGlMap);
+	    	    	 }else{
+	    	    		 Map tempGlWiseDetailsMap=FastMap.newInstance();
+	    	    		 	 tempGlWiseDetailsMap.putAll((Map)postedTransactionTotalsMap1.get(partyId));
+	    	    		 	 if(UtilValidate.isEmpty(tempGlWiseDetailsMap.get(glAccountId))){
+	    	    		 		 Map tempGlWiseMap=FastMap.newInstance();
+	    	    		 		 Map tempTrnsTypeWiseMap=FastMap.newInstance();
+	    	    		 		 Map tempGlDetailsWise=FastMap.newInstance();
+	    	    		 		if(flag.equals("D")){
+	    	    		 			tempGlDetailsWise.put("D", amtVal);
+	        	    		 	}else{
+	        	    		 		tempGlDetailsWise.put("C", amtVal);
+	        	    		 	}
+	    	    		 		tempTrnsTypeWiseMap.put(acctgTransTypeId, tempGlDetailsWise);
+	    	    		 		tempGlWiseDetailsMap.put(glAccountId, tempTrnsTypeWiseMap);    	    		 		 
+	    	    		 	 }else{
+	    	    		 		 Map glWiseDetailsMap=FastMap.newInstance();
+	    	    		 		 glWiseDetailsMap.putAll((Map)tempGlWiseDetailsMap.get(glAccountId));
+	    	    		 		 if(UtilValidate.isEmpty(glWiseDetailsMap.get(acctgTransTypeId))){
+	    	    		 			 Map tempTransType=FastMap.newInstance();
+		    	    		 			if(flag.equals("D")){
+		    	    		 				tempTransType.put("D", amtVal);
+		        	    		 		 }else{
+		        	    		 			tempTransType.put("C", amtVal);
+		        	    		 		 }
+		    	    		 			glWiseDetailsMap.put(acctgTransTypeId,tempTransType);
+	    	    		 		 }else{
+	    	    		 			 Map  accntTransTypeMap=FastMap.newInstance();
+	    	    		 			 accntTransTypeMap.putAll((Map)glWiseDetailsMap.get(acctgTransTypeId));
+	    	    		 			 BigDecimal glDebitAmt=BigDecimal.ZERO;
+	        	    		 		 if(UtilValidate.isNotEmpty(accntTransTypeMap.get("D"))){
+	        	    		 			glDebitAmt=(BigDecimal)accntTransTypeMap.get("D");
+	        	    		 		 }
+	        	    		 		 BigDecimal glCrAmt=BigDecimal.ZERO;
+	        	    		 		if(UtilValidate.isNotEmpty(accntTransTypeMap.get("C"))){
+	        	    		 			glCrAmt=(BigDecimal)accntTransTypeMap.get("C");
+	        	    		 		 }
+	        	    		 		if(flag.equals("D")){
+	        	    		 			accntTransTypeMap.put("D", amtVal.add(glDebitAmt));
+	        	    		 		 }else{
+	        	    		 			accntTransTypeMap.put("C", amtVal.add(glCrAmt));
+	        	    		 		 }
+	        	    		 		glWiseDetailsMap.put(acctgTransTypeId,accntTransTypeMap);
+	    	    		 		 }   		 		
+	    	    		 		 
+	    	    		 		 tempGlWiseDetailsMap.put(glAccountId, glWiseDetailsMap);
+	    	    		 	 }
+	    	    		 	postedTransactionTotalsMap1.put(partyId, tempGlWiseDetailsMap);
+	    	    	 }
+		    	 
+		     }
+		    	 /*Map accountMap1 = (Map)postedTransactionTotalsMap1.get(partyId);
+		    	 if (UtilValidate.isEmpty(accountMap1)) {    	    		 
+		    		 accountMap1 = FastMap.newInstance();
+		    		 accountMap1.put("glAccountId", glAccountId);
+		    		 accountMap1.put("partyId", partyId);
+	                 accountMap1.put("D", BigDecimal.ZERO);
+	                 accountMap1.put("C", BigDecimal.ZERO);
+	             }
+		    	 
+		         UtilMisc.addToBigDecimalInMap(accountMap1 , transTotalEntry1.getString("debitCreditFlag"), transTotalEntry1.getBigDecimal("amount"));
+		         postedTransactionTotalsMap1.put(glAccountId, accountMap1);*/
+		     }    	    
+		     allPostedTransactionTotalItr1.close();
+		     andExprs1.clear();
+		     andExprs1.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+		     andExprs1.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
+		     List glHistoryPartyWiseList = delegator.findList("GlAccountHistoryPartyWise", EntityCondition.makeCondition(andExprs1,EntityOperator.AND), null, null, null, false);
+		     delegator.removeAll(glHistoryPartyWiseList);
+		     if(UtilValidate.isNotEmpty(postedTransactionTotalsMap1)){
+		    	 Iterator tempIter = postedTransactionTotalsMap1.entrySet().iterator();
+					while (tempIter.hasNext()) {
+						Map.Entry tempEntry = (Entry) tempIter.next();
+						String party=(String)tempEntry.getKey();
+						Map tempEntryDetails=(Map)tempEntry.getValue();
+						Iterator tempEntDetailIter = tempEntryDetails.entrySet().iterator();
+						while (tempEntDetailIter.hasNext()) {
+							Map.Entry tempGlEntry = (Entry) tempEntDetailIter.next();
+							Map tempGlDetailsVal=(Map)tempGlEntry.getValue();
+		 					String glAccId=(String)tempGlEntry.getKey();
+		 					
+		 					Iterator tempEntTypeDetailIter = tempGlDetailsVal.entrySet().iterator();
+		 					
+		 					while (tempEntTypeDetailIter.hasNext()) {
+		 						Map.Entry tempTransTypeEntry = (Entry) tempEntTypeDetailIter.next();
+		 						Map tempTransTypeDetailsVal=(Map)tempTransTypeEntry.getValue();
+		 	 					String transTypeId=(String)tempTransTypeEntry.getKey();
+		 					
+	 	 					BigDecimal debitVal=BigDecimal.ZERO;
+	 	 					if(UtilValidate.isNotEmpty(tempTransTypeDetailsVal.get("D"))){
+	 	 						 debitVal=(BigDecimal)tempTransTypeDetailsVal.get("D");
+	 	 					}
+	 	 					BigDecimal creditVal=BigDecimal.ZERO;
+	 	 					if(UtilValidate.isNotEmpty(tempTransTypeDetailsVal.get("C"))){
+	 	 						 creditVal=(BigDecimal)tempTransTypeDetailsVal.get("C");
+	 	 					}
+	 	 					GenericValue glAccountHistoryPartyWise = delegator.makeValue("GlAccountHistoryPartyWise");
+	 	 	    	    	 glAccountHistoryPartyWise.set("glAccountId", glAccId);
+	 	 	    	    	 glAccountHistoryPartyWise.set("organizationPartyId",organizationPartyId);
+	 	 	    	    	 glAccountHistoryPartyWise.set("partyId",party);
+	 	 	    	    	 glAccountHistoryPartyWise.set("acctgTransTypeId",transTypeId);
+	 	 	    	    	 glAccountHistoryPartyWise.set("customTimePeriodId",customTimePeriodId);
+	 	 	    	    	 glAccountHistoryPartyWise.set("postedDebits",debitVal );
+	 	 	    	    	 glAccountHistoryPartyWise.set("postedCredits", creditVal);
+	 	 	    	    	 delegator.createOrStore(glAccountHistoryPartyWise);
+		 					}
+						}
+					}
+		     }
+		     
+		     
+		   
+	    } catch (Exception e) {
+	        Debug.logError(e, "Problem in reCalculateGlHistory", module);
+	        return ServiceUtil.returnError("Problem in reCalculateGlHistory");
+	    }
+	    return result;
+    }
+    
+    public static Map<String, Object> reCalculateGlHistoryForPeriodForAllInt(DispatchContext ctx, Map<String, Object> context) throws GenericEntityException {
     	Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String customTimePeriodId = (String) context.get("customTimePeriodId");
+        String partyIdFrom = (String) context.get("partyIdFrom");
         String organizationPartyId = (String)context.get("organizationPartyId");
-        String glFiscalTypeId = (String)context.get("glFiscalTypeId");
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        try {
-        	 GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", UtilMisc.toMap("customTimePeriodId",customTimePeriodId), false);
-    	     //emtpy or not a fiscal period then return
-        	 if(UtilValidate.isEmpty(customTimePeriod) || !(customTimePeriod.getString("periodTypeId").contains("FISCAL")) || (customTimePeriod.getString("isClosed").equals("Y"))){
-    	    	 return result;
-    	     }
-        	 
-    	     Timestamp fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(customTimePeriod.getDate("fromDate")));
-    	     Timestamp thruDate = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(customTimePeriod.getDate("thruDate")));
- 			 
-    	     List andExprs = FastList.newInstance();
-    	     if(UtilValidate.isEmpty(organizationPartyId)){
-    	    	 organizationPartyId = "Company";
-    	     }
-    	     andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
-    	     if(UtilValidate.isNotEmpty(organizationPartyId)){
-    	    	 //get internal orgs and do in query here
-    	    	 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
-    	     }
-    	     
-    	     if(UtilValidate.isNotEmpty(glFiscalTypeId)){
-    	    	 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
-    	     }
-    	     
-    	     andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-    	     andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-    	     EntityCondition andCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
-    	     //Debug.log("andCond======="+andCond);
-    	     EntityListIterator allPostedTransactionTotalItr = delegator.find("AcctgTransEntrySums", andCond, null, null, null, null);
-    	     GenericValue transTotalEntry;
-    	     Map<String ,Object> postedTransactionTotalsMap = FastMap.newInstance();
-    	     
-    	     while(allPostedTransactionTotalItr != null && (transTotalEntry = allPostedTransactionTotalItr.next()) != null) {
-    	    	 String glAccountId = transTotalEntry.getString("glAccountId");
-    	    	 Map accountMap = (Map)postedTransactionTotalsMap.get(transTotalEntry.getString("glAccountId"));
-    	    	 if (UtilValidate.isEmpty(accountMap)) {
-    	    		 accountMap = FastMap.newInstance();
-    	    		 accountMap.put("glAccountId", glAccountId);
-	                 accountMap.put("D", BigDecimal.ZERO);
-	                 accountMap.put("C", BigDecimal.ZERO);
-	             }
-    	    	 
-    	         UtilMisc.addToBigDecimalInMap(accountMap , transTotalEntry.getString("debitCreditFlag"), transTotalEntry.getBigDecimal("amount"));
-    	         postedTransactionTotalsMap.put(glAccountId, accountMap);
-    	     }
-    	     allPostedTransactionTotalItr.close();
-    	     andExprs.clear();
-    	     andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
-    	     andExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId));
-    	     List glHistoryList = delegator.findList("GlAccountHistory", EntityCondition.makeCondition(andExprs,EntityOperator.AND), null, null, null, false);
-    	     delegator.removeAll(glHistoryList);
-    	     for ( Map.Entry<String, Object> entry : postedTransactionTotalsMap.entrySet() ) {
-    	    	  Map postedTotalEntry = (Map)entry.getValue();
-    	    	 GenericValue glAccountHistory = delegator.makeValue("GlAccountHistory");
-    	    	 glAccountHistory.set("glAccountId", (String)postedTotalEntry.get("glAccountId"));
-    	    	 glAccountHistory.set("organizationPartyId",organizationPartyId);
-    	    	 glAccountHistory.set("customTimePeriodId",customTimePeriodId);
-    	    	 glAccountHistory.set("postedDebits",(BigDecimal)postedTotalEntry.get("D") );
-    	    	 glAccountHistory.set("postedCredits", (BigDecimal)postedTotalEntry.get("C"));
-    	    	 delegator.createOrStore(glAccountHistory);
-    	    	 //Debug.log("glAccountHistory============="+glAccountHistory);
-    	     }	 
-    	    	 
-    	   
-        } catch (Exception e) {
-            Debug.logError(e, "Problem in reCalculateGlHistory", module);
-            return ServiceUtil.returnError("Problem in reCalculateGlHistory");
+        
+        List<GenericValue> internalOrgList = FastList.newInstance();
+        List conditionList = FastList.newInstance();
+        if(UtilValidate.isNotEmpty(partyIdFrom)){
+        	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
+        }else{
+        	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
         }
-        return result;
+        conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+        conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "GROUP_ROLLUP"));
+        EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        internalOrgList = delegator.findList("PartyRelationship",condition,null, UtilMisc.toList("-fromDate"), null, false);
+    	
+    	List intOrgIdsList = FastList.newInstance();
+    	if(UtilValidate.isNotEmpty(internalOrgList)){
+    		intOrgIdsList = EntityUtil.getFieldListFromEntityList(internalOrgList, "partyIdTo", true);
+    	}
+    	intOrgIdsList.add(organizationPartyId);
+        Debug.log("intOrgIdsList==========="+intOrgIdsList);
+    	intOrgIdsList.add("Company");
+    	
+    	for(int i=0;i<intOrgIdsList.size();i++){
+    		
+    		String organizationPartyIdStr = (String) intOrgIdsList.get(i);
+    		
+    		if(UtilValidate.isNotEmpty(organizationPartyIdStr)){
+	            Map<String, Object> getTelParams = FastMap.newInstance();
+	        	getTelParams.put("customTimePeriodId", customTimePeriodId);
+	        	getTelParams.put("organizationPartyId", organizationPartyIdStr);
+	            getTelParams.put("userLogin", userLogin);  
+	    		
+	    		try {
+	                dispatcher.runSync("reCalculateGlHistoryForPeriod", getTelParams);
+	            } catch (GenericServiceException e) {
+	                Debug.logError(e, module);
+	                return ServiceUtil.returnError(e.getMessage());
+	            }
+    		}	
+    	}
+    	return result;
     }
     
 	public static Map getLedgerAmountByInvoiceAndPayments(DispatchContext dctx,Map<String, ? extends Object> context) {
