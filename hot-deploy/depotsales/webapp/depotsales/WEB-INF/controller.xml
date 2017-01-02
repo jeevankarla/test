@@ -42,6 +42,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentAnalytics"/>
     </request-map>
+    
+     <request-map uri="QuotaDashboard">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuotaDashboard"/>
+    </request-map>
+    
     <request-map uri="IndentAnalyticsInternal">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentAnalyticsInternal"/>
@@ -191,6 +197,14 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    
+     <request-map uri="getWeaverQuotaDashboard">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getWeaverQuotaDashboard.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
     <request-map uri="CustomerDetails.csv">
         <security https="true" auth="true"/>
 	    <response name="success" type="view" value="CustomerDetails"/>
@@ -2682,6 +2696,8 @@
     <view-map name="ChannelWiseDepoSalesChart" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChart"/>
 	<view-map name="ChannelWiseDepoSalesChartInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChartInternal"/>
     <view-map name="IndentAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalytics"/>
+    <view-map name="QuotaDashboard" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaDashboard"/>
+    
 	<view-map name="IndentAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalyticsInternal"/>
 	<view-map name="IndentQtyAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentQtyAnalytics"/>
 	<view-map name="IndentQtyAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentQtyAnalyticsInternal"/>
