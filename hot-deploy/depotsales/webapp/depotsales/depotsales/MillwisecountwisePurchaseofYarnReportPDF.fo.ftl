@@ -136,13 +136,13 @@ under the License.
 							  </#list>
                                      <fo:table-row>
                                      	<fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt"  white-space-collapse="false"></fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">TOTAL</fo:block>
 							            </fo:table-cell >
 							             <fo:table-cell border-style="solid" >
 							            	<fo:block  text-align="left" font-size="9pt"  white-space-collapse="false"></fo:block>
 							            </fo:table-cell >
 							            <fo:table-cell border-style="solid" >
-							            	<fo:block  text-align="left" font-size="10pt" font-weight="bold"  white-space-collapse="false">TOTAL</fo:block>
+							            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
 							            </fo:table-cell >
 							            <fo:table-cell  border-style="solid">
 							            	<fo:block  text-align="right" font-size="10pt" font-weight="bold"  white-space-collapse="false">${totalsMap.get("orderQty")?if_exists}</fo:block>

@@ -3122,11 +3122,12 @@
          <field name="orderValue" title="_Development Corporation LTD___ ___"><display/></field>
     </form>
     <form name="MillwisecountwisePurchaseofYarnReportCSV" type="list" list-name="finalCSVList" view-size="99999">
-    	 <field name="partyName" title="Supplier Name"><display/></field>
-    	 <field name="orderQty" title="Qty"><display/></field>
-         <field name="BdlWt" title="Bdl Wt"><display/></field>
-         <field name="rate" title="Rate"><display/></field>
-         <field name="orderValue" title="Value"><display/></field>
+    	<field name="prodcatName" title="___"><display/></field>
+    	 <field name="productName" title="____"><display/></field>
+    	 <field name="partyName" title="____"><display/></field>
+    	 <field name="orderQty" title="__National Handloom____"><display/></field>
+         <field name="rate" title="_Development Corporation LTD___ ___"><display/></field>
+         <field name="orderValue" title="__"><display/></field>
     </form>
     <form name="purchaseRegisterCSV" type="list" list-name="orderList" view-size="99999">
         <field name="orderDate" title="INDENT DATE"><display/></field>
