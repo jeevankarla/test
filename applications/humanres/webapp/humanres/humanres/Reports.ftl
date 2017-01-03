@@ -1040,6 +1040,28 @@ function setOrgPartyId() {
 							</table>	
 						</form>
 				   	</tr>
+				   	<tr class="alternate-row">
+							<form id="EmployerCpfReport" name="EmployerCpfReport" mothed="post" action="<@ofbizUrl>EmployerCpfReport.pdf</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="25%"><span class='h3'>Employer CPF Report </span></td>
+										<td width="50%"><span class='h3'>Period Id</span>
+										<select name="customTimePeriodId" id="customTimePeriodId" class='h4'>
+											<#list customTimePeriodList as customTimePeriod>
+												 <#if defaultTimePeriodId?exists && (defaultTimePeriodId == customTimePeriod.customTimePeriodId)>
+							      					<option value='${customTimePeriod.customTimePeriodId?if_exists}' selected="selected">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							      					<#else>
+							      						<option value='${customTimePeriod.customTimePeriodId?if_exists}' >${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "dd MMMMM, yyyy")} -${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.thruDate, "dd MMMMM, yyyy")}</option>
+							                  		</option>
+							      				</#if>
+											</#list>
+										</select>
+									</td>	
+									<td width="25%"><span class='h3'><input type="hidden" name="isRegionalOfficeTotals" id="isRegionalOfficeTotals" value="Y"/><input type="hidden" name="isEmployerCpfReport" id="isEmployerCpfReport" value="Y"/><input type="submit" value="Download" class="buttontext"></span></td>
+								</tr>
+							</table>	
+						</form>
+				   	</tr>
 					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("IncomeTaxReport.txt")?exists) && (reportDetailsMap.get("IncomeTaxReport.txt") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("IncomeTaxReport.txt"))?exists))> 
 						<tr class="alternate-row">
 							<form id="IncomeTaxReport" name="IncomeTaxReport" mothed="post" action="<@ofbizUrl>IncomeTaxReport.txt</@ofbizUrl>" target="_blank">
