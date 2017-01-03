@@ -3297,11 +3297,13 @@
          <field name="allMonthsTotal" title="TOTAL INVOICE VALUE"><display/></field>
     </form>
     <form name="m1ReportCSV" type="list" list-name="finalCSVList" view-size="99999">
-    	 <field name="partyName" title="Supplier Name"><display/></field>
-    	 <field name="orderQty" title="Qty"><display/></field>
-         <field name="BdlWt" title="Bdl Wt"><display/></field>
-         <field name="rate" title="Rate"><display/></field>
-         <field name="orderValue" title="Value"><display/></field>
+    	 <field name="prodcatName" title="___"><display/></field>
+    	 <field name="productName" title="____"><display/></field>
+    	 <field name="partyName" title="_"><display/></field>
+    	 <field name="orderQty" title="_"><display/></field>
+         <field name="BdlWt" title="__National Handloom__"><display/></field>
+         <field name="rate" title="_Development"><display/></field>
+         <field name="orderValue" title="_ Corporation LTD__"><display/></field>
     </form>
     <form name="fiberAndCountWiseSalesReportCSV" type="list" list-name="finalCSVList" view-size="99999">
     	 <field name="prodcatName" title="___"><display/></field>

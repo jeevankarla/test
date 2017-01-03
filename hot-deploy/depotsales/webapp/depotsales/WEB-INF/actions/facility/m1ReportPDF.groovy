@@ -95,6 +95,24 @@ totalValue=0;
 totalRate=0;
 prodCatMap=[:];
 totalsMap=[:];
+
+headerData2=[:];
+headerData2.put("prodcatName", "______");
+headerData2.put("productName", "______");
+headerData2.put("partyName", "______");
+headerData2.put("orderQty", "__M1 REPORT__");
+headerData2.put("rate", "_ __");
+headerData2.put("orderValue", "___________");
+finalCSVList.add(headerData2);
+
+headerData=[:];
+headerData.put("prodcatName", "product Category");
+headerData.put("productName", "product count");
+headerData.put("partyName", "partyName");
+headerData.put("orderQty", "orderQty");
+headerData.put("rate", "rate");
+headerData.put("orderValue", "orderValue");
+finalCSVList.add(headerData);
 for(productCategoryId in productCategoryIds){
 	tempCSVMap1=[:];
 	prodCatList=[];
@@ -103,7 +121,7 @@ for(productCategoryId in productCategoryIds){
 	if(UtilValidate.isNotEmpty(productCategoryDetails)){
 		prodCatName=productCategoryDetails.description
 	}
-	tempCSVMap1.put("partyName", prodCatName);
+	tempCSVMap1.put("partyName", "");
 	tempCSVMap1.put("orderQty", "");
 	/*tempCSVMap1.put("BdlWt", "");*/
 	tempCSVMap1.put("rate", "");
@@ -125,7 +143,7 @@ for(productCategoryId in productCategoryIds){
 		partyIds=EntityUtil.getFieldListFromEntityList(singleCatProductsOrdersDetails, "partyId", true);
 		
 		if(UtilValidate.isNotEmpty(singleCatProductsOrdersDetail)){
-			tempCSVMap2.put("partyName", singleCatProductsOrdersDetail.itemDescription);
+			tempCSVMap2.put("partyName", "");
 			tempCSVMap2.put("orderQty", "");
 			/*tempCSVMap2.put("BdlWt", "");*/
 			tempCSVMap2.put("rate", "");
