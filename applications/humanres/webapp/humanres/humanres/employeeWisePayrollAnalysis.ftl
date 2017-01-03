@@ -34,10 +34,12 @@ $(document).ready(function(){
   	$("#getCharts").click(function(){  
   	    $('#loader').show();
      	$('#result').hide(); 
-  	    
         $.get(  
             "${ajaxUrl}",  
-            { customTimePeriodId: $("select[name=customTimePeriodId]").val()},  
+            { customTimePeriodId: $("select[name=customTimePeriodId]").val(),
+              regionalOfficeId: $("select[name=regionalOffice]").val(),
+            },  
+           
             function(responseText){  
                 $("#result").html(responseText); 
 				var reponse = jQuery(responseText);
@@ -65,7 +67,7 @@ $(document).ready(function(){
 		<table class="basic-table" cellspacing="0">
 			<tr>
 				<td width="10%"><span class='h3'>Time Period: </span></td>
-				<td align="left" width="10%">
+				<td align="left" width="15%">
 				<select name="customTimePeriodId" class='h4'>
                 		<#list customTimePeriods as customTimePeriod>    
                 			 <#assign fromDate = Static["org.ofbiz.base.util.UtilDateTime"].toDateString(customTimePeriod.fromDate, "MMMdd")/>
@@ -75,6 +77,16 @@ $(document).ready(function(){
 	                  		</option>
                 		</#list>           
 					</select>
+				</td>
+				<td width="10%"><span class='h3'>Regional Office: </span></td>
+				<td align="left" width="15%">
+				<select name="regionalOffice" class='h4'>
+					<option value='Company'>NHDC</option>
+                	<#list ROList as org>
+                		<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+                	</#list>
+                	<option value='INT58'>Pochampally</option>
+				</select>
 				</td>
 				<td><input type="submit" value="Submit" id="getCharts" class="smallSubmit" /></td>				
 			</tr>

@@ -20,3 +20,10 @@ condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 customTimePeriods = delegator.findList("CustomTimePeriod", condition, null, ["-thruDate"], null, true);
 context.customTimePeriods = customTimePeriods;
 Debug.logError("customTimePeriods="+customTimePeriods,"");
+
+condList = [];
+condList.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS ,"PARTY_GROUP"));
+condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,"Company"));
+cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+ROList = delegator.findList("PartyRelationshipAndDetail", cond, null, null, null, false);
+context.ROList = ROList;
