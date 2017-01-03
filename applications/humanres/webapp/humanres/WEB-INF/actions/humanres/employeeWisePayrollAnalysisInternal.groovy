@@ -138,6 +138,7 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 			if(tempMap.containsKey("empFpf")){
 				empFpf += tempMap["empFpf"]; 
 			}
+			empFpf = new BigDecimal(empFpf).setScale(0,BigDecimal.ROUND_HALF_UP);
 			tempMap.put("empFpf", empFpf);
 			
 			dedDescMap.each { dedMap ->
