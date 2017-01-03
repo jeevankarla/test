@@ -47,6 +47,8 @@ context.formatList = formatList;*/
 
 Map formatMap = [:];
 List formatList = [];
+
+JSONObject branchProductSroreMap = new JSONObject();
 	
 	List<GenericValue> partyClassificationList = null;
 		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
@@ -58,20 +60,35 @@ List formatList = [];
 			formatMap.put("productStoreName",partyName);
 			formatMap.put("payToPartyId",eachList.get("partyId"));
 			formatList.addAll(formatMap);
+			
+			
+			
+			cndList=[];
+			cndList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.EQUALS,eachList.get("partyId")));
+			EntityCondition cnd1 = EntityCondition.makeCondition(cndList, EntityOperator.AND);
+			ProductStoreList =delegator.findList("ProductStore", cnd1,UtilMisc.toSet("productStoreId"), null, null, false);
+			
+			if(ProductStoreList){
+			productStoreId = ProductStoreList[0].productStoreId;
+			branchProductSroreMap.put(eachList.get("partyId"), productStoreId);
+			}
 		}
 	}
 
 	context.formatList = formatList;
+	
+	context.branchProductSroreMap = branchProductSroreMap;
 
 
 	partyClassificationList = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "CUST_CLASSIFICATION"), UtilMisc.toSet("partyClassificationGroupId","description"), null, null,false);
 	
 	context.partyClassificationList = partyClassificationList;
 
+	
 
 branchId = "";
-if(parameters.branchId)
-branchId = parameters.branchId;
+if(parameters.branchId2)
+branchId = parameters.branchId2;
 
 passbookNumber = "";
 if(parameters.passbookNumber)
@@ -121,7 +138,6 @@ if(parameters.isDepot)
 isDepot = parameters.isDepot;
 
 */
-
 context.branchId = branchId;
 context.passbookNumber = passbookNumber;
 context.partyId = partyId;

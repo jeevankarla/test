@@ -4285,8 +4285,14 @@
                 <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                       	<screenlet title="Find Weaver">
-                      		<include-form name="FindQuotaProducer"
-  								location="component://depotsales/widget/DepotSalesForms.xml" />
+                      		<!-- <include-form name="FindQuotaProducer"
+  								location="component://depotsales/widget/DepotSalesForms.xml" /> -->
+  								<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/quotaDashboard.ftl" />
+							</html>
+						</platform-specific>
                       	</screenlet>
                       	<platform-specific>
 							<html>
