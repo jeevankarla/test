@@ -275,8 +275,8 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 							tempMap["finalQty"]=shippedQty;
 							dispatchPrice=productEntry.unitPrice;
 							totFinalQty=totFinalQty+shippedQty;
-							tempMap["indentPrice"]=(tempMap["indentPrice"])/productList.size();
-							dispatchPrice=dispatchPrice/productList.size();
+							//tempMap["indentPrice"]=(tempMap["indentPrice"])/productList.size();
+							//dispatchPrice=dispatchPrice/productList.size();
 						if(tempMap["initialQty"]!=null && tempMap["finalQty"]!=null){
 							
 						tempMap["diffQty"] = (tempMap["initialQty"]).subtract(tempMap["finalQty"]);
