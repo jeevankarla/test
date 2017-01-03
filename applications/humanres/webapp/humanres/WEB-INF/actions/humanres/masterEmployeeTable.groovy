@@ -130,12 +130,11 @@ def populateChildren(org, employeeList) {
 			finAccountCode=finAccountIds.get(0).finAccountCode;
 			finAccountName=finAccountIds.get(0).finAccountName;
 			ifscCode=finAccountIds.get(0).ifscCode;
+			employee.put("finAccountCode",finAccountCode);
+			employee.put("finAccountName",finAccountName);
+			employee.put("ifscCode",ifscCode);
 			
 		 }
-		employee.put("finAccountCode",finAccountCode);
-		employee.put("finAccountName",finAccountName);
-		employee.put("ifscCode",ifscCode);
-		
 		
 		address = "";
 		if (employment.birthDate) {
@@ -144,7 +143,7 @@ def populateChildren(org, employeeList) {
 			if (day == 1) { // need to take the prev month last date
 				month--;
 			}
-			int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(employment.birthDate), timeZone, locale) + 60;
+			int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(employment.birthDate), timeZone, locale) + 58;
 			retirementDate = UtilDateTime.toTimestamp(month, day, year, 0, 0, 0);
 			retirementDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(retirementDate), timeZone, locale);
 			retirementDate=UtilDateTime.toDateString(retirementDate,"dd/MM/yyyy");

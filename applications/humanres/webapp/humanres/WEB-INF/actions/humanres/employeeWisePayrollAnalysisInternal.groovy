@@ -16,6 +16,18 @@ import org.ofbiz.party.party.PartyHelper;
 payRollSummaryMap = context.payRollSummaryMap;
 Debug.logError("payRollSummaryMap="+payRollSummaryMap, "");
 
+screenFlag=context.ajaxUrl1;
+employementIds = [];
+if(screenFlag.equals("EmployeeWisePayrollAnalysisInternal")){
+	regionalOfficeId = parameters.regionalOfficeId;
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, regionalOfficeId));
+	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+	employementList = delegator.findList("Employment", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(employementList)){
+		employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+	}
+}
 benefitDescMap=context.benefitDescMap;
 benefitTypeIds=context.benefitTypeIds;
 dedTypeIds=context.dedTypeIds;
@@ -235,59 +247,61 @@ else{
 		payRollEmployeeMap.each { employeePayroll ->
 			netAmount = 0.0;
 			partyId = employeePayroll.getKey();
-			partyName = PartyHelper.getPartyName(delegator, partyId, false);
-			JSONArray employeePayrollJSON = new JSONArray();
-			employeePayrollJSON.add(partyId);
-			employeePayrollJSON.add(partyName);
-			employeePayrollJSON.add(employeeDeptMap.get(partyId));
-			employeePayrollItems = employeePayroll.getValue();
-			
-			totBenifit = 0;
-			benefitTypeIds.each{ benefitTypeId->
-				amount = 0;
-				if (payRollSummaryMap.containsKey(benefitTypeId)) {
-					if (employeePayrollItems.containsKey(benefitTypeId)) {
-						amount = employeePayrollItems.get(benefitTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
+			if(employementIds.contains(partyId)){
+				partyName = PartyHelper.getPartyName(delegator, partyId, false);
+				JSONArray employeePayrollJSON = new JSONArray();
+				employeePayrollJSON.add(partyId);
+				employeePayrollJSON.add(partyName);
+				employeePayrollJSON.add(employeeDeptMap.get(partyId));
+				employeePayrollItems = employeePayroll.getValue();
+				
+				totBenifit = 0;
+				benefitTypeIds.each{ benefitTypeId->
+					amount = 0;
+					if (payRollSummaryMap.containsKey(benefitTypeId)) {
+						if (employeePayrollItems.containsKey(benefitTypeId)) {
+							amount = employeePayrollItems.get(benefitTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
+							netAmount = netAmount + amount;
+							totBenifit=totBenifit+amount;
+						}
+						employeePayrollJSON.add(amount);
+					}
+				}
+				employeePayrollJSON.add(totBenifit);
+				totDeduction = 0;
+				dedTypeIds.each{ dedTypeId->
+					amount = 0;
+					if (payRollSummaryMap.containsKey(dedTypeId)) {
+						if (employeePayrollItems.containsKey(dedTypeId)) {
+							amount = employeePayrollItems.get(dedTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
+							netAmount = netAmount + amount;
+							totDeduction=totDeduction+amount;
+						}
+						employeePayrollJSON.add(amount);
+					}
+				}
+				employeePayrollJSON.add(totDeduction);
+				/*payheadTypeIds.each{ payheadTypeId->
+					amount = 0;
+					if (employeePayrollItems.containsKey(payheadTypeId)) {
+						amount = employeePayrollItems.get(payheadTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
 						netAmount = netAmount + amount;
-						totBenifit=totBenifit+amount;
 					}
 					employeePayrollJSON.add(amount);
+				}*/
+				employeePayrollJSON.add(netAmount);
+				empCPF = 0;
+				if(employeePayrollItems.get("PAYROL_BEN_SALARY")){
+					empCPF = employeePayrollItems.get("PAYROL_BEN_SALARY");
 				}
-			}
-			employeePayrollJSON.add(totBenifit);
-			totDeduction = 0;
-			dedTypeIds.each{ dedTypeId->
-				amount = 0;
-				if (payRollSummaryMap.containsKey(dedTypeId)) {
-					if (employeePayrollItems.containsKey(dedTypeId)) {
-						amount = employeePayrollItems.get(dedTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
-						netAmount = netAmount + amount;
-						totDeduction=totDeduction+amount;
-					}
-					employeePayrollJSON.add(amount);
+				if(employeePayrollItems.get("PAYROL_BEN_DA")){
+					empCPF+=employeePayrollItems.get("PAYROL_BEN_DA");
 				}
-			}
-			employeePayrollJSON.add(totDeduction);
-			/*payheadTypeIds.each{ payheadTypeId->
-				amount = 0;
-				if (employeePayrollItems.containsKey(payheadTypeId)) {
-					amount = employeePayrollItems.get(payheadTypeId);//.setScale(0, BigDecimal.ROUND_HALF_UP);
-					netAmount = netAmount + amount;
-				}
-				employeePayrollJSON.add(amount);
-			}*/
-			employeePayrollJSON.add(netAmount);
-			empCPF = 0;
-			if(employeePayrollItems.get("PAYROL_BEN_SALARY")){
-				empCPF = employeePayrollItems.get("PAYROL_BEN_SALARY");
-			}
-			if(employeePayrollItems.get("PAYROL_BEN_DA")){
-				empCPF+=employeePayrollItems.get("PAYROL_BEN_DA");
-			}
-			empCPF*=0.12;
-			employeePayrollJSON.add(empCPF);
-			employeePayrollJSON.add(totBenifit+empCPF);
-			employeesPayrollTableJSON.add(employeePayrollJSON);
+				empCPF*=0.12;
+				employeePayrollJSON.add(empCPF);
+				employeePayrollJSON.add(totBenifit+empCPF);
+				employeesPayrollTableJSON.add(employeePayrollJSON);
+		  }
 		}
 	}
 }
