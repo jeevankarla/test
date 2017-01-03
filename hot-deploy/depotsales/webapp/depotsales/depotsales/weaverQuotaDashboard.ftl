@@ -225,7 +225,10 @@ function drawRow(rowData) {
     
     row.append($("<td>" + rowData.partyName + "</td>"));
     
+     row.append($("<td>" + rowData.partyClassification + "</td>"));
+    
      row.append($("<td>" + rowData.branchName + "</td>"));
+     
      
      var loomDeatilJson = rowData.loomDetail;
      
@@ -326,6 +329,7 @@ function drawRow(rowData) {
         <tr class="header-row-2">
           <td>Weaver Id</td>
           <td>Weaver Name</td>
+          <td>Party Classificatin</td>
           <td>Branch Name</td>
            <td>No Of Looms</td>
           <td>Eligible Quota</td>
