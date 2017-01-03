@@ -398,6 +398,8 @@ under the License.
                 <entity-one entity-name="Payment" value-field="payment"/>
                 <set field="finAccountTransId" from-field="payment.finAccountTransId"/>
                 <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
+                <set field="realisationDate" from-field="finAccountTrans.realisationDate"/>
+                 
                 <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment).toString()}"/>
                 <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment).toString()}"/>
                 <service service-name="getAcctTransEnries" result-map="AcctgTransAndEntries" auto-field-map="true"/>
