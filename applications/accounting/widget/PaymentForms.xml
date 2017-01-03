@@ -568,6 +568,7 @@ under the License.
         <field name="instrumentDate" position="2" title="${uiLabelMap.instrumentDate}"><display type="date"/></field>
         <field name="issuingAuthority" position="1" title="${uiLabelMap.issuingAuthority}" required-field="true"><display/></field>
         <field name="comments" position="2"><display/></field>
+        <field name="realisationDate" title="Realisation Date"  position="1" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(realisationDate,&quot;MM/dd/yy&quot;)}"/> </field>
         <field name="cancelComments" title="Reason for Voided" position="2"><display/></field>
     </form>
 
