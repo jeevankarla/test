@@ -151,10 +151,8 @@ $(function(){
 
 
 
-
 if(branchId.length == 0)
 branchId = "INT10";
-
 
   function recursively_ajax(){
     
@@ -165,7 +163,7 @@ branchId = "INT10";
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
    //  alert(JSON.stringify(dataJson));
     jQuery.ajax({
-                url: 'getWeaverQuotaDashboard',
+                url: 'getWeaverQuotaUtilDashboard',
                 type: 'POST',
                 data: dataJson,
                 dataType: 'json',
@@ -239,29 +237,29 @@ function drawRow(rowData) {
      
      row.append($("<td>"+"<table id='quotaTable'>"+quotaRows+"</table>"+ "</td>"));
      
-      var partyLoomArrayJSON = rowData.partyLoomArrayJSON;
+      var QuotaConsumeArrayJSON = rowData.QuotaConsumeArrayJSON;
       
-      var eligible = "";
-      for(var i=0;i<partyLoomArrayJSON.length;i++){
-          eligible = eligible+ '<tr>'+partyLoomArrayJSON[i].loomQuota+'</tr>'+'</br>';
+      var quotaQuantity = "";
+      for(var i=0;i<QuotaConsumeArrayJSON.length;i++){
+          quotaQuantity = quotaQuantity+ '<tr>'+QuotaConsumeArrayJSON[i].quotaQuantity+'</tr>'+'</br>';
      }
      
-     row.append($("<td>"+"<table id='eligible'>"+eligible+"</table>"+ "</td>"));
+     row.append($("<td align=right>"+"<table id='eligible'>"+quotaQuantity+"</table>"+ "</td>"));
      
-      var balnceQuota = "";
-      for(var i=0;i<partyLoomArrayJSON.length;i++){
-          balnceQuota = balnceQuota+ '<tr>'+partyLoomArrayJSON[i].availableQuota+'</tr>'+'</br>';
+      var tenPerValue = "";
+      for(var i=0;i<QuotaConsumeArrayJSON.length;i++){
+          tenPerValue = tenPerValue+ '<tr>'+QuotaConsumeArrayJSON[i].tenPerValue+'</tr>'+'</br>';
      }
      
-     row.append($("<td>"+"<table id='balnceQuota'>"+balnceQuota+"</table>"+ "</td>"));
+     row.append($("<td align=right>"+"<table id='balnceQuota'>"+tenPerValue+"</table>"+ "</td>"));
      
      
-      var usedQuota = "";
-      for(var i=0;i<partyLoomArrayJSON.length;i++){
-          usedQuota = usedQuota+ '<tr>'+partyLoomArrayJSON[i].usedQuota+'</tr>'+'</br>';
+      var invoiceValue = "";
+      for(var i=0;i<QuotaConsumeArrayJSON.length;i++){
+          invoiceValue = invoiceValue+ '<tr>'+QuotaConsumeArrayJSON[i].invoiceValue+'</tr>'+'</br>';
      }
      
-     row.append($("<td>"+"<table id='usedQuota'>"+usedQuota+"</table>"+ "</td>"));
+     row.append($("<td align=right>"+"<table id='usedQuota'>"+invoiceValue+"</table>"+ "</td>"));
      
 
 
@@ -332,9 +330,9 @@ function drawRow(rowData) {
           <td>Party Classificatin</td>
           <td>Branch Name</td>
            <td>No Of Looms</td>
-          <td>Eligible Quota</td>
-          <td>Balance Quota</td>
-          <td>Used Quota</td>
+          <td>Quota Quantity</td>
+          <td>Subsidy Amount</td>
+          <td>Invoice Amount</td>
         </tr>
       </thead>
       <tbody>
