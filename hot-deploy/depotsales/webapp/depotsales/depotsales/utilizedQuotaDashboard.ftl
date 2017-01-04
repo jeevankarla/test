@@ -246,6 +246,14 @@ function drawRow(rowData) {
      
      row.append($("<td align=right>"+"<table id='eligible'>"+quotaQuantity+"</table>"+ "</td>"));
      
+      var invoiceGrossValue = "";
+      for(var i=0;i<QuotaConsumeArrayJSON.length;i++){
+          invoiceGrossValue = invoiceGrossValue+ '<tr>'+QuotaConsumeArrayJSON[i].invoiceGrossValue+'</tr>'+'</br>';
+     }
+     
+     row.append($("<td align=right>"+"<table id='invoiceGrossValue'>"+invoiceGrossValue+"</table>"+ "</td>"));
+     
+     
       var tenPerValue = "";
       for(var i=0;i<QuotaConsumeArrayJSON.length;i++){
           tenPerValue = tenPerValue+ '<tr>'+QuotaConsumeArrayJSON[i].tenPerValue+'</tr>'+'</br>';
@@ -261,7 +269,6 @@ function drawRow(rowData) {
      
      row.append($("<td align=right>"+"<table id='usedQuota'>"+invoiceValue+"</table>"+ "</td>"));
      
-
 
 }
 
@@ -331,6 +338,7 @@ function drawRow(rowData) {
           <td>Branch Name</td>
            <td>No Of Looms</td>
           <td>Quota Quantity</td>
+          <td>Invoice Gross Amount</td>
           <td>Subsidy Amount</td>
           <td>Invoice Amount</td>
         </tr>

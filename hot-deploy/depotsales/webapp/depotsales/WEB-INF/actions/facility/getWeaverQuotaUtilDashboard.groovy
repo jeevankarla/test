@@ -349,6 +349,7 @@ partyList.each{ partyList ->
 		quotaQuantity = 0;
 		tenPerValue = 0;
 		invoiceValue = 0;
+		invoiceGrossValue = 0;
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("loomTypeId", EntityOperator.EQUALS,eachPartyLoom.loomTypeId));
@@ -448,7 +449,7 @@ partyList.each{ partyList ->
 			
 			tenPerValue = tenPerValue+Math.round(eachItem.amount*eachItem.quantity);
 			
-			invoiceValue = invoiceValue + Math.round(eachItem.amount*eachItem.quantity);
+			//invoiceValue = invoiceValue + Math.round(eachItem.amount*eachItem.quantity);
 			
 			}else{
 			
@@ -461,10 +462,13 @@ partyList.each{ partyList ->
 		}
 		
 		
+		invoiceGrossValue = invoiceValue + tenPerValue;
+		
 		JSONObject quotaconsume = new JSONObject();
 		quotaconsume.put("quotaQuantity",quotaQuantity);
 		quotaconsume.put("tenPerValue",tenPerValue);
 		quotaconsume.put("invoiceValue",invoiceValue);
+		quotaconsume.put("invoiceGrossValue",invoiceGrossValue);
 		QuotaConsumeArrayJSON.add(quotaconsume);
 		/*Debug.log("quotaQuantity=================="+quotaQuantity);
 		
