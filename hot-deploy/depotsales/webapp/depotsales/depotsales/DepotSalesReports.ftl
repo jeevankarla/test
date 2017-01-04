@@ -280,6 +280,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="30%">M1 Report</td>
 				<td width="15%">From</br><input  type="text" size="18pt" id="m1ReportDateFrom" readonly  name="fromDate"/></td>
 			    <td width="15%">To</br><input  type="text" size="18pt" id="m1ReportDateThru" readonly  name="thruDate"/></td>
+      			 <td width="15%"><span class='h3'>Branch
+							    <select name="branchId" id="branchId">
+							        <option value=""></option>
+							        <#list  formatList as formatList>
+							          <option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+							        </#list> 
+							    </select>    								
+					  	 </span></td>
       			 <td width="15%"><span class='h3'>Category
 				    <select name="categoryId" id="categoryId">
 				          <option value="ALL">ALL</option>
@@ -288,10 +296,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				       	  <option value='OTHER'>OTHERS</option>
 				    </select>  </span>  								
 			  	 </td>
-			  	<td width="10%">
-			  	 
-				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('m1Report', '<@ofbizUrl>m1Report.pdf</@ofbizUrl>');" class="buttontext"/></td>
-				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('m1Report', '<@ofbizUrl>m1Report.csv</@ofbizUrl>');" class="buttontext"/></td>   			
+				<td width="10%">
+				<input type="submit" value="PDF" onClick="javascript:appendParams('m1Report', '<@ofbizUrl>m1Report.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('m1Report', '<@ofbizUrl>m1Report.csv</@ofbizUrl>');" class="buttontext"/></td>   			
 				
 			</form>
           </tr>
@@ -301,6 +308,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="40%">Mill wise count wise Purchase of Yarn Report</td>
 				<td width="15%">From</br><input  type="text" size="18pt" id="MillwisecountwisePurchaseofYarnReportDateFrom" readonly  name="fromDate"/></td>
 			    <td width="15%">To</br><input  type="text" size="18pt" id="MillwisecountwisePurchaseofYarnReportDateThru" readonly  name="thruDate"/></td>
+      			 <td width="15%"><span class='h3'>Branch
+							    <select name="branchId" id="branchId">
+							        <option value=""></option>
+							        <#list  formatList as formatList>
+							          <option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+							        </#list> 
+							    </select>    								
+					  	 </span></td>
       			 <td width="15%"><span class='h3'>Category
 				    <select name="categoryId" id="categoryId">
 				          <option value="ALL">ALL</option>
@@ -308,11 +323,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				       	  <option value='SILK'>SILK</option>
 				       	  <option value='OTHER'>OTHERS</option>
 				    </select>  </span>  								
-			  	 </td>
-			  	 <td width="10%">
-				
-				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('MillwisecountwisePurchaseofYarnReport', '<@ofbizUrl>MillwisecountwisePurchaseofYarnReport.pdf</@ofbizUrl>');" class="buttontext"/></td>
-				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('MillwisecountwisePurchaseofYarnReport', '<@ofbizUrl>MillwisecountwisePurchaseofYarnReport.csv</@ofbizUrl>');" class="buttontext"/></td>       			
+			  	 </td>				
+				<td width="10%">
+				<input type="submit" value="PDF" onClick="javascript:appendParams('MillwisecountwisePurchaseofYarnReport', '<@ofbizUrl>MillwisecountwisePurchaseofYarnReport.pdf</@ofbizUrl>');" class="buttontext"/>
+				<input type="submit" value="CSV" onClick="javascript:appendParams('MillwisecountwisePurchaseofYarnReport', '<@ofbizUrl>MillwisecountwisePurchaseofYarnReport.csv</@ofbizUrl>');" class="buttontext"/></td>       			
 				
 			</form>
           </tr>
@@ -718,7 +732,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
           
 		</#if>
       
-         <#--<tr class="alternate-row">
+          <tr class="alternate-row">
 			<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookReport.pdf</@ofbizUrl>" target="_blank">	
 				<td width="30%">Sale Book Report Detail</td>
 				<td width="15%">From</br><input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
@@ -729,8 +743,8 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>        			
 				
 			</form>
-          </tr>-->
-        		   
+          </tr>
+        		
  		
           
            
@@ -825,7 +839,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				
 		</form>	
       </tr>
-      <#--<tr class="alternate-row">
+      <tr class="alternate-row">
     	<form id="stockStatement" name="stockStatement" method="post"  target="_blank" action="<@ofbizUrl>StockStatementReport.pdf</@ofbizUrl>">	
   			<td width="30%" nowrap>Stock Statement Report</td>
   			<td width="15%">From</br><input  type="text" size="18pt" id="stockFromDate" readonly  name="stockFromDate"/></td>
@@ -835,9 +849,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			<td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
 			<td width="10%"></td>
 		</form>	
-      </tr>-->
+      </tr>
       
-      <tr class="alternate-row">     
+      <tr class="alternate-row">
     	<form id="mobilehits" name="mobilehits" method="post"  target="_blank" action="<@ofbizUrl>MobileHitsReport.csv</@ofbizUrl>">	
   			<td width="30%" nowrap>Mobile Hits Report</td>
   			<td width="15%">From</br><input  type="text" size="18pt" id="mobileHitsFromDate" readonly  name="mobileHitsFromDate"/></td>
@@ -936,7 +950,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
         	
 	</table>
 </div>
-<#--<div class="screenlet">
+<div class="screenlet">
     <div class="screenlet-title-bar">
       <h3>Store Report</h3>
     </div>
@@ -969,4 +983,4 @@ function makeDatePicker3(fromDateId ,thruDateId){
        
 	</table>
    </div>
-</div>-->
+</div>
