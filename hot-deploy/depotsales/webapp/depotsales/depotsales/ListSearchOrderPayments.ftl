@@ -66,16 +66,17 @@ var orderData;
 var domOrderIds = "";
 var low = 0, high = 20;
 $(document).ready(function() {
-   $(window).scroll(function() {
-    	if($(window).scrollTop() == $(document).height() - $(window).height()) {
-          
+    $(window).scroll(function() {
+         var came = "";
+    	 if ($(window).scrollTop() >= ($(document).height() - $(window).height())*0.99){
            low = high;
            high = high + 30;
-         
-           recursively_ajax();          
-                    
+           if(came != "YES")
+           recursively_ajax();    
+           came = "YES";
     	}
 });
+
 
 
 //========================page Top======================
