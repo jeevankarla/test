@@ -123,9 +123,10 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("glAccountCategoryId", EntityOperator.IN, glAccountCategoryIds));
 conditionList.add(EntityCondition.makeCondition("glAccountCategoryTypeId",EntityOperator.EQUALS, glAccountCategoryTypeId));
 condition1=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-glAccountCategoryDetails = delegator.findList("GlAccountCategory",condition1,null, ["categoryNarration"], null, false );
+glAccountCategoryDetails = delegator.findList("GlAccountCategory",condition1,null, ["seqId"], null, false );
 
 if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
+	glAccountCategoryDetails = EntityUtil.orderBy(glAccountCategoryDetails, ['seqId']);
 	glAccountCategoryIds = EntityUtil.getFieldListFromEntityList(glAccountCategoryDetails,"glAccountCategoryId",true);
 	for(i=0; i<glAccountCategoryIds.size(); i++){
 		childCatDebitTotal=0;

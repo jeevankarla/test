@@ -237,6 +237,7 @@ under the License.
 											  <#assign profitCategoryList = profitChildWiseMap.entrySet()>
 											      <fo:table-body>
 											      <#assign categoryId ="">
+											      <#assign parentCategoryId ="">
 												     <#list profitCategoryList as category>
 													 <#assign profitValues=category.getValue()>
 													 <#assign presentYearVal=0>
@@ -252,6 +253,24 @@ under the License.
 													 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",glCategry.parentCategoryId,"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
 													 <#if categoryId=="" || categoryId!=glCategry.glAccountCategoryId>
 													 <#assign categoryId=glCategry.glAccountCategoryId>
+													 <#if glCategry.parentCategoryId?has_content && (parentCategoryId="" || parentCategoryId!=glCategry.parentCategoryId)>
+													 	<#assign parentGlCatgry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",glCategry.parentCategoryId,"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+													 	<#assign parentCategoryId= parentGlCatgry.glAccountCategoryId>
+													 	<fo:table-row >
+											             <fo:table-cell border="solid" >
+															 <fo:block text-align="left"  font-weight="bold">${parentGlCatgry.description?if_exists}</fo:block>
+														 </fo:table-cell>
+														 <fo:table-cell border="solid" >
+															 <fo:block text-align="center" keep-together="always" font-weight="bold"></fo:block>
+														 </fo:table-cell>
+														 <fo:table-cell border="solid">
+															 <fo:block text-align="right" keep-together="always" font-weight="bold"></fo:block>
+														 </fo:table-cell>
+							                             <fo:table-cell border="solid">
+							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold">&#160;</fo:block>
+														 </fo:table-cell>
+												 	</fo:table-row>
+													 </#if>
 													 <fo:table-row >
 											             <fo:table-cell border="solid" >
 															 <fo:block text-align="left"  font-weight="bold">${glCategry.description?if_exists}</fo:block>
@@ -296,6 +315,7 @@ under the License.
 											      <fo:table-body>
 											            <#assign lossCategoryList= lossChildWiseMap.entrySet()>
 											            <#assign categoryId ="">
+											            <#assign parentCategoryId ="">
 											             <#list lossCategoryList as category>
 														 <#assign values=category.getValue()>
 														 <#assign presentYearVal=0>
@@ -311,6 +331,24 @@ under the License.
 														 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",glCategry.parentCategoryId,"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
 														 <#if categoryId=="" || categoryId!=glCategry.glAccountCategoryId>
 														 <#assign categoryId=glCategry.glAccountCategoryId>
+														  <#if glCategry.parentCategoryId?has_content && (parentCategoryId="" || parentCategoryId!=glCategry.parentCategoryId)>
+														 	<#assign parentGlCatgry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",glCategry.parentCategoryId,"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+														 	<#assign parentCategoryId= parentGlCatgry.glAccountCategoryId>
+														 	<fo:table-row >
+												             <fo:table-cell border="solid" >
+																 <fo:block text-align="left"  font-weight="bold">${parentGlCatgry.description?if_exists}</fo:block>
+															 </fo:table-cell>
+															 <fo:table-cell border="solid" >
+																 <fo:block text-align="center" keep-together="always" font-weight="bold"></fo:block>
+															 </fo:table-cell>
+															 <fo:table-cell border="solid">
+																 <fo:block text-align="right" keep-together="always" font-weight="bold"></fo:block>
+															 </fo:table-cell>
+								                             <fo:table-cell border="solid">
+								                             	 <fo:block text-align="right" keep-together="always" font-weight="bold">&#160;</fo:block>
+															 </fo:table-cell>
+													 	</fo:table-row>
+														 </#if>
 														 <fo:table-row >
 												             <fo:table-cell border="solid" >
 																 <fo:block text-align="left"  font-weight="bold">${glCategry.description?if_exists}</fo:block>
