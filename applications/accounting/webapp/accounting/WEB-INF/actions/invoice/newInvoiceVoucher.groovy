@@ -290,18 +290,18 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			  tempMap.put("itemValue", eachItem.itemValue);
 			  
 			  totTaxAmount = totTaxAmount+(eachItem.itemValue);
-			  totTaxAmount2 = totTaxAmount2+(eachItem.itemValue);
+			 // totTaxAmount2 = totTaxAmount2+(eachItem.itemValue);
 			  itemAdjustList.add(tempMap);
 			  }
 			  if(eachItem.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
 			  mgpsAmt = mgpsAmt+eachItem.itemValue;
 			  }
 			  
-			  if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"  || eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){ 
+			  if(eachItem.invoiceItemTypeId !="VAT_SALE" && eachItem.invoiceItemTypeId !="TEN_PERCENT_SUBSIDY" && eachItem.invoiceItemTypeId !="INV_FPROD_ITEM"){ 
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
-				  if(eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"){
-					  totTaxAmount2=totTaxAmount2+(eachItem.itemValue);
-				  }
+			  }
+			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
+				  totTaxAmount2=totTaxAmount2+(eachItem.itemValue);
 			  }
 			  if(eachItem.invoiceItemTypeId=="CST_SALE"){
 			  	cFormAgnst=cFormAgnst+1;

@@ -3288,11 +3288,13 @@
 				<set field="filterByDate" value="true" />
 				<set field="parameters.purposeTypeId" value="YARN_SALE"/>
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/sequenceFilter.groovy"/>
-				<service service-name="performFind" result-map="result">
+				
+				<!-- <service service-name="performFind" result-map="result">
 					<field-map field-name="inputFields" from-field="parameters" />
 					<field-map field-name="entityName" value="Invoice" />
+					
 					<field-map field-name="orderBy" value="createdStamp DESC" />
-				</service>
+				</service> -->
 				<set field="parameters.partyId" value="${parameters.tempPartyId}" />
 				<set field="invoices" from-field="result.listIt" />
 				<set field="tabButtonItem" value="purchaseinvoice" />
