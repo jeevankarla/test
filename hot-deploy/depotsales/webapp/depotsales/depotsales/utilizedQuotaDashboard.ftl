@@ -246,13 +246,13 @@ function drawRow(rowData) {
      
      row.append($("<td align=right>"+"<table id='eligible'>"+quotaQuantity+"</table>"+ "</td>"));
      
-      var invoiceGrossValue = "";
+       var invoiceValue = "";
       for(var i=0;i<QuotaConsumeArrayJSON.length;i++){
-          invoiceGrossValue = invoiceGrossValue+ '<tr>'+QuotaConsumeArrayJSON[i].invoiceGrossValue+'</tr>'+'</br>';
+          invoiceValue = invoiceValue+ '<tr>'+QuotaConsumeArrayJSON[i].invoiceValue+'</tr>'+'</br>';
      }
      
-     row.append($("<td align=right>"+"<table id='invoiceGrossValue'>"+invoiceGrossValue+"</table>"+ "</td>"));
-     
+     row.append($("<td align=right>"+"<table id='usedQuota'>"+invoiceValue+"</table>"+ "</td>"));
+          
      
       var tenPerValue = "";
       for(var i=0;i<QuotaConsumeArrayJSON.length;i++){
@@ -260,14 +260,15 @@ function drawRow(rowData) {
      }
      
      row.append($("<td align=right>"+"<table id='balnceQuota'>"+tenPerValue+"</table>"+ "</td>"));
+          
      
-     
-      var invoiceValue = "";
+      var invoiceGrossValue = "";
       for(var i=0;i<QuotaConsumeArrayJSON.length;i++){
-          invoiceValue = invoiceValue+ '<tr>'+QuotaConsumeArrayJSON[i].invoiceValue+'</tr>'+'</br>';
+          invoiceGrossValue = invoiceGrossValue+ '<tr>'+QuotaConsumeArrayJSON[i].invoiceGrossValue+'</tr>'+'</br>';
      }
      
-     row.append($("<td align=right>"+"<table id='usedQuota'>"+invoiceValue+"</table>"+ "</td>"));
+     row.append($("<td align=right>"+"<table id='invoiceGrossValue'>"+invoiceGrossValue+"</table>"+ "</td>"));
+     
      
 
 }
