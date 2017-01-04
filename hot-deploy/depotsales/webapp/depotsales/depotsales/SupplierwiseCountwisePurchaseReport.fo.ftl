@@ -124,7 +124,7 @@ under the License.
 							  </#list>
                                      <fo:table-row>
                                      <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="10pt"  font-weight="bold" white-space-collapse="false">TOTAL</fo:block>
+								            	<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL</fo:block>
 							            </fo:table-cell >
 							             <fo:table-cell border-style="solid" >
 							            	<fo:block  text-align="left" font-size="9pt"  white-space-collapse="false"></fo:block>
