@@ -208,7 +208,7 @@ for (eachParty in allParties) {
 		  diffDays = Math.abs(diffDays);
 		  
 		  
-		  if(diffDays >= days){
+		  if(diffDays <= days){
 			  
 			  peddingShipments = peddingShipments+1;
 		  }

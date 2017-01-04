@@ -44,12 +44,12 @@
     </request-map>
     
      <request-map uri="QuotaDashboard">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="QuotaDashboard"/>
     </request-map>
     
     <request-map uri="utilizedQuotaDashboard">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="utilizedQuotaDashboard"/>
     </request-map>
      

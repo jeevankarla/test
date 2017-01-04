@@ -259,9 +259,23 @@ if(invoice){
 			}
 
 			partyName = "";
-			if(partyId)
+			if(partyId){
 				partyName = PartyHelper.getPartyName(delegator, partyId, false);
 
+				partyName=partyName+"["+partyId+"]";
+				
+				regno="";
+				partyRegIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", partyId, "partyIdentificationTypeId", "REGISTRATION_NUMBER"), false);
+				if(partyRegIdentification){
+					regno = partyRegIdentification.get("idValue");
+				}
+				if(regno){
+					partyName=partyName+"[ RegNo: "+regno+"]";
+				}
+				
+				
+			}	
+				
 			supplierName = "";
 			if(supplier)
 				supplierName = PartyHelper.getPartyName(delegator, supplier, false);

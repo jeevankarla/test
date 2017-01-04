@@ -4284,7 +4284,8 @@
               	  <set field="district" from-field="parameters.district" />
               </actions>           
                <widgets>
-                <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+               <decorator-screen name="NoAuthDepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                       	<screenlet title="Find Weaver">
                       		<!-- <include-form name="FindQuotaProducer"

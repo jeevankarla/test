@@ -1,15 +1,44 @@
 
 <input type="hidden" name="branchId" id="branchId" value="${branchId}">
 <input type="hidden" name="partyId1" id="partyId1" value="${partyId}">
+<input type="hidden" name="effectiveDate1" id="effectiveDate1" value="${effectiveDate}">
+
 
 <script type="text/javascript">
 	
 	var branchProductSroreMap=${StringUtil.wrapString(branchProductSroreMap)!'[]'};
 	
+	//for Month Picker
+$(document).ready(function(){
+    $(".monthPicker").datepicker( {
+       changeMonth: true,
+       changeYear: true,
+       showButtonPanel: true,
+        minDate: new Date("04-01-2016"),
+        maxDate: new Date("03-01-2017"),
+       dateFormat: 'yy-mm',
+       onClose: function(dateText, inst) { 
+           var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+           var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+           $(this).datepicker('setDate', new Date(year, month, 1));
+       }
+});
+$(".monthPicker").focus(function () {
+       $(".ui-datepicker-calendar").hide();
+       $("#ui-datepicker-div").position({
+           my: "center top",
+           at: "center bottom",
+           of: $(this)
+       });    
+    });
+});
+	
 $(document).ready(function(){
 
 var branchId = $("#branchId").val();
 var partyId = $("#partyId1").val();
+var effectiveDate1 = $("#effectiveDate1").val();
+
   var branchList = "";
   <#list formatList as eachList>
 	branchList = branchList + "<option value='${eachList.payToPartyId}' >${eachList.productStoreName}</option>";
@@ -20,6 +49,7 @@ var partyId = $("#partyId1").val();
      
      $("#branchId2").val(branchId);
      $("#partyId").val(partyId);
+      $("#effectiveDate").val(effectiveDate1);
      
 		
 	});
@@ -152,13 +182,23 @@ var partyId = $("#partyId1").val();
 			   <tr><td><br/></td></tr>
 			   
 			   <tr>
+				  <td align='left' valign='middle' nowrap="nowrap">Date :</td>
+				  <td valign='middle'><font color="green">          
+				    <input  type="text" size="18pt" id="effectiveDate" readonly  name="effectiveDate" onmouseover='monthPicker()' class="monthPicker" /> 		
+				  </td>
+				  <td><br/></td>
+				</tr>
+			   
+			   <tr><td><br/></td></tr>
+			   
+			   <tr>
 				  <td align='left' valign='middle' nowrap="nowrap"></td>
 				  <td valign='middle'><font color="green">          
 				     <input type="submit" style="padding:.3em" value="Find" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />     		
 				  </td>
 				  <td><br/></td>
 				</tr>
-			 
+			  
 		</table>
             </form>
  	
