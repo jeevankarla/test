@@ -76,13 +76,13 @@ var domOrderIds = "";
 var low = 0, high = 50;
 $(document).ready(function() {
    $(window).scroll(function() {
-    	if($(window).scrollTop() == $(document).height() - $(window).height()) {
-          
+         var came = "";
+    	 if ($(window).scrollTop() >= ($(document).height() - $(window).height())*0.99){
            low = high;
            high = high + 50;
-         
-           recursively_ajax();          
-                    
+           if(came != "YES")
+           recursively_ajax();    
+           came = "YES";
     	}
 });
 
