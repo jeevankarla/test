@@ -995,7 +995,7 @@ function setOrgPartyId() {
 								</table>	
 							</form>
 					   	</tr>
-					</#if>
+					</#if> -->
 					<tr class="alternate-row">
 							<form id="RegionalOfficeTotals" name="RegionalOfficeTotals" mothed="post" action="<@ofbizUrl>RegionalOfficeTotals.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
@@ -1062,7 +1062,7 @@ function setOrgPartyId() {
 							</table>	
 						</form>
 				   	</tr>
-					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("IncomeTaxReport.txt")?exists) && (reportDetailsMap.get("IncomeTaxReport.txt") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("IncomeTaxReport.txt"))?exists))> 
+					<#-- <#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("IncomeTaxReport.txt")?exists) && (reportDetailsMap.get("IncomeTaxReport.txt") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("IncomeTaxReport.txt"))?exists))> 
 						<tr class="alternate-row">
 							<form id="IncomeTaxReport" name="IncomeTaxReport" mothed="post" action="<@ofbizUrl>IncomeTaxReport.txt</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
@@ -1085,7 +1085,7 @@ function setOrgPartyId() {
 								</table>	
 							</form>
 			   			</tr>
-			   		</#if>
+			   		</#if> -->
 					<#-- <#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("CostCodeReport.txt")?exists) && (reportDetailsMap.get("CostCodeReport.txt") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("CostCodeReport.txt"))?exists))> 
 						<tr class="alternate-row">
 							<form id="CostCodeReport" name="CostCodeReport" mothed="post" action="<@ofbizUrl>CostCodeReport.txt</@ofbizUrl>" target="_blank">
