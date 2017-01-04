@@ -30,6 +30,48 @@ Timestamp thruDate;
 partyfromDate=parameters.fromDate;
 partythruDate=parameters.thruDate;
 
+branchIds=[];
+branchId = parameters.branchId;
+DateMap = [:];
+branchName = "";
+
+if(branchId){
+branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
+branchName = branch.get("groupName");
+DateMap.put("branchName", branchName);
+}
+branchList = [];
+condListb = [];
+if(branchId){
+condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+
+PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+
+branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+
+if(!branchList)
+branchList.add(branchId);
+}
+Debug.log("branchName=================="+branchName);
+//Debug.log("branchList=================="+branchList);
+
+branchBasedWeaversList = [];
+condListb1 = [];
+if(branchId){
+condListb1.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+condListb1.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+condListb = EntityCondition.makeCondition(condListb1, EntityOperator.AND);
+
+PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+
+if(!branchBasedWeaversList)
+branchBasedWeaversList.add(branchId);
+}
+//Debug.log("branchBasedWeaversList=================="+branchBasedWeaversList);
+
 productCategory=parameters.categoryId;
 context.partyfromDate=partyfromDate;
 context.partythruDate=partythruDate;
@@ -116,7 +158,9 @@ conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LE
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
 invoiceItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productId","quantity","itemValue","amount","partyId"), null, null, false);
+//Debug.log("invoiceItems=================="+invoiceItems);
 finalCSVList=[];
 totalQty=0 
 totalValue=0;

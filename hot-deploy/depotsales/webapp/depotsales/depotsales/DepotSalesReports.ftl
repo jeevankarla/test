@@ -120,6 +120,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="40%">Supplier wise Count wise Purchase Report</td>
 				<td width="15%">From</br><input  type="text" size="18pt" id="SupplierwiseCountwiseReportDateFrom" readonly  name="fromDate"/></td>
 			    <td width="15%">To</br><input  type="text" size="18pt" id="SupplierwiseCountwiseReportDateThru" readonly  name="thruDate"/></td>
+      			<td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+					<option value=''></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
       			 <td width="15%"><span class='h3'>Category
 				    <select name="categoryId" id="categoryId">
 				          <option value="ALL">ALL</option>
@@ -140,6 +148,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="30%">Fiber And Count Wise Sales Report</td>
 				<td width="15%">From</br><input  type="text" size="18pt" id="FCWSReportDateFrom" readonly  name="fromDate"/></td>
 			    <td width="15%">To</br><input  type="text" size="18pt" id="FCWSReportDateThru" readonly  name="thruDate"/></td>
+			    <td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+					<option value=''></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
       			 <td width="15%"><span class='h3'>Category
 				    <select name="categoryId" id="categoryId">
 				          <option value="ALL">ALL</option>
