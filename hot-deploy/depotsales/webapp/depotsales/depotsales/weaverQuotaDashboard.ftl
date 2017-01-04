@@ -42,7 +42,7 @@ under the License.
 <input type="hidden" name="isDepot" id="isDepot" value="${isDepot}">
 <input type="hidden" name="satate" id="satate" value="${satate}">
 <input type="hidden" name="passGreater" id="passGreater" value="${passGreater}">
-<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}">
+<input type="hidden" name="effectiveDate1" id="effectiveDate1" value="${effectiveDate}">
 
 
 
@@ -65,7 +65,7 @@ var satate = $("#satate").val();
 var district = $("#district").val();
 var passGreater = $("#passGreater").val();
 
-var effectiveDate = $("#effectiveDate").val();
+var effectiveDate = $("#effectiveDate1").val();
 
 
 

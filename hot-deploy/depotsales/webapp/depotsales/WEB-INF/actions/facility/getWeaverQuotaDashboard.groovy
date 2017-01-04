@@ -44,10 +44,12 @@ passGreater = parameters.passGreater;
 
 effectiveDate = parameters.effectiveDate;
 
-/*facilityDateStart = null;
+
+
+facilityDateStart = null;
 facilityDateEnd = null;
 if(UtilValidate.isNotEmpty(effectiveDate)){
-	def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	def sdf = new SimpleDateFormat("yyyy-MM");
 	try {
 		transDate = new java.sql.Timestamp(sdf.parse(effectiveDate+" 00:00:00").getTime());
 	} catch (ParseException e) {
@@ -63,7 +65,7 @@ if(UtilValidate.isNotEmpty(effectiveDate)){
 }
 
 
-*/
+
 
 uniqueOrderId = parameters.uniqueOrderId;
 
@@ -324,8 +326,8 @@ partyList.each{ partyList ->
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
-	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
-	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()),
+	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, facilityDateEnd));
+	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateEnd),
 		EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
 	
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -359,7 +361,7 @@ partyList.each{ partyList ->
 			
 		}	
 		
-		resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId,"effectiveDate",UtilDateTime.nowTimestamp()));
+		resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId,"effectiveDate",facilityDateEnd));
 		productCategoryQuotasMap = resultCtx.get("schemesMap");
 		usedQuotaMap = resultCtx.get("usedQuotaMap");
 		eligibleQuota = resultCtx.get("eligibleQuota");

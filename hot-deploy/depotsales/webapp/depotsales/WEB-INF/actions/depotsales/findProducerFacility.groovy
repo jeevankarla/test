@@ -28,7 +28,7 @@ import net.sf.json.JSONArray;
 
 
 
-resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+//resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 
 
 /*Map formatMap = [:];
