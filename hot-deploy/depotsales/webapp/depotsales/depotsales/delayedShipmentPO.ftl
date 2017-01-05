@@ -2,7 +2,7 @@
 <input type="hidden" name="branchId" id="branchId" value="${branchId}">
 <input type="hidden" name="partyId1" id="partyId1" value="${partyId}">
 <input type="hidden" name="effectiveDate1" id="effectiveDate1" value="${effectiveDate}">
-
+  
 
 <script type="text/javascript">
 	

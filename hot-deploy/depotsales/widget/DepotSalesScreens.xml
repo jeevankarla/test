@@ -4327,7 +4327,7 @@
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
               	  <set field="district" from-field="parameters.district" />
               </actions>           
-               <widgets>
+                <widgets>
                <decorator-screen name="NoAuthDepotSalesCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">

@@ -199,7 +199,7 @@
 	   </menu-item>
         <menu-item name="DepotSalesReports" title="${uiLabelMap.Reports}">
 	   		 <condition>
-				<or>
+	 			<or>
 	        		<if-has-permission permission="DEPOTSALES" action="_REPORTS_VIEW"/>
 				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
             	</or>            

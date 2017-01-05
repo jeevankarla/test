@@ -1907,7 +1907,7 @@
 			</entity-one>
 			<set field="dec" from-field="uom.description"/>
         </row-actions> -->
-      	<!-- <field name="receiptId" title="GRN Item No"> 
+      	 <!-- <field name="receiptId" title="GRN Item No"> 
       		<display/>
       	</field> -->
       	<field name="shipmentId" title="GRN ShipmentId"><display/></field>

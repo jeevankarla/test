@@ -57,7 +57,7 @@ JSONObject branchProductSroreMap = new JSONObject();
 			//Debug.log("eachList========================"+eachList.get("partyId"));
 			formatMap = [:];
 			partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
-			formatMap.put("productStoreName",partyName);
+	   		formatMap.put("productStoreName",partyName);
 			formatMap.put("payToPartyId",eachList.get("partyId"));
 			formatList.addAll(formatMap);
 			
