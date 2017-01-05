@@ -878,7 +878,7 @@
 	<screen name="findDelayShipments">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Delay Shipments From Supplier" />
+				<set field="titleProperty" value="Delayed Shipments From Supplier" />
 			     <set field="tabButtonItem" value="findDelayShipments"/>
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"

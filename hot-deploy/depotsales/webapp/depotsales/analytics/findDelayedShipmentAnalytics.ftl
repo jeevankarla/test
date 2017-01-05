@@ -155,7 +155,8 @@ $("#branch").val("INT10");
      <div class="screenlet-body">
 		<span class='h3'>From Date: </span><input class='h2' type="text" id="fromDate" name="fromDate" value="${defaultEffectiveDate}" readonly="true"/>
 		<span class='h3'>Thru Date: </span><input class='h2' type="text" id="thruDate" name="thruDate" value="${defaultEffectiveThruDate}" readonly="true"/>
-		<span class='h3'>Days: </span><input  type="text" id="days" name="days" />
+		<input type="hidden" name="screenFlag" value="7" id="days" name="days"/>
+		<#-- <span class='h3'>Days: </span><input  type="text" id="days" name="days" /> -->
 		<span class='h3'>Branch: </span><select name="branch" id="branch"><#list formatList as format> <option value="${format.payToPartyId}">${format.productStoreName?if_exists}</option></#list></select>
 		<input type="submit" value="Submit" id="getTreeGrid" class="smallSubmit" />
 		<form name="csvForm" id="csvForm" action="indentAnalytics.csv">

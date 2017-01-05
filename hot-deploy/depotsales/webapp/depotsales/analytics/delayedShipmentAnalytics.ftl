@@ -91,7 +91,7 @@ $(document).ready(function () {
                 editable: true,
                 showtoolbar: true,
                 rendertoolbar: function (toolbar) {
-                    var gridTitle = "<div style='width: 99%; text-align: left;'><h3>Delayed Shipment Analytics From  ${defaultEffectiveDate?if_exists}  To ${defaultEffectiveThruDate?if_exists}</h3></div>";
+                    var gridTitle = "<div style='width: 99%; text-align: left;'><h3>Above 7 Days Delayed Shipment Analytics From  ${defaultEffectiveDate?if_exists}  To ${defaultEffectiveThruDate?if_exists}</h3></div>";
                     toolbar.append(gridTitle);
                 },           
                 columns: [
