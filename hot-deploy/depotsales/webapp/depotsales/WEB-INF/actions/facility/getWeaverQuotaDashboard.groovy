@@ -299,7 +299,6 @@ partyList.each{ partyList ->
 	
 	tempData.put("passbookNo", partyList.idValue);
 	
-	Debug.log("passbook================================="+partyList.idValue);
 	
 	partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), UtilMisc.toSet("partyClassificationGroupId"), null, null,false);
 	
