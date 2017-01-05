@@ -118,22 +118,21 @@ under the License.
 
 
 
-<h2>FIND SUPPLIER SHIPMENT HISTORY<h2>
+<h2>SUPPLIERS TO USER AGENCY OPERATED DEPOTS<h2>
 <div class="screenlet">
   <div class="screenlet-body">
     <div id="findPartyParameters"  >
       <form method="post" name="ShipmentHistory" id="ShipmentHistory" action="<@ofbizUrl>ShipmentHistory</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
           <tr>     
-          			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Branch</td>
+          			<td>Branch</td>
 	              <td>
 					 <select name="branchId2" id="branchId" onchange="javascript:getbrancheCustomers(this);">
 	              <#if branchIdName?has_content>
 		 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
  	              </#if>
 				  <#if !branchIdName?has_content>
-						 <option value=''></option>
+						 <option value=''>Select Branch</option>
 				  </#if>
 			      <#list  formatList as formatList>
 					<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
@@ -145,13 +144,13 @@ under the License.
 				  </td>
 				   
 				   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agency/Depot  <input  type="text" size="25pt" id="cutomerId"   name="customer" value="${customerId?if_exists}" onkeypress="javascript:checkFields();" onblur="javascript:displayName(this,'customer');" />
+				       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agency/Depot  <input  type="text" size="25pt" placeholder="Select Agency" id="cutomerId"   name="customer" value="${customerId?if_exists}" onkeypress="javascript:checkFields();" onblur="javascript:displayName(this,'customer');" />
 					   <div id="customerName"><#if customerName?has_content>${customerName?if_exists} </#if></div>
 				   </td>
 				   
-				   <td>Supplier <input  type="text" size="25pt" id="SupplierId"   name="Supplier"  value="${SupplierId?if_exists}" onblur="javascript:displayName(this,'supplier');" />
+				<#--   <td>Supplier <input  type="text" size="25pt" id="SupplierId"   name="Supplier"  value="${SupplierId?if_exists}" onblur="javascript:displayName(this,'supplier');" />
 						<div id="SupplierName"><#if SupplierIdName?has_content> ${SupplierIdName?if_exists} </#if> </div>
-				   </td>
+				   </td>  -->
 		  </tr> 
 		  <tr>
 				<#--  <#if customerName?has_content>
@@ -195,7 +194,7 @@ under the License.
       		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Period Selection</b>
       		 	 <select name="period" id="period">
       		 	    <#if period?has_content>
-      		 	    	<option value='${period}'>${period}</option>
+      		 	    	<option value='${period}'>${periodName}</option>
       		 	    </#if>
 					<option value='one_Month'>Last One Month</option>
 					<option value='two_Month'>Last Two Months</option>
@@ -204,9 +203,11 @@ under the License.
 			  </select> 
       		 </td>
 		  </tr>
+		  <tr><td>&nbsp; </td><td>&nbsp; </td><td> &nbsp;</td></tr>
           <tr>
-          	
-				<td width="10%"> <input type="submit" value="Search" class="buttontext"/> </td>
+          	    
+          	    <td> </td>
+				<td width="10%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="submit" value="Search" class="buttontext"/> </td>
 		  </tr>
       </table>
    
