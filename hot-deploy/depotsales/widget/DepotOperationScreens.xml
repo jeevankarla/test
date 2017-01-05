@@ -884,7 +884,6 @@
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
 				<set field="targetRequest" value="findDelayShipments" />
-				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/findDelayShipments.groovy" />
 			</actions>

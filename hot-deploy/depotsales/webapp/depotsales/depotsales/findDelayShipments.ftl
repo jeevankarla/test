@@ -36,8 +36,6 @@ under the License.
 	}
 </script>
 
-
-
 <h2>FIND DELAYED SHIPMENTS FROM SUPPLIER<h2>
 <div class="screenlet">
   <div class="screenlet-body">

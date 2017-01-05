@@ -68,7 +68,6 @@ $(document).ready(function () {
                     return '<span style="color:#0E6655">' + value + '</span>';
                 }
             };            
-            
             // create Tree Grid
             $("#treeGrid").jqxTreeGrid(
             {
