@@ -60,8 +60,8 @@ dedTypeIds.each{ dedTypeId->
 }
 payheadTypeNames.add("Total Deductions");
 payheadTypeNames.add("Net Amount");
-payheadTypeNames.add("Empl Contribution to CPF");
-payheadTypeNames.add("Gross Total");
+//payheadTypeNames.add("Empl Contribution to CPF");
+//payheadTypeNames.add("Gross Total");
 JSONArray benefitsTableJSON = new JSONArray();
 employeeDeptMap = [:];
 employments = [];
@@ -396,8 +396,8 @@ else{
 					empCPF+=employeePayrollItems.get("PAYROL_BEN_DA");
 				}
 				empCPF*=0.12;
-				employeePayrollJSON.add(empCPF);
-				employeePayrollJSON.add(totBenifit+empCPF);
+				//employeePayrollJSON.add(empCPF);
+				//employeePayrollJSON.add(totBenifit+empCPF);
 				employeesPayrollTableJSON.add(employeePayrollJSON);
 		  }
 		}
