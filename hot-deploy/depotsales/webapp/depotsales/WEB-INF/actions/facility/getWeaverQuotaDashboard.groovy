@@ -367,6 +367,100 @@ partyList.each{ partyList ->
 		eligibleQuota = resultCtx.get("eligibleQuota");
 		
 		
+		
+		
+		//start===============================================================
+		quotaQuantity = 0;
+		tenPerValue = 0;
+		invoiceValue = 0;
+		invoiceGrossValue = 0;
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS,eachPartyLoom.loomTypeId));
+		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			
+		productIdsList = EntityUtil.getFieldListFromEntityList(delegator.findList("ProductCategoryAndMember",condition, UtilMisc.toSet("productId"), null, null, false), "productId", true);
+		
+		if(partyId){
+			condList.clear();
+			condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+			condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE"]));
+			
+			cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			
+			fieldsToSelect = ["invoiceId"] as Set;
+			
+			
+			//invoice = delegator.findList("Invoice", cond, fieldsToSelect, null, null, false);
+			
+			invoiceIdsList = EntityUtil.getFieldListFromEntityList(delegator.findList("Invoice",cond, UtilMisc.toSet("invoiceId"), null, null, false), "invoiceId", true);
+			
+			
+		
+			if(invoiceIdsList){
+				condList.clear();
+				condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIdsList));
+				condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+				condList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
+				invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+				
+				InvoiceTenItem = delegator.findList("InvoiceItem", invoiceItemcond, UtilMisc.toSet("invoiceId"), null, null, false);
+				
+				invoicetenIds = EntityUtil.getFieldListFromEntityList(InvoiceTenItem,"invoiceId", true);
+				
+				//Debug.log("invoiceIdsList======="+eachPartyLoom.loomTypeId+"=========="+invoicetenIds);
+				
+				condList.clear();
+				condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoicetenIds));
+				condList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList));
+				invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+				
+				InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, UtilMisc.toSet("invoiceId","invoiceItemSeqId","itemValue","invoiceItemTypeId","amount","quantity"), null, null, false);
+				
+				
+				//Debug.log("InvoiceItem=================="+InvoiceItem.size());
+				
+				for (eachItem in InvoiceItem) {
+				
+					if(eachItem.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
+					condList.clear();
+					condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
+					condList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+					orderAjBillCon = EntityCondition.makeCondition(condList, EntityOperator.AND);
+					
+					OrderAdjustmentBilling = delegator.findList("OrderAdjustmentBilling", orderAjBillCon, UtilMisc.toSet("quantity"), null, null, false);
+			
+					quotaQuantity = quotaQuantity + OrderAdjustmentBilling[0].quantity;
+					
+					tenPerValue = tenPerValue+Math.round(eachItem.amount*eachItem.quantity);
+					
+					//invoiceValue = invoiceValue + Math.round(eachItem.amount*eachItem.quantity);
+					
+					}else{
+					
+					invoiceValue = invoiceValue + Math.round(eachItem.amount*eachItem.quantity);
+					
+					}
+					
+					
+				}
+			}
+		}
+		//end====================================================
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		Desc = eachPartyLoom.loomTypeId;
 		
 		JSONObject partyLoomJSON = new JSONObject();
@@ -374,6 +468,12 @@ partyList.each{ partyList ->
 		partyLoomJSON.put("loomQuota",eligibleQuota.get(Desc));
 		partyLoomJSON.put("availableQuota",productCategoryQuotasMap.get(Desc));
 		partyLoomJSON.put("usedQuota",usedQuotaMap.get(Desc));
+		
+		partyLoomJSON.put("quotaQuantity",quotaQuantity);
+		partyLoomJSON.put("tenPerValue",tenPerValue);
+		partyLoomJSON.put("invoiceValue",invoiceValue);
+		partyLoomJSON.put("invoiceGrossValue",invoiceGrossValue);
+		
 		partyLoomArrayJSON.add(partyLoomJSON);
 			
 		}
