@@ -488,8 +488,10 @@ partyList.each{ partyList ->
 	
 	tempData.put("partyLoomArrayJSON", partyLoomArrayJSON);
 	
+	if(loomDetail){
+		weaverDetailsList.add(tempData);
+	}
 	
-	weaverDetailsList.add(tempData);
 	}
 	
 	
