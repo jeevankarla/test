@@ -168,15 +168,15 @@ under the License.
 					
 				<#-- </#if> -->
            </tr> 
-          <tr>
+         <#--  <tr>
           		<#if fromDateStr?has_content>
 	                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From Date</td>
+          			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From Date</td>
 					<td > <input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate" value="${fromDateStr?if_exists}"/></td>
 
 				<#else>
 	                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;From Date</td>
+          			&nbsp;&nbsp;&nbsp;From Date</td>
 					<td > <input  type="text" size="14pt" id="ShipmentHistoryfromDate" readonly  name="fromDate"/></td>
 				</#if>
 	            
@@ -188,9 +188,21 @@ under the License.
 				       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To Date&nbsp;<input  type="text" size="14pt" id="ShipmentHistoryThruDate" readonly  name="thruDate"/></td>
 				</#if>
 			    
-          </tr>
-           <tr>
-          		 <td> </td>
+          </tr>  -->
+          <tr>
+          	 <td> </td>
+          	 <td> </td> 	
+      		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Period Selection</b>
+      		 	 <select name="period" id="period">
+      		 	    <#if period?has_content>
+      		 	    	<option value='${period}'>${period}</option>
+      		 	    </#if>
+					<option value='one_Month'>Last One Month</option>
+					<option value='two_Month'>Last Two Months</option>
+					<option value='three_Month'>Last Three  Months</option>
+					<option value='six_Month'>Last  Six Months</option>
+			  </select> 
+      		 </td>
 		  </tr>
           <tr>
           	

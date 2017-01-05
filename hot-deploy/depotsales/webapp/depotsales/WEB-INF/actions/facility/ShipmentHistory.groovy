@@ -37,7 +37,7 @@ import org.ofbiz.service.GenericDispatcher;
 HttpServletRequest httpRequest = (HttpServletRequest) request;
 HttpServletResponse httpResponse = (HttpServletResponse) response;
 dctx = dispatcher.getDispatchContext();
-delegator = DelegatorFactory.getDelegator("default#NHDC");
+delegator = DelegatorFactory.getDelegator("default#nhdc-test2");
 
 
 isReport=parameters.isReport;
@@ -138,20 +138,43 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	branchId=parameters.branchId2;
 	customerId=parameters.customer;
 	SupplierId=parameters.Supplier;
-	fromDateStr=parameters.fromDate;
-	thruDateStr=parameters.thruDate;
+	/*fromDateStr=parameters.fromDate;
+	thruDateStr=parameters.thruDate;*/
+	daystart = null;
+	dayend = null;
+	period=parameters.period;
+	context.period=period;
+	periodFrmDate=null;
+	dayend =UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+	
+	if("one_Month".equals(period)){
+		daystart = UtilDateTime.addDaysToTimestamp(dayend,-30);
+	}
+	if("two_Month".equals(period)){
+		daystart = UtilDateTime.addDaysToTimestamp(dayend,-60);
+	}
+	if("three_Month".equals(period)){
+		daystart = UtilDateTime.addDaysToTimestamp(dayend,-90);
+	}
+	if("six_Month".equals(period)){
+		daystart = UtilDateTime.addDaysToTimestamp(dayend,-180);
+	}
+	
+	Debug.log("daystart======"+ daystart)
+	Debug.log("dayend======"+ daystart)
+	/*
+	
 	Timestamp fromDate;
 	Timestamp thruDate;
-	daystart = null;
-	dayend = null; 
+	*/
 	String supplierName = PartyHelper.getPartyName(delegator,SupplierId,false);
 	String customerName = PartyHelper.getPartyName(delegator,customerId,false);
 	partygroup = delegator.findOne("PartyGroup",["partyId":branchId],false);
 	context.branchIdName=partygroup.groupName
 	context.SupplierIdName=supplierName
 	context.customerName=customerName
-	context.fromDateStr=fromDateStr
-	context.thruDateStr=thruDateStr
+	//context.fromDateStr=fromDateStr
+	//context.thruDateStr=thruDateStr
 	context.branchId=branchId 
 	context.SupplierId=SupplierId
 	context.customerId=customerId
@@ -190,7 +213,7 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	context.partyNameObj2=partyNameObj2;
 	context.cutomerJSON=cutomerJSON
 	
-	SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
+	/*SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
 	if(UtilValidate.isNotEmpty(fromDateStr)){
 		try {
 			fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
@@ -206,7 +229,7 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	   } catch (ParseException e) {
 		       Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 			}
-	}
+	}*/
 	robranchIds=[];
 	if(UtilValidate.isNotEmpty(branchId)){
 		partyRelationship = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , branchId)  , UtilMisc.toSet("partyIdTo"), null, null, false );
