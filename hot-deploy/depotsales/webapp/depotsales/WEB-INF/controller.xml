@@ -81,6 +81,17 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="delayedShipmentAnalyticsInternal"/>
     </request-map>
+    
+     <request-map uri="delayedIndentToPoAnalytics">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="delayedIndentToPoAnalytics"/>
+    </request-map>
+    
+     <request-map uri="delayedIndentToPoAnalyticsInternal">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="delayedIndentToPoAnalyticsInternal"/>
+    </request-map>
+    
     <request-map uri="IndentQtyAnalytics">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentQtyAnalytics"/>
@@ -2722,6 +2733,12 @@
 	<view-map name="durationAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#durationAnalyticsInternal"/>
 	<view-map name="delayedShipmentAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#delayedShipmentAnalytics"/>
 	<view-map name="delayedShipmentAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#delayedShipmentAnalyticsInternal"/>
+	
+	<view-map name="delayedIndentToPoAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#delayedIndentToPoAnalytics"/>
+	<view-map name="delayedIndentToPoAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#delayedIndentToPoAnalyticsInternal"/>
+	
+	
+	
 	<view-map name="supplyAnalyticsInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentSupplyAnalyticsInternal"/>
 	
 	<view-map name="IndentPurchaseAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentPurchaseAnalytics"/>
