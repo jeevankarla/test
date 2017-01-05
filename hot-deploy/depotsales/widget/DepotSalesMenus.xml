@@ -212,8 +212,11 @@
 	      	<link target="CustomerAssoc">
         	</link>
 	    </menu-item>
-	     <menu-item name="FindSupplierDispatchs" title="Shipment History">
+	    <menu-item name="FindSupplierDispatchs" title="Shipment History">
         	<link target="ShipmentHistory"/>
+        </menu-item>
+        <menu-item name="findDelayShipments" title="Delay Shipments">
+        	<link target="findDelayShipments"/>
         </menu-item>
          <!-- <menu-item name="ShipmentHistory" title="Shipment History2">
         	<link target="ShipmentHistory"/>

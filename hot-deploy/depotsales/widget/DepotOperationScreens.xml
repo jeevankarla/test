@@ -814,7 +814,7 @@
 				</decorator-screen>
 			</widgets>
 		</section>
-	</screen>
+	</screen> 
 	<screen name="ShipmentHistory">
 		<section>
 			<actions>
@@ -866,6 +866,62 @@
 											<include-form name="listMaterialShipmentReceiptDepotTrans"
 												location="component://depotsales/widget/DepotSalesForms.xml" />
 										</screenlet>
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="findDelayShipments">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Delay Shipments From Supplier" />
+			     <set field="tabButtonItem" value="findDelayShipments"/>
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="20" />
+				<set field="targetRequest" value="findDelayShipments" />
+				
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/findDelayShipments.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="NoAuthDepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<decorator-screen name="FindScreenDecorator"
+									location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="search-options">
+											<platform-specific>
+											<html>
+												<html-template
+													location="component://depotsales/webapp/depotsales/depotsales/findDelayShipments.ftl" />
+											</html>
+											</platform-specific>
+											<!-- <link text="${uiLabelMap.AccountingExportAsCsv}"  
+														style="buttontext" target="ShipmentsDispatchReport.csv">
+														<parameter param-name="fromDate" from-field="parameters.fromDate" />
+														<parameter param-name="thruDate" from-field="parameters.thruDate" />
+														<parameter param-name="branchId2" from-field="parameters.branchId2" />
+														<parameter param-name="Supplier" from-field="parameters.Supplier" />
+														<parameter param-name="customer" from-field="parameters.customer" />
+														<parameter param-name="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+														<parameter param-name="isReport" value="YES" />
+													</link> -->
+									</decorator-section>
+									
+									<decorator-section name="search-results">
+									   <platform-specific>
+											<html>
+												<html-template
+													location="component://depotsales/webapp/depotsales/depotsales/listDelayShipments.ftl" />
+											</html>
+										</platform-specific>
 									</decorator-section>
 								</decorator-screen>
 							</widgets>

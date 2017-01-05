@@ -134,7 +134,7 @@ if(UtilValidate.isNotEmpty(fromDate)){
 	
 }
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId","partyId"), null, null, false);
+orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId","partyId","orderDate"), null, null, false);
 
 partyIdsFromOrders=EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles, "partyId", true);
 
@@ -173,13 +173,13 @@ for (eachParty in allParties) {
 		  Shipment = delegator.findList("Shipment", condition,UtilMisc.toSet("shipmentId","supplierInvoiceDate"), payOrderBy, null, false);
 		  
 		  if(!Shipment){
-			  peddingShipments = peddingShipments+1;
+			 // peddingShipments = peddingShipments+1;
 		  }else{
 		  
 		   if(days > 0){
 		   ShipmentFirst = Shipment[0];
 		   supplierInvoiceDate  = ShipmentFirst.supplierInvoiceDate;
-		  
+		  /*
 		   conditionList.clear();
 		   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachList.orderId));
 		   conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ORDER_APPROVED"));
@@ -187,8 +187,8 @@ for (eachParty in allParties) {
 		   OrderStatus = delegator.findList("OrderStatus", condition,UtilMisc.toSet("orderId","statusDatetime"), null, null, false);
  
 		   statusDatetime = "";
-		   if(OrderStatus[0])
-		    statusDatetime = OrderStatus[0].get("statusDatetime");
+		   if(OrderStatus[0])*/
+		   statusDatetime = eachList.orderDate;
 		   
 		   //Debug.log("statusDatetime============="+statusDatetime);
 			long timeDiff = 0;
