@@ -1988,7 +1988,7 @@ public class PartyServices {
 		}
 	 	
 	 	if (UtilValidate.isNotEmpty(thruDateStr)) { //2011-12-25 18:09:45
-			SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy");             
+			SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");             
 			try {
 				thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
 				thruDate = UtilDateTime.getDayEnd(thruDate);
