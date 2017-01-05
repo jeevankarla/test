@@ -35,7 +35,7 @@ under the License.
 		$('div#spinner').html('<img src="/images/ajax-loader64.gif">');
 	}
 </script>
-<h2>FIND DELAYED SHIPMENTS FROM SUPPLIER<h2>
+<h2>LISTING OF DELIVERIES DELAYED BY MORE THAN 7 DAYS BY SUPPLIERS<h2>
 <div class="screenlet">
   <div class="screenlet-body">
     <div id="findPartyParameters"  >
@@ -49,7 +49,7 @@ under the License.
 		 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
  	              </#if>
 				  <#if !branchIdName?has_content>
-						 <option value=''></option>
+						 <option value=''>Select Branch</option>
 				  </#if>
 			      <#list  formatList as formatList>
 					<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
@@ -66,7 +66,7 @@ under the License.
       		 <td>
       		 	 <select name="period" id="period">
       		 	    <#if period?has_content>
-      		 	    	<option value='${period}'>${period}</option>
+      		 	    	<option value='${period}'>${periodName}</option>
       		 	    </#if>
 					<option value='One_Month'>Last One Month</option>
 					<option value='Two_Month'>Last Two Months</option>

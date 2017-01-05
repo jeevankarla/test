@@ -42,7 +42,7 @@ delegator = DelegatorFactory.getDelegator("default#nhdc-test2");
 List formatList = [];
 
 List<GenericValue> partyClassificationList = null;
-	partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+	partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
 if(partyClassificationList){
 	for (eachList in partyClassificationList) {
 		formatMap = [:];
@@ -65,15 +65,19 @@ if("Y".equals(isFormSubmitted)){
 	
 	if("One_Month".equals(period)){
 		daystart = UtilDateTime.addDaysToTimestamp(dayend,-30);
+		context.periodName="Last One Month";
 	}
 	if("Two_Month".equals(period)){
 		daystart = UtilDateTime.addDaysToTimestamp(dayend,-60);
+		context.periodName="Last Two Months";
 	}
 	if("Three_Month".equals(period)){
 		daystart = UtilDateTime.addDaysToTimestamp(dayend,-90);
+		context.periodName="Last Three  Months";
 	}
 	if("Six_Month".equals(period)){
 		daystart = UtilDateTime.addDaysToTimestamp(dayend,-180);
+		context.periodName="Last  Six Months";
 	}
 	JSONArray dataList = new JSONArray();
 	
@@ -141,7 +145,7 @@ if("Y".equals(isFormSubmitted)){
 					  orderHeaderAndRole2 = EntityUtil.filterByCondition(orderHeaderAndRole, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,eachList.orderId));
 					  shipedQty=0;
 					  ordQty=0;
-					  supplierName =  PartyHelper.getPartyName(delegator, eachList.partyId, false);
+					  supplierName =  PartyHelper.getPartyName(delegator, eachParty, false);
 					   if(UtilValidate.isNotEmpty(Shipment)){
 						  ShipmentFirst = Shipment[0];
 						  supplierInvoiceDate  = ShipmentFirst.supplierInvoiceDate;
@@ -196,7 +200,7 @@ if("Y".equals(isFormSubmitted)){
 							ordQty=ordQty+eachRecord.quantity;
 						}
 						newObj.put("diffDays",(int)diffDays+1)
-						newObj.put("supplierName","-")
+						newObj.put("supplierName",supplierName)
 						newObj.put("shipedQty","-")
 						newObj.put("ordQty",ordQty)
 						totordQty=totordQty+ordQty;

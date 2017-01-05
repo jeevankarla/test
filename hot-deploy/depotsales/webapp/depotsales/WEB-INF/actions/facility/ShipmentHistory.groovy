@@ -90,7 +90,7 @@ if(UtilValidate.isEmpty(isReport)){
 	List formatList = [];
 	
 	List<GenericValue> partyClassificationList = null;
-		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
 	if(partyClassificationList){
 		for (eachList in partyClassificationList) {
 			//Debug.log("eachList========================"+eachList.get("partyId"));
@@ -149,19 +149,21 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	
 	if("one_Month".equals(period)){
 		daystart = UtilDateTime.addDaysToTimestamp(dayend,-30);
+		context.periodName="Last One Month";
 	}
 	if("two_Month".equals(period)){
 		daystart = UtilDateTime.addDaysToTimestamp(dayend,-60);
+		context.periodName="Last Two Months";
 	}
 	if("three_Month".equals(period)){
 		daystart = UtilDateTime.addDaysToTimestamp(dayend,-90);
+		context.periodName="Last Three  Months";
 	}
 	if("six_Month".equals(period)){
 		daystart = UtilDateTime.addDaysToTimestamp(dayend,-180);
+		context.periodName="Last  Six Months";
 	}
 	
-	Debug.log("daystart======"+ daystart)
-	Debug.log("dayend======"+ daystart)
 	/*
 	
 	Timestamp fromDate;

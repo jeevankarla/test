@@ -36,11 +36,11 @@ under the License.
         <tr class="header-row-2">
           <td align="center">OrderId</td>
           <td align="center">order Date</td>
-          <td align="center">Order Qty</td>
+          <td align="center">Order Qty(Kgs)</td>
           <td align="center">Supplier Name</td>
-          <td align="center">1st Shipment Date</td>
-          <td align="center">ship Qty</td>
-          <td align="center">Shipment Delay</td>
+          <td align="center">Delivery  Date</td>
+          <td align="center">Delivered Qty(Kgs)</td>
+          <td align="center">Delivery Delayed</td>
         </tr>
       </thead>
       <tbody>
