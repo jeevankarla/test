@@ -184,7 +184,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 			   <tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Month :</td>
 				  <td valign='middle'><font color="green">          
-				    <input  type="text" size="18pt" id="effectiveDate" readonly  name="effectiveDate" onmouseover='monthPicker()' class="monthPicker" /> 		
+				    <input  type="text" size="20" id="effectiveDate" readonly  name="effectiveDate" onmouseover='monthPicker()' class="monthPicker" /> 		
 				  </td>
 				  <td><br/></td>
 				</tr>

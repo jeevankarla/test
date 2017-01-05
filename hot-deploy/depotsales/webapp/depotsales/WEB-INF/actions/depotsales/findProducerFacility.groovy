@@ -51,7 +51,7 @@ List formatList = [];
 JSONObject branchProductSroreMap = new JSONObject();
 	
 	List<GenericValue> partyClassificationList = null;
-		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
 	if(partyClassificationList){
 		for (eachList in partyClassificationList) {
 			//Debug.log("eachList========================"+eachList.get("partyId"));
