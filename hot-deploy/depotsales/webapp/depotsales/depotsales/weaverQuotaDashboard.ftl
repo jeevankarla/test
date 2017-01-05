@@ -263,7 +263,40 @@ function drawRow(rowData) {
      
      row.append($("<td>"+"<table id='usedQuota'>"+usedQuota+"</table>"+ "</td>"));
      
-
+	 
+	 
+	 var quotaQuantity = "";
+      for(var i=0;i<partyLoomArrayJSON.length;i++){
+          quotaQuantity = quotaQuantity+ '<tr>'+partyLoomArrayJSON[i].quotaQuantity+'</tr>'+'</br>';
+     }
+     
+     row.append($("<td align=right>"+"<table id='eligible'>"+quotaQuantity+"</table>"+ "</td>"));
+     
+       var invoiceValue = "";
+      for(var i=0;i<partyLoomArrayJSON.length;i++){
+          invoiceValue = invoiceValue+ '<tr>'+partyLoomArrayJSON[i].invoiceValue+'</tr>'+'</br>';
+     }
+     
+     row.append($("<td align=right>"+"<table id='usedQuota'>"+invoiceValue+"</table>"+ "</td>"));
+          
+     
+      var tenPerValue = "";
+      for(var i=0;i<partyLoomArrayJSON.length;i++){
+          tenPerValue = tenPerValue+ '<tr>'+partyLoomArrayJSON[i].tenPerValue+'</tr>'+'</br>';
+     }
+     
+     row.append($("<td align=right>"+"<table id='balnceQuota'>"+tenPerValue+"</table>"+ "</td>"));
+          
+     
+      var invoiceGrossValue = "";
+      for(var i=0;i<partyLoomArrayJSON.length;i++){
+          invoiceGrossValue = invoiceGrossValue+ '<tr>'+partyLoomArrayJSON[i].invoiceGrossValue+'</tr>'+'</br>';
+     }
+     
+     row.append($("<td align=right>"+"<table id='invoiceGrossValue'>"+invoiceGrossValue+"</table>"+ "</td>"));
+	 
+	 
+	 
 
 }
 
@@ -335,6 +368,10 @@ function drawRow(rowData) {
           <td>Eligible Quota</td>
           <td>Balance Quota</td>
           <td>Used Quota</td>
+          <td>Quota Quantity</td>
+          <td>Invoice Gross Amount</td>
+          <td>Subsidy Amount</td>
+          <td>Invoice Amount</td>
         </tr>
       </thead>
       <tbody>
