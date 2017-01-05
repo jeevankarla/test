@@ -31,34 +31,34 @@ function makeDatePicker(fromDateId ,thruDateId){
 
 $(document).ready(function(){
 
-	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate");
-	    makeDatePicker("regularIceCreamfDate","regularIceCreamtDate"); 
-	    makeDatePicker("pendingShipmentsReportFrom","pendingShipmentsReportT0");
-	    makeDatePicker("SupplierwiseCountwiseReportDateFrom","SupplierwiseCountwiseReportDateThru");
-	    makeDatePicker("MillwisecountwisePurchaseofYarnReportDateFrom","MillwisecountwisePurchaseofYarnReportDateThru");
-	    makeDatePicker("m1ReportDateFrom","m1ReportDateThru");
-	    makeDatePicker("FCWSReportDateFrom","FCWSReportDateThru");
-	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
-	    makeDatePicker("amulIceCreamfDate","amulIceCreamtDate");
-	    makeDatePicker("stockFromDate","stockThruDate");
-	    makeDatePicker("mobileHitsFromDate","mobileHitsThruDate");
-	    makeDatePicker("ivdFromDate","ivdThruDate");
-	    makeDatePicker("eObFromDate");
-	    makeDatePicker3("subsidyFromDate","subsidyThruDate");
+	    makeDatePicker1("regularIceCreamfDate","regularIceCreamtDate");
+	    makeDatePicker1("regularIceCreamfDate","regularIceCreamtDate"); 
+	    makeDatePicker1("pendingShipmentsReportFrom","pendingShipmentsReportT0");
+	    makeDatePicker1("SupplierwiseCountwiseReportDateFrom","SupplierwiseCountwiseReportDateThru");
+	    makeDatePicker1("MillwisecountwisePurchaseofYarnReportDateFrom","MillwisecountwisePurchaseofYarnReportDateThru");
+	    makeDatePicker1("m1ReportDateFrom","m1ReportDateThru");
+	    makeDatePicker1("FCWSReportDateFrom","FCWSReportDateThru");
+	    makeDatePicker1("amulIceCreamfDate","amulIceCreamtDate");
+	    makeDatePicker1("amulIceCreamfDate","amulIceCreamtDate");
+	    makeDatePicker1("stockFromDate","stockThruDate");
+	    makeDatePicker1("mobileHitsFromDate","mobileHitsThruDate");
+	    makeDatePicker1("ivdFromDate","ivdThruDate");
+	    makeDatePicker1("eObFromDate");
+	    makeDatePicker2("subsidyFromDate","subsidyThruDate");
 	    makeDatePicker2("claimFromDate","claimThruDate");
-	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
-	    makeDatePicker("reimburcentTransporterFRO","reimburcentTransporterTHRU");
-	    makeDatePicker("depotReimburcentReportFRO","depotReimburcentReportTHRU");
-	    makeDatePicker("stateWiseBranchWiseSaleReportFro","stateWiseBranchWiseSaleReportTHRU");
-	    makeDatePicker3("abstrctFromDate","abstrctThruDate");
-	    makeDatePicker3("salesPurchaseReportFRO","salesPurchaseReportTHRU");
-	    makeDatePicker("stockDate");
-	    makeDatePicker("AWIORDate");
-	    makeDatePicker("CASHFromDateId","");
-	    makeDatePicker("billWiseSalesReportFrom","billWiseSalesReportThru");
-	    makeDatePicker("IndentRegisterFromDate","IndentRegisterThruDate");
-	    makeDatePicker("IndentRegisterEntryFromDate","IndentRegisterEntryThruDate");
-	     makeDatePicker("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
+	    makeDatePicker2("PFHFromDateCrDr","PFHThruDateCrDr");
+	    makeDatePicker1("reimburcentTransporterFRO","reimburcentTransporterTHRU");
+	    makeDatePicker1("depotReimburcentReportFRO","depotReimburcentReportTHRU");
+	    makeDatePicker1("stateWiseBranchWiseSaleReportFro","stateWiseBranchWiseSaleReportTHRU");
+	    makeDatePicker2("abstrctFromDate","abstrctThruDate");
+	    makeDatePicker2("salesPurchaseReportFRO","salesPurchaseReportTHRU");
+	    makeDatePicker1("stockDate");
+	    makeDatePicker1("AWIORDate");
+	    makeDatePicker1("CASHFromDateId","");
+	    makeDatePicker1("billWiseSalesReportFrom","billWiseSalesReportThru");
+	    makeDatePicker1("IndentRegisterFromDate","IndentRegisterThruDate");
+	    makeDatePicker1("IndentRegisterEntryFromDate","IndentRegisterEntryThruDate");
+	     makeDatePicker1("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 function makeDatePicker3(fromDateId ,thruDateId){
@@ -84,12 +84,11 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			dateFormat:'yy, MM dd',
 			changeMonth: true,
 			changeYear: true,
-			numberOfMonths: 1,
 			yearRange: "-20:+0",
 			onSelect: function(selectedDate) {
 			date = $(this).datepicker('getDate');
 			var maxDate = new Date(date.getTime());
-	        	maxDate.setDate(maxDate.getDate() + 31);
+	        	maxDate.setDate(maxDate.getDate() + 366);
 				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
 				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
 			}
@@ -97,7 +96,31 @@ function makeDatePicker3(fromDateId ,thruDateId){
 	$( "#"+thruDateId ).datepicker({
 			dateFormat:'yy, MM dd',
 			changeMonth: true,
-			numberOfMonths: 1,
+			changeYear: true,
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+	}
+	
+	function makeDatePicker1(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'MM d, yy',
+			changeMonth: true,
+			changeYear: true,
+			yearRange: "-20:+0",
+			onSelect: function(selectedDate) {
+			date = $(this).datepicker('getDate');
+			var maxDate = new Date(date.getTime());
+	        	maxDate.setDate(maxDate.getDate() + 366);
+				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'MM d, yy',
+			changeMonth: true,
+			changeYear: true,
 			onSelect: function( selectedDate ) {
 				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
 			}
@@ -767,7 +790,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
           <tr class="alternate-row">
       	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCrDepot.pdf</@ofbizUrl>" target="_blank">        
              <td width="10%">Party Financial History With Dr/Cr</td>
-             <td width="10%">From</br></br><input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></br>
+             <td width="10%">From</br><input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></br>
       		 To</br><input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
              <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
             <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></br>
