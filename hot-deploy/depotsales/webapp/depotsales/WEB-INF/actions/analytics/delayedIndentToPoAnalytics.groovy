@@ -101,7 +101,7 @@ branchList = formatList1;
 if(UtilValidate.isNotEmpty(days))
 days = Integer.parseInt(days);
 else
-days = 0;
+days = 7;
 
 
 
