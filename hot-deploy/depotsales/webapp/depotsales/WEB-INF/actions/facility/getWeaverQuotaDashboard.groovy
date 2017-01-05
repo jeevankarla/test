@@ -463,6 +463,8 @@ partyList.each{ partyList ->
 		
 		Desc = eachPartyLoom.loomTypeId;
 		
+		invoiceGrossValue = invoiceValue + tenPerValue;
+		
 		JSONObject partyLoomJSON = new JSONObject();
 		partyLoomJSON.put("loomType",Desc);
 		partyLoomJSON.put("loomQuota",eligibleQuota.get(Desc));
