@@ -105,41 +105,6 @@ days = 7;
 
 
 
-
-/*conditionList = [];
-//conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN,FromOrders));
-conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
-if(UtilValidate.isNotEmpty(fromDate)){
-	conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-	conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-	
-}
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-SaleOrderHeader = delegator.findList("OrderHeader", condition,UtilMisc.toSet("orderId","orderDate"), null, null, false);
-
-SalesOrders=EntityUtil.getFieldListFromEntityList(SaleOrderHeader, "orderId", true);
-
-Debug.log("SalesOrders================="+SalesOrders);
-
-conditionList = [];
-conditionList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.IN,SalesOrders));
-conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-OrderAssoc = delegator.findList("OrderAssoc", condition,UtilMisc.toSet("orderId","toOrderId"), null, null, false);
-
-purchaseOrders = EntityUtil.getFieldListFromEntityList(OrderAssoc, "orderId", true);
-
-Debug.log("purchaseOrders================="+purchaseOrders);
-
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN,purchaseOrders));
-conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
-condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-PurchaseOrderHeader = delegator.findList("OrderHeader", condition,UtilMisc.toSet("orderId","orderDate"), null, null, false);
-*/
-
 condListb = [];
 condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
 condListb.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.NOT_EQUAL, "HO"));
@@ -162,9 +127,6 @@ hoJSson.put("partyId", "nhdcId");
 hoJSson.put("ROName", "NHDC");
 hoJSson.put("branchName", "");
 hoJSson.put("ReportsTo", "");
-
-
-
 
 
 for (eachPartyRel in PartyRelationship) {
@@ -254,6 +216,12 @@ for (eachOrder in FromOrders) {
 			saleOrderDate = SaleOrderHeader.orderDate;
 			
 			purchaseOrderDate = PurchaseOrderHeader.orderDate;
+			
+			
+			
+			
+			
+			
 			
 			
 			long timeDiff = 0;

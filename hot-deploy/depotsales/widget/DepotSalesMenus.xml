@@ -292,7 +292,7 @@
         <menu-item name="delayedShipmentAnalytics" title="Delayed Shipment Analytics">
         	<link target="delayedShipmentAnalytics"/>
         </menu-item>
-        <menu-item name="delayedIndentPOAnalytics" title="Delayed Indent To Po Analytics">
+        <menu-item name="delayedIndentPOAnalytics" title="Delayed PO Analytics">
         	<link target="delayedIndentToPoAnalytics"/>
         </menu-item>
        <!--  <menu-item name="IndentPurchaseAnalytics" title="Purchase Analytics">

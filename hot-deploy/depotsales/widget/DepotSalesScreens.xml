@@ -9954,7 +9954,7 @@
     <screen name="delayedIndentToPoAnalytics">
         <section>
             <actions>
-               	<set field="titleProperty" value="Indent To Po Delayed Analytics"/>
+               	<set field="titleProperty" value="Delays in processing purchase orders by more than 2 days"/>
   				<set field="tabButtonItem" value="analytics" />		            
 				<set field="tabButtonItem2" value="delayedIndentPOAnalytics" />
 				<set field="ajaxUrl" value="delayedIndentToPoAnalyticsInternal" type="String" global="true"/>  
