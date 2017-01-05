@@ -176,7 +176,7 @@ $(document).ready(function(){
 		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
 		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
 		<td align="right">
-		<input type="button" value="Email" id="email" onclick="javascript:showEnquiryEmail();" style='solid blue'; class="button1" /> 
+		<#--<input type="button" value="Email" id="email" onclick="javascript:showEnquiryEmail();" style='solid blue'; class="button1" /> -->
 		</td>
 		</tr>
 		<table>

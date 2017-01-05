@@ -97,7 +97,7 @@ $(document).ready(function () {
                 columns: [
                   { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ROName', cellsRenderer: cellsRenderer, className:'fontSizeChange'},
                   { text: 'Branch', width:'12%', align: 'center', dataField: 'branchName',cellsalign: 'left', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
-                  { text: 'Count', width:'12%', align: 'center', dataField: 'Count',cellsalign: 'left', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
+                  { text: 'P.Os Delayed', width:'12%', align: 'center', dataField: 'Count',cellsalign: 'left', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
                  
                  
                

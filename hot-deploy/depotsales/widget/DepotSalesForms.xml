@@ -1895,39 +1895,14 @@
         <field name="statusIdTo"  > <hidden  value="SR_QUALITYCHECK" /> </field>
     </form>
     
-     <form name="listOfDelayedShipment" type="list" list-name="receiptList" paginate-target="${targetRequest}"
+     <form name="listOfDelayedShipment" type="list" list-name="dataJSON" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row"  target="sendReceiptQtyForQC" default-table-style="basic-table hover-bar">
-      <!--   
-        <row-actions>
-        	<entity-one value-field="product" entity-name="Product">
-				<field-map field-name="productId" from-field="productId"/>
-			</entity-one>
-			<entity-one value-field="uom" entity-name="Uom">
-				<field-map field-name="uomId" from-field="product.quantityUomId"/>
-			</entity-one>
-			<set field="dec" from-field="uom.description"/>
-        </row-actions> -->
-      	 <!-- <field name="receiptId" title="GRN Item No"> 
-      		<display/>
-      	</field> -->
-      	<field name="shipmentId" title="GRN ShipmentId"><display/></field>
-      	<field name="categoryName" title="Category"><display/></field>
-      	<field name="productName" title="Product Name"><display/></field>
-      	<field name="supplier" title="Supplier"><display/></field>
-        <field name="datetimeReceived" title="Received Date"><display/></field>
-        <field name="quantityAccepted" title="    Quantity(Kgs)" widget-area-style="align-text" ><display/></field>
-        <field name="unitPrice" title="Unit Price(Rs)" widget-area-style="align-text"><display/></field>
-       <!-- <field name="orderId" title="PO No"><display/></field> --> 
-       
-       <!-- <field name="customerName" title="CustomerName"><display/></field> -->
-        <!-- <field name="statusId" title="Status"> 
-        	<display-entity entity-name="StatusItem" description="${description}"/>
-        </field>  -->
-        
-      	
-      	<!-- <field name="quantityRejected" title="Qty Rejected"><display/></field> -->
-      	<!-- <field name="receivedByUserLoginId" title="Entry by"><display/></field> -->	
-        <field name="statusIdTo"  > <hidden  value="SR_QUALITYCHECK" /> </field>
+      	<field name="orderNo" title="Indent No."><display/></field>
+      	<field name="branchIdName" title="Branch"><display/></field>
+      	<field name="saleOrderDate" title="Indent Date"><display/></field>
+      	<field name="purchaseOrderDate" title="Po Date"><display/></field>
+        <field name="orderQuantity" title="Indent Quantity"><display/></field>
+        <field name="diffDays" title="No.of Days" ><display/></field>
     </form>
     
     <form name="FindDepotTransMaterialShipment" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">

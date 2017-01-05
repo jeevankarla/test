@@ -1,5 +1,5 @@
 
-<input type="hidden" name="branchId" id="branchId" value="${branchId}">
+<input type="hidden" name="branchId1" id="branchId1" value="${branchId}">
 <input type="hidden" name="partyId1" id="partyId1" value="${partyId}">
 <input type="hidden" name="effectiveDate1" id="effectiveDate1" value="${effectiveDate}">
   
@@ -35,7 +35,7 @@ $(".monthPicker").focus(function () {
 	
 $(document).ready(function(){
 
-var branchId = $("#branchId").val();
+var branchId = $("#branchId1").val();
 var partyId = $("#partyId1").val();
 var effectiveDate1 = $("#effectiveDate1").val();
 
@@ -145,7 +145,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 
 
         
-      <form method="post" name="QuotaDashboard" id="QuotaDashboard" action="<@ofbizUrl>QuotaDashboard</@ofbizUrl> " class="basic-form">
+      <form method="post" name="delayedIndentPOAnalyticsListing" id="delayedIndentPOAnalyticsListing" action="<@ofbizUrl>delayedIndentPOAnalyticsListing</@ofbizUrl> " class="basic-form">
         
 		  <table width="60%" border="0" cellspacing="0" cellpadding="0" class="form-style-8">
 				<tr>
@@ -153,11 +153,11 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				<tr>
 				  <td align='left' valign='middle' nowrap="nowrap">${uiLabelMap.Branch} :</td>
 				  
-				  <#if productStoreId?exists && productStoreId?has_content>  
+				  <#if branchId?exists && branchId?has_content>  
 								  	  		   
 				  <td valign='middle'><font color="green">          
 				    <select name="branchId2" id="branchId2" onchange="javascript:clearData();" >
-				    <option value >         		
+				    <option value="${branchId}" >${branchIdName}</option>       		
 				  </td>
 				  
 				  <#else>
@@ -174,22 +174,21 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				<tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Period :</td>
 				  <td valign='middle'><font color="green">          
-				     <input type='text' id='partyId' name='partyId' onfocus='javascript:autoCompletePartyId();' size='13'/><p><label  align="left" id="partyTooltip" style="color: blue"></label><p>  		
+				  <input type="hidden" name="isFormSubmitted" id="isFormSubmitted" value="Y"  />     
+				     <select name="periodName" id="periodName">
+      		 	    <#if period?has_content>
+      		 	    	<option value='${period}'>${periodName}</option>
+      		 	    </#if>
+					<option value='One_Month'>Last One Month</option>
+					<option value='Three_Month'>Last Three  Months</option>
+					<option value='Six_Month'>Last  Six Months</option>
+			  </select>   		
 				  </td>
 				  <td><br/></td>
 				</tr>
 			 
 			   <tr><td><br/></td></tr>
 			   
-			   <tr>
-				  <td align='left' valign='middle' nowrap="nowrap">Date :</td>
-				  <td valign='middle'><font color="green">          
-				    <input  type="text" size="18pt" id="effectiveDate" readonly  name="effectiveDate" onmouseover='monthPicker()' class="monthPicker" /> 		
-				  </td>
-				  <td><br/></td>
-				</tr>
-			   
-			   <tr><td><br/></td></tr>
 			   
 			   <tr>
 				  <td align='left' valign='middle' nowrap="nowrap"></td>
