@@ -35,10 +35,7 @@ under the License.
 		$('div#spinner').html('<img src="/images/ajax-loader64.gif">');
 	}
 </script>
-
-
-
-<h2>FIND DELAY SHIPMENTS FROM SUPPLIER<h2>
+<h2>FIND DELAYED SHIPMENTS FROM SUPPLIER<h2>
 <div class="screenlet">
   <div class="screenlet-body">
     <div id="findPartyParameters"  >

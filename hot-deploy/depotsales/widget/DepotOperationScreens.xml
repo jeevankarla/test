@@ -921,13 +921,12 @@
 	<screen name="findDelayShipments">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Delay Shipments From Supplier" />
+				<set field="titleProperty" value="Delayed Shipments From Supplier" />
 			     <set field="tabButtonItem" value="findDelayShipments"/>
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
 				<set field="targetRequest" value="findDelayShipments" />
-				
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/findDelayShipments.groovy" />
 			</actions>
@@ -957,7 +956,6 @@
 														<parameter param-name="isReport" value="YES" />
 													</link> -->
 									</decorator-section>
-									
 									<decorator-section name="search-results">
 									   <platform-specific>
 											<html>

@@ -4,7 +4,6 @@
 
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.js</@ofbizContentUrl>"></script>
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.axislabels.js"</@ofbizContentUrl>></script>
- 
 <#if ajaxUrl != "LMSChartsDayCashReceivablesInternal">
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.pie.js"</@ofbizContentUrl>></script>
 <script  language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/flot/jquery.flot.tooltip.js"</@ofbizContentUrl>></script>
@@ -12,7 +11,6 @@
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.pager.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/examples/examples.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
-
 
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-ui-1.8.5.custom.min.js</@ofbizContentUrl>"></script>
@@ -155,7 +153,8 @@ $("#branch").val("INT10");
      <div class="screenlet-body">
 		<span class='h3'>From Date: </span><input class='h2' type="text" id="fromDate" name="fromDate" value="${defaultEffectiveDate}" readonly="true"/>
 		<span class='h3'>Thru Date: </span><input class='h2' type="text" id="thruDate" name="thruDate" value="${defaultEffectiveThruDate}" readonly="true"/>
-		<span class='h3'>Days: </span><input  type="text" id="days" name="days" />
+		<input type="hidden" name="screenFlag" value="7" id="days" name="days"/>
+		<#-- <span class='h3'>Days: </span><input  type="text" id="days" name="days" /> -->
 		<span class='h3'>Branch: </span><select name="branch" id="branch"><#list formatList as format> <option value="${format.payToPartyId}">${format.productStoreName?if_exists}</option></#list></select>
 		<input type="submit" value="Submit" id="getTreeGrid" class="smallSubmit" />
 		<form name="csvForm" id="csvForm" action="indentAnalytics.csv">
