@@ -4320,12 +4320,13 @@
    <screen name="delayedIndentPOAnalyticsListing">
           <section>
               <actions>
-                  <set field="titleProperty" value="Find Weaver"/>
+                  <set field="titleProperty" value="Delays in processing purchase orders by more than 2 days"/>
                   <set field="tabButtonItem" value="quotaDashboard"/>
                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
                     <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
               	  <set field="district" from-field="parameters.district" />
+              	   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/listingThePoAnalytics.groovy"/>
               </actions>           
                 <widgets>
                <decorator-screen name="NoAuthDepotSalesCommonDecorator"
