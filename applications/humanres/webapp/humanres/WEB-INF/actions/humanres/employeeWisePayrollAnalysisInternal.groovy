@@ -18,14 +18,23 @@ Debug.logError("payRollSummaryMap="+payRollSummaryMap, "");
 
 screenFlag=context.ajaxUrl1;
 employementIds = [];
+if (security.hasEntityPermission("HUMANRES", "_ADMIN", session)) {
+	if(payRollEmployeeMap!=null){
+		employementIds = payRollEmployeeMap.keySet();
+	}
+}
 if(screenFlag.equals("EmployeeWisePayrollAnalysisInternal")){
 	regionalOfficeId = parameters.regionalOfficeId;
-	conditionList = [];
-	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, regionalOfficeId));
-	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
-	employementList = delegator.findList("Employment", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
-	if(UtilValidate.isNotEmpty(employementList)){
-		employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+	if(regionalOfficeId.equals("Company")){
+		
+	}else{	
+		conditionList = [];
+		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, regionalOfficeId));
+		conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		employementList = delegator.findList("Employment", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
+		if(UtilValidate.isNotEmpty(employementList)){
+			employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+		}
 	}
 }
 benefitDescMap=context.benefitDescMap;

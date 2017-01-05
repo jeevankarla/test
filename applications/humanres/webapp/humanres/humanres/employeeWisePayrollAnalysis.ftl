@@ -81,11 +81,17 @@ $(document).ready(function(){
 				<td width="10%"><span class='h3'>Regional Office: </span></td>
 				<td align="left" width="15%">
 				<select name="regionalOffice" class='h4'>
-					<option value='Company'>NHDC</option>
-                	<#list ROList as org>
-                		<option value='${org.partyId}'>${org.groupName?if_exists}</option>
-                	</#list>
-                	<option value='INT58'>Pochampally</option>
+					<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session)>
+						<option value='Company'>NHDC</option>
+						<#list ROList as org>
+	                		<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+	                	</#list>
+					<#else>
+	                	<#list ROList as org>
+	                		<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+	                	</#list>
+                	</#if>
+                	<#-- <option value='INT58'>Pochampally</option> -->
 				</select>
 				</td>
 				<td><input type="submit" value="Submit" id="getCharts" class="smallSubmit" /></td>				

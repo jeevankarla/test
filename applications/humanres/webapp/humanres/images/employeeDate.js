@@ -62,7 +62,7 @@ function datePicker1(){
 		dateFormat:'dd-mm-yy',
 		changeMonth: true,
 		changeYear: true,
-		yearRange: "-30:+0",
+		yearRange: "-70:+0",
 		onSelect: function(selectedDate) {
 			jQuery("#dependentBirthDate").datepicker('setDate', selectedDate);
 		}
