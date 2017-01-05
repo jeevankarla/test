@@ -182,11 +182,14 @@
             </condition>       
         	<link target="QuotaDashboard"/>
         </menu-item>
-          <menu-item name="utilizedQuotaDashboard" title="Quota Utilized Dashboard">
+          <!-- <menu-item name="utilizedQuotaDashboard" title="Quota Utilized Dashboard">
         	<condition>
             	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
             </condition>       
         	<link target="utilizedQuotaDashboard"/>
+        </menu-item>-->
+         <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Analytics">
+        	<link target="delayedIndentPOAnalyticsListing"/>
         </menu-item>
          <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Analytics">
         	<link target="delayedIndentPOAnalyticsListing"/>

@@ -248,7 +248,7 @@ function drawRow(rowData) {
           eligible = eligible+ '<tr>'+partyLoomArrayJSON[i].loomQuota+'</tr>'+'</br>';
      }
      
-     row.append($("<td>"+"<table id='eligible'>"+eligible+"</table>"+ "</td>"));
+     row.append($("<td align=center>"+"<table id='eligible'>"+eligible+"</table>"+ "</td>"));
      
       var usedQuota = "";
       for(var i=0;i<partyLoomArrayJSON.length;i++){
@@ -367,9 +367,9 @@ function drawRow(rowData) {
           <td>Passbook Number</td>
           <td>Branch Name</td>
            <td>No Of Looms</td>
-          <td>Eligible Quota</td>
-          <td>Used Quota</td>
-          <td>Balance Quota</td>
+          <td align=center>Eligible Quota(Kgs)</td>
+          <td>Used Quota(Kgs)</td>
+          <td>Balance Quota(Kgs)</td>
           
           <#--<td>Quota Quantity</td>
           <td>Invoice Gross Amount</td>
