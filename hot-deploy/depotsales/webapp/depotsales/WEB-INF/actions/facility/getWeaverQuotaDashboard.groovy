@@ -297,7 +297,9 @@ partyList.each{ partyList ->
 	
 	tempData.put("branchName", branchName);
 	
-	//tempData.put("passNo", partyList.idValue);
+	tempData.put("passbookNo", partyList.idValue);
+	
+	Debug.log("passbook================================="+partyList.idValue);
 	
 	partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), UtilMisc.toSet("partyClassificationGroupId"), null, null,false);
 	
@@ -370,7 +372,7 @@ partyList.each{ partyList ->
 		
 		
 		//start===============================================================
-		quotaQuantity = 0;
+		/*quotaQuantity = 0;
 		tenPerValue = 0;
 		invoiceValue = 0;
 		invoiceGrossValue = 0;
@@ -387,6 +389,7 @@ partyList.each{ partyList ->
 			condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 			condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE"]));
+			condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, facilityDateEnd));
 			
 			cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 			
@@ -447,7 +450,7 @@ partyList.each{ partyList ->
 					
 				}
 			}
-		}
+		}*/
 		//end====================================================
 		
 		
@@ -463,7 +466,7 @@ partyList.each{ partyList ->
 		
 		Desc = eachPartyLoom.loomTypeId;
 		
-		invoiceGrossValue = invoiceValue + tenPerValue;
+		//invoiceGrossValue = invoiceValue + tenPerValue;
 		
 		JSONObject partyLoomJSON = new JSONObject();
 		partyLoomJSON.put("loomType",Desc);
@@ -471,10 +474,10 @@ partyList.each{ partyList ->
 		partyLoomJSON.put("availableQuota",productCategoryQuotasMap.get(Desc));
 		partyLoomJSON.put("usedQuota",usedQuotaMap.get(Desc));
 		
-		partyLoomJSON.put("quotaQuantity",quotaQuantity);
+		/*partyLoomJSON.put("quotaQuantity",quotaQuantity);
 		partyLoomJSON.put("tenPerValue",tenPerValue);
 		partyLoomJSON.put("invoiceValue",invoiceValue);
-		partyLoomJSON.put("invoiceGrossValue",invoiceGrossValue);
+		partyLoomJSON.put("invoiceGrossValue",invoiceGrossValue);*/
 		
 		partyLoomArrayJSON.add(partyLoomJSON);
 			

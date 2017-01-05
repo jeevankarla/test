@@ -30,7 +30,9 @@ under the License.
     background: url('/images/arrow66.png') no-repeat;
     background-color: orange;
 }
-
+.ui-datepicker-current{
+	display:none;
+}
 
 </style>
 
@@ -219,13 +221,13 @@ function drawRow(rowData) {
     $("#coreTable tr:even").css("background-color", "#F4F4F8");
     
     
-    var partyOverView = '<a class="buttontext" href="<@ofbizUrl>EditProcProducer?partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">'+rowData.partyId+'</a>';
+    //var partyOverView = '<a class="buttontext" href="<@ofbizUrl>EditProcProducer?partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">'+rowData.partyId+'</a>';
     
-    row.append($("<td>" +  partyOverView  +"</td>"));  
+    row.append($("<td>" +  rowData.partyId  +"</td>"));  
     
     row.append($("<td>" + rowData.partyName + "</td>"));
     
-     row.append($("<td>" + rowData.partyClassification + "</td>"));
+     row.append($("<td>" + rowData.passbookNo + "</td>"));
     
      row.append($("<td>" + rowData.branchName + "</td>"));
      
@@ -248,14 +250,6 @@ function drawRow(rowData) {
      
      row.append($("<td>"+"<table id='eligible'>"+eligible+"</table>"+ "</td>"));
      
-      var balnceQuota = "";
-      for(var i=0;i<partyLoomArrayJSON.length;i++){
-          balnceQuota = balnceQuota+ '<tr>'+partyLoomArrayJSON[i].availableQuota+'</tr>'+'</br>';
-     }
-     
-     row.append($("<td>"+"<table id='balnceQuota'>"+balnceQuota+"</table>"+ "</td>"));
-     
-     
       var usedQuota = "";
       for(var i=0;i<partyLoomArrayJSON.length;i++){
           usedQuota = usedQuota+ '<tr>'+partyLoomArrayJSON[i].usedQuota+'</tr>'+'</br>';
@@ -263,8 +257,16 @@ function drawRow(rowData) {
      
      row.append($("<td>"+"<table id='usedQuota'>"+usedQuota+"</table>"+ "</td>"));
      
+     var balnceQuota = "";
+      for(var i=0;i<partyLoomArrayJSON.length;i++){
+          balnceQuota = balnceQuota+ '<tr>'+partyLoomArrayJSON[i].availableQuota+'</tr>'+'</br>';
+     }
+     
+     row.append($("<td>"+"<table id='balnceQuota'>"+balnceQuota+"</table>"+ "</td>"));
+     
 	 
-	 
+	
+	<#-- 
 	 var quotaQuantity = "";
       for(var i=0;i<partyLoomArrayJSON.length;i++){
           quotaQuantity = quotaQuantity+ '<tr>'+partyLoomArrayJSON[i].quotaQuantity+'</tr>'+'</br>';
@@ -295,7 +297,7 @@ function drawRow(rowData) {
      
      row.append($("<td align=right>"+"<table id='invoiceGrossValue'>"+invoiceGrossValue+"</table>"+ "</td>"));
 	 
-	 
+	 -->
 	 
 
 }
@@ -353,25 +355,26 @@ function drawRow(rowData) {
  
  <div id = "firstDiv" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
      <font color="blue">Search In Displaying Weavers:</font><input type="text"  style="border-radius: 5px;" class="light-table-filter" data-table="basic-table" placeholder="Filter by any">
-        <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Weavers : <label  align="center" id="totIndents"style="color: blue" ></label>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Displayed Weavers : <label  align="center" id="displayedIndent"style="color: blue" ></label> </div>
+        <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Weavers : <label  align="center" id="totIndents"style="color: blue" ></label>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <#--Displayed Weavers : <label  align="center" id="displayedIndent"style="color: blue" ></label>--> </div>
 
   <form name="listOrders" id="listOrders"   method="post" >
    
      <table id="coreTable" class="basic-table hover-bar" cellspacing="0">
       <thead>
         <tr class="header-row-2">
-          <td>Weaver Id</td>
-          <td>Weaver Name</td>
-          <td>Party Classificatin</td>
+          <td>Customer Id</td>
+          <td>Customer Name</td>
+          <td>Passbook Number</td>
           <td>Branch Name</td>
            <td>No Of Looms</td>
           <td>Eligible Quota</td>
-          <td>Balance Quota</td>
           <td>Used Quota</td>
-          <td>Quota Quantity</td>
+          <td>Balance Quota</td>
+          
+          <#--<td>Quota Quantity</td>
           <td>Invoice Gross Amount</td>
           <td>Subsidy Amount</td>
-          <td>Invoice Amount</td>
+          <td>Invoice Amount</td>-->
         </tr>
       </thead>
       <tbody>

@@ -172,9 +172,9 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				<tr><td><br/></td></tr>
 				
 				<tr>
-				  <td align='left' valign='middle' nowrap="nowrap">Customer :</td>
+				  <td align='left' valign='middle' nowrap="nowrap">Customer Name:</td>
 				  <td valign='middle'><font color="green">          
-				     <input type='text' id='partyId' name='partyId' onfocus='javascript:autoCompletePartyId();' size='13'/><p><label  align="left" id="partyTooltip" style="color: blue"></label><p>  		
+				     <input type='text' id='partyId' name='partyId' placeholder="Enter Customer Name" onfocus='javascript:autoCompletePartyId();' size='20'/><p><label  align="left" id="partyTooltip" style="color: blue"></label><p>  		
 				  </td>
 				  <td><br/></td>
 				</tr>
@@ -182,7 +182,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 			   <tr><td><br/></td></tr>
 			   
 			   <tr>
-				  <td align='left' valign='middle' nowrap="nowrap">Date :</td>
+				  <td align='left' valign='middle' nowrap="nowrap">Month :</td>
 				  <td valign='middle'><font color="green">          
 				    <input  type="text" size="18pt" id="effectiveDate" readonly  name="effectiveDate" onmouseover='monthPicker()' class="monthPicker" /> 		
 				  </td>
