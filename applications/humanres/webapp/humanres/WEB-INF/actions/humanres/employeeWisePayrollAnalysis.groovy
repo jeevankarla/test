@@ -21,9 +21,8 @@ customTimePeriods = delegator.findList("CustomTimePeriod", condition, null, ["-t
 context.customTimePeriods = customTimePeriods;
 Debug.logError("customTimePeriods="+customTimePeriods,"");
 
-condList = [];
-condList.add(EntityCondition.makeCondition("partyTypeId", EntityOperator.EQUALS ,"PARTY_GROUP"));
-condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,"Company"));
-cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
-ROList = delegator.findList("PartyRelationshipAndDetail", cond, null, null, null, false);
-context.ROList = ROList;
+dctx = dispatcher.getDispatchContext();
+partyId = userLogin.get("partyId");
+roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+roPartyList = roList.get("partyList");
+context.ROList = roPartyList;
