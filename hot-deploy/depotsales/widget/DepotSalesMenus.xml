@@ -188,15 +188,18 @@
             </condition>       
         	<link target="utilizedQuotaDashboard"/>
         </menu-item>
+         <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Analytics">
+        	<link target="delayedIndentPOAnalyticsListing"/>
+        </menu-item>
          <menu-item name="Transpoter" title="Transporters">
 		      <!--  <condition>
 		        	<if-has-permission permission="MM" action="_VENDOR_VIEW"/>
-		    </condition> -->
+		      </condition> -->
 		           <link target="findTransporter"/>
 	   </menu-item>
         <menu-item name="DepotSalesReports" title="${uiLabelMap.Reports}">
 	   		 <condition>
-				<or>
+	 			<or>
 	        		<if-has-permission permission="DEPOTSALES" action="_REPORTS_VIEW"/>
 				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
             	</or>            

@@ -51,17 +51,17 @@ List formatList = [];
 JSONObject branchProductSroreMap = new JSONObject();
 	
 	List<GenericValue> partyClassificationList = null;
-		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
 	if(partyClassificationList){
 		for (eachList in partyClassificationList) {
 			//Debug.log("eachList========================"+eachList.get("partyId"));
 			formatMap = [:];
 			partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
-			formatMap.put("productStoreName",partyName);
+	   		formatMap.put("productStoreName",partyName);
 			formatMap.put("payToPartyId",eachList.get("partyId"));
 			formatList.addAll(formatMap);
 			
-			
+		  	
 			
 			cndList=[];
 			cndList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.EQUALS,eachList.get("partyId")));

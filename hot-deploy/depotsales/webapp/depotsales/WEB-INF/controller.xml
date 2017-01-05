@@ -48,6 +48,11 @@
         <response name="success" type="view" value="QuotaDashboard"/>
     </request-map>
     
+    <request-map uri="delayedIndentPOAnalyticsListing">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="delayedIndentPOAnalyticsListing"/>
+    </request-map>
+         
     <request-map uri="utilizedQuotaDashboard">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="utilizedQuotaDashboard"/>
@@ -2730,6 +2735,8 @@
 	<view-map name="ChannelWiseDepoSalesChartInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChartInternal"/>
     <view-map name="IndentAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalytics"/>
     <view-map name="QuotaDashboard" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaDashboard"/>
+    
+    <view-map name="delayedIndentPOAnalyticsListing" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#delayedIndentPOAnalyticsListing"/>
     
     <view-map name="utilizedQuotaDashboard" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#utilizedQuotaDashboard"/>
     
