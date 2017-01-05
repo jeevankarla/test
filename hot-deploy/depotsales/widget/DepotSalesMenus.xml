@@ -194,7 +194,7 @@
          <menu-item name="Transpoter" title="Transporters">
 		      <!--  <condition>
 		        	<if-has-permission permission="MM" action="_VENDOR_VIEW"/>
-		    </condition> -->
+		      </condition> -->
 		           <link target="findTransporter"/>
 	   </menu-item>
         <menu-item name="DepotSalesReports" title="${uiLabelMap.Reports}">

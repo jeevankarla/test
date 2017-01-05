@@ -9,7 +9,7 @@
 	var branchProductSroreMap=${StringUtil.wrapString(branchProductSroreMap)!'[]'};
 	
 	//for Month Picker
-$(document).ready(function(){
+$(document).ready(function(){ 
     $(".monthPicker").datepicker( {
        changeMonth: true,
        changeYear: true,

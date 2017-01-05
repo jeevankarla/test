@@ -1897,7 +1897,7 @@
     
      <form name="listOfDelayedShipment" type="list" list-name="receiptList" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row"  target="sendReceiptQtyForQC" default-table-style="basic-table hover-bar">
-      <!-- 
+      <!--   
         <row-actions>
         	<entity-one value-field="product" entity-name="Product">
 				<field-map field-name="productId" from-field="productId"/>

@@ -4323,7 +4323,7 @@
                   <set field="titleProperty" value="Find Weaver"/>
                   <set field="tabButtonItem" value="quotaDashboard"/>
                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
-                  <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
+                    <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
               	  <set field="district" from-field="parameters.district" />
               </actions>           
@@ -4334,7 +4334,7 @@
                       	<screenlet title="Find Weaver">
                       		<!-- <include-form name="FindQuotaProducer"
   								location="component://depotsales/widget/DepotSalesForms.xml" /> -->
-  								<platform-specific>
+  	  							<platform-specific>
 							<html>
 								<html-template
 									location="component://depotsales/webapp/depotsales/depotsales/delayedShipmentPO.ftl" />

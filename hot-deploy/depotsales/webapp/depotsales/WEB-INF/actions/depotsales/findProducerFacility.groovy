@@ -61,7 +61,7 @@ JSONObject branchProductSroreMap = new JSONObject();
 			formatMap.put("payToPartyId",eachList.get("partyId"));
 			formatList.addAll(formatMap);
 			
-			
+		  	
 			
 			cndList=[];
 			cndList.add(EntityCondition.makeCondition("payToPartyId", EntityOperator.EQUALS,eachList.get("partyId")));
