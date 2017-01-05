@@ -37,7 +37,7 @@ import org.ofbiz.service.GenericDispatcher;
 HttpServletRequest httpRequest = (HttpServletRequest) request;
 HttpServletResponse httpResponse = (HttpServletResponse) response;
 dctx = dispatcher.getDispatchContext();
-//delegator = DelegatorFactory.getDelegator("default#nhdc-lan");
+delegator = DelegatorFactory.getDelegator("default#nhdc-test2");
 
 List formatList = [];
 
@@ -113,6 +113,7 @@ if("Y".equals(isFormSubmitted)){
 	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, branchPoIds));
 	orderHeaderAndRoleSuppliers = delegator.findList("OrderHeaderItemAndRoles",EntityCondition.makeCondition(conditionList,EntityOperator.AND),UtilMisc.toSet("partyId","orderId","orderDate","quantity"), null, null, false);
 	partyIdsFromOrders=EntityUtil.getFieldListFromEntityList(orderHeaderAndRoleSuppliers, "partyId", true);
+	orderHeaderSequenceList = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId",EntityOperator.IN,branchPoIds),UtilMisc.toSet("orderNo","orderId"), null, null, false);
 	orderIds=[];
 	for (eachParty in partyIdsFromOrders) {
 		totordQty=0
@@ -120,7 +121,6 @@ if("Y".equals(isFormSubmitted)){
 		totDelayDays=0;
 		JSONObject totNewObj = new JSONObject();
 		orderHeaderAndRole = EntityUtil.filterByCondition(orderHeaderAndRoleSuppliers, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,eachParty));
-		supplierName =  PartyHelper.getPartyName(delegator, eachParty, false);
 		double peddingShipments = 0;
 		if(orderHeaderAndRole){
 			  for (eachList in orderHeaderAndRole) {
@@ -141,6 +141,7 @@ if("Y".equals(isFormSubmitted)){
 					  orderHeaderAndRole2 = EntityUtil.filterByCondition(orderHeaderAndRole, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,eachList.orderId));
 					  shipedQty=0;
 					  ordQty=0;
+					  supplierName =  PartyHelper.getPartyName(delegator, eachList.partyId, false);
 					   if(UtilValidate.isNotEmpty(Shipment)){
 						  ShipmentFirst = Shipment[0];
 						  supplierInvoiceDate  = ShipmentFirst.supplierInvoiceDate;
@@ -160,7 +161,9 @@ if("Y".equals(isFormSubmitted)){
 						  }
 						  if(diffDays >= 7){
 							  JSONObject newObj = new JSONObject();
-							  newObj.put("orderId",eachList.orderId)
+							  orderHeaderSequence = EntityUtil.filterByCondition(orderHeaderSequenceList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,eachList.orderId));
+							  orderseq=EntityUtil.getFirst(orderHeaderSequence).get("orderNo")
+							  newObj.put("orderId",orderseq)
 							  dateStr=UtilDateTime.toDateString(eachList.orderDate,"dd/MM/yyyy");
 							  //statusDatetime=UtilDateTime.addDaysToTimestamp(statusDatetime,diffDays);
 							  shptDateStr=UtilDateTime.toDateString(supplierInvoiceDate,"dd/MM/yyyy");
@@ -177,8 +180,10 @@ if("Y".equals(isFormSubmitted)){
 							  orderIds.add(eachList.orderId)
 						  }
 					  }else if(UtilValidate.isNotEmpty(statusDatetime)){
-						  JSONObject newObj = new JSONObject();
-						newObj.put("orderId",eachList.orderId)
+					     JSONObject newObj = new JSONObject();
+					     orderHeaderSequence = EntityUtil.filterByCondition(orderHeaderSequenceList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,eachList.orderId));
+					     orderseq=EntityUtil.getFirst(orderHeaderSequence).get("orderNo")
+						newObj.put("orderId",orderseq)
 						dateStr=UtilDateTime.toDateString(statusDatetime,"dd/MM/yyyy");
 						newObj.put("orderDate",dateStr)
 						newObj.put("shipDate","-")
@@ -204,11 +209,13 @@ if("Y".equals(isFormSubmitted)){
 			  }
 			  
 		}
-		totNewObj.put("orderId","Total")
-		totNewObj.put("diffDays",(int)totDelayDays+1)
-		totNewObj.put("shipedQty",totShipQty)
-		totNewObj.put("ordQty",totordQty)
-		dataList.add(totNewObj);
+		if(totordQty > 0){
+			totNewObj.put("orderId","Total")
+			totNewObj.put("diffDays",(int)totDelayDays+1)
+			totNewObj.put("shipedQty",totShipQty)
+			totNewObj.put("ordQty",totordQty)
+			dataList.add(totNewObj);
+		}
 	}
 	context.dataList=dataList;
 	
