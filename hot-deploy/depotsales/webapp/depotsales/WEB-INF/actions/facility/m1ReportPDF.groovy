@@ -149,27 +149,48 @@ totalValue=0;
 totalRate=0;
 prodCatMap=[:];
 totalsMap=[:];
+headerData2=[:];
+headerData2.put("prodcatName", "");
+headerData2.put("productName", "");
+headerData2.put("partyName", "");
+headerData2.put("orderQty", "");
+/*headerData2.put("BdlWt", "____");*/
+headerData2.put("rate", "");
+headerData2.put("orderValue", " ");
+finalCSVList.add(headerData2);
+
+headerData=[:];
+headerData.put("prodcatName", "PRODUCT CATEGORY");
+headerData.put("productName", "PRODUCT COUNT");
+headerData.put("partyName", "PARTY NAME");
+headerData.put("orderQty", "ORDERQTY");
+/*headerData.put("BdlWt", "BdlWt");*/
+headerData.put("rate", "RATE");
+headerData.put("orderValue", "ORDERVALUE");
+finalCSVList.add(headerData);
+
 for(productCategoryId in productCategoryIds){
-	tempCSVMap1=[:];
+	//tempCSVMap1=[:];
 	prodCatList=[];
 	prodCatName="";
 	productCategoryDetails = delegator.findOne("ProductCategory",[productCategoryId : productCategoryId] , false);
 	if(UtilValidate.isNotEmpty(productCategoryDetails)){
 		prodCatName=productCategoryDetails.description
 	}
-	tempCSVMap1.put("partyName", prodCatName);
+	/*tempCSVMap1.put("partyName", "");
 	tempCSVMap1.put("orderQty", "");
-	/*tempCSVMap1.put("BdlWt", "");*/
+	//tempCSVMap1.put("BdlWt", "");
 	tempCSVMap1.put("rate", "");
 	tempCSVMap1.put("orderValue", "");
-	finalCSVList.add(tempCSVMap1);
+	finalCSVList.add(tempCSVMap1);*/
 	singleCatProducts = EntityUtil.filterByCondition(produtCategorieMember, EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
-	singleProductIds=EntityUtil.getFieldListFromEntityList(produtCategorieMember, "productId", true);
+	singleProductIds=EntityUtil.getFieldListFromEntityList(singleCatProducts, "productId", true);
+	//singleProductIds=EntityUtil.getFieldListFromEntityList(produtCategorieMember, "productId", true);
 	//Debug.log("singleProductIds=================="+singleProductIds);
 	for(singleProductId in singleProductIds){
 		prodMap=[:];
 		tempTotMap=[:];
-		tempCSVMap2=[:];
+		//tempCSVMap2=[:];
 		prodPartiesList=[];
 		totOrderQty =0;
 		totOrderValue =0;
@@ -178,15 +199,15 @@ for(productCategoryId in productCategoryIds){
 		singleCatProductsOrdersDetail = EntityUtil.getFirst(singleCatProductsOrdersDetails);
 		partyIds=EntityUtil.getFieldListFromEntityList(singleCatProductsOrdersDetails, "partyId", true);
 		//Debug.log("singleCatProductsOrdersDetail=================="+singleCatProductsOrdersDetail);
-		if(UtilValidate.isNotEmpty(singleCatProductsOrdersDetail)){
-			tempCSVMap2.put("partyName", singleCatProductsOrdersDetail.itemDescription);
+		/*if(UtilValidate.isNotEmpty(singleCatProductsOrdersDetail)){
+			tempCSVMap2.put("partyName", "");
 			tempCSVMap2.put("orderQty", "");
-			/*tempCSVMap2.put("BdlWt", "");*/
+			//tempCSVMap2.put("BdlWt", "");
 			tempCSVMap2.put("rate", "");
 			tempCSVMap2.put("orderValue", "");
 			finalCSVList.add(tempCSVMap2);
 			
-		}
+		}*/
 		
 		for(partyId in partyIds){
 			//Debug.log("partyId=================="+partyId);
