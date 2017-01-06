@@ -46,7 +46,7 @@ $(document).ready(function(){
 	    makeDatePicker1("eObFromDate");
 	    makeDatePicker2("subsidyFromDate","subsidyThruDate");
 	    makeDatePicker2("claimFromDate","claimThruDate");
-	    makeDatePicker2("PFHFromDateCrDr","PFHThruDateCrDr");
+	    makeDatePicker4("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker1("reimburcentTransporterFRO","reimburcentTransporterTHRU");
 	    makeDatePicker1("depotReimburcentReportFRO","depotReimburcentReportTHRU");
 	    makeDatePicker1("stateWiseBranchWiseSaleReportFro","stateWiseBranchWiseSaleReportTHRU");
@@ -119,6 +119,26 @@ function makeDatePicker3(fromDateId ,thruDateId){
 		});
 	$( "#"+thruDateId ).datepicker({
 			dateFormat:'MM d, yy',
+			changeMonth: true,
+			changeYear: true,
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+	}
+	
+	function makeDatePicker4(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'yy, MM dd',
+			changeMonth: true,
+			changeYear: true,
+			yearRange: "-20:+0", 
+			onSelect: function(selectedDate) {
+			//$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: null}).datepicker('setDate', date);
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'yy, MM dd',
 			changeMonth: true,
 			changeYear: true,
 			onSelect: function( selectedDate ) {
