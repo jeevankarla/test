@@ -189,6 +189,7 @@ public class DepotPurchaseServices{
 		List productQtyList = FastList.newInstance();
 		List invoiceAdjChargesList = FastList.newInstance();
 		List invoiceDiscountsList = FastList.newInstance();
+		List<String> orderItemSeqIdList = FastList.newInstance();
 		
 		String applicableTo = "ALL";
 		String applicableToDisc = "ALL";
@@ -205,6 +206,7 @@ public class DepotPurchaseServices{
 			String assessableValue = "";
 			String discAssessableValue = "";
 			String invoiceItemDiscTypeId = "";
+			String orderItemSeqId = "";
 			String adjAmtDiscStr = "";
 			String discQtyStr = "";
 			BigDecimal adjDiscAmt = BigDecimal.ZERO;
@@ -451,6 +453,11 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
 					return "error";	
 				}
+				if (paramMap.containsKey("oritemseq" + thisSuffix)) {
+					orderItemSeqId = (String) paramMap.get("oritemseq" + thisSuffix);
+					
+					orderItemSeqIdList.add(orderItemSeqId);
+				}
 				
 				if (paramMap.containsKey("UPrice" + thisSuffix)) {
 				   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
@@ -572,7 +579,13 @@ public class DepotPurchaseServices{
 
 			if(UtilValidate.isNotEmpty(productId)){
 				try{
-					List<GenericValue> orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));				
+					
+					List itemAssocCond1 = FastList.newInstance();
+					itemAssocCond1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+					itemAssocCond1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+					itemAssocCond1.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					
+					List<GenericValue> orderItem = delegator.findList("OrderItem", EntityCondition.makeCondition(itemAssocCond1, EntityOperator.AND), null, UtilMisc.toList("orderItemSeqId"), null, false);
 					if(UtilValidate.isNotEmpty(orderItem)){
 						orderItemValue = EntityUtil.getFirst(orderItem);
 						orderItemValue.put("unitPrice", uPrice);
@@ -761,6 +774,26 @@ public class DepotPurchaseServices{
                 	 Debug.logError(e, "Failed to Populate Invoice ", module);
                  }
         		
+                 
+                 try{
+                	 GenericValue billToCustRole1 = delegator.makeValue("InvoiceRole");
+                	 billToCustRole1.set("invoiceId", invoiceId);
+                	 billToCustRole1.set("partyId", "Company");
+                	 billToCustRole1.set("roleTypeId", "ACCOUNTING");
+                     delegator.createOrStore(billToCustRole1);
+                 } catch (GenericEntityException e) {
+                	 Debug.logError(e, "Failed to Populate Invoice ", module);
+                 }
+                 
+                 try{
+                	 GenericValue billToCustRole2 = delegator.makeValue("InvoiceRole");
+                	 billToCustRole2.set("invoiceId", invoiceId);
+                	 billToCustRole2.set("partyId", partyIdTo);
+                	 billToCustRole2.set("roleTypeId", "INTERNAL_ORGANIZATIO");
+                     delegator.createOrStore(billToCustRole2);
+                 } catch (GenericEntityException e) {
+                	 Debug.logError(e, "Failed to Populate Invoice ", module);
+                 }
         		
         		
         		
@@ -1433,7 +1466,13 @@ public class DepotPurchaseServices{
 
 			if(UtilValidate.isNotEmpty(productId)){
 				try{
-					List<GenericValue> orderItem = EntityUtil.filterByCondition(orderItems, EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));				
+					
+					List itemAssocCond1 = FastList.newInstance();
+					itemAssocCond1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+					itemAssocCond1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeq));
+					itemAssocCond1.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+					
+					List<GenericValue> orderItem = delegator.findList("OrderItem", EntityCondition.makeCondition(itemAssocCond1, EntityOperator.AND), null, UtilMisc.toList("orderItemSeqId"), null, false);
 					if(UtilValidate.isNotEmpty(orderItem)){
 						orderItemValue = EntityUtil.getFirst(orderItem);
 						orderItemValue.put("unitPrice", uPrice);
@@ -1491,7 +1530,9 @@ public class DepotPurchaseServices{
 					
 					itemAdjMap.put(orderItemSeq, taxRateList);
 					
+					Debug.log("quantity=====From========"+quantity);
 					
+					Debug.log("uPrice=====From========"+uPrice);
 						
 					toBillItems.add(eachItem);
         
@@ -1906,6 +1947,26 @@ public class DepotPurchaseServices{
            	  Debug.logError(e, "Failed to Populate Invoice ", module);
              }	
              
+          	  
+          	 try{
+            	 GenericValue billToCustRole1 = delegator.makeValue("InvoiceRole");
+            	 billToCustRole1.set("invoiceId", invoiceId);
+            	 billToCustRole1.set("partyId", "Company");
+            	 billToCustRole1.set("roleTypeId", "ACCOUNTING");
+                 delegator.createOrStore(billToCustRole1);
+             } catch (GenericEntityException e) {
+            	 Debug.logError(e, "Failed to Populate Invoice ", module);
+             }
+             
+             try{
+            	 GenericValue billToCustRole2 = delegator.makeValue("InvoiceRole");
+            	 billToCustRole2.set("invoiceId", invoiceId);
+            	 billToCustRole2.set("partyId", custmentPartyId);
+            	 billToCustRole2.set("roleTypeId", "INTERNAL_ORGANIZATIO");
+                 delegator.createOrStore(billToCustRole2);
+             } catch (GenericEntityException e) {
+            	 Debug.logError(e, "Failed to Populate Invoice ", module);
+             }
        		
        		
        	}catch(GenericEntityException e){
@@ -9816,6 +9877,27 @@ public class DepotPurchaseServices{
   		                   }
   		          		
   		          		
+						try{
+						 GenericValue billToCustRole1 = delegator.makeValue("InvoiceRole");
+						 billToCustRole1.set("invoiceId", invoiceId);
+						 billToCustRole1.set("partyId", "Company");
+						 billToCustRole1.set("roleTypeId", "ACCOUNTING");
+						     delegator.createOrStore(billToCustRole1);
+						 } catch (GenericEntityException e) {
+							 Debug.logError(e, "Failed to Populate Invoice ", module);
+						 }
+						 
+						 try{
+							 GenericValue billToCustRole2 = delegator.makeValue("InvoiceRole");
+						 billToCustRole2.set("invoiceId", invoiceId);
+						 billToCustRole2.set("partyId", partyIdTo);
+						 billToCustRole2.set("roleTypeId", "INTERNAL_ORGANIZATIO");
+						     delegator.createOrStore(billToCustRole2);
+						 } catch (GenericEntityException e) {
+							 Debug.logError(e, "Failed to Populate Invoice ", module);
+						 }
+						
+  		          		
   		          		
   		          		
   		          	}catch(GenericEntityException e){
@@ -10902,6 +10984,26 @@ public class DepotPurchaseServices{
          	  Debug.logError(e, "Failed to Populate Invoice ", module);
            }	
            
+           
+            try{
+            	 GenericValue billToCustRole1 = delegator.makeValue("InvoiceRole");
+            	 billToCustRole1.set("invoiceId", invoiceId);
+            	 billToCustRole1.set("partyId", "Company");
+            	 billToCustRole1.set("roleTypeId", "ACCOUNTING");
+                 delegator.createOrStore(billToCustRole1);
+             } catch (GenericEntityException e) {
+            	 Debug.logError(e, "Failed to Populate Invoice ", module);
+             }
+             
+             try{
+            	 GenericValue billToCustRole2 = delegator.makeValue("InvoiceRole");
+            	 billToCustRole2.set("invoiceId", invoiceId);
+            	 billToCustRole2.set("partyId", custmentPartyId);
+            	 billToCustRole2.set("roleTypeId", "INTERNAL_ORGANIZATIO");
+                 delegator.createOrStore(billToCustRole2);
+             } catch (GenericEntityException e) {
+            	 Debug.logError(e, "Failed to Populate Invoice ", module);
+             }
      		
      		
      	}catch(GenericEntityException e){
