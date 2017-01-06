@@ -160,13 +160,11 @@ input[type=button]:hover {
 	        <tr><td><br/></td></tr>
 	         <tr>
 	        <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Scheme:</td>
-	        <#if tenperValue?has_content>  
 	      		<td valign='middle'>
 	        		<div class='tabletext h3'>
-	        			10% subsidy scheme amount : ${tenperValue?if_exists}
+	        			 ${scheme?if_exists}
 	        		</div>
 	      		</td>       
-	         </#if>
 	        </tr>
 	        <tr><td><br/></td></tr>
 	        <tr>

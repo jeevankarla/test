@@ -122,9 +122,8 @@ for(partyId in partyIds){
 																							EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,thrdMnththruDate)));
 	fourthMntInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, frthMnthfromDate) ,EntityOperator.AND,
 																							 EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,frthMnththruDate)));
-	above180DaysInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate) ,EntityOperator.AND,
-																							EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,frthMnthfromDate)));
-	
+	above180DaysInvoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceAndItemsForParty, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO,frthMnthfromDate)));
+																							    //EntityCondition.makeCondition("invoiceDate",EntityOperator.GREATER_THAN_EQUAL_TO, fromDate) ,EntityOperator.AND,
 	for(invoice in firstMntInvoiceAndItemsForParty){  
 		if(UtilValidate.isNotEmpty(invoice)&& invoice.quantity && invoice.amount){
 			total = invoice.amount*invoice.quantity
