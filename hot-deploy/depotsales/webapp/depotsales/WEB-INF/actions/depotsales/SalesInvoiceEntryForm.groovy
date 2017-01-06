@@ -261,7 +261,7 @@ if(shipments){
 		//Debug.log("scheme============="+scheme);
 		
 	
-		
+		/*
 		
 		condExpr = [];
 		condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -278,7 +278,7 @@ if(shipments){
 			tenperValue = Double.valueOf(amount);
 		}
 		
-		context.tenperValue = tenperValue;
+		context.tenperValue = tenperValue;*/
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
