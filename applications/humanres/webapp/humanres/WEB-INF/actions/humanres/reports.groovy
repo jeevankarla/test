@@ -90,3 +90,8 @@ if(UtilValidate.isNotEmpty(DeptIdDetailsList)){
 	}
 }
 context.deptIdDescList = deptIdDescList;
+
+roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+roPartyList = roList.get("partyList");
+context.roPartyList = roPartyList;
+
