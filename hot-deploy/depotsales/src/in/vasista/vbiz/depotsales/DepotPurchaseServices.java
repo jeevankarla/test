@@ -453,11 +453,11 @@ public class DepotPurchaseServices{
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
 					return "error";	
 				}
-				if (paramMap.containsKey("oritemseq" + thisSuffix)) {
+				/*if (paramMap.containsKey("oritemseq" + thisSuffix)) {
 					orderItemSeqId = (String) paramMap.get("oritemseq" + thisSuffix);
 					
 					orderItemSeqIdList.add(orderItemSeqId);
-				}
+				}*/
 				
 				if (paramMap.containsKey("UPrice" + thisSuffix)) {
 				   unitPriceStr = (String) paramMap.get("UPrice" + thisSuffix);
@@ -578,7 +578,7 @@ public class DepotPurchaseServices{
 			GenericValue orderItemValue = null;
 
 			if(UtilValidate.isNotEmpty(productId)){
-				try{
+				/*try{
 					
 					List itemAssocCond1 = FastList.newInstance();
 					itemAssocCond1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -598,7 +598,7 @@ public class DepotPurchaseServices{
 					  Debug.logError(e, "Error While Updating purchase Order ", module);
 					  request.setAttribute("_ERROR_MESSAGE_", "Unable to update Purchase Order :" + orderId+"....! ");
 						return "error";
-				}
+				}*/
 				prodQtyMap.put("productId", productId);
 				prodQtyMap.put("quantity", quantity);
 				prodQtyMap.put("unitPrice", uPrice);
