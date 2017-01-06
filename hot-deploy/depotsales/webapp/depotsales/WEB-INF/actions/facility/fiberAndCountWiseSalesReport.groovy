@@ -54,7 +54,7 @@ branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo",
 if(!branchList)
 branchList.add(branchId);
 }
-Debug.log("branchName=================="+branchName);
+//Debug.log("branchName=================="+branchName);
 //Debug.log("branchList=================="+branchList);
 
 branchBasedWeaversList = [];
@@ -201,7 +201,7 @@ for(productCategoryId in productCategoryIds){
 	tempCSVMap1.put("orderValue", "");
 	finalCSVList.add(tempCSVMap1);
 	singleCatProducts = EntityUtil.filterByCondition(produtCategorieMember, EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
-	singleProductIds=EntityUtil.getFieldListFromEntityList(produtCategorieMember, "productId", true);
+	singleProductIds=EntityUtil.getFieldListFromEntityList(singleCatProducts, "productId", true);
 	
 	for(singleProductId in singleProductIds){
 		prodMap=[:];

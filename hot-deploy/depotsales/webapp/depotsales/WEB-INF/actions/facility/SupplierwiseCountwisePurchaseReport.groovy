@@ -186,7 +186,7 @@ for(productCategoryId in productCategoryIds){
 	tempCSVMap1.put("orderValue", "");
 	finalCSVList.add(tempCSVMap1);
 	singleCatProducts = EntityUtil.filterByCondition(produtCategorieMember, EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
-	singleProductIds=EntityUtil.getFieldListFromEntityList(produtCategorieMember, "productId", true);
+	singleProductIds=EntityUtil.getFieldListFromEntityList(singleCatProducts, "productId", true);
 	
 	for(singleProductId in singleProductIds){
 		prodMap=[:];
@@ -228,7 +228,7 @@ for(productCategoryId in productCategoryIds){
 				supplierDetails = EntityUtil.getFirst(delegator.findList("OrderRole", Condition, null,null,null, false));
 				if(supplierDetails){
 					supplierPartyId=supplierDetails.get("partyId");
-					Debug.log("supplierPartyId=================="+supplierPartyId);
+					//Debug.log("supplierPartyId=================="+supplierPartyId);
 				}
 				supplierpartyName="";
 				if(supplierPartyId){
