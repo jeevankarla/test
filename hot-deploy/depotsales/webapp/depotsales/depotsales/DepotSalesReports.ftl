@@ -398,6 +398,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
       		 To</br><input  type="text" size="15pt" id="salesPurchaseReportTHRU" readonly  name="partythruDate"/></td>
                       <td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId">
+				 	<option value=""></option>
 				     <#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
@@ -824,9 +825,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
                          </#list> 
   						</select></br>
-  		    			
              <span class='h3'>Branch
 				 <select name="branchId" id="branchId">
+				 <option value=""></option>
 				     <#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
@@ -857,6 +858,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			 </select></td>	 -->			
              <td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId">
+				 	<option value=""></option>
 				     <#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
