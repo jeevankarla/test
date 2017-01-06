@@ -100,7 +100,7 @@ $(document).ready(function () {
 									if(rowKey=='NHDC'){
 										rowKey='';
 									}          
-							 return '<a href="FindSupplierPO?partyId='+rowKey+'" target="_blank" >'+value+'</a>'; 
+							 return value; 
 		 				  }
 		 		  },
                   
