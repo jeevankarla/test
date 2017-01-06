@@ -1035,13 +1035,6 @@
                 	<order-by field-name="thruDate"/>
                     <order-by field-name="periodNum"/>
                 </entity-condition> 
-                <entity-condition list="orgListMain" entity-name="PartyRelationshipAndDetail">
-                	<condition-list combine="and">
-						<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
-						<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
-					</condition-list>
-					<order-by field-name="partyId"/>
-				</entity-condition>
                 <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getUserRelatedReports.groovy"/>
 	    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 	    		<set field="reportFrequencyFlag" value="LeaveReports"/>

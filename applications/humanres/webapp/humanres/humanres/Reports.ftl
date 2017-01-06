@@ -153,13 +153,19 @@ function makeDatePicker1(fromDateId ,thruDateId){
       			<td align="center">
 	   				  Organization Id :
       				<select name="partyId"  id="partyId"  onchange="javascript:setOrgPartyId();">
+      					<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session)>
       					<#list PartyGroupList as PartyList>
                 			<option value='Company'>${PartyList.groupName?if_exists}</option>
                 		</#list> 
-                		<#list orgListMain as org>
+                		<#list roPartyList as org>
                 			<option value='${org.partyId}'>${org.groupName?if_exists}</option>
                 		</#list>
-                			<option value='INT58'>Pochampally</option>           
+                		<#else>
+                			<#list roPartyList as org>
+                				<option value='${org.partyId}'>${org.groupName?if_exists}</option>
+                			</#list>
+                		</#if>
+                			<#-- <option value='INT58'>Pochampally</option> -->           
 					</select>
           		</td> 
           	</tr>      	   	      	                 
