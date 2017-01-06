@@ -771,7 +771,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
           
 		</#if>
       
-          <tr class="alternate-row">
+          <#--<tr class="alternate-row">
 			<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookReport.pdf</@ofbizUrl>" target="_blank">	
 				<td width="30%">Sale Book Report Detail</td>
 				<td width="15%">From</br><input  type="text" size="18pt" id="regularIceCreamfDate" readonly  name="fromDate"/></td>
@@ -782,7 +782,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('regularIceCreamSaleReport', '<@ofbizUrl>RegularIceCreamSaleBookReport.csv</@ofbizUrl>');" class="buttontext"/></td>        			
 				
 			</form>
-          </tr>
+          </tr>-->
         		
  		
           
@@ -878,7 +878,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				
 		</form>	
       </tr>
-      <tr class="alternate-row">
+      <#--<tr class="alternate-row">
     	<form id="stockStatement" name="stockStatement" method="post"  target="_blank" action="<@ofbizUrl>StockStatementReport.pdf</@ofbizUrl>">	
   			<td width="30%" nowrap>Stock Statement Report</td>
   			<td width="15%">From</br><input  type="text" size="18pt" id="stockFromDate" readonly  name="stockFromDate"/></td>
@@ -888,7 +888,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			<td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
 			<td width="10%"></td>
 		</form>	
-      </tr>
+      </tr>-->
       
       <tr class="alternate-row">
     	<form id="mobilehits" name="mobilehits" method="post"  target="_blank" action="<@ofbizUrl>MobileHitsReport.csv</@ofbizUrl>">	
@@ -989,7 +989,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
         	
 	</table>
 </div>
-<div class="screenlet">
+<#--<div class="screenlet">
     <div class="screenlet-title-bar">
       <h3>Store Report</h3>
     </div>
@@ -1015,11 +1015,11 @@ function makeDatePicker3(fromDateId ,thruDateId){
 							    </select>    								
 					  	 </span></td>
 						    <td width="10%"><span class='h3'><input type="submit" value="PDF" class="buttontext"></span></td>
-						</tr>
+						</tr>     
 					</table>
 				</form>
 			</tr>
        
 	</table>
    </div>
-</div>
+</div>-->
