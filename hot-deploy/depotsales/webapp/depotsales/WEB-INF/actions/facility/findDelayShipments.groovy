@@ -36,7 +36,7 @@ import org.ofbiz.service.GenericDispatcher;
 HttpServletRequest httpRequest = (HttpServletRequest) request;
 HttpServletResponse httpResponse = (HttpServletResponse) response;
 dctx = dispatcher.getDispatchContext();
-delegator = DelegatorFactory.getDelegator("default#nhdc-lan");
+delegator = DelegatorFactory.getDelegator("default#NHDC");
 List formatRList = [];
 List formatBList = [];
 List<GenericValue> partyClassificationList = null;
