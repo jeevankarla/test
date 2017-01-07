@@ -21,9 +21,39 @@ under the License.
 <script type= "text/javascript">
 	
 	$(document).ready(function(){
-		$('#spinner').hide();  
+		$('#spinner').hide(); 
+		$('#BranchFilter').hide();
+		$('#BranchFilterlabel').hide();
+		$('#RegionFilterLabel').hide();
+		$('#RegionFilter').hide();
+		$('#StateFilterLabel').show();
+		$('#StateFilter').show();
 	});
-
+    function showSearchFilter(obj){
+       	var searchType=obj.value;
+       	if(searchType=="BY_STATE"){
+       		$('#BranchFilter').hide();
+			$('#BranchFilterlabel').hide();
+			$('#RegionFilterLabel').hide();
+			$('#RegionFilter').hide();
+			$('#StateFilterLabel').show();
+			$('#StateFilter').show();
+       	}else if (searchType=="BY_RO"){
+        	$('#BranchFilter').hide();
+			$('#BranchFilterlabel').hide();
+			$('#RegionFilterLabel').show();
+			$('#RegionFilter').show();
+			$('#StateFilterLabel').hide();
+			$('#StateFilter').hide();      		
+       	}else{
+       		$('#BranchFilter').show();
+			$('#BranchFilterlabel').show();
+			$('#RegionFilterLabel').hide();
+			$('#RegionFilter').hide();
+			$('#StateFilterLabel').hide();
+			$('#StateFilter').hide();       		
+       	}
+    }	
 	function callSpinner()
 	{
 		var branch=$("#branchId").val();
@@ -41,23 +71,68 @@ under the License.
     <div id="findPartyParameters"  >
       <form method="post" name="findDelayShipments" id="findDelayShipments" action="<@ofbizUrl>findDelayShipments</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
-          <tr>     
-          		  <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Branch</td>
-	              <td>
-					 <select name="branchId2" id="branchId">
-	              <#if branchIdName?has_content>
-		 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
- 	              </#if>
-				  <#if !branchIdName?has_content>
-						 <option value=''>Select Branch</option>
-				  </#if>
-			      <#list  formatList as formatList>
-					<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
-				 </#list> 
-				  </select>  
-				  <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
-				  <input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/>
-				  </td>
+        <tr>
+        	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search By</td> 
+        	 <td>
+      		 	 <select name="searchType" id="searchType" onchange="javascript:showSearchFilter(this);">
+					<option value='BY_STATE'>By State</option>
+					<option value='BY_BO'>By Branch Office</option>
+					<option value='BY_RO'>By Regional Office</option>
+			  </select> 
+      		 </td>
+        </tr>
+          <tr>    
+  			  <div>
+  				  <td id="BranchFilterlabel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Branch</td>
+	              <td id="BranchFilter">
+					  <select name="branchId2" id="branchId">
+		              <#if branchIdName?has_content>
+			 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
+	 	              </#if>
+					  <#if !branchIdName?has_content>
+							 <option value=''>Select Branch</option>
+					  </#if>
+				      <#list  formatBList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+					 </select>
+				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+		  		   </td>
+  		       </div>
+  		       <div >
+  				  <td id="RegionFilterLabel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Regional Office</td>
+	              <td id="RegionFilter">
+					  <select name="regionId" id="regionId">
+		              <#if regionIdName?has_content>
+			 	             <option value='${regionId?if_exists}'>${regionIdName?if_exists}</option> 
+	 	              </#if>
+					  <#if !regionIdName?has_content>
+							 <option value=''>Select Region</option>
+					  </#if>
+				      <#list  formatRList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+					 </select>
+				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+		  		   </td>
+  		       </div>
+  		       <div>
+  				  <td id="StateFilterLabel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;State</td>
+	              <td id="StateFilter">
+					  <select name="stateId" id="stateId">
+		              <#if stateIdName?has_content>
+			 	             <option value='${stateId?if_exists}'>${stateIdName?if_exists}</option> 
+	 	              </#if>
+					  <#if !stateIdName?has_content>
+							 <option value=''>Select State</option>
+					  </#if>
+				       <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					  </#list> 
+					 </select>
+				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+		  		   </td>
+  		       </div>
 		  </tr> 
 		 
           <tr>
@@ -66,7 +141,7 @@ under the License.
       		 <td>
       		 	 <select name="period" id="period">
       		 	    <#if period?has_content>
-      		 	    	<option value='${period}'>${periodName}</option>
+      		 	    	<option value='${period?if_exists}'>${periodName?if_exists}</option>
       		 	    </#if>
 					<option value='One_Month'>Last One Month</option>
 					<option value='Two_Month'>Last Two Months</option>
@@ -77,7 +152,9 @@ under the License.
 		  </tr>
           <tr>
           	    
-				<td width="10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Search" class="buttontext" onClick="javascript:callSpinner();"/> </td>
+				<td width="10%"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Search" class="buttontext" onClick="javascript:callSpinner();"/> 
+				<input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/>
+				</td>
 		  </tr>
 		  
       </table>
