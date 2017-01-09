@@ -100,7 +100,7 @@ under the License.
 		  		   </td>
   		       </div>
   		       <div >
-  				  <td id="RegionFilterLabel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Regional Office</td>
+  				  <td id="RegionFilterLabel">&nbsp;&nbsp;&nbsp;Regional Office</td>
 	              <td id="RegionFilter">
 					  <select name="regionId" id="regionId">
 		              <#if regionIdName?has_content>

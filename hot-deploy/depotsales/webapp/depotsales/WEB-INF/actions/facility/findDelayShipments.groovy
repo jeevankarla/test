@@ -1,35 +1,50 @@
 import org.ofbiz.base.util.*;
-import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+
 import javolution.util.FastMap;
+
 import java.sql.Timestamp;
+
 import org.ofbiz.base.util.UtilDateTime;
+
 import java.text.SimpleDateFormat;
+
 import org.ofbiz.party.party.PartyHelper;
+
 import java.text.ParseException;
+
 import org.ofbiz.service.ServiceUtil;
+
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
+
 import org.ofbiz.product.product.ProductWorker;
+
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
+
 import java.io.ObjectOutputStream.DebugTraceInfoStack;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import javolution.util.FastList;
+
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.util.EntityUtil;
+
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
+
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.service.GenericDispatcher;
 
@@ -99,14 +114,43 @@ if("Y".equals(isFormSubmitted)){
 		GenericValue state=delegator.findOne("Geo",[geoId:stateId],false);
 		context.stateId=stateId;
 		context.stateIdName=state.geoName;
-		result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",stateId,"userLogin",userLogin));
-		stateBranchsList=result.get("stateBranchsList");
-		stateRosList=result.get("stateRosList");
-		stateBranchsList.each{ eachState ->
-			branchIds.add(eachState.partyId);
-		}
-		stateRosList.each{ eachState ->
-			branchIds.add(eachState.partyId);
+		roIdsList=[];
+		branchIdsList=[];
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, stateId));
+		conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.LIKE, "INT%"));
+		stateWiseRosAndBranchList = delegator.findList("PartyContactDetailByPurpose", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		if(UtilValidate.isNotEmpty(stateWiseRosAndBranchList)){
+			List roAndBranchIds = EntityUtil.getFieldListFromEntityList(stateWiseRosAndBranchList, "partyId", true);
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roAndBranchIds));
+			conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "BRANCH_OFFICE"));
+			List<GenericValue> partyClassicationForBranch= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(partyClassicationForBranch)){
+				 branchIdsList = EntityUtil.getFieldListFromEntityList(partyClassicationForBranch, "partyId", true);
+			}
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roAndBranchIds));
+			conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"));
+			List<GenericValue> partyClassicationForRo= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(partyClassicationForRo)){
+				roIdsList = EntityUtil.getFieldListFromEntityList(partyClassicationForRo, "partyId", true);
+			}
+			List<GenericValue> partyGroupRo=null;
+			List<GenericValue> partyGroupBranch=null;
+			if(UtilValidate.isNotEmpty(roIdsList)){
+				stateRosList = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, roIdsList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+				stateRosList.each{ eachState ->
+					branchIds.add(eachState.partyId);
+				}
+			}
+			if(UtilValidate.isNotEmpty(branchIdsList)){
+				stateBranchsList = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, branchIdsList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+				stateBranchsList.each{ eachState ->
+					branchIds.add(eachState.partyId);
+				}
+			}
 		}
 	}
 	dayend =UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
@@ -211,6 +255,7 @@ if("Y".equals(isFormSubmitted)){
 							  newObj.put("shipedQty",shipedQty)
 							  newObj.put("ordQty",ordQty)
 							  newObj.put("diffDays",(int)diffDays)
+							  newObj.put("noOfShipments",Shipment.size())
 							  totordQty=totordQty+ordQty;
 							  totShipQty=totShipQty+shipedQty;
 							  totDelayDays=totDelayDays+diffDays;
@@ -233,12 +278,12 @@ if("Y".equals(isFormSubmitted)){
 						for(eachRecord in orderHeaderAndRole2){
 							ordQty=ordQty+eachRecord.quantity;
 						}
-						newObj.put("diffDays",(int)diffDays+1)
+						newObj.put("diffDays",(int)diffDays)
 						newObj.put("supplierName",supplierName)
 						newObj.put("shipedQty","-")
 						newObj.put("ordQty",ordQty)
 						totordQty=totordQty+ordQty;
-						totDelayDays=totDelayDays+diffDays;
+						totDelayDays=totDelayDays+(int)diffDays;
 						dataList.add(newObj);
 						orderIds.add(eachList.orderId)
 					  }
@@ -247,7 +292,7 @@ if("Y".equals(isFormSubmitted)){
 		}
 		if(totordQty > 0){
 			totNewObj.put("orderId","Total")
-			totNewObj.put("diffDays",(int)totDelayDays+1)
+			totNewObj.put("diffDays",totDelayDays)
 			totNewObj.put("shipedQty",totShipQty)
 			totNewObj.put("ordQty",totordQty)
 			dataList.add(totNewObj);
