@@ -69,7 +69,19 @@ var passGreater = $("#passGreater").val();
 
 var effectiveDate = $("#effectiveDate1").val();
 
+var effDate=effectiveDate.toString();
+var effYear=effectiveDate.substring(0,4);
 
+
+var effMonth=effectiveDate.substring(5,7);
+var effYear1=parseInt(effYear);
+var effMonth1=parseInt(effMonth);
+
+var currentDate= new Date();
+var currentYear=currentDate.getFullYear();
+var currentMonth=currentDate.getMonth()+1;
+//alert("effMonth"+effMonth1);
+//alert("currentMonth"+currentMonth);
 
 var displayedIndent = 0;
 var uniqueOrderIdsList = [];
@@ -77,6 +89,11 @@ var orderData;
 var domOrderIds = "";
 var low = 0, high = 50;
 $(document).ready(function() {
+if(effMonth1!=currentMonth && effYear1!=currentYear){
+    //alert("balance quota lapses after passage of that month");
+    $("#display").html("BALANCE QUOTA LAPSES AFTER PASSAGE OF THAT MONTH");
+    
+}
    $(window).scroll(function() {
          var came = "";
     	 if ($(window).scrollTop() >= ($(document).height() - $(window).height())*0.99){
@@ -85,7 +102,7 @@ $(document).ready(function() {
            if(came != "YES")
            recursively_ajax();    
            came = "YES";
-    	}
+    	}    	
 });
 
 
@@ -201,7 +218,10 @@ function blinker() {
     $('div#blink').show();
     $('.blink_me').fadeOut(500);
     $('.blink_me').fadeIn(500);
+    
 } 
+
+
 
 
 function drawTable(data) {
@@ -355,6 +375,7 @@ function drawRow(rowData) {
  
  <div id = "firstDiv" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
      <font color="blue">Search In Displaying Weavers:</font><input type="text"  style="border-radius: 5px;" class="light-table-filter" data-table="basic-table" placeholder="Filter by any">
+        <font color="red"><b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<label  align="center" id="display" class="blink" style="color: red" ></label></b></font>
         <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Weavers : <label  align="center" id="totIndents"style="color: blue" ></label>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <#--Displayed Weavers : <label  align="center" id="displayedIndent"style="color: blue" ></label>--> </div>
 
   <form name="listOrders" id="listOrders"   method="post" >
