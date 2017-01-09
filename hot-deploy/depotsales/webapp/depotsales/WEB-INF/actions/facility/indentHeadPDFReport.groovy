@@ -653,6 +653,9 @@ if(invoice){
 					tempMap.put("invoiceId", eachItem.invoiceId);
 				}
 
+				
+				tempMap.put("actualSaleInvoiceId", eachItem.invoiceId);
+				
 				tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd-MM-yyyy"));
 
 				//  invoAmt = invoAmt+(eachItem.amount*eachItem.quantity);
@@ -991,6 +994,8 @@ if(invoice){
 					poInvoiceItemSeqId  = POrderItemBilling[0].invoiceItemSeqId;
 				}
 
+				
+				tempMap.put("actualPurInvoiceId", poInvoiceId);
 
 				////Debug.log("poInvoiceId============="+poInvoiceId);
 				////Debug.log("poInvoiceItemSeqId============="+poInvoiceItemSeqId);
@@ -1090,6 +1095,8 @@ if(invoice){
 
 					lrNumber = shipmentList.get("lrNumber");
 
+					tempMap.put("shipmentId", shipmentId);
+					
 					if(lrNumber)
 						tempMap.put("lrNumber", lrNumber);
 					else
@@ -2171,10 +2178,12 @@ if(invoice){
 
 					estimatedShipCost = shipmentList.get("estimatedShipCost");
 
-					if(estimatedShipCost && dontRepeat.size() == 1)
+					/*if(estimatedShipCost && dontRepeat.size() == 1)
 						tempMap.put("freight", estimatedShipCost);
 					else
-						tempMap.put("freight", "");
+						tempMap.put("freight", "");*/
+					
+					tempMap.put("freight", "");
 
 					estimatedShipCost = shipmentList.get("estimatedShipCost");
 
