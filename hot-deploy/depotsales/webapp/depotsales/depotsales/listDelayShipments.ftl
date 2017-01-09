@@ -32,28 +32,41 @@ under the License.
   <form name="listOrders" id="listOrders"  method="post" >
    
     <table class="basic-table hover-bar" cellspacing="0">
-      <thead>
-        <tr class="header-row-2">
-          <td align="center">OrderId</td>
-          <td align="center">order Date</td>
-          <td align="center">Order Qty(Kgs)</td>
-          <td align="center">Supplier Name</td>
-          <td align="center">Delivery  Date</td>
-          <td align="center">Delivered Qty(Kgs)</td>
-          <td align="center">Delivery Delayed</td>
-        </tr>
-      </thead>
       <tbody>
+        <tr class="alternate-row" style="color:black; font-stlye:bold; font-size:12px; background-color:grey;">
+          <td align="center"><b>OrderId&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
+          <td align="center"><b>order Date</b></td>
+          <td align="right"><b>Order Qty(Kgs)</b></td>
+          <td align="left"><b>&nbsp;&nbsp;&nbsp;&nbsp;Supplier Name</b></td>
+          <td align="center"><b>Delivery  Date</b></td>
+          <td align="right"><b>No of Shipments</b></td>
+          <td align="right"><b>Delivered Qty(Kgs)</b></td>
+          <td align="right"><b>Delivery Delayed</b></td>
+        </tr>
+     
+     
       <#assign alt_row = false>
+      <#assign records=0>
       <#list dataList as eachOrder>
-      		<tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-            	<td><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.orderId?if_exists} <#if eachOrder.orderId=="Total"></font></b></#if></td>
-              	<td><#if eachOrder.orderId=="Total"> <font color="Blue"> <b></#if>${eachOrder.orderDate?if_exists}<#if eachOrder.orderId=="Total"></font></b></#if></td>
-              	<td><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.ordQty?if_exists}<#if eachOrder.orderId=="Total"></b></font></#if></td>
-              	<td><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.supplierName?if_exists}<#if eachOrder.orderId=="Total"></font></b></#if></td>
-              	<td><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.shipDate?if_exists}<#if eachOrder.orderId=="Total"></b></font></#if></td>
+      		<tr valign="middle"<#if alt_row> class="alternate-row"</#if> style="font-size:12px; color:black;">
+      		     <#if eachOrder.orderId!="Total">
+      		     	<#assign records=records+1>
+      		     </#if>
+            	<td><#if eachOrder.orderId=="Total"> <font color="Blue"> <b></#if>${eachOrder.orderId?if_exists} <#if eachOrder.orderId=="Total"></font></b></#if></td>
+              	<td align="center"><#if eachOrder.orderId=="Total"> <font color="Blue"> <b></#if>${eachOrder.orderDate?if_exists}<#if eachOrder.orderId=="Total"></font></b></#if></td>
+              	<td align="right"><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.ordQty?if_exists}<#if eachOrder.orderId=="Total"></b></font></#if></td>
+              	<td><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>&nbsp;&nbsp;&nbsp;&nbsp;${eachOrder.supplierName?if_exists}<#if eachOrder.orderId=="Total"></font></b></#if></td>
+              	<td align="center"><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.shipDate?if_exists}<#if eachOrder.orderId=="Total"></b></font></#if></td>
+              	<td align="right"><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.noOfShipments?if_exists}<#if eachOrder.orderId=="Total"></b></font></#if></td>
               	<td align="right"><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.shipedQty?if_exists}<#if eachOrder.orderId=="Total"></b></font></#if></td>
-              	<td align="right"><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.diffDays?if_exists} Days<#if eachOrder.orderId=="Total"></b></font></#if></td>
+              	
+              	<#if eachOrder.orderId=="Total">
+              		<#assign diffDays=eachOrder.diffDays/records>
+              		<#assign records=0>
+              	<#else>
+              		<#assign diffDays=eachOrder.diffDays>
+              	</#if>
+              	<td align="right"><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${diffDays?if_exists?string("##0")} Days<#if eachOrder.orderId=="Total"></b></font></#if></td>
             </tr>
             <#assign alt_row = !alt_row>
         </#list>
