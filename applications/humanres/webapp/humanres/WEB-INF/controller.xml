@@ -65,7 +65,11 @@ under the License.
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    
+     <request-map uri="checkEmployeeExistance">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://humanres/webapp/humanres/WEB-INF/actions/humanres/" invoke="checkEmployeeExistance.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
     <request-map uri="getPartyDeductionAmount">
         <security auth="true" https="true"/>    
         <event type="service" invoke="getPartyDeductionAmount"/>
@@ -2976,7 +2980,7 @@ under the License.
     <view-map name="EmployeeMisPunchData" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeMisPunchData" content-type="application/pdf" encoding="none"/>
     <view-map name="EmployeesLOPdays" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeesLOPdays" content-type="application/pdf" encoding="none"/>
     <view-map name="CanteenReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#CanteenReport" content-type="application/pdf" encoding="none"/>
-    <view-map name="DeductionsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#DeductionsReport" content-type="text/plain" encoding="none"/>
+    <view-map name="DeductionsReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#DeductionsReport" content-type="application/pdf" encoding="none"/>
     <view-map name="BenefitReport" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#BenefitReport" content-type="text/plain" encoding="none"/>
     <view-map name="EmployeePunchData" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeePunchData" content-type="application/pdf" encoding="none"/>
 	<view-map name="DayWiseEditedLateHoursReport" type="screenfop" page="component://humanres/widget/EmployeeScreens.xml#DayWiseEditedLateHoursReport" content-type="application/pdf" encoding="none"/>

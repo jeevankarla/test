@@ -1498,7 +1498,7 @@
     </field>
     </form>
     <form name="createEmployee" type="single" header-row-style="header-row" default-table-style="basic-table"  target="createEmployeeMaster">
-    	<field name="employeeId" parameter-name="employeeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+    	<field name="employeeId" id-name = "employeeId" parameter-name="employeeId" event="onkeyup" action="javascript:checkPartyExistance(this);" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" ><text></text></field>
     	<!-- <field name="LastEmplCode" title="Last Empl Code"><display></display></field> -->
     	<field name="partyId" parameter-name="partyIdFrom" title="Place of posting" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="false">

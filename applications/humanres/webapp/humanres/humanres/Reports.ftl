@@ -1136,7 +1136,7 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>
-					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("DeductionsReport.txt")?exists) && (reportDetailsMap.get("DeductionsReport.txt") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("DeductionsReport.txt"))?exists))> 
+				<#--	<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("DeductionsReport.txt")?exists) && (reportDetailsMap.get("DeductionsReport.txt") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("DeductionsReport.txt"))?exists))> 
 						<tr class="alternate-row">
 							<form id="DeductionsReport" name="DeductionsReport" mothed="post" action="<@ofbizUrl>DeductionsReport.txt</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="0">
@@ -1199,7 +1199,7 @@ function setOrgPartyId() {
 								</table>
 							</form>
 						</tr>
-					</#if>
+					</#if> -->
 					<#-- <#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("ProfessionalTaxReport.pdf")?exists) && (reportDetailsMap.get("ProfessionalTaxReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("ProfessionalTaxReport.pdf"))?exists))> 
 					 <tr class="alternate-row">
 						<form id="ProfessionalTaxReport" name="ProfessionalTaxReport" mothed="post" action="<@ofbizUrl>ProfessionalTaxReport.pdf</@ofbizUrl" target="_blank">
