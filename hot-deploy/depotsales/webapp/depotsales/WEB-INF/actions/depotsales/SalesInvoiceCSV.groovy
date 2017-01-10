@@ -66,6 +66,7 @@ while ((eachInvoice = invoiceListItr.next()) != null) {
 			}
 		}
 	}
+	GenericValue shipment =  delegator.findOne("Shipment", [shipmentId : eachInvoice.shipmentId], false);
 	//checking for tally ref no in order
 	if(UtilValidate.isEmpty(tallyRefNo)){
 		List orderItemBilling = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId) , null, null, null, false );
@@ -89,6 +90,10 @@ while ((eachInvoice = invoiceListItr.next()) != null) {
 	invoiceDetailMap.put("partyIdFrom",eachInvoice.partyIdFrom);
 	invoiceDetailMap.put("partyId",eachInvoice.partyId);
 	invoiceDetailMap.put("tallyRefNo",tallyRefNo);
+	invoiceDetailMap.put("shipmentId",eachInvoice.shipmentId);
+	if(UtilValidate.isNotEmpty(shipment)){
+		invoiceDetailMap.put("frightCharges",shipment.estimatedShipCost);
+	}
 	//invoiceDetailMap.put("referenceNumber",eachInvoice.referenceNumber);
 	quantity = 0;
 	List invoiceItems = delegator.findByAnd("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId,"invoiceItemTypeId","INV_FPROD_ITEM"));

@@ -3107,6 +3107,7 @@
 															from-field="parameters.invoiceTypeId" />
 														<parameter param-name="statusId" from-field="parameters.statusId" />
 														<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom" />
+														<parameter param-name="shipmentId" from-field="parameters.shipmentId" />
 														<parameter param-name="partyId" from-field="parameters.partyId" />
 														<parameter param-name="invoiceDate_fld0_value"
 															from-field="parameters.invoiceDate_fld0_value" />
