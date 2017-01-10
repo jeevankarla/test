@@ -11945,9 +11945,6 @@ public class DepotPurchaseServices{
 				    	 }
 						 
 						 
-						 
-						 
-						 
 						}
 						
 						if(UtilValidate.isNotEmpty(purchaseInvoiceId)){
@@ -11965,6 +11962,7 @@ public class DepotPurchaseServices{
 							   if(UtilValidate.isNotEmpty(purcahseIn)){
 									 try{		
 										 purcahseIn.set("amount", givenQuantity);
+										 purcahseIn.set("unitPrice", givenQuantity);
 										 purcahseIn.store();
 									}catch(Exception e1){
 						            	Debug.log("Problem in sending OrderItem");
