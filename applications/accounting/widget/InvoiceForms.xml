@@ -959,6 +959,8 @@ under the License.
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}"><display description="${partyNameResultFrom.fullName} [${partyIdFrom}]"/></field>
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}"><display description="${partyNameResultTo.fullName} [${partyId}]"/></field>
         <field name="amount"><display/></field>
+        <field name="shipmentId" title="Shipment Id"><display/></field>
+        <field name="frightCharges" title="Fright Charges"><display/></field>
         <field name="paidAmount"><display/></field>
         <field name="outstandingAmount"><display/></field>
         <field name="tallyRefNo"><display/></field>
