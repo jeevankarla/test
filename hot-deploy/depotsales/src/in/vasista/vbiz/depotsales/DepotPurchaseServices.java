@@ -11302,7 +11302,354 @@ public class DepotPurchaseServices{
 	        
 			return result;
 	    
-	    }    
+	    } 
+  	  
+  	  
+  	 public static Map<String, Object> quantityOverrideService(DispatchContext ctx, Map context) {
+	    	Delegator delegator = ctx.getDelegator();
+			LocalDispatcher dispatcher = ctx.getDispatcher();
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			Map result = ServiceUtil.returnSuccess();
+			
+			String orderId = (String) context.get("orderId");
+			String orderItemSeqId = (String) context.get("orderItemSeqId");
+			BigDecimal givenQuantity = (BigDecimal) context.get("quantity");
+			String shipmentId = (String) context.get("shipmentId");
+			
+			
+			
+			List conList1 = FastList.newInstance();
+			
+			List<GenericValue> OrderItem =null;
+			List<GenericValue> OrderItemDetail =null;
+			try {
+			
+			conList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
+			conList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,orderItemSeqId));
+  		    EntityCondition cond1=EntityCondition.makeCondition(conList1,EntityOperator.AND);
+			OrderItem = delegator.findList("OrderItem", cond1, null, null, null, false);
+			
+			}catch(Exception e1){
+         	Debug.log("Problem in sending OrderItem");
+	        }
+			
+			GenericValue OrderItem1 = EntityUtil.getFirst(OrderItem);
+			
+			
+			if(UtilValidate.isNotEmpty(givenQuantity)){
+			
+				
+				try{
+					conList1.clear();
+					conList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
+					conList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,orderItemSeqId));
+		     		EntityCondition cond2=EntityCondition.makeCondition(conList1,EntityOperator.AND);
+		     		OrderItemDetail = delegator.findList("OrderItemDetail", cond2, null, null, null, false);
+					}catch(Exception e1){
+		            	Debug.log("Problem in sending OrderItem");
+			        }
+					
+		     		GenericValue OrderItemDetail1 = EntityUtil.getFirst(OrderItemDetail);
+					 
+					if(UtilValidate.isNotEmpty(OrderItem1)){
+						
+					 try {
+						 OrderItem1.set("quantity", givenQuantity);
+						 OrderItem1.store();
+					 }catch(Exception e1){
+			            	Debug.log("Problem in sending OrderItem");
+				        }
+					 
+					 
+					}
+					
+					if(UtilValidate.isNotEmpty(OrderItemDetail1)){
+					 try{		
+							 OrderItemDetail1.set("quantity", givenQuantity);
+							 OrderItemDetail1.store();
+					}catch(Exception e1){
+		            	Debug.log("Problem in sending OrderItem");
+			        }
+						 
+					}
+				
+				//=============================PO===========================//
+					String POOrderId =null;	
+				try{		
+				   List condList= FastList.newInstance();;
+				   condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
+				   EntityCondition condExpress = EntityCondition.makeCondition(condList, EntityOperator.AND);
+				   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
+				POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
+				
+				}catch(Exception e1){
+					Debug.log("Problem in sending OrderItem");
+				}
+			   
+				//Debug.log("POOrderId================="+POOrderId);
+				
+				List<GenericValue> poOrderItem =null;
+				List<GenericValue> poOrderItemDetail =null;
+				
+				try {
+				conList1.clear();	
+				conList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,POOrderId));
+				conList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,orderItemSeqId));
+				EntityCondition cond2=EntityCondition.makeCondition(conList1,EntityOperator.AND);
+				poOrderItem = delegator.findList("OrderItem", cond2, null, null, null, false);
+				
+				}catch(Exception e1){
+				Debug.log("Problem in sending OrderItem");
+				}
+				
+				GenericValue poOrderItem1 = EntityUtil.getFirst(poOrderItem);
+				
+				try{
+					conList1.clear();
+					conList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,POOrderId));
+					conList1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,orderItemSeqId));
+		     		EntityCondition cond2=EntityCondition.makeCondition(conList1,EntityOperator.AND);
+		     		poOrderItemDetail = delegator.findList("OrderItemDetail", cond2, null, null, null, false);
+					}catch(Exception e1){
+		            	Debug.log("Problem in sending OrderItem");
+			        }
+					
+		     		GenericValue poOrderItemDetail1 = EntityUtil.getFirst(poOrderItemDetail);
+		     		
+		     		
+		     		if(UtilValidate.isNotEmpty(poOrderItem1)){
+						
+						 try {
+							 poOrderItem1.set("quantity", givenQuantity);
+							 poOrderItem1.store();
+						 }catch(Exception e1){
+				            	Debug.log("Problem in sending OrderItem");
+					        }
+						 
+						 
+						}
+						
+						if(UtilValidate.isNotEmpty(poOrderItemDetail1)){
+						 try{		
+							 poOrderItemDetail1.set("quantity", givenQuantity);
+							 poOrderItemDetail1.store();
+						}catch(Exception e1){
+			            	Debug.log("Problem in sending OrderItem");
+				        }
+							 
+						}
+
+			
+						
+						 try {
+				        	 Map<String, Object> updateShipmentCtx = FastMap.newInstance();
+				        	 updateShipmentCtx.put("userLogin", context.get("userLogin"));
+				        	 updateShipmentCtx.put("shipmentId", shipmentId);
+				        	 updateShipmentCtx.put("shipmentItemSeqId","00001");   
+				        	 updateShipmentCtx.put("quantity",givenQuantity);
+				             dispatcher.runSync("updateShipmentItem", updateShipmentCtx);
+				        }
+				        catch (GenericServiceException e) {
+				    		Debug.logError(e, "Failed to update shipment status " + shipmentId, module);
+				    		return ServiceUtil.returnError("Failed to update shipment status " + shipmentId + ": " + e);          	
+				        }
+						 List conditionList = FastList.newInstance();
+						 List<GenericValue> ShipmentReceipt =null;
+						 try{ 
+								conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, POOrderId));
+								conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+								conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+								conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_REJECTED"));
+								EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+								ShipmentReceipt = delegator.findList("ShipmentReceipt", condExpr, null, null, null, false);
+								
+								GenericValue ShipmentReceiptFirst = EntityUtil.getFirst(ShipmentReceipt);
+								
+								if(UtilValidate.isEmpty(ShipmentReceiptFirst)){
+									Debug.logError("GRN not found for the shipment: "+orderId, module);
+									return ServiceUtil.returnError("GRN not found for the shipment: "+orderId);
+								}
+								
+								ShipmentReceiptFirst.set("quantityAccepted", givenQuantity);
+								ShipmentReceiptFirst.set("deliveryChallanQty", givenQuantity);
+								ShipmentReceiptFirst.store();
+								
+					        }catch(Exception e1){
+				            	Debug.log("Problem in sending email");
+					        } 
+						 
+						 //==============================invoices===========================
+						 
+						String saleInvoiceId = null; 
+						try{ 
+					    conditionList.clear();
+						conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+						conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED", "INVOICE_WRITEOFF")));
+						conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+						EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+						List<GenericValue> Saleinvoices = delegator.findList("Invoice", condition, null, null, null, false);
+						GenericValue Saleinvoice = EntityUtil.getFirst(Saleinvoices);
+						saleInvoiceId = Saleinvoice.getString("invoiceId");
+						
+						}catch(Exception e1){
+			            	Debug.log("Problem in sending email");
+				        } 
+						
+						String purchaseInvoiceId = null; 
+						
+						try{ 
+						    conditionList.clear();
+							conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+							conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("INVOICE_CANCELLED", "INVOICE_WRITEOFF")));
+							conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+							EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+							List<GenericValue> purchaseinvoices = delegator.findList("Invoice", condition, null, null, null, false);
+							GenericValue purchaseinvoice = EntityUtil.getFirst(purchaseinvoices);
+							purchaseInvoiceId = purchaseinvoice.getString("invoiceId");
+							
+							}catch(Exception e1){
+				            	Debug.log("Problem in sending email");
+					        } 
+						
+						if(UtilValidate.isNotEmpty(saleInvoiceId)){
+						 List<GenericValue> saleInvoiceItem = null;
+							
+						 conditionList.clear();
+						conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, saleInvoiceId));
+					    conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+						 try{
+						   saleInvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+						 
+						   GenericValue saleInvoiceI = EntityUtil.getFirst(saleInvoiceItem);
+						   
+						   
+						   if(UtilValidate.isNotEmpty(saleInvoiceI)){
+								 try{		
+									 saleInvoiceI.set("quantity", givenQuantity);
+									 saleInvoiceI.store();
+								}catch(Exception e1){
+					            	Debug.log("Problem in sending OrderItem");
+						        }
+									 
+								}
+						   
+						 }catch(GenericEntityException e){
+								Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+						}
+						 
+						 
+						 if(UtilValidate.isNotEmpty(saleInvoiceItem)){
+				        	 
+				    		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+				    		 
+				        	for(GenericValue eachInvoiceItem : saleInvoiceItem){
+				        	
+				        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+				        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
+				        		BigDecimal itemValue = quantity.multiply(amount);
+				        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+				        		
+				        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+				        		
+				        		eachInvoiceItem.set("itemValue",roundedAmount);
+				        		
+				        		try{
+				        		eachInvoiceItem.store();
+				        		}catch(GenericEntityException e){
+				        			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+				        		}
+				        	}
+				        	
+				        	try{
+				        		
+				        		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",saleInvoiceId),false);	
+				        		
+				        	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+				        	InvoiceHeader.store();
+				        	}catch(GenericEntityException e){
+				    			Debug.logError(e, "Failed to Populate Invoice ", module);
+				    		}
+				        	
+				    	 }
+						 
+						 
+						 
+						 
+						 
+						}
+						
+						if(UtilValidate.isNotEmpty(purchaseInvoiceId)){
+							 List<GenericValue> purcahseInvoiceItem = null;
+								
+							 conditionList.clear();
+							conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purchaseInvoiceId));
+						    conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_RAWPROD_ITEM"));
+							 try{
+								 purcahseInvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+							 
+							   GenericValue purcahseIn = EntityUtil.getFirst(purcahseInvoiceItem);
+							   
+							   
+							   if(UtilValidate.isNotEmpty(purcahseIn)){
+									 try{		
+										 purcahseIn.set("quantity", givenQuantity);
+										 purcahseIn.store();
+									}catch(Exception e1){
+						            	Debug.log("Problem in sending OrderItem");
+							        }
+										 
+									}
+							   
+							 }catch(GenericEntityException e){
+									Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+							}
+				
+						
+							 if(UtilValidate.isNotEmpty(purcahseInvoiceItem)){
+					        	 
+					    		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+					    		 
+					        	for(GenericValue eachInvoiceItem : purcahseInvoiceItem){
+					        	
+					        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+					        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
+					        		BigDecimal itemValue = quantity.multiply(amount);
+					        		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+					        		
+					        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+					        		
+					        		eachInvoiceItem.set("itemValue",roundedAmount);
+					        		
+					        		try{
+					        		eachInvoiceItem.store();
+					        		}catch(GenericEntityException e){
+					        			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+					        		}
+					        	}
+					        	
+					        	try{
+					        		
+					        		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",purchaseInvoiceId),false);	
+					        		
+					        	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+					        	InvoiceHeader.store();
+					        	}catch(GenericEntityException e){
+					    			Debug.logError(e, "Failed to Populate Invoice ", module);
+					    		}
+					        	
+					    	 }		 
+						
+						
+					
+							 
+							 
+							 
+							 
+							}
+			}
+			return result;
+	    
+	    } 
   	    
   	    
   		

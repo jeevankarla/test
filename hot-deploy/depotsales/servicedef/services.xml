@@ -233,6 +233,14 @@
         <attribute name="differenceQuantity" mode="IN" type="BigDecimal" optional="false"/>
     </service>
     
+     <service name="quantityOverrideService" engine="java"
+            location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="quantityOverrideService" auth="false">
+        <description>sendPurchaseOrderEmailToParty  </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
     
 	<service name="getCustomerBranch" engine="java"
                 location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getCustomerBranch" auth="false">
