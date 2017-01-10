@@ -781,7 +781,7 @@
      <!--   <field name="height" title="${uiLabelMap.Height}"><display/></field>
 		<field name="weight" title="${uiLabelMap.Weight}"><display/></field>-->
         <field name="emergencyContactName" title="${uiLabelMap.EmergencyContactName}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyName}"></display-entity></field>
-        <field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><display description="${emergencyContactNumber}"></display></field>       
+        <field name="emergencyContactNumber" title="${uiLabelMap.EmergencyContactNumber}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${emergencyContactNumber}"></display-entity><!-- <display description="${emergencyContactNumber}"></display> --></field>       
         <field name="emergencyContactRelationship" title="${uiLabelMap.EmergencyContactRelationship}"><display-entity entity-name="PartyRelationshipType" key-field-name="partyRelationshipTypeId" description="${description}" /></field>
        <!--  <field name="panId" title="${uiLabelMap.Pan}"><display-entity entity-name="Person" key-field-name="partyId" description="${panId}" ></display-entity></field>
         <field name="typeOfInsurance" title="${uiLabelMap.InsuranceType}"><display-entity entity-name="EmployeeDetail" key-field-name="partyId" description="${typeOfInsurance}"></display-entity></field>-->

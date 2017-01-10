@@ -1812,7 +1812,7 @@
         <field name="periodTypeId" event="onchange" action="javascript:dateFormatType();">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PeriodType" description="${description}" >
-						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH" operator="in"></entity-constraint>
+						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH,HR_YEAR" operator="in"></entity-constraint>
                     <entity-order-by field-name="description"/>
                 </entity-options >
             </drop-down>
@@ -1842,7 +1842,7 @@
         <field name="periodTypeId" event="onchange" action="javascript:dateFormatType();">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PeriodType" description="${description}" >
-						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH" operator="in"></entity-constraint>
+						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH,HR_YEAR" operator="in"></entity-constraint>
                     <entity-order-by field-name="description"/>
                 </entity-options >
             </drop-down>

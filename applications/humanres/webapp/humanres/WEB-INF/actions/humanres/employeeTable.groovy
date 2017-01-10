@@ -13,7 +13,7 @@ def populateChildren(org, employeeList) {
 		populateChildren(internalOrg, employeeList);
 	}
 	if(UtilValidate.isNotEmpty(flag) && flag.equals("true")){
-		employments = EntityUtil.filterByDate(delegator.findByAnd("EmploymentAndPerson", [partyIdFrom : org.partyId, roleTypeIdTo : "EMPLOYEE"],["firstName"]));
+		employments = delegator.findByAnd("EmploymentAndPerson", [partyIdFrom : org.partyId, roleTypeIdTo : "EMPLOYEE"],["firstName"]);
 	}else{
 		employments = EntityUtil.filterByDate(delegator.findByAnd("EmploymentAndPerson", [partyIdFrom : org.partyId, roleTypeIdTo : "EMPLOYEE"],["firstName"]));
 	}
