@@ -1648,20 +1648,21 @@ public class HumanresService {
 					if (UtilValidate.isEmpty(countryCode)){
 						countryCode	="91";
 					}
-		            input.clear();
+					input.clear();
 		            input.put("userLogin", userLogin);
 		            input.put("contactNumber",emergencyContactNumber);
-		            input.put("contactMechPurposeTypeId","PHONE_WORK_EMRGNCY");
+		            input.put("contactMechPurposeTypeId","PHONE_WORK_EMRGNCY"); 
 		            input.put("countryCode",countryCode);	
 		            input.put("partyId", ownerPartyId);
 		            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
-		            if(ServiceUtil.isError(outMap)){
+					if(ServiceUtil.isError(outMap)){
 		           	 	Debug.logError("failed service create party emergency contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
 		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
 		            }
 				}
 				
 				// create PostalAddress
+				input.clear();
 				if (UtilValidate.isNotEmpty(address1)){
 					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",address1, "address2", address2, "city", (String)context.get("city"), "birthState",birthState,  "birthDistrict",birthDistrict, "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("postalCode"), "contactMechId", contactMechId);
 					resultMap =  dispatcher.runSync("createPartyPostalAddress", input);
@@ -1670,7 +1671,7 @@ public class HumanresService {
 		                return resultMap;
 		            }
 				}
-				//input.clear();
+				input.clear();
 				if (UtilValidate.isNotEmpty(prsAddress1)){
 					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",prsAddress1, "address2", prsAddress2, "city", (String)context.get("prsCity"), "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("prsPostalCode"), "contactMechTypeId","POSTAL_ADDRES2", "contactMechId", contactMechId);
 					resultMap1 =  dispatcher.runSync("createPartyPostalAddress", input);

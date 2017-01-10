@@ -975,6 +975,16 @@
         		</iterate>
         		</if-not-empty>
         	</if-not-empty>
+        	<if-not-empty field="parameters.emergencyContactNumber">
+        	<set field="createPartyContactMechMap.partyId" from-field="parameters.partyId"/>
+        	<set field="createPartyContactMechMap.contactMechPurposeTypeId" value="PHONE_WORK_EMRGNCY"/>
+        	<set field="createPartyContactMechMap.userLogin" from-field="userLogin"/>
+        	<set field="createPartyContactMechMap.contactNumber" from-field="parameters.emergencyContactNumber"/>
+	        	<call-service service-name="createPartyTelecomNumber" in-map-name="createPartyContactMechMap" to-map = "emergencyContactDetails" break-on-error="true">
+	                 <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyCreated"/>
+	            </call-service>
+            </if-not-empty>
+                        
        		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
            	<store-value value-field="lookedUpValue" />
         </else>
