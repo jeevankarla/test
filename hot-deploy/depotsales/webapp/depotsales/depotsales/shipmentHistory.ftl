@@ -113,10 +113,51 @@ under the License.
        	    }
        	}      	
        }	
-
+		$(document).ready(function(){
+		$('#spinner').hide(); 
+		$('#BranchFilter').hide();
+		$('#BranchFilterlabel').hide();
+		$('#RegionFilterLabel').hide();
+		$('#RegionFilter').hide();
+		$('#StateFilterLabel').show();
+		$('#StateFilter').show();
+	});
+    function showSearchFilter(obj){
+       	var searchType=obj.value;
+       	if(searchType=="BY_STATE"){
+       		$('#BranchFilter').hide();
+			$('#BranchFilterlabel').hide();
+			$('#RegionFilterLabel').hide();
+			$('#RegionFilter').hide();
+			$('#StateFilterLabel').show();
+			$('#StateFilter').show();
+       	}else if (searchType=="BY_RO"){
+        	$('#BranchFilter').hide();
+			$('#BranchFilterlabel').hide();
+			$('#RegionFilterLabel').show();
+			$('#RegionFilter').show();
+			$('#StateFilterLabel').hide();
+			$('#StateFilter').hide();      		
+       	}else{
+       		$('#BranchFilter').show();
+			$('#BranchFilterlabel').show();
+			$('#RegionFilterLabel').hide();
+			$('#RegionFilter').hide();
+			$('#StateFilterLabel').hide();
+			$('#StateFilter').hide();       		
+       	}
+    }	
+    function callSpinner()
+	{
+		var branch=$("#branchId").val();
+        if(branch==""){
+        	$("#dispComField").show();
+        	$("#dispComField").delay(50000).fadeOut('slow'); 
+        }
+		$('#spinner').show();
+		$('div#spinner').html('<img src="/images/ajax-loader64.gif">');
+	}	
 </script>
-
-
 
 <h2>SUPPLIERS TO USER AGENCY OPERATED DEPOTS<h2>
 <div class="screenlet">
@@ -124,27 +165,73 @@ under the License.
     <div id="findPartyParameters"  >
       <form method="post" name="ShipmentHistory" id="ShipmentHistory" action="<@ofbizUrl>ShipmentHistory</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
-          <tr>     
-          			<td>Branch</td>
-	              <td>
-					 <select name="branchId2" id="branchId" onchange="javascript:getbrancheCustomers(this);">
-	              <#if branchIdName?has_content>
-		 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
- 	              </#if>
-				  <#if !branchIdName?has_content>
-						 <option value=''>Select Branch</option>
-				  </#if>
-			      <#list  formatList as formatList>
-					<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
-				 </#list> 
-				  </select>  
-				  <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
-				  <input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/>
-				  
-				  </td>
-				   
-				   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agency/Depot  <input  type="text" size="25pt" placeholder="Select Agency" id="cutomerId"   name="customer" value="${customerId?if_exists}" onkeypress="javascript:checkFields();" onblur="javascript:displayName(this,'customer');" />
+         <tr>
+        	 <td>Search By</td> 
+        	 <td>
+      		 	 <select name="searchType" id="searchType" onchange="javascript:showSearchFilter(this);">
+					<option value='BY_STATE'>By State</option>
+					<option value='BY_BO'>By Branch Office</option>
+					<option value='BY_RO'>By Regional Office</option>
+			  </select> 
+      		 </td>
+        </tr>
+           <tr>    
+  			  <div>
+  				  <td id="BranchFilterlabel">Branch</td>
+	              <td id="BranchFilter">
+					  <select name="branchId2" id="branchId">
+		              <#if branchIdName?has_content>
+			 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
+	 	              </#if>
+					  <#if !branchIdName?has_content>
+							 <option value=''>Select Branch</option>
+					  </#if>
+				      <#list  formatBList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+					 </select>
+				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+		  		   </td>
+  		       </div>
+  		       <div >
+  				  <td id="RegionFilterLabel">Regional Office</td>
+	              <td id="RegionFilter">
+					  <select name="regionId" id="regionId">
+		              <#if regionIdName?has_content>
+			 	             <option value='${regionId?if_exists}'>${regionIdName?if_exists}</option> 
+	 	              </#if>
+					  <#if !regionIdName?has_content>
+							 <option value=''>Select Region</option>
+					  </#if>
+				      <#list  formatRList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+					 </select>
+				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+		  		   </td>
+  		       </div>
+  		       <div>
+  				  <td id="StateFilterLabel">State</td>
+	              <td id="StateFilter">
+					  <select name="stateId" id="stateId">
+		              <#if stateIdName?has_content>
+			 	             <option value='${stateId?if_exists}'>${stateIdName?if_exists}</option> 
+	 	              </#if>
+					  <#if !stateIdName?has_content>
+							 <option value=''>Select State</option>
+					  </#if>
+				       <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					  </#list> 
+					 </select>
+				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+		  		   </td>
+  		       </div>
+		  </tr> 
+		  				  
+			<tr>
+				   <td>Agency/Depot</td> 
+				   <td><input  type="text" size="25pt" placeholder="Select Agency" id="cutomerId"   name="customer" value="${customerId?if_exists}" onkeypress="javascript:checkFields();" onblur="javascript:displayName(this,'customer');" />
 					   <div id="customerName"><#if customerName?has_content>${customerName?if_exists} </#if></div>
 				   </td>
 				   
@@ -152,8 +239,8 @@ under the License.
 						<div id="SupplierName"><#if SupplierIdName?has_content> ${SupplierIdName?if_exists} </#if> </div>
 				   </td>  -->
 		  </tr> 
-		  <tr>
-				<#--  <#if customerName?has_content>
+		  <#--<tr>
+			  <#if customerName?has_content>
 		         	<td>Agency <br> <input  type="text" size="25pt"  id="cutomerId"  name="cutomerName"  onblur="javascript:displayName(this,'customer');" />
 		            <input  type="hidden" size="14pt"   name="customer" value="${customerId?if_exists}"/></td>
 				<#else> -->
@@ -165,8 +252,8 @@ under the License.
 					<input  type="hidden" size="14pt"    name="Supplier" value="${SupplierId?if_exists}"/></td>
 				<#else>  -->
 					
-				<#-- </#if> -->
-           </tr> 
+				<#-- </#if> 
+           </tr> -->
          <#--  <tr>
           		<#if fromDateStr?has_content>
 	                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -188,26 +275,27 @@ under the License.
 				</#if>
 			    
           </tr>  -->
-          <tr>
-          	 <td> </td>
-          	 <td> </td> 	
-      		 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Period Selection</b>
+      <tr>
+          	 	
+      		 <td><b>Period Selection</b></td>
+      		 <td>
       		 	 <select name="period" id="period">
       		 	    <#if period?has_content>
-      		 	    	<option value='${period}'>${periodName}</option>
+      		 	    	<option value='${period?if_exists}'>${periodName?if_exists}'</option>
       		 	    </#if>
-					<option value='one_Month'>Last One Month</option>
-					<option value='two_Month'>Last Two Months</option>
-					<option value='three_Month'>Last Three  Months</option>
-					<option value='six_Month'>Last  Six Months</option>
+					<option value='One_Month'>Last One Month</option>
+					<option value='Two_Month'>Last Two Months</option>
+					<option value='Three_Month'>Last Three  Months</option>
+					<option value='Six_Month'>Last  Six Months</option>
 			  </select> 
       		 </td>
 		  </tr>
 		  <tr><td>&nbsp; </td><td>&nbsp; </td><td> &nbsp;</td></tr>
-          <tr>
+      <tr>
           	    
-          	    <td> </td>
-				<td width="10%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="submit" value="Search" class="buttontext"/> </td>
+				<td width="10%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Search" class="buttontext" onClick="javascript:callSpinner();"/> 
+				<input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/>
+				</td>
 		  </tr>
       </table>
    
