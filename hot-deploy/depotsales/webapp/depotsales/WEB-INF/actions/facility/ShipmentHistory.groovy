@@ -37,7 +37,7 @@ import org.ofbiz.service.GenericDispatcher;
 HttpServletRequest httpRequest = (HttpServletRequest) request;
 HttpServletResponse httpResponse = (HttpServletResponse) response;
 dctx = dispatcher.getDispatchContext();
-delegator = DelegatorFactory.getDelegator("default#NHDC");
+delegator = DelegatorFactory.getDelegator("default#NHDC_RO_BO");
 
 
 isReport=parameters.isReport;
@@ -133,6 +133,48 @@ context.partyNameObj=partyNameObj;
 
 }
 
+List formatRList = [];
+List formatBList = [];
+List<GenericValue> partyClassificationList = null;
+	partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId","partyClassificationGroupId"), null, null,false);
+if(partyClassificationList){
+	for (eachList in partyClassificationList) {
+		formatMap = [:];
+		partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
+		formatMap.put("productStoreName",partyName);
+		formatMap.put("payToPartyId",eachList.get("partyId"));
+		if(eachList.partyClassificationGroupId=="REGIONAL_OFFICE"){
+			formatRList.addAll(formatMap);
+		}else{
+			formatBList.addAll(formatMap);
+		}
+	}
+}
+context.formatRList = formatRList;
+context.formatBList = formatBList;
+daystart = null;
+dayend = null;
+period=parameters.period;
+context.period=period;
+periodFrmDate=null;
+isFormSubmitted=parameters.isFormSubmitted;
+context.period=period;
+periodFrmDate=null;
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+	conditionList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+	statesList = delegator.findList("Geo",EntityCondition.makeCondition(conditionList,EntityOperator.AND),null,null,null,false);
+	statesIdsList=EntityUtil.getFieldListFromEntityList(statesList, "geoId", true);
+	
+	JSONArray stateListJSON = new JSONArray();
+	statesList.each{ eachState ->
+			JSONObject newObj = new JSONObject();
+			newObj.put("value",eachState.geoId);
+			newObj.put("label",eachState.geoName);
+			stateListJSON.add(newObj);
+	}
+	context.stateListJSON = stateListJSON;
+	
 if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	conditionList=[];
 	branchId=parameters.branchId2;
@@ -140,11 +182,49 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	SupplierId=parameters.Supplier;
 	/*fromDateStr=parameters.fromDate;
 	thruDateStr=parameters.thruDate;*/
-	daystart = null;
+	
+	/*daystart = null;
 	dayend = null;
 	period=parameters.period;
 	context.period=period;
 	periodFrmDate=null;
+	*/
+	branchIds=[];
+	branchId = parameters.branchId2;
+	searchType = parameters.searchType;
+	branchIdName =  PartyHelper.getPartyName(delegator, branchId, false);
+	context.branchId=branchId;
+	context.branchIdName=branchIdName;
+	if(UtilValidate.isNotEmpty(branchId) && "BY_BO".equals(searchType)){
+		branchIds.add(branchId)
+	}
+	regionId = parameters.regionId;
+	regionIdName =  PartyHelper.getPartyName(delegator, regionId, false);
+	context.regionId=regionId;
+	context.regionIdName=regionIdName;
+	if(UtilValidate.isNotEmpty(regionId) && "BY_RO".equals(searchType)){
+		partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,regionId), UtilMisc.toSet("partyIdTo"), null, null,false);
+		branchIds=EntityUtil.getFieldListFromEntityList(partyRelationship, "partyIdTo", true);
+	}
+	
+	
+	
+	stateId = parameters.stateId;
+	if(UtilValidate.isNotEmpty(stateId) && "BY_STATE".equals(searchType)){
+		GenericValue state=delegator.findOne("Geo",[geoId:stateId],false);
+		context.stateId=stateId;
+		context.stateIdName=state.geoName;
+		result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",stateId,"userLogin",userLogin));
+		stateBranchsList=result.get("stateBranchsList");
+		stateRosList=result.get("stateRosList");
+		stateBranchsList.each{ eachState ->
+			branchIds.add(eachState.partyId);
+		}
+		stateRosList.each{ eachState ->
+			branchIds.add(eachState.partyId);
+		}
+	}
+	
 	dayend =UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 	
 	if("one_Month".equals(period)){
@@ -165,7 +245,6 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	}
 	
 	/*
-	
 	Timestamp fromDate;
 	Timestamp thruDate;
 	*/
@@ -235,24 +314,29 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	robranchIds=[];
 	if(UtilValidate.isNotEmpty(branchId)){
 		partyRelationship = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , branchId)  , UtilMisc.toSet("partyIdTo"), null, null, false );
+		//Debug.log("============bo===========");
 		robranchIds = EntityUtil.getFieldListFromEntityList(partyRelationship, "partyIdTo", true);
-		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+		//Debug.log("robranchIds==========BO=========="+robranchIds.size());
 		if(UtilValidate.isNotEmpty(robranchIds)){
 			partyRelationship2 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN , robranchIds)  , UtilMisc.toSet("partyIdTo"), null, null, false );
 			if(UtilValidate.isNotEmpty(partyRelationship2)){
+				//Debug.log("============ro===========");
 				robranchIds = EntityUtil.getFieldListFromEntityList(partyRelationship2, "partyIdTo", true);
 			}
 		}	
 	}
+		
+	/*Debug.log("daystart===================="+daystart);
+	Debug.log("dayend===================="+dayend);*/
+
 	conditionList.clear();
 	shipmentIds=[];
 	shipmentDetailsItr=null;
 	if(UtilValidate.isNotEmpty(robranchIds)){ 
 		/*conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, purchaseOrderIds));*/
 		if(UtilValidate.isNotEmpty(daystart)){
-			conditionList.add(EntityCondition.makeCondition("supplierInvoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
-			conditionList.add(EntityCondition.makeCondition("supplierInvoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
+			conditionList.add(EntityCondition.makeCondition("supplierInvoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,daystart));
+			conditionList.add(EntityCondition.makeCondition("supplierInvoiceDate", EntityOperator.LESS_THAN_EQUAL_TO,dayend));
 		}
 		if(UtilValidate.isNotEmpty(SupplierId)){
 			shipment = delegator.findList("Shipment",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , SupplierId)  , UtilMisc.toSet("shipmentId"), null, null, false );
@@ -273,15 +357,21 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_CANCELLED"));
 		shipmentDetailsItr = delegator.find("ShipmentAndReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, null);
 	}
+	
+	//Debug.log("shipmentDetailsItr=========dddd==========="+shipmentDetailsItr.size());
+	
 	receiptList=[];
 	rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
 	while(UtilValidate.isNotEmpty(shipmentDetailsItr) && shipmentDetailsItr.hasNext()){
+		
+		//Debug.log("=====================while==========");
+		
 		GenericValue shipmentDetails=shipmentDetailsItr.next();
 		tempMap=[:];
 		//tempMap.put("receiptId", shipmentDetails.receiptId)
 		tempMap.put("datetimeReceived", UtilDateTime.toDateString(shipmentDetails.supplierInvoiceDate,"dd-MM-yyyy"))
 		tempMap.put("statusId", shipmentDetails.statusId);
-		tempMap.put("shipmentId", shipmentDetails.shipmentId)
+		tempMap.put("shipmentId", shipmentDetails.shipmentId);
 		tempMap.put("quantityAccepted", shipmentDetails.quantityAccepted);
 		orderItem = delegator.findOne("OrderItem",["orderId":shipmentDetails.orderId,"orderItemSeqId":shipmentDetails.orderItemSeqId],false);
 		tempMap.put("unitPrice", (orderItem.unitPrice).setScale(2, rounding));
@@ -305,3 +395,4 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	context.receiptList=receiptList;
 
 }
+

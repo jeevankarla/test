@@ -1880,8 +1880,8 @@
       	<field name="productName" title="Product Name"><display/></field>
       	<field name="supplier" title="Supplier"><display/></field>
         <field name="datetimeReceived" title="Received Date"><display/></field>
-        <field name="quantityAccepted" title="    Quantity(Kgs)" widget-area-style="align-text"  position="1"><display/></field>
-        <field name="unitPrice" title="Unit Price(Rs)" widget-area-style="align-text"><display/></field>
+        <field name="quantityAccepted" title="Quantity(Kgs)" position="1"><display/></field>
+        <field name="unitPrice" title="Unit Price(Rs)"><display/></field>
        <!-- <field name="orderId" title="PO No"><display/></field> --> 
        
        <!-- <field name="customerName" title="CustomerName"><display/></field> -->
