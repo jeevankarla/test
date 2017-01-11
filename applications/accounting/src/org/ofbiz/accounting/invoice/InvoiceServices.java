@@ -6632,14 +6632,14 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	    	        if (ServiceUtil.isError(createInvoiceRoleResult)) {
 	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
 	    	        }
-	    	        if(UtilValidate.isNotEmpty(partyId)){
+	    	        /*if(UtilValidate.isNotEmpty(partyId)){
 	    	        	createRoleContext.put("partyId",partyId);
 	    	        	createRoleContext.put("roleTypeId","INTERNAL_ORGANIZATIO");
 	    	        	createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createRoleContext);
 	    		        if (ServiceUtil.isError(createInvoiceRoleResult)) {
 	    		            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createInvoiceRoleResult);
 	    		        }
-	    	        }
+	    	        }*/
 	        }
 	        
 	        

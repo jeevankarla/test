@@ -489,10 +489,15 @@ under the License.
                     </if-compare>
                     <store-value value-field="glAccountHistory"/>                  
                     <!-- population of GlAccountHistoryPartyWise -->
-                    <if-not-empty field="acctgTransEntry.partyId">
+                     <entity-condition list="acctransDetails" entity-name="AcctgTransRole">
+			        	<condition-expr field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
+			        	<condition-expr field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+			        </entity-condition>				        
+                    <if-not-empty field="acctgTransEntry.partyId">                    
 	                     <entity-one entity-name="GlAccountHistoryPartyWise" value-field="glAccountHistoryPartyWise">
 	                        <field-map field-name="glAccountId" from-field="acctgTransEntry.glAccountId"/>
 	                        <field-map field-name="partyId" from-field="acctgTransEntry.partyId"/>
+	                        <field-map field-name="costCenterId" from-field="acctransDetails[1].partyId"/>
 	                        <field-map field-name="acctgTransTypeId" from-field="acctgTrans.acctgTransTypeId"/>
 	                        <field-map field-name="organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
 	                        <field-map field-name="customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
@@ -503,6 +508,7 @@ under the License.
 	                        <set from-field="acctgTransEntry.glAccountId" field="glAccountHistoryPartyWise.glAccountId"/>
 	                        <set from-field="acctgTransEntry.organizationPartyId" field="glAccountHistoryPartyWise.organizationPartyId"/>
 	                        <set from-field="acctgTransEntry.partyId" field="glAccountHistoryPartyWise.partyId"/>
+	                        <set value="${acctransDetails[1].partyId}" field="glAccountHistoryPartyWise.costCenterId"/>
 	                        <set from-field="acctgTrans.acctgTransTypeId" field="glAccountHistoryPartyWise.acctgTransTypeId"/>
 	                        <set from-field="customTimePeriod.customTimePeriodId" field="glAccountHistoryPartyWise.customTimePeriodId"/>
 	                        <set field="glAccountHistoryPartyWise.postedDebits" value="0.0" type="BigDecimal"/>
@@ -731,7 +737,7 @@ under the License.
                 <set from-field="customTimePeriodListByOrganizationPartyIdMap[acctgTransEntry.organizationPartyId]" field="customTimePeriodList"/>
                 <iterate entry="customTimePeriod" list="customTimePeriodList">               
                 <!-- Let's populate internalOrganization entries -->                
-		        <entity-condition list="acctrans" entity-name="AcctgTransRole">
+		       <!--  <entity-condition list="acctrans" entity-name="AcctgTransRole">
 		        	<condition-expr field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
 		        	<condition-expr field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
 		        </entity-condition>		        
@@ -743,7 +749,7 @@ under the License.
 	                        <field-map field-name="organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
 	                        <field-map field-name="customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
 	                    </entity-one>
-	                    <!-- if no glAccountHistoryPartyWise create a new empty one -->
+	                    if no glAccountHistoryPartyWise create a new empty one
 	                    <if-empty field="glAccountHistoryPartyWise">
 	                        <make-value value-field="glAccountHistoryPartyWise" entity-name="GlAccountHistoryPartyWise"/>
 	                        <set from-field="acctgTransEntry.glAccountId" field="glAccountHistoryPartyWise.glAccountId"/>
@@ -756,7 +762,7 @@ under the License.
 	                        <create-value value-field="glAccountHistoryPartyWise"/>
 	                    </if-empty>
 	
-	                    <!-- update GlAccountHistoryPartyWise's debit and credit totals -->
+	                    update GlAccountHistoryPartyWise's debit and credit totals
 	                    <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
 	                        <calculate field="glAccountHistoryPartyWise.postedDebits" type="BigDecimal">
 	                            <calcop operator="add">
@@ -779,7 +785,7 @@ under the License.
 	                    </else>
 	                    </if-compare>
 	                    <store-value value-field="glAccountHistoryPartyWise"/>
-                </if-not-empty>   
+                </if-not-empty>    -->
                 </iterate>
             </iterate>
 
