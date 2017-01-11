@@ -25,16 +25,119 @@ dctx = dispatcher.getDispatchContext();
 JSONArray dataList = new JSONArray();
 period = parameters.periodName;
 
-Debug.log("period==========="+period);
-
 isFormSubmitted=parameters.isFormSubmitted;
+
+List formatRList = [];
+List formatBList = [];
+List<GenericValue> partyClassificationList = null;
+	partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId","partyClassificationGroupId"), null, null,false);
+if(partyClassificationList){
+	for (eachList in partyClassificationList) {
+		formatMap = [:];
+		partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
+		formatMap.put("productStoreName",partyName);
+		formatMap.put("payToPartyId",eachList.get("partyId"));
+		if(eachList.partyClassificationGroupId=="REGIONAL_OFFICE"){
+			formatRList.addAll(formatMap);
+		}else{
+			formatBList.addAll(formatMap);
+		}
+	}
+}
+context.formatRList = formatRList;
+context.formatBList = formatBList;
+daystart = null;
+dayend = null;
+period=parameters.period;
+context.period=period;
+periodFrmDate=null;
+isFormSubmitted=parameters.isFormSubmitted;
+
+periodFrmDate=null;
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+	conditionList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+	statesList = delegator.findList("Geo",EntityCondition.makeCondition(conditionList,EntityOperator.AND),null,null,null,false);
+	statesIdsList=EntityUtil.getFieldListFromEntityList(statesList, "geoId", true);
+	
+	JSONArray stateListJSON = new JSONArray();
+	statesList.each{ eachState ->
+			JSONObject newObj = new JSONObject();
+			newObj.put("value",eachState.geoId);
+			newObj.put("label",eachState.geoName);
+			stateListJSON.add(newObj);
+	}
+	context.stateListJSON = stateListJSON;
 
 if("Y".equals(isFormSubmitted)){
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 fromDate=null;
 thruDate=null;
-
 thruDate =UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+branchId=parameters.branchId2;
+branchIds=[]; 
+	branchId = parameters.branchId2;
+	searchType = parameters.searchType;
+	branchIdName =  PartyHelper.getPartyName(delegator, branchId, false);
+	context.branchId=branchId;
+	context.branchIdName=branchIdName;
+	if(UtilValidate.isNotEmpty(branchId) && "BY_BO".equals(searchType)){
+		branchIds.add(branchId)
+	}
+	regionId = parameters.regionId;
+	regionIdName =  PartyHelper.getPartyName(delegator, regionId, false);
+	context.regionId=regionId;
+	context.regionIdName=regionIdName;
+	if(UtilValidate.isNotEmpty(regionId) && "BY_RO".equals(searchType)){
+		partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,regionId), UtilMisc.toSet("partyIdTo"), null, null,false);
+		branchIds=EntityUtil.getFieldListFromEntityList(partyRelationship, "partyIdTo", true);
+	}
+	stateId = parameters.stateId;
+	if(UtilValidate.isNotEmpty(stateId) && "BY_STATE".equals(searchType)){
+		GenericValue state=delegator.findOne("Geo",[geoId:stateId],false);
+		context.stateId=stateId;
+		context.stateIdName=state.geoName;
+		roIdsList=[];
+		branchIdsList=[];
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, stateId));
+		conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.LIKE, "INT%"));
+		stateWiseRosAndBranchList = delegator.findList("PartyContactDetailByPurpose", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		if(UtilValidate.isNotEmpty(stateWiseRosAndBranchList)){
+			List roAndBranchIds = EntityUtil.getFieldListFromEntityList(stateWiseRosAndBranchList, "partyId", true);
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roAndBranchIds));
+			conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "BRANCH_OFFICE"));
+			List<GenericValue> partyClassicationForBranch= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(partyClassicationForBranch)){
+				 branchIdsList = EntityUtil.getFieldListFromEntityList(partyClassicationForBranch, "partyId", true);
+			}
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roAndBranchIds));
+			conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"));
+			List<GenericValue> partyClassicationForRo= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(partyClassicationForRo)){
+				roIdsList = EntityUtil.getFieldListFromEntityList(partyClassicationForRo, "partyId", true);
+			}
+			List<GenericValue> partyGroupRo=null;
+			List<GenericValue> partyGroupBranch=null;
+			if(UtilValidate.isNotEmpty(roIdsList)){
+				stateRosList = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, roIdsList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+				stateRosList.each{ eachState ->
+					branchIds.add(eachState.partyId);
+				}
+			}
+			if(UtilValidate.isNotEmpty(branchIdsList)){
+				stateBranchsList = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, branchIdsList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+				stateBranchsList.each{ eachState ->
+					branchIds.add(eachState.partyId);
+				}
+			}
+		}
+	}
+	dayend =UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+
 
 if("One_Month".equals(period)){
 	fromDate = UtilDateTime.addDaysToTimestamp(thruDate,-30);
@@ -53,19 +156,19 @@ if("Six_Month".equals(period)){
 	context.periodName="Last  Six Months";
 }
 
-branchId=parameters.branchId2;
+/*branchId=parameters.branchId2;
 
 context.branchId=branchId;
 
 branchId = parameters.branchId2;
 branchIdName =  PartyHelper.getPartyName(delegator, branchId, false);
 context.branchIdName=branchIdName;
-
+*/
 dctx = dispatcher.getDispatchContext();
 
 days = parameters.days;
 
-branchId = parameters.branch;
+branchId = parameters.branchId2;
 
 partyId = userLogin.get("partyId");
 
@@ -85,7 +188,7 @@ for (eachList in productStoreList) {
 }
 context.formatList = formatList;
 
-if(!branchId)
+/*if(!branchId)
 branchId = "INT10";
 
 branchList = [];
@@ -111,7 +214,7 @@ for (eachList in formatList) {
 }
 branchList = formatList1;
 }
-
+*/
 
 if(UtilValidate.isNotEmpty(days))
 days = Integer.parseInt(days);
@@ -120,13 +223,11 @@ days = 7;
 
 branchListOf = [];
 
-branchListOf.add(branchId);
+branchListOf.addAll(branchIds);
 
 if(days > 0){
 
 	for (eachBranch in branchListOf) {
-		
-		Debug.log("eachBranch============="+eachBranch);
 		
 		 branchMap = [:];
 		
@@ -146,31 +247,19 @@ if(days > 0){
 	orderHeaderAndRoles1 = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId"), null, null, false);
 	
 	FromOrders=EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles1, "orderId", true);
-	
-	Debug.log("FromOrders================="+FromOrders);
-	
 
-
-for (eachOrder in FromOrders) {
-	
-	
+for (eachOrder in FromOrders) {	
 	 exprCondList=[];
    exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, eachOrder));
    exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
    EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
    eachOrderAssoc = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
-   
-	//Debug.log("purcahseorderId================="+purcahseorderId);
-	
-	
+  
 	if(eachOrderAssoc){
 		purchaseOrder = "";
 		if(eachOrderAssoc){
 			purchaseOrder=eachOrderAssoc.orderId;
-		}
-	
-		//Debug.log("purchaseOrder================="+purchaseOrder);
-		
+		}		
 		
 		SaleOrderHeader = delegator.findOne("OrderHeader",[orderId : eachOrder] , false);
 		
@@ -196,9 +285,7 @@ for (eachOrder in FromOrders) {
 			
 			
 			diffDays = Math.abs(diffDays);
-			
-			//Debug.log("diffDays============="+diffDays);
-			
+					
 			if(diffDays >= days){
 				
 				branchMap.put("orderId", eachOrder);
@@ -251,19 +338,11 @@ for (eachOrder in FromOrders) {
 	
 }
 
-
-
 }
-
-
-
 	}
 
 }
 }
-
-//Debug.log("dataList============="+dataList);
-
 context.putAt("dataJSON",dataList);
 Map resultMap = FastMap.newInstance();
 resultMap = ServiceUtil.returnSuccess();

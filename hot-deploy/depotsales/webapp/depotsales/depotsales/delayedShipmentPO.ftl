@@ -33,7 +33,7 @@ $(".monthPicker").focus(function () {
     });
 });
 	
-$(document).ready(function(){
+<#--$(document).ready(function(){
 
 var branchId = $("#branchId1").val();
 var partyId = $("#partyId1").val();
@@ -115,8 +115,51 @@ var effectiveDate1 = $("#effectiveDate1").val();
 	   if(($("#partyId").val()).length == 0)
 	   $("#partyTooltip").html('');
 	 
-	 }
-	
+	 }-->
+	$(document).ready(function(){
+		$('#spinner').hide(); 
+		$('#BranchFilter').hide();
+		$('#BranchFilterlabel').hide();
+		$('#RegionFilterLabel').hide();
+		$('#RegionFilter').hide();
+		$('#StateFilterLabel').show();
+		$('#StateFilter').show();
+	});
+    function showSearchFilter(obj){
+       	var searchType=obj.value;
+       	if(searchType=="BY_STATE"){
+       		$('#BranchFilter').hide();
+			$('#BranchFilterlabel').hide();
+			$('#RegionFilterLabel').hide();
+			$('#RegionFilter').hide();
+			$('#StateFilterLabel').show();
+			$('#StateFilter').show();
+       	}else if (searchType=="BY_RO"){
+        	$('#BranchFilter').hide();
+			$('#BranchFilterlabel').hide();
+			$('#RegionFilterLabel').show();
+			$('#RegionFilter').show();
+			$('#StateFilterLabel').hide();
+			$('#StateFilter').hide();      		
+       	}else{
+       		$('#BranchFilter').show();
+			$('#BranchFilterlabel').show();
+			$('#RegionFilterLabel').hide();
+			$('#RegionFilter').hide();
+			$('#StateFilterLabel').hide();
+			$('#StateFilter').hide();       		
+       	}
+    }	
+    function callSpinner()
+	{
+		var branch=$("#branchId").val();  
+        if(branch==""){
+        	$("#dispComField").show();
+        	$("#dispComField").delay(50000).fadeOut('slow'); 
+        }
+		$('#spinner').show();
+		$('div#spinner').html('<img src="/images/ajax-loader64.gif">');
+	}
 	
 </script>
 
@@ -148,9 +191,71 @@ var effectiveDate1 = $("#effectiveDate1").val();
       <form method="post" name="delayedIndentPOAnalyticsListing" id="delayedIndentPOAnalyticsListing" action="<@ofbizUrl>delayedIndentPOAnalyticsListing</@ofbizUrl> " class="basic-form">
         
 		  <table width="60%" border="0" cellspacing="0" cellpadding="0" class="form-style-8">
-				<tr>
-				<td width="40%">
-				<tr>
+				 <tr>
+        	 <td>Search By</td> 
+        	 <td>
+      		 	 <select name="searchType" id="searchType" onchange="javascript:showSearchFilter(this);">
+					<option value='BY_STATE'>By State</option>
+					<option value='BY_BO'>By Branch Office</option>
+					<option value='BY_RO'>By Regional Office</option>
+			  		</select> 
+      		 	</td>
+        	</tr>
+			<tr>    
+  			  <div>
+  				  <td id="BranchFilterlabel">Branch</td>
+	              <td id="BranchFilter">
+					  <select name="branchId2" id="branchId">
+		              <#if branchIdName?has_content>
+			 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
+	 	              </#if>
+					  <#if !branchIdName?has_content>
+							 <option value=''>Select Branch</option>
+					  </#if>
+				      <#list  formatBList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+					 </select>
+				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+		  		   </td>
+  		       </div>
+  		       <div >
+  				  <td id="RegionFilterLabel">Regional Office</td>
+	              <td id="RegionFilter">
+					  <select name="regionId" id="regionId">
+		              <#if regionIdName?has_content>
+			 	             <option value='${regionId?if_exists}'>${regionIdName?if_exists}</option> 
+	 	              </#if>
+					  <#if !regionIdName?has_content>
+							 <option value=''>Select Region</option>
+					  </#if>
+				      <#list  formatRList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+					 </select>
+				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+		  		   </td>
+  		       </div>
+  		       <div>
+  				  <td id="StateFilterLabel">State</td>
+	              <td id="StateFilter">
+					  <select name="stateId" id="stateId">
+		              <#if stateIdName?has_content>
+			 	             <option value='${stateId?if_exists}'>${stateIdName?if_exists}</option> 
+	 	              </#if>
+					  <#if !stateIdName?has_content>
+							 <option value=''>Select State</option>
+					  </#if>
+				       <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					  </#list> 
+					 </select>
+				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
+		  		   </td>
+  		       </div>
+		  </tr> 
+				
+				<#--<tr>
 				  <td align='left' valign='middle' nowrap="nowrap">${uiLabelMap.Branch} :</td>
 				  
 				  <#if branchId?exists && branchId?has_content>  
@@ -167,15 +272,15 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				   </#if>
 				  
 				  <td><br/></td>
-				</tr>
+				</tr>-->
 				
-				<tr><td><br/></td></tr>
+				
 				
 				<tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Period :</td>
 				  <td valign='middle'><font color="green">          
 				  <input type="hidden" name="isFormSubmitted" id="isFormSubmitted" value="Y"  />     
-				     <select name="periodName" id="periodName">
+				     <select name="period" id="periodName">
       		 	    <#if period?has_content>
       		 	    	<option value='${period}'>${periodName}</option>
       		 	    </#if>
