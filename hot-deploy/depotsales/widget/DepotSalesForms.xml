@@ -3277,6 +3277,11 @@
 			<field name="lrNumber" title="Lr Number"><display/></field>
 			<field name="lrDate" title="Lr Date"><display/></field>
 			<field name="freight" title="Freight Amount"><display/></field>
+			<field name="shipmentId" title="ShipmentId"><display/></field>
+			<field name="actualSaleInvoiceId" title="Internal Sales InvoiceId"><display/></field>
+			<field name="actualPurInvoiceId" title="Internal purchase InvoiceId"><display/></field>
+
+
 
     </form>
     <form name="invoiceVoucherReportDetails" type="list"  view-size="99999" list-name="DateList">
