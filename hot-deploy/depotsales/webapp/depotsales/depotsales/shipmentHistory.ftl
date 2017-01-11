@@ -114,13 +114,25 @@ under the License.
        	}      	
        }	
 		$(document).ready(function(){
+		var searchType='${searchType?if_exists}';
 		$('#spinner').hide(); 
 		$('#BranchFilter').hide();
 		$('#BranchFilterlabel').hide();
 		$('#RegionFilterLabel').hide();
 		$('#RegionFilter').hide();
-		$('#StateFilterLabel').show();
-		$('#StateFilter').show();
+		$('#StateFilterLabel').hide();
+		$('#StateFilter').hide();
+		if(searchType=="BY_BO"){
+			$('#BranchFilter').show();
+			$('#BranchFilterlabel').show();
+		}else if(searchType=="BY_RO"){
+			$('#RegionFilter').show();
+			$('#RegionFilterLabel').show();
+		}else{
+			$('#StateFilter').show();
+			$('#StateFilterLabel').show();
+		}
+		
 	});
     function showSearchFilter(obj){
        	var searchType=obj.value;
@@ -169,6 +181,9 @@ under the License.
         	 <td>Search By</td> 
         	 <td>
       		 	 <select name="searchType" id="searchType" onchange="javascript:showSearchFilter(this);">
+      		 	 	<#if period?has_content>
+      		 	    	<option value='${searchType?if_exists}'>${searchTypeName?if_exists}</option>
+      		 	    </#if>
 					<option value='BY_STATE'>By State</option>
 					<option value='BY_BO'>By Branch Office</option>
 					<option value='BY_RO'>By Regional Office</option>
@@ -179,7 +194,7 @@ under the License.
   			  <div>
   				  <td id="BranchFilterlabel">Branch</td>
 	              <td id="BranchFilter">
-					  <select name="branchId2" id="branchId">
+					  <select name="branchId2" id="branchId" onchange="javascript:getbrancheCustomers(this);">
 		              <#if branchIdName?has_content>
 			 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
 	 	              </#if>
@@ -281,7 +296,7 @@ under the License.
       		 <td>
       		 	 <select name="period" id="period">
       		 	    <#if period?has_content>
-      		 	    	<option value='${period?if_exists}'>${periodName?if_exists}'</option>
+      		 	    	<option value='${period?if_exists}'>${periodName?if_exists}</option>
       		 	    </#if>
 					<option value='One_Month'>Last One Month</option>
 					<option value='Two_Month'>Last Two Months</option>
