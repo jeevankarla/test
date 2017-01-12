@@ -115,11 +115,35 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
 			AllPartyList.addAll(partyIds);
+			emplPartyIds=[];
+			for(String partyId : partyIds){
+				if(UtilValidate.isNotEmpty(bankAdvPayrollMap.get(partyId)) && (bankAdvPayrollMap.get(partyId).get("netAmt") !=0)){
+					emplPartyIds.add(partyId);
+				}
+			}
+			
+			if(UtilValidate.isNotEmpty(emplPartyIds)){
+				if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
+					bankWiseEmplDetails=bankWiseEmplDetailsMap.entrySet();
+					bankWiseEmplDetails.each { bank ->
+						employeeList = bank.getValue();
+						for(employee in employeeList){
+							if(emplPartyIds.contains(employee)){
+								emplPartyIds.remove(employee);
+							}
+						}
+					}
+				}
+				bankWiseEmplDetailsMap.put(finAccountId,emplPartyIds);
+			}
+			
+			/*finAccountIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "finAccountId", true);
+			AllPartyList.addAll(partyIds);*/
 			//Debug.log("partyIds============="+partyIds);
-			if(UtilValidate.isNotEmpty(partyIds)){
+			/*if(UtilValidate.isNotEmpty(partyIds)){
 				emplPartyIds=[];
 				List finAccConList=FastList.newInstance();
-					 finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN ,partyIds));
+					 finAccConList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.IN ,finAccountIds));
 					 finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
 					 finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
 					 EntityCondition finAccCond = EntityCondition.makeCondition(finAccConList, EntityOperator.AND);
@@ -199,7 +223,7 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 					}
 					bankWiseEmplDetailsMap.put(finAccountId,emplPartyIds);
 				}
-			}
+			}*/
 		}
 		
 	}
