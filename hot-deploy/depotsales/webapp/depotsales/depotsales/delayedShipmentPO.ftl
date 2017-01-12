@@ -117,13 +117,24 @@ var effectiveDate1 = $("#effectiveDate1").val();
 	 
 	 }-->
 	$(document).ready(function(){
+		var searchType='${searchType?if_exists}';
 		$('#spinner').hide(); 
 		$('#BranchFilter').hide();
 		$('#BranchFilterlabel').hide();
 		$('#RegionFilterLabel').hide();
 		$('#RegionFilter').hide();
-		$('#StateFilterLabel').show();
-		$('#StateFilter').show();
+		$('#StateFilterLabel').hide();
+		$('#StateFilter').hide();
+		if(searchType=="BY_BO"){
+			$('#BranchFilter').show();
+			$('#BranchFilterlabel').show();
+		}else if(searchType=="BY_RO"){
+			$('#RegionFilter').show();
+			$('#RegionFilterLabel').show();
+		}else{
+			$('#StateFilter').show();
+			$('#StateFilterLabel').show();
+		}
 	});
     function showSearchFilter(obj){
        	var searchType=obj.value;
@@ -152,7 +163,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
     }	
     function callSpinner()
 	{
-		var branch=$("#branchId").val();  
+		var branch=$("#branchId").val();
         if(branch==""){
         	$("#dispComField").show();
         	$("#dispComField").delay(50000).fadeOut('slow'); 
@@ -195,6 +206,9 @@ var effectiveDate1 = $("#effectiveDate1").val();
         	 <td>Search By</td> 
         	 <td>
       		 	 <select name="searchType" id="searchType" onchange="javascript:showSearchFilter(this);">
+      		 	 	<#if period?has_content>
+      		 	    	<option value='${searchType?if_exists}'>${searchTypeName?if_exists}</option>
+      		 	    </#if>
 					<option value='BY_STATE'>By State</option>
 					<option value='BY_BO'>By Branch Office</option>
 					<option value='BY_RO'>By Regional Office</option>
@@ -219,7 +233,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				      <div id="dispComField" style="color:red; font-stlye:bold; display:none">Please Select Branch</div>
 		  		   </td>
   		       </div>
-  		       <div >
+  		      <div >
   				  <td id="RegionFilterLabel">Regional Office</td>
 	              <td id="RegionFilter">
 					  <select name="regionId" id="regionId">
