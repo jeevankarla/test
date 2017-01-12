@@ -28,7 +28,9 @@ import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 
-
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.service.GenericDispatcher;
 
 
 branchId = parameters.branchId;
@@ -39,12 +41,92 @@ isDepot = parameters.isDepot;
 state = parameters.satate;
 district = parameters.district;
 passGreater = parameters.passGreater;
-
-
-
+regionId = parameters.regionId;
+stateId = parameters.stateId;
+searchType = parameters.searchType;
 effectiveDate = parameters.effectiveDate;
+conditionList = [];
+conditionList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+conditionList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+statesList = delegator.findList("Geo",EntityCondition.makeCondition(conditionList,EntityOperator.AND),null,null,null,false);
+statesIdsList=EntityUtil.getFieldListFromEntityList(statesList, "geoId", true);
 
+JSONArray stateListJSON = new JSONArray();
+statesList.each{ eachState ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachState.geoId);
+		newObj.put("label",eachState.geoName);
+		stateListJSON.add(newObj);
+}
+context.stateListJSON = stateListJSON;
 
+branchIds=[];
+//branchId = parameters.branchId;
+//searchType = parameters.searchType;
+context.searchType=searchType;
+branchIdName =  PartyHelper.getPartyName(delegator, branchId, false);
+context.branchId=branchId;
+context.branchIdName=branchIdName;
+if(UtilValidate.isNotEmpty(branchId) && "BY_BO".equals(searchType)){
+	branchIds.add(branchId)
+}
+//regionId = parameters.regionId;
+regionIdName =  PartyHelper.getPartyName(delegator, regionId, false);
+context.regionId=regionId;
+context.regionIdName=regionIdName;
+if(UtilValidate.isNotEmpty(regionId) && "BY_RO".equals(searchType)){
+	partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,regionId), UtilMisc.toSet("partyIdTo"), null, null,false);
+	branchIds=EntityUtil.getFieldListFromEntityList(partyRelationship, "partyIdTo", true);
+}
+//stateId = parameters.stateId;
+if(UtilValidate.isNotEmpty(stateId) && "BY_STATE".equals(searchType)){
+	GenericValue state=delegator.findOne("Geo",[geoId:stateId],false);
+	context.stateId=stateId;
+	context.stateIdName=state.geoName;
+	roIdsList=[];
+	branchIdsList=[];
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, stateId));
+	conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.LIKE, "INT%"));
+	stateWiseRosAndBranchList = delegator.findList("PartyContactDetailByPurpose", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(stateWiseRosAndBranchList)){
+		List roAndBranchIds = EntityUtil.getFieldListFromEntityList(stateWiseRosAndBranchList, "partyId", true);
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roAndBranchIds));
+		conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "BRANCH_OFFICE"));
+		List<GenericValue> partyClassicationForBranch= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		if(UtilValidate.isNotEmpty(partyClassicationForBranch)){
+			 branchIdsList = EntityUtil.getFieldListFromEntityList(partyClassicationForBranch, "partyId", true);
+		}
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roAndBranchIds));
+		conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "REGIONAL_OFFICE"));
+		List<GenericValue> partyClassicationForRo= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		if(UtilValidate.isNotEmpty(partyClassicationForRo)){
+			roIdsList = EntityUtil.getFieldListFromEntityList(partyClassicationForRo, "partyId", true);
+		}
+		List<GenericValue> partyGroupRo=null;
+		List<GenericValue> partyGroupBranch=null;
+		if(UtilValidate.isNotEmpty(roIdsList)){
+			stateRosList = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, roIdsList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+			stateRosList.each{ eachState ->
+				branchIds.add(eachState.partyId);
+			}
+		}
+		if(UtilValidate.isNotEmpty(branchIdsList)){
+			stateBranchsList = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.IN, branchIdsList), UtilMisc.toSet("partyId","groupName"), null, null, false);
+			stateBranchsList.each{ eachState ->
+				branchIds.add(eachState.partyId);
+			}
+		}
+	}
+}
+//Debug.log("searchType================="+searchType);
+//Debug.log("branchId================="+branchId);
+//Debug.log("stateId================="+stateId);
+//Debug.log("regionId================="+regionId);
+//Debug.log("branchIds=======@@@@@@@@=========="+branchIds);
 
 facilityDateStart = null;
 facilityDateEnd = null;
@@ -73,7 +155,7 @@ uniqueOrderId = parameters.uniqueOrderId;
 uniqueOrderIdsList = Eval.me(uniqueOrderId)
 
 
-//Debug.log("branchId================="+branchId);
+//Debug.log("branchIds===ff=============="+branchIds);
 //Debug.log("passbookNumber================="+passbookNumber);
 //Debug.log("partyId================="+partyId);
 //Debug.log("partyClassification================="+partyClassification);
@@ -85,21 +167,20 @@ JSONArray weaverDetailsList = new JSONArray();
 
 branchList = [];
 
-if(branchId){
+if(branchIds){
 condListb = [];
-condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchIds));
 condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
 condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 
 PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
 branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
 }
+//Debug.log("branchIds===ff=====189=========");
+if(UtilValidate.isEmpty(branchList) && UtilValidate.isNotEmpty(branchIds))
+branchList.addAll(branchIds);
 
-if(UtilValidate.isEmpty(branchList) && UtilValidate.isNotEmpty(branchId))
-branchList.add(branchId);
-
-
-
+//Debug.log("branchList===ff=====189========="+ branchList);
 partyList = [];
 
 
@@ -110,10 +191,10 @@ condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUA
 condListb = EntityCondition.makeCondition(condListba, EntityOperator.AND);
 
 partyIdsList = delegator.find("PartyRelationship", condListb, null, UtilMisc.toSet("partyIdTo"), null, null);
-
+//Debug.log("partyIdsList===ff=====189========="+ partyIdsList);
 
 branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList, "partyIdTo", true);
-
+//Debug.log("partyIdsList================="+partyIdsList);
 
 	PartyClassificationPartyIds = [];
 	if(partyClassification && !partyId){
@@ -127,7 +208,7 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 		
 		branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyClassificationList, "partyId", true);
 	}
-	
+	//Debug.log("branchpartyIdsList================="+branchpartyIdsList);
 	isDepotPartyIds = [];
 	if(isDepot && !partyId){
 		condListb2 = [];
@@ -177,7 +258,7 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 	
 	
 	List condList = [];
-	if((branchpartyIdsList || branchId || partyClassification || isDepot || state || district) && !partyId)
+	if((branchpartyIdsList || branchIds || partyClassification || isDepot || state || district) && !partyId)
 	condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, branchpartyIdsList));
 	else if(UtilValidate.isNotEmpty(partyId))
 		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, partyId));
@@ -185,7 +266,7 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 		
 	
 	if(branchList.size() == 1){
-		condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS, branchId));
+		condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS, branchIds));
 	}
 		
 		
@@ -208,6 +289,7 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 	resultList = delegator.find("PartyRelationAndIdentificationAndPerson", cond, null, fieldsToSelect, payOrderBy, null);
 	
 	partyList = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high)-Integer.valueOf(parameters.low));
+	//Debug.log("partyList================="+partyList);
 	
 	
 	
@@ -215,6 +297,7 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 		fieldsToSelect = ["partyId"] as Set;
 		forIndentsCount = delegator.find("PartyRelationAndIdentificationAndPerson", cond, null, fieldsToSelect, null, null);
 		totalIndents = forIndentsCount.size();
+		//Debug.log("totalIndents================="+totalIndents);
 	}
 	
 
@@ -233,13 +316,18 @@ partyList.each{ partyList ->
 	partyId = partyList.partyId;
 	
 	conditionList = [];
+	if(partyId){
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+	}
+	else{
 	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+	}
 	conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
 	fcond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	
 	FacilityList = delegator.findList("Facility", fcond, UtilMisc.toSet("facilityId"), null, null, false);
 	
-	
+	//Debug.log("FacilityList================="+FacilityList);
 	isDepots = "";
 	if(FacilityList)
 	isDepots ="Y"
@@ -261,7 +349,7 @@ partyList.each{ partyList ->
 	tempData.put("partyName", "");
 	
 	tempData.put("totalIndents", totalIndents);
-	
+	//Debug.log("partyName================="+tempData["partyName"]);
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
@@ -298,7 +386,7 @@ partyList.each{ partyList ->
 	tempData.put("branchName", branchName);
 	
 	tempData.put("passbookNo", partyList.idValue);
-	
+	//Debug.log("passbookNo================="+tempData["passbookNo"]);
 	
 	partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId), UtilMisc.toSet("partyClassificationGroupId"), null, null,false);
 	
@@ -487,7 +575,7 @@ partyList.each{ partyList ->
 	tempData.put("loomDetail", loomDetail);
 	
 	tempData.put("partyLoomArrayJSON", partyLoomArrayJSON);
-	
+	//Debug.log("partyLoomArrayJSON================="+tempData["partyLoomArrayJSON"]);
 	if(loomDetail){
 		weaverDetailsList.add(tempData);
 	}
@@ -496,8 +584,8 @@ partyList.each{ partyList ->
 	
 	
 }
-	
+partyIdsList.close();
+//Debug.log("weaverDetailsList==gggggg==============="+weaverDetailsList);
 
 request.setAttribute("weaverDetailsList", weaverDetailsList);
 return "success";
-

@@ -4277,7 +4277,7 @@
        <screen name="QuotaDashboard">
           <section>
               <actions>
-                  <set field="titleProperty" value="Find Weaver"/>
+                  <set field="titleProperty" value="DashBoard for weaver quota utilization"/>
                   <set field="tabButtonItem" value="quotaDashboard"/>
                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
                   <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
@@ -4288,7 +4288,7 @@
                <decorator-screen name="NoAuthDepotSalesCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                      	<screenlet title="Find Weaver">
+                      	<screenlet title="DashBoard for weaver quota utilization">
                       		<!-- <include-form name="FindQuotaProducer"
   								location="component://depotsales/widget/DepotSalesForms.xml" /> -->
   								<platform-specific>

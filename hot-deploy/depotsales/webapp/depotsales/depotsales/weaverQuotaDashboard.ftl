@@ -165,29 +165,28 @@ $(function(){
 //================================================
 
 
-	recursively_ajax();
+	//recursively_ajax();
 });
 
 
 
 
-if(branchId.length == 0)
-branchId = "INT10";
 
 
   function recursively_ajax(){
-    
-           var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
-           
-		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"passGreater":passGreater,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"satate":satate,"effectiveDate":effectiveDate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
-	
+    var branchId=$('#branchId').val();
+       var regionId=$('#regionId').val();
+       var stateId=$('#stateId').val();
+       var searchType=$('#searchType').val();
+       var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
+		var dataJson = {"branchId":branchId,"stateId":stateId,"regionId":regionId,"searchType":searchType,"partyId":partyId,"passbookNumber":passbookNumber,"passGreater":passGreater,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"satate":satate,"effectiveDate":effectiveDate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
-   //  alert(JSON.stringify(dataJson));
     jQuery.ajax({
                 url: 'getWeaverQuotaDashboard',
                 type: 'POST',
                 data: dataJson,
                 dataType: 'json',
+                
                success: function(result){
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 					    alert("Error in order Items");
@@ -268,21 +267,21 @@ function drawRow(rowData) {
           eligible = eligible+ '<tr>'+partyLoomArrayJSON[i].loomQuota+'</tr>'+'</br>';
      }
      
-     row.append($("<td align=center>"+"<table id='eligible'>"+eligible+"</table>"+ "</td>"));
+     row.append($("<td align=right>"+"<table id='eligible'>"+eligible+"</table>"+ "</td>"));
      
       var usedQuota = "";
       for(var i=0;i<partyLoomArrayJSON.length;i++){
-          usedQuota = usedQuota+ '<tr>'+partyLoomArrayJSON[i].usedQuota+'</tr>'+'</br>';
+          usedQuota = usedQuota+ '<tr >'+partyLoomArrayJSON[i].usedQuota+'</tr>'+'</br>';
      }
      
-     row.append($("<td>"+"<table id='usedQuota'>"+usedQuota+"</table>"+ "</td>"));
+     row.append($("<td align=right>"+"<table id='usedQuota'>"+usedQuota+"</table>"+ "</td>"));
      
      var balnceQuota = "";
       for(var i=0;i<partyLoomArrayJSON.length;i++){
           balnceQuota = balnceQuota+ '<tr>'+partyLoomArrayJSON[i].availableQuota+'</tr>'+'</br>';
      }
      
-     row.append($("<td>"+"<table id='balnceQuota'>"+balnceQuota+"</table>"+ "</td>"));
+     row.append($("<td align=right>"+"<table id='balnceQuota'>"+balnceQuota+"</table>"+ "</td>"));
      
 	 
 	
@@ -385,7 +384,7 @@ function drawRow(rowData) {
         <tr class="header-row-2">
           <td>Customer Id</td>
           <td>Customer Name</td>
-          <td>Passbook Number</td>
+          <td>Passbook No</td>
           <td>Branch Name</td>
            <td>No Of Looms</td>
           <td align=center>Eligible Quota(Kgs)</td>
