@@ -74,15 +74,16 @@ def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 fromDate=null;
 thruDate=null;
 thruDate =UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-branchId=parameters.branchId2;
 branchIds=[]; 
 	branchId = parameters.branchId2;
 	searchType = parameters.searchType;
+	context.searchType=searchType;
 	branchIdName =  PartyHelper.getPartyName(delegator, branchId, false);
 	context.branchId=branchId;
 	context.branchIdName=branchIdName;
 	if(UtilValidate.isNotEmpty(branchId) && "BY_BO".equals(searchType)){
 		branchIds.add(branchId)
+		context.searchTypeName="By Branch"
 	}
 	regionId = parameters.regionId;
 	regionIdName =  PartyHelper.getPartyName(delegator, regionId, false);
@@ -91,10 +92,12 @@ branchIds=[];
 	if(UtilValidate.isNotEmpty(regionId) && "BY_RO".equals(searchType)){
 		partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,regionId), UtilMisc.toSet("partyIdTo"), null, null,false);
 		branchIds=EntityUtil.getFieldListFromEntityList(partyRelationship, "partyIdTo", true);
+		context.searchTypeName="By Regional Office";
 	}
 	stateId = parameters.stateId;
 	if(UtilValidate.isNotEmpty(stateId) && "BY_STATE".equals(searchType)){
 		GenericValue state=delegator.findOne("Geo",[geoId:stateId],false);
+		context.searchTypeName="By State";
 		context.stateId=stateId;
 		context.stateIdName=state.geoName;
 		roIdsList=[];
