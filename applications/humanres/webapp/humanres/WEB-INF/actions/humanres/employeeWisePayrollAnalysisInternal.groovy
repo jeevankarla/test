@@ -165,6 +165,9 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 					tempMap["dearnessAlw"] = dearnessAlw;
 					tempMap["totalBenefit"] = totalBenefit;
 					tempMap["empCpf"] = empCpf;
+					if(pfVc < 0){
+						pfVc *= -1;
+					}
 					tempMap["pfVc"] = pfVc;
 					tempMap["emplyrCpf"] = emplyrCpf;
 					tempMap["empFpf"] = empFpf;
