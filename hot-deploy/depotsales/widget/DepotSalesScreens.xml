@@ -4279,7 +4279,7 @@
               <actions>
                   <set field="titleProperty" value="DashBoard for weaver quota utilization"/>
                   <set field="tabButtonItem" value="quotaDashboard"/>
-                   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
+                   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacilityForQuota.groovy"/>   
                   <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
               	  <set field="district" from-field="parameters.district" />
