@@ -1105,11 +1105,11 @@ public class DepotPurchaseServices{
 					quantityStr = (String) paramMap.get("quantity" + thisSuffix);
 				}
 				
-				if (paramMap.containsKey("SERVICE_CHARGE" + thisSuffix)) {
+				/*if (paramMap.containsKey("SERVICE_CHARGE" + thisSuffix)) {
 					SERVICE_CHARGEStr = (String) paramMap.get("SERVICE_CHARGE" + thisSuffix);
 					
 					//Debug.logSERVICE_CHARGEStr============="+SERVICE_CHARGEStr);
-				}
+				}*/
 				
 				if(UtilValidate.isEmpty(quantityStr)){
 					request.setAttribute("_ERROR_MESSAGE_", "Missing product quantity");
@@ -1166,17 +1166,32 @@ public class DepotPurchaseServices{
 						taxRateMap.put("orderAdjustmentTypeId",taxType);
 						taxRateMap.put("sourcePercentage",BigDecimal.ZERO);
 						taxRateMap.put("amount",BigDecimal.ZERO);
+						if(taxType.equals("SERVICE_CHARGE"))
+						taxRateMap.put("description","Service Charge");
 						//taxRateMap.put("taxAuthGeoId", partyGeoId);
+						
+						//Debug.log("taxType================"+taxType);
+						
+						//Debug.log("taxType===11111============="+paramMap.get(taxType + thisSuffix));
+						
+						//Debug.log("taxType===32323============="+paramMap.get(taxType+ "_AMT" + thisSuffix));
 						
 						if (paramMap.containsKey(taxType + thisSuffix)) {
 							String taxPercentage = (String) paramMap.get(taxType + thisSuffix);
+							
+							//Debug.log("taxPercentage================"+taxPercentage);
+							
 							if(UtilValidate.isNotEmpty(taxPercentage) && !(taxPercentage.equals("NaN"))){
 								taxRateMap.put("sourcePercentage",new BigDecimal(taxPercentage));
 							}
 							
+							//Debug.log("taxPercentage================"+taxPercentage);
+							
 						}
 						if (paramMap.containsKey(taxType+ "_AMT" + thisSuffix)) {
 							String taxAmt = (String) paramMap.get(taxType+ "_AMT" + thisSuffix);
+							
+							//Debug.log("taxAmt================"+taxAmt);
 							if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
 								taxRateMap.put("amount",new BigDecimal(taxAmt));
 							}
@@ -1208,6 +1223,8 @@ public class DepotPurchaseServices{
 						ignoreAdjustmentsList.add(taxType);
 					}
 				}
+				
+				Debug.log("vamsi================");
 				
 				if (paramMap.containsKey("tenPercent" + thisSuffix)) {
 					tenPercentStr = (String) paramMap.get("tenPercent" + thisSuffix);
@@ -1449,7 +1466,7 @@ public class DepotPurchaseServices{
 				}
 				
 				
-				try {
+				/*try {
 					if (!SERVICE_CHARGEStr.equals("")) {
 						SERVICE_CHARGEBigDecimal = new BigDecimal(SERVICE_CHARGEStr);
 						//Debug.logSERVICE_CHARGEBigDecimal================"+SERVICE_CHARGEBigDecimal);
@@ -1458,7 +1475,7 @@ public class DepotPurchaseServices{
 						Debug.logError(e, "Problems parsing CSTPercent string: " + SERVICE_CHARGEStr, module);
 						request.setAttribute("_ERROR_MESSAGE_", "Problems parsing CSTPercent string: " + SERVICE_CHARGEStr);
 						return "error";
-					}
+					}*/
 					
 				
 			}
@@ -1653,7 +1670,7 @@ public class DepotPurchaseServices{
 	    
 	  //============================================Service Charge===============================
 	    
-	    if(UtilValidate.isNotEmpty(SERVICE_CHARGEBigDecimal) && SERVICE_CHARGEBigDecimal.compareTo(BigDecimal.ZERO)>0){
+	    if(UtilValidate.isNotEmpty(SERVICE_CHARGEBigDecimal) && SERVICE_CHARGEBigDecimal.compareTo(BigDecimal.ZERO)>0){/*
     	Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
 	    
 	    createInvoiceItemContext.put("invoiceId",invoiceId);
@@ -1729,7 +1746,7 @@ public class DepotPurchaseServices{
     	 
     	 
         
-	    }
+	    */}
 	    
 	  //============================================Rounding Off===============================
 	    
