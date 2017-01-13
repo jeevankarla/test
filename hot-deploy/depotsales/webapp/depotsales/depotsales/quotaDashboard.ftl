@@ -33,19 +33,8 @@ $(".monthPicker").focus(function () {
 });
 	
 	
-function getbranchesByState(state ,branchId){
-       	var stateId=state.value;
-       	var optionList = '';
-			var list= stateJSON[stateId];
-			if (list && list.length>0) {	
-				optionList += "<option value = " + " " + " >" +"All "+ "</option>";	       				        	
-	        	for(var i=0 ; i<list.length ; i++){
-					var innerList=list[i];	     
-	                optionList += "<option value = " + innerList['value'] + " >" +innerList['label']+" </option>";          			
-	      		}//end of main list for loop
-	      	}
-	      	jQuery("[name='"+branchId+"']").html(optionList);
-       }		
+
+	
 	
 $(document).ready(function(){
 
@@ -189,10 +178,11 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				 <tr>
 				  <td align='left' valign='middle' nowrap="nowrap">State :</td>
 				  
-				  <#if state?exists && state?has_content>  
+				  <#if stateWise?exists && stateWise?has_content>  
 								  	  		   
-				  <td valign='middle'><font color="green">          
+				  <td valign='middle'><font color="green"> 
 				   <select name="stateWise" id="stateWise" >
+				   <option value="${stateWise}">${stateName}</option>    
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
 					 </#list> 
@@ -202,7 +192,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				  <#else>
 				  <td valign='middle'><font color="green">          
 				    <select name="stateWise" id="stateWise">
-				     <option value="INT10">TAMILNADU</option>
+				     <option value="IN-TN">TAMILNADU</option>
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
 					 </#list> 

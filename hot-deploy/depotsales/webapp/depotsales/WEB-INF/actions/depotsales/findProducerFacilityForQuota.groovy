@@ -175,6 +175,12 @@ statesList.each{ eachState ->
 context.stateListJSON = stateListJSON;
 
 
+	
+stateNameList = EntityUtil.filterByCondition(statesList, EntityCondition.makeCondition("geoId", EntityOperator.EQUALS, stateWise));
+stateName = "";
+if(stateNameList)	
+stateName = stateNameList[0].geoName;
+context.stateName = stateName;
 
 /*partyRoleAndIde = new DynamicViewEntity();
 partyRoleAndIde.addMemberEntity("PRPD", "PartyRoleDetailAndPartyDetail");
