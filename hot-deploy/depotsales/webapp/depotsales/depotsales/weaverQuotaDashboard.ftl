@@ -42,7 +42,7 @@ under the License.
 <input type="hidden" name="passbookNumber" id="passbookNumber" value="${passbookNumber}">
 <input type="hidden" name="partyClassification" id="partyClassification" value="${partyClassification}">
 <input type="hidden" name="isDepot" id="isDepot" value="${isDepot}">
-<input type="hidden" name="satate" id="satate" value="${satate}">
+<input type="hidden" name="stateWise1" id="stateWise1" value="${stateWise}">
 <input type="hidden" name="passGreater" id="passGreater" value="${passGreater}">
 <input type="hidden" name="effectiveDate1" id="effectiveDate1" value="${effectiveDate}">
 
@@ -63,25 +63,13 @@ var passbookNumber = $("#passbookNumber").val();
 var partyClassification = $("#partyClassification").val();
 
 var isDepot = $("#isDepot").val();
-var satate = $("#satate").val();
+var stateWise = $("#stateWise1").val();
 var district = $("#district").val();
 var passGreater = $("#passGreater").val();
 
 var effectiveDate = $("#effectiveDate1").val();
 
-var effDate=effectiveDate.toString();
-var effYear=effectiveDate.substring(0,4);
 
-
-var effMonth=effectiveDate.substring(5,7);
-var effYear1=parseInt(effYear);
-var effMonth1=parseInt(effMonth);
-
-var currentDate= new Date();
-var currentYear=currentDate.getFullYear();
-var currentMonth=currentDate.getMonth()+1;
-//alert("effMonth"+effMonth1);
-//alert("currentMonth"+currentMonth);
 
 var displayedIndent = 0;
 var uniqueOrderIdsList = [];
@@ -89,11 +77,6 @@ var orderData;
 var domOrderIds = "";
 var low = 0, high = 50;
 $(document).ready(function() {
-if(effMonth1!=currentMonth && effYear1!=currentYear){
-    //alert("balance quota lapses after passage of that month");
-    $("#display").html("BALANCE QUOTA LAPSES AFTER PASSAGE OF THAT MONTH");
-    
-}
    $(window).scroll(function() {
          var came = "";
     	 if ($(window).scrollTop() >= ($(document).height() - $(window).height())*0.99){
@@ -102,7 +85,7 @@ if(effMonth1!=currentMonth && effYear1!=currentYear){
            if(came != "YES")
            recursively_ajax();    
            came = "YES";
-    	}    	
+    	}
 });
 
 
@@ -165,28 +148,29 @@ $(function(){
 //================================================
 
 
-	//recursively_ajax();
+	recursively_ajax();
 });
 
 
 
 
+if(branchId.length == 0)
+branchId = "INT10";
 
 
   function recursively_ajax(){
-    var branchId=$('#branchId').val();
-       var regionId=$('#regionId').val();
-       var stateId=$('#stateId').val();
-       var searchType=$('#searchType').val();
-       var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
-		var dataJson = {"branchId":branchId,"stateId":stateId,"regionId":regionId,"searchType":searchType,"partyId":partyId,"passbookNumber":passbookNumber,"passGreater":passGreater,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"satate":satate,"effectiveDate":effectiveDate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+    
+           var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
+           
+		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"passGreater":passGreater,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"stateWise":stateWise,"effectiveDate":effectiveDate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+	
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
+   //  alert(JSON.stringify(dataJson));
     jQuery.ajax({
                 url: 'getWeaverQuotaDashboard',
                 type: 'POST',
                 data: dataJson,
                 dataType: 'json',
-                
                success: function(result){
 					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
 					    alert("Error in order Items");
@@ -217,10 +201,7 @@ function blinker() {
     $('div#blink').show();
     $('.blink_me').fadeOut(500);
     $('.blink_me').fadeIn(500);
-    
 } 
-
-
 
 
 function drawTable(data) {
@@ -267,21 +248,21 @@ function drawRow(rowData) {
           eligible = eligible+ '<tr>'+partyLoomArrayJSON[i].loomQuota+'</tr>'+'</br>';
      }
      
-     row.append($("<td align=center>"+"<table id='eligible'>"+eligible+"</table>"+ "</td>"));
+     row.append($("<td>"+"<table id='eligible'>"+eligible+"</table>"+ "</td>"));
      
       var usedQuota = "";
       for(var i=0;i<partyLoomArrayJSON.length;i++){
-          usedQuota = usedQuota+ '<tr >'+partyLoomArrayJSON[i].usedQuota+'</tr>'+'</br>';
+          usedQuota = usedQuota+ '<tr>'+partyLoomArrayJSON[i].usedQuota+'</tr>'+'</br>';
      }
      
-     row.append($("<td align=center>"+"<table id='usedQuota'>"+usedQuota+"</table>"+ "</td>"));
+     row.append($("<td>"+"<table id='usedQuota'>"+usedQuota+"</table>"+ "</td>"));
      
      var balnceQuota = "";
       for(var i=0;i<partyLoomArrayJSON.length;i++){
           balnceQuota = balnceQuota+ '<tr>'+partyLoomArrayJSON[i].availableQuota+'</tr>'+'</br>';
      }
      
-     row.append($("<td align=center>"+"<table id='balnceQuota'>"+balnceQuota+"</table>"+ "</td>"));
+     row.append($("<td>"+"<table id='balnceQuota'>"+balnceQuota+"</table>"+ "</td>"));
      
 	 
 	
@@ -374,7 +355,6 @@ function drawRow(rowData) {
  
  <div id = "firstDiv" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
      <font color="blue">Search In Displaying Weavers:</font><input type="text"  style="border-radius: 5px;" class="light-table-filter" data-table="basic-table" placeholder="Filter by any">
-        <font color="red"><b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<label  align="center" id="display" class="blink" style="color: red" ></label></b></font>
         <div id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Weavers : <label  align="center" id="totIndents"style="color: blue" ></label>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <#--Displayed Weavers : <label  align="center" id="displayedIndent"style="color: blue" ></label>--> </div>
 
   <form name="listOrders" id="listOrders"   method="post" >
@@ -384,12 +364,12 @@ function drawRow(rowData) {
         <tr class="header-row-2">
           <td>Customer Id</td>
           <td>Customer Name</td>
-          <td>Passbook No</td>
+          <td>Passbook Number</td>
           <td>Branch Name</td>
            <td>No Of Looms</td>
-          <td align=center>Eligible Quota(Kgs)</td>
-          <td>Used Quota(Kgs)</td>
-          <td>Balance Quota(Kgs)</td>
+          <td>Eligible Quota</td>
+          <td>Used Quota</td>
+          <td>Balance Quota</td>
           
           <#--<td>Quota Quantity</td>
           <td>Invoice Gross Amount</td>
