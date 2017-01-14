@@ -247,9 +247,6 @@
 						else
 						 taxValue = data[rowCount]["SERVICE_CHARGE_AMT"];
 						 
-						 alert(taxPercentage);
-						 
-						  alert(taxValue);
 						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
 						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
 						
