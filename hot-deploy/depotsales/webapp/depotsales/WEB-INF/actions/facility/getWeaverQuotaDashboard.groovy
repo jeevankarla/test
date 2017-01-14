@@ -45,6 +45,8 @@ stateWise = parameters.stateWise;
 
 effectiveDate = parameters.effectiveDate;
 
+if(!stateWise)
+stateWise = "IN-TN";
 
 
 facilityDateStart = null;
@@ -83,23 +85,19 @@ stateBranchsList=result.get("stateBranchsList");
 stateRosList=result.get("stateRosList");
 
 
-roPartyIds = [];
-if(stateRosList && stateRosList.size() != 9){
-stateRosList.each{ eachState ->
-	roPartyIds.add(eachState.partyId);
+branchList = [];
+if(stateBranchsList){
+stateBranchsList.each{ eachState ->
+	branchList.add(eachState.partyId);
 }
-}else{
-roPartyIds.add(branchId);
 }
+
 
 double totalIndents = 0;
 JSONArray weaverDetailsList = new JSONArray();
 
 
-
-branchList = [];
-
-if(roPartyIds){
+/*if(roPartyIds){
 condListb = [];
 condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, roPartyIds));
 condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
@@ -110,12 +108,9 @@ branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo",
 }
 
 if(UtilValidate.isEmpty(branchList))
-branchList.add(branchId);
-
-
+branchList.add(branchId);*/
 
 partyList = [];
-
 
 condListba = [];
 condListba.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
