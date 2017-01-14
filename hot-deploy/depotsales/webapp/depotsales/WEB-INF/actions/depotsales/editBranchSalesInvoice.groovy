@@ -533,7 +533,7 @@
 				
 				
 				condExpr = [];
-				//condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+				condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
 				condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
 				condExpr.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS, "Service Charge"));
 				//Debug.log("condExpr ============="+condExpr);

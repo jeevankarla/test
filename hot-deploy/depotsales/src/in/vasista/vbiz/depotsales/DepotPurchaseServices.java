@@ -2366,7 +2366,7 @@ public class DepotPurchaseServices{
 					return "error";
 				} 
 				
-				try {
+				/*try {
 					if (!SERVICE_CHARGEStr.equals("")) {
 						SERVICE_CHARGEBigDecimal = new BigDecimal(SERVICE_CHARGEStr);
 						//Debug.logSERVICE_CHARGEBigDecimal================"+SERVICE_CHARGEBigDecimal);
@@ -2375,7 +2375,7 @@ public class DepotPurchaseServices{
 						Debug.logError(e, "Problems parsing SERVICE_CHARGEStr string: " + SERVICE_CHARGEStr, module);
 						request.setAttribute("_ERROR_MESSAGE_", "Problems parsing SERVICE_CHARGEStr string: " + SERVICE_CHARGEStr);
 						return "error";
-					}
+					}*/
 
 				/*try {
 					if (!vatStr.equals("")) {
@@ -2479,7 +2479,14 @@ public class DepotPurchaseServices{
 
 		        	BigDecimal amount = BigDecimal.ZERO;
 		        	createInvoiceItemContext.put("invoiceId",invoiceId);
-		            createInvoiceItemContext.put("invoiceItemTypeId", taxType);
+		        	
+		        	if(taxType.equals("SERVICE_CHARGE")){
+		            createInvoiceItemContext.put("invoiceItemTypeId", "INVOICE_ITM_ADJ");
+		        	createInvoiceItemContext.put("description", "Service Charge");
+		        	}else{
+		        	createInvoiceItemContext.put("invoiceItemTypeId", taxType);
+		        	}
+		        	
 		            createInvoiceItemContext.put("parentInvoiceId", invoiceId);
 		            createInvoiceItemContext.put("parentInvoiceItemSeqId", invoiceItemSeqId);
 		            createInvoiceItemContext.put("quantity", BigDecimal.ONE);
@@ -2871,7 +2878,7 @@ public class DepotPurchaseServices{
 		//==============update in Purchase=====================
 	    
 	    
-	    if(UtilValidate.isNotEmpty(SERVICE_CHARGEBigDecimal) && SERVICE_CHARGEBigDecimal.compareTo(BigDecimal.ZERO)>0){
+	    if(UtilValidate.isNotEmpty(SERVICE_CHARGEBigDecimal) && SERVICE_CHARGEBigDecimal.compareTo(BigDecimal.ZERO)>0){/*
 	    	Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
 		    
 		    createInvoiceItemContext.put("invoiceId",invoiceId);
@@ -2914,7 +2921,7 @@ public class DepotPurchaseServices{
 				}
 	        
 	        
-	    /*	 List<GenericValue> orderAdjServiceCharge = null;
+	    	 List<GenericValue> orderAdjServiceCharge = null;
 	     	
 	    	 String orderAdjustmentId = "";
 	 	    conditionList.clear();
@@ -2943,11 +2950,11 @@ public class DepotPurchaseServices{
 					 }catch (Exception e) {
 						 request.setAttribute("_ERROR_MESSAGE_", "Error in populating OrderAdjustmentBilling : ");
 							return "error";
-			 	 	}*/
+			 	 	}
 	    	 
 	    	 
 	        
-		    }
+		    */}
 		
 		
 		
