@@ -214,21 +214,7 @@
             </condition>       
         	<link target="IndentAnalytics"/>
         </menu-item>
-	     <menu-item name="quotaDashboard" title="Quota Dashboard">
-        	<condition>
-            	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
-            </condition>       
-        	<link target="QuotaDashboard"/>
-        </menu-item>
-	    <menu-item name="FindSupplierDispatchs" title="Shipment History">
-        	<link target="ShipmentHistory"/>
-        </menu-item>
-         <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Analytics">
-        	<link target="delayedIndentPOAnalyticsListing"/>
-        </menu-item>
-        <menu-item name="findDelayShipments" title="Delay Shipments">
-        	<link target="findDelayShipments"/>
-        </menu-item>
+	     
          <!-- <menu-item name="ShipmentHistory" title="Shipment History2">
         	<link target="ShipmentHistory"/>
         </menu-item> -->
@@ -291,18 +277,35 @@
          <!-- <menu-item name="indentQtyAnalytics" title="Indent Quantity Analytics">
         	<link target="IndentQtyAnalytics"/>
         </menu-item>  --> 
+        
         <menu-item name="IndentSupplyAnalytics" title="Supply Analytics">
         	<link target="IndentSupplyAnalytics"/>
+        </menu-item>
+         <menu-item name="quotaDashboard" title="Quota Dashboard">
+        	<condition>
+            	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
+            </condition>       
+        	<link target="QuotaDashboard"/>
         </menu-item>
        <!--  <menu-item name="durationAnalytics" title="Duration Analytics">
         	<link target="durationAnalytics"/>
         </menu-item> -->
+         <menu-item name="delayedIndentPOAnalytics" title="Delayed PO Analytics">
+        	<link target="delayedIndentToPoAnalytics"/>
+        </menu-item>
+        <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Listing">
+        	<link target="delayedIndentPOAnalyticsListing"/>
+        </menu-item>
         <menu-item name="delayedShipmentAnalytics" title="Delayed Shipment Analytics">
         	<link target="delayedShipmentAnalytics"/>
         </menu-item>
-        <menu-item name="delayedIndentPOAnalytics" title="Delayed PO Analytics">
-        	<link target="delayedIndentToPoAnalytics"/>
+        <menu-item name="findDelayShipments" title="Delay Shipments Listing">
+        	<link target="findDelayShipments"/>
         </menu-item>
+	    <menu-item name="FindSupplierDispatchs" title="Shipment History">
+        	<link target="ShipmentHistory"/>
+        </menu-item>
+        
        <!--  <menu-item name="IndentPurchaseAnalytics" title="Purchase Analytics">
         	<link target="IndentPurchaseAnalytics"/>
         </menu-item>  -->
