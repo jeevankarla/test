@@ -46,16 +46,11 @@ under the License.
 <input type="hidden" name="passGreater" id="passGreater" value="${passGreater}">
 <input type="hidden" name="effectiveDate1" id="effectiveDate1" value="${effectiveDate}">
 
-
-
 <input type="hidden" name="noOFIndentsFlag" id="noOFIndentsFlag" >
 
 <input type="hidden" name="viewClicked" id="viewClicked" >
 
-
 <script type="text/javascript">
-
-
 
 var branchId = $("#branchId").val();
 var partyId = $("#partyId1").val();

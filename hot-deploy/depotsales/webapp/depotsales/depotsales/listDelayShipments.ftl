@@ -33,7 +33,7 @@ under the License.
    
     <table class="basic-table hover-bar" cellspacing="0">
       <tbody>
-        <tr class="alternate-row" style="color:black; font-stlye:bold; font-size:12px; background-color:grey;">
+        <tr class="alternate-row" style="color:black; font-stlye:bold; font-size:12px; background-color:skyblue;">
           <td align="center"><b>OrderId&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
           <td align="center"><b>order Date</b></td>
           <td align="right"><b>Order Qty(Kgs)</b></td>
@@ -60,13 +60,13 @@ under the License.
               	<td align="right"><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.noOfShipments?if_exists}<#if eachOrder.orderId=="Total"></b></font></#if></td>
               	<td align="right"><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${eachOrder.shipedQty?if_exists}<#if eachOrder.orderId=="Total"></b></font></#if></td>
               	
-              	<#if eachOrder.orderId=="Total">
+             <#-- >	<#if eachOrder.orderId=="Total">
               		<#assign diffDays=eachOrder.diffDays/records>
               		<#assign records=0>
               	<#else>
               		<#assign diffDays=eachOrder.diffDays>
-              	</#if>
-              	<td align="right"><#if eachOrder.orderId=="Total"><font color="Blue"> <b></#if>${diffDays?if_exists?string("##0")} Days<#if eachOrder.orderId=="Total"></b></font></#if></td>
+              	</#if> -->
+              	<td align="right">${eachOrder.diffDays?if_exists} <#if eachOrder.diffDays?has_content>Days </#if> </td>
             </tr>
             <#assign alt_row = !alt_row>
         </#list>
