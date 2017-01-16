@@ -296,7 +296,7 @@ if("Y".equals(isFormSubmitted)){
 		}
 		if(totordQty > 0){
 			totNewObj.put("orderId","Total")
-			totNewObj.put("diffDays",totDelayDays)
+			//totNewObj.put("diffDays",totDelayDays)
 			totNewObj.put("shipedQty",totShipQty)
 			totNewObj.put("ordQty",totordQty)
 			dataList.add(totNewObj);

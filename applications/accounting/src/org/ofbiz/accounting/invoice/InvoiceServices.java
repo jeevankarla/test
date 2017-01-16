@@ -5411,11 +5411,15 @@ public class InvoiceServices {
       				//=========================================================================
 	       				
 	        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
-	        			orderId = shipments.getString("primaryOrderId");
+	        			if(UtilValidate.isNotEmpty(shipments)){
+	        				orderId = shipments.getString("primaryOrderId");
+	        			}
 	        			//Debug.log("invDate============="+invDate);
 	        			try{
 	           			orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
-	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+		           			if(UtilValidate.isNotEmpty(orderAssoc)){
+		           				orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+		           			}
 	        			}catch(Exception e){
 	        				Debug.logError("Problem in OrderAssoc", module);
 	        			}
@@ -5447,11 +5451,15 @@ public class InvoiceServices {
 	       				//=========================================================================
 	       				*/
 	       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
-	        			orderId = shipments.getString("primaryOrderId");
+	       				if(UtilValidate.isNotEmpty(shipments)){
+	       					orderId = shipments.getString("primaryOrderId");
+	       				}
 	        			//Debug.log("orderId============="+orderId);
 	        			try{
-	                	orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
-	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+	        				orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+		                	if(UtilValidate.isNotEmpty(orderAssoc)){
+		                		orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+		       				}
 	        			}catch(Exception e){
 	        				Debug.logError("Problem in OrderAssoc", module);
 	        			}
