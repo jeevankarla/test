@@ -220,7 +220,7 @@
     </request-map>
     
      <request-map uri="getWeaverQuotaDashboard">
-        <security https="true" auth="true"/>
+        <security https="true" auth="false"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getWeaverQuotaDashboard.groovy"/> 
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>

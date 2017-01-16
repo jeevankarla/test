@@ -28,7 +28,16 @@ import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.ofbiz.entity.DelegatorFactory;
 
+
+
+HttpServletRequest httpRequest = (HttpServletRequest) request;
+HttpServletResponse httpResponse = (HttpServletResponse) response;
+dctx = dispatcher.getDispatchContext();
+delegator = DelegatorFactory.getDelegator("default#nhdc-local");
 
 
 branchId = parameters.branchId;
@@ -76,21 +85,39 @@ uniqueOrderId = parameters.uniqueOrderId;
 uniqueOrderIdsList = Eval.me(uniqueOrderId)
 
 
-//Debug.log("partyId================="+partyId);
 //Debug.log("partyClassification================="+partyClassification);
 
 
-result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",stateWise,"userLogin",userLogin));
+/*result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",stateWise,"userLogin",userLogin));
 stateBranchsList=result.get("stateBranchsList");
-stateRosList=result.get("stateRosList");
-
-
+stateRosList=result.get("stateRosList");*/
 branchList = [];
+conditions = [];
+if(UtilValidate.isNotEmpty(stateWise)){
+	conditions.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, stateWise));
+}
+conditions.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+conditions.add(EntityCondition.makeCondition("partyId", EntityOperator.LIKE, "INT%"));
+stateWiseRosAndBranchList = delegator.findList("PartyContactDetailByPurpose", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+
+ roAndBranchIds = EntityUtil.getFieldListFromEntityList(stateWiseRosAndBranchList, "partyId", true);
+
+ 
+ conditions.clear();
+ conditions.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roAndBranchIds));
+ conditions.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "BRANCH_OFFICE"));
+ partyClassicationForBranch= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+ if(UtilValidate.isNotEmpty(partyClassicationForBranch)){
+	  branchList = EntityUtil.getFieldListFromEntityList(partyClassicationForBranch, "partyId", true);
+ }
+ 
+ 
+/*branchList = [];
 if(stateBranchsList){
 stateBranchsList.each{ eachState ->
 	branchList.add(eachState.partyId);
 }
-}
+}*/
 
 
 double totalIndents = 0;
@@ -201,11 +228,13 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));
 	
-	if(UtilValidate.isNotEmpty(passbookNumber) && UtilValidate.isNotEmpty(passGreater)){
+	/*if(UtilValidate.isNotEmpty(passbookNumber) && UtilValidate.isNotEmpty(passGreater)){
 		condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.GREATER_THAN, passbookNumber));
 	}else if(UtilValidate.isNotEmpty(passbookNumber)){
 	   condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.EQUALS, passbookNumber));
 	}
+	*/
+	condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.NOT_EQUAL, null));
 	
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
