@@ -26,6 +26,16 @@ import org.ofbiz.entity.model.ModelKeyMap;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.ofbiz.entity.DelegatorFactory;
+
+
+
+HttpServletRequest httpRequest = (HttpServletRequest) request;
+HttpServletResponse httpResponse = (HttpServletResponse) response;
+dctx = dispatcher.getDispatchContext();
+delegator = DelegatorFactory.getDelegator("default#nhdc-local");
 
 
 //resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));

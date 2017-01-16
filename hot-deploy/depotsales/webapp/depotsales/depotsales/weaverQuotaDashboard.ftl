@@ -387,9 +387,9 @@ function drawRow(rowData) {
           <td>Passbook Number</td>
           <td>Branch Name</td>
            <td>No Of Looms</td>
-          <td align=center>Eligible Quota(Kgs)</td>
-          <td>Used Quota(Kgs)</td>
-          <td>Balance Quota(Kgs)</td>
+          <td align=center>Eligible Quota(Kgs) Including Advanced Quota</td>
+          <td>Used Quota(Kgs) Including Advanced Quota</td>
+          <td>Balance Quota(Kgs) Including Advanced Quota</td>
           
           <#--<td>Quota Quantity</td>
           <td>Invoice Gross Amount</td>

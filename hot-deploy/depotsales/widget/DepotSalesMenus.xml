@@ -170,30 +170,14 @@
             <link target="searchProduct">
             </link>
         </menu-item>
-        <menu-item name="analytics" title="Dashboard">
-        	<condition>
-            	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
-            </condition>       
-        	<link target="IndentAnalytics"/>
-        </menu-item>
-         <menu-item name="quotaDashboard" title="Quota Dashboard">
-        	<condition>
-            	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
-            </condition>       
-        	<link target="QuotaDashboard"/>
-        </menu-item>
+        
           <!-- <menu-item name="utilizedQuotaDashboard" title="Quota Utilized Dashboard">
         	<condition>
             	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
             </condition>       
         	<link target="utilizedQuotaDashboard"/>
         </menu-item>-->
-         <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Analytics">
-        	<link target="delayedIndentPOAnalyticsListing"/>
-        </menu-item>
-         <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Analytics">
-        	<link target="delayedIndentPOAnalyticsListing"/>
-        </menu-item>
+        
          <menu-item name="Transpoter" title="Transporters">
 		      <!--  <condition>
 		        	<if-has-permission permission="MM" action="_VENDOR_VIEW"/>
@@ -219,13 +203,28 @@
 	    <menu-item name="Rounding" title="Rounding">
 	      	<link target="Rounding">
         	</link>
-	    </menu-item>
+	    </menu-item> 
 	    <menu-item name="CustomerAssoc" title="Customer Assoc">
 	      	<link target="CustomerAssoc">
         	</link>
 	    </menu-item>
+	    <menu-item name="analytics" title="Dashboard">
+        	<condition>
+            	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
+            </condition>       
+        	<link target="IndentAnalytics"/>
+        </menu-item>
+	     <menu-item name="quotaDashboard" title="Quota Dashboard">
+        	<condition>
+            	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
+            </condition>       
+        	<link target="QuotaDashboard"/>
+        </menu-item>
 	    <menu-item name="FindSupplierDispatchs" title="Shipment History">
         	<link target="ShipmentHistory"/>
+        </menu-item>
+         <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Analytics">
+        	<link target="delayedIndentPOAnalyticsListing"/>
         </menu-item>
         <menu-item name="findDelayShipments" title="Delay Shipments">
         	<link target="findDelayShipments"/>
