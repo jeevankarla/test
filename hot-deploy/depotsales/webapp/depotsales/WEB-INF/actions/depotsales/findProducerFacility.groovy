@@ -47,7 +47,7 @@ context.formatList = formatList;*/
 
 //Map formatMap = [:];
 //List formatList = [];
-List formatRList = [];
+/*List formatRList = [];
 List formatBList = [];
 
 JSONObject branchProductSroreMap = new JSONObject();
@@ -78,7 +78,7 @@ for (eachList in partyClassificationList) {
 }
 }
 context.formatRList = formatRList;
-context.formatBList = formatBList;
+context.formatBList = formatBList;*/
 
 isFormSubmitted=parameters.isFormSubmitted;
 
@@ -159,7 +159,11 @@ if("Y".equals(isFormSubmitted)){
 		}
 	}
 }
-/*List<GenericValue> partyClassificationList = null;
+
+
+List formatList = [];
+JSONObject branchProductSroreMap = new JSONObject();
+List<GenericValue> partyClassificationList = null;
 		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
 	if(partyClassificationList){
 		for (eachList in partyClassificationList) {
@@ -191,7 +195,7 @@ if("Y".equals(isFormSubmitted)){
 
 	partyClassificationList = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "CUST_CLASSIFICATION"), UtilMisc.toSet("partyClassificationGroupId","description"), null, null,false);
 	
-	context.partyClassificationList = partyClassificationList;*/
+	context.partyClassificationList = partyClassificationList;
 
 	
 
