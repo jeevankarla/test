@@ -63,6 +63,82 @@ def populateChildren(org, employeeList) {
 			panId=panIds.get(0).idValue;
 		 }
 		employee.put("panId",panId);
+		aadharId = "";
+		aadharIds=delegator.findByAnd("PartyIdentification",[partyId:employment.partyId, partyIdentificationTypeId:"ADR_NUMBER"],["idValue"]);
+		Debug.log("aadharIds==========================="+aadharIds);
+		if(UtilValidate.isNotEmpty(aadharIds)){
+			aadharId=aadharIds.get(0).idValue;
+		}
+		employee.put("aadharId",aadharId);
+		
+		
+		
+		personaldetails = [];
+		String fatherName="";
+		String motherName="";
+		String spouseName="";
+		String passportNumber="";
+		String  religion="";
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			
+		personaldetails = delegator.findOne("Person", [partyId : employment.partyId], false);
+			
+		// Debug.log("personaldetails=================="+personaldetails);
+		 if(UtilValidate.isNotEmpty(employment.partyId)){
+			fatherName =personaldetails.fatherName;
+			motherName =personaldetails.motherName;
+			spouseName =personaldetails.spouseName;
+			passportNumber =personaldetails.passportNumber;
+			religion = personaldetails.religion;
+			/*Debug.log("fatherName=================="+fatherName);
+			Debug.log("motherName=================="+motherName);
+			Debug.log("spouseName=================="+spouseName);
+			Debug.log("passportNumber=================="+passportNumber);
+			employee.put("fatherName",fatherName);*/
+			employee.put("motherName",motherName);
+			employee.put("spouseName",spouseName);
+			employee.put("passportNumber",passportNumber);
+			employee.put("religion",religion);
+		 }
+		}
+		
+		
+		
+		
+		 conditionpayList=[];
+		 PayHistoryDetails = [];
+		//List payGradeDetails=[];
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			conditionpayList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employment.partyId));
+		}
+			conditionpayList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		
+		condition1=EntityCondition.makeCondition(conditionpayList,EntityOperator.AND);
+		PayHistoryDetails= delegator.findList("PayHistory", condition1, null, null, null, false );
+		String emplpayGradeId = "";
+		String PayScale="";
+		if(UtilValidate.isNotEmpty(PayHistoryDetails)){
+		
+		emplpayGradeId = EntityUtil.getFirst(PayHistoryDetails).get("payGradeId");
+		}
+		payGradeDetails = delegator.findOne("PayGrade", [payGradeId : emplpayGradeId], false);
+		if(UtilValidate.isNotEmpty(payGradeDetails)){
+				PayScale=payGradeDetails.payScale;
+		}
+		//employeeList.add(PayScale);
+		context.PayScale=PayScale;
+		employee.put("PayScale", PayScale);
+	//	Debug.log("payScale============"+PayScale);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		daAmount=0;
 		if(UtilValidate.isNotEmpty(Flag) && Flag=="daAmount"){
@@ -121,6 +197,43 @@ def populateChildren(org, employeeList) {
 		employee.put("bloodGroup",employment.bloodGroup);
 		}
 		
+		 geodetails=[];
+		String geoname="";
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			
+		geodetails = delegator.findOne("Geo", [geoId : employment.locationGeoId], false);
+		
+		if(UtilValidate.isNotEmpty(geodetails)){
+		geoname=geodetails.geoName;
+		employee.put("geoName",geoname);
+		}
+		
+		}
+		
+		
+		
+		
+		
+		 exprList = [];
+		deptName = "";
+		exprList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"DEPATMENT_NAME"));
+		exprList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+		exprList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,employment.partyId));
+		exprList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		exprCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		partyRelationshipList = delegator.findList("PartyRelationship", exprCond, null, null, null, false);
+		
+		if(UtilValidate.isNotEmpty(partyRelationshipList)){
+			deptId = (EntityUtil.getFirst(partyRelationshipList)).get("partyIdFrom");
+			partyGroupDetails = delegator.findOne("PartyGroup", [partyId : deptId], false);
+			if(UtilValidate.isNotEmpty(partyGroupDetails)){
+				deptName = 	partyGroupDetails.groupName;
+			
+				Debug.log("deptName==============="+deptName);
+				}
+		}
+		employee.put("deptName",deptName);
+		//Debug.log("deptName=============="+deptName);
 		
 		finAccountId="";
 		finAccountName="";
@@ -220,7 +333,7 @@ employeeList.each {employee ->
 	employeeJSON.add(employee.phoneNumber);
 	//employeeJSON.add(employee.address);
 	employeesJSON.add(employeeJSON);
-	Debug.log("employeesJSON=========="+employeesJSON);
+	//Debug.log("employeesJSON=========="+employeesJSON);
 }
 context.employeesJSON = employeesJSON;
 //Debug.logError("employeesJSON="+employeesJSON,"");
