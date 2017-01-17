@@ -22,7 +22,7 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
 			<fo:simple-page-master master-name="main" page-height="11.69in" page-width="8.27in"  margin-bottom=".1in" margin-left="0.5in" margin-right=".3in">
-		        <fo:region-body margin-top="2in"/>
+		        <fo:region-body margin-top="0.8in"/>
 		        <fo:region-before extent="1in"/>
 		        <fo:region-after extent="1in"/>        
 		    </fo:simple-page-master>   
@@ -50,8 +50,6 @@ under the License.
                 	
                 	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size = "12pt" font-family="Arial">BANK ACCOUNT DETAILS</fo:block>
           		<#-->	<fo:block text-align="center" keep-together="always"  white-space-collapse="false" font-family="Arial" font-size = "10pt"> From ${fromDate} - ${thruDate} </fo:block> -->
-          			<fo:block text-align="left"  keep-together="always" font-family="Arial" white-space-collapse="false" font-size="8pt"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                 &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
 	        	<fo:table font-family="Arial">
@@ -76,7 +74,7 @@ under the License.
 							            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Bank A/c No</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Operative/ Inoperative</fo:block>  
+							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Opr/ In Opr</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
 							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Bank Balance as per Bank Statement (as on )</fo:block>  
@@ -109,9 +107,17 @@ under the License.
 			            <fo:table-cell border-style="solid">
 			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.isOperative?if_exists}</fo:block>  
 			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balance?if_exists}</fo:block>  
+			            <!--  <@ofbizCurrency amount=printBankAccountDetailEntry.balance isoCode=currencyUomId/> -->
+			            <#if printBankAccountDetailEntry.isNegBalance == 'Y' >
+			            	<fo:table-cell border-style="solid">
+			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=printBankAccountDetailEntry.balance isoCode=currencyUomId/> Cr</fo:block>  
 			            </fo:table-cell>
+			            <#else>
+			            	<fo:table-cell border-style="solid">
+			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=printBankAccountDetailEntry.balance isoCode=currencyUomId/> Dr</fo:block>  
+			            </fo:table-cell>
+			            </#if>
+			            
 			            <fo:table-cell border-style="solid">
 			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balanceConfirmation?if_exists}</fo:block>  
 			            </fo:table-cell>

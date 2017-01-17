@@ -3069,10 +3069,10 @@ under the License.
     </form>  
     <form name="FindBankAccountDetails" type="single" target="BankAccountDetail" header-row-style="header-row" default-table-style="basic-table">        
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="finAccountId" position="1" tooltip="contains"><text/></field>
-        <field name="finAccountName" position="1" tooltip="contains"><text/></field>
         <field name="finAccountTypeId"><hidden value="BANK_ACCOUNT"/></field>
-        <field name="ownerPartyId" position="1"><lookup target-form-name="LookupPartyName"/></field> 
+        <!-- <field name="finAccountId" position="1" tooltip="contains"><text/></field>
+        <field name="finAccountName" position="1" tooltip="contains"><text/></field>
+        <field name="ownerPartyId" position="1"><lookup target-form-name="LookupPartyName"/></field> --> 
         <field name="asOnDate" required-field="true"><date-time type="date"/></field>       
         <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>

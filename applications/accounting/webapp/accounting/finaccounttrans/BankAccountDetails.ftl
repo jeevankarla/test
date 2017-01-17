@@ -79,7 +79,10 @@ function setContent(){
  	 
  	 var realisationDateObj=$(varform).find("[name='"+"realisationDate"+"']");
  	 var realisationDate=$(realisationDateObj).val();
-
+ 	 
+ 	 var remarksObj=$(varform).find("[name='"+"remarks"+"']");
+ 	 var remarks=$(remarksObj).val();
+ 	 
 	 var finAccountNameSplit = finAccountName.split(' ');
    	 var appendStr = "<input type=hidden name=finAccountId_o_"+index+" value="+finAccountId+" />";
   		 appendStr += "<input type=hidden name=finAccountNameSplit_o_"+index+"  value="+finAccountNameSplit+" />";
@@ -88,11 +91,13 @@ function setContent(){
          appendStr += "<input type=hidden name=balance_o_"+index+"  value="+balance+" />";
          appendStr += "<input type=hidden name=balanceConfirmation_o_"+index+"  value="+balanceConfirmation+" />";
          appendStr += "<input type=hidden name=realisationDate_o_"+index+"  value="+realisationDate+" />";
+         appendStr += "<input type=hidden name=remarks_o_"+index+"  value="+remarks+" />";
  	$("#listBankAccountDetails").append(appendStr);
  	index = index+1;
     });
      action= 'printBankAccountDetails';
      jQuery('#listBankAccountDetails').attr("action", action);
+     //jQuery('#listBankAccountDetails').attr("target", "blank");
      jQuery('#listBankAccountDetails').submit();
 }
 
@@ -108,9 +113,10 @@ function setContent(){
           <td>Name of Bank</td>
           <td>Bank Acc No</td>
           <td>Is Operative</td>
-          <td>Bank balance (as on date)</td>
+          <td>Bank balance</td>
           <td>Balance confirmation is on record Yes/No</td>
           <td>BRS available as on</td>
+          <td>Remarks</td>
       </thead>
       <tbody>
         <#assign alt_row = false>
@@ -128,6 +134,7 @@ function setContent(){
 			  <td><@ofbizCurrency amount=bankAccountDetailEntry.balance?if_exists/><input type="hidden" name="balance" id="balance" value="${bankAccountDetailEntry.balance?if_exists}"/></td>
 			  <td><input class='h3'  type='text' id='balanceConfirmation' name='balanceConfirmation' size='10'/><input type="hidden" name="pickRecord" id="pickRecord" value="Y"/> </td>
               <td>${realisationDate?if_exists}<input type="hidden" name="realisationDate" id="realisationDate" value="${bankAccountDetailEntry.realisationDate?if_exists}"/></td>
+              <td><input class='h3'  type='text' id='remarks' name='remarks' size='10'/></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
@@ -138,6 +145,7 @@ function setContent(){
         	<td></td>
         	<td> <input type="hidden" name="printBankAccountDetails" id="printBankAccountDetails" value="Y"/> <input type="submit" class="smallSubmit" id="viewPrint" value="Print" onclick="javascript:setContent();"/></td>
         	<td><div class="loader" id="loader" ></div></td>
+        	<td></td>
         	<td></td>
         	<td></td>
         	<td></td>
