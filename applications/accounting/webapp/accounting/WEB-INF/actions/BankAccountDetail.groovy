@@ -100,6 +100,7 @@ if("Y".equals(parameters.printBankAccountDetails)){
 	realisationDate = "";
 	printBankAccountDetailList = [];
 	finAccountNameSplit = "";
+	remarks = "";
 	
 	Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 	int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
@@ -135,14 +136,33 @@ if("Y".equals(parameters.printBankAccountDetails)){
 		if (paramMap.containsKey("realisationDate" + thisSuffix)) {
 			realisationDate = (String) paramMap.get("realisationDate"+thisSuffix);
 		  }
+		if (paramMap.containsKey("remarks" + thisSuffix)) {
+			remarks = (String) paramMap.get("remarks"+thisSuffix);
+		  }
 		finAccountName = finAccountName.replaceAll("[,]"," ");
 		tempMap["finAccountId"] = finAccountId;
 		tempMap["finAccountName"] = finAccountName;
 		tempMap["finAccountCode"] = bankAccNo;
 		tempMap["isOperative"] = isOperative;
+		BigDecimal balance = new BigDecimal(balance);
+		if(balance < 0){
+			tempMap["isNegBalance"] = "Y";
+		}else{
+			tempMap["isNegBalance"] = "N";
+		}
+		if(balanceConfirmation == "/"){
+			balanceConfirmation = "";
+		}
+		if(realisationDate == "/"){
+			realisationDate = "";
+		}
+		if(remarks == "/"){
+			remarks = "";
+		}
 		tempMap["balance"] = balance;
 		tempMap["balanceConfirmation"] = balanceConfirmation;
 		tempMap["realisationDate"] = realisationDate;
+		tempMap["remarks"] = remarks;
 		printBankAccountDetailList.add(tempMap);
 	}
 	context.printBankAccountDetailList=printBankAccountDetailList;
