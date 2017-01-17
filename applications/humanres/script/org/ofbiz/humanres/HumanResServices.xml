@@ -236,6 +236,10 @@
     <simple-method method-name="deletePerfReviewItem" short-description="Delete Performance Review Items">
         <entity-one entity-name="PerfReviewItem" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+       	<set field="lookedUpValue1.employeePartyId" from-field="parameters.employeePartyId"/>
+        <set field="lookedUpValue1.employeeRoleTypeId" from-field="parameters.employeeRoleTypeId"/>
+        <set field="lookedUpValue1.perfReviewId" from-field="parameters.perfReviewId"/>
+        <call-service service-name="deletePerfReview" in-map-name="lookedUpValue1"></call-service> 
     </simple-method>
 
     <simple-method method-name="createPerformanceNote" short-description="Create Performance Note">

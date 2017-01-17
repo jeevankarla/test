@@ -25,12 +25,26 @@ if (security.hasEntityPermission("HUMANRES", "_ADMIN", session)) {
 }
 if(screenFlag.equals("EmployeeWisePayrollAnalysisInternal")){
 	regionalOfficeId = parameters.regionalOfficeId;
+	customTimePeriodId = parameters.customTimePeriodId;
+	fromDate = null;
+	thruDate = null;
+	CustomTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : customTimePeriodId], false);
+	fromDate = CustomTimePeriod.fromDate;
+	thruDate = CustomTimePeriod.thruDate;
+	fromDateStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate));
+	thruDateEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate));
+	
+	if(UtilValidate.isNotEmpty(CustomTimePeriod)){
+		fromDate = fromDate;
+		thruDate = thruDate;
+	}
 	if(regionalOfficeId.equals("Company")){
 		
 	}else{	
 		conditionList = [];
 		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, regionalOfficeId));
-		conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO ,fromDateStart));
+		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, thruDateEnd)));
 		employementList = delegator.findList("Employment", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
 		if(UtilValidate.isNotEmpty(employementList)){
 			employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);

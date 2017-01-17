@@ -96,9 +96,32 @@ function datePicker1(){
 			jQuery("#leaveFromDate").datepicker('setDate', selectedDate);
 		}
 	});
+	jQuery("#dateOfPromotion").datepicker({
+		dateFormat:'dd-mm-yy',
+		showSecond: true,
+		timeFormat: 'hh:mm:ss',
+		changeMonth: true,
+		changeYear: true,
+		yearRange: "-30:+0",
+		onSelect: function(selectedDate) {
+			jQuery("#leaveFromDate").datepicker('setDate', selectedDate);
+		}
+	});
+	jQuery("#dateOfConfirmation").datepicker({
+		dateFormat:'dd-mm-yy',
+		showSecond: true,
+		changeMonth: true,
+		changeYear: true,
+		yearRange: "-30:+0",
+		onSelect: function(selectedDate) {
+			jQuery("#leaveFromDate").datepicker('setDate', selectedDate);
+		}
+	});
+	
+	
 }
 function datePicker2(monthYearpckr){
-	var monthYearpckrId = $(monthYearpckr).id;
+	var monthYearpckrId =monthYearpckr.id;
 	jQuery("#"+monthYearpckrId).datepicker({
 		dateFormat:'dd-mm-yy',
 		changeMonth: true,
@@ -108,4 +131,5 @@ function datePicker2(monthYearpckr){
 			jQuery("#"+monthYearpckrId).datepicker('setDate', selectedDate);
 		}
 	});
+	
 }

@@ -281,6 +281,8 @@ under the License.
       <field name="perfReviewItemSeqId" type="id-ne"></field>
       <field name="perfRatingTypeId" type="id"></field>
       <field name="perfReviewItemTypeId" type="id"></field>
+       <field name="PromotionDate" type="date-time"></field>
+      <field name="ConfirmationDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
