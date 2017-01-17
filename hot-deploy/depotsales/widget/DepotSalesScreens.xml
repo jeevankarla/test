@@ -10038,6 +10038,30 @@
             </widgets>
         </section>
     </screen>
+		<screen name="CreateUserLogin">
+    		<section>
+    			<actions>
+    				<set field="titleProperty" value="Create User Login" />
+    				<set field="tabButtonItem" value="CreateUserLogin" />
+    				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/SecurityGroupJSON.groovy" />
+    			</actions>
+    			<widgets>
+    					<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+    						<decorator-section name="body"> 
+    							<section>
+    								<widgets>
+    								
+    										<platform-specific>
+    												<html><html-template location="component://depotsales/webapp/depotsales/depotsales/CreateUserLogin.ftl" /></html>
+    										</platform-specific>
+    							
+    								</widgets>
+    							</section>
+    						</decorator-section>
+    				</decorator-screen>
+    			</widgets>
+    		</section>
+	</screen>
 	
 	
 	

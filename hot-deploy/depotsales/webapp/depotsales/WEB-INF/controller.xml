@@ -1139,6 +1139,11 @@
            <response name="success" type="view" value="stateWiseBranchWiseSaleReportCSV"/>        
         </request-map>
         
+        <request-map uri="CreateUserLogin">
+	        <security auth="true" https="true"/>    
+	        <response name="success" type="view" value="CreateUserLogin"/>
+	        <response name="error" type="view" value="CreateUserLogin"/>
+	    </request-map>
         
         
         
@@ -2618,6 +2623,12 @@
         <response name="success" type="view" value="CreateUserLogin"/>
         <response name="error" type="view" value="CreateUserLogin"/>
     </request-map>
+    <request-map uri="CreateUserLogins">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="CreateUserLogins"></event>
+       <response name="success" type="view"  value="CreateUserLogin"/>
+       <response name="error" type="view" value="CreateUserLogin"/>
+     </request-map>
      <!-- View Mappings -->
      
      
@@ -2966,4 +2977,5 @@
 	<view-map name="CustomerDetails" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerDetails" content-type="text/csv"/>
 	<view-map name="claimReportDetailsPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsPDF" content-type="application/pdf"/>
 	<view-map name="billWiseSalesReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#billWiseSalesReport" content-type="application/pdf"/>
+	<view-map name="CreateUserLogin" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateUserLogin"/>
 </site-conf>
