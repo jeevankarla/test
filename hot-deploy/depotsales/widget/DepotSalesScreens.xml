@@ -10043,7 +10043,7 @@
     			<actions>
     				<set field="titleProperty" value="Create User Login" />
     				<set field="tabButtonItem" value="CreateUserLogin" />
-    				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/SecurityGroupJSON.groovy" />
+    				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/securityGroupJSON.groovy" />
     			</actions>
     			<widgets>
     					<decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
