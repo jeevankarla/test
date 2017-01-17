@@ -214,6 +214,10 @@
             </condition>       
         	<link target="IndentAnalytics"/>
         </menu-item>
+       	<menu-item name="CreateUserLogin" title="Create User Login">
+        	<link target="CreateUserLogin"/>
+        </menu-item>
+        
 	     
          <!-- <menu-item name="ShipmentHistory" title="Shipment History2">
         	<link target="ShipmentHistory"/>

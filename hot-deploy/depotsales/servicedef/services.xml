@@ -754,5 +754,12 @@
          <attribute mode="IN" name="partyId" optional="true" type="String"/>
          <attribute mode="IN" name="invoiceTypeId" optional="true" type="String"/>
     </service>
+    <service name="CreateUserLogins" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreateUserLogins" transaction-timeout="6000000">
+         <description>Create UserLogins</description>
+         <attribute mode="IN" name="partyIds" optional="false" type="List"/>
+         <attribute mode="IN" name="groupIds" optional="false" type="List"/>
+         <attribute mode="IN" name="password" optional="true" type="String"/>
+    </service>
+    
 </services>
 

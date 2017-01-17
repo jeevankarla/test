@@ -18776,6 +18776,94 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
     
     }    
     
-    
+    public static Map<String, Object> CreateUserLogins(DispatchContext ctx, Map context) {
+    	Delegator delegator = ctx.getDelegator();
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+    	GenericValue userLogin = (GenericValue) context.get("userLogin");
+    	Map result = ServiceUtil.returnSuccess("Successfully Created!");    	
+    	
+    	FastList partyIdsList = (FastList)context.get("partyIds");
+    	FastList groupIdsList = (FastList)context.get("groupIds");
+    	
+    	String partyIds[] = ((String)partyIdsList.get(0)).split(",");
+    	String groupIds[] = ((String)groupIdsList.get(0)).split(",");
+    	String password = "nhdc123";
+
+      if(UtilValidate.isNotEmpty(context.get("password"))){
+        password = (String)context.get("password");
+      }
+    	
+    	for (int i=0;i<partyIds.length;i++){
+    		String partyId = (String)partyIds[i];
+    		String passBookNo = "";
+    		try{
+    			GenericValue partyIdentification = delegator.findOne("PartyIdentification", UtilMisc.toMap("partyId", partyId, "partyIdentificationTypeId", "PSB_NUMER"), false);
+    			if(UtilValidate.isNotEmpty(partyIdentification)){
+    				passBookNo = partyIdentification.getString("idValue");
+    			}
+    		}catch(GenericEntityException e){
+    			Debug.logError("Not a valid party", module);
+    		}
+    		Map<String, Object> resultCtx = null;
+    		try{
+    			GenericValue userLoginDetail = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", passBookNo), false);
+    			if(UtilValidate.isEmpty(userLoginDetail)){
+    				Map userDetail = FastMap.newInstance();
+    				userDetail.put("userLoginId", passBookNo);
+            userDetail.put("userLogin", userLogin);
+    				userDetail.put("currentPassword", password);
+    				userDetail.put("currentPasswordVerify", password);
+    				userDetail.put("requirePasswordChange", "N");
+    				userDetail.put("partyId", partyId);
+    				try{
+    					resultCtx = dispatcher.runSync("createUserLogin", userDetail);
+    				} catch (Exception e) {
+    					Debug.logError(e, module);
+    				}
+    			}
+    		} catch(GenericEntityException e){
+    			Debug.logError(e, module);
+    		}
+			try{
+				GenericValue userLoginDetail = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", passBookNo), false);
+				if(UtilValidate.isNotEmpty(userLoginDetail)){
+					for(int j=0;j<groupIds.length;j++){
+		    			String groupId = groupIds[j];
+        				List conditionList = FastList.newInstance();
+        	            conditionList.add(EntityCondition.makeCondition("userLoginId", EntityOperator.EQUALS, passBookNo));
+        	       	    conditionList.add(EntityCondition.makeCondition("groupId", EntityOperator.EQUALS, groupId));
+        	            conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+        	            EntityCondition condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+        	            try{
+        	            	List<GenericValue> UserLoginSecurityGroup = delegator.findList("UserLoginSecurityGroup", condExpr, null, null, null, false);
+        	            	if(UtilValidate.isEmpty(UserLoginSecurityGroup)){
+            	            	Map<String, Object> createGroupResult = null;
+            	            	Map groupDetail = FastMap.newInstance();
+            	            	groupDetail.put("userLogin",userLogin);
+            	            	groupDetail.put("userLoginId", passBookNo);
+            	            	groupDetail.put("groupId", groupId);
+            	            	try{
+            	            		createGroupResult = dispatcher.runSync("addUserLoginToSecurityGroup", groupDetail);
+            	            	} catch (Exception e) {
+            	            		Debug.logError(e, module);
+            	            	}
+            	            }
+        	            } catch(GenericEntityException e){
+        	    			Debug.logError(e, module);
+        	    		}
+					}
+    			}
+			}
+			catch(GenericEntityException e){
+    			Debug.logError(e, module);
+    		}
+    			
+    		
+    		
+    	}
+    	
+    	
+    	return result;
+    }
     
 }
