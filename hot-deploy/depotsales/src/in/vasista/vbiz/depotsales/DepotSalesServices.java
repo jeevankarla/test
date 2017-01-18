@@ -18800,9 +18800,9 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
     			GenericValue partyIdentification = delegator.findOne("PartyIdentification", UtilMisc.toMap("partyId", partyId, "partyIdentificationTypeId", "PSB_NUMER"), false);
     			if(UtilValidate.isNotEmpty(partyIdentification)){
     				passBookNo = partyIdentification.getString("idValue");
-    			}
-    			else{
-    				passBookNo = partyId;
+    				if(passBookNo == "_NA_"){
+    					passBookNo = partyId;
+    				}
     			}
     		}catch(GenericEntityException e){
     			Debug.logError("Not a valid party", module);
