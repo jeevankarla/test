@@ -65,12 +65,10 @@ def populateChildren(org, employeeList) {
 		employee.put("panId",panId);
 		aadharId = "";
 		aadharIds=delegator.findByAnd("PartyIdentification",[partyId:employment.partyId, partyIdentificationTypeId:"ADR_NUMBER"],["idValue"]);
-		Debug.log("aadharIds==========================="+aadharIds);
 		if(UtilValidate.isNotEmpty(aadharIds)){
 			aadharId=aadharIds.get(0).idValue;
 		}
 		employee.put("aadharId",aadharId);
-		
 		
 		
 		personaldetails = [];
@@ -83,18 +81,12 @@ def populateChildren(org, employeeList) {
 			
 		personaldetails = delegator.findOne("Person", [partyId : employment.partyId], false);
 			
-		// Debug.log("personaldetails=================="+personaldetails);
 		 if(UtilValidate.isNotEmpty(employment.partyId)){
 			fatherName =personaldetails.fatherName;
 			motherName =personaldetails.motherName;
 			spouseName =personaldetails.spouseName;
 			passportNumber =personaldetails.passportNumber;
 			religion = personaldetails.religion;
-			/*Debug.log("fatherName=================="+fatherName);
-			Debug.log("motherName=================="+motherName);
-			Debug.log("spouseName=================="+spouseName);
-			Debug.log("passportNumber=================="+passportNumber);
-			employee.put("fatherName",fatherName);*/
 			employee.put("motherName",motherName);
 			employee.put("spouseName",spouseName);
 			employee.put("passportNumber",passportNumber);
@@ -102,12 +94,8 @@ def populateChildren(org, employeeList) {
 		 }
 		}
 		
-		
-		
-		
 		 conditionpayList=[];
 		 PayHistoryDetails = [];
-		//List payGradeDetails=[];
 		if(UtilValidate.isNotEmpty(employment.partyId)){
 			conditionpayList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employment.partyId));
 		}
@@ -125,19 +113,8 @@ def populateChildren(org, employeeList) {
 		if(UtilValidate.isNotEmpty(payGradeDetails)){
 				PayScale=payGradeDetails.payScale;
 		}
-		//employeeList.add(PayScale);
 		context.PayScale=PayScale;
 		employee.put("PayScale", PayScale);
-	//	Debug.log("payScale============"+PayScale);
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		daAmount=0;
@@ -209,11 +186,6 @@ def populateChildren(org, employeeList) {
 		}
 		
 		}
-		
-		
-		
-		
-		
 		 exprList = [];
 		deptName = "";
 		exprList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"DEPATMENT_NAME"));
@@ -233,7 +205,6 @@ def populateChildren(org, employeeList) {
 				}
 		}
 		employee.put("deptName",deptName);
-		//Debug.log("deptName=============="+deptName);
 		
 		finAccountId="";
 		finAccountName="";
@@ -319,11 +290,11 @@ context.employeeList=employeeList;
 if(UtilValidate.isEmpty(parameters.partyId)){
 	parameters.partyId = "Company";
 	
-}
-company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : parameters.partyId]);
-populateChildren(company, employeeList);
-JSONArray employeesJSON = new JSONArray();
-employeeList.each {employee ->
+   }
+	company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : parameters.partyId]);
+	populateChildren(company, employeeList);
+	JSONArray employeesJSON = new JSONArray();
+	employeeList.each {employee ->
 	JSONArray employeeJSON = new JSONArray();
 	employeeJSON.add(employee.name);
 	employeeJSON.add(employee.employeeId);
@@ -331,9 +302,7 @@ employeeList.each {employee ->
 	employeeJSON.add(employee.position);
 	employeeJSON.add(employee.joinDate);
 	employeeJSON.add(employee.phoneNumber);
-	//employeeJSON.add(employee.address);
 	employeesJSON.add(employeeJSON);
-	//Debug.log("employeesJSON=========="+employeesJSON);
-}
+
+	}
 context.employeesJSON = employeesJSON;
-//Debug.logError("employeesJSON="+employeesJSON,"");
