@@ -26,16 +26,6 @@ import org.ofbiz.entity.model.ModelKeyMap;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.ofbiz.entity.DelegatorFactory;
-
-
-
-HttpServletRequest httpRequest = (HttpServletRequest) request;
-HttpServletResponse httpResponse = (HttpServletResponse) response;
-dctx = dispatcher.getDispatchContext();
-delegator = DelegatorFactory.getDelegator("default#NHDC");
 
 
 //resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
@@ -97,8 +87,8 @@ JSONObject branchProductSroreMap = new JSONObject();
 	
 
 branchId = "";
-if(parameters.branchId2)
-branchId = parameters.branchId2;
+if(parameters.branchId)
+branchId = parameters.branchId;
 
 passbookNumber = "";
 if(parameters.passbookNumber)
@@ -122,12 +112,6 @@ isDepot = parameters.isDepot;
 satate = "";
 if(parameters.satate)
 satate = parameters.satate;
-
-stateWise = "";
-if(parameters.stateWise)
-stateWise = parameters.stateWise;
-
-Debug.log("stateWise============="+stateWise);
 
 district = "";
 if(parameters.district)
@@ -163,7 +147,6 @@ context.satate = satate;
 context.district = district;
 context.passGreater = passGreater;
 context.effectiveDate = effectiveDate;
-context.stateWise = stateWise;
 
 
 
@@ -185,12 +168,6 @@ statesList.each{ eachState ->
 context.stateListJSON = stateListJSON;
 
 
-	
-stateNameList = EntityUtil.filterByCondition(statesList, EntityCondition.makeCondition("geoId", EntityOperator.EQUALS, stateWise));
-stateName = "";
-if(stateNameList)	
-stateName = stateNameList[0].geoName;
-context.stateName = stateName;
 
 /*partyRoleAndIde = new DynamicViewEntity();
 partyRoleAndIde.addMemberEntity("PRPD", "PartyRoleDetailAndPartyDetail");
