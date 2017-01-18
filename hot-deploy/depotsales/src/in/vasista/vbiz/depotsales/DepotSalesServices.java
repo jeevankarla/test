@@ -18801,6 +18801,9 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
     			if(UtilValidate.isNotEmpty(partyIdentification)){
     				passBookNo = partyIdentification.getString("idValue");
     			}
+    			else{
+    				passBookNo = partyId;
+    			}
     		}catch(GenericEntityException e){
     			Debug.logError("Not a valid party", module);
     		}
