@@ -201,7 +201,6 @@ def populateChildren(org, employeeList) {
 			if(UtilValidate.isNotEmpty(partyGroupDetails)){
 				deptName = 	partyGroupDetails.groupName;
 			
-				Debug.log("deptName==============="+deptName);
 				}
 		}
 		employee.put("deptName",deptName);
