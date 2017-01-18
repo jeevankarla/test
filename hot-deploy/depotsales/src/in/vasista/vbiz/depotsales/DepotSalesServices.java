@@ -18800,7 +18800,7 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
     			GenericValue partyIdentification = delegator.findOne("PartyIdentification", UtilMisc.toMap("partyId", partyId, "partyIdentificationTypeId", "PSB_NUMER"), false);
     			if(UtilValidate.isNotEmpty(partyIdentification)){
     				passBookNo = partyIdentification.getString("idValue");
-    				if(passBookNo == "_NA_"){
+    				if(passBookNo.equals("_NA_")){
     					passBookNo = partyId;
     				}
     			}
