@@ -49,7 +49,7 @@ partyIdFrom=invoiceList.get("partyIdFrom");
 branchRo = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyIdFrom)  , UtilMisc.toSet("partyIdFrom"), null, null, false );
 roID = EntityUtil.getFirst(branchRo);
 context.partyIdFrom=partyIdFrom;
-if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
+if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyIdFrom=="INT4")){
 	kanAndKalRo="yes";
 	context.kanAndKalRo=kanAndKalRo;
 	tallySalesNo = invoiceList.get("referenceNumber");
@@ -316,8 +316,8 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		 invoiceInnerAdjItemList2 = EntityUtil.filterByCondition(invoiceAdjItemList, cond11);
 		 invoiceInnerAdjItem2 = EntityUtil.getFirst(invoiceInnerAdjItemList2);
 		 if(UtilValidate.isNotEmpty(invoiceInnerAdjItem2)){
-			 unitPriceIncTax=unitPriceIncTax+(invoiceInnerAdjItem2.amount/eachList.quantity);
-			 totTaxAmount2=totTaxAmount2+(invoiceInnerAdjItem2.amount);
+			 //unitPriceIncTax=unitPriceIncTax+(invoiceInnerAdjItem2.amount/eachList.quantity);
+			 //totTaxAmount2=totTaxAmount2+(invoiceInnerAdjItem2.amount);
 		 }
 		 invoiceItemLevelUnitListPrice.put(eachList.productId, unitPriceIncTax);
 		 
@@ -883,20 +883,20 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			  }
 			  
 			  
-			  if(scheme == "General"){
+			  /*if(scheme == "General"){
 				  
 				  sourcePercentage = (serviceAmt/(eachInvoiceList.itemValue))*100;
 				  double perAmt = (eachInvoiceList.amount*sourcePercentage)/100;
 				  
 				  tempMap.put("amount",(eachInvoiceList.amount+perAmt));
-				  }else{
+				  }else{*/
 				  tempMap.put("amount", eachInvoiceList.amount);
-			   }
+			  // }
 				  Debug.log("invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId)========="+ invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId))
 				  tempMap.put("unitPriceIncTax", invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId)+tempMap.get("amount"));
 			 // tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
 				  
-				  tempMap.put("ToTamount", tempMap.get("quantity")*tempMap.get("unitPriceIncTax") );
+				  tempMap.put("ToTamount", Math.round(tempMap.get("quantity")*tempMap.get("unitPriceIncTax")));
 			 
 				   grandTotal = grandTotal+(eachInvoiceList.itemValue)+serviceAmt;
 			  
