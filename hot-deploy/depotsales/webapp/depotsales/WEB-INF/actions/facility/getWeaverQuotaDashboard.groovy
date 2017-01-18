@@ -37,7 +37,7 @@ import org.ofbiz.entity.DelegatorFactory;
 HttpServletRequest httpRequest = (HttpServletRequest) request;
 HttpServletResponse httpResponse = (HttpServletResponse) response;
 dctx = dispatcher.getDispatchContext();
-delegator = DelegatorFactory.getDelegator("default#nhdc-local");
+delegator = DelegatorFactory.getDelegator("default#NHDC");
 
 
 branchId = parameters.branchId;
