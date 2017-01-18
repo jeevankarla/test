@@ -1496,6 +1496,70 @@
            </hyperlink>
         </field> -->
    	</form>
-    
+    <form name="createPerformanceRating" type="single" target="createNewPerformanceRating">
+    	<field name="employeeId" title="EmployeeId"  >
+			<lookup  target-form-name="LookupEmployeeName" size="10"/>
+		</field>
+		<field name="fromDate" id-name="fromDate" title="${uiLabelMap.fromDate}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
+		<field name="thruDate" id-name="thruDate" title="${uiLabelMap.toDate}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
+        <field name="PerfRatingType" title="Grading" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PerfRatingType" key-field-name="perfRatingTypeId" description="${description}" filter-by-date="false">
+                    <entity-constraint name="parentTypeId" operator="equals" value="EMP_RATING"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> 
+        <field name="Promotion" title="Promotion" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="EmplPositionType" key-field-name="emplPositionTypeId" description="${description}">
+				</entity-options>
+			</drop-down>
+		</field>
+        <field name="dateOfPromotion" id-name="dateOfPromotion" title="${uiLabelMap.dateOfPromotion}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
+        <field name="dateOfConfirmation" id-name="dateOfConfirmation" title="${uiLabelMap.dateOfConfirmation}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>		  
+    	<field name="submitButton" title="Create" widget-style="smallSubmit"><submit/></field>
+    </form>
+    <form name="findPerformanceRating" odd-row-style="alternate-row" header-row-style="header-row" type="single"
+	    	default-table-style="basic-table hover-bar" separate-columns="true">
+		<field name="employeeId" title="EmployeeId"  >
+			<lookup  target-form-name="LookupEmployeeName" size="10"/>
+		</field>
+         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>	
+	</form>
+	 
+   <form name="ListPerformanceRating" type="list" list-name="performanceRatingList" default-table-style="basic-table hover-bar" separate-columns="true"  target="UpdatePerformanceRating">
+   		<field name="partyId" title="Employee Id"><display></display></field>
+    	<!-- <field name="fromDate" title="Assessment from Date"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/></field> -->
+    	<field name="perfReviewId"><hidden></hidden></field> 	
+    	<field name="perfReviewItemSeqId"><hidden></hidden></field> 	
+    	<field name="fromDate" title="Assessment from Date" ><display></display></field>
+    	<field name="thruDate" title="Assessment thru Date" ><display></display></field>
+    	<field name="PerfRatingType" title="Grading">
+    		<drop-down allow-empty="true">
+                <entity-options entity-name="PerfRatingType" key-field-name="perfRatingTypeId" description="${description}" filter-by-date="false">
+                    <entity-constraint name="parentTypeId" operator="equals" value="EMP_RATING"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+    	</field>
+    	<field name="promotion" title="Promotion">
+    		<drop-down allow-empty="true">
+				<entity-options entity-name="EmplPositionType" key-field-name="emplPositionTypeId" description="${description}">
+				</entity-options>
+			</drop-down>
+		</field>
+    	<field name="PromotionDate" id-name="PromotionDate" title="Promotion Date" event="onclick" action="javascript:datePicker2(PromotionDate)"><text></text><!-- <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(PromotionDate, &quot;dd/MM/yyyy&quot;);}"></display> --></field>
+    	<field name="ConfirmationDate" id-name="ConfirmationDate" title="Confirmation Date" event="onclick" action="javascript:datePicker2(ConfirmationDate)"><text></text><!-- <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(ConfirmationDate, &quot;dd/MM/yyyy&quot;);}"></display> --></field>
+    	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    	<field name="deleteLink" title="Delete" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="DeletePerformanceRating">
+                 <parameter param-name="employeePartyId" from-field="partyId"/>
+                <parameter param-name="employeeRoleTypeId" value="EMPLOYEE"/>
+                <parameter param-name="perfReviewId" from-field="perfReviewId"/>
+                <parameter param-name="perfReviewItemSeqId" from-field="perfReviewItemSeqId"/> 
+           </hyperlink>
+           </field>
+   </form>
 </forms>
 

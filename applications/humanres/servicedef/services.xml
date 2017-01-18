@@ -1131,7 +1131,33 @@ under the License.emplpunch
         <attribute name="oldAppointmentDate" mode="IN" type="String" optional="true"/>
         <attribute name="newAppointmentDate" mode="IN" type="String" optional="true"/>
     </service>
-
+	
+	
+	<service name="makeEmployeeAppraisalPromotion" engine="java" default-entity-name="Employment"
+             location="in.vasista.vbiz.humanres.HumanresService" invoke="makeEmployeeAppraisalPromotion" auth="true">
+        <description>Make appraisal and promotion</description>
+        <attribute name="employeeId" mode="IN" type="String" optional="true"/>
+        <attribute name="PerfRatingType" mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate" mode="IN" type="String" optional="true"/>
+        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+        <attribute name="Promotion" mode="IN" type="String" optional="true"/>
+        <attribute name="dateOfPromotion" mode="IN" type="String" optional="true"/>
+        <attribute name="dateOfConfirmation" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="UpdatePerformanceRating" engine="java" 
+                 location="in.vasista.vbiz.humanres.HumanresService" invoke="UpdatePerformanceRating" auth="true">
+        <description>Make appraisal and promotion</description>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+        <attribute name="PerfRatingType" mode="IN" type="String" optional="true"/>
+        <attribute name="perfReviewId" mode="IN" type="String" optional="true"/>
+        <attribute name="perfReviewItemSeqId" mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate" mode="IN" type="String" optional="true"/>
+        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+        <attribute name="promotion" mode="IN" type="String" optional="true"/>
+        <attribute name="PromotionDate" mode="IN" type="String" optional="true"/>
+        <attribute name="ConfirmationDate" mode="IN" type="String" optional="true"/>
+    </service>
+    
     <service name="createJobRequisition" engine="simple" default-entity-name="JobRequisition"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createJobRequisition" auth="true">
         <description>Create a new Job Requisition</description>

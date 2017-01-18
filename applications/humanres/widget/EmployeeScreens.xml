@@ -611,6 +611,77 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="performanceManagement">
+        <section>
+            <actions>
+                <set field="titleProperty" value="performance Management"/>
+                <set field="tabButtonItem" value="pmsLD" />
+                <set field="tabButtonItem2" value="performanceManagement" />
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_EDIT"/>
+                </service>
+                <set field="hasEmployeeEditPermission" from-field="permResult.hasPermission"/>                   
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/> 
+               <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>   
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/PerformanceRatingList.groovy"/>       
+            </actions>
+            <widgets>
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="pmsLDTabBar"/>
+                            	<container>
+                            		<container style="button-bar">
+		                        		<link target="createPerformanceRating" text="Create New Performance Rating" style="buttontext"></link>
+		                        	</container>
+		                           	<container>                                            
+				                        <screenlet id="findPerformanceRating" title="Search-Options" collapsible="true">
+				                            <include-form name="findPerformanceRating" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+				                        </screenlet>
+				                        <screenlet title="search-results">
+				                        	<include-form name="ListPerformanceRating" location="component://humanres/widget/forms/EmployeeForms.xml"/>		                        
+				                        </screenlet>
+				                    </container>
+				                 </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="createPerformanceRating">
+        <section>
+            <actions>
+                <set field="titleProperty" value="performance Management"/>
+                <set field="tabButtonItem" value="pmsLD" />
+                <set field="tabButtonItem2" value="performanceManagement" />
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_EDIT"/>
+                </service>
+                <set field="hasEmployeeEditPermission" from-field="permResult.hasPermission"/>                   
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/> 
+            </actions>/
+               <widgets>
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="pmsLDTabBar"/>
+              			<container>                                            
+							<screenlet id="createPerformanceRating" title="Create New Performance Rating" collapsible="true">
+						        <include-form name="createPerformanceRating" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+						    </screenlet>
+						</container>
+			 		</decorator-section>
+                </decorator-screen>
+            </widgets>	
+       </section>
+    </screen>
     <screen name="EditEmployeeExp">
         <section>
             <actions>

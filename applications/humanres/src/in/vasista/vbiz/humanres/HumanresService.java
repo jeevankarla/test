@@ -2343,5 +2343,234 @@ public class HumanresService {
 		} 
 		return result;
     }
-     
+    
+    public static Map<String, Object> makeEmployeeAppraisalPromotion(DispatchContext ctx, Map<String, ? extends Object> context) {
+    	Map result = ServiceUtil.returnSuccess();
+    	Delegator delegator = ctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> inMap = FastMap.newInstance();
+        String employeeId = (String)context.get("employeeId");
+        String PerfRatingType = (String)context.get("PerfRatingType");
+        String fromDateStr = (String)context.get("fromDate");
+        String thruDateStr = (String)context.get("thruDate");
+        String emplPositionTypeId = (String) context.get("Promotion");
+        String dateOfPromotionStr = (String) context.get("dateOfPromotion");
+        String dateOfConfirmationStr = (String) context.get("dateOfConfirmation");
+        Map<String, Object> input = FastMap.newInstance();
+		Map<String, Object> outMap = FastMap.newInstance();
+		Timestamp fromDate = null;
+		Timestamp thruDate = null;
+		Timestamp dateOfPromotion = null;
+		Timestamp dateOfConfirmation = null;
+		try{
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+			 if(UtilValidate.isNotEmpty(fromDateStr)){
+				try {
+		    		fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(fromDateStr)));
+				} catch (ParseException e) {
+				}
+			 }
+			 if(UtilValidate.isNotEmpty(thruDateStr)){
+					try {
+						thruDate = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(thruDateStr)));
+					} catch (ParseException e) {
+					}
+			}
+			 if(UtilValidate.isNotEmpty(dateOfPromotionStr)){
+					try {
+						dateOfPromotion = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(dateOfPromotionStr)));
+					} catch (ParseException e) {
+					}
+			}
+			 if(UtilValidate.isNotEmpty(dateOfConfirmationStr)){
+					try {
+						dateOfConfirmation = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(dateOfConfirmationStr)));
+					} catch (ParseException e) {
+					}
+			}
+			
+			// Create Employee Position  
+			String emplPositionId = null;
+			if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+	            input.clear();
+	            input.put("userLogin", userLogin);
+	            input.put("partyId", employeeId);
+	            input.put("emplPositionTypeId", emplPositionTypeId);
+	            outMap = dispatcher.runSync("createEmplPosition", input);
+	            if(ServiceUtil.isError(outMap)){
+	           	 	Debug.logError("faild service create Employee Position:"+ServiceUtil.getErrorMessage(outMap), module);
+	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+	            }
+	            emplPositionId = (String) outMap.get("emplPositionId");
+	            // Create Employee Position Fulfillment
+				if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+		            input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("partyId", employeeId);
+		            input.put("fromDate", dateOfConfirmation);
+		            input.put("emplPositionId", emplPositionId);
+		            outMap = dispatcher.runSync("createEmplPositionFulfillment", input);
+		            if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("faild service create Employee Position Fulfillment:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+				}
+			}
+			
+			
+	 		 if(UtilValidate.isNotEmpty(employeeId)){
+	 			  GenericValue perfReview = delegator.makeValue("PerfReview");
+	 			  perfReview.set("employeePartyId", employeeId);
+	 			  perfReview.set("employeeRoleTypeId", "EMPLOYEE");
+	 			 if(UtilValidate.isNotEmpty(emplPositionId)){
+	 				 perfReview.set("emplPositionId", emplPositionId);
+	 			 }
+	 			 perfReview.set("fromDate", fromDate);
+	 			 perfReview.set("thruDate", thruDate);
+	 			 delegator.setNextSubSeqId(perfReview, "perfReviewId", 5, 1);
+				 delegator.create(perfReview);
+	 			//creating review item here
+	 			String perfReviewId  = (String) perfReview.get("perfReviewId");
+	 			if(UtilValidate.isNotEmpty(perfReviewId)){  	 
+	 				GenericValue perfReviewItem = delegator.makeValue("PerfReviewItem");
+				  	perfReviewItem.set("employeePartyId", employeeId);
+				  	perfReviewItem.set("employeeRoleTypeId", "EMPLOYEE");
+				  	perfReviewItem.set("perfReviewId", perfReviewId);
+				  	perfReviewItem.set("perfReviewItemTypeId", "GRADING");
+				  	perfReviewItem.set("perfRatingTypeId", PerfRatingType);
+				  	perfReviewItem.set("PromotionDate", dateOfPromotion);
+				  	perfReviewItem.set("ConfirmationDate", dateOfConfirmation);
+				  	delegator.setNextSubSeqId(perfReviewItem, "perfReviewItemSeqId", 5, 1);
+				  	delegator.create(perfReviewItem);
+	 			}
+			result = ServiceUtil.returnSuccess("Employee Performance Dating Created successfully.");
+			
+	    }
+	} catch (Exception e) {
+		Debug.logError("Error while creating Performance Rating", module);
+	  }
+		return result;	
+    }
+    
+    public static Map<String, Object> UpdatePerformanceRating(DispatchContext ctx, Map<String, ? extends Object> context) {
+    	Map result = ServiceUtil.returnSuccess();
+    	Delegator delegator = ctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> inMap = FastMap.newInstance();
+        String employeeId = (String)context.get("partyId");
+        String PerfRatingType = (String)context.get("PerfRatingType");
+        String perfReviewId = (String)context.get("perfReviewId");
+        String perfReviewItemSeqId = (String)context.get("perfReviewItemSeqId");
+        String fromDateStr = (String)context.get("fromDate");
+        String thruDateStr = (String)context.get("thruDate");
+        String emplPositionTypeId = (String) context.get("promotion");
+        String dateOfPromotionStr = (String) context.get("PromotionDate");
+        String dateOfConfirmationStr = (String) context.get("ConfirmationDate");
+        Map<String, Object> input = FastMap.newInstance();
+		Map<String, Object> outMap = FastMap.newInstance();
+		GenericValue perfReviewDetails = null;
+		Timestamp fromDate = null;
+		Timestamp thruDate = null;
+		Timestamp dateOfPromotion = null;
+		Timestamp dateOfConfirmation = null;
+		try{
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+			 if(UtilValidate.isNotEmpty(fromDateStr)){
+				try {
+		    		fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(fromDateStr)));
+				} catch (ParseException e) {
+				}
+			 }
+			 if(UtilValidate.isNotEmpty(thruDateStr)){
+					try {
+						thruDate = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(thruDateStr)));
+					} catch (ParseException e) {
+					}
+			}
+			 if(UtilValidate.isNotEmpty(dateOfPromotionStr)){
+					try {
+						dateOfPromotion = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(dateOfPromotionStr)));
+					} catch (ParseException e) {
+					}
+			}
+			 if(UtilValidate.isNotEmpty(dateOfConfirmationStr)){
+					try {
+						dateOfConfirmation = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(dateOfConfirmationStr)));
+					} catch (ParseException e) {
+					}
+			}
+			
+			Timestamp prevDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dateOfConfirmation, -1));
+			 if(UtilValidate.isNotEmpty(perfReviewId)){
+				 perfReviewDetails =delegator.findOne("PerfReview", UtilMisc.toMap("employeePartyId", employeeId, "employeeRoleTypeId", "EMPLOYEE", "perfReviewId", perfReviewId), false);
+				 if(UtilValidate.isNotEmpty(perfReviewDetails)){
+					 String emplPositionId = (String)perfReviewDetails.get("emplPositionId");
+					 List designationconditionList = FastList.newInstance();
+						designationconditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,employeeId));
+						designationconditionList.add(EntityCondition.makeCondition("emplPositionId",EntityOperator.EQUALS,emplPositionId));
+						EntityCondition designationcondition = EntityCondition.makeCondition(designationconditionList,EntityOperator.AND);
+				    	List<GenericValue> emplPositionAndFulfillments = delegator.findList("EmplPositionFulfillment", designationcondition, null, null, null, false);
+						
+			        	if(UtilValidate.isNotEmpty(emplPositionAndFulfillments)){
+			        		GenericValue emplPositionFulfillments = EntityUtil.getFirst(emplPositionAndFulfillments);
+			    			emplPositionFulfillments.set("thruDate",prevDayEnd);
+			    			emplPositionFulfillments.store();
+			        		
+			        		if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+			        			input.put("userLogin", userLogin);
+			    	            input.put("partyId", employeeId);
+			    	            input.put("actualFromDate",dateOfConfirmation);
+			    	            input.put("emplPositionTypeId", emplPositionTypeId);
+			    	            input.put("statusId", "EMPL_POS_ACTIVE");
+			    	            outMap = dispatcher.runSync("createEmplPosition", input);
+			    	            if(ServiceUtil.isError(outMap)){
+			    	           	 	Debug.logError("faild service create Employee Position:"+ServiceUtil.getErrorMessage(outMap), module);
+			    	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+			    	            }
+			    	            
+			    	            	String newEmplPositionId = (String)outMap.get("emplPositionId");
+			    	            	 perfReviewDetails.set("emplPositionId",newEmplPositionId);
+			    	            	 perfReviewDetails.store();
+			    	            	if (UtilValidate.isNotEmpty(newEmplPositionId)){
+			    	            		input.clear();
+			    	            		input.put("userLogin", userLogin);
+			    			            input.put("partyId", employeeId);
+			    			            input.put("fromDate",dateOfConfirmation);
+			    			            input.put("emplPositionId", newEmplPositionId);
+			    			            outMap = dispatcher.runSync("createEmplPositionFulfillment", input);
+			    			            if(ServiceUtil.isError(outMap)){
+			    			           	 	Debug.logError("faild service create Employee Position Fulfillment:"+ServiceUtil.getErrorMessage(outMap), module);
+			    			           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+			    			            }
+			    	            	}
+			    	           
+							}
+			        		
+			        		
+			        	}
+			        	
+			        	GenericValue perfReviewItemDetails =delegator.findOne("PerfReviewItem", UtilMisc.toMap("employeePartyId", employeeId, "employeeRoleTypeId", "EMPLOYEE", "perfReviewId", perfReviewId, "perfReviewItemSeqId", perfReviewItemSeqId), false);
+		  	  			if (UtilValidate.isNotEmpty(perfReviewItemDetails)){
+		  	  				perfReviewItemDetails.set("perfRatingTypeId",PerfRatingType);
+		  	  				perfReviewItemDetails.set("PromotionDate",dateOfPromotion);
+		  	  				perfReviewItemDetails.set("ConfirmationDate",dateOfConfirmation);
+		  	  				perfReviewItemDetails.store();
+		  	  			}
+		  	  			
+			 }
+			 
+			 }	
+			 result = ServiceUtil.returnSuccess("Employee Performance Rating Updated successfully.");
+		}catch (Exception e) {
+			Debug.logError("Error while Updating Performance Rating", module);
+		  }
+			return result;	
+    }
+    
 }

@@ -1888,5 +1888,22 @@
     	<field name="acctgFormulaId" id-name="acctgFormulaId"><display size="20"/></field>
     	<field name="formula" title="formula"><display size ="20"></display></field>
     </form>
+    <form name="PerformanceRatingReportCsv" type="list" list-name="performanceRatingList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<actions></actions>
+		<field name="sNo " title="S.No"><display/></field>
+		<field name="partyId" title="Emp Code"><display/></field>
+		<field name="partyName" title="Name"><display/></field>
+		<field name="deptName" title="Department"><display/></field>
+		<field name="caste" title="Category"><display/></field>
+		<field name="joinDate" title="Date of Joining"><display/></field>
+		<field name="birthDate" title="Date of Birth"><display/></field>
+		<field name="assessmentPeriod" title="Assessment Period"><display/></field>
+		<field name="PerfRatingType" title="Grading"><display/></field>
+		<field name="promotion" title="Promotion/Upgradation"><display/></field>
+		<field name="PromotionDate" title="Date of Promotion/Upgradation"><display/></field>
+		<field name="ConfirmationDate" title="Date of Confirmation"><display/></field>
+		
+	</form>	
 </forms>
         

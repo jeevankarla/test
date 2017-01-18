@@ -138,7 +138,32 @@ function makeDatePicker1(fromDateId ,thruDateId){
 	        });    
 	     });
 	     setOrgPartyId();
+	     
+	     jQuery("#assessmentFromDate").datepicker({
+		dateFormat:'dd-mm-yy',
+		showSecond: true,
+		changeMonth: true,
+		changeYear: true,
+		yearRange: "-30:+0",
+		onSelect: function(selectedDate) {
+			//jQuery("#leaveFromDate").datepicker('setDate', selectedDate);
+		}
+	});	
+	jQuery("#assessmentThruDate").datepicker({
+		dateFormat:'dd-mm-yy',
+		showSecond: true,
+		changeMonth: true,
+		changeYear: true,
+		yearRange: "-30:+0",
+		onSelect: function(selectedDate) {
+			//jQuery("#leaveFromDate").datepicker('setDate', selectedDate);
+		}
+	});	
+	
+	     
+	     
 	});
+
 
 </script>
 <div>
@@ -369,6 +394,33 @@ function setOrgPartyId() {
 										</td>
 										<td width="22%"><input type="submit" value="PDF" onClick="javascript:appendParams('EmplJoiningReport', '<@ofbizUrl>EmplJoiningReport.pdf</@ofbizUrl>');" class="buttontext"/>
 						                </td>
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>		
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("PerformanceRatingReport.csv")?exists) && (reportDetailsMap.get("PerformanceRatingReport.csv") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("PerformanceRatingReport.csv"))?exists))> 
+						<tr class="alternate-row"> 
+							<form id="PerformanceRatingReport" name="PerformanceRatingReport" mothed="post" action="<@ofbizUrl>PerformanceRatingReport.csv</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="24%"><span class='h3'>Performance Rating Report</span></td>
+										<td width="20%"><span class='h3'>
+												Employee Id<@htmlTemplate.lookupField formName="PerformanceRatingReport" name="employeeId" fieldFormName="LookupEmployeeName"/>
+											</span>
+										</td> 
+										<td width="40%"><span class='h3'>
+												From Date <input type='text' id='assessmentFromDate' name='assessmentFromDate' />
+											<#--	<input  type="text" size="18pt" id="assessmentFromDate"   name="assessmentFromDate"/>  -->
+												${uiLabelMap.toDate} <input type='text' id='assessmentThruDate' name='assessmentThruDate' />
+											<#--	<input  type="text" size="18pt" id="assessmentTruDate"   name="assessmentTruDate"/>  -->
+											</span>
+										</td>
+										<td width=22%"><input type="submit" value="Downlaod" onClick="javascript:appendParams('PerformanceRatingReport', '<@ofbizUrl>PerformanceRatingReport.csv</@ofbizUrl>');" class="buttontext"/>
+						                </td>
+						                
+						                
+						                
 									</tr>
 								</table>
 							</form>

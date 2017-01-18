@@ -2678,5 +2678,15 @@
      <property key="Type">       
         <value xml:lang="en">Type</value>        
     </property>
+    <property key="dateOfPromotion">       
+        <value xml:lang="en">Date of Promotion/Upgradation</value>        
+    </property>
+     <property key="dateOfConfirmation">       
+        <value xml:lang="en">Date of Confirmation</value>        
+    </property>
+    <property key="fromDate">       
+        <value xml:lang="en">from Date</value>        
+    </property>
+    
     
 </resource>
