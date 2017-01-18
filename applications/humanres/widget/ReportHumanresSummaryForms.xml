@@ -160,8 +160,8 @@
 		<field name="employmentFrom" title-area-style="tableheadwide" title="Join Date"><display description="${joinDate}"/></field>
 		<!-- <field name="qual" title="Educational Qualification"><display description="${qual}"/></field> -->
 		
-		<field name="position" title="Designation" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${position}" key-field-name="emplPositionTypeId"></display-entity></field>
-		<field name="deptName" title-area-style="tableheadwide" title="Department"><display/></field>
+		 <field name="position" title="Designation" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${position}" key-field-name="emplPositionTypeId"></display-entity></field>
+		 <field name="deptName" title-area-style="tableheadwide" title="Department"><display/></field>
 		<field name="department" title-area-style="tableheadwide" title="Region"><display description="${department}"/></field>
 		<field name="geoName" title="Branch" title-area-style="tableheadwide"><display/></field>
 		<field name="phoneNumber" title-area-style="tableheadwide" title="Phone number"><display description="${phoneNumber}"/></field>

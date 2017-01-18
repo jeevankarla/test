@@ -73,7 +73,7 @@ def populateChildren(org, employeeList) {
 		
 		personaldetails = [];
 		String fatherName="";
-		String motherName="";
+		 String motherName="";
 		String spouseName="";
 		String passportNumber="";
 		String  religion="";
