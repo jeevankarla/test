@@ -932,8 +932,21 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="customTimePeriodId" required-field="true"><text></text></field>
-        <field name="leaveTypeId" required-field="true"><text></text></field>
+        <field name="customTimePeriodId" required-field="true"><text></text>
+        <drop-down no-current-selected-key="${timecustom}">
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
+                    <entity-order-by field-name="-fromDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="leaveTypeId" required-field="true"><text></text>
+            
+         <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
+            </drop-down>
+        </field>
         <field name="searchButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="EmplLeaveBalance" type="single" target="FindEmplLeaveBalance">
