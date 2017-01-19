@@ -280,4 +280,74 @@
                  </widgets>
          </section>
      </screen>
+     <screen name="LearningAndDevelopment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Learning And Development"/>
+                <set field="tabButtonItem" value="pmsLD" />
+                <set field="tabButtonItem2" value="LearningDevelopment" />
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_EDIT"/>
+                </service>
+                <set field="hasEmployeeEditPermission" from-field="permResult.hasPermission"/>                   
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/> 
+               <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>   
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/TrainigList.groovy"/>       
+            </actions>
+            <widgets>
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu location="component://humanres/widget/HumanresMenus.xml" name="pmsLDTabBar"/>
+                            	<container>
+                            		<container style="button-bar">
+		                        		<link target="createTrainig" text="Create New Training" style="buttontext"></link>
+		                        	</container>
+		                           	<container>                                            
+				                        <screenlet id="findPerformanceRating" title="Search-Options" collapsible="true">
+				                            <include-form name="findTraining" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+				                        </screenlet>
+				                        <screenlet title="search-results">
+				                        	<include-form name="ListTraining" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>		                        
+				                        </screenlet>
+				                    </container>
+				                 </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="createTrainig">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Learning And Development"/>
+                <set field="tabButtonItem" value="pmsLD" />
+                <set field="tabButtonItem2" value="LearningDevelopment" />
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_EDIT"/>
+                </service>
+                <set field="hasEmployeeEditPermission" from-field="permResult.hasPermission"/>                   
+                <service service-name="humanResManagerPermission" result-map="permResult">
+                    <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
+                </service>
+                <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>
+                <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/> 
+            </actions>/
+               <widgets>
+                <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="pmsLDTabBar"/>
+              			<container>                                            
+							<screenlet id="createTrainig" title="Create New Training" collapsible="true">
+						        <include-form name="createTrainig" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+						    </screenlet>
+						</container>
+			 		</decorator-section>
+                </decorator-screen>
+            </widgets>	
+       </section>
+    </screen> 
 </screens>

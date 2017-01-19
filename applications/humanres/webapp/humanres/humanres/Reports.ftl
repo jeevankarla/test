@@ -159,8 +159,28 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			//jQuery("#leaveFromDate").datepicker('setDate', selectedDate);
 		}
 	});	
+	 jQuery("#TrainingFromDate").datepicker({
+		dateFormat:'dd-mm-yy',
+		showSecond: true,
+		changeMonth: true,
+		changeYear: true,
+		yearRange: "-30:+0",
+		onSelect: function(selectedDate) {
+			//jQuery("#leaveFromDate").datepicker('setDate', selectedDate);
+		}
+	});	   
 	
-	     
+	 jQuery("#TrainingThruDate").datepicker({
+		dateFormat:'dd-mm-yy',
+		showSecond: true,
+		changeMonth: true,
+		changeYear: true,
+		yearRange: "-30:+0",
+		onSelect: function(selectedDate) {
+			//jQuery("#leaveFromDate").datepicker('setDate', selectedDate);
+		}
+	});	   
+	  
 	     
 	});
 
@@ -411,16 +431,33 @@ function setOrgPartyId() {
 										</td> 
 										<td width="40%"><span class='h3'>
 												From Date <input type='text' id='assessmentFromDate' name='assessmentFromDate' />
-											<#--	<input  type="text" size="18pt" id="assessmentFromDate"   name="assessmentFromDate"/>  -->
 												${uiLabelMap.toDate} <input type='text' id='assessmentThruDate' name='assessmentThruDate' />
-											<#--	<input  type="text" size="18pt" id="assessmentTruDate"   name="assessmentTruDate"/>  -->
 											</span>
 										</td>
 										<td width=22%"><input type="submit" value="Downlaod" onClick="javascript:appendParams('PerformanceRatingReport', '<@ofbizUrl>PerformanceRatingReport.csv</@ofbizUrl>');" class="buttontext"/>
 						                </td>
-						                
-						                
-						                
+									</tr>
+								</table>
+							</form>
+						</tr>
+					</#if>		
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("PersonTrainingReport.csv")?exists) && (reportDetailsMap.get("PersonTrainingReport.csv") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("PersonTrainingReport.csv"))?exists))> 
+						<tr class="alternate-row"> 
+							<form id="PersonTrainingReport" name="PersonTrainingReport" mothed="post" action="<@ofbizUrl>PersonTrainingReport.csv</@ofbizUrl>" target="_blank">
+								<table class="basic-table" cellspacing="5">
+									<tr class="alternate-row">
+										<td width="24%"><span class='h3'>Person Training Report</span></td>
+										<td width="20%"><span class='h3'>
+												Employee Id<@htmlTemplate.lookupField formName="PersonTrainingReport" name="employeeId" fieldFormName="LookupEmployeeName"/>
+											</span>
+										</td> 
+										<td width="40%"><span class='h3'>
+												From Date <input type='text' id='TrainingFromDate' name='TrainingFromDate' />
+												${uiLabelMap.toDate} <input type='text' id='TrainingThruDate' name='TrainingThruDate' />
+											</span>
+										</td>
+										<td width=22%"><input type="submit" value="Downlaod" onClick="javascript:appendParams('PersonTrainingReport', '<@ofbizUrl>PersonTrainingReport.csv</@ofbizUrl>');" class="buttontext"/>
+						                </td>
 									</tr>
 								</table>
 							</form>

@@ -241,7 +241,12 @@
         <set field="lookedUpValue1.perfReviewId" from-field="parameters.perfReviewId"/>
         <call-service service-name="deletePerfReview" in-map-name="lookedUpValue1"></call-service> 
     </simple-method>
-
+	
+	<simple-method method-name="DeleteTraining" short-description="Delete Person Training">
+        <entity-one entity-name="PersonTraining" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
     <simple-method method-name="createPerformanceNote" short-description="Create Performance Note">
         <make-value entity-name="PerformanceNote" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/>
