@@ -61,9 +61,9 @@
         	<display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">
             </display-entity>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="buttontext">
+        <field name="partyIdTo" title="Employee Id" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${partyIdTo}" target="EmployeeProfile">
-                <parameter param-name="partyId" from-field="partyIdTo"/>
+                <parameter param-name="partyId"  from-field="partyIdTo"/>
             </hyperlink>
         </field>
         <field name="firstName"><display></display></field>
@@ -827,7 +827,7 @@
     </form>
     <form name="editLeaveEncashment" odd-row-style="alternate-row" header-row-style="header-row" type="single"
 	    	default-table-style="basic-table hover-bar" separate-columns="true">  
-	     <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
+	     <field name="partyIdTo" title="Employee Id"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
 	     <field name="partyId" title="Organisation">
 			<drop-down allow-empty="false">
 				<entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
@@ -964,7 +964,7 @@
       
     <form name="updateForm16Details" odd-row-style="alternate-row" header-row-style="header-row" type="single"
     	default-table-style="basic-table hover-bar" separate-columns="true" >  
-        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" required-field="true" tooltip="Required"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
+        <field name="partyIdTo" title="Employee Id" required-field="true" tooltip="Required"><lookup target-form-name="LookupEmployeeName" size="15"/></field>
         <field name="customTimePeriodId" title="Period Id" required-field="true" tooltip="Required">
              <drop-down allow-empty="false" no-current-selected-key="${finYearId}" current="selected">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;MMMMM, yyyy&quot;);}" filter-by-date="false">

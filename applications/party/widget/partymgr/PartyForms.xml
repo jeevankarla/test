@@ -25,9 +25,9 @@ under the License.
         focus-field-name="salutation" header-row-style="header-row" default-table-style="basic-table">
         <alt-target use-when="personInfo==null" target="createPerson"/>
         <auto-fields-service service-name="updatePerson"/>
-        <field use-when="personInfo!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="${uiLabelMap.PartyPartyId}"><ignored/></field>
-        <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
+        <field use-when="personInfo!=null" name="partyId" title="Employee Id" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="personInfo==null&amp;&amp;partyId==null" name="partyId" title="Employee Id"><ignored/></field>
+        <field use-when="personInfo==null&amp;&amp;partyId!=null" name="partyId" title="Employee Id" tooltip="${uiLabelMap.CommonCannotBeFound}: [${partyId}]"><display also-hidden="false"/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="40" maxlength="60"/></field>
         <field name="personalTitle"><hidden/></field>
