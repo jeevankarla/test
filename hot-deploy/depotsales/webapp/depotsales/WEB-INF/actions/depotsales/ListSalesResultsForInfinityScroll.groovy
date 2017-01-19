@@ -598,7 +598,7 @@ scheme = parameters.scheme;
 if(parameters.salesChannel)
 salesChannel = parameters.salesChannel;
   
-  Debug.log("salesChannel==========323======="+salesChannel);
+//  Debug.log("salesChannel==========323======="+salesChannel);
    
 context.paramOrderId = paramOrderId;
 context.paramFacilityId = paramFacilityId;

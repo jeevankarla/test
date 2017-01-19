@@ -93,7 +93,9 @@ JSONObject branchProductSroreMap = new JSONObject();
 	partyClassificationList = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "CUST_CLASSIFICATION"), UtilMisc.toSet("partyClassificationGroupId","description"), null, null,false);
 	
 	context.partyClassificationList = partyClassificationList;
-
+	
+	
+	
 	
 
 branchId = "";
@@ -111,8 +113,9 @@ partyId = parameters.partyId;
 
 
 partyClassification = "";
-if(parameters.partyClassificationId)
-partyClassification = parameters.partyClassificationId;
+if(parameters.partyClassificationId2)
+partyClassification = parameters.partyClassificationId2;
+
 
 
 isDepot = "";
@@ -166,7 +169,12 @@ context.effectiveDate = effectiveDate;
 context.stateWise = stateWise;
 
 
+partyClassifiName = EntityUtil.filterByCondition(partyClassificationList, EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, partyClassification));
+partyClasificationName = "";
+if(partyClassifiName)
+partyClasificationName = partyClassifiName[0].description;
 
+context.partyClasificationName = partyClasificationName;
 
 conditionDeopoList = [];
 conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
