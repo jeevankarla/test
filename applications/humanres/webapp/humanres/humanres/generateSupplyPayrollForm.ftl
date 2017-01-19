@@ -116,7 +116,7 @@ function showSuplyPayrollGenerateForm() {
 		message += "<form action='createSuplyPayrollBilling' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10>" ; 		
 		
 			//message += "<br/><br/>";
-			message +="<tr class='h3'><td align='left' class='h3' width='30%'>Organization Employee Id :</td><td align='left' width='40%'><select name='orgPartyId' allow-empty='true' id='orgPartyId' class='h3'>"+
+			message +="<tr class='h3'><td align='left' class='h3' width='30%'>${uiLabelMap.HumanResEmploymentOrganisation}:</td><td align='left' width='40%'><select name='orgPartyId' allow-empty='true' id='orgPartyId' class='h3'>"+
 	              		"<#list orgList as org><option value='${org.partyId?if_exists}' >${org.groupName?if_exists}</option></#list>"+            
 						"</select></td></tr>";
 			message +="<tr class='h3'><td align='left' class='h3' width='30%'>Suply Payroll Type :</td><td align='left' width='40%'><select name='billingTypeId' allow-empty='true' id='billingTypeId' class='h3' onchange='javascript:payrollTypeOnchange();'>"+
