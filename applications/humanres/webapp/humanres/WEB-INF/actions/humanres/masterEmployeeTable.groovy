@@ -63,6 +63,59 @@ def populateChildren(org, employeeList) {
 			panId=panIds.get(0).idValue;
 		 }
 		employee.put("panId",panId);
+		aadharId = "";
+		aadharIds=delegator.findByAnd("PartyIdentification",[partyId:employment.partyId, partyIdentificationTypeId:"ADR_NUMBER"],["idValue"]);
+		if(UtilValidate.isNotEmpty(aadharIds)){
+			aadharId=aadharIds.get(0).idValue;
+		}
+		employee.put("aadharId",aadharId);
+		
+		
+		personaldetails = [];
+		String fatherName="";
+		 String motherName="";
+		String spouseName="";
+		String passportNumber="";
+		String  religion="";
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			
+		personaldetails = delegator.findOne("Person", [partyId : employment.partyId], false);
+			
+		 if(UtilValidate.isNotEmpty(employment.partyId)){
+			fatherName =personaldetails.fatherName;
+			motherName =personaldetails.motherName;
+			spouseName =personaldetails.spouseName;
+			passportNumber =personaldetails.passportNumber;
+			religion = personaldetails.religion;
+			employee.put("motherName",motherName);
+			employee.put("spouseName",spouseName);
+			employee.put("passportNumber",passportNumber);
+			employee.put("religion",religion);
+		 }
+		}
+		
+		 conditionpayList=[];
+		 PayHistoryDetails = [];
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			conditionpayList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employment.partyId));
+		}
+			conditionpayList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		
+		condition1=EntityCondition.makeCondition(conditionpayList,EntityOperator.AND);
+		PayHistoryDetails= delegator.findList("PayHistory", condition1, null, null, null, false );
+		String emplpayGradeId = "";
+		String PayScale="";
+		if(UtilValidate.isNotEmpty(PayHistoryDetails)){
+		
+		emplpayGradeId = EntityUtil.getFirst(PayHistoryDetails).get("payGradeId");
+		}
+		payGradeDetails = delegator.findOne("PayGrade", [payGradeId : emplpayGradeId], false);
+		if(UtilValidate.isNotEmpty(payGradeDetails)){
+				PayScale=payGradeDetails.payScale;
+		}
+		context.PayScale=PayScale;
+		employee.put("PayScale", PayScale);
+		
 		
 		daAmount=0;
 		if(UtilValidate.isNotEmpty(Flag) && Flag=="daAmount"){
@@ -121,6 +174,36 @@ def populateChildren(org, employeeList) {
 		employee.put("bloodGroup",employment.bloodGroup);
 		}
 		
+		 geodetails=[];
+		String geoname="";
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			
+		geodetails = delegator.findOne("Geo", [geoId : employment.locationGeoId], false);
+		
+		if(UtilValidate.isNotEmpty(geodetails)){
+		geoname=geodetails.geoName;
+		employee.put("geoName",geoname);
+		}
+		
+		}
+		 exprList = [];
+		deptName = "";
+		exprList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"DEPATMENT_NAME"));
+		exprList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+		exprList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,employment.partyId));
+		exprList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		exprCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		partyRelationshipList = delegator.findList("PartyRelationship", exprCond, null, null, null, false);
+		
+		if(UtilValidate.isNotEmpty(partyRelationshipList)){
+			deptId = (EntityUtil.getFirst(partyRelationshipList)).get("partyIdFrom");
+			partyGroupDetails = delegator.findOne("PartyGroup", [partyId : deptId], false);
+			if(UtilValidate.isNotEmpty(partyGroupDetails)){
+				deptName = 	partyGroupDetails.groupName;
+			
+				}
+		}
+		employee.put("deptName",deptName);
 		
 		finAccountId="";
 		finAccountName="";
@@ -206,11 +289,11 @@ context.employeeList=employeeList;
 if(UtilValidate.isEmpty(parameters.partyId)){
 	parameters.partyId = "Company";
 	
-}
-company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : parameters.partyId]);
-populateChildren(company, employeeList);
-JSONArray employeesJSON = new JSONArray();
-employeeList.each {employee ->
+   }
+	company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : parameters.partyId]);
+	populateChildren(company, employeeList);
+	JSONArray employeesJSON = new JSONArray();
+	employeeList.each {employee ->
 	JSONArray employeeJSON = new JSONArray();
 	employeeJSON.add(employee.name);
 	employeeJSON.add(employee.employeeId);
@@ -218,9 +301,7 @@ employeeList.each {employee ->
 	employeeJSON.add(employee.position);
 	employeeJSON.add(employee.joinDate);
 	employeeJSON.add(employee.phoneNumber);
-	//employeeJSON.add(employee.address);
 	employeesJSON.add(employeeJSON);
-	Debug.log("employeesJSON=========="+employeesJSON);
-}
+
+	}
 context.employeesJSON = employeesJSON;
-//Debug.logError("employeesJSON="+employeesJSON,"");
