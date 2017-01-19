@@ -5314,6 +5314,25 @@ public class MaterialPurchaseServices {
 	
 	            }
             }
+            
+            List<GenericValue> orderAssocItemList = null;
+            try {
+            	orderAssocItemList = delegator.findList("OrderItemAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId), null, null, null, false);            	
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                orderAssocItemList = null;
+            }
+           
+            if (UtilValidate.isNotEmpty(orderAssocItemList)) {
+	            try {
+	            	delegator.removeAll(orderAssocItemList);
+	            	Debug.log("order Item Association Removed!");
+	            } catch (GenericEntityException e) {
+	 	        	Debug.logError("error while removing order Item Association" + orderId, module);
+	
+	            }
+            }
+
 
 			
 		} catch (Exception e) {
