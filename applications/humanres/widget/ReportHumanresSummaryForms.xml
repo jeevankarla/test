@@ -1899,18 +1899,36 @@
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
 		<actions></actions>
 		<field name="sNo " title="S.No"><display/></field>
-		<field name="partyId" title="Emp Code"><display/></field>
-		<field name="partyName" title="Name"><display/></field>
-		<field name="deptName" title="Department"><display/></field>
+		<field name="partyId" title="${uiLabelMap.empCode}"><display/></field>
+		<field name="partyName" title="${uiLabelMap.Name}"><display/></field>
+		<field name="deptName" title="${uiLabelMap.Department}"><display/></field>
 		<field name="caste" title="Category"><display/></field>
-		<field name="joinDate" title="Date of Joining"><display/></field>
-		<field name="birthDate" title="Date of Birth"><display/></field>
+		<field name="joinDate" title="${uiLabelMap.DateOfJoining}"><display/></field>
+		<field name="birthDate" title="${uiLabelMap.DateOfBirth}"><display/></field>
 		<field name="assessmentPeriod" title="Assessment Period"><display/></field>
 		<field name="PerfRatingType" title="Grading"><display/></field>
 		<field name="promotion" title="Promotion/Upgradation"><display/></field>
 		<field name="PromotionDate" title="Date of Promotion/Upgradation"><display/></field>
 		<field name="ConfirmationDate" title="Date of Confirmation"><display/></field>
-		
 	</form>	
+	 <form name="PersonTrainigReportCsv" type="list" list-name="trainingList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<actions></actions>
+		<field name="sNo " title="S.No"><display/></field>
+		<field name="partyId" title="${uiLabelMap.empCode}"><display/></field>
+		<field name="topicsCoverd" title="${uiLabelMap.Topic}"><display/></field>
+		<field name="partyName" title="${uiLabelMap.Name}"><display/></field>
+		<field name="designation" title="${uiLabelMap.Designation}"><display/></field>
+		<field name="deptName" title="${uiLabelMap.Department}"><display/></field>
+		<field name="trainingLocation" title="${uiLabelMap.Venue}"><display/></field>
+		<field name="fromDate" title="${uiLabelMap.fromDate}"><display/></field>
+		<field name="thruDate" title="${uiLabelMap.toDate}"><display/></field>
+		<field name="duration" title="${uiLabelMap.duration}"><display/></field>
+		<field name="trgCategory" title="${uiLabelMap.trgCategory}"><display/></field>
+		<field name="facultyType" title="${uiLabelMap.facultyType}"><display/></field>
+		<field name="nameOfInstitute" title="${uiLabelMap.nameOfInstitute}"><display/></field>
+		<field name="traingCost" title="${uiLabelMap.TotalCost}"><display/></field>
+	</form>	
+	
 </forms>
         

@@ -299,7 +299,7 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-
+	
     <service name="createPerformanceNote" engine="simple" default-entity-name="PerformanceNote"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPerformanceNote" auth="true">
         <description>Create Performance Note</description>
@@ -316,7 +316,7 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-
+	
     <service name="deletePerformanceNote" engine="simple" default-entity-name="PerformanceNote"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deletePerformanceNote" auth="true">
         <description>Delete a Performance Note</description>
@@ -1156,6 +1156,40 @@ under the License.emplpunch
         <attribute name="promotion" mode="IN" type="String" optional="true"/>
         <attribute name="PromotionDate" mode="IN" type="String" optional="true"/>
         <attribute name="ConfirmationDate" mode="IN" type="String" optional="true"/>
+    </service>
+     <service name="createNewEmplTraining"  engine="java"  auth="true"
+ 	        location="in.vasista.vbiz.humanres.HumanresService" invoke="createNewEmplTraining">
+ 	        <attribute name="partyId" mode="IN" type="String" optional="true"></attribute>
+ 	        <attribute name="topicsCoverd" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="trainingLocation" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="fromDate" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="duration" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="trgCategory" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="facultyType" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="nameOfInstitute" mode="IN" type="String" optional="true"></attribute>
+ 	       	<attribute name="traingCost" mode="IN" type="BigDecimal" optional="true"/>
+     </service> 
+      <service name="UpdateTraining"  engine="java"  auth="true"
+ 	        location="in.vasista.vbiz.humanres.HumanresService" invoke="UpdateTraining">
+ 	        <attribute name="partyId" mode="IN" type="String" optional="true"></attribute>
+ 	        <attribute name="trainingRequestId" mode="IN" type="String" optional="true"></attribute>
+ 	        <attribute name="topicsCoverd" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="trainingLocation" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="fromDate" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="duration" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="trgCategory" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="facultyType" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="nameOfInstitute" mode="IN" type="String" optional="true"></attribute>
+ 	       	<attribute name="traingCost" mode="IN" type="BigDecimal" optional="true"/>
+     </service> 
+     
+	 <service name="DeleteTraining" engine="simple" default-entity-name="PersonTraining"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="DeleteTraining" auth="true">
+        <description>Delete a Performance Review Item</description>
+        <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
     <service name="createJobRequisition" engine="simple" default-entity-name="JobRequisition"

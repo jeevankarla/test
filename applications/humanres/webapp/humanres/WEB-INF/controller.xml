@@ -1578,13 +1578,11 @@ under the License.
     <request-map uri="createNewPerformanceRating">
         <security https="true" auth="true"/>
         <event type="service" invoke="makeEmployeeAppraisalPromotion"/>
-     	<!-- <event type="java" path="in.vasista.vbiz.humanres.HumanresService" invoke="makeEmployeeAppraisal" global-transaction="true"/> -->
         <response name="success" type="view" value="performanceManagement"/>
     </request-map>
     <request-map uri="UpdatePerformanceRating">
         <security https="true" auth="true"/>
         <event type="service" invoke="UpdatePerformanceRating"/>
-     	<!-- <event type="java" path="in.vasista.vbiz.humanres.HumanresService" invoke="makeEmployeeAppraisal" global-transaction="true"/> -->
         <response name="success" type="view" value="performanceManagement"/>
     </request-map>
      <request-map uri="DeletePerformanceRating">
@@ -1593,8 +1591,30 @@ under the License.
     	<response name="success" type="view" value="performanceManagement"/>
     	<response name="error" type="view" value="performanceManagement"/>
     </request-map>
-    
-    
+     <request-map uri="LearningAndDevelopment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LearningAndDevelopment"/>
+    </request-map>
+    <request-map uri="createTrainig">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createTrainig"/>
+    </request-map> 
+     <request-map uri="createNewTraining">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createNewEmplTraining"/>
+        <response name="success" type="view" value="LearningAndDevelopment"/>
+    </request-map>
+    <request-map uri="UpdateTraining">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="UpdateTraining"/>
+        <response name="success" type="view" value="LearningAndDevelopment"/>
+    </request-map>
+     <request-map uri="DeleteTraining">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="DeleteTraining"/>
+    	<response name="success" type="view" value="LearningAndDevelopment"/>
+    	<response name="error" type="view" value="LearningAndDevelopment"/>
+    </request-map>
     
 	<!--====================Employee Content Requests===================================-->
 	<request-map uri="createEmployeeContent">
@@ -2109,7 +2129,7 @@ under the License.
      <request-map uri="LeaveTypeListCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListCsv"></response></request-map>
     <request-map uri="LeaveTypeListPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListPdf"></response></request-map>
     <request-map uri="PerformanceRatingReport.csv"><security https="true" auth="true"/><response name="success" type="view" value="PerformanceRatingReportCsv"></response></request-map>
-    
+    <request-map uri="PersonTrainingReport.csv"><security https="true" auth="true"/><response name="success" type="view" value="PersonTrainingReportCsv"></response></request-map>
     <request-map uri="Employees">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="Employees"/>
@@ -2914,6 +2934,7 @@ under the License.
 	<view-map name="PayHeadTypesCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="PayHeadTypesPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesPdf" content-type="application/pdf" encoding="none"/>
  	<view-map name="PerformanceRatingReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PerformanceRatingReportCsv" content-type="text/csv" encoding="none"/>
+ 	<view-map name="PersonTrainingReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PersonTrainingReportCsv" content-type="text/csv" encoding="none"/>
  	
  
  	<view-map name="EmployeeProfileReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileReport"/>
@@ -3067,6 +3088,8 @@ under the License.
 	<view-map name="cashEncashmentReport" type="screen" page="component://humanres/widget/EmployeeScreens.xml#cashEncashmentReport"/>
 	<view-map name="performanceManagement" type="screen" page="component://humanres/widget/EmployeeScreens.xml#performanceManagement"></view-map>
 	<view-map name="createPerformanceRating" type="screen" page="component://humanres/widget/EmployeeScreens.xml#createPerformanceRating"></view-map>
+	<view-map name="LearningAndDevelopment" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#LearningAndDevelopment"/>
+	<view-map name="createTrainig" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#createTrainig"/>
 	
 	<!-- Analytics -->
 	<view-map name="EmployeesAnalysisChart" type="screen" page="component://humanres/widget/HumanresScreens.xml#EmployeesAnalysisChart"/>
