@@ -294,15 +294,15 @@
        <!--  <menu-item name="durationAnalytics" title="Duration Analytics">
         	<link target="durationAnalytics"/>
         </menu-item> -->
-         <menu-item name="delayedIndentPOAnalytics" title="Delayed PO Analytics">
+         <!-- <menu-item name="delayedIndentPOAnalytics" title="Delayed PO Analytics">
         	<link target="delayedIndentToPoAnalytics"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Listing">
         	<link target="delayedIndentPOAnalyticsListing"/>
         </menu-item>
-        <menu-item name="delayedShipmentAnalytics" title="Delayed Shipment Analytics">
+        <!-- <menu-item name="delayedShipmentAnalytics" title="Delayed Shipment Analytics">
         	<link target="delayedShipmentAnalytics"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="findDelayShipments" title="Delay Shipments Listing">
         	<link target="findDelayShipments"/>
         </menu-item>
