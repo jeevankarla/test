@@ -40,7 +40,7 @@ under the License.
 <input type="hidden" name="branchId" id="branchId" value="${branchId}">
 <input type="hidden" name="partyId1" id="partyId1" value="${partyId}">
 <input type="hidden" name="passbookNumber" id="passbookNumber" value="${passbookNumber}">
-<input type="hidden" name="partyClassification" id="partyClassification" value="${partyClassification}">
+<input type="hidden" name="partyClassification1" id="partyClassification1" value="${partyClassification}">
 <input type="hidden" name="isDepot" id="isDepot" value="${isDepot}">
 <input type="hidden" name="stateWise1" id="stateWise1" value="${stateWise}">
 <input type="hidden" name="passGreater" id="passGreater" value="${passGreater}">
@@ -55,7 +55,8 @@ under the License.
 var branchId = $("#branchId").val();
 var partyId = $("#partyId1").val();
 var passbookNumber = $("#passbookNumber").val();
-var partyClassification = $("#partyClassification").val();
+var partyClassification = $("#partyClassification1").val();
+
 
 var isDepot = $("#isDepot").val();
 var stateWise = $("#stateWise1").val();

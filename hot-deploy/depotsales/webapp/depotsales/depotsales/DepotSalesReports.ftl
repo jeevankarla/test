@@ -749,7 +749,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			<td width="10%"></td>
 			</form>
         </tr>
-      	<tr class="alternate-row">
+      <#--	<tr class="alternate-row">
 			<form id="customerMasters" name="customerMasters" method="post" action="<@ofbizUrl>CustomerMasters.csv</@ofbizUrl>" target="_blank">	
 				<td width="30%">Customer Masters</td>
       			 <td width="15%"><span class='h3'>Branch
@@ -766,7 +766,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			    <td width="10%"></td>
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('customerMasters', '<@ofbizUrl>CustomerMasters.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 			</form>
-          </tr>
+          </tr> -->
       	<tr class="alternate-row">
 			<form id="supplierMasters" name="supplierMasters" method="post" action="<@ofbizUrl>SupplierMasters.csv</@ofbizUrl>" target="_blank">	
 				<td width="30%">Supplier Masters</td>        

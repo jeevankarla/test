@@ -38,6 +38,7 @@ $(".monthPicker").focus(function () {
 	
 $(document).ready(function(){
 
+autoCompletePartyId();
 var branchId = $("#branchId").val();
 var partyId = $("#partyId1").val();
 var effectiveDate1 = $("#effectiveDate1").val();
@@ -60,53 +61,34 @@ var effectiveDate1 = $("#effectiveDate1").val();
 	
 	function autoCompletePartyId(){
 	
-	  var branchId2 = $("#branchId2").val();
-	
-	
-			var productStoreId = branchProductSroreMap[branchId2];
-			
-			
-		      $("#partyId").autocomplete({ 
-		      
-		      		
-		      		source: function( request, response ) {
-	        			$.ajax({
-	          					url: "LookupBranchCustomers",
-	          					dataType: "html",
-	          					data: {
-	            					ajaxLookup: "Y",
-	            					term : request.term,
-	            					productStoreId : productStoreId
-	          					},
-	          					success: function( data ) {
-	          						var dom = $(data);
-	        						dom.filter('script').each(function(){
-	            						$.globalEval(this.text || this.textContent || this.innerHTML || '');
-	        						});
-	            					response($.map(autocomp, function(v,i){
-	    								return {
-	                						label: v.label,
-	                						value: v.value
-	               						};
-									}));
-									
-	          					}
-	        			});
-	        			
-	      			},
-	      			select: function(e, ui) {
-			        	//$('#partyTooltip').val('<label>+ui.item.label+</label>');
-			        	
-			        	$("#partyTooltip").html("<font size=5>"+ui.item.label+"</font>");
-			        	
-			        	 $("p label").hover(function(){
-							           $(this).animate({fontSize: "15px"}, 300)
-							          }, function() {
-							         $(this).animate({fontSize: "10"}, 300)  
-							          })
-			        }
+		var stateWise = $("#stateWise").val();
+		
+		
+		var dataJson = {"stateWise": stateWise};
+		//$('div#orderSpinn1').html('<img src="/images/loadingImage.gif" height="70" width="70">');
+		jQuery.ajax({
+                url: 'getPartiesBasedOnBranch',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
 					
-			  });	
+					
+					var	partyNameObj = result["partyNameObj"];
+				   
+				    $('div#orderSpinn1').html('');
+				    
+					 $("#partyId").autocomplete({ source: partyNameObj }).keydown(function(e){});
+						
+               		}
+               	}							
+		});
+	
+	 
+	 
 		 }
 	
 	
@@ -146,7 +128,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 
 </style>			
 
-
+     <div align='center' name ='displayMsg' id='orderSpinn1'/></div>
         
       <form method="post" name="QuotaDashboard" id="QuotaDashboard" action="<@ofbizUrl>QuotaDashboard</@ofbizUrl> " class="basic-form">
         
@@ -181,7 +163,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				  <#if stateWise?exists && stateWise?has_content>  
 								  	  		   
 				  <td valign='middle'><font color="green"> 
-				   <select name="stateWise" id="stateWise" >
+				   <select name="stateWise" id="stateWise" onchange='javascript:autoCompletePartyId();'>
 				   <option value="${stateWise}">${stateName}</option>    
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
@@ -191,7 +173,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				  
 				  <#else>
 				  <td valign='middle'><font color="green">          
-				    <select name="stateWise" id="stateWise">
+				    <select name="stateWise" id="stateWise" onchange='javascript:autoCompletePartyId();'>
 				     <option value="IN-TN">TAMILNADU</option>
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
@@ -202,22 +184,53 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				  
 				  <td><br/></td>
 				</tr>
-				 
+				
 				
 				
 				<tr><td><br/></td></tr>
 				
-				<#--
+				
 				<tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Customer Name:</td>
 				  <td valign='middle'><font color="green">          
-				     <input type='text' id='partyId' name='partyId' placeholder="Enter Customer Name" onfocus='javascript:autoCompletePartyId();' size='20'/><p><label  align="left" id="partyTooltip" style="color: blue"></label><p>  		
+				     <input type='text' id='partyId' name='partyId' placeholder="Enter Customer Name"  size='20'/><p><label  align="left" id="partyTooltip" style="color: blue"></label><p>  		
 				  </td>
 				  <td><br/></td>
 				</tr>
-				-->
+			
 			 
 			   <tr><td><br/></td></tr>
+			   <#--
+			    <tr>
+				  <td align='left' valign='middle' nowrap="nowrap">Party Classification :</td>
+				  
+				  <#if partyClasificationName?exists && partyClasificationName?has_content>  
+								  	  		   
+				  <td valign='middle'><font color="green"> 
+				   <select name="partyClassificationId2" id="partyClassificationId2" >
+				   <option value="${partyClassification}">${partyClasificationName}</option>    
+				     <#list  partyClassificationList as partyClassificationList>
+						<option value='${partyClassificationList.partyClassificationTypeId?if_exists}'>${partyClassificationList.description?if_exists}</option>
+					 </#list> 
+				  </select>         		
+				  </td>
+				  
+				  <#else>
+				  <td valign='middle'><font color="green"> 
+				    <select name="partyClassificationId2" id="partyClassificationId2" >
+				    <option value=""></option>     
+				     <#list  partyClassificationList as partyClassificationList>
+						<option value='${partyClassificationList.partyClassificationTypeId?if_exists}'>${partyClassificationList.description?if_exists}</option>
+					 </#list> 
+				  </select>       		
+				  </td>
+				   </#if>
+				  
+				  <td><br/></td>
+				</tr>
+			   
+			   <tr><td><br/></td></tr>
+			   -->
 			   
 			   <tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Month :</td>
