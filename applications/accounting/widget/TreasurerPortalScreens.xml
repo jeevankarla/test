@@ -835,9 +835,11 @@
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
                 <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
+                <set field="screenFlag" value="N"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                <script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getbankAccounts.groovy" />
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
@@ -898,10 +900,12 @@
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
+                <set field="screenFlag" value="N"/>
                 <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getbankAccounts.groovy" />
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
@@ -962,10 +966,12 @@
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
+                <set field="screenFlag" value="N"/>
                 <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getbankAccounts.groovy" />
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>

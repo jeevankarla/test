@@ -3412,6 +3412,13 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
+          <menu-item name="PurchaseInvoice" title="Purchase Invoice">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
+             	<parameter param-name="subTabButtonValue" value="PurchaseInvoice" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item> 
           <!-- <menu-item name="SalesAndDistribution" title="Sales And Distribution">
              <link target="ApInvoices">
              	<parameter param-name="invoiceTypeId" value="SALES_DIS_OUT" />
@@ -3877,6 +3884,13 @@
              	<parameter param-name="subTabButtonValue" value="Miscellaneous" />
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
+          </menu-item>
+          <menu-item name="salesInvoice" title="Sales Invoice">
+            <link target="ArInvoices">
+             	<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
+             	<parameter param-name="subTabButtonValue" value="salesInvoice" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" /> 
+             </link> 
           </menu-item>
           <!-- <menu-item name="Finance" title="Finance Income">
              <link target="ArInvoices">

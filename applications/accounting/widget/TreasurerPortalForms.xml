@@ -1072,7 +1072,7 @@ under the License.
         </field> -->
         <field name="finAccountIdTo" title="From/To Account" >
             <drop-down allow-empty="false">
-            	<list-options key-name="finAccountId" list-name="companyBanksList" description="${finAccountName}"/>
+            	<list-options key-name="finAccountId" list-name="finalList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="amount" required-field="true"><text/></field>
@@ -1124,7 +1124,7 @@ under the License.
         </field> -->
         <field name="finAccountIdTo" title="From/To Account" >
             <drop-down allow-empty="false">
-            	<list-options key-name="finAccountId" list-name="companyBanksList" description="${finAccountName}"/>
+            	<list-options key-name="finAccountId" list-name="finalList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="amount" required-field="true"><text/></field>
@@ -1179,7 +1179,7 @@ under the License.
         </field> -->
         <field name="finAccountIdTo" title="From/To Account" >
             <drop-down allow-empty="false">
-            	<list-options key-name="finAccountId" list-name="companyBanksList" description="${finAccountName}"/>
+            	<list-options key-name="finAccountId" list-name="finalList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="amount" required-field="true"><text/></field>
