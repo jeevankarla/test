@@ -2689,4 +2689,23 @@
     </property>
     
     
+     <property key="HumanResEmploymentDeductions">       
+        <value xml:lang="en">Employee Deductions </value>        
+    </property>
+    
+     <property key="HumanResEmploymentBenifits">       
+        <value xml:lang="en">Employee Benifits</value>        
+    </property>
+    
+    
+    <property key="HumanResEmploymentOrganisation">       
+        <value xml:lang="en">Organisation Employee Id</value>        
+    </property>
+    
+    <property key="HumanResEmploymentPartyIdTO">       
+        <value xml:lang="en">Employee Id</value>        
+    </property>
+    
+    
+    
 </resource>

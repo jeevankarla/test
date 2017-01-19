@@ -762,7 +762,7 @@
 			<set field="doj" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(employmentList[0].fromDate, &quot;dd/MM/yyyy&quot;);}"/>
      	</actions>
      	
-        <field name="partyId"><display/></field>
+        <field name="partyId" title="${uiLabelMap.HumanResEmploymentPartyIdTO}"><display/></field>
       <!--   <field name="employeeId" title="${uiLabelMap.EmployeeId}"><display></display></field>-->
         <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPersonPartyAndEmployeeDetail.personalTitle} ${lookupPersonPartyAndEmployeeDetail.firstName} ${lookupPersonPartyAndEmployeeDetail.middleName} ${lookupPersonPartyAndEmployeeDetail.lastName}"/></field>
       <!--   <field name="belongsTo" title="${uiLabelMap.SonWifeDaughter}"><display/></field>-->

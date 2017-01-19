@@ -120,7 +120,7 @@
 		var message = "";
 		message += "<form action='createNewEmployment' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
 		
-		message +=  "<tr class='h3'><td align='left' class='h3' width='60%'>PartyId:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='partyIdTo' name='partyIdTo' value='${partyId?if_exists}'/></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='60%'>${uiLabelMap.HumanResEmploymentPartyIdTO} :</td><td align='left' width='60%'><input class='h4' type='text' readonly id='partyIdTo' name='partyIdTo' value='${partyId?if_exists}'/></td></tr>";
 		
 		message +=	"<tr class='h3'><td align='left' class='h3' width='60%'>Cur.Department:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='partyName' name='partyName'/></td></tr>";
 		
