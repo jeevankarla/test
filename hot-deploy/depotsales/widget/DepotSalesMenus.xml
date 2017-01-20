@@ -209,10 +209,10 @@
         	</link>
 	    </menu-item>
 	    <menu-item name="analytics" title="Dashboard">
-        	<condition>
+        	<!-- <condition>
             	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
-            </condition>       
-        	<link target="IndentAnalytics"/>
+            </condition>    -->    
+        	<link target="IndentAnalyticsTab"/>
         </menu-item>
        	<menu-item name="CreateUserLogin" title="Create User Login">
         	<link target="CreateUserLogin"/>
@@ -274,35 +274,70 @@
 	    
 	        
       </menu>
+      
+     <menu name="IndentAnalyticsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem2">
+			<menu-item name="indentAnalytics" title="Indent Analytics">
+        		<link target="IndentAnalytics"/>
+        	</menu-item>  
+        	<menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Listing">
+        		<link target="delayedIndentPOAnalyticsListing"/>
+        	</menu-item>
+       </menu>
+      <menu name="SupplierAnalyticsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem2">
+			<menu-item name="IndentSupplyAnalytics" title="Supply Analytics">
+        		<link target="IndentSupplyAnalytics"/>
+        	</menu-item> 
+        	<menu-item name="findDelayShipments" title="Delay Shipments Listing">
+        		<link target="findDelayShipments"/>
+        	</menu-item>
+	    	<menu-item name="FindSupplierDispatchs" title="Shipment History">
+        		<link target="ShipmentHistory"/>
+        	</menu-item>
+       </menu> 
+       <!-- <menu-item name="quotaDashboard" title="Quota Dashboard">
+        	<condition>
+            	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
+            </condition>       
+        	<link target="QuotaDashboard"/>
+        </menu-item>
+        <menu-item name="indentAnalytics1" title="Indent Analytics">
+        		<link target="IndentAnalytics"/>
+        </menu-item>  
+        <menu-item name="IndentSupplyAnalytics1" title="Supply Analytics">
+        		<link target="IndentSupplyAnalytics"/>
+        </menu-item>  -->
+        
        <menu name="AnalyticsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="indentAnalytics" title="Indent Analytics">
-        	<link target="IndentAnalytics"/>
+        	<link target="IndentAnalyticsTab"/>
         </menu-item>  
          <!-- <menu-item name="indentQtyAnalytics" title="Indent Quantity Analytics">
         	<link target="IndentQtyAnalytics"/>
         </menu-item>  --> 
         
         <menu-item name="IndentSupplyAnalytics" title="Supply Analytics">
-        	<link target="IndentSupplyAnalytics"/>
+        	<link target="SupplierAnalyticsSubTabBar"/>
         </menu-item>
          <menu-item name="quotaDashboard" title="Quota Dashboard">
-        	<condition>
+        	<!-- <condition>
             	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
-            </condition>       
+            </condition>  -->      
         	<link target="QuotaDashboard"/>
         </menu-item>
-       <!--  <menu-item name="durationAnalytics" title="Duration Analytics">
+      <!--  <menu-item name="durationAnalytics" title="Duration Analytics">
         	<link target="durationAnalytics"/>
-        </menu-item> -->
-         <!-- <menu-item name="delayedIndentPOAnalytics" title="Delayed PO Analytics">
+        </menu-item>
+         <menu-item name="delayedIndentPOAnalytics" title="Delayed PO Analytics">
         	<link target="delayedIndentToPoAnalytics"/>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Listing">
         	<link target="delayedIndentPOAnalyticsListing"/>
         </menu-item>
-        <!-- <menu-item name="delayedShipmentAnalytics" title="Delayed Shipment Analytics">
+        <menu-item name="delayedShipmentAnalytics" title="Delayed Shipment Analytics">
         	<link target="delayedShipmentAnalytics"/>
-        </menu-item> -->
+        </menu-item>
         <menu-item name="findDelayShipments" title="Delay Shipments Listing">
         	<link target="findDelayShipments"/>
         </menu-item>
@@ -310,11 +345,11 @@
         	<link target="ShipmentHistory"/>
         </menu-item>
         
-       <!--  <menu-item name="IndentPurchaseAnalytics" title="Purchase Analytics">
+        <menu-item name="IndentPurchaseAnalytics" title="Purchase Analytics">
         	<link target="IndentPurchaseAnalytics"/>
-        </menu-item>  -->
+        </menu-item> 
           
-     <!--    <menu-item name="channelSalesChart" title="Sales Mix Trend">
+        <menu-item name="channelSalesChart" title="Sales Mix Trend">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -331,8 +366,8 @@
             	</or>            
             </condition>  
         	<link target="QuotaAnalytics"/>
-        </menu-item>   -->
-       <!--  <menu-item name="salesRevenueTrend" title="Sales Trend">
+        </menu-item>  
+        <menu-item name="salesRevenueTrend" title="Sales Trend">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -340,8 +375,8 @@
             	</or>            
             </condition>  
         	<link target="DailySalesRevenueTrend"/>
-        </menu-item> -->
-        <!-- <menu-item name="ShopeeDespatchChart" title="Shopee Trend">
+        </menu-item>
+        <menu-item name="ShopeeDespatchChart" title="Shopee Trend">
         	<condition>
 				<or>
             		<if-has-permission permission="FACILITY"  action="_ADMIN"/>
@@ -368,8 +403,14 @@
             </condition>         
             <link target="FieldStaffComparison">
             </link>
-        </menu-item>     -->   
+        </menu-item>     -->    
     </menu>
+    
+    
+    
+    
+    
+    
        <menu name="FindPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindPO" title="Find Purchase Order">
         	<link target="FindPO"/>
