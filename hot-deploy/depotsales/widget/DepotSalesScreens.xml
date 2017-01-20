@@ -77,13 +77,72 @@
 				</section>
 			</widgets>
 		</section>
-	</screen>
+	</screen> 
+	<screen name="IndentAnalyticsTab">
+        <section>
+            <actions>
+               	<set field="titleProperty" value="Indent Analytics"/>
+  				<set field="tabButtonItem" value="analytics" />		            
+				<set field="tabButtonItem2" value="indentAnalytics" />
+				<set field="ajaxUrl" value="IndentAnalyticsInternal" type="String" global="true"/>
+				<set field="parameters.screenflag" value="indentAnalytics"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
+				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />   
+            </actions>
+            <widgets>
+				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
+					<decorator-section name="body">
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="IndentAnalyticsSubTabBar" />
+					   <platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/EnquiryEmailOpen.ftl"></html-template></html>
+                       		</platform-specific> 
+                    		<platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentAnalytics.ftl"></html-template></html>
+                       		</platform-specific> 
+					</decorator-section>
+				</decorator-screen>	                    	               
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SupplierAnalyticsSubTabBar">
+        <section>
+            <actions>
+               	<set field="titleProperty" value="Supply Analytics"/>
+  				<set field="tabButtonItem" value="analytics" />		            
+				<set field="tabButtonItem2" value="IndentSupplyAnalytics" />
+				<set field="ajaxUrl" value="IndentSupplyAnalyticsInternal" type="String" global="true"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
+				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
+                 <set field="parameters.screenflag" value="indentSupplyAnalytics"/>
+            </actions>
+            <widgets>
+				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
+					<decorator-section name="body">
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="SupplierAnalyticsSubTabBar" />
+					  <platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/EnquiryEmailOpen.ftl"></html-template></html>
+                       		</platform-specific> 
+                    		<platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentAnalytics.ftl"></html-template></html>
+                       		</platform-specific> 
+					</decorator-section>
+				</decorator-screen>	                    	               
+            </widgets>
+        </section>
+    </screen>
 	<screen name="IndentAnalytics">
         <section>
             <actions>
                	<set field="titleProperty" value="Indent Analytics"/>
   				<set field="tabButtonItem" value="analytics" />		            
 				<set field="tabButtonItem2" value="indentAnalytics" />
+				<set field="tabButtonItem3" value="indentAnalytics" />
 				<set field="ajaxUrl" value="IndentAnalyticsInternal" type="String" global="true"/>  
 				<set field="parameters.screenflag" value="indentAnalytics"/>
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
@@ -96,6 +155,7 @@
 				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
 					<decorator-section name="body">
 					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="IndentAnalyticsSubTabBar" />
 					   <platform-specific> 
                            		<html><html-template location="component://depotsales/webapp/depotsales/analytics/EnquiryEmailOpen.ftl"></html-template></html>
                        		</platform-specific> 
@@ -4322,7 +4382,8 @@
           <section>
               <actions>
                   <set field="titleProperty" value="Delays in processing purchase orders by more than 2 days"/>
-                  <set field="tabButtonItem" value="quotaDashboard"/>
+                  <set field="tabButtonItem2" value="indentAnalytics"/>
+                  <set field="tabButtonItem2" value="FindSupplierDispatchs"/>
                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
                     <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
@@ -4336,6 +4397,8 @@
                       	<screenlet title="Find Weaver">
                       		<!-- <include-form name="FindQuotaProducer"
   								location="component://depotsales/widget/DepotSalesForms.xml" /> -->
+  								<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					        <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="IndentAnalyticsSubTabBar" />
   	  							<platform-specific>
 							<html>
 								<html-template
@@ -9590,6 +9653,7 @@
                	<set field="titleProperty" value="Supply Analytics"/>
   				<set field="tabButtonItem" value="analytics" />		            
 				<set field="tabButtonItem2" value="IndentSupplyAnalytics" />
+				<set field="tabButtonItem3" value="IndentSupplyAnalytics" />
 				<set field="ajaxUrl" value="IndentSupplyAnalyticsInternal" type="String" global="true"/>                      
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
 				
@@ -9603,6 +9667,7 @@
 				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
 					<decorator-section name="body">
 					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="SupplierAnalyticsSubTabBar" />
 					  <platform-specific> 
                            		<html><html-template location="component://depotsales/webapp/depotsales/analytics/EnquiryEmailOpen.ftl"></html-template></html>
                        		</platform-specific> 

@@ -41,8 +41,15 @@
     <request-map uri="IndentAnalytics">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentAnalytics"/>
+    </request-map> 
+     <request-map uri="IndentAnalyticsTab">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="IndentAnalyticsTab"/>
     </request-map>
-    
+     <request-map uri="SupplierAnalyticsSubTabBar">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SupplierAnalyticsSubTabBar"/>
+    </request-map>
      <request-map uri="QuotaDashboard">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="QuotaDashboard"/>
@@ -2754,6 +2761,8 @@
     <view-map name="ChannelWiseDepoSalesChart" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChart"/>
 	<view-map name="ChannelWiseDepoSalesChartInternal" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChannelWiseDepoSalesChartInternal"/>
     <view-map name="IndentAnalytics" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalytics"/>
+    <view-map name="IndentAnalyticsTab" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalyticsTab"/>
+    <view-map name="SupplierAnalyticsSubTabBar" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SupplierAnalyticsSubTabBar"/>
     <view-map name="QuotaDashboard" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaDashboard"/>
     
     <view-map name="delayedIndentPOAnalyticsListing" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#delayedIndentPOAnalyticsListing"/>

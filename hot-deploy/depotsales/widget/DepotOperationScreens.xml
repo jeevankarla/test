@@ -794,6 +794,7 @@
 			<actions>
 				<set field="titleProperty" value="Find Supplier Dispatch Items" />
 			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
+			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
@@ -843,6 +844,8 @@
 											<include-form name="listMaterialShipmentReceiptDepotTrans"
 												location="component://depotsales/widget/DepotSalesForms.xml" />
 										</screenlet>
+										<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					                    <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="IndentAnalyticsSubTabBar" />
 										<platform-specific>
 											<html>
 												<html-template
@@ -863,6 +866,7 @@
 			<actions>
 				<set field="titleProperty" value="Find Supplier Dispatch Items" />
 			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
+			     <set field="tabButtonItem2" value="FindSupplierDispatchs" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
@@ -886,6 +890,8 @@
 									<decorator-section name="search-options">
 										<!-- <include-form name="FindShipmentReceiptDepotTrans"
 											location="component://depotsales/widget/DepotSalesForms.xml" /> -->
+											<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					                        <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="SupplierAnalyticsSubTabBar" />
 											<platform-specific>
 											<html>
 												<html-template
@@ -903,7 +909,6 @@
 														<parameter param-name="isReport" value="YES" />
 													</link>
 									</decorator-section>
-									
 									<decorator-section name="search-results">
 										<screenlet title="">
 											<include-form name="listMaterialShipmentReceiptDepotTrans"
@@ -923,6 +928,7 @@
 			<actions>
 				<set field="titleProperty" value="Delayed Shipments From Supplier" />
 			     <set field="tabButtonItem" value="findDelayShipments"/>
+			     <set field="tabButtonItem2" value="findDelayShipments"/>
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
@@ -939,6 +945,8 @@
 								<decorator-screen name="FindScreenDecorator"
 									location="component://common/widget/CommonScreens.xml">
 									<decorator-section name="search-options">
+									<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					                <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="SupplierAnalyticsSubTabBar" />
 											<platform-specific>
 											<html>
 												<html-template
