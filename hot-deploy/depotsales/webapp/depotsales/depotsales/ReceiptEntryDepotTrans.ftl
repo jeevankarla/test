@@ -58,7 +58,7 @@ $( "#effectiveDate" ).datepicker({
 $( "#suppInvoiceDate" ).datepicker({
 	dateFormat:'d MM, yy',
 	changeMonth: true,
-	
+    minDate: new Date(${minimumtime?if_exists}),	
 });
 $( "#deliveryChallanDate" ).datepicker({
 	dateFormat:'d MM, yy',
