@@ -2969,6 +2969,140 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
 
     return result;	
 }	
+public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContext dctx, Map<String, ? extends Object> context) {
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();   
+    Map<String, Object> result = new HashMap<String, Object>();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+    String fromDateStr = (String) context.get("fromDate");
+    String thruDateStr = (String) context.get("thruDate");
+    String invoiceIdUi = (String) context.get("invoiceId");
+    String roId = (String) context.get("partyId");
+    String invoiceTypeIdUi = (String) context.get("invoiceTypeId");
+	Timestamp fromDate=null;
+	Timestamp thruDate = null;
+	List branchIds = FastList.newInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+  	if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
+  		try {
+  			fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+  			thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+	  	} catch (ParseException e) {
+	  		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	  	} catch (NullPointerException e) {
+  			Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	  	}
+  	}
+    Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+    Timestamp transactionDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+
+    EntityCondition cond = null;
+    List condList = FastList.newInstance();
+    if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+    	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+    	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+    }
+    if(UtilValidate.isNotEmpty(invoiceTypeIdUi) && (invoiceTypeIdUi.equals("PURCHASE_INVOICE"))){
+    	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, roId));
+    }
+    if(UtilValidate.isNotEmpty(invoiceIdUi)){
+    	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdUi));
+    }
+    if(UtilValidate.isNotEmpty(invoiceTypeIdUi) && (invoiceTypeIdUi.equals("SALES_INVOICE"))){
+    	condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId));
+    }
+	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_LIKE,"OB%"));
+	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("DEPOT_YARN_SALE","YARN_SALE")));
+	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+    cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+    EntityListIterator invoiceItr = null;
+    String statusId = "";
+    try {
+    	    invoiceItr = delegator.find("Invoice", cond, null,  UtilMisc.toSet("invoiceId","invoiceTypeId","partyIdFrom","partyId","statusId"), null, null);
+			if (invoiceItr != null) {
+                GenericValue invoice = null;
+                while ((invoice = invoiceItr.next()) != null) {
+                	 String invoiceId = invoice.getString("invoiceId");
+                	 statusId = invoice.getString("statusId");
+                	 String oldStatusId=statusId;
+                	 String invoiceTypeId = invoice.getString("invoiceTypeId");
+                	 if(statusId.equals("INVOICE_IN_PROCESS")){
+	                      Map<String, Object> InvoiceInProcessCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
+	                      InvoiceInProcessCtx.put("userLogin", userLogin);
+	                      InvoiceInProcessCtx.put("statusId", "INVOICE_APPROVED");
+	                      InvoiceInProcessCtx.put("statusDate", transactionDate);
+	          			  Map InvoiceInProcessResult = FastMap.newInstance();
+	             	   	 	try{
+	             	   	 		InvoiceInProcessResult = dispatcher.runSync("setInvoiceStatus",InvoiceInProcessCtx);
+	             	   	 		if (ServiceUtil.isError(InvoiceInProcessResult)) {
+	             	   	 			Debug.logError(InvoiceInProcessResult.toString(), module);
+	             	   	 			return ServiceUtil.returnError(null, null, null, InvoiceInProcessResult);
+	             	   	 		}	
+	             	   	 		statusId= "INVOICE_APPROVED";
+	             	        }catch(GenericServiceException e){
+	             	          	Debug.logError(e, e.toString(), module);
+	             	            return ServiceUtil.returnError(e.toString());
+	             	        } 
+                	 }
+                	 if(statusId.equals("INVOICE_APPROVED")){
+	                      Map<String, Object> InvoiceApprovCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
+	                      InvoiceApprovCtx.put("userLogin", userLogin);
+	                      InvoiceApprovCtx.put("statusId", "INVOICE_READY");
+	                      InvoiceApprovCtx.put("statusDate", transactionDate);
+	             	   	 	try{
+	             	   	 		Map<String, Object> InvoiceApprovResult = dispatcher.runSync("setInvoiceStatus",InvoiceApprovCtx);
+	             	   	 		if (ServiceUtil.isError(InvoiceApprovResult)) {
+	             	   	 			Debug.logError(InvoiceApprovResult.toString(), module);
+	             	   	 			return ServiceUtil.returnError(null, null, null, InvoiceApprovResult);
+	             	   	 		}	
+	             	   	 		statusId= "INVOICE_READY";
+	             	        }catch(GenericServiceException e){
+	             	          	Debug.logError(e, e.toString(), module);
+	             	            return ServiceUtil.returnError(e.toString());
+	             	        } 
+               	    }
+	        	    if(oldStatusId.equals("INVOICE_READY")){
+	        	    	Map InvoiceReadyCtx = FastMap.newInstance();
+	        	    	if(invoiceTypeId.equals("PURCHASE_INVOICE")){
+	                      	InvoiceReadyCtx.put("userLogin", userLogin);
+	        	    		InvoiceReadyCtx.put("invoiceId", invoiceId);
+	        	    		try{
+	             	   	 		Map<String, Object> InvoiceReadyResult = dispatcher.runSync("createAcctgTransForPurchaseInvoice",InvoiceReadyCtx);
+	             	   	 		if (ServiceUtil.isError(InvoiceReadyResult)) {
+	             	   	 			Debug.logError(InvoiceReadyResult.toString(), module);
+	             	   	 			return ServiceUtil.returnError(null, null, null, InvoiceReadyResult);
+	             	   	 		}	             	
+	             	        }catch(GenericServiceException e){
+	             	          	Debug.logError(e, e.toString(), module);
+	             	            return ServiceUtil.returnError(e.toString());
+	             	        } 
+	        	    	}
+	        	    	if(invoiceTypeId.equals("SALES_INVOICE")){
+		                    InvoiceReadyCtx.put("userLogin", userLogin);
+	        	    		InvoiceReadyCtx.put("invoiceId", invoiceId);
+	        	    		try{
+	             	   	 		Map<String, Object> InvoiceReadyResult = dispatcher.runSync("createAcctgTransForSalesInvoice",InvoiceReadyCtx);
+	             	   	 		if (ServiceUtil.isError(InvoiceReadyResult)) {
+	             	   	 			Debug.logError(InvoiceReadyResult.toString(), module);
+	             	   	 			return ServiceUtil.returnError(null, null, null, InvoiceReadyResult);
+	             	   	 		}	             	
+	             	        }catch(GenericServiceException e){
+	             	          	Debug.logError(e, e.toString(), module);
+	             	            return ServiceUtil.returnError(e.toString());
+	             	        } 
+	        	    	}
+	        	    }
+                	 
+                }
+                invoiceItr.close();
+            }
+    } catch (GenericEntityException e) {
+        Debug.logError(e, module);
+        return ServiceUtil.returnError(e.getMessage());
+    }
+    result = ServiceUtil.returnSuccess("Successfully Populate RO roles for Invoices: ");
+    return result;	
+}	
 	
   	
 }

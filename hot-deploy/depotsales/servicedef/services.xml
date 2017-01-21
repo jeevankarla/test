@@ -732,7 +732,14 @@
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
          <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
     </service>
-    
+        <service name="creatingAcctTransForAllInvoices" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="creatingAcctTransForAllInvoices" transaction-timeout="6000000">
+         <description>Creating Accounting Trans For All Invoices</description>
+         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
+         <attribute mode="IN" name="invoiceId" optional="true" type="String"/>
+         <attribute mode="IN" name="partyId" optional="true" type="String"/>
+         <attribute mode="IN" name="invoiceTypeId" optional="true" type="String"/>
+    </service>
      <service name="roundingOfAdjustmentSubtraction" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="roundingOfAdjustmentSubtraction" transaction-timeout="6000000">
         <description>roundingOfAdjustmentProblem</description>
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
