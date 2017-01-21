@@ -50,6 +50,9 @@ if(orderId){
 	
 	context.purposeTypeId = purposeTypeId;
 	
+	minimumtime=(orderHeader.orderDate).getTime();
+	context.minimumtime=minimumtime;
+	
 	if(!orderHeader){
 
 		context.errorMessage = "No Order Found with Order Id: "+orderId+" !";

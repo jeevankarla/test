@@ -28,6 +28,7 @@ $(document).ready(function(){
 			dateFormat:'d MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
+			minDate: new Date(${minimumtime?if_exists}),
 			onSelect: function( selectedDate ) {
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}
@@ -112,6 +113,7 @@ input[type=button]:hover {
 			    			<table  border="0" cellspacing="0" cellpadding="0" class="form-style-8">
 				        		<tr>
 	          						<input type="hidden" name="isFormSubmitted"  value="YES" />
+	          						 <input type="hidden" id="purchaseInvoiceId" name="purchaseInvoiceId"  value="${purchaceInvoiceId}" />
 							        <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Invoice Date :</div></td>
 							        <#if effectiveDate?exists && effectiveDate?has_content>  
 								  	 	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
