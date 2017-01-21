@@ -50,6 +50,13 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
     
+     <service name="invalidShipments" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="invalidShipments">
+        <description>Approve Depot Orders</description>
+        <attribute name="ro" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentIds" type="List" mode="OUT" optional="true"/>
+    </service>
+    
      <service name="changeSaleOrderStatusForDEPOT" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="changeSaleOrderStatusForDEPOT">
         <description>Approve Depot Orders</description>
