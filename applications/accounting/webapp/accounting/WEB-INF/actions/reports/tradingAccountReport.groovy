@@ -109,16 +109,16 @@ for(a=0; a<customTimePeriodIds.size(); a++){
 	eachPeriodThruDateTime = UtilDateTime.getDayEnd(eachPeriodThruDateTime);
 	
 conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,eachPeriodFromDateTime));
+conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,eachPeriodThruDateTime));
 //conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.LESS_THAN_EQUAL_TO, eachPeriodThruDateTime));
-conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,eachPeriodThruDateTime) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
+conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO,eachPeriodFromDateTime) , EntityOperator.OR ,EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null) ));
 if(UtilValidate.isNotEmpty(parameters.organizationPartyId) && "Company".equalsIgnoreCase(parameters.organizationPartyId)){
 	//conditionList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.IN, partyIds);
 }else{
 	conditionList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS, parameters.organizationPartyId));
 }
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-glAccountCategoryMemberDetails = delegator.findList("GlAccountCategoryMember",condition,UtilMisc.toSet("glAccountCategoryId","glAccountId"), null, null, false );
+glAccountCategoryMemberDetails = delegator.findList("GlAccountCategoryMember",condition,UtilMisc.toSet("organizationPartyId","glAccountCategoryId","glAccountId"), null, null, false );
 glAccountCategoryIds=EntityUtil.getFieldListFromEntityList(glAccountCategoryMemberDetails, "glAccountCategoryId", true);
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("glAccountCategoryId", EntityOperator.IN, glAccountCategoryIds));
@@ -137,49 +137,59 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 		glAccountCategoryMember = EntityUtil.filterByCondition(glAccountCategoryMemberDetails, EntityCondition.makeCondition("glAccountCategoryId", EntityOperator.EQUALS,glAccntCategoryId));
 		glAccountIds = EntityUtil.getFieldListFromEntityList(glAccountCategoryMember,"glAccountId", true);
 		glAccountIdsMap=[:];
-		for(k=0; k<glAccountIds.size(); k++){
-			glAccountId = glAccountIds.get(k);
+		for(k=0; k<glAccountCategoryMember.size(); k++){
+			//GenericValue glAccntCatMbr = (GenericValue)glAccountCategoryMember.get(k)
+			glAccountId = glAccountCategoryMember.get(k).get("glAccountId");
+			organizationPartyId = glAccountCategoryMember.get(k).get("organizationPartyId");
 			condList = [];
 			condList.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,glAccountId));
 			condList.add(EntityCondition.makeCondition("customTimePeriodId" , EntityOperator.EQUALS,eachCustmTime));
 			condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.IN, partyIds));
-			tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description"), null, null, false);
+			tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description","organizationPartyId"), null, null, false);
 			if(UtilValidate.isNotEmpty(tempGlAccountAndHistories)){
-				tempGlAccountAndHistories = EntityUtil.getFirst(tempGlAccountAndHistories);
-				totalPostedDebits= tempGlAccountAndHistories.totalPostedDebits;
-				if(UtilValidate.isNotEmpty(totalPostedDebits)){
-					childCatDebitTotal=childCatDebitTotal+totalPostedDebits;
+				if(UtilValidate.isNotEmpty(parameters.organizationPartyId) && "Company".equalsIgnoreCase(parameters.organizationPartyId)){
+					tempGlAccountAndHistories = EntityUtil.getFirst(EntityUtil.filterByCondition(tempGlAccountAndHistories,EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS,organizationPartyId)));
+				}else{
+					tempGlAccountAndHistories = EntityUtil.getFirst(tempGlAccountAndHistories);
 				}
-				totalPostedCredits = tempGlAccountAndHistories.totalPostedCredits;
-				if(UtilValidate.isNotEmpty(totalPostedCredits)){
-					childCatCreditTotal=childCatCreditTotal+totalPostedCredits;
-				}
-				glTempVal=0
-				glTempVal=totalPostedDebits-totalPostedCredits;
-				if(glTempVal<0){
-					glTempVal=glTempVal.multiply(-1);
-				}
-				if(GlAccountIdsWiseMap && GlAccountIdsWiseMap.get(glAccntCategoryId)){
-					tempGlMap=GlAccountIdsWiseMap.get(glAccntCategoryId);
-					if( tempGlMap && tempGlMap.get(glAccountId)){
-						tempExGlMap = tempGlMap.get(glAccountId);
-						tempExGlMap.put(eachCustmTime,glTempVal);
-						glAccountIdsMap.put(glAccountId,tempExGlMap);
+				
+				if(UtilValidate.isNotEmpty(tempGlAccountAndHistories)){
+					totalPostedDebits= tempGlAccountAndHistories.totalPostedDebits;
+					if(UtilValidate.isNotEmpty(totalPostedDebits)){
+						childCatDebitTotal=childCatDebitTotal+totalPostedDebits;
+					}
+					totalPostedCredits = tempGlAccountAndHistories.totalPostedCredits;
+					if(UtilValidate.isNotEmpty(totalPostedCredits)){
+						childCatCreditTotal=childCatCreditTotal+totalPostedCredits;
+					}
+					
+					glTempVal=0
+					glTempVal=totalPostedDebits-totalPostedCredits;
+					if(glTempVal<0){
+						glTempVal=glTempVal.multiply(-1);
+					}
+					if(GlAccountIdsWiseMap && GlAccountIdsWiseMap.get(glAccntCategoryId)){
+						tempGlMap=GlAccountIdsWiseMap.get(glAccntCategoryId);
+						if( tempGlMap && tempGlMap.get(glAccountId)){
+							tempExGlMap = tempGlMap.get(glAccountId);
+							tempExGlMap.put(eachCustmTime,tempExGlMap.get(eachCustmTime)+glTempVal);
+							glAccountIdsMap.put(glAccountId,tempExGlMap);
+						}else{
+							tempMap=[:];
+							tempMap.put("glAccountId",glAccountId);
+							tempMap.put("description",tempGlAccountAndHistories.description);
+							tempMap.put(eachCustmTime,glTempVal);
+							glAccountIdsMap.put(glAccountId,tempMap);
+						}
+						GlAccountIdsWiseMap.put(glAccntCategoryId,glAccountIdsMap);
 					}else{
 						tempMap=[:];
 						tempMap.put("glAccountId",glAccountId);
 						tempMap.put("description",tempGlAccountAndHistories.description);
 						tempMap.put(eachCustmTime,glTempVal);
 						glAccountIdsMap.put(glAccountId,tempMap);
+						GlAccountIdsWiseMap.put(glAccntCategoryId,glAccountIdsMap);
 					}
-					GlAccountIdsWiseMap.put(glAccntCategoryId,glAccountIdsMap);
-				}else{
-					tempMap=[:];
-					tempMap.put("glAccountId",glAccountId);
-					tempMap.put("description",tempGlAccountAndHistories.description);
-					tempMap.put(eachCustmTime,glTempVal);
-					glAccountIdsMap.put(glAccountId,tempMap);
-					GlAccountIdsWiseMap.put(glAccntCategoryId,glAccountIdsMap);
 				}
 			}
 			
