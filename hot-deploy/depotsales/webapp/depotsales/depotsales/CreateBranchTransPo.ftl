@@ -111,12 +111,31 @@ var CountryJsonMap = ${StringUtil.wrapString(countryListJSON)!'{}'};
  
 }
 		
-		
 function makeDatePicker(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat:'dd MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'MM d, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+	}
+	
+	function makeDatePickerPO(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			minDate: new Date(${orderDateToCompPO?if_exists}),
 			onSelect: function( selectedDate ) {
 				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
 			}
@@ -148,6 +167,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 			}
 		});
 	}
+
+
 	function manualAddressEntry(){
 	//$("#ManualAddress").hide();
 	$("#manualEntryDiv").show();
@@ -323,7 +344,7 @@ function populateData(){
 	
 		$("#PostalAddress").hide();
 			makeDatePicker("estimatedDeliveryDate","fromDateId");
-			makeDatePicker("orderDate","fromDateId");
+			makeDatePickerPO("orderDate","fromDateIdPO");
 			makeDatePicker("refDate","fromDateId");
 			makeDatePicker("quoteDate","fromDateId");
 			
