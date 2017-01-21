@@ -2047,6 +2047,7 @@ under the License.
     <alias-all entity-alias="OIB"/>
     <alias-all entity-alias="OI"/>
     <alias entity-alias="INV" name="statusId"/>
+    <alias entity-alias="II" name="invoiceItemTypeId"/>
     <view-link entity-alias="OIB" rel-entity-alias="INV">
       <key-map field-name="invoiceId"/>
     </view-link>
@@ -2064,10 +2065,6 @@ under the License.
     <relation type="one" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
-    </relation>
-    <relation type="one" rel-entity-name="InvoiceItem">
-        <key-map field-name="invoiceId"/>
-        <key-map field-name="invoiceItemType"/>
     </relation>
     <relation type="one-nofk" rel-entity-name="OrderItem">
          <key-map field-name="orderId"/>
