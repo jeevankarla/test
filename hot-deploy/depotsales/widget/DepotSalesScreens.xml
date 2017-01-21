@@ -4349,6 +4349,7 @@
 					location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                       	<screenlet title="DashBoard for weaver quota utilization">
+                      	<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
                       		<!-- <include-form name="FindQuotaProducer"
   								location="component://depotsales/widget/DepotSalesForms.xml" /> -->
   								<platform-specific>
