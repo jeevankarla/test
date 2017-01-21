@@ -2537,7 +2537,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			                // reset each order
 	                GenericValue item = null;
 	                while ((item = orderItemBillingItr.next()) != null) {
-	             if("TEN_PERCENT_SUBSIDY".equals(item.getBigDecimal("invoiceItemTypeId"))){
+	             if("TEN_PERCENT_SUBSIDY".equals(item.getString("invoiceItemTypeId"))){
 	            	 saleBillTenPrcAmt=item.getBigDecimal("amount");
 	             }else{
 	                	saleBillQty = saleBillQty.add(item.getBigDecimal("quantity"));
