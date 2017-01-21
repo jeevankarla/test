@@ -12040,6 +12040,122 @@ public class DepotPurchaseServices{
 	    
 	    } 
   	 
+  	 
+	    
+  	 public static Map<String, Object> invalidShipments(DispatchContext dctx, Map context) {
+   		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+   		LocalDispatcher dispatcher = dctx.getDispatcher();
+   		Map<String, Object> result = ServiceUtil.returnSuccess();
+   		GenericValue userLogin = (GenericValue) context.get("userLogin");
+   		String itemType = (String) context.get("itemType");
+   		String decimals = (String) context.get("decimals");
+   		String roundType = (String) context.get("roundType");
+   		String places = (String) context.get("places");
+   		
+   		String ro = (String) context.get("ro");
+   		
+   		String invoiceId = (String) context.get("invoiceId");
+   		
+   		Locale locale = (Locale) context.get("locale");
+   		
+   		List<GenericValue> shipmentList = null;
+   		List<GenericValue> PartyRelationship = null;
+   		List<GenericValue> Invoice = null;
+   		List branchList =  FastList.newInstance();
+   		List ShipementIds =  FastList.newInstance();
+   		
+   		
+   		List conditionList = FastList.newInstance();
+   		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro));
+   		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+   		
+   		try{
+   		PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
+
+   	     branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+   		}catch(GenericEntityException e){
+ 			Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+ 		}
+   		
+   		
+  		 try{
+  			conditionList.clear();
+  		    if(UtilValidate.isNotEmpty(branchList))	
+  		    	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+  		     if(UtilValidate.isNotEmpty(invoiceId))	
+  			    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+  			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+  		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+  		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
+  			 
+  		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, false);
+ 				
+ 			}catch(GenericEntityException e){
+ 				Debug.logError(e, "Failed to retrive Shipment ", module);
+ 			}
+   		 
+  		  
+  		if(UtilValidate.isNotEmpty(Invoice)){
+  			
+ 	        for(GenericValue eachInvoice : Invoice){
+   				
+ 	        	String eacinvoiceId = eachInvoice.getString("invoiceId");
+ 	        	
+ 	        	String shipmentId = eachInvoice.getString("shipmentId");
+ 	        	
+ 	        	try{
+ 	        	
+ 	        	 if(UtilValidate.isNotEmpty(shipmentId)){	
+ 	        	List<GenericValue> shipment = null;
+ 	        	
+ 	        	conditionList.clear();
+ 	        	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+ 	        	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+ 	        	 
+ 	        		shipment = delegator.findList("Shipment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+ 	        	 
+ 	        		if(UtilValidate.isEmpty(shipment))
+ 	        		 ShipementIds.add(shipmentId);
+ 	        		
+ 	        	 }
+ 	        		
+ 	        	 }catch(GenericEntityException e){
+ 	 				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+ 	 			}
+ 	        	 
+ 	        	 
+ 	        	
+ 	        	 try{
+ 	     			conditionList.clear();
+ 	     		   if(UtilValidate.isNotEmpty(shipmentId)){	
+ 	     			 List<GenericValue> PurChseInvoice = null;
+ 	    			    conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+ 	     			    conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+ 	     		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+ 	     		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
+ 	     			 
+ 	     		      PurChseInvoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, false);
+ 	    				
+ 	     		   if(UtilValidate.isEmpty(PurChseInvoice))
+ 	     			 ShipementIds.add(shipmentId); 
+ 	     		     
+ 	     		   }
+ 	    			}catch(GenericEntityException e){
+ 	    				Debug.logError(e, "Failed to retrive Shipment ", module);
+ 	    			}
+ 	        	 
+   			}
+  			
+  		}
+  		 
+   		
+     	  result.put("shipmentIds",ShipementIds);
+          
+          return result;
+   	}
+     
+	    
+  	 
   		
 	    
 }
