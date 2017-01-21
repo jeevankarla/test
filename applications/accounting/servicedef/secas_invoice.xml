@@ -52,7 +52,7 @@ under the License.
         <condition field-name="oldStatusId" operator="not-equals" value="INVOICE_READY"/>
         <condition field-name="oldStatusId" operator="not-equals" value="INVOICE_APPROVED"/>
         <condition field-name="oldStatusId" operator="not-equals" value="INVOICE_PAID"/>
-        <action service="createTaxInvoiceSequence" mode="sync"/>
+<!--         <action service="createTaxInvoiceSequence" mode="sync"/> -->
     </eca>
     
     <!-- Remove InvoiceItemAssoc on cancel commission invoice -->
