@@ -2321,11 +2321,15 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	    	  		  	}
 	                    BigDecimal saleBillQty = BigDecimal.ZERO;
 	                    BigDecimal saleBillAmt = BigDecimal.ZERO;
+	                    BigDecimal saleBillTenPrcAmt=BigDecimal.ZERO;
 	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillQty"))){
 	                       saleBillQty=(BigDecimal)saleBillresultCtx.get("saleBillQty");
 	                    }  
 	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillAmt"))){
 	                        saleBillAmt=(BigDecimal)saleBillresultCtx.get("saleBillAmt");
+	                    } 
+	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillTenPrcAmt"))){
+	                    	saleBillTenPrcAmt=(BigDecimal)saleBillresultCtx.get("saleBillTenPrcAmt");
 	                    } 
 	                    Map purBillresultCtx = dispatcher.runSync("getPurchaseBillDetails", UtilMisc.toMap("userLogin", userLogin, "orderId", indentId));
                         if (ServiceUtil.isError(purBillresultCtx)) {
@@ -2365,6 +2369,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    indentSummaryDetails.set("purAmout", purAmout);
 	                    indentSummaryDetails.set("saleQuantity", saleBillQty);
 	                    indentSummaryDetails.set("saleAmount", saleBillAmt);
+	                    indentSummaryDetails.set("saleTenPrcAmount", saleBillTenPrcAmt);
 						delegator.createOrStore(indentSummaryDetails);
                     
                     } catch (GenericServiceException e) {
@@ -2517,6 +2522,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         EntityCondition itemcond = null;
         String extPOId="";
         BigDecimal saleBillAmt =BigDecimal.ZERO;
+        BigDecimal saleBillTenPrcAmt =BigDecimal.ZERO;
         BigDecimal saleBillQty =BigDecimal.ZERO;
         BigDecimal price =BigDecimal.ZERO;
 
@@ -2531,10 +2537,14 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			                // reset each order
 	                GenericValue item = null;
 	                while ((item = orderItemBillingItr.next()) != null) {
+	             if("TEN_PERCENT_SUBSIDY".equals(item.getBigDecimal("invoiceItemTypeId"))){
+	            	 saleBillTenPrcAmt=item.getBigDecimal("amount");
+	             }else{
 	                	saleBillQty = saleBillQty.add(item.getBigDecimal("quantity"));
 	                	price = item.getBigDecimal("amount");
 	                	BigDecimal amount = (item.getBigDecimal("quantity")).multiply(item.getBigDecimal("amount"));
 	                	saleBillAmt = saleBillAmt.add(amount);
+	             }
 	                }
 	                orderItemBillingItr.close();
 			     }
@@ -2544,6 +2554,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	        }
 		
         result.put("saleBillQty",saleBillQty.setScale(2, BigDecimal.ROUND_HALF_UP));
+        result.put("saleBillTenPrcAmt",saleBillTenPrcAmt.setScale(2, BigDecimal.ROUND_HALF_UP));
         result.put("saleBillAmt",saleBillAmt.setScale(2, BigDecimal.ROUND_HALF_UP));
 	    return result;
 	}

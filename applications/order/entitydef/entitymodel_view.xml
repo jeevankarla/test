@@ -2065,6 +2065,10 @@ under the License.
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
     </relation>
+    <relation type="one" rel-entity-name="InvoiceItem">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemType"/>
+    </relation>
     <relation type="one-nofk" rel-entity-name="OrderItem">
          <key-map field-name="orderId"/>
       <key-map field-name="orderItemSeqId"/>
