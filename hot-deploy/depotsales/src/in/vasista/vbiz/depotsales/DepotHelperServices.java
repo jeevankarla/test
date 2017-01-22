@@ -2972,7 +2972,7 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
 public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContext dctx, Map<String, ? extends Object> context) {
 	Delegator delegator = dctx.getDelegator();
     LocalDispatcher dispatcher = dctx.getDispatcher();   
-    Map<String, Object> result = new HashMap<String, Object>();
+	Map result = ServiceUtil.returnSuccess();
     GenericValue userLogin = (GenericValue) context.get("userLogin");
     String fromDateStr = (String) context.get("fromDate");
     String thruDateStr = (String) context.get("thruDate");
@@ -2983,7 +2983,15 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
 	Timestamp thruDate = null;
 	List branchIds = FastList.newInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-  	if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
+    Timestamp targetDate =null;
+	try {
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd MMMMM, yyyy");  
+		targetDate = new java.sql.Timestamp(sdf1.parse("01 APRIL, 2016").getTime());
+	} catch (Exception e) {
+		Debug.logError(e, "Failed to covert date ", module);
+		return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+	} 
+	if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
   		try {
   			fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
   			thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
@@ -2992,7 +3000,17 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
 	  	} catch (NullPointerException e) {
   			Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
 	  	}
-  	}
+  		try{
+	  		if(UtilValidate.isNotEmpty(fromDateStr) && fromDate.before(targetDate)){
+	  			
+	  			result =  ServiceUtil.returnError("Please give from date Should be Greater than 2016-04-01");
+	  		  return result;
+	  		}
+  		}catch (Exception e) {
+  			Debug.logError(e, "Please give from date Should be Greater than 2016-04-01 ", module);
+  			return ServiceUtil.returnError("Please give from date Should be Greater than 2016-04-01 " + e);
+  		} 
+    }
     Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
     Timestamp transactionDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 
@@ -3001,6 +3019,9 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
     if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
     	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
     	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+    }
+    else{
+    	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(targetDate)));
     }
     if(UtilValidate.isNotEmpty(invoiceTypeIdUi) && (invoiceTypeIdUi.equals("PURCHASE_INVOICE"))){
     	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, roId));
@@ -3100,7 +3121,7 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
         Debug.logError(e, module);
         return ServiceUtil.returnError(e.getMessage());
     }
-    result = ServiceUtil.returnSuccess("Successfully Populate RO roles for Invoices: ");
+    result = ServiceUtil.returnSuccess("Successfully Populate Acctg Trans for Invoices: ");
     return result;	
 }	
 	
