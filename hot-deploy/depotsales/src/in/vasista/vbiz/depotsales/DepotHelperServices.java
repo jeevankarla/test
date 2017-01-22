@@ -3032,6 +3032,10 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
     if(UtilValidate.isNotEmpty(invoiceTypeIdUi) && (invoiceTypeIdUi.equals("SALES_INVOICE"))){
     	condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId));
     }
+    if(UtilValidate.isEmpty(invoiceTypeIdUi)){
+    condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, roId),EntityOperator.OR,
+ 			 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId)));
+    }
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_LIKE,"OB%"));
 	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("DEPOT_YARN_SALE","YARN_SALE")));
 	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -3123,7 +3127,155 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
     }
     result = ServiceUtil.returnSuccess("Successfully Populate Acctg Trans for Invoices: ");
     return result;	
-}	
+}
+public static Map<String, Object> creatingAcctTransForAllPayment(DispatchContext dctx, Map<String, ? extends Object> context) {
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();   
+	Map result = ServiceUtil.returnSuccess();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+    String fromDateStr = (String) context.get("fromDate");
+    String thruDateStr = (String) context.get("thruDate");
+    String paymentIdUi = (String) context.get("paymentId");
+    String paymentTypeIdUi = (String) context.get("paymentTypeIdUi");
+    String roId = (String) context.get("partyId");
+	Timestamp fromDate=null;
+	Timestamp thruDate = null;
+	List branchIds = FastList.newInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Timestamp targetDate =null;
+	try {
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd MMMMM, yyyy");  
+		targetDate = new java.sql.Timestamp(sdf1.parse("01 APRIL, 2016").getTime());
+	} catch (Exception e) {
+		Debug.logError(e, "Failed to covert date ", module);
+		return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+	} 
+	if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
+  		try {
+  			fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+  			thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+	  	} catch (ParseException e) {
+	  		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	  	} catch (NullPointerException e) {
+  			Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	  	}
+  		try{
+	  		if(UtilValidate.isNotEmpty(fromDateStr) && fromDate.before(targetDate)){
+	  			
+	  			result =  ServiceUtil.returnError("Please give from date Should be Greater than 2016-04-01");
+	  		  return result;
+	  		}
+  		}catch (Exception e) {
+  			Debug.logError(e, "Please give from date Should be Greater than 2016-04-01 ", module);
+  			return ServiceUtil.returnError("Please give from date Should be Greater than 2016-04-01 " + e);
+  		} 
+    }
+    Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+    Timestamp transactionDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+
+    EntityCondition cond = null;
+    List condList = FastList.newInstance();
+    if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+    	condList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+    	condList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+    }
+    else{
+    	condList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(targetDate)));
+    }
+    if(UtilValidate.isNotEmpty(paymentTypeIdUi) && (paymentTypeIdUi.contains("PAYIN"))){
+    	condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, roId));
+    }
+    if(UtilValidate.isNotEmpty(paymentIdUi)){
+    	condList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentIdUi));
+    }
+   if(UtilValidate.isNotEmpty(paymentTypeIdUi) && (paymentTypeIdUi.contains("PAYOUT"))){
+    	condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId));
+    }
+   if(UtilValidate.isEmpty(paymentTypeIdUi)){
+	    condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, roId),EntityOperator.OR,
+	 			 EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId)));
+	 }
+	//condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_LIKE,"OB%"));
+	condList.add(EntityCondition.makeCondition("paymentPurposeType", EntityOperator.IN,UtilMisc.toList("DEPOT_YARN_SALE","YARN_SALE")));
+	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+    cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+    EntityListIterator paymentItr = null;
+    String statusId = "";
+    try {
+    	    paymentItr = delegator.find("Payment", cond, null,  UtilMisc.toSet("paymentId","paymentTypeId","partyIdFrom","partyIdTo","statusId"), null, null);
+			if (paymentItr != null) {
+                GenericValue payment = null;
+                while ((payment = paymentItr.next()) != null) {
+                	 String paymentId = payment.getString("paymentId");
+                	 statusId = payment.getString("statusId");
+                	 String oldStatusId=statusId;
+                	 String paymentTypeId = payment.getString("paymentTypeId");
+                	 if(statusId.equals("PMNT_NOT_PAID")){
+	                      Map<String, Object> paymentStatusCtx = UtilMisc.<String, Object>toMap("paymentId", paymentId);
+	                      paymentStatusCtx.put("userLogin", userLogin);
+	                      if(UtilValidate.isNotEmpty(paymentTypeId) && (paymentTypeId.contains("PAYOUT"))){
+	                    	  paymentStatusCtx.put("statusId", "PMNT_SENT");
+	                      }else{
+	                    	  paymentStatusCtx.put("statusId", "PMNT_RECEIVED");
+	                      }
+	                      
+	          			  Map paymentStatusResult = FastMap.newInstance();
+	             	   	 	try{
+	             	   	 		paymentStatusResult = dispatcher.runSync("setPaymentStatus",paymentStatusCtx);
+	             	   	 		if (ServiceUtil.isError(paymentStatusResult)) {
+	             	   	 			Debug.logError(paymentStatusResult.toString(), module);
+	             	   	 			return ServiceUtil.returnError(null, null, null, paymentStatusResult);
+	             	   	 		}	
+	             	   	 	if(UtilValidate.isNotEmpty(paymentTypeId) && (paymentTypeId.contains("PAYOUT"))){
+	             	   	 			statusId= "PMNT_SENT";
+		                      }else{
+		                    	    statusId="PMNT_RECEIVED";
+		                      }
+	             	        }catch(GenericServiceException e){
+	             	          	Debug.logError(e, e.toString(), module);
+	             	            return ServiceUtil.returnError(e.toString());
+	             	        } 
+                	 }
+	        	    if(oldStatusId.equals("PMNT_SENT") || oldStatusId.equals("PMNT_RECEIVED")){
+	        	    	Map paymentSentCtx = FastMap.newInstance();
+	        	    	paymentSentCtx.put("userLogin", userLogin);
+        	    		paymentSentCtx.put("paymentId", paymentId);
+	        	    	if(oldStatusId.equals("PMNT_SENT")){
+	        	    		try{
+	             	   	 		Map<String, Object> paymentSentResult = dispatcher.runSync("createAcctgTransAndEntriesForOutgoingPayment",paymentSentCtx);
+	             	   	 		if (ServiceUtil.isError(paymentSentResult)) {
+	             	   	 			Debug.logError(paymentSentResult.toString(), module);
+	             	   	 			return ServiceUtil.returnError(null, null, null, paymentSentResult);
+	             	   	 		}	             	
+	             	        }catch(GenericServiceException e){
+	             	          	Debug.logError(e, e.toString(), module);
+	             	            return ServiceUtil.returnError(e.toString());
+	             	        } 
+	        	    	}
+	        	    	if(oldStatusId.equals("PMNT_RECEIVED")){
+	        	    		try{
+	             	   	 		Map<String, Object> paymentReceivedResult = dispatcher.runSync("createAcctgTransAndEntriesForIncomingPayment",paymentSentCtx);
+	             	   	 		if (ServiceUtil.isError(paymentReceivedResult)) {
+	             	   	 			Debug.logError(paymentReceivedResult.toString(), module);
+	             	   	 			return ServiceUtil.returnError(null, null, null, paymentReceivedResult);
+	             	   	 		}	             	
+	             	        }catch(GenericServiceException e){
+	             	          	Debug.logError(e, e.toString(), module);
+	             	            return ServiceUtil.returnError(e.toString());
+	             	        } 
+	        	    	}
+	        	    }
+                	 
+                }
+                paymentItr.close();
+            }
+    } catch (GenericEntityException e) {
+        Debug.logError(e, module);
+        return ServiceUtil.returnError(e.getMessage());
+    }
+    result = ServiceUtil.returnSuccess("Successfully Populate Acctg Trans for Payments: ");
+    return result;	
+}
 	
   	
 }
