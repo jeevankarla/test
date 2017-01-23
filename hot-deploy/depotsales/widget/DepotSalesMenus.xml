@@ -278,8 +278,14 @@
      <menu name="IndentAnalyticsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
 			<menu-item name="indentAnalytics" title="Indent Analytics">
-        		<link target="IndentAnalytics"/>
+				<link target="IndentAnalytics">
+				     <parameter param-name="isFind" value="Y"/>
+				 </link>
         	</menu-item>  
+        	
+        	
+        	
+        	
         	<menu-item name="delayedIndentPOAnalyticsListing" title="Delayed PO Listing">
         		<link target="delayedIndentPOAnalyticsListing"/>
         	</menu-item>
