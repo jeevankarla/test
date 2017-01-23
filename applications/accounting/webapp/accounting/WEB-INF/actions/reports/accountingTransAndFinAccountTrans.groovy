@@ -53,6 +53,11 @@ if(UtilValidate.isNotEmpty(invoiceTaxType)){
 }
 context.taxType = taxType;
 
+if(UtilValidate.isNotEmpty(parameters.finAccountId)){
+	finAccountTrns=delegator.findList("FinAccountTrans", EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, parameters.finAccountId), null, null, null, false);
+	finTransValue = EntityUtil.getFirst(finAccountTrns);
+	parameters.finAccountTransId=finTransValue.finAccountTransId;
+}
 conditionList=[];
 //finding on AcctgTrans for invoice,payment and finAccnTransId
 if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(parameters.paymentId) ||UtilValidate.isNotEmpty(parameters.finAccountTransId) ){
@@ -69,9 +74,10 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 		conditionList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS,parameters.finAccountTransId));
 	}
 	conditionAcctgTrans = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	
+	Debug.log("conditionAcctgTrans==========="+conditionAcctgTrans);
 	//finding on AcctgTrans
 	acctgTransList = delegator.findList("AcctgTrans",conditionAcctgTrans , null, null, null, false );
+	Debug.log("acctgTransList==========="+acctgTransList);
 	if(UtilValidate.isNotEmpty(acctgTransList)){
 		acctgTrans = EntityUtil.getFirst(acctgTransList);
 		if(UtilValidate.isNotEmpty(acctgTrans)){
