@@ -51,7 +51,7 @@
         <response name="success" type="view" value="SupplierAnalyticsSubTabBar"/>
     </request-map>
      <request-map uri="QuotaDashboard">
-        <security https="true" auth="false"/>
+        <security https="false" auth="false"/>
         <response name="success" type="view" value="QuotaDashboard"/>
     </request-map>
     <request-map uri="QuotaDashboardAuth">
@@ -1922,7 +1922,7 @@
 	       <response name="error" type="view" value="ShipmentHistory"/>
 	     </request-map> 
 	     <request-map uri="ShipmentHistoryAuth">
-	        <security https="false" auth="true" />
+	        <security https="true" auth="true" />
 	       <response name="success" type="view" value="ShipmentHistoryAuth"/>
 	       <response name="error" type="view" value="ShipmentHistoryAuth"/>
 	     </request-map> 
@@ -1932,7 +1932,7 @@
 	       <response name="error" type="view" value="findDelayShipments"/>
 	     </request-map>
 	     <request-map uri="findDelayShipmentsAuth">
-	        <security https="false" auth="true" />
+	        <security https="true" auth="true" />
 	       <response name="success" type="view" value="findDelayShipmentsAuth"/>
 	       <response name="error" type="view" value="findDelayShipmentsAuth"/>
 	     </request-map>

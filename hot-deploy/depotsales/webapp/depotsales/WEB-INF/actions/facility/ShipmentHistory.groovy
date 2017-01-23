@@ -42,6 +42,7 @@ delegator = DelegatorFactory.getDelegator("default#NHDC");
 isReport=parameters.isReport;
 isFormSubmitted=parameters.isFormSubmitted;
 bId=parameters.bId;
+filterType=parameters.filterType; 
 context.isFormSubmitted=isFormSubmitted;
 
 JSONObject stateJSON = new JSONObject();
@@ -49,11 +50,29 @@ JSONObject partyNameObj2 = new JSONObject();
 JSONArray cutomerJSON = new JSONArray();
 
 if(UtilValidate.isNotEmpty(bId)){
-	partyRelationship1 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , bId)  , UtilMisc.toSet("partyIdTo"), null, null, false );
-	partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship1, "partyIdTo", true);
-	partyRelationship2 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,partyIds)  , UtilMisc.toSet("partyIdTo"), null, null, false );
-	if(UtilValidate.isNotEmpty(partyRelationship2)){
-		partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship2, "partyIdTo", true);
+	conditionList =[];
+	if("By_Branch".equals(filterType)){
+		partyRelationship1 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , bId)  , UtilMisc.toSet("partyIdTo"), null, null, false );
+		partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship1, "partyIdTo", true);
+	}
+	if("By_Ro".equals(filterType)){
+		partyRelationship1 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS , bId)  , UtilMisc.toSet("partyIdTo"), null, null, false );
+		partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship1, "partyIdTo", true);
+		partyRelationship2 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,partyIds)  , UtilMisc.toSet("partyIdTo"), null, null, false );
+		if(UtilValidate.isNotEmpty(partyRelationship2)){
+			partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship2, "partyIdTo", true);
+		}
+	}
+	if("By_State".equals(filterType)){
+		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, bId));
+		conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.LIKE, "INT%"));
+		stateWiseRosAndBranchList = delegator.findList("PartyContactDetailByPurpose", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		if(UtilValidate.isNotEmpty(stateWiseRosAndBranchList)){
+			List roAndBranchIds = EntityUtil.getFieldListFromEntityList(stateWiseRosAndBranchList, "partyId", true);
+			partyRelationship1 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN , roAndBranchIds)  , UtilMisc.toSet("partyIdTo"), null, null, false );
+			partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship1, "partyIdTo", true);
+		}	
 	}
 	Condition1=[];
 	Condition1.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS , "BILL_TO_CUSTOMER"));
@@ -64,7 +83,7 @@ if(UtilValidate.isNotEmpty(bId)){
 	if(customersList){
 		customersList.each{ supplier ->
 			JSONObject newObj = new JSONObject();
-			conditionList =[];
+			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , supplier.ownerPartyId));
 			/*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS , "PARTY_ENABLED"));*/
 			condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);

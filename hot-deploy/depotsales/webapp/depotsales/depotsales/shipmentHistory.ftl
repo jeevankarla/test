@@ -59,7 +59,7 @@ under the License.
 			}
 		});
 
-    function getbrancheCustomers(state){
+    function getbrancheCustomers(state,filterType){
        	var bId=state.value;
        	var dataMap = {};
       	$("#cutomerId").val("");
@@ -67,6 +67,7 @@ under the License.
       	$("#customerName").html("");
       	$("#SupplierName").html("");
 		dataMap["bId"] = bId;
+		dataMap["filterType"] = filterType;
 		jQuery.ajax({
             url: 'getBranchCutomers',
             async: false,
@@ -197,7 +198,7 @@ under the License.
   			  <div>
   				  <td id="BranchFilterlabel">Branch</td>
 	              <td id="BranchFilter">
-					  <select name="branchId2" id="branchId" onchange="javascript:getbrancheCustomers(this);">
+					  <select name="branchId2" id="branchId" onchange="javascript:getbrancheCustomers(this,'By_Branch');">
 		              <#if branchIdName?has_content>
 			 	             <option value='${branchId?if_exists}'>${branchIdName?if_exists}</option> 
 	 	              </#if>
@@ -214,7 +215,7 @@ under the License.
   		       <div >
   				  <td id="RegionFilterLabel">Regional Office</td>
 	              <td id="RegionFilter">
-					  <select name="regionId" id="regionId">
+					  <select name="regionId" id="regionId" onchange="javascript:getbrancheCustomers(this,'By_Ro');">
 		              <#if regionIdName?has_content>
 			 	             <option value='${regionId?if_exists}'>${regionIdName?if_exists}</option> 
 	 	              </#if>
@@ -231,7 +232,7 @@ under the License.
   		       <div>
   				  <td id="StateFilterLabel">State</td>
 	              <td id="StateFilter">
-					  <select name="stateId" id="stateId">
+					  <select name="stateId" id="stateId" onchange="javascript:getbrancheCustomers(this,'By_State');">
 		              <#if stateIdName?has_content>
 			 	             <option value='${stateId?if_exists}'>${stateIdName?if_exists}</option> 
 	 	              </#if>
