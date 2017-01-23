@@ -87,9 +87,9 @@
 				<set field="ajaxUrl" value="IndentAnalyticsInternal" type="String" global="true"/>
 				<set field="parameters.screenflag" value="indentAnalytics"/>
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
-				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
-			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />   
+				<!-- <set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/> -->
+			    <set field="defaultEffectiveDate" value="${defaultEffectiveDateStr}" /> 
+			    <set field="defaultEffectiveThruDate" value="${defaultEffectiveThruDateStr}" />   
             </actions>
             <widgets>
 				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                    
@@ -4380,16 +4380,18 @@
           <section>
               <actions>
                   <set field="titleProperty" value="DashBoard for weaver quota utilization"/>
-                  <set field="tabButtonItem" value="quotaDashboard"/>
+                  <set field="tabButtonItem" value="analytics"/>
+                  <set field="tabButtonItem1" value="quotaDashboardNoAuth"/> 
                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacilityForQuota.groovy"/>   
                   <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
               	  <set field="district" from-field="parameters.district" />
               </actions>           
                <widgets>
-               <decorator-screen name="DepotSalesCommonDecorator"
+               <decorator-screen name="DashBoardCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                    <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
                       	<screenlet title="DashBoard for weaver quota utilization">
                       		<!-- <include-form name="FindQuotaProducer"
   								location="component://depotsales/widget/DepotSalesForms.xml" /> -->
@@ -9697,10 +9699,8 @@
 				<set field="tabButtonItem3" value="IndentSupplyAnalytics" />
 				<set field="ajaxUrl" value="IndentSupplyAnalyticsInternal" type="String" global="true"/>                      
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
-				
-				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
-			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
-			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        
+			    <set field="defaultEffectiveDate" value="${defaultEffectiveDateStr}" /> 
+			    <set field="defaultEffectiveThruDate" value="${defaultEffectiveThruDateStr}" />          				                                                                        
                  <set field="parameters.screenflag" value="indentSupplyAnalytics"/>
            
             </actions>

@@ -25,6 +25,13 @@ JSONArray dataList = new JSONArray();
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 fromDate=null;
 thruDate=null;
+
+analyticsThruDate=UtilDateTime.nowTimestamp();
+analyticsFrmDate= UtilDateTime.addDaysToTimestamp(analyticsThruDate,-90);
+defaultEffectiveThruDateStr=UtilDateTime.toDateString(analyticsThruDate,"MMMM dd, yyyy");
+defaultEffectiveDateStr=UtilDateTime.toDateString(analyticsFrmDate,"MMMM dd, yyyy");
+context.defaultEffectiveDateStr=defaultEffectiveDateStr
+context.defaultEffectiveThruDateStr=defaultEffectiveThruDateStr;
 try {
 	   if (parameters.fromDate) {
 			   fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime()));

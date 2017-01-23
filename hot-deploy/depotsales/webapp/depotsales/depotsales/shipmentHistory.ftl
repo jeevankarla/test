@@ -48,7 +48,6 @@ under the License.
 				}
 			});
 		}
-	
 	$(document).ready(function(){
 		    makeDatePicker("ShipmentHistoryfromDate","ShipmentHistoryThruDate");
 			$('#ui-datepicker-div').css('clip', 'auto'); 
@@ -132,7 +131,6 @@ under the License.
 			$('#StateFilter').show();
 			$('#StateFilterLabel').show();
 		}
-		
 	});
     function showSearchFilter(obj){
        	var searchType=obj.value;
@@ -170,12 +168,17 @@ under the License.
 		$('div#spinner').html('<img src="/images/ajax-loader64.gif">');
 	}	
 </script>
-
+<#assign action="">
+<#if screenFlag=="ShipmentHistoryAuth">
+	<#assign action="ShipmentHistoryAuth">
+<#else>
+	<#assign action="ShipmentHistory">
+</#if>
 <h2>SUPPLIERS TO USER AGENCY OPERATED DEPOTS<h2>
 <div class="screenlet">
   <div class="screenlet-body">
     <div id="findPartyParameters"  >
-      <form method="post" name="ShipmentHistory" id="ShipmentHistory" action="<@ofbizUrl>ShipmentHistory</@ofbizUrl> " class="basic-form">
+      <form method="post" name="ShipmentHistory" id="ShipmentHistory" action="<@ofbizUrl>${action}</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
          <tr>
         	 <td>Search By</td> 

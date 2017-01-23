@@ -871,13 +871,15 @@
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
 				<set field="targetRequest" value="ShipmentHistory" />
-				
+				<set field="screenFlag" value="ShipmentHistory" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTranspurchaseDepartments.groovy" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/ShipmentHistory.groovy" />
+				<set field="customerName" value="${customerName}"/>
 			</actions>
 			<widgets>
+			
 				<decorator-screen name="NoAuthDepotSalesCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
@@ -908,10 +910,25 @@
 													</link>
 									</decorator-section>
 									<decorator-section name="search-results">
-										<screenlet title="">
-											<include-form name="listMaterialShipmentReceiptDepotTrans"
-												location="component://depotsales/widget/DepotSalesForms.xml" />
-										</screenlet>
+										<section>
+											<condition>
+												<if-compare operator="not-equals" value="" field="customerName"/>
+											</condition>
+										    <widgets>
+										    	<screenlet id="head" title="SUPPLIERS TO ${customerName} OPERATED DEPOTS">
+												</screenlet>
+												<screenlet>
+													<include-form name="listMaterialShipmentReceiptDepotTrans"
+														location="component://depotsales/widget/DepotSalesForms.xml" />
+												</screenlet>
+										    </widgets>
+										    <fail-widgets>
+										    	<screenlet  title="SUPPLIERS TO USER AGENCY OPERATED DEPOTS">
+													<include-form name="listMaterialShipmentReceiptDepotTrans"
+														location="component://depotsales/widget/DepotSalesForms.xml" />
+												</screenlet>
+										    </fail-widgets>
+										</section>
 									</decorator-section>
 								</decorator-screen>
 							</widgets>
@@ -931,7 +948,7 @@
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
 				<set field="targetRequest" value="ShipmentHistory" />
-				
+				<set field="screenFlag" value="ShipmentHistoryAuth" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTranspurchaseDepartments.groovy" />
 				<script
