@@ -54,7 +54,10 @@
         <security https="true" auth="false"/>
         <response name="success" type="view" value="QuotaDashboard"/>
     </request-map>
-    
+    <request-map uri="QuotaDashboardAuth">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuotaDashboardAuth"/>
+    </request-map>
     <request-map uri="delayedIndentPOAnalyticsListing">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="delayedIndentPOAnalyticsListing"/>
@@ -1918,10 +1921,20 @@
 	       <response name="success" type="view" value="ShipmentHistory"/>
 	       <response name="error" type="view" value="ShipmentHistory"/>
 	     </request-map> 
+	     <request-map uri="ShipmentHistoryAuth">
+	        <security https="false" auth="true" />
+	       <response name="success" type="view" value="ShipmentHistoryAuth"/>
+	       <response name="error" type="view" value="ShipmentHistoryAuth"/>
+	     </request-map> 
 	     <request-map uri="findDelayShipments">
 	        <security https="false" auth="false" />
 	       <response name="success" type="view" value="findDelayShipments"/>
 	       <response name="error" type="view" value="findDelayShipments"/>
+	     </request-map>
+	     <request-map uri="findDelayShipmentsAuth">
+	        <security https="false" auth="true" />
+	       <response name="success" type="view" value="findDelayShipmentsAuth"/>
+	       <response name="error" type="view" value="findDelayShipmentsAuth"/>
 	     </request-map>
 	     <request-map uri="showDelayShipemnstList">
 	        <security https="false" auth="false" />
@@ -2764,6 +2777,7 @@
     <view-map name="IndentAnalyticsTab" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#IndentAnalyticsTab"/>
     <view-map name="SupplierAnalyticsSubTabBar" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SupplierAnalyticsSubTabBar"/>
     <view-map name="QuotaDashboard" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaDashboard"/>
+    <view-map name="QuotaDashboardAuth" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaDashboardAuth"/>
     
     <view-map name="delayedIndentPOAnalyticsListing" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#delayedIndentPOAnalyticsListing"/>
     
@@ -2952,7 +2966,9 @@
      <view-map name="indentOverViewReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#indentOverViewReport" content-type="application/pdf"/>
      <view-map name="FindSupplierDispatchs" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierDispatchs"/>
      <view-map name="ShipmentHistory" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ShipmentHistory"/>
-     <view-map name="findDelayShipments" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#findDelayShipments"/> 
+     <view-map name="ShipmentHistoryAuth" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ShipmentHistoryAuth"/>
+     <view-map name="findDelayShipments" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#findDelayShipments"/>
+     <view-map name="findDelayShipmentsAuth" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#findDelayShipmentsAuth"/> 
      <view-map name="SupplierPoOverView" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierPoOverView"/>
      <view-map name="SupplierDispatchEntry" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#SupplierDispatchEntry"/>
      <view-map name="FindSupplierShipments" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierShipments"/>
