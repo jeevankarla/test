@@ -39,6 +39,12 @@ try {
 	   context.errorMessage = "Cannot parse date string: " + e;
 	   return;
 }
+
+isFind = parameters.isFind;
+
+
+context.isFind = isFind;
+
 if(UtilValidate.isNotEmpty(fromDate)){
 	context.fromDate=fromDate;
 	context.defaultEffectiveDate=UtilDateTime.toDateString(fromDate,"MMMM dd, yyyy");

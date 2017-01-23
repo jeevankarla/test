@@ -56,9 +56,46 @@ input[type=button]:hover {
     background-color: #3e8e41;
 }
 </style>
+
+<input type = "hidden" id="isFind" value=${isFind} >
+
 <script type="text/javascript">
 
 $(document).ready(function(){
+
+
+$("#counter").hide();
+
+var isFind = $("#isFind").val();
+
+ if(isFind == "Y"){
+  $(".screenlet").show();
+ }else{
+  $(".screenlet").hide(); 
+  
+}
+
+
+
+
+ var n = localStorage.getItem('on_load_counter');
+    if (n === null) {
+        n = 0;
+    }
+    n++;
+    localStorage.setItem("on_load_counter", n);
+    document.getElementById('counter').innerHTML = n;
+    $( ".user" ).click(function() {
+        localStorage.setItem("on_load_counter", 0);
+});
+
+
+if(n==1){
+
+  $('div#orderSpinn1').html('<img src="/images/NHDC-namasthe-low.gif"  width="500">');
+  $('div#orderSpinn1').show().delay(5000).fadeOut();
+
+}
 
 // enter event handle
 	$("input").keypress(function(e){
@@ -143,8 +180,13 @@ $(document).ready(function(){
     });
 });
 
-</script>
 
+
+
+</script>
+  <div align='center' name ='displayMsg' id='orderSpinn1'/></div>
+
+<div id="counter"></div>
 <div class="screenlet">
     <div class="screenlet-title-bar">
       <h3>Select Date</h3>
@@ -162,7 +204,7 @@ $(document).ready(function(){
 		<input type="hidden" name="screenFlag" id="screenFlag"/> 
 		</td>
 		<td>
-		<input type="submit" value="CSV" id="getTreeGridCsv" class="smallSubmit" /> 
+		<input type="submit" value="SAVE" id="getTreeGridCsv" class="smallSubmit" /> 
 		</td>
 		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
 		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
@@ -191,3 +233,6 @@ $(document).ready(function(){
       </p>
 </div>
 <div id="result"/>
+
+
+
