@@ -299,7 +299,7 @@
       <menu name="SupplierAnalyticsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
 			<menu-item name="IndentSupplyAnalytics" title="Supply Analytics">
-        		<link target="IndentSupplyAnalytics"/>
+        		<link target="IndentSupplyAnalytics"> <parameter param-name="isFind" value="Y"/> </link>
         	</menu-item> 
         	<menu-item name="findDelayShipments" title="Delay Shipments Listing">
         		<link target="findDelayShipmentsAuth"/> 
