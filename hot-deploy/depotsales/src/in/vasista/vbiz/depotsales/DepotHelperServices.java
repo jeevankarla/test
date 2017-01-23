@@ -2848,116 +2848,141 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     String thruDateStr = (String) context.get("thruDate"); 
     String roId = (String) context.get("partyId");
     String invoiceTypeIdUi = (String) context.get("invoiceTypeId");
-	Timestamp fromDate=null;
-	Timestamp thruDate = null;
-	List branchIds = FastList.newInstance();
+    Timestamp fromDate=null;
+    Timestamp thruDate = null;
+    List branchIds = FastList.newInstance();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-  	if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
-  		try {
-  			fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
-  			thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
-	  	} catch (ParseException e) {
-	  		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
-	  	} catch (NullPointerException e) {
-  			Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
-	  	}
-  	}
-  	try {
-  	  	EntityListIterator partyRelationshipItr = delegator.find("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId), null, UtilMisc.toSet("partyIdTo"), null, null);
-  	  	branchIds=EntityUtil.getFieldListFromEntityListIterator(partyRelationshipItr, "partyIdTo", true);
-  	}catch (GenericEntityException e) {
+    int count=0;
+    if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
+    	try {
+    		fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+    		thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+    	} catch (ParseException e) {
+    		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+    	} catch (NullPointerException e) {
+    		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+    	}
+  }
+  /*try {
+       EntityListIterator partyRelationshipItr = delegator.find("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId), null, UtilMisc.toSet("partyIdTo"), null, null);
+       branchIds=EntityUtil.getFieldListFromEntityListIterator(partyRelationshipItr, "partyIdTo", true);
+  }catch (GenericEntityException e) {
         Debug.logError(e, module);
         return ServiceUtil.returnError(e.getMessage());
-    }
+    }*/
+    branchIds.add(roId);
     Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
     EntityCondition cond = null;
     List condList = FastList.newInstance();
     if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
-    	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
-    	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+    condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+    condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
     }
     condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchIds),EntityOperator.OR,
-  			 EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchIds)));
-	condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,invoiceTypeIdUi));
-	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_LIKE,"OB%"));
-	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("DEPOT_YARN_SALE","YARN_SALE")));
-	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+    		EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchIds)));
+    if(UtilValidate.isNotEmpty(invoiceTypeIdUi)){
+    condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,invoiceTypeIdUi));
+    }
+    condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_LIKE,"OB%"));
+    condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("DEPOT_YARN_SALE","YARN_SALE")));
+    condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
     cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-    Debug.log("cond=============================="+cond);
+//    Debug.log("cond=============================="+cond);
     EntityListIterator invoiceItr = null;
     try {
-    	    invoiceItr = delegator.find("Invoice", cond, null,  UtilMisc.toSet("invoiceId","invoiceTypeId","partyIdFrom","partyId"), null, null);
-			if (invoiceItr != null) {
+       invoiceItr = delegator.find("Invoice", cond, null,  UtilMisc.toSet("invoiceId","invoiceTypeId","partyIdFrom","partyId"), null, null);
+       if (invoiceItr != null) {
                 GenericValue invoice = null;
                 while ((invoice = invoiceItr.next()) != null) {
-                	 String invoiceId = invoice.getString("invoiceId");
-                	 Debug.log("invoiceId======================"+invoiceId);
-                	 String invoiceTypeId = invoice.getString("invoiceTypeId");
-                	 String roPartyId ="";
-                	 if(invoiceTypeId.equals("SALES_INVOICE")){
-                    	 String partyIdFrom = invoice.getString("partyIdFrom");
-                     	 List<GenericValue> partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdFrom), null, null, null, false);
- 						 GenericValue partyRel = EntityUtil.getFirst(partyRelationship);
- 						 roPartyId = partyRel.getString("partyIdFrom");
+                String invoiceId = invoice.getString("invoiceId");
+//                Debug.log("invoiceId======================"+invoiceId);
+                String invoiceTypeId = invoice.getString("invoiceTypeId");
+                String roPartyId ="";
+                if(invoiceTypeId.equals("SALES_INVOICE")){
+                    String partyIdFrom = invoice.getString("partyIdFrom");
+                         List<GenericValue> partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdFrom), null, null, null, false);
+                         GenericValue partyRel = EntityUtil.getFirst(partyRelationship);
+                         roPartyId = partyRel.getString("partyIdFrom");
                          invoice.set("partyIdFrom",roPartyId);
                          invoice.store();
                          GenericValue invoiceRole = delegator.findOne("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId,"partyId",partyIdFrom,"roleTypeId","BILL_FROM_VENDOR"), false);
                          String partyId = invoiceRole.getString("partyId");
-                    	 invoiceRole.remove();   
+                         Timestamp datetimePerformed = invoiceRole.getTimestamp("datetimePerformed");
+
+                    invoiceRole.remove();   
                          try{
-                        	 GenericValue billFromVendorRole = delegator.makeValue("InvoiceRole");
-                        	 billFromVendorRole.set("invoiceId", invoiceId);
-                        	 billFromVendorRole.set("partyId", roPartyId);
-                        	 billFromVendorRole.set("roleTypeId", "BILL_FROM_VENDOR");
-	                         delegator.createOrStore(billFromVendorRole);
+                        GenericValue billFromVendorRole = delegator.makeValue("InvoiceRole");
+                        billFromVendorRole.set("invoiceId", invoiceId);
+                        billFromVendorRole.set("partyId", roPartyId);
+                        billFromVendorRole.set("datetimePerformed", datetimePerformed);
+                        billFromVendorRole.set("roleTypeId", "BILL_FROM_VENDOR");
+                        delegator.createOrStore(billFromVendorRole);
 
-	                         GenericValue customerAgentRole = delegator.makeValue("InvoiceRole");
-	                         customerAgentRole.set("invoiceId", invoiceId);
-	                         customerAgentRole.set("partyId", partyId);
-	                         customerAgentRole.set("roleTypeId", "CUSTOMER_AGENT");
-	                         delegator.createOrStore(customerAgentRole);
+                        GenericValue customerAgentRole = delegator.makeValue("InvoiceRole");
+                        customerAgentRole.set("invoiceId", invoiceId);
+                        customerAgentRole.set("datetimePerformed", datetimePerformed);
+                        customerAgentRole.set("partyId", partyId);
+                        customerAgentRole.set("roleTypeId", "COST_CENTER_ID");
+                        delegator.createOrStore(customerAgentRole);
+                        
+                        GenericValue accountingRole = delegator.makeValue("InvoiceRole");
+                        accountingRole.set("invoiceId", invoiceId);
+                        accountingRole.set("datetimePerformed", datetimePerformed);
+                        accountingRole.set("partyId", "Company");
+                        accountingRole.set("roleTypeId", "ACCOUNTING");
+                        delegator.createOrStore(accountingRole);
 
-	                     } catch (GenericEntityException e) {
-	                         Debug.logError(e, module);
-	                         return ServiceUtil.returnError(e.getMessage());
-	                     }	
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }    
                          
-                	 }
-                	 if(invoiceTypeId.equals("PURCHASE_INVOICE")){
-                    	 String partyIdTo = invoice.getString("partyId");
-                    	 String partyIdFrom =invoice.getString("partyIdFrom");
-                     	 List<GenericValue> partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdTo), null, null, null, false);
- 						 GenericValue partyRel = EntityUtil.getFirst(partyRelationship);
- 						 roPartyId = partyRel.getString("partyIdFrom");
+                }
+                if(invoiceTypeId.equals("PURCHASE_INVOICE")){
+                    String partyIdTo = invoice.getString("partyId");
+                    String partyIdFrom =invoice.getString("partyIdFrom");
+                         List<GenericValue> partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdTo), null, null, null, false);
+                         GenericValue partyRel = EntityUtil.getFirst(partyRelationship);
+                         roPartyId = partyRel.getString("partyIdFrom");
                          invoice.set("partyId",roPartyId);
                          invoice.store();
                          GenericValue invoiceRole = delegator.findOne("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId,"partyId",partyIdTo,"roleTypeId","BILL_TO_CUSTOMER"), false);
                          String partyId = invoiceRole.getString("partyId");
+                         Timestamp datetimePerformed = invoiceRole.getTimestamp("datetimePerformed");
                          invoiceRole.remove();
                          try{
-                        	 GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
-                        	 billToCustomerRole.set("invoiceId", invoiceId);
-                        	 billToCustomerRole.set("partyId", roPartyId);
-                        	 billToCustomerRole.set("roleTypeId", "BILL_TO_CUSTOMER");
-	                         delegator.createOrStore(billToCustomerRole);
-	                     } catch (GenericEntityException e) {
-	                         Debug.logError(e, module);
-	                         return ServiceUtil.returnError(e.getMessage());
-	                     }	
+                        GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
+                        billToCustomerRole.set("invoiceId", invoiceId);
+                        billToCustomerRole.set("partyId", roPartyId);
+                        billToCustomerRole.set("datetimePerformed", datetimePerformed);
+                        billToCustomerRole.set("roleTypeId", "BILL_TO_CUSTOMER");
+                        delegator.createOrStore(billToCustomerRole);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }    
                          GenericValue supplierAgentRole = delegator.findOne("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId,"partyId",partyIdFrom,"roleTypeId","SUPPLIER_AGENT"), false);
                          supplierAgentRole.remove();
                          try{
-                        	 GenericValue billToCustRole = delegator.makeValue("InvoiceRole");
-                        	 billToCustRole.set("invoiceId", invoiceId);
-                        	 billToCustRole.set("partyId", partyIdTo);
-                        	 billToCustRole.set("roleTypeId", "SUPPLIER_AGENT");
-	                         delegator.createOrStore(billToCustRole);
-	                     } catch (GenericEntityException e) {
-	                         Debug.logError(e, module);
-	                         return ServiceUtil.returnError(e.getMessage());
-	                     }	
-                	 }
-                	 
+                        GenericValue billToCustRole = delegator.makeValue("InvoiceRole");
+                        billToCustRole.set("invoiceId", invoiceId);
+                        billToCustRole.set("partyId", partyIdTo);
+                        billToCustRole.set("datetimePerformed", datetimePerformed);
+                        billToCustRole.set("roleTypeId", "COST_CENTER_ID");
+                        delegator.createOrStore(billToCustRole);
+                        
+                        GenericValue accountingRole = delegator.makeValue("InvoiceRole");
+                        accountingRole.set("invoiceId", invoiceId);
+                        accountingRole.set("datetimePerformed", datetimePerformed);
+                        accountingRole.set("partyId", "Company");
+                        accountingRole.set("roleTypeId", "ACCOUNTING");
+                        delegator.createOrStore(accountingRole);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }    
+                }
+                count=count+1;
                 }
                 invoiceItr.close();
             }
@@ -2965,7 +2990,7 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
         Debug.logError(e, module);
         return ServiceUtil.returnError(e.getMessage());
     }
-    result = ServiceUtil.returnSuccess("Successfully Populate RO roles for Invoices: ");
+    result = ServiceUtil.returnSuccess("Successfully Populate RO roles for "+count+" Invoices ");
 
     return result;	
 }	
