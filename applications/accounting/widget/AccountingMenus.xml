@@ -2301,7 +2301,7 @@
            </condition>
 			<link target="InterUnitContraEntry">
 			</link>
-		</menu-item> -->  
+		</menu-item>   
 		<menu-item name="BatchContraEntry" title="Batch Contra">
 		  <condition>
 		   	<and>
@@ -2310,7 +2310,7 @@
            </condition>
 			<link target="BatchBankContraEntry">
 			</link>
-		</menu-item> 
+		</menu-item> -->
 		 <menu-item name="BankBook" title="Bank Book">
           <condition>
 				<or>
@@ -2384,14 +2384,14 @@
             </condition>
 			<link target="apGroupPayment"></link>
 		</menu-item> 
-		<menu-item name="cpfAccounts" title="CPF Accounts">
+		<!-- <menu-item name="cpfAccounts" title="CPF Accounts">
 		     <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
             	</or>            
             </condition>
 			<link target="cpfAccounts"></link>
-		</menu-item> 
+		</menu-item>  -->
 		<menu-item name="Reports" title="Reports">
 		     <condition>
 				<or>
