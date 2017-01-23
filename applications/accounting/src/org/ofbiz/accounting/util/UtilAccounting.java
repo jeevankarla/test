@@ -317,6 +317,57 @@ public class UtilAccounting {
     	result.put("openingGlHistory", openingGlHistory);
         return result;
     }
+    
+    public static Map getLastClosedGlBalanceForCostCenter(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericEntityException {
+    	Delegator delegator = dctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+    	String organizationPartyId =(String)context.get("organizationPartyId");
+    	String customTimePeriodId = (String)context.get("customTimePeriodId");
+    	String costCenterId = (String)context.get("costCenterId");
+    	String glAccountId = (String)context.get("glAccountId");
+    	String lastClosedPeriodId = null;
+    	List<GenericValue>  openingGlHistory = FastList.newInstance();
+    	GenericValue lastClosedPeriod =null;
+       
+    	lastClosedPeriodId=customTimePeriodId;
+    	if(UtilValidate.isNotEmpty(lastClosedPeriodId)){
+    		
+    		GenericValue assetGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","ASSET"), true);
+    		List assetAccountClassIds = getDescendantGlAccountClassIds(assetGlAccountClass);
+    		assetAccountClassIds.add("OB_TB");    		
+    		GenericValue contraAssetGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","CONTRA_ASSET"), true);
+    		List contraAssetAccountClassIds = getDescendantGlAccountClassIds(contraAssetGlAccountClass);
+    		
+    		GenericValue liabilityGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","LIABILITY"), true);
+    		List liabilityAccountClassIds = getDescendantGlAccountClassIds(liabilityGlAccountClass);
+    		
+    		
+    		GenericValue equityGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","EQUITY"), true);
+    		List equityAccountClassIds = getDescendantGlAccountClassIds(equityGlAccountClass);
+    		
+    		
+    		
+    		List condList = FastList.newInstance();
+    		condList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,costCenterId));
+    		condList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS,organizationPartyId));
+    		condList.add(EntityCondition.makeCondition("customTimePeriodId",EntityOperator.EQUALS,lastClosedPeriodId));
+    		if(UtilValidate.isNotEmpty(glAccountId)){
+    			condList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
+    		}
+    		
+    		/*List orCondList = FastList.newInstance();
+    		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,assetAccountClassIds)));
+    		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,contraAssetAccountClassIds)));
+    		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,liabilityAccountClassIds)));
+    		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,equityAccountClassIds)));
+    		condList.add(EntityCondition.makeCondition(orCondList,EntityOperator.OR));*/
+    		openingGlHistory = delegator.findList("GlAccountAndPartyHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND),
+                    null,null, null, false);
+    	}
+    	Map result = FastMap.newInstance();
+    	result.put("openingGlHistory", openingGlHistory);
+        return result;
+    }
 
     /**
      * Recurses up payment type tree via parentTypeId to see if input payment type ID is in tree.
