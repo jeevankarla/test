@@ -214,11 +214,23 @@
             </condition>    -->    
         	<link target="IndentAnalyticsTab"/>
         </menu-item>
+        
        	<menu-item name="CreateUserLogin" title="Create User Login">
         	<link target="CreateUserLogin"/>
         </menu-item>
+        <menu name="SupplierAnalyticsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem2">
+          	<menu-item name="delayShipmentListingNoAuth" title="Delay Shipment Listing">
+        		<link target="findDelayShipments"/>
+        	</menu-item>
+       		<menu-item name="shipmentHistoryNoAuth" title="Shipment History">
+        		<link target="ShipmentHistory"/>
+        	</menu-item>
+	        <menu-item name="quotaDashboardNoAuth" title="Quata Dashboard">
+        		<link target="QuotaDashboard"/>
+        	</menu-item>
+         </menu>
         
-	     
          <!-- <menu-item name="ShipmentHistory" title="Shipment History2">
         	<link target="ShipmentHistory"/>
         </menu-item> -->
@@ -290,10 +302,10 @@
         		<link target="IndentSupplyAnalytics"/>
         	</menu-item> 
         	<menu-item name="findDelayShipments" title="Delay Shipments Listing">
-        		<link target="findDelayShipments"/>
+        		<link target="findDelayShipmentsAuth"/> 
         	</menu-item>
 	    	<menu-item name="FindSupplierDispatchs" title="Shipment History">
-        		<link target="ShipmentHistory"/>
+        		<link target="ShipmentHistoryAuth"/>
         	</menu-item>
        </menu> 
        <!-- <menu-item name="quotaDashboard" title="Quota Dashboard">
@@ -324,7 +336,7 @@
         	<!-- <condition>
             	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
             </condition>  -->      
-        	<link target="QuotaDashboard"/>
+        	<link target="QuotaDashboardAuth"/>
         </menu-item>
       <!--  <menu-item name="durationAnalytics" title="Duration Analytics">
         	<link target="durationAnalytics"/>

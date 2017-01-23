@@ -294,14 +294,30 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				  <td align='left' valign='middle' nowrap="nowrap">Period :</td>
 				  <td valign='middle'><font color="green">          
 				  <input type="hidden" name="isFormSubmitted" id="isFormSubmitted" value="Y"  />     
-				     <select name="period" id="periodName">
+				<select name="period" id="periodName">
       		 	    <#if period?has_content>
       		 	    	<option value='${period}'>${periodName}</option>
       		 	    </#if>
-					<option value='One_Month'>Last One Month</option>
-					<option value='Three_Month'>Last Three  Months</option>
-					<option value='Six_Month'>Last  Six Months</option>
-			  </select>   		
+	                <#if period?has_content && period=='One_Month'>
+						<option value='Three_Month'>Last Three  Months</option>
+						<option value='Six_Month'>Last  Six Months</option>	 
+					</#if>
+
+					<#if period?has_content && period=='Three_Month'>
+						<option value='One_Month'>Last One Month</option>
+						<option value='Six_Month'>Last  Six Months</option>
+					</#if>
+                    <#if period?has_content && period=='Six_Month'>
+						<option value='One_Month'>Last One Month</option>
+						<option value='Three_Month'>Last Three  Months</option>
+					</#if>
+	                 <#if !period?has_content>
+						<option value='One_Month'>Last One Month</option>
+						<option value='Three_Month'>Last Three  Months</option>
+	                    <option value='Six_Month'>Last  Six Months</option>
+					</#if>
+					
+			   </select>   		
 				  </td>
 				  <td><br/></td>
 				</tr>
