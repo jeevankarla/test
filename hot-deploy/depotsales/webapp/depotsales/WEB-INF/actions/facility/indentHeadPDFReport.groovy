@@ -755,6 +755,10 @@ if(invoice){
 				if(invoiceInnerAdjItemList){
 
 					////Debug.log("invoiceInnerAdjItemList============="+invoiceInnerAdjItemList);
+					
+					if(invoiceInnerAdjItemList[0].itemValue)
+					schemeAMMMt = Math.round(invoiceInnerAdjItemList[0].itemValue);
+					else
 					schemeAMMMt = Math.round(invoiceInnerAdjItemList[0].amount);
 
 					invoiceIdAdj = invoiceInnerAdjItemList[0].invoiceId;
