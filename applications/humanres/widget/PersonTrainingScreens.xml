@@ -335,15 +335,21 @@
                 </service>
                 <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/>
                 <set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/> 
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employees.groovy"/>  
             </actions>/
                <widgets>
                 <decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
                     <decorator-section name="body">
                     	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="pmsLDTabBar"/>
               			<container>                                            
-							<screenlet id="createTrainig" title="Create New Training" collapsible="true">
+							<!-- <screenlet id="createTrainig" title="Create New Training" collapsible="true">
 						        <include-form name="createTrainig" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
-						    </screenlet>
+						    </screenlet> -->
+						    <screenlet id="createTrainig" title="Create New Training" collapsible="true">
+							    <platform-specific>
+									<html><html-template location="component://humanres/webapp/humanres/humanres/createPersonsTrainig.ftl"></html-template></html>                          
+		            			</platform-specific>  
+	            			 </screenlet> 
 						</container>
 			 		</decorator-section>
                 </decorator-screen>

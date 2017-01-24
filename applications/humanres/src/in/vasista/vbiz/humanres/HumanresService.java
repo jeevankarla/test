@@ -2574,7 +2574,7 @@ public class HumanresService {
     }
     public static Map<String, Object> createNewEmplTraining(DispatchContext dctx, Map context) {
     	Map<String, Object> result = ServiceUtil.returnSuccess();
-    	String partyId = (String) context.get("partyId");
+    	//String partyId = (String) context.get("partyId");
     	String nameOfInstitute = (String) context.get("nameOfInstitute");
     	String fromDateStr = (String) context.get("fromDate");
     	String thruDateStr = (String) context.get("thruDate");
@@ -2589,6 +2589,8 @@ public class HumanresService {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		Timestamp fromDate=null;
 		Timestamp thruDate=null;
+		FastList partyIdsList = (FastList)context.get("partyIdList");
+    	String partyIds[] = ((String)partyIdsList.get(0)).split(",");
 		try {
 		    if(UtilValidate.isNotEmpty(fromDateStr)){
 				fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(fromDateStr)));
@@ -2607,55 +2609,59 @@ public class HumanresService {
 
 		try {
 			List TrainingList = FastList.newInstance();
-			if(UtilValidate.isNotEmpty(partyId)){
-				TrainingList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
-			}
-			if(UtilValidate.isNotEmpty(topicsCoverd)){
-				TrainingList.add(EntityCondition.makeCondition("topicsCoverd",EntityOperator.EQUALS,topicsCoverd));
-			}
-	    	EntityCondition condition = EntityCondition.makeCondition(TrainingList,EntityOperator.AND);
-	    	List<GenericValue> PersonTrainingList = delegator.findList("PersonTraining", condition, null, null, null, false);
-	    	PersonTrainingList = EntityUtil.orderBy(PersonTrainingList,UtilMisc.toList("-createdStamp"));
-	    	if(UtilValidate.isEmpty(PersonTrainingList)){
-	    		GenericValue PersonTraining = delegator.makeValue("PersonTraining");
-	    		if(UtilValidate.isNotEmpty(partyId)){
-	    			PersonTraining.set("partyId", partyId);
-	    		}
-	    		if(UtilValidate.isNotEmpty(nameOfInstitute)){
-	    			PersonTraining.set("nameOfInstitute", nameOfInstitute);
-	    		}
-	    		if(UtilValidate.isNotEmpty(fromDate)){
-	    			PersonTraining.set("fromDate", fromDate);
-	    		}
-	    		if(UtilValidate.isNotEmpty(thruDate)){
-	    			PersonTraining.set("thruDate", thruDate);
-	    		}
-	    		if(UtilValidate.isNotEmpty(topicsCoverd)){
-	    			PersonTraining.set("topicsCoverd", topicsCoverd);
-	    		}
-	    		if(UtilValidate.isNotEmpty(traingCost)){
-	    			PersonTraining.set("traingCost", traingCost);
-	    		}
-	    		if(UtilValidate.isNotEmpty(trainingLocation)){
-	    			PersonTraining.set("trainingLocation", trainingLocation);
-	    		}
-	    		if(UtilValidate.isNotEmpty(duration)){
-	    			PersonTraining.set("duration", duration);
-	    		}
-	    		if(UtilValidate.isNotEmpty(trgCategory)){
-	    			PersonTraining.set("trgCategory", trgCategory);
-	    		}
-	    		if(UtilValidate.isNotEmpty(facultyType)){
-	    			PersonTraining.set("facultyType", facultyType);
-	    		}
-	  	        delegator.createSetNextSeqId(PersonTraining);
-	  	       String trainingRequestId=(String)PersonTraining.get("trainingRequestId");
-	    	  }
-			
+			 if(UtilValidate.isNotEmpty(partyIdsList)){
+				 for(int i=0;i<partyIds.length;i++){
+					 String partyId = (String)partyIds[i];
+					if(UtilValidate.isNotEmpty(partyId)){
+						TrainingList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+					}
+					if(UtilValidate.isNotEmpty(topicsCoverd)){
+						TrainingList.add(EntityCondition.makeCondition("topicsCoverd",EntityOperator.EQUALS,topicsCoverd));
+					}
+			    	EntityCondition condition = EntityCondition.makeCondition(TrainingList,EntityOperator.AND);
+			    	List<GenericValue> PersonTrainingList = delegator.findList("PersonTraining", condition, null, null, null, false);
+			    	PersonTrainingList = EntityUtil.orderBy(PersonTrainingList,UtilMisc.toList("-createdStamp"));
+			    	if(UtilValidate.isEmpty(PersonTrainingList)){
+			    		GenericValue PersonTraining = delegator.makeValue("PersonTraining");
+			    		if(UtilValidate.isNotEmpty(partyId)){
+			    			PersonTraining.set("partyId", partyId);
+			    		}
+			    		if(UtilValidate.isNotEmpty(nameOfInstitute)){
+			    			PersonTraining.set("nameOfInstitute", nameOfInstitute);
+			    		}
+			    		if(UtilValidate.isNotEmpty(fromDate)){
+			    			PersonTraining.set("fromDate", fromDate);
+			    		}
+			    		if(UtilValidate.isNotEmpty(thruDate)){
+			    			PersonTraining.set("thruDate", thruDate);
+			    		}
+			    		if(UtilValidate.isNotEmpty(topicsCoverd)){
+			    			PersonTraining.set("topicsCoverd", topicsCoverd);
+			    		}
+			    		if(UtilValidate.isNotEmpty(traingCost)){
+			    			PersonTraining.set("traingCost", traingCost);
+			    		}
+			    		if(UtilValidate.isNotEmpty(trainingLocation)){
+			    			PersonTraining.set("trainingLocation", trainingLocation);
+			    		}
+			    		if(UtilValidate.isNotEmpty(duration)){
+			    			PersonTraining.set("duration", duration);
+			    		}
+			    		if(UtilValidate.isNotEmpty(trgCategory)){
+			    			PersonTraining.set("trgCategory", trgCategory);
+			    		}
+			    		if(UtilValidate.isNotEmpty(facultyType)){
+			    			PersonTraining.set("facultyType", facultyType);
+			    		}
+			  	        delegator.createSetNextSeqId(PersonTraining);
+			  	       String trainingRequestId=(String)PersonTraining.get("trainingRequestId");
+			    	  }
+				 }
+			 }
 		}catch(GenericEntityException e){
 			Debug.logError("Error while creating PersonTraining"+e.getMessage(), module);
 		}
-		result = ServiceUtil.returnSuccess("PersonTraining Created Sucessfully for Employee "  +partyId);
+		result = ServiceUtil.returnSuccess("PersonTraining Created Sucessfully for Employees ");
 		return result;
 
     }
@@ -2694,26 +2700,35 @@ public class HumanresService {
 		
 
 		try {
+				List conditionList = FastList.newInstance();
+				if(UtilValidate.isNotEmpty(topicsCoverd)){
+					conditionList.add(EntityCondition.makeCondition("topicsCoverd",EntityOperator.EQUALS,topicsCoverd));
+				}
+				if(UtilValidate.isNotEmpty(trainingLocation)){
+					conditionList.add(EntityCondition.makeCondition("trainingLocation",EntityOperator.EQUALS,trainingLocation));
+				}
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		    	List<GenericValue> PersonTrainingList = delegator.findList("PersonTraining", condition, null, null, null, false);
+				if(UtilValidate.isNotEmpty(PersonTrainingList)){
+		    	for(int i=0;i<PersonTrainingList.size();i++){
+					GenericValue personTrainingDetail = PersonTrainingList.get(i);
+					personTrainingDetail.set("nameOfInstitute",nameOfInstitute);
+					personTrainingDetail.set("fromDate",fromDate);
+					personTrainingDetail.set("thruDate",thruDate);
+					personTrainingDetail.set("topicsCoverd",topicsCoverd);
+					personTrainingDetail.set("traingCost",traingCost);
+					personTrainingDetail.set("trainingLocation",trainingLocation);
+					personTrainingDetail.set("duration",duration);
+					personTrainingDetail.set("trgCategory",trgCategory);
+					personTrainingDetail.set("facultyType",facultyType);
+					personTrainingDetail.store();
+				}
 			
-			GenericValue personTrainingDetail = delegator.findOne("PersonTraining",UtilMisc.toMap("trainingRequestId",trainingRequestId),false);
-			if(UtilValidate.isNotEmpty(personTrainingDetail)){
-				personTrainingDetail.set("nameOfInstitute",nameOfInstitute);
-				personTrainingDetail.set("fromDate",fromDate);
-				personTrainingDetail.set("thruDate",thruDate);
-				personTrainingDetail.set("topicsCoverd",topicsCoverd);
-				personTrainingDetail.set("traingCost",traingCost);
-				personTrainingDetail.set("trainingLocation",trainingLocation);
-				personTrainingDetail.set("duration",duration);
-				personTrainingDetail.set("trgCategory",trgCategory);
-				personTrainingDetail.set("facultyType",facultyType);
-				personTrainingDetail.store();
-			}
-			
-			
+		    }
 		}catch(GenericEntityException e){
 			Debug.logError("Error while creating PersonTraining"+e.getMessage(), module);
 		}
-		result = ServiceUtil.returnSuccess("PersonTraining Updated Sucessfully for Employee "  +partyId);
+		result = ServiceUtil.returnSuccess("PersonsTraining Updated Sucessfully for Employees ");
 		return result;
 
     }

@@ -2129,7 +2129,7 @@ under the License.
      <request-map uri="LeaveTypeListCsv.csv"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListCsv"></response></request-map>
     <request-map uri="LeaveTypeListPdf.pdf"><security https="true" auth="true"/><response name="success" type="view" value="LeaveTypeListPdf"></response></request-map>
     <request-map uri="PerformanceRatingReport.csv"><security https="true" auth="true"/><response name="success" type="view" value="PerformanceRatingReportCsv"></response></request-map>
-    <request-map uri="PersonTrainingReport.csv"><security https="true" auth="true"/><response name="success" type="view" value="PersonTrainingReportCsv"></response></request-map>
+    <request-map uri="PersonTrainingReport.pdf"><security https="true" auth="true"/><response name="success" type="view" value="PersonTrainingReportPdf"></response></request-map>
     <request-map uri="Employees">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="Employees"/>
@@ -2934,7 +2934,7 @@ under the License.
 	<view-map name="PayHeadTypesCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesCsv" content-type="text/csv" encoding="none"/>
 	<view-map name="PayHeadTypesPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PayHeadTypesPdf" content-type="application/pdf" encoding="none"/>
  	<view-map name="PerformanceRatingReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PerformanceRatingReportCsv" content-type="text/csv" encoding="none"/>
- 	<view-map name="PersonTrainingReportCsv" type="screencsv" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PersonTrainingReportCsv" content-type="text/csv" encoding="none"/>
+ 	<view-map name="PersonTrainingReportPdf" type="screenfop" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#PersonTrainingReportPdf" content-type="application/pdf" encoding="none"/>
  	
  
  	<view-map name="EmployeeProfileReport" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#EmployeeProfileReport"/>

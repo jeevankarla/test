@@ -441,14 +441,14 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>		
-					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("PersonTrainingReport.csv")?exists) && (reportDetailsMap.get("PersonTrainingReport.csv") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("PersonTrainingReport.csv"))?exists))> 
+					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("PersonTrainingReport.pdf")?exists) && (reportDetailsMap.get("PersonTrainingReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("PersonTrainingReport.csv"))?exists))> 
 						<tr class="alternate-row"> 
-							<form id="PersonTrainingReport" name="PersonTrainingReport" mothed="post" action="<@ofbizUrl>PersonTrainingReport.csv</@ofbizUrl>" target="_blank">
+							<form id="PersonTrainingReport" name="PersonTrainingReport" mothed="post" action="<@ofbizUrl>PersonTrainingReport.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
 									<tr class="alternate-row">
-										<td width="24%"><span class='h3'>Person Training Report</span></td>
+										<td width="24%"><span class='h3'>Learning And Development Report</span></td>
 										<td width="20%"><span class='h3'>
-												Employee Id<@htmlTemplate.lookupField formName="PersonTrainingReport" name="employeeId" fieldFormName="LookupEmployeeName"/>
+												${uiLabelMap.Topic} <input type='text' id='topicsCoverd' name='topicsCoverd' />
 											</span>
 										</td> 
 										<td width="40%"><span class='h3'>
@@ -456,7 +456,7 @@ function setOrgPartyId() {
 												${uiLabelMap.toDate} <input type='text' id='TrainingThruDate' name='TrainingThruDate' />
 											</span>
 										</td>
-										<td width=22%"><input type="submit" value="Downlaod" onClick="javascript:appendParams('PersonTrainingReport', '<@ofbizUrl>PersonTrainingReport.csv</@ofbizUrl>');" class="buttontext"/>
+										<td width=22%"><input type="submit" value="Downlaod" onClick="javascript:appendParams('PersonTrainingReport', '<@ofbizUrl>PersonTrainingReport.pdf</@ofbizUrl>');" class="buttontext"/>
 						                </td>
 									</tr>
 								</table>
