@@ -955,7 +955,7 @@
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/ShipmentHistory.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="DashBoardCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <include-menu name="SupplierReceiptTabBar"
@@ -1085,7 +1085,7 @@
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/findDelayShipments.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				  <decorator-screen name="DashBoardCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
