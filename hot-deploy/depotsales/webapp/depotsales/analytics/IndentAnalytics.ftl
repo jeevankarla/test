@@ -101,7 +101,7 @@ if(n==1){
 		if (e.which == 13 && e.target.name =="facilityId") {
 				$("#getTreeGrid").click();
 		}
-	});
+	});  
 	
     $('#loader').hide();
 	jQuery.ajaxSetup({
