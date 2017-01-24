@@ -1159,7 +1159,7 @@ under the License.emplpunch
     </service>
      <service name="createNewEmplTraining"  engine="java"  auth="true"
  	        location="in.vasista.vbiz.humanres.HumanresService" invoke="createNewEmplTraining">
- 	        <attribute name="partyId" mode="IN" type="String" optional="true"></attribute>
+ 	        <attribute name="partyIdList" mode="IN" type="List" optional="true"></attribute>
  	        <attribute name="topicsCoverd" mode="IN" type="String" optional="true"/>
  	        <attribute name="trainingLocation" mode="IN" type="String" optional="true"/>
  	        <attribute name="fromDate" mode="IN" type="String" optional="true"/>

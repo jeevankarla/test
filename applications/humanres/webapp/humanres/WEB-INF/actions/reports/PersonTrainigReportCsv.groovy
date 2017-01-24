@@ -13,13 +13,14 @@ import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 
 dctx = dispatcher.getDispatchContext();
-employeeId = parameters.employeeId;
+topicsCoverd = parameters.topicsCoverd;
 fromDateStr = parameters.TrainingFromDate;
 thruDateStr = parameters.TrainingThruDate;
 conditionList = [];
-
-if(UtilValidate.isNotEmpty(employeeId)){
-	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
+personTrainingMap = [:];
+finalTempMap = [:];
+if(UtilValidate.isNotEmpty(topicsCoverd)){
+	conditionList.add(EntityCondition.makeCondition("topicsCoverd", EntityOperator.EQUALS ,topicsCoverd));
 }
 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 if(UtilValidate.isNotEmpty(fromDateStr)){
@@ -40,13 +41,37 @@ if(UtilValidate.isNotEmpty(thruDateStr)){
 
 Cond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 personTrainingList = delegator.findList("PersonTraining", Cond, null, null, null, false);
-sNo = 0;
+finalMap = [:];
+prevTopicCoverd = null;
+prevTrainingLocation = null;
+prevfromDate = null;
+prevthruDate = null;
+prevduration = null;
+prevtrgCategory = null;
+prevfacultyType = null;
+prevnameOfInstitute = null;
+prevtraingCost = null;
+if(UtilValidate.isNotEmpty(personTrainingList)){
+	personTrainingDetails1 = EntityUtil.getFirst(personTrainingList);
+	prevTopicCoverd = personTrainingDetails1.topicsCoverd;
+	prevTrainingLocation = personTrainingDetails1.trainingLocation
+	prevfromDateTime = personTrainingDetails1.fromDate;
+	prevfromDate =  UtilDateTime.toDateString(prevfromDateTime, "dd-MMM-yy");
+	prevthruDateTime = personTrainingDetails1.thruDate;
+	prevthruDate =  UtilDateTime.toDateString(prevthruDateTime, "dd-MMM-yy");
+	prevduration = personTrainingDetails1.duration;
+	prevtrgCategory = personTrainingDetails1.trgCategory;
+	prevfacultyType = personTrainingDetails1.facultyType;
+	prevnameOfInstitute = personTrainingDetails1.nameOfInstitute;
+	prevtraingCost = personTrainingDetails1.traingCost;
+}
 trainingList = [];
+prevTrainingList = [];
 if(UtilValidate.isNotEmpty(personTrainingList)){
 	for(int i=0;i<personTrainingList.size();i++){
-		tempMap = [:]
+		tempMap = [:];
 		personTrainingDetails = personTrainingList.get(i);
-		sNo = sNo+1;
+		topicsCoverd = personTrainingDetails.topicsCoverd;
 		partyId = personTrainingDetails.partyId;
 		trainingRequestId = personTrainingDetails.trainingRequestId;
 		topicsCoverd = personTrainingDetails.topicsCoverd;
@@ -60,9 +85,8 @@ if(UtilValidate.isNotEmpty(personTrainingList)){
 		traingCost = personTrainingDetails.traingCost;
 		fromDate = UtilDateTime.toDateString(fromDateTime, "dd-MMM-yy");
 		thruDate = UtilDateTime.toDateString(thruDateTime, "dd-MMM-yy");
-		tempMap.put("sNo", sNo);
+		
 		tempMap.put("partyId", partyId);
-		tempMap.put("topicsCoverd", topicsCoverd);
 		partyName = PartyHelper.getPartyName(delegator, partyId, true);
 		tempMap.put("partyName", partyName);
 		employeePosition = "";
@@ -96,20 +120,66 @@ if(UtilValidate.isNotEmpty(personTrainingList)){
 			}
 		}
 		tempMap.put("deptName",deptName);
-		tempMap.put("trainingLocation", trainingLocation);
-		tempMap.put("fromDate", fromDate);
-		tempMap.put("thruDate", thruDate);
-		tempMap.put("duration", duration);
-		tempMap.put("trgCategory", trgCategory);
-		tempMap.put("facultyType", facultyType);
-		tempMap.put("nameOfInstitute", nameOfInstitute);
-		tempMap.put("traingCost", traingCost);
-		if(UtilValidate.isNotEmpty(tempMap)){
-			trainingList.addAll(tempMap);
+		finalTempMap.put("trainingLocation", trainingLocation);
+		finalTempMap.put("fromDate", fromDate);
+		finalTempMap.put("thruDate", thruDate);
+		finalTempMap.put("duration", duration);
+		finalTempMap.put("trgCategory", trgCategory);
+		finalTempMap.put("facultyType", facultyType);
+		finalTempMap.put("nameOfInstitute", nameOfInstitute);
+		finalTempMap.put("traingCost", traingCost);
+		
+		if(prevTopicCoverd.equals(topicsCoverd)){
+			if(UtilValidate.isNotEmpty(tempMap)){
+					trainingList.addAll(tempMap);
+				}
+				finalTempMap.put("trainingLocation", trainingLocation);
+				finalTempMap.put("fromDate", fromDate);
+				finalTempMap.put("thruDate", thruDate);
+				finalTempMap.put("duration", duration);
+				finalTempMap.put("trgCategory", trgCategory);
+				finalTempMap.put("facultyType", facultyType);
+				finalTempMap.put("nameOfInstitute", nameOfInstitute);
+				finalTempMap.put("traingCost", traingCost);
+				finalTempMap.put("emplDetailsList", trainingList);
+				finalMap.put(topicsCoverd, finalTempMap);
+				prevTrainingList = trainingList;
+			
+		}else{
+		
+			finalTempMap.put("emplDetailsList", prevTrainingList);
+			prevTrainingList = trainingList;
+			finalTempMap.put("trainingLocation", prevTrainingLocation);
+			finalTempMap.put("fromDate", prevfromDate);
+			finalTempMap.put("thruDate", prevthruDate);
+			finalTempMap.put("duration", prevduration);
+			finalTempMap.put("trgCategory", prevtrgCategory);
+			finalTempMap.put("facultyType", prevfacultyType);
+			finalTempMap.put("nameOfInstitute", prevnameOfInstitute);
+			finalTempMap.put("traingCost", prevtraingCost);
+			
+			finalMap.put(prevTopicCoverd, finalTempMap);
+			prevTrainingList = trainingList;
+			prevTopicCoverd = topicsCoverd;
+			prevTrainingLocation = trainingLocation;
+			prevfromDate = fromDate;
+			prevthruDate = thruDate;
+			prevduration = duration;
+			prevtrgCategory = trgCategory;
+			prevfacultyType = facultyType;
+			prevnameOfInstitute = nameOfInstitute;
+			prevtraingCost = traingCost;
+			trainingList = [];
+			if(UtilValidate.isNotEmpty(tempMap)){
+				trainingList.addAll(tempMap);
+			}
+			
+			finalTempMap = [:];
 		}
+		
+	}
 }
+
+if(UtilValidate.isNotEmpty(finalMap)){
+	context.finalMap = finalMap;	
 }
-
-context.trainingList = trainingList;
-
-

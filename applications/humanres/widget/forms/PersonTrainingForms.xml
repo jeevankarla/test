@@ -226,16 +226,16 @@ under the License.
     </form>
     <form name="findTraining" odd-row-style="alternate-row" header-row-style="header-row" type="single"
 	    	default-table-style="basic-table hover-bar" separate-columns="true">
-		<field name="employeeId" title="EmployeeId"  >
-			<lookup  target-form-name="LookupEmployeeName" size="10"/>
-		</field>
+		<field name="topicsCoverd" title="${uiLabelMap.Topic}"  ><text></text> </field>
+		<field name="fromDate" id-name="fromDate" title="${uiLabelMap.fromDate}" event="onclick" action="javascript:datePicker2(fromDate)"><text></text></field>
+		<field name="thruDate" id-name="thruDate" title="${uiLabelMap.toDate}" event="onclick" action="javascript:datePicker2(thruDate)"><text></text></field>
          <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>	
 	</form>
     <form name="ListTraining" type="list" list-name="trainingList" default-table-style="basic-table hover-bar" separate-columns="true"  target="UpdateTraining">
-   		<field name="partyId" title="Employee Id" size="15"><display></display></field>
-    	<field name="trainingRequestId"  title="${uiLabelMap.trainReqId}"><display size="15"></display></field> 	
-    	<field name="topicsCoverd" title="${uiLabelMap.Topic}" ><text></text></field>
-    	<field name="trainingLocation" title="${uiLabelMap.Venue}" ><text></text></field>
+   		<field name="partyId" title="Employee Id" size="15"><display></display><hidden/></field>
+    	<field name="trainingRequestId"  title="${uiLabelMap.trainReqId}"><display size="15"></display><hidden/></field> 	
+    	<field name="topicsCoverd" title="${uiLabelMap.Topic}" > <display></display> </field>
+    	<field name="trainingLocation" title="${uiLabelMap.Venue}" ><display></display></field>
     	<field name="fromDate" id-name="fromDate" title="${uiLabelMap.fromDate}" event="onclick" action="javascript:datePicker2(fromDate)"><text></text></field>
     	<field name="thruDate" id-name="thruDate" title="${uiLabelMap.toDate}" event="onclick" action="javascript:datePicker2(thruDate)"><text></text></field>
     	<field name="duration" title="${uiLabelMap.duration}" ><text></text></field>
