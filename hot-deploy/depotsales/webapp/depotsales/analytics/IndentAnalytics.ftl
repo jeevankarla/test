@@ -92,17 +92,16 @@ var isFind = $("#isFind").val();
 
 if(n==1){
 
-  $('div#orderSpinn1').html('<img src="/images/NHDC-namasthe-low.gif"  width="500">');
-  $('div#orderSpinn1').show().delay(5000).fadeOut();
+  $('div#orderSpinn1').html('<img src="/images/welcome nhdc3.jpg"  width="500">');
 
-}
+}  
 
 // enter event handle
 	$("input").keypress(function(e){
 		if (e.which == 13 && e.target.name =="facilityId") {
 				$("#getTreeGrid").click();
 		}
-	});
+	});  
 	
     $('#loader').hide();
 	jQuery.ajaxSetup({

@@ -183,7 +183,7 @@ under the License.
 				       </#if>
 				  </#list>
 				 </#if>
-				  <#if invoiceItemLevelAdjustments?has_content>		
+				  <#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -196,7 +196,7 @@ under the License.
 				       </#if>
 				  </#list>
 				 </#if>
-				</fo:table-cell>
+				</fo:table-cell>    
 				
 				<#--><fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}<#else>0.00</#if></fo:block>
@@ -284,7 +284,7 @@ under the License.
 				  </#list>
 				 </#if>
 				 
-				  <#if invoiceItemLevelAdjustments?has_content>		
+				  <#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -398,7 +398,10 @@ under the License.
 				
 				</fo:table-cell>
 				<fo:table-cell >
+				 <#if eachList.invoiceItemTypeId != "INVOICE_ITM_ADJ">
 				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.itemValue)>
+				</#if>
+				
 			<#--	<#if eachList.invoiceItemTypeId == "ENTRY_TAX">
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				<#else>
