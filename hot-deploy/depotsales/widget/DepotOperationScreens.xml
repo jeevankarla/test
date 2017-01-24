@@ -987,10 +987,25 @@
 													</link>
 									</decorator-section>
 									<decorator-section name="search-results">
-										<screenlet title="">
-											<include-form name="listMaterialShipmentReceiptDepotTrans"
-												location="component://depotsales/widget/DepotSalesForms.xml" />
-										</screenlet>
+										<section>
+											<condition>
+												<if-compare operator="not-equals" value="" field="customerName"/>
+											</condition>
+										    <widgets>
+										    	<screenlet id="head" title="SUPPLIERS TO ${customerName} OPERATED DEPOTS">
+												</screenlet>
+												<screenlet>
+													<include-form name="listMaterialShipmentReceiptDepotTrans"
+														location="component://depotsales/widget/DepotSalesForms.xml" />
+												</screenlet>
+										    </widgets>
+										    <fail-widgets>
+										    	<screenlet  title="SUPPLIERS TO USER AGENCY OPERATED DEPOTS">
+													<include-form name="listMaterialShipmentReceiptDepotTrans"
+														location="component://depotsales/widget/DepotSalesForms.xml" />
+												</screenlet>
+										    </fail-widgets>
+										</section>
 									</decorator-section>
 								</decorator-screen>
 							</widgets>
