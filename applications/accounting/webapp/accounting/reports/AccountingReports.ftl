@@ -302,7 +302,11 @@ function reportTypeChangeFunc() {
 		});
  	
 	});
-	
+	var glAccountType = ${StringUtil.wrapString(glAccountTypeJSON)!'[]'};
+    var glAccountName = ${StringUtil.wrapString(glAccountName)!'[]'};
+	$(document).ready(function(){
+	    $("#glAccountId").autocomplete({ source: glAccountType }).keydown(function(e){});	
+	});
 	var AccountName;
 	function dispglAccountName(selection){
 	   value = $("#glAccountId").val();
@@ -653,6 +657,7 @@ function reportTypeChangeFunc() {
 					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParams('PartyLedgerCreditors', '<@ofbizUrl>PartyLedgerCreditorsReport.csv</@ofbizUrl>');" class="buttontext"/></td>
 				</form>
               </tr>
+              <#--
                <tr class="alternate-row">
 			    	<form id="employeeOB" name="employeeOB" method="post"  target="_blank" action="<@ofbizUrl>employeesFinOpeningBal.pdf</@ofbizUrl>">	
 			  			<td width="30%" nowrap>Employee CPF OB</td>
@@ -661,7 +666,8 @@ function reportTypeChangeFunc() {
 			  			<td width="15%"></td>
 						<td width="10%"><input type="submit" value="Download" class="buttontext"/></td>
 					</form>	
-     		 </tr>
+     	 </tr>
+     	 -->
 		</table>     			     
 	</div> 	
 </div>
@@ -798,12 +804,16 @@ function reportTypeChangeFunc() {
 			<tr class="alternate-row">
 			  	 <td width="25%"> &#160;</td>
 			  	 <td width="50%">AccountCode
-			  	  	<#--<select name='AccountCode' id ="AccountCode">	
-					 	<#list glAccounts as glAccount> 	
-							<option value='${glAccount.glAccountId}'>${glAccount.accountName}</option>
+			  	  <#--<select name='AccountCode' id ="AccountCode">	
+					 	
+					 	<#list glAccount as glAccountTypeId> 	
+					 	<option>
+							<option value='${glAccountTypeId.glAccountId}'>${glAccountTypeId.accountName}</option>
+          		   		</option>
           		   		</#list>
+				 	
 				 	</select>-->
-				 	<input type="text" name="AccountCode" id="glAccountId" size="11" maxlength="60"  required onblur='javascript:dispglAccountName(this);'/>
+				 <input type="text" name="AccountCode" id="glAccountId" size="11" maxlength="60"  required onblur='javascript:dispglAccountName(this);'/>
   					<span  class="tooltip" id="AccountName"></span>
 			  	 </td>
 			 	 <td width="15%">Report Type 
