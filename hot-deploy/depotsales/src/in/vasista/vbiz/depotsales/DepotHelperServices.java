@@ -3302,5 +3302,225 @@ public static Map<String, Object> creatingAcctTransForAllPayment(DispatchContext
     return result;	
 }
 	
+
+public static Map<String, Object> creatingAcctTransForAllFinAccnts(DispatchContext dctx, Map<String, ? extends Object> context) {
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();   
+	Map result = ServiceUtil.returnSuccess();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+    String fromDateStr = (String) context.get("fromDate");
+    String thruDateStr = (String) context.get("thruDate");
+    String finAccountTransIdUi = (String) context.get("finAccountTransId");
+    String finAccountTransTypeIdUi = (String) context.get("finAccountTransTypeId");
+    String roId = (String) context.get("partyId");
+	Timestamp fromDate=null;
+	Timestamp thruDate = null;
+	List branchIds = FastList.newInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Timestamp targetDate =null;
+	try {
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd MMMMM, yyyy");  
+		targetDate = new java.sql.Timestamp(sdf1.parse("01 APRIL, 2016").getTime());
+	} catch (Exception e) {
+		Debug.logError(e, "Failed to covert date ", module);
+		return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+	} 
+	if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
+  		try {
+  			fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+  			thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+	  	} catch (ParseException e) {
+	  		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	  	} catch (NullPointerException e) {
+  			Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	  	}
+  		try{
+	  		if(UtilValidate.isNotEmpty(fromDateStr) && fromDate.before(targetDate)){
+	  			
+	  			result =  ServiceUtil.returnError("Please give from date Should be Greater than 2016-04-01");
+	  		  return result;
+	  		}
+  		}catch (Exception e) {
+  			Debug.logError(e, "Please give from date Should be Greater than 2016-04-01 ", module);
+  			return ServiceUtil.returnError("Please give from date Should be Greater than 2016-04-01 " + e);
+  		} 
+    }
+    Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+    Timestamp transactionDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+
+    List condList = FastList.newInstance();
+	condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,roId));
+	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
+    List finAccountIds = FastList.newInstance();
+
+	try{
+		List<GenericValue> finAccountList = delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId","finAccountName"), null, null, false);
+		if(UtilValidate.isNotEmpty(finAccountList)){
+	        finAccountIds = EntityUtil.getFieldListFromEntityList(finAccountList, "finAccountId", true);
+		}
+	}catch (GenericEntityException e) {
+        Debug.logError(e, module);
+        return ServiceUtil.returnError(e.getMessage());
+    }
+    EntityCondition cond1 = null;
+    condList.clear();
+    if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+    	condList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+    	condList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+    }
+    else{
+    	condList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(targetDate)));
+    }
+    if(UtilValidate.isNotEmpty(finAccountIds)){
+    	condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.IN, finAccountIds));
+    }
+    if(UtilValidate.isNotEmpty(finAccountTransIdUi)){
+    	condList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, finAccountTransIdUi));
+    }
+    if(UtilValidate.isNotEmpty(finAccountTransTypeIdUi)){
+    	condList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, finAccountTransTypeIdUi));
+    }
+	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "FINACT_TRNS_CANCELED"));
+    cond1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+    EntityListIterator finAccntTransItr = null;
+    String statusId = "";
+    try {
+    	finAccntTransItr = delegator.find("FinAccountTrans", cond1, null,  UtilMisc.toSet("finAccountTransId","finAccountTransTypeId","finAccountId","partyId","statusId","transactionDate"), null, null);
+			if (finAccntTransItr != null) {
+                GenericValue finAccntTrans = null;
+                while ((finAccntTrans = finAccntTransItr.next()) != null) {
+                	 String finAccountTransId = finAccntTrans.getString("finAccountTransId");
+                	 String party = finAccntTrans.getString("partyId");
+                	 statusId = finAccntTrans.getString("statusId");
+                	 String oldStatusId=statusId;
+                	 String finAccountTransTypeId = finAccntTrans.getString("finAccountTransTypeId");
+		  			  GenericValue finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId",  finAccntTrans.getString("finAccountId")),false);
+		  			  String paymentId=finAccntTrans.getString("paymentId");
+		  			 String postToGlAccountId="";
+		  			  if(UtilValidate.isNotEmpty(finAccount)){
+		  				  postToGlAccountId=finAccount.getString("postToGlAccountId");
+		  			  }
+		  			  
+		  			  String paymentMethodTypeGLId="";
+		  			  String paymentMethodGLId="";
+		  			 if(UtilValidate.isNotEmpty(paymentId)){
+		 				GenericValue paymentDetails = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
+		 				 if(UtilValidate.isNotEmpty(paymentDetails)){
+		  				 String paymentMethodTypeId=paymentDetails.getString("paymentMethodTypeId");
+		  				 String paymentMethodId=paymentDetails.getString("paymentMethodId");
+
+		  				 	if(UtilValidate.isNotEmpty(paymentMethodTypeId)){
+				 				GenericValue paymentMethodTypeGL = delegator.findOne("PaymentMethodTypeGlAccount", UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId,"organizationPartyId",party), false);
+				 				if(UtilValidate.isNotEmpty(paymentMethodTypeGL)){
+					  				 paymentMethodTypeGLId=paymentMethodTypeGL.getString("glAccountId");
+				 				}
+		  				 	}
+		  				 	if(UtilValidate.isNotEmpty(paymentMethodId)){
+				 				GenericValue paymentMethodGL = delegator.findOne("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+				 				if(UtilValidate.isNotEmpty(paymentMethodGL)){
+					  				 paymentMethodGLId=paymentMethodGL.getString("glAccountId");
+				 				}
+		  				 	}
+		 				 }
+		  			 }
+         	   	     String debitCreditFlag =null;
+	             	 Map createAcctgTransHeaderMap=UtilMisc.toMap("userLogin",userLogin);
+	             	 if(UtilValidate.isNotEmpty(finAccountTransTypeId) && (finAccountTransTypeId.equals("WITHDRAWAL"))){
+	             		 createAcctgTransHeaderMap.put("acctgTransTypeId", "PAYMENT_ACCTG_TRANS");
+	             		 debitCreditFlag ="C";
+	                 }
+	                 if(UtilValidate.isNotEmpty(finAccountTransTypeId) && (finAccountTransTypeId.equals("DEPOSIT"))){
+	                 	createAcctgTransHeaderMap.put("acctgTransTypeId", "RECEIPT");
+	                 	debitCreditFlag = "D";
+	                 }
+    	   			 createAcctgTransHeaderMap.put("glFiscalTypeId","ACTUAL");
+    	   			 createAcctgTransHeaderMap.put("transactionDate",finAccntTrans.getTimestamp("transactionDate"));
+    	   			 createAcctgTransHeaderMap.put("finAccountTransId",finAccountTransId);
+	   			     createAcctgTransHeaderMap.put("isPosted","Y");
+	   			     createAcctgTransHeaderMap.put("partyId",finAccntTrans.getString("partyId"));
+		   			 String acctgTransId="";
+		   			 try{
+		   				    Map<String, Object> createAcctgTransResult = dispatcher.runSync("createAcctgTrans", createAcctgTransHeaderMap);
+		   				    if (ServiceUtil.isError(createAcctgTransResult)) {
+	         	   	 			Debug.logError(createAcctgTransResult.toString(), module);
+	         	   	 			return ServiceUtil.returnError(null, null, null, createAcctgTransResult);
+	         	   	 		}
+		   					acctgTransId=(String)createAcctgTransResult.get("acctgTransId");
+		   			  }
+		   			  catch(GenericServiceException e){
+         	          	Debug.logError(e, e.toString(), module);
+         	            return ServiceUtil.returnError(e.toString());
+         	         } 
+		   			 
+		   			 List<GenericValue> glAccounts = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "CONTRA_ADJUSTMENT"), null, null, null, false);
+       			     if(UtilValidate.isEmpty(glAccounts)){
+      	   	 			return ServiceUtil.returnError("Error while creating  account trans there was no  glAccount");
+       			     }
+             	      GenericValue glAccount = EntityUtil.getFirst(glAccounts);
+                      String contraGlAccountId = glAccount.getString("glAccountId");
+		   			  String acctgTransEntryTypeId=null;
+                      Map createAcctgTransEntryMap=UtilMisc.toMap("userLogin",userLogin);
+       		          createAcctgTransEntryMap.put("acctgTransId",acctgTransId);
+                   	  createAcctgTransEntryMap.put("organizationPartyId", "Company");
+                   	  BigDecimal origAmount =(BigDecimal)finAccntTrans.get("amount");
+                   	  createAcctgTransEntryMap.put("acctgTransEntryTypeId",acctgTransEntryTypeId);
+                   	  createAcctgTransEntryMap.put("partyId",party);
+       			      createAcctgTransEntryMap.put("glAccountId", postToGlAccountId);
+       			      createAcctgTransEntryMap.put("debitCreditFlag",debitCreditFlag);
+       			      createAcctgTransEntryMap.put("origAmount", origAmount);
+   		  	  	      List transEntryList = FastList.newInstance();
+   		  	  	      transEntryList.add(createAcctgTransEntryMap);
+                      Map createAcctgTransetry=UtilMisc.toMap("userLogin",userLogin);		        
+   		  	 	      createAcctgTransetry.put("acctgTransId",acctgTransId);
+   		  	 	      createAcctgTransetry.put("organizationPartyId", "Company");
+                      createAcctgTransetry.put("acctgTransEntryTypeId",acctgTransEntryTypeId);
+                      createAcctgTransetry.put("partyId",party);
+                      
+ 		  			 if(UtilValidate.isNotEmpty(paymentId)){
+ 		  				 if(debitCreditFlag.equals("C")){
+ 		                      createAcctgTransetry.put("glAccountId",paymentMethodGLId);
+ 	   				      }else{
+ 	                         createAcctgTransetry.put("glAccountId", paymentMethodTypeGLId);
+ 	   				      }
+ 		  			 
+ 		  			 }else{
+ 	                      createAcctgTransetry.put("glAccountId", contraGlAccountId);
+ 		  			 }
+                      createAcctgTransetry.put("origAmount", origAmount);
+   				      if(debitCreditFlag.equals("C")){
+   				    	debitCreditFlag="D";
+   				      }else{
+     				    debitCreditFlag="C";
+   				      }
+       				  createAcctgTransetry.put("debitCreditFlag",debitCreditFlag);
+	           		  transEntryList.add(createAcctgTransetry);
+           		      for(int i=0; i<transEntryList.size();i++){
+	                     	Map transEntry=(Map) transEntryList.get(i);
+	       			        try{
+	       				        Map<String, Object> createAcctgTransEntryResult = dispatcher.runSync("createAcctgTransEntry", transEntry);
+	       						if (ServiceUtil.isError(createAcctgTransEntryResult)) {
+	       	      	   	 			return ServiceUtil.returnError(null, null, null, createAcctgTransEntryResult);
+	       						}
+	       			        }catch (GenericServiceException e) {
+	       			        	Debug.logError(e, "Error While 'createAcctgTrans' for JV", module);
+       	      	   	 			return ServiceUtil.returnError("Error while creating fin account trans");
+	       			        } 
+                      }
+           		   GenericValue acctngTrns = delegator.findOne("AcctgTrans", UtilMisc.toMap("acctgTransId", acctgTransId), false);
+                   acctngTrns.put("isPosted","Y");
+                   delegator.store(acctngTrns);
+		   			 
+                }
+                finAccntTransItr.close();
+            }
+    } catch (GenericEntityException e) {
+        Debug.logError(e, module);
+        return ServiceUtil.returnError(e.getMessage());
+    }
+    result = ServiceUtil.returnSuccess("Successfully Populate Acctg Trans for FinAccntTrans: ");
+    return result;	
+}
+
   	
 }

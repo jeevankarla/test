@@ -783,6 +783,14 @@
          <attribute mode="IN" name="groupIds" optional="false" type="List"/>
          <attribute mode="IN" name="password" optional="true" type="String"/>
     </service>
+    <service name="creatingAcctTransForAllFinAccnts" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="creatingAcctTransForAllFinAccnts" transaction-timeout="6000000">
+        <description>Creating Accounting Trans For All FinAccnts</description>
+        <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+        <attribute mode="IN" name="thruDate" optional="true" type="String"/>
+        <attribute mode="IN" name="finAccountTransId" optional="true" type="String"/>
+        <attribute mode="IN" name="partyId" optional="true" type="String"/>
+        <attribute mode="IN" name="finAccountTransTypeId" optional="true" type="String"/>
+   </service>
     
 </services>
 
