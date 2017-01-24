@@ -94,7 +94,7 @@ if(n==1){
 
   $('div#orderSpinn1').html('<img src="/images/welcome nhdc3.jpg"  width="500">');
 
-}
+}  
 
 // enter event handle
 	$("input").keypress(function(e){

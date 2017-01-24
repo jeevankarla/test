@@ -196,7 +196,7 @@ under the License.
 				       </#if>
 				  </#list>
 				 </#if>
-				</fo:table-cell>
+				</fo:table-cell>  
 				
 				<#--><fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}<#else>0.00</#if></fo:block>
