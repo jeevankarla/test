@@ -379,11 +379,7 @@ function datepick()
               <input type="hidden" name="organizationPartyId" value="${defaultOrganizationPartyId}"/>
               
               <td>
-              	<#if invoice.purposeTypeId?has_content>
-                <#assign channelType = delegator.findOne("Enumeration", {"enumId" : invoice.purposeTypeId?if_exists}, true) />
-                ${channelType.description}
-                </#if>
-              </td>
+                            </td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)?if_exists} [${(invoice.partyIdFrom)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)?if_exists} [${(invoice.partyId)?if_exists}]</a></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
