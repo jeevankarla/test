@@ -139,8 +139,9 @@ under the License.
 						             <fo:table-cell border-style="solid">
 						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Amount of Reimbursement claimed</fo:block>  
 						            </fo:table-cell>
+						            <#assign totalClaim=totalsubsidyAmt+totalserviceCharg>
 						             <fo:table-cell border-style="solid">
-						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${claimTotal?if_exists?string("##0.00")}</fo:block>  
+						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false">${totalClaim?if_exists?string("##0.00")}</fo:block>  
 						            </fo:table-cell>
 							     </fo:table-row>
 							     <fo:table-row>

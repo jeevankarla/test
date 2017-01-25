@@ -20,3 +20,9 @@ condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 customTimePeriods = delegator.findList("CustomTimePeriod", condition, null, ["-thruDate"], null, true);
 context.customTimePeriods = customTimePeriods;
 Debug.logError("customTimePeriods="+customTimePeriods,"");
+
+dctx = dispatcher.getDispatchContext();
+partyId = userLogin.get("partyId");
+roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+roPartyList = roList.get("partyList");
+context.ROList = roPartyList;

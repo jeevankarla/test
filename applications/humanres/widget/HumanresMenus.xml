@@ -105,6 +105,13 @@
             </condition>
             <link target="EmplSupPayroll"/>
         </menu-item>
+        <menu-item name="pmsLD" title="Performance Rating and L &amp; D">
+			<condition>
+				<if-has-permission permission="HR"  action="_PROFILE_ADMIN"/>
+            	<!-- <if-has-permission permission="HR"  action="_SUPLYPAYROLL_VIEW"/> -->
+            </condition>
+            <link target="performanceManagement"/>
+        </menu-item>
         <menu-item name="analytics" title="Analytics">
         	<condition>
             	<if-has-permission permission="HR"  action="_ANALYTICS_VIEW"/>
@@ -334,6 +341,24 @@
 	             </and> 
             </condition>
         	<link target="EditLeaveEncashment"/>
+        </menu-item>
+    </menu>
+   	
+     <menu name="pmsLDTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+		selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="performanceManagement" title="Performance Ratings">
+			<!-- <condition>
+            	<if-has-permission permission="HR"  action="_SUPLYPAYROLL_VIEW"/>
+            </condition> -->
+            <link target="performanceManagement"/>
+        </menu-item>
+        <menu-item name="LearningDevelopment" title="Learning and Development">
+        	<!-- <condition>
+                 <and>
+                    <if-has-permission permission="HR"  action="_LEAVEENCASHVIEW"/>
+	             </and> 
+            </condition> -->
+        	<link target="LearningAndDevelopment"/>
         </menu-item>
     </menu>
     
@@ -856,7 +881,7 @@
 	
 	<menu name="PayrollItemsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
 		selected-menuitem-context-field-name="tabButtonItem3">
-        <menu-item name="ListPayHistories" title="Pay History"> 
+        <menu-item name="ListPayHistories" title="Employee Pay history"> 
         	<link target="ListPayHistories">
         	<parameter param-name="roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo"/>
@@ -865,7 +890,7 @@
                 <parameter param-name="fromDate"/>
         	</link>
         </menu-item>  
-        <menu-item name="EditPartyBenefit" title="${uiLabelMap.HumanResEditPartyBenefit}">
+        <menu-item name="EditPartyBenefit" title="${uiLabelMap.HumanResEmploymentBenifits}">
             <link target="EditPartyBenefits" >
                 <parameter param-name="roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo"/>
@@ -883,7 +908,7 @@
                 <parameter param-name="fromDate"/>
             </link>
         </menu-item>  -->
-        <menu-item name="EditPartyDeduction" title="Party Deductions">
+        <menu-item name="EditPartyDeduction" title="${uiLabelMap.HumanResEmploymentDeductions}">
             <link target="EditPartyDeductions" >
                 <parameter param-name="roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo"/>
@@ -1074,13 +1099,16 @@
         </condition> 
 			<link target="FindEmplLeaveBalance"></link>        
         </menu-item> 
-        <menu-item name="creditLeavesELHPLCL" title="Credit Leaves EL/HPL/CL">
+        <menu-item name="creditLeavesELHPLCL" title="Credit Leaves EL/CL">
         <condition>
              <and>
                 <if-has-permission permission="CREDIT_ELHPLCL_TAB"  action="_VIEW"/>
           </and> 
         </condition> 
 			<link target="creditLeavesELHPLCL"></link>        
+        </menu-item> 
+         <menu-item name="EmplLeaveBalanceStatus" title="Leave Balance">
+			<link target="EmplLeaveBalanceStatus"></link>        
         </menu-item> 
     </menu>
     

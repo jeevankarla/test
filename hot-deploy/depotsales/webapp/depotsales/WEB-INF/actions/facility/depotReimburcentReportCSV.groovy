@@ -48,7 +48,7 @@ branchId = parameters.branchId;
 branchName = "";
 
 branchContext=[:];
-branchContext.put("branchId","INT15");
+branchContext.put("branchId",branchId);
 
 BOAddress="";
 BOEmail="";
@@ -288,7 +288,10 @@ Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(condList, 
 
 
 //Debug.log("invoiceIds================="+invoiceIds.size());
-
+totQty=0
+totAmt=0
+totdepotChargs=0
+totalsMap=[:];
 finalList = [];
 for (eachInvoiceList in Invoice) {
 	
@@ -338,6 +341,8 @@ for (eachInvoiceList in Invoice) {
 		
 		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
 		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
+		totQty=totQty+eachInvoiceItem.quantity
+		totAmt=totAmt+eachInvoiceItem.itemValue
 		
 	}
 	
@@ -398,6 +403,7 @@ for (eachInvoiceList in Invoice) {
 	 
 	 tempMap.put("partyName", partyName);
 	 tempMap.put("depotCharges", maxAmt);
+	 totdepotChargs=totdepotChargs+maxAmt;
 	 shipmentId = eachInvoiceList.shipmentId;
 	 
 	 if(shipmentId){
@@ -533,4 +539,18 @@ for (eachInvoiceList in Invoice) {
 	 finalList.add(tempMap);
 }
 
+totalsMap.put("billno","TOTAL");
+totalsMap.put("invoiceQTY",totQty);
+totalsMap.put("invoiceAmount",totAmt);
+totalsMap.put("depotCharges",totdepotChargs);
+finalList.add(totalsMap);
 context.finalList = finalList;
+
+
+
+
+
+
+
+
+

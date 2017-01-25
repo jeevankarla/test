@@ -43,6 +43,7 @@ try {
 } catch (ParseException e) {
 	Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 }
+
 fromDateTime = UtilDateTime.getDayStart(fromDateTime);
 monthBegin = UtilDateTime.getDayStart(fromDateTime, timeZone, locale);
 monthEnd = UtilDateTime.getDayEnd(thruDateTime, timeZone, locale);
@@ -136,11 +137,19 @@ invoices = delegator.find("Invoice",condition,null,UtilMisc.toSet("invoiceId"),n
 invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoices, "invoiceId", true);
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,invoiceIds));
-conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.IN,["TEN_PERCENT_SUBSIDY","INV_FPROD_ITEM"]));
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 InvoiceItem = delegator.findList("InvoiceItem",condition, null, null, null, false );
+
 DecimalFormat df = new DecimalFormat("0.00");
 DistrictWiseMap=[:];
+totalsMap=[:];
+totMap = [:];
+totalQty=0
+totalvalue=0
+totalsubsidyAmt=0
+totalserviceCharg=0;
+totalclaimTotal=0
 if(UtilValidate.isNotEmpty(InvoiceItem)){
 	sNo=1;
 	summarySNo=0;
@@ -156,6 +165,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 		 invoiceItemTypeId=eachInvoiceItem.get("invoiceItemTypeId");
 		 invoiceId = eachInvoiceItem.get("invoiceId");
 		 invoiceItemSeqId = eachInvoiceItem.get("invoiceItemSeqId");
+		 
 		 if(invoiceItemTypeId.equals("INV_FPROD_ITEM")){
 			 invoice = delegator.findOne("Invoice",["invoiceId":eachInvoiceItem.get("invoiceId")],false);
 			 invoiceDate = UtilDateTime.toDateString(invoice.invoiceDate,"dd/MM/yyyy");
@@ -184,6 +194,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 if(UtilValidate.isNotEmpty(productDetails)){
 				 productName=productDetails.description;
 			 }
+			 
 			 temMap.put("productName", productName);
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId",EntityOperator.NOT_EQUAL,null));
@@ -200,9 +211,11 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 temMap.put("categoryname", categoryname);
 			 quantity = eachInvoiceItem.get("quantity");
 			 temMap.put("quantity", df.format(quantity.setScale(0, 0)));
-			 amount = eachInvoiceItem.get("amount");
-			 value= quantity*amount;
-			 temMap.put("value", df.format(value.setScale(0, 0)));
+			 totalQty=totalQty+quantity;
+			 value=eachInvoiceItem.get("itemValue");
+		
+			 temMap.put("value", df.format(value.setScale(2, 0)));
+			 totalvalue=totalvalue+value
 			 BigDecimal serviceCharg= BigDecimal.ZERO;
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("parentInvoiceId",EntityOperator.EQUALS,invoiceId));
@@ -212,15 +225,18 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 invoiceSubsidyDetails = delegator.findList("InvoiceItem",condition, null, null, null, false );
 			 invoiceSubsidyDetails= EntityUtil.getFirst(invoiceSubsidyDetails);
 			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetails) && (invoiceSubsidyDetails.amount)){
-				 subsidyAmt= (invoiceSubsidyDetails.amount)*(-1);
+				 subsidyAmt= (invoiceSubsidyDetails.itemValue)*(-1);
 			 }
 			 temMap.put("subsidyAmt", df.format(subsidyAmt.setScale(0, 0)));
-			 serviceCharg= (subsidyAmt*0.05);
+			 totalsubsidyAmt=totalsubsidyAmt+subsidyAmt
+			 serviceCharg= (value*0.005);
 			 temMap.put("serviceCharg", df.format(serviceCharg.setScale(0, 0)));
+			 totalserviceCharg=totalserviceCharg+serviceCharg
 			 BigDecimal claimTotal = (subsidyAmt +serviceCharg).setScale(0, 0);
 			 temMap.put("claimTotal", claimTotal);
+			 totalclaimTotal=totalclaimTotal+claimTotal
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
-				temMap.put("sNo", sNo);
+				temMap.put("sNo", String.valueOf(sNo));
 				sNo = sNo+1;
 			    finalList.add(temMap);
 				if(DistrictWiseMap.get(districtName)){
@@ -237,7 +253,6 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 					existingMap["serviceCharg"]=df.format(serviceCharg.add(new BigDecimal(existingMap.get("serviceCharg"))).setScale(0, 0));
 					existingMap["claimTotal"]=claimTotal.add(new BigDecimal(existingMap.get("claimTotal")));
 					DistrictWiseMap.put(districtName,existingMap);
-					
 				}else{
 				  fieldMap=[:];
 				  summarySNo=summarySNo+1;				  
@@ -254,13 +269,18 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 				  fieldMap["claimTotal"]=temMap.get("claimTotal");
 				  DistrictWiseMap.put(districtName,fieldMap);
 				}
-				
 			 } 
-			 
 		 }
-		
 	}
 }
+totalsMap.put("quantity", totalQty);
+totalsMap.put("value", totalvalue);
+totalsMap.put("subsidyAmt", totalsubsidyAmt);
+totalsMap.put("serviceCharg", totalserviceCharg);
+totalsMap.put("claimTotal", totalclaimTotal);
+context.totalsMap=totalsMap; 
+context.totalsubsidyAmt=totalsubsidyAmt;
+context.totalserviceCharg=totalserviceCharg;
 context.DistrictWiseMap=DistrictWiseMap;
 DistrictWiseList=[];
 granTotal=0;
@@ -285,6 +305,20 @@ desList.each{ eachdesc ->
 	totalList.add(temMap);
 	i=i+1;
 }
+//if(UtilValidate.isNotEmpty(productCategory) && (productCategory.description) && UtilValidate.isNotEmpty(invoiceSubsidyDetails)){
+	totMap.put("sNo", "TOTAL");
+	totMap.put("districtName", " ");
+	totMap.put("userAgency", " ");
+	totMap.put("invoiceDate", " ");
+	totMap.put("productName", " ");
+	totMap.put("categoryname", " ");
+	totMap.put("quantity", totalQty);
+	totMap.put("value", totalvalue);
+	totMap.put("subsidyAmt", totalsubsidyAmt);
+	totMap.put("serviceCharg", totalserviceCharg);
+	totMap.put("claimTotal", String.valueOf(totalclaimTotal));	
+//}
+finalList.add(totMap);
 context.totalList = totalList;
 context.DistrictWiseList = DistrictWiseList;
 context.finalList = finalList;

@@ -2047,6 +2047,7 @@ under the License.
     <alias-all entity-alias="OIB"/>
     <alias-all entity-alias="OI"/>
     <alias entity-alias="INV" name="statusId"/>
+    <alias entity-alias="II" name="invoiceItemTypeId"/>
     <view-link entity-alias="OIB" rel-entity-alias="INV">
       <key-map field-name="invoiceId"/>
     </view-link>

@@ -49,7 +49,7 @@ partyIdFrom=invoiceList.get("partyIdFrom");
 branchRo = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyIdFrom)  , UtilMisc.toSet("partyIdFrom"), null, null, false );
 roID = EntityUtil.getFirst(branchRo);
 context.partyIdFrom=partyIdFrom;
-if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
+if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyIdFrom=="INT4")){
 	kanAndKalRo="yes";
 	context.kanAndKalRo=kanAndKalRo;
 	tallySalesNo = invoiceList.get("referenceNumber");
@@ -290,18 +290,18 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			  tempMap.put("itemValue", eachItem.itemValue);
 			  
 			  totTaxAmount = totTaxAmount+(eachItem.itemValue);
-			  totTaxAmount2 = totTaxAmount2+(eachItem.itemValue);
+			 // totTaxAmount2 = totTaxAmount2+(eachItem.itemValue);
 			  itemAdjustList.add(tempMap);
 			  }
 			  if(eachItem.invoiceItemTypeId == "TEN_PERCENT_SUBSIDY"){
 			  mgpsAmt = mgpsAmt+eachItem.itemValue;
 			  }
 			  
-			  if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"  || eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){ 
+			  if(eachItem.invoiceItemTypeId !="VAT_SALE" && eachItem.invoiceItemTypeId !="TEN_PERCENT_SUBSIDY" && eachItem.invoiceItemTypeId !="INV_FPROD_ITEM"){ 
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
-				  if(eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"){
-					  totTaxAmount2=totTaxAmount2+(eachItem.itemValue);
-				  }
+			  }
+			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
+				  totTaxAmount2=totTaxAmount2+(eachItem.itemValue);
 			  }
 			  if(eachItem.invoiceItemTypeId=="CST_SALE"){
 			  	cFormAgnst=cFormAgnst+1;
@@ -316,8 +316,8 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		 invoiceInnerAdjItemList2 = EntityUtil.filterByCondition(invoiceAdjItemList, cond11);
 		 invoiceInnerAdjItem2 = EntityUtil.getFirst(invoiceInnerAdjItemList2);
 		 if(UtilValidate.isNotEmpty(invoiceInnerAdjItem2)){
-			 unitPriceIncTax=unitPriceIncTax+(invoiceInnerAdjItem2.amount/eachList.quantity);
-			 totTaxAmount2=totTaxAmount2+(invoiceInnerAdjItem2.amount);
+			 //unitPriceIncTax=unitPriceIncTax+(invoiceInnerAdjItem2.amount/eachList.quantity);
+			 //totTaxAmount2=totTaxAmount2+(invoiceInnerAdjItem2.amount);
 		 }
 		 invoiceItemLevelUnitListPrice.put(eachList.productId, unitPriceIncTax);
 		 
@@ -883,20 +883,20 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			  }
 			  
 			  
-			  if(scheme == "General"){
+			  /*if(scheme == "General"){
 				  
 				  sourcePercentage = (serviceAmt/(eachInvoiceList.itemValue))*100;
 				  double perAmt = (eachInvoiceList.amount*sourcePercentage)/100;
 				  
 				  tempMap.put("amount",(eachInvoiceList.amount+perAmt));
-				  }else{
+				  }else{*/
 				  tempMap.put("amount", eachInvoiceList.amount);
-			   }
+			  // }
 				  Debug.log("invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId)========="+ invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId))
 				  tempMap.put("unitPriceIncTax", invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId)+tempMap.get("amount"));
 			 // tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
 				  
-				  tempMap.put("ToTamount", tempMap.get("quantity")*tempMap.get("unitPriceIncTax") );
+				  tempMap.put("ToTamount", Math.round(tempMap.get("quantity")*tempMap.get("unitPriceIncTax")));
 			 
 				   grandTotal = grandTotal+(eachInvoiceList.itemValue)+serviceAmt;
 			  
@@ -1147,7 +1147,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 }else{
 
 tallySalesNo = invoiceList.get("referenceNumber");
-
 context.partyId = partyId;
 invoiceDate = invoiceList.get("invoiceDate");
 context.invoiceDate = invoiceDate;
@@ -1161,7 +1160,6 @@ conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator
 fcond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 
 FacilityList = delegator.findList("Facility", fcond, null, null, null, false);
-
 
 
 isDepot = "";
@@ -1193,7 +1191,6 @@ carrierName = "";
 estimatedShipCost = "";
 estimatedShipDate = "";
 destination = "";
-
 
 if(shipmentId){
 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
@@ -1229,13 +1226,13 @@ destination = shipmentList.get("destination");
 
 estimatedShipCost = shipmentList.get("estimatedShipCost");
 
-
 if(UtilValidate.isNotEmpty(shipmentList.get("supplierInvoiceDate"))){
 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 }
+context.deliveryChallanDate = deliveryChallanDate;
 }
 
-context.deliveryChallanDate = deliveryChallanDate;
+
 orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 
 
@@ -1254,7 +1251,6 @@ context.carrierName = carrierName;
 context.estimatedShipCost = estimatedShipCost;
 context.passNo = passNo;
 context.estimatedShipDate = estimatedShipDate;
-
 
 
 conditionList = [];
@@ -1359,7 +1355,6 @@ for (eachList in invoiceItemList) {
 		   }
 	}
 	 }
-	 
 	 
 	if(itemAdjustList){
 		invoiceItemLevelAdjustments.put(i, itemAdjustList);

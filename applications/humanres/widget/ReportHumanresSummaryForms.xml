@@ -158,24 +158,37 @@
 			<display description="${name} " />
 		</field>		
 		<field name="employmentFrom" title-area-style="tableheadwide" title="Join Date"><display description="${joinDate}"/></field>
-		<field name="qual" title="Educational Qualification"><display description="${qual}"/></field>
-		<field name="position" title="Designation" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${position}" key-field-name="emplPositionTypeId"></display-entity></field>
-		<field name="department" title-area-style="tableheadwide"><display description="${department}"/></field>
-		<field name="phoneNumber" title-area-style="tableheadwide"><display description="${phoneNumber}"/></field>
+		<!-- <field name="qual" title="Educational Qualification"><display description="${qual}"/></field> -->
+		
+		 <field name="position" title="Designation" title-area-style="tableheadwide"><display-entity entity-name="EmplPositionType" description="${position}" key-field-name="emplPositionTypeId"></display-entity></field>
+		 <field name="deptName" title-area-style="tableheadwide" title="Department"><display/></field>
+		<field name="department" title-area-style="tableheadwide" title="Region"><display description="${department}"/></field>
+		<field name="geoName" title="Branch" title-area-style="tableheadwide"><display/></field>
+		<field name="phoneNumber" title-area-style="tableheadwide" title="Phone number"><display description="${phoneNumber}"/></field>
 		<field name="gender" title-area-style="tableheadwide"><display description="${gender}"/></field>
 		<field name="dateofBirth" title-area-style="tableheadwide"><display description="${dateofBirth}"/></field>
-		<field name="caste" title="Caste"><display description="${caste}"/></field>
-		<!-- <field name="weeklyOff" title="Weekly Off"><display description="${weeklyOff}"/></field> -->
-		<field name="canteenFacin" title="Canteen Facility"><display description="${canteenFacin}"/></field>
-		<field name="companyBus" title="Compay Bus"><display description="${companyBus}"/></field>
+		<field name="fatherName" title-area-style="tableheadwide" title="Father Name"><display/></field>
+		<field name="motherName" title-area-style="tableheadwide" title="Mother Name"><display/></field>
+		<field name="spouseName" title-area-style="tableheadwide" title="Spouse Name"><display/></field>
+		<field name="passportNumber" title-area-style="tableheadwide" title="Passport Number"><display/></field>
+		<field name="religion" title-area-style="tableheadwide" title="Religion"><display/></field>
+		<field name="caste" title="Caste"><display/></field>
+		<field name="aadharId" title-area-style="tableheadwide" title="Aadhar Id"><display/></field>
+		<field name="panId" title="Pan Id"><display/></field>
+		<field name="finAccountName" title="Fin Account Name"><display/></field>
+		<field name="finAccountCode" title="Fin Account Code"><display description="${finAccountCode}"/></field>
+		<field name="ifscCode" title="IFSC Code"><display description="${ifscCode}"/></field>
+		
 		<field name="amount" title="Basic Pay" title-area-style="tableheadwide"><display description="${amount}"/></field>
-		<field name="daAmount" title="DA Amount"><display description="${daAmount}"/></field>
+		<field name="PayScale" title="pay scale"><display/></field>
 		<field name="payGradeId" title="Grade" title-area-style="tableheadwide"><display description="${payGradeId}"/></field>
 		<field name="bloodGroup" title-area-style="tableheadwide"><display description="${bloodGroup}"/></field>
 		<field name="emailAddress" title-area-style="tableheadwide"><display description="${emailAddress}"/></field>
-		<field name="locationGeoId" title="Location Geo" title-area-style="tableheadwide"><display description="${locationGeoId}"/></field>
+		<field name="emergencyContactNumber" title-area-style="tableheadwide" title="Emergency contact number"><display/></field>
 		<field name="address" title="Residential Address"><display description="${address}"/></field>
-		<field name="retirementDate" title="Retirement Date" title-area-style="tableheadwide"><display description="${retirementDate}"/></field>		
+		<field name="retirementDate" title="Retirement Date" title-area-style="tableheadwide"><display description="${retirementDate}"/></field>	
+		
+			
 	</form>	
 	<form name="LICRDReportCsv" type="list" list-name="finalList" 
 		odd-row-style="alternate-row" default-table-style="basic-table hover-bar" view-size="99999" paginate="false">
@@ -1276,7 +1289,7 @@
     	<field name="hideSearch"><hidden value="Y" /></field>
 		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     	<field name="loanId" title="loanId"><text size="10"/></field>
-    	<field name="partyId">
+    	<field name="partyId" title="${uiLabelMap.HumanResEmploymentPartyIdTO}">
 			<lookup target-form-name="LookupEmployeeName"/>
 		</field>
     	<field name="loanTypeId" title="loanTypeId">
@@ -1371,7 +1384,7 @@
     		</drop-down>
     	</field>
     	<field name="roleTypeId"><hidden value="UNITS"/></field>
-    	<field name="deducteePartyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId" /></field>
+    	<field name="deducteePartyId" required-field="true" title="Deductee ${uiLabelMap.HumanResEmploymentPartyIdTO}"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId" /></field>
     	<field name="amount" title="Recovery Amount" required-field="true"><text size="20"/></field>
     	<field name="description" title="Description" required-field="false"><text size="20"/></field>
     	<field name="finAccountId"  title="Financial Account" required-field="true">
@@ -1435,7 +1448,7 @@
     	<field name="hideSearch"><hidden value="Y" /></field>
 		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     	<field name="loanId" title="loanId"><text size="10"/></field>
-    	<field name="partyId">
+    	<field name="partyId" title="Employee Id">
 			<lookup target-form-name="LookupEmployeeName"/>
 		</field>
     	<field name="loanTypeId" title="loanTypeId">
@@ -1492,7 +1505,7 @@
     </field>
     </form>
     <form name="createEmployee" type="single" header-row-style="header-row" default-table-style="basic-table"  target="createEmployeeMaster">
-    	<field name="employeeId" parameter-name="employeeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
+    	<field name="employeeId" id-name = "employeeId" parameter-name="employeeId" event="onkeyup" action="javascript:checkPartyExistance(this);" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" ><text></text></field>
     	<!-- <field name="LastEmplCode" title="Last Empl Code"><display></display></field> -->
     	<field name="partyId" parameter-name="partyIdFrom" title="Place of posting" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="false">
@@ -1528,7 +1541,7 @@
     	<field name="birthDistrict" title="Birth District" required-field="false"><text size="20"/></field>
     	<field name="birthPlace" title="Place Of Birth" required-field="false"><text size="20"/></field>
         <!-- <field name="birthDate" id-name="birthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:picker()"><text  size="12"/></field> -->
-    	<field name="birthDate" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"></date-time></field> 
+    	<field name="birthDate" id-name="DateOfBirth" title="${uiLabelMap.DateOfBirth}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:datePicker1(this)"><text size="12"></text><!-- <date-time type="date"></date-time> --></field> 
     	<field name="bloodGroup" title="${uiLabelMap.BloodGroup}">
 			<drop-down allow-empty="true">
 			<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
@@ -1766,7 +1779,7 @@
 		<field name="aadharNumber" title="${uiLabelMap.aadharNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
 		<field name="panNumber" title="${uiLabelMap.panNumber}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text></text></field>
 		<!-- <field name="dateOfJoining" title="${uiLabelMap.DateOfJoining}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date"></date-time></field> -->
-		<field name="employmentDate" title="Date of joining NHDC" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time type="date" ></date-time></field>
+		<field name="employmentDate" id-name="employmentDate" title="Date of joining NHDC" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" event="onclick" action="javascript:datePicker1(this)"><text size="12"></text></field>
 		
 		<!-- <field name="backgroundVerification" title="${uiLabelMap.BackgroundVerification}">
 			<drop-down allow-empty="false" no-current-selected-key="Y">
@@ -1806,7 +1819,7 @@
         <field name="periodTypeId" event="onchange" action="javascript:dateFormatType();">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PeriodType" description="${description}" >
-						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH" operator="in"></entity-constraint>
+						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH,HR_YEAR" operator="in"></entity-constraint>
                     <entity-order-by field-name="description"/>
                 </entity-options >
             </drop-down>
@@ -1836,7 +1849,7 @@
         <field name="periodTypeId" event="onchange" action="javascript:dateFormatType();">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PeriodType" description="${description}" >
-						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH" operator="in"></entity-constraint>
+						<entity-constraint name="periodTypeId" value="HR_MONTH,ATTENDANCE_MONTH,HR_YEAR" operator="in"></entity-constraint>
                     <entity-order-by field-name="description"/>
                 </entity-options >
             </drop-down>
@@ -1882,5 +1895,40 @@
     	<field name="acctgFormulaId" id-name="acctgFormulaId"><display size="20"/></field>
     	<field name="formula" title="formula"><display size ="20"></display></field>
     </form>
+    <form name="PerformanceRatingReportCsv" type="list" list-name="performanceRatingList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<actions></actions>
+		<field name="sNo " title="S.No"><display/></field>
+		<field name="partyId" title="${uiLabelMap.empCode}"><display/></field>
+		<field name="partyName" title="${uiLabelMap.Name}"><display/></field>
+		<field name="deptName" title="${uiLabelMap.Department}"><display/></field>
+		<field name="caste" title="Category"><display/></field>
+		<field name="joinDate" title="${uiLabelMap.DateOfJoining}"><display/></field>
+		<field name="birthDate" title="${uiLabelMap.DateOfBirth}"><display/></field>
+		<field name="assessmentPeriod" title="Assessment Period"><display/></field>
+		<field name="PerfRatingType" title="Grading"><display/></field>
+		<field name="promotion" title="Promotion/Upgradation"><display/></field>
+		<field name="PromotionDate" title="Date of Promotion/Upgradation"><display/></field>
+		<field name="ConfirmationDate" title="Date of Confirmation"><display/></field>
+	</form>	
+	 <form name="PersonTrainigReportCsv" type="list" list-name="trainingList" 
+		odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+		<actions></actions>
+		<field name="sNo " title="S.No"><display/></field>
+		<field name="partyId" title="${uiLabelMap.empCode}"><display/></field>
+		<field name="topicsCoverd" title="${uiLabelMap.Topic}"><display/></field>
+		<field name="partyName" title="${uiLabelMap.Name}"><display/></field>
+		<field name="designation" title="${uiLabelMap.Designation}"><display/></field>
+		<field name="deptName" title="${uiLabelMap.Department}"><display/></field>
+		<field name="trainingLocation" title="${uiLabelMap.Venue}"><display/></field>
+		<field name="fromDate" title="${uiLabelMap.fromDate}"><display/></field>
+		<field name="thruDate" title="${uiLabelMap.toDate}"><display/></field>
+		<field name="duration" title="${uiLabelMap.duration}"><display/></field>
+		<field name="trgCategory" title="${uiLabelMap.trgCategory}"><display/></field>
+		<field name="facultyType" title="${uiLabelMap.facultyType}"><display/></field>
+		<field name="nameOfInstitute" title="${uiLabelMap.nameOfInstitute}"><display/></field>
+		<field name="traingCost" title="${uiLabelMap.TotalCost}"><display/></field>
+	</form>	
+	
 </forms>
         

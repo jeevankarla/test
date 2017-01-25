@@ -19,6 +19,7 @@
 
 package org.ofbiz.party.party;
 
+
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +27,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -37,6 +40,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+
 import java.math.BigDecimal;
 
 import org.ofbiz.entity.GenericDelegator;
@@ -1951,4 +1955,98 @@ public class PartyServices {
 		return employeeInternalId;
 	}
     
+	public static Map<String, Object>  createOrUpdateWeaversPartyClassification(DispatchContext dctx, Map<String, ? extends Object> context)  {
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+	 	 String partyId = (String) context.get("partyId"); 
+	 	 String partyClassificationGroupId = (String) context.get("partyClassificationGroupId"); 
+	 	 String fromDateStr = (String) context.get("fromDate");
+	 	 String thruDateStr = (String)context.get("thruDate");
+	 	 String actionType =(String) context.get("actionType");
+	 	 Timestamp fromDate=null;
+	 	 Timestamp thruDate=null;
+	 	 
+	 	if (UtilValidate.isNotEmpty(fromDateStr)) { //2011-12-25 18:09:45
+			SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy");             
+			try {
+				fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+				fromDate = UtilDateTime.getDayStart(fromDate);
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+				result = ServiceUtil.returnError("Cannot parse date string:" + fromDateStr);
+				return result;
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+				result = ServiceUtil.returnError("Cannot parse date string:" + fromDateStr);
+				return result;
+			}
+		}
+		else{
+			fromDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+	 	
+	 	    if (UtilValidate.isNotEmpty(thruDateStr)) { //2011-12-25 18:09:45
+ 				SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");             
+			try {
+				thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+				thruDate = UtilDateTime.getDayEnd(thruDate);
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: " + thruDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: " + thruDateStr, module);
+				result = ServiceUtil.returnError("Cannot parse date string:"+ thruDateStr);
+				return result;
+			}
+		}
+		else{
+			thruDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+		}
+	 
+	 	if("createForm".equals(actionType)){
+	 		 Map inPartyMapClass = UtilMisc.toMap("userLogin", userLogin);
+	         inPartyMapClass.put("partyClassificationGroupId", partyClassificationGroupId);
+	         inPartyMapClass.put("partyId", partyId);
+	         inPartyMapClass.put("fromDate", fromDate);
+	         inPartyMapClass.put("thruDate", thruDate);
+	 		try{            	
+	 			Map resultMap = dispatcher.runSync("createPartyClassification", inPartyMapClass);
+	 			if (ServiceUtil.isError(resultMap)) {
+	 					String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+	 					Debug.logError(errMsg , module);
+	 					return ServiceUtil.returnError(errMsg);
+	              }
+	 			
+	         }catch (GenericServiceException e) {
+	          Debug.logError(e, module);
+	          return ServiceUtil.returnError("Service Exception: " + e.getMessage());
+	       }
+	 		result = ServiceUtil.returnSuccess("Weaver classification Created Successfully");
+			return result;
+	 	}
+		if("updateForm".equals(actionType)){
+			Map inPartyMapClass = UtilMisc.toMap("userLogin", userLogin);
+	         inPartyMapClass.put("partyClassificationGroupId", partyClassificationGroupId);
+	         inPartyMapClass.put("partyId", partyId);
+	         inPartyMapClass.put("fromDate", fromDate);
+	         inPartyMapClass.put("thruDate", thruDate);
+	 		try{            	
+	 			Map resultMap = dispatcher.runSync("updatePartyClassification", inPartyMapClass);
+	 			if (ServiceUtil.isError(resultMap)) {
+	 					String errMsg =  ServiceUtil.getErrorMessage(resultMap);
+	 					Debug.logError(errMsg , module);
+	 					return ServiceUtil.returnError(errMsg);
+	              }
+	 			
+	         }catch (GenericServiceException e) {
+	          Debug.logError(e, module);
+	          return ServiceUtil.returnError("Service Exception: " + e.getMessage());
+	       }
+	 		result = ServiceUtil.returnSuccess("Weaver classification updated  Successfully");
+			return result;	
+		}
+		return result;
+	}
+	
 }

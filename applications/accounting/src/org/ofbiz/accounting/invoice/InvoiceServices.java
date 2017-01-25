@@ -531,8 +531,8 @@ public class InvoiceServices {
                 // create the item adjustment as line items
                 List<GenericValue> itemAdjustments = OrderReadHelper.getOrderItemAdjustmentList(orderItem, orh.getAdjustments());
                 
-                Debug.log("inputAdjustmentsList==================="+inputAdjustmentsList);
-                Debug.log("ignoreAdjustmentsList==================="+ignoreAdjustmentsList);
+               // Debug.log("inputAdjustmentsList==================="+inputAdjustmentsList);
+               // Debug.log("ignoreAdjustmentsList==================="+ignoreAdjustmentsList);
                 
                 
                 
@@ -663,9 +663,9 @@ public class InvoiceServices {
                                     
                                      sourcePercentage = adj.getBigDecimal("sourcePercentage");
                                     
-                                    Debug.log("amount=======INNNNN3232323========"+amount);
+                                   // Debug.log("amount=======INNNNN3232323========"+amount);
                                     
-                                    Debug.log("sourcePercentage=======INNNNN3232323========"+sourcePercentage);
+                                   // Debug.log("sourcePercentage=======INNNNN3232323========"+sourcePercentage);
                                     
                                 }
                             } else if (adj.get("sourcePercentage") != null) {
@@ -5347,6 +5347,9 @@ public class InvoiceServices {
         GenericValue invoiceDetails = null;
         Map<String, Object> result = ServiceUtil.returnSuccess();
         GenericValue tenantConfigEnableTaxInvSeq;
+        
+       // Debug.log("invoiceId============="+invoiceId);
+        
         try {
         	
         	Boolean enableTaxInvSeq  = Boolean.FALSE;
@@ -5360,6 +5363,8 @@ public class InvoiceServices {
 	       			enableTaxInvSeq = Boolean.TRUE;
 	       		}
        		}
+       		
+       	 //Debug.log("enableTaxInvSeq============="+enableTaxInvSeq);
        		Timestamp invDate=null;
        		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId)){
        			List<GenericValue> invoiceItems = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceTypeId", "dueDate", "invoiceDate","partyIdFrom","partyId","shipmentId"), null, null, false);
@@ -5370,6 +5375,9 @@ public class InvoiceServices {
        			if(UtilValidate.isEmpty(invDate)){
        				invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("invoiceDate");
        			}
+       			
+       		   // Debug.log("invDate============="+invDate);
+       			
        			String partyId ="";
        			String prefix ="";
        			String orderId = "";
@@ -5386,31 +5394,79 @@ public class InvoiceServices {
        			//if(UtilValidate.isNotEmpty(shipmentId)){
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");
+	       				
+	       			/*//=======================New Sequence from Role========================
+		       			 try {
+		 					List conditions = FastList.newInstance();
+		 					conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		 					conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+		 			    	List <GenericValue> InvoiceRole = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+		 			    	if(UtilValidate.isNotEmpty(InvoiceRole)){
+		 			    		partyId = (EntityUtil.getFirst(InvoiceRole)).getString("partyId");
+		 			    		
+		 			    	}
+		 			 } catch (Exception e) {
+		 				Debug.logError("Problem in Invoice Role", module);
+		 			 }*/
+      				//=========================================================================
+	       				
 	        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
-	        			orderId = shipments.getString("primaryOrderId");
-	        			
+	        			if(UtilValidate.isNotEmpty(shipments)){
+	        				orderId = shipments.getString("primaryOrderId");
+	        			}
+	        			//Debug.log("invDate============="+invDate);
 	        			try{
 	           			orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
-	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+		           			if(UtilValidate.isNotEmpty(orderAssoc)){
+		           				orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+		           			}
 	        			}catch(Exception e){
 	        				Debug.logError("Problem in OrderAssoc", module);
 	        			}
 	           			
 	                	prefix="PI";
 	       			}
+	       			
+	       			//Debug.log("prefix============="+prefix);
+	       			
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
 	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
+	       				/*
+	       				//=======================New Sequence from Role========================
+	       				
+			       			 try {
+			 					List conditions = FastList.newInstance();
+			 					conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			 					conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "CUSTOMER_AGENT"));
+			 			    	List <GenericValue> InvoiceRole = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+			 			    	if(UtilValidate.isNotEmpty(InvoiceRole)){
+			 			    		partyId = (EntityUtil.getFirst(InvoiceRole)).getString("partyId");
+			 			    		
+			 			    	}
+			 			 } catch (Exception e) {
+			 				Debug.logError("Problem in Invoice Role", module);
+			 			 }
+	       				
+	       				
+	       				//=========================================================================
+	       				*/
 	       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
-	        			orderId = shipments.getString("primaryOrderId");
-	        			
+	       				if(UtilValidate.isNotEmpty(shipments)){
+	       					orderId = shipments.getString("primaryOrderId");
+	       				}
+	        			//Debug.log("orderId============="+orderId);
 	        			try{
-	                	orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
-	           			orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+	        				orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+		                	if(UtilValidate.isNotEmpty(orderAssoc)){
+		                		orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+		       				}
 	        			}catch(Exception e){
 	        				Debug.logError("Problem in OrderAssoc", module);
 	        			}
 	                	prefix="SI";
 	       			}
+	       			
+	       			//Debug.log("prefix============="+prefix);
 	       			if(UtilValidate.isNotEmpty(shipmentId)){
 	       		    List condList = FastList.newInstance();
 	                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -5420,6 +5476,8 @@ public class InvoiceServices {
 	                if(UtilValidate.isNotEmpty(orderRolesDetails)){
 	                	indentTypeId = "O";
 	                }
+	                
+	                //Debug.log("indentTypeId============="+indentTypeId);
 	       			GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
 	                boSequnce = partyBOs.getString("externalId");
 	       			List<GenericValue> partyRelations = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId), null, null, null, false);
@@ -5427,6 +5485,8 @@ public class InvoiceServices {
 	    			GenericValue partyROs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdFrom), false);
 	                roSequnce = partyROs.getString("externalId");
        			}
+	       			
+	       			//Debug.log("roSequnce============="+roSequnce);
        			Map finYearContext = FastMap.newInstance();
    				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
    				finYearContext.put("organizationPartyId", "Company");
@@ -5473,6 +5533,9 @@ public class InvoiceServices {
        			}*/
        			if(invoiceItemTypeIds.contains("PURCHASE_INVOICE")){
        				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+       				
+       				//Debug.log("billOfSale============="+billOfSale);
+       				
     				billOfSale.put("billOfSaleTypeId", "PUR_INV_SQUENCE");
     				billOfSale.put("invoiceId", invoiceId);
     				billOfSale.put("finYearId", finYearId);
@@ -5489,6 +5552,8 @@ public class InvoiceServices {
    			    }
    			    if(invoiceItemTypeIds.contains("SALES_INVOICE")){
        				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+       				
+       				//Debug.log("billOfSale===sale=========="+billOfSale);
     				billOfSale.put("billOfSaleTypeId", "SALE_INV_SQUENCE");
     				billOfSale.put("invoiceId", invoiceId);
     				billOfSale.put("partyId", partyId);
@@ -6879,4 +6944,76 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	    return ServiceUtil.returnSuccess();	    
 	}
 	
+	
+	//createPaymentApplicationForInvoiceEmp
+	public static Map<String, Object> createPaymentApplicationForInvoiceEmp(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();              
+        Locale locale = (Locale) context.get("locale");     
+        String paymentMethodType = (String) context.get("paymentMethodTypeId");
+        String paymentMethodId = (String) context.get("paymentMethodId");
+        Timestamp effectiveDate = (Timestamp) context.get("effectiveDate");
+        Timestamp paymentDate = (Timestamp) context.get("paymentDate");
+        String paymentTypeId = (String) context.get("paymentTypeId");
+        String finAccountId = (String) context.get("finAccountId");
+        String invoicePartyIdFrom =(String) context.get("invoicePartyIdFrom");
+        String invoicePartyIdTo = (String) context.get("invoicePartyIdTo");
+        String invoiceId =(String) context.get("invoiceId");
+        String headerCostCenterId =(String) context.get("headerCostCenterId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        Map<String, Object> invoiceResult = ServiceUtil.returnSuccess();
+        BigDecimal amount;
+        String paymentId = "";
+        try{
+        	if(UtilValidate.isNotEmpty(headerCostCenterId) && UtilValidate.isNotEmpty(invoiceId)){
+        		GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), false);
+        		if(UtilValidate.isNotEmpty(invoice)){
+        			invoice.set("costCenterId", headerCostCenterId);
+        			invoice.store();
+        		}
+        	}
+        	invoiceResult = dispatcher.runSync("getInvoiceTotal", UtilMisc.toMap("invoiceId",invoiceId ,"userLogin" ,userLogin));
+        	amount = (BigDecimal)invoiceResult.get("amountTotal");
+        	if (amount.compareTo(ZERO) > 0) {
+        		Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentTypeId);
+      	        paymentCtx.put("paymentMethodId", paymentMethodId);//from AP mandatory
+      	        paymentCtx.put("organizationPartyId", invoicePartyIdFrom);
+                paymentCtx.put("partyId", invoicePartyIdTo);
+      	        paymentCtx.put("paymentDate", UtilDateTime.nowTimestamp());
+      	        paymentCtx.put("statusId", "PMNT_NOT_PAID");
+      	        if (UtilValidate.isNotEmpty(finAccountId) ) {
+      	            paymentCtx.put("finAccountId", finAccountId);                        	
+      	        }
+      	        paymentCtx.put("userLogin", userLogin);
+      	        paymentCtx.put("amount", amount);
+      	        paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
+      	        Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
+	  	        if (ServiceUtil.isError(paymentResult)) {
+	  	            Debug.logError("Problems in service createPaymentAndApplicationForInvoices", module);
+		  			//request.setAttribute("_ERROR_MESSAGE_", "Error in service createPaymentAndApplicationForInvoices");
+		  			return ServiceUtil.returnError("Problem calling 'createPaymentAndApplicationForInvoices'");
+	  	        }
+	  	        paymentId = (String)paymentResult.get("paymentId");
+        	}
+        	
+        	Map<String, Object> setPaymentStatusMap = UtilMisc.<String, Object>toMap("userLogin", userLogin);
+        	setPaymentStatusMap.put("paymentId", paymentId);
+        	setPaymentStatusMap.put("statusId", "PMNT_SENT");
+        	if(UtilValidate.isNotEmpty(finAccountId)){
+        		setPaymentStatusMap.put("finAccountId", finAccountId);
+        	}
+        	setPaymentStatusMap.put("depositReceiptFlag", "Y");
+            Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", setPaymentStatusMap);
+        }
+        catch (GenericServiceException e) {
+            return ServiceUtil.returnError("Problem calling 'createPaymentAndApplicationForInvoices'");
+        }
+        catch (GenericEntityException e) {
+            return ServiceUtil.returnError("Problem updating  'invoice'");
+        }
+        result.put("paymentId",paymentId);
+        return ServiceUtil.returnSuccess("Payment and Application Successful. PaymentId: "+paymentId+", InvoiceId: "+invoiceId);
+	}
+
 }

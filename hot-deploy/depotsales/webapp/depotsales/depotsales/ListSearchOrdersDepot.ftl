@@ -38,14 +38,17 @@ under the License.
 <input type="hidden" name="paramFacilityId" id="paramFacilityId" value="${paramFacilityId}">
 <input type="hidden" name="paramEstimatedDeliveryDate" id="paramEstimatedDeliveryDate" value="${paramEstimatedDeliveryDate}">
 <input type="hidden" name="paramEstimatedDeliveryThruDate" id="paramEstimatedDeliveryThruDate" value="${paramEstimatedDeliveryThruDate}">
+<input type="hidden" name="paramindentEntryFromDate" id="paramindentEntryFromDate" value="${paramindentEntryFromDate}">
+<input type="hidden" name="paramEstimatedindentEntryThruDate" id="paramEstimatedindentEntryThruDate" value="${paramEstimatedindentEntryThruDate}">
 <input type="hidden" name="paramStatusId" id="paramStatusId" value="${paramStatusId}">
 <input type="hidden" name="tallyRefNO" id="tallyRefNO" value="${tallyRefNO}">
 <input type="hidden" name="paramBranch" id="paramBranch" value="${paramBranch}">
 <input type="hidden" name="indentDateSort" id="indentDateSort" value="${indentDateSort}">
 <input type="hidden" name="ApproveOrderId" id="ApproveOrderId">
 <input type="hidden" name="scheme" id="scheme" value="${scheme}">
+<input type="hidden" name="salesChannel" id="salesChannel" value="${salesChannel}">
 
-
+  
 
 <script type="text/javascript">
  
@@ -55,11 +58,17 @@ var orderId = $("#paramOrderId").val();
 var paramFacilityId = $("#paramFacilityId").val();
 var paramEstimatedDeliveryDate = $("#paramEstimatedDeliveryDate").val();
 var paramEstimatedDeliveryThruDate = $("#paramEstimatedDeliveryThruDate").val();
+var paramindentEntryFromDate = $("#paramindentEntryFromDate").val();
+var paramEstimatedindentEntryThruDate = $("#paramEstimatedindentEntryThruDate").val();
+
 var paramStatusId = $("#paramStatusId").val();
 var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
 var tallyRefNO = $("#tallyRefNO").val();
 var scheme = $("#scheme").val();
+var salesChannel = $("#salesChannel").val();
+
+
 
 var reload = "";
 
@@ -72,10 +81,13 @@ var domOrderIds = "";
 var low = 0, high = 20;
 $(document).ready(function() {
    $(window).scroll(function() {
-    	if($(window).scrollTop() == $(document).height() - $(window).height()) {
+         var came = "";
+    	 if ($(window).scrollTop() >= ($(document).height() - $(window).height())*0.99){
            low = high;
            high = high + 30;
-           recursively_ajax();          
+           if(came != "YES")
+           recursively_ajax();    
+           came = "YES";
     	}
 });
 
@@ -164,7 +176,7 @@ $(function(){
            }
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
-		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"scheme":scheme,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"indentEntryFromDate":paramindentEntryFromDate,"indentEntryThruDate":paramEstimatedindentEntryThruDate,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"scheme":scheme,"salesChannel":salesChannel, "partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
      
@@ -468,7 +480,9 @@ function drawRow(rowData) {
     <#if security.hasPermission("INDENT_CANCEL", session)>
     	hasPermission = true;
     </#if>
-    if((rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_PENDING" && rowData.statusId != "ORDER_COMPLETED") && (rowData.statusId != "ORDER_CANCELLED") || hasPermission){
+    //if((rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_PENDING" && rowData.statusId != "ORDER_COMPLETED") && (rowData.statusId != "ORDER_CANCELLED") && (rowData.statusId != "DRAFTPO_PROPOSAL") || hasPermission){
+      
+    if((rowData.POorder == "NA" && rowData.statusId == "ORDER_CREATED") || hasPermission){
        var orderParam = '\'' + rowData.orderId + '\'';
         var partyId = '\'' + rowData.partyId + '\'';
     var cancellorder = "javascript:cancelOrderCaution("+ orderParam + ","+ partyId +")";
@@ -480,6 +494,7 @@ function drawRow(rowData) {
         row.append($("<td></td>"));
     
     }
+    
     
     if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId == "ORDER_APPROVED"){
       var amendButton = '<a class="buttontext" href="<@ofbizUrl>amendOrder?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Amend Indent</a>';

@@ -62,7 +62,7 @@ Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 employDetailsList=EmploymentsMap.get("employementList");
 List employmentsList = FastList.newInstance();
 for(employe in employDetailsList){
-	partyId = Integer.parseInt(employe.get("partyId"));
+	partyId = employe.get("partyId");
 	employmentsList.add(partyId);
 }
 Collections.sort(employmentsList);
@@ -76,7 +76,8 @@ periodbillingConditionList.add(EntityCondition.makeCondition("partyId", EntityOp
 periodbillingCondition = EntityCondition.makeCondition(periodbillingConditionList,EntityOperator.AND);
 BillingList = delegator.findList("PeriodBillingAndCustomTimePeriod", periodbillingCondition, null, null, null, false);
 if(UtilValidate.isNotEmpty(BillingList)){
-	BillingId = BillingList.periodBillingId;
+	BillingDetails = EntityUtil.getFirst(BillingList);
+	BillingId = BillingDetails.periodBillingId;
 	dedTypeIds.each{ dedTypeId->
 		if(UtilValidate.isNotEmpty(employmentsList)){
 			periodTotalsMap=[:];
@@ -286,7 +287,7 @@ if(UtilValidate.isNotEmpty(BillingList)){
 			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
 	EntityCondition condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	def orderBy = UtilMisc.toList("partyIdTo","cost");
-	List<GenericValue> partyDeductionList = delegator.findList("PartyDeduction", condition, null, orderBy, null, false);
+	partyDeductionList = delegator.findList("PartyDeduction", condition, null, orderBy, null, false);
 	periodTotalsMap=[:];
 	if(UtilValidate.isNotEmpty(partyDeductionList)){
 		partyDeductionList.each{ partyDed->

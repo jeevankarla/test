@@ -885,7 +885,8 @@
         <section>
             <actions>
 <!--           		<set field="parameters.customTimePeriodId" value="APR_14" />-->
-            	<set field="parameters.partyId" value="Company" />            	
+            	<set field="parameters.partyId" value="Company" />
+            	<set field="ajaxUrl1" value="EmployeeWisePayrollAnalysisInternal" type="String"/>            	
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>              
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysisInternal.groovy"/>  
             </actions>            
@@ -926,7 +927,7 @@
 				<set field="titleProperty" value="New Employee" />
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/reports.groovy"/>
 				<set field="layoutSettings.javaScripts[]" value="/humanres/images/getAllEmployees.js" global="true"/>
-				 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/> 
+				<set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="HumanresCommonDecorator"

@@ -644,7 +644,7 @@
 				</entity-condition>
 				<set field="partyIds[]" from-field="organizationPartyId" />
 				<script
-					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalanceorgNames.groovy" />
+					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
 				<entity-condition entity-name="GlAccountAndHistoryTotals"
 					filter-by-date="false" list="grandTotalPosted">
 					<condition-list>
@@ -824,16 +824,24 @@
 				<decorator-screen name="SimpleDecorator"
 					location="component://common/widget/CommonScreens.xml">
 					<decorator-section name="body">
-						<container style="h3">
+						
+						<container style="h1">
 							<label text="${uiLabelMap.AccountingTrialBalance}" />
 						</container>
-						<container style="h3">
+						
+						<!-- <container style="h3">
 							<label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}" />
+						</container> -->
+						 <container style="h1">
+							<label text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD." />
+						</container>
+						<container style="h1">
+							<label text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4th Floor Chenetha Bhawan Naampally Hyderabad 500001" />
 						</container>
 						<include-form name="TrialBalanceFinancialTimePeriodSelection"
 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 						<include-form name="TrialBalanceReport"
-							location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+							location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
 						<include-form name="TrialBalanceGrandTotalReport" 
  							location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
 						<!-- <container style="h3">
@@ -857,6 +865,19 @@
 				<screenlet title="${uiLabelMap.AccountingBalanceSheet}">
 					<include-form name="BalanceSheetParameters"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+				
+				<link text="${uiLabelMap.AccountingExportAsCsv}" style="button"
+					target="BalanceSheetForIndian.csv">
+					<parameter param-name="organizationPartyId" />
+					<parameter param-name="thruDate" from-field="parameters.thruDate" />
+					<parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId" />
+				</link>
+				<link text="${uiLabelMap.AccountingExportAsPdf}" style="button"
+					target="BalanceSheetForIndian.pdf">
+					<parameter param-name="organizationPartyId" />
+					<parameter param-name="thruDate" from-field="parameters.thruDate" />
+					<parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId" />
+				</link>		
 				</screenlet>
 				<container style="righthalf">
 				<screenlet title="ASSETS">
@@ -881,11 +902,11 @@
 						</container>
 					<screenlet title="------">
 					</screenlet>
-						<screenlet title="${uiLabelMap.AccountingBalanceSheet}">
+						<!-- <screenlet title="${uiLabelMap.AccountingBalanceSheet}">
 					<label style="h3" text="${uiLabelMap.CommonTotal}" />
 					<include-form name="BalanceTotals"
 						location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
-				</screenlet>
+				</screenlet> -->
 				
 			</widgets>
 		</section>
@@ -940,6 +961,7 @@
 				<field-map field-name="partyId" value="${parameters.organizationPartyId}"/>
 				<select-field field-name="groupName"/>
 				</entity-one>
+				
 				<set field="titleProperty" value="AccountingBalanceSheetOrgName" />
 				<set field="tabButtonItem" value="OrganizationAccountingReports" />
 				<set field="tabButtonItem2" value="BalanceSheet" />
@@ -1243,7 +1265,13 @@
 					location="component://common/widget/CommonScreens.xml">
 					<decorator-section name="body">
 						<container>
-							<label style="h1" text="${uiLabelMap.AccountingBalanceSheet}" />
+						  <container style="h1">
+							<label text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD." />
+						</container>
+						<container style="h1">
+							<label text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4th Floor Chenetha Bhawan Naampally Hyderabad 500001" />
+						</container>
+							<label style="h1" text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Balance Sheet" />
 							<include-form name="BalanceSheetParametersForIndian"
 								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 							<label style="h3" text="${uiLabelMap.AccountingAssets}" />
@@ -1831,6 +1859,13 @@
 							location="component://common/widget/CommonScreens.xml">
 							<decorator-section name="body">
 								<container>
+								  
+						  <container style="h1">
+							<label text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD." />
+						</container>
+						<container style="h1">
+							<label text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4th Floor Chenetha Bhawan Naampally Hyderabad 500001" />
+						</container>
 									<include-form name="FindTransactionTotals"
 										location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 									<label text="${uiLabelMap.AccountingPostedTransactionTotals}" />
@@ -5058,6 +5093,19 @@
 				<set field="tabButtonItem" value="OrganizationAccountingReports" />
 				<set field="tabButtonItem2" value="SubLedgers" />
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="Company" />
+				<entity-condition entity-name="CustomTimePeriod" list="customTimePeriods">
+	            	<condition-list combine="and">
+	                    <condition-expr field-name="periodTypeId" operator="equals" value="FISCAL_YEAR"/>
+	                    <condition-expr field-name="organizationPartyId" operator="equals" value="${parameters.organizationPartyId}"/>
+	                </condition-list>
+	                <order-by field-name="customTimePeriodId"/>
+	            </entity-condition>
+	            <entity-condition entity-name="GlAccountCategoryType" list="glAccountCategoryTypeList">
+	            	<condition-list combine="or">
+	                    <condition-expr field-name="glAccountCategoryTypeId" operator="not-equals" value="null"/>
+	                </condition-list>
+	                <order-by field-name="description"/>
+	            </entity-condition>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
 			</actions>
 			<widgets>
@@ -5071,6 +5119,240 @@
 			</widgets>
   		</section>
   </screen>	
+  <screen name="scheduleReportPdf">
+		<section>
+			<actions>
+				<set field="organizationPartyId" value="Company" />
+			<service service-name="getPartyAccountingPreferences"
+				result-map="result">
+				<field-map field-name="organizationPartyId" />
+			</service>
+			<set field="partyAcctgPreference" from-field="result.partyAccountingPreference" />
+			<set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId" />
+			<!-- 	<set field="partyIds"
+				value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}"
+				type="List" />
+			<entity-condition entity-name="Party" list="parties">
+				<condition-expr field-name="partyId" operator="in"
+					from-field="partyIds" />
+			</entity-condition>
+			<set field="partyIds[]" from-field="organizationPartyId" /> -->
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/scheduleWiseReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="abstract" field="parameters.reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/scheduleAbstractReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/scheduleDetailedReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+  <screen name="manufacturingAccntReportPDF">
+		<section>
+			<actions>
+				<set field="organizationPartyId" value="Company" />
+			<service service-name="getPartyAccountingPreferences"
+				result-map="result">
+				<field-map field-name="organizationPartyId" />
+			</service>
+			<set field="partyAcctgPreference" from-field="result.partyAccountingPreference" />
+			<set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId" />
+			<!-- 
+				<set field="partyIds"
+				value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, 'Company', 'GROUP_ROLLUP')}"
+				type="List" />
+			<entity-condition entity-name="Party" list="parties">
+				<condition-expr field-name="partyId" operator="in"
+					from-field="partyIds" />
+			</entity-condition>
+			<set field="partyIds[]" from-field="organizationPartyId" /> -->
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/manufacturingAccntReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="abstract" field="parameters.reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/manufacturingAccntReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/manufacturingAccntDetailedReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="tradingAccountReportPDF">
+		<section>
+			<actions>
+				<set field="organizationPartyId" value="Company" />
+			<service service-name="getPartyAccountingPreferences"
+				result-map="result">
+				<field-map field-name="organizationPartyId" />
+			</service>
+			<set field="partyAcctgPreference" from-field="result.partyAccountingPreference" />
+			<set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId" />
+				<!-- <set field="partyIds"
+				value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}"
+				type="List" />
+			<entity-condition entity-name="Party" list="parties">
+				<condition-expr field-name="partyId" operator="in"
+					from-field="partyIds" />
+			</entity-condition>
+			<set field="partyIds[]" from-field="organizationPartyId" /> -->
+			<set field="parameters.glAccountCategoryTypeId" value="MFA"/>
+			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/manufacturingAccntReport.groovy" />
+			<set field="parameters.glAccountCategoryTypeId" value="TRA"/>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/tradingAccountReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="abstract" field="parameters.reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/tradingAccountReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+					<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/tradingAccountDetailedReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="profitAndLossAccountReportPDF">
+		<section>
+			<actions>
+				<set field="organizationPartyId" value="Company" />
+			<service service-name="getPartyAccountingPreferences"
+				result-map="result">
+				<field-map field-name="organizationPartyId" />
+			</service>
+			<set field="partyAcctgPreference" from-field="result.partyAccountingPreference" />
+			<set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId" />
+				<!-- <set field="partyIds"
+				value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}"
+				type="List" />
+			<entity-condition entity-name="Party" list="parties">
+				<condition-expr field-name="partyId" operator="in"
+					from-field="partyIds" />
+			</entity-condition>
+			<set field="partyIds[]" from-field="organizationPartyId" /> -->
+			<set field="parameters.glAccountCategoryTypeId" value="MFA"/>
+			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/manufacturingAccntReport.groovy" />
+			<set field="parameters.glAccountCategoryTypeId" value="TRA"/>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/tradingAccountReport.groovy" />
+				<set field="parameters.glAccountCategoryTypeId" value="PL"/> 
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/profitAndLossAccountReport.groovy" /> 
+			</actions>
+			<widgets>
+				<section>
+				<condition>
+						<if-compare operator="equals" value="abstract" field="parameters.reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/profitAndLossAccountReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/profitAndLossAccountDetailedReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="balanceSheetReportPDF">
+		<section>
+			<actions>
+				<set field="organizationPartyId" value="Company" />
+			<service service-name="getPartyAccountingPreferences"
+				result-map="result">
+				<field-map field-name="organizationPartyId" />
+			</service>
+			<set field="partyAcctgPreference" from-field="result.partyAccountingPreference" />
+			<set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId" />
+				<!-- <set field="partyIds"
+				value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}"
+				type="List" />
+			<entity-condition entity-name="Party" list="parties">
+				<condition-expr field-name="partyId" operator="in"
+					from-field="partyIds" />
+			</entity-condition>
+			<set field="partyIds[]" from-field="organizationPartyId" /> -->
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/balanceSheetReport.groovy" />
+			</actions>
+			<widgets>
+				<section>
+				<condition>
+						<if-compare operator="equals" value="abstract" field="parameters.reportTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/balanceSheetReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accounting/webapp/accounting/reports/balanceSheetDetailedReport.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
   <screen name="SalesAnalysisCSV">
 		<section>
 			<actions>

@@ -23,9 +23,23 @@
 
     <!-- Party Qualification -->
     <simple-method method-name="createPartyQual" short-description="Create a Party Qualification">
+    	<set field="fromDateStr" from-field="parameters.fromDateStr"/>
+    	<set field="thruDateStr" from-field="parameters.thruDateStr"/>
         <make-value entity-name="PartyQual" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="newEntity.fromDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def fromDateTime = sdf.parse(fromDateStr);
+            return fromDateTime;
+        }" type="Timestamp"/>
+        <set field="newEntity.thruDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(thruDateStr);
+            return thruDateTime;
+        }" type="Timestamp"/>
          <if-not-empty field="parameters.designation">
             <set field="newEntity.title" from-field="parameters.designation"/>
          </if-not-empty>
@@ -222,8 +236,17 @@
     <simple-method method-name="deletePerfReviewItem" short-description="Delete Performance Review Items">
         <entity-one entity-name="PerfReviewItem" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
+       	<set field="lookedUpValue1.employeePartyId" from-field="parameters.employeePartyId"/>
+        <set field="lookedUpValue1.employeeRoleTypeId" from-field="parameters.employeeRoleTypeId"/>
+        <set field="lookedUpValue1.perfReviewId" from-field="parameters.perfReviewId"/>
+        <call-service service-name="deletePerfReview" in-map-name="lookedUpValue1"></call-service> 
     </simple-method>
-
+	
+	<simple-method method-name="DeleteTraining" short-description="Delete Person Training">
+        <entity-one entity-name="PersonTraining" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
     <simple-method method-name="createPerformanceNote" short-description="Create Performance Note">
         <make-value entity-name="PerformanceNote" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/>
@@ -290,7 +313,13 @@
 	<simple-method method-name="createPartyRelationshipDependent" short-description="create a dependent relationship with employee by creating roles">  
         <set field="dependentCtx.firstName" from-field="parameters.dependentFirstName"/>
         <set field="dependentCtx.lastName" from-field="parameters.dependentLastName"/>
-        <set field="dependentCtx.birthDate" from-field="parameters.dependentBirthDate"/>
+        <set field="birthDateStr" from-field="parameters.dependentBirthDate"/>
+        <set field="dependentCtx.birthDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def birthDate = sdf.parse(birthDateStr);
+            return birthDate;
+        }" type="Date"/>
         <call-service service-name="createPerson" in-map-name="dependentCtx">          
         <result-to-field result-name="partyId" field="partyId"/>            
         </call-service>   
@@ -544,6 +573,36 @@
         <make-value entity-name="PayHistory" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="fromDate" from-field="parameters.fromDate"/>
+        <set field="fromDateStr" from-field="parameters.fromDateStr"/>
+    	<set field="thruDateStr" from-field="parameters.thruDateStr"/>
+        <if-not-empty field="fromDateStr">
+	        <set field="newEntity.fromDate" value="${groovy:
+	            import java.text.SimpleDateFormat;
+	            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+	            def fromDateTime = sdf.parse(fromDateStr);
+	            return fromDateTime;
+	        }" type="Timestamp"/>
+        </if-not-empty>
+        <if-not-empty field="thruDateStr">
+        	<set field="newEntity.thruDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(thruDateStr);
+            return thruDateTime;
+        }" type="Timestamp"/>
+        </if-not-empty>
+         <entity-and entity-name="PayHistory" list="payHistoryList" filter-by-date="true">
+            <field-map field-name="partyIdTo" from-field="parameters.partyIdTo"/>
+             <order-by field-name="-fromDate"/>
+         </entity-and>
+         <if-not-empty field="payHistoryList">
+            <first-from-list entry="payHistoryDetails" list="payHistoryList"/>
+             <if-empty field="payHistoryDetails.thruDate">
+	            <set field="payHistoryDetails.thruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.addDaysToTimestamp(newEntity.fromDate, -1)}" type="Timestamp"/>
+	             <store-value value-field="payHistoryDetails"/>
+            </if-empty>
+        </if-not-empty>
         <if-empty field="newEntity.fromDate">
             <now-timestamp field="nowTimeStamp"/>
             <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
@@ -925,6 +984,16 @@
         		</iterate>
         		</if-not-empty>
         	</if-not-empty>
+        	<if-not-empty field="parameters.emergencyContactNumber">
+        	<set field="createPartyContactMechMap.partyId" from-field="parameters.partyId"/>
+        	<set field="createPartyContactMechMap.contactMechPurposeTypeId" value="PHONE_WORK_EMRGNCY"/>
+        	<set field="createPartyContactMechMap.userLogin" from-field="userLogin"/>
+        	<set field="createPartyContactMechMap.contactNumber" from-field="parameters.emergencyContactNumber"/>
+	        	<call-service service-name="createPartyTelecomNumber" in-map-name="createPartyContactMechMap" to-map = "emergencyContactDetails" break-on-error="true">
+	                 <default-message resource="PartyUiLabels" property="PartyTelecomNumberSuccessfullyCreated"/>
+	            </call-service>
+            </if-not-empty>
+                        
        		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
            	<store-value value-field="lookedUpValue" />
         </else>

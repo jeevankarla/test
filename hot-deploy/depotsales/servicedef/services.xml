@@ -49,6 +49,24 @@
         <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
+    
+     <service name="invalidShipments" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="invalidShipments">
+        <description>Approve Depot Orders</description>
+        <attribute name="ro" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentIds" type="List" mode="OUT" optional="true"/>
+    </service>
+    
+     <service name="changeSaleOrderStatusForDEPOT" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="changeSaleOrderStatusForDEPOT">
+        <description>Approve Depot Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
     <service name="createCustomPaymentFromPreference" engine="java"
            location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createCustomPaymentFromPreference">
        <description>Creates a payment using the order payment preference</description>
@@ -200,6 +218,45 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/> 
         <attribute name="partyId" type="String" mode="IN" optional="true"/> 
     </service>
+    
+    <service name="sendEmaiFromAnalytics" engine="java"
+            location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="sendEmaiFromAnalytics" auth="false">
+        <description>sendPurchaseOrderEmailToParty  </description>
+        <attribute name="sendFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="userLogin" type="String" mode="IN" optional="true"/>
+        <attribute name="subject" type="String" mode="IN" optional="true"/>
+        <attribute name="bodyText" type="String" mode="IN" optional="true" allow-html="safe"/>  
+    </service>
+    
+     <service name="increaseInventoryQuantity" engine="java"
+            location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="increaseInventoryQuantity" auth="false">
+        <description>sendPurchaseOrderEmailToParty  </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+        <attribute name="differenceQuantity" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    
+     <service name="quantityOverrideService" engine="java"
+            location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="quantityOverrideService" auth="false">
+        <description>sendPurchaseOrderEmailToParty  </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    
+    <service name="priceOverrideService" engine="java"
+            location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="priceOverrideService" auth="false">
+        <description>sendPurchaseOrderEmailToParty  </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="price" mode="IN" type="BigDecimal" optional="false"/>
+    </service>
+    
 	<service name="getCustomerBranch" engine="java"
                 location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getCustomerBranch" auth="false">
         <attribute name="partyId" mode="IN" type="String" optional="true"/>
@@ -352,6 +409,17 @@
          <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
     </service>
+    
+     <service name="cancelIndentOrderDepot" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="cancelIndentOrderDepot">
+        <description>Cancel Indent Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+         <attribute name="partyId" type="String" mode="IN" optional="false"/>
+         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
+    </service>
+    
      <service name="cancelPartyQuotaBalanceHistory" engine="java" auth="false" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="cancelPartyQuotaBalanceHistory">
         <description>cancel PartyQuota Balance History</description>
@@ -418,6 +486,15 @@
         <attribute name="daDate" mode="IN" type="String" optional="true"/>
         <attribute name="bonusDate" mode="IN" type="String" optional="true"/>
         <!-- <attribute name="periodBillingMap" mode="OUT" type="Map"></attribute> -->
+    </service>
+     <service name="createSchemeTimePeriod"  engine="java"
+                location="in.vasista.vbiz.depotsales.ReimbursementService" invoke="createSchemeTimePeriod" auth="true">
+        <description>create Scheme Time Period For Billing</description>
+        <attribute name="periodName" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="periodTypeId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"></attribute>
+        <attribute name="thruDate" mode="IN" type="Timestamp" optional="false"></attribute>
+        <attribute name="SchemeTimePeriodId" mode="OUT" type="String" optional="true"></attribute>
     </service>
     <service name="cancelDepotReimbursementBilling"  engine="java"
                 location="in.vasista.vbiz.depotsales.ReimbursementService" invoke="cancelDepotReimbursementBilling" auth="true" transaction-timeout="3000">
@@ -662,6 +739,22 @@
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
          <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
     </service>
+        <service name="creatingAcctTransForAllInvoices" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="creatingAcctTransForAllInvoices" transaction-timeout="6000000">
+         <description>Creating Accounting Trans For All Invoices</description>
+         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
+         <attribute mode="IN" name="invoiceId" optional="true" type="String"/>
+         <attribute mode="IN" name="partyId" optional="true" type="String"/>
+         <attribute mode="IN" name="invoiceTypeId" optional="true" type="String"/>
+    </service>
+    <service name="creatingAcctTransForAllPayment" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="creatingAcctTransForAllPayment" transaction-timeout="6000000">
+         <description>Creating Accounting Trans For All Payments</description>
+         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
+         <attribute mode="IN" name="paymentId" optional="true" type="String"/>
+         <attribute mode="IN" name="partyId" optional="true" type="String"/>
+         <attribute mode="IN" name="paymentTypeId" optional="true" type="String"/>
+    </service>
     
      <service name="roundingOfAdjustmentSubtraction" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="roundingOfAdjustmentSubtraction" transaction-timeout="6000000">
         <description>roundingOfAdjustmentProblem</description>
@@ -677,5 +770,27 @@
         location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="finYearPopulationIndentSummaryDetails" transaction-timeout="10800000">
         <description>run populate Indent summary Orders</description>
     </service>
-
+    <service name="mappingInvoicesToRO" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="mappingInvoicesToRO" transaction-timeout="6000000">
+         <description>populating Bo roles </description>
+         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
+         <attribute mode="IN" name="partyId" optional="true" type="String"/>
+         <attribute mode="IN" name="invoiceTypeId" optional="true" type="String"/>
+    </service>
+    <service name="CreateUserLogins" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreateUserLogins" transaction-timeout="6000000">
+         <description>Create UserLogins</description>
+         <attribute mode="IN" name="partyIds" optional="false" type="List"/>
+         <attribute mode="IN" name="groupIds" optional="false" type="List"/>
+         <attribute mode="IN" name="password" optional="true" type="String"/>
+    </service>
+    <service name="creatingAcctTransForAllFinAccnts" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="creatingAcctTransForAllFinAccnts" transaction-timeout="6000000">
+        <description>Creating Accounting Trans For All FinAccnts</description>
+        <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+        <attribute mode="IN" name="thruDate" optional="true" type="String"/>
+        <attribute mode="IN" name="finAccountTransId" optional="true" type="String"/>
+        <attribute mode="IN" name="partyId" optional="true" type="String"/>
+        <attribute mode="IN" name="finAccountTransTypeId" optional="true" type="String"/>
+   </service>
+    
 </services>
+

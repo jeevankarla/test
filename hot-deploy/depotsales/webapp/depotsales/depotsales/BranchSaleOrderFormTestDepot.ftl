@@ -250,11 +250,8 @@
 			 	fillPartyData($('#partyId').val());
 			 	$("#editServChgButton").hide();
 			if(indententryinit.schemeCategory.value.length > 0){
-	  			if ($('#schemeCategory').val() == "General"){
+	  			if ($('#schemeCategory').val() == "MGPS_10Pecent" || $('#schemeCategory').val() == "MGPS"){
 	  				$("#editServChgButton").show();
-	  				$('#serviceChargePercent').val(2);
-	  				var scPerc = $('#serviceChargePercent').val();
-	  				$("#serviceCharge").html("<b>"+scPerc+"% Service Charge is applicable</b>");
 	  			}
 	  		}
 	  		
@@ -897,7 +894,7 @@ function fillPartyQuota(partyId){
 	       	  				  
 	       	  				   $.each(SchemeList, function(key, item){
 	       	  				   
-	       	  				        if(item['schemeId'] != "General")
+	       	  				        //if(item['schemeId'] != "General")
 		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
 		       	  				
 		       	  				 });
@@ -1034,6 +1031,7 @@ function fillPartyQuota(partyId){
 				               	<input type="hidden" name="unitCost" id="unitCost" value="${parameters.unitCost?if_exists}"/>
 				               	
 				               	<input type="hidden" name="bookedQuantity" id="bookedQuantity" value="${parameters.bookedQuantity?if_exists}"/>
+				                <input type="hidden" name="availbleQuantity" id="availbleQuantity" value="${parameters.availbleQuantity?if_exists}"/>
 				               	
 				               	<input type="hidden" name="inventoryItemId" id="inventoryItemId" value="${parameters.inventoryItemId?if_exists}"/>
 				               	
@@ -1044,8 +1042,6 @@ function fillPartyQuota(partyId){
 				               	
 				               	<input type="hidden" name="editDestination" id="editDestination" />
 				               	<input type="hidden" name="changeDesti" id="changeDesti" />
-				               	
-				               	
 				               	
 				               	<tr>
 						           	<td>&nbsp;</td>
@@ -1084,14 +1080,13 @@ function fillPartyQuota(partyId){
 							          			<span class="tooltip" id="branchName"></span>
 							          			<label class='CFC_TD' style='display:none;'><b>CFC:</label>
 							          			<select name="cfcs" id="cfcs" style='display:none;' class='CFC_TD' >
-				          						          					
 						          				</select>
 							          		</td>
 							          	</#if>
 						        	</#if>
-					       	  		<td><span class="tooltip" id="branchName"  >${branchName}</span></td>
+					       	  		<#--<td><span class="tooltip" id="branchName"></span></td>-->
 				               	</tr>
-				               	
+				               	 
 				               	<tr>
 					       	  		
 					       			<td>&nbsp;</td>
@@ -1721,7 +1716,7 @@ function fillPartyQuota(partyId){
 				<div class="grid-header" style="margin-left:auto; margin-right:0;">
 					<span style="float:left; margin-left:0px;" id="serviceCharge" class="serviceCharge"></span>
 					<#--<a style="float:left; margin-left:0px;" href="javascript:changeServiceChargePercent()" class="button2" id="editServChgButton">Edit Service Charge</a>-->
-					<input type="button" style="float:left" class="buttonText" id="editServChgButton" value="Edit Service Charge" onclick="javascript:changeServiceChargePercent();" />
+					<input type="button" style="float:left" class="buttonText" id="editServiceCharge" value="Edit Destination" onclick="javascript:changeServiceChargePercent();" />
 					<label style="float:left" id="itemsSelected" class="labelItemHeader"></label>
 					<label style="float:left" id="totalAmount" class="labelItemHeader"></label>
 					<label style="float:left" id="totalDiscount" class="labelItemHeader"></label>

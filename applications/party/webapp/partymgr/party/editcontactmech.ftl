@@ -26,11 +26,22 @@ under the License.
         <tr>
           <td class="label">${uiLabelMap.PartySelectContactType}</td>
           <td>
+          	<#if flag>
+          		<select name="preContactMechTypeId">
+	              <#list mechMap.contactMechTypes as contactMechType>
+	              	<#assign contactMechTypeId = contactMechType.contactMechTypeId>
+	              	<#if (contactMechTypeId!="DOMAIN_NAME") && (contactMechTypeId!="ELECTRONIC_ADDRESS") && (contactMechTypeId!="INTERNAL_PARTYID") && (contactMechTypeId!="IP_ADDRESS") && (contactMechTypeId!="LDAP_ADDRESS") && (contactMechTypeId!="TAX_CONTACT_MECH") && (contactMechTypeId!="WEB_ADDRESS")>
+	                	<option value="${contactMechTypeId}">${contactMechType.get("description",locale)}</option>
+	                </#if>
+	              </#list>
+            	</select>
+          	<#else>
             <select name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
             </select>
+            </#if>
             <a href="javascript:document.createcontactmechform.submit()" class="smallSubmit">${uiLabelMap.CommonCreate}</a>
           </td>
         </tr>

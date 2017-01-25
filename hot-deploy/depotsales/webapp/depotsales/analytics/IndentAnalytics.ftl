@@ -29,16 +29,79 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/controls/slick.columnpicker.js</@ofbizContentUrl>"></script>
 </#if>
 
+<style>
+.button1 {
+    background-color: grey;
+    border: none;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+input[type=button] {
+	color: white;
+    padding: .5x 7px;
+    background:#008CBA;
+    border: .8px solid green;
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+}
+input[type=button]:hover {
+    background-color: #3e8e41;
+}
+</style>
+
+<input type = "hidden" id="isFind" value=${isFind} >
+
 <script type="text/javascript">
 
 $(document).ready(function(){
+
+
+$("#counter").hide();
+
+var isFind = $("#isFind").val();
+
+ if(isFind == "Y"){
+  $(".screenlet").show();
+ }else{
+  $(".screenlet").hide(); 
+  
+}
+
+
+
+
+ var n = localStorage.getItem('on_load_counter');
+    if (n === null) {
+        n = 0;
+    }
+    n++;
+    localStorage.setItem("on_load_counter", n);
+    document.getElementById('counter').innerHTML = n;
+    $( ".user" ).click(function() {
+        localStorage.setItem("on_load_counter", 0);
+});
+
+
+if(n==1){
+
+  $('div#orderSpinn1').html('<img src="/images/welcome nhdc3.jpg"  width="500">');
+
+}  
 
 // enter event handle
 	$("input").keypress(function(e){
 		if (e.which == 13 && e.target.name =="facilityId") {
 				$("#getTreeGrid").click();
 		}
-	});
+	});  
 	
     $('#loader').hide();
 	jQuery.ajaxSetup({
@@ -116,8 +179,13 @@ $(document).ready(function(){
     });
 });
 
-</script>
 
+
+
+</script>
+  <div align='center' name ='displayMsg' id='orderSpinn1'/></div>
+
+<div id="counter"></div>
 <div class="screenlet">
     <div class="screenlet-title-bar">
       <h3>Select Date</h3>
@@ -127,10 +195,32 @@ $(document).ready(function(){
 		<span class='h3'>Thru Date: </span><input class='h2' type="text" id="thruDate" name="thruDate" value="${defaultEffectiveThruDate}" readonly="true"/>
 		<input type="submit" value="Submit" id="getTreeGrid" class="smallSubmit" />
 		<form name="csvForm" id="csvForm" action="indentAnalytics.csv">
+		<table>
+		<tr>
+		<td>
 		<input type="hidden" name="fromDateCsv" id="fromDateCsv"/> 
 		<input type="hidden" name="thruDateCsv" id="thruDateCsv"/> 
 		<input type="hidden" name="screenFlag" id="screenFlag"/> 
-		<input type="submit" value="CSV" id="getTreeGridCsv" class="smallSubmit" /> 
+		</td>
+		<td>
+		<input type="submit" value="SAVE" id="getTreeGridCsv" class="smallSubmit" /> 
+		</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
+		<td align="right">
+		<#--<input type="button" value="Email" id="email" onclick="javascript:showEnquiryEmail();" style='solid blue'; class="button1" /> -->
+		</td>
+		</tr>
+		<table>
 		</form>		
     </div>
 </div>
@@ -142,3 +232,6 @@ $(document).ready(function(){
       </p>
 </div>
 <div id="result"/>
+
+
+

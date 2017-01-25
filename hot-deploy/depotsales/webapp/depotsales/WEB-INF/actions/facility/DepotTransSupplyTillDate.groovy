@@ -10,6 +10,7 @@ import javolution.util.FastMap;
 import java.sql.Timestamp;
 import org.ofbiz.base.util.UtilDateTime;
 import java.text.SimpleDateFormat;
+import org.ofbiz.party.party.PartyHelper;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
@@ -19,6 +20,8 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
 if(UtilValidate.isNotEmpty(result.listIt)){
+
+	partyId = parameters.partyId;
 	list = [];
 	list=result.listIt.getCompleteList();
 	receiptList=[];
@@ -32,6 +35,7 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 			list = EntityUtil.filterByCondition(list, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 		}
 	}
+	
 	list.each{receipt->
 		tempMap=[:];
 		receiptId="";
@@ -76,7 +80,13 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 		if(UtilValidate.isNotEmpty(receipt.productId)){
 			productId=receipt.productId;
 		}
+		orderItem = delegator.findOne("OrderItem",["orderId":orderId,"orderItemSeqId":orderItemSeqId],false);
+		tempMap.put("unitPrice", orderItem.unitPrice);
 		tempMap.put("productId", productId);
+		product = delegator.findOne("Product",["productId":productId],false);
+		productCategory = delegator.findOne("ProductCategory",["productCategoryId":product.primaryProductCategoryId],false);
+		tempMap.put("productName", product.productName);
+		tempMap.put("categoryName", productCategory.categoryName);
 		if(UtilValidate.isNotEmpty(receipt.datetimeReceived)){
 			datetimeReceived=receipt.datetimeReceived;
 		}
@@ -84,7 +94,12 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 		if(UtilValidate.isNotEmpty(receipt.shipmentId)){
 			shipmentId=receipt.shipmentId;
 		}
+		shipment = delegator.findOne("Shipment",["shipmentId":shipmentId],false);
 		tempMap.put("shipmentId", shipmentId);
+		if(UtilValidate.isNotEmpty(shipment)){
+			String supplier = PartyHelper.getPartyName(delegator,shipment.partyIdFrom,false);
+			tempMap.put("supplier", supplier);
+		}
 		if(UtilValidate.isNotEmpty(receipt.statusId)){
 			statusId=receipt.statusId;
 		}
@@ -101,9 +116,16 @@ if(UtilValidate.isNotEmpty(result.listIt)){
 			receivedByUserLoginId=receipt.receivedByUserLoginId;
 		}
 		tempMap.put("receivedByUserLoginId", receivedByUserLoginId);
-		receiptList.add(tempMap);
+		if(UtilValidate.isNotEmpty(parameters.partyId)){
+			if(UtilValidate.isNotEmpty(shipment) && shipment.partyIdFrom==parameters.partyId){
+				receiptList.add(tempMap);
+			}
+		}else{
+			receiptList.add(tempMap);
+		}
 	}
 	context.listIt=receiptList;
+	context.receiptList=receiptList;
 }
 orderRolesList = [];
 orderRoles = delegator.findList("OrderRole",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , parameters.orderId)  , null, null, null, false );

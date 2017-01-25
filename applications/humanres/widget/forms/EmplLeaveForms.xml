@@ -91,7 +91,7 @@
         <field name="effectedCreditDays"><hidden/></field>
         <field name="lossOfPayDays"><hidden/></field>
 		<field name="emplLeaveApplId" title="Leave Id"></field>        
-        <field name="partyId" field-name="partyId" >
+        <field name="partyId" field-name="partyId"  title="${uiLabelMap.HumanResEmploymentPartyIdTO}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]"><!--
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="partyId"/>
@@ -260,7 +260,7 @@
         <field name="lossOfPayDays"><hidden/></field>
         <field name="comment" title="Description" ><display size="20"/></field>       
 		<field name="emplLeaveApplId" title="Leave Id"><display></display></field>                
-        <field name="partyId" field-name="partyId">
+        <field name="partyId" field-name="partyId" title="${uiLabelMap.HumanResEmploymentPartyIdTO}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} [${partyId}]"><!--
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
                     <parameter param-name="partyId" from-field="partyId"/>

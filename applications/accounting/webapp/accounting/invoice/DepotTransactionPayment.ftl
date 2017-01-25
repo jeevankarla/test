@@ -227,7 +227,7 @@
 	
 	
 		
-	  function showPaymentEntryForDepotInvoListing(invoiceId,grandTotal,balance,partyIdFrom,partyIdTo,partyName,purposeTypeId1) {
+	  function showPaymentEntryDepotPurchaseForInvoListing(invoiceId,grandTotal,balance,partyIdFrom,partyIdTo,partyName,purposeTypeId1) {
 		var message = "";
 		invoiceId = invoiceId;
 		
@@ -238,7 +238,7 @@
 		partyName= partyName;
 		purposeTypeId=purposeTypeId1;
 		
-		message += "<html><head></head><body><form action='createDepotInvoiceApplyPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
+		message += "<html><head></head><body><form action='createDepotPurcahseInvoiceApplyPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
 			//message += "<br/><br/>";
 		
 		
@@ -255,12 +255,12 @@
 		       }
 		  } */
 		  
-		            message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Weaver Code :</font></td><td align='left' width='60%'>"+partyIdFrom+"</td></tr>"+
+		            message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Branch Code :</font></td><td align='left' width='60%'>"+partyIdFrom+"</td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Method Type :</font></td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
 						<#list PaymentMethodType as payment>
 						"<option value='${payment.paymentMethodTypeId}' <#if (payment.paymentMethodTypeId == 'CHEQUE')>selected='selected'</#if>>${payment.description}</option>"+
 	                   </#list> 
-					    "</select><input class='h4' type='input' id='paymentPurposeType' name='paymentPurposeType' value='"+purposeTypeId+"'/></td></tr>"+
+					    "</select><input class='h4' type='hidden' id='paymentPurposeType' name='paymentPurposeType' value='"+purposeTypeId+"'/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Balance :</font></font></td><td align='left' width='60%'><label  align='left' id='bal'>"+balance+"</label></td></tr>" +

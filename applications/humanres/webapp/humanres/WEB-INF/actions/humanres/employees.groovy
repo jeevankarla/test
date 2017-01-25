@@ -19,9 +19,9 @@ Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
 List<GenericValue> employementList = (List<GenericValue>)resultMap.get("employementList");
 employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("firstName"));
 JSONObject employee = new JSONObject();
-employee.put("employeeId","");
+/*employee.put("employeeId","");
 employee.put("name","");
-employeesJSON.add(employee);
+employeesJSON.add(employee);*/
 for (int i = 0; i < employementList.size(); ++i) {
 	GenericValue employment = employementList.get(i);
 	employeeId = employment.getString("partyIdTo");
@@ -32,6 +32,8 @@ for (int i = 0; i < employementList.size(); ++i) {
 	name = employment.getString("firstName") + " " + lastName;
 	employee.put("employeeId", employeeId);
 	employee.put("name", name);
+	employee.put("value", employeeId);
+	employee.put("label", name);
 	employeesJSON.add(employee);
 }
 

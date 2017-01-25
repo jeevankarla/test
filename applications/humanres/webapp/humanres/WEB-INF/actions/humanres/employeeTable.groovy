@@ -20,7 +20,6 @@ def populateChildren(org, employeeList) {
 	
 	employments.each { employment ->
 		employee = [:];
-		
 		employee.put("department", org.groupName);
 		employeePosition = "";
 		emplPositionAndFulfillments = EntityUtil.filterByDate(delegator.findByAnd("EmplPositionAndFulfillment", ["employeePartyId" : employment.partyId]));

@@ -105,38 +105,38 @@ under the License.
 								
 				                    
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("billno")?if_exists} </fo:block>
+					            		<fo:block text-align="left" font-size="8pt" <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("billno")?if_exists} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("invoiceDate")?if_exists} </fo:block>
+					            		<fo:block   text-align="left" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("invoiceDate")?if_exists} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("invoiceQTY")?if_exists} </fo:block>
+					            		<fo:block   text-align="right" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if>  white-space-collapse="false">${eachList.get("invoiceQTY")?if_exists?string("##0.00")} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("invoiceAmount")?if_exists} </fo:block>
+					            		<fo:block   text-align="right" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("invoiceAmount")?if_exists?string("##0.00")} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("supplierName")?if_exists} </fo:block>
+					            		<fo:block text-align="left" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("supplierName")?if_exists} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("partyName")?if_exists} </fo:block>
+					            		<fo:block  text-align="left" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("partyName")?if_exists} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("destAddr")?if_exists} </fo:block>
+					            		<fo:block   text-align="left" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("destAddr")?if_exists} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("transporter")?if_exists} </fo:block>
+					            		<fo:block  text-align="left" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("transporter")?if_exists} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block   text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("depotCharges")?if_exists} </fo:block>
+					            		<fo:block   text-align="right" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("depotCharges")?if_exists?string("##0.00")} </fo:block>
 					            	</fo:table-cell>
 					            	
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("lrNumber")?if_exists} </fo:block>
+					            		<fo:block  text-align="left" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("lrNumber")?if_exists} </fo:block>
 					            	</fo:table-cell>
 					            	<fo:table-cell border-style="solid">
-					            		<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${eachList.get("lrDate")?if_exists} </fo:block>
+					            		<fo:block  text-align="left" font-size="8pt"  <#if eachList.get("billno")=="TOTAL">font-weight="bold" </#if> white-space-collapse="false">${eachList.get("lrDate")?if_exists} </fo:block>
 					            	</fo:table-cell>
 								</fo:table-row>
 							</#list>
@@ -150,7 +150,7 @@ under the License.
     	<fo:page-sequence master-reference="main">
 	    	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 	       		 <fo:block font-size="14pt">
- 	            	${uiLabelMap.NoOrdersFound}.
+ 	            	No Orders Found
 	       		 </fo:block>
 	    	</fo:flow>
 		</fo:page-sequence>	

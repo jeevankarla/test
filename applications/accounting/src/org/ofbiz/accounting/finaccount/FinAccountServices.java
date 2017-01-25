@@ -279,6 +279,7 @@ public class FinAccountServices {
         amount = amount.abs();
         String parentTypeId = (String) context.get("acctParentTypeId");
         String finAccountTypeId=(String) context.get("finAccountTypeId");
+        String finAccountParentId = (String)context.get("finAccountParentId");
         String finAccountId="";
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp fromDate = null;
@@ -292,7 +293,7 @@ public class FinAccountServices {
             // get the product store id and use it to generate a unique fin account code
         	// check party FinAccount 
 			Map<String, Object> createResult=FastMap.newInstance();
-        	if("EMP_ADV".equals(finAccountTypeId)){
+        	if("EMP_ADV".equals(finAccountTypeId) || "EMPLOYEE_ADV".equals(finAccountParentId)){
 	        	List condList = FastList.newInstance();
 				condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,depositPartyId));
 				condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,finAccountTypeId));

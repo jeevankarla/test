@@ -5300,8 +5300,12 @@
 		title="General Ledger Account Category Entity">
 		<field name="glAccountCategoryId" type="id-ne"></field>
 		<field name="glAccountCategoryTypeId" type="id-ne"></field>
+		<field name="categoryNarration" type="description"></field>
+		<field name="parentCategoryId" type="id-ne"></field>
+		<field name="seqId" type="id-ne"></field>
 		<field name="description" type="description"></field>
 		<prim-key field="glAccountCategoryId" />
+		<prim-key field="glAccountCategoryTypeId" />
 		<relation type="one" fk-name="GLACT_CAT_TP" rel-entity-name="GlAccountCategoryType">
 			<key-map field-name="glAccountCategoryTypeId" />
 		</relation>
@@ -5311,15 +5315,22 @@
 		title="General Ledger Account Category Member Entity">
 		<field name="glAccountId" type="id-ne"></field>
 		<field name="glAccountCategoryId" type="id-ne"></field>
+		<field name="organizationPartyId" type="id-ne"></field>		
 		<field name="fromDate" type="date-time"></field>
 		<field name="thruDate" type="date-time"></field>
 		<field name="amountPercentage" type="fixed-point"></field>
+		<field name="seqId" type="id-ne"></field>
+		<field name="isDetailed" type="short-varchar"></field>
 		<prim-key field="glAccountId" />
 		<prim-key field="glAccountCategoryId" />
 		<prim-key field="fromDate" />
+		<prim-key field="organizationPartyId" />
 		<relation type="one" fk-name="GLACT_CATMBR_AC"
 			rel-entity-name="GlAccount">
 			<key-map field-name="glAccountId" />
+		</relation>
+		<relation type="one" fk-name="GLACT_CATMBR_ORGPTY" rel-entity-name="Party">
+			<key-map field-name="organizationPartyId" rel-field-name="partyId" />
 		</relation>
 		<relation type="one" fk-name="GLACT_CATMBR_CAT"
 			rel-entity-name="GlAccountCategory">
@@ -5720,4 +5731,40 @@
 			<key-map field-name="schemeTimePeriodId" />
 		</view-link>
 	</view-entity>
+	<entity entity-name="GlAccountHistoryPartyWise" package-name="org.ofbiz.accounting.ledger"
+		title="GL Account Party Wise History Entity">
+		<field name="glAccountId" type="id-ne"></field>
+		<field name="organizationPartyId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="customTimePeriodId" type="id-ne"></field>
+		<field name="acctgTransTypeId" type="id-ne"></field>
+		<field name="postedDebits" type="currency-amount"></field>
+		<field name="postedCredits" type="currency-amount"></field>
+		<field name="endingBalance" type="currency-amount"></field>
+		<prim-key field="glAccountId" />
+		<prim-key field="organizationPartyId" />
+		<prim-key field="partyId" />
+		<prim-key field="customTimePeriodId" />
+		<prim-key field="acctgTransTypeId" />
+		<relation type="one" fk-name="GLACCT_HSTP_GLA"
+			rel-entity-name="GlAccount">
+			<key-map field-name="glAccountId" />
+		</relation>
+		<relation type="one" fk-name="GLACCT_HSTP_PARTY"
+			rel-entity-name="Party">
+			<key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+		</relation>
+		<relation type="one" fk-name="GLACCT_HSTP_TXTYPE" rel-entity-name="AcctgTransType">
+			<key-map field-name="acctgTransTypeId" />
+		</relation>
+		<relation type="one" fk-name="GLACCT_HSTP_PPARTY"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" rel-field-name="partyId" />
+		</relation>
+		<relation type="one" fk-name="GLACCT_HSTP_CTP"
+			rel-entity-name="CustomTimePeriod">
+			<key-map field-name="customTimePeriodId" />
+		</relation>
+	</entity>
+	
 </entitymodel>

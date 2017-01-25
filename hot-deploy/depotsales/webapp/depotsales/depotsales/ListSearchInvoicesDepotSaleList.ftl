@@ -507,8 +507,6 @@ function roundingInvoiceItems(invoiceId){
 	};
 		
 	
-	
-	
 </script>
 <#if invoices?has_content>
   <#assign invoiceList  =  invoices.getCompleteList() />
@@ -601,6 +599,8 @@ function roundingInvoiceItems(invoiceId){
                 ${invoiceType.description?default(invoice.invoiceTypeId)}
               </td>-->
               
+              <#--<td>${(invoicePaymentInfo)?if_exists}</td> -->
+              
               <#--><td><input type="button" name="round" id="round" value="Rounding" onclick="javascript:roundingInvoiceItems('${invoice.invoiceId}');"/></td>-->
                <td>${(invoice.referenceNumber)?if_exists}</td>
               <td>${(invoice.invoiceDate)?if_exists}</td>
@@ -672,7 +672,7 @@ function roundingInvoiceItems(invoiceId){
               <td><@ofbizCurrency amount=saleBasicAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
+              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
                
                
         <#-->       <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
@@ -690,7 +690,7 @@ function roundingInvoiceItems(invoiceId){
  		   	       <td></td>
               </#if>
               
-                <#if ( ((invoice.statusId == "INVOICE_IN_PROCESS") || (invoice.statusId == "INVOICE_READY")) && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
+                <#if ( ((invoice.statusId != "INVOICE_IN_PROCESS")) && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
               	  <#if (invoice.invoiceTypeId == "SALES_INVOICE")||(invoice.invoiceTypeId?exists) >
               		   <#if invoice.purposeTypeId?has_content>
               		  	 <#assign purposeTypeId=invoice.purposeTypeId>

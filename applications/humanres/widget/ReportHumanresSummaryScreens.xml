@@ -916,7 +916,7 @@
 											<widgets>												
 												<screenlet title="${uiLabelMap.EmployeeList}">
 													<link text="${uiLabelMap.EmployeesExportAsCsv}" style="button"
-													target="EmployeesListCsv.csv">
+													target="EmployeesListCsv.xls">
 													<parameter param-name="partyId" from-field="parameters.partyId"/>													      
 												</link>
 												<link text="${uiLabelMap.EmployeesExportAsPdf}" style="button"
@@ -1826,7 +1826,14 @@
 							<html-template location="component://humanres/webapp/humanres/humanres/employeeBankDetails.fo.ftl" />
 						</xsl-fo>
 					</platform-specific>
-				</widgets>
+			
+ 					<!-- <platform-specific>
+						<xsl-fo>
+							<html-template location="component://humanres/webapp/humanres/humanres/employeeBankDetailsNew.fo.ftl" />
+						</xsl-fo>
+					</platform-specific> -->
+ 
+ 		</widgets>
 			</section>
 		</widgets>
 	</section>
@@ -2426,6 +2433,44 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="PerformanceRatingReportCsv">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999"/>
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"  global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+				<set field="parameters.partyId" from-field="parameters.partyId"/>
+				<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/PerformanceRatingReportCsv.groovy"/>  
+			</actions>
+			<widgets>
+				<section>                                                      
+					<widgets>
+						<include-form location="component://humanres/widget/ReportHumanresSummaryForms.xml" name="PerformanceRatingReportCsv"/>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="PersonTrainingReportPdf">
+        <section>
+           <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/PersonTrainigReportCsv.groovy"/> 
+            </actions> 
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/PersonTrainigReportPdf.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+   	</screen> 
+	
     <screen name="CostCodeReport">
             <section>
                <actions>
@@ -2471,6 +2516,50 @@
             </widgets>
         </section>
    	</screen>     	
+   	
+   	<screen name="RegionalOfficeTotalsPdf">
+		<section>
+			<actions>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysisInternal.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/RegionalOfficeTotals.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="NoteSheetReportPdf">
+		<section>
+			<actions>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysisInternal.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/NoteSheetReportPdf.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="EmployerCpfReportPdf">
+		<section>
+			<actions>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>
+			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysisInternal.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://humanres/webapp/humanres/humanres/EmployerCpfReport.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	
+	
 </screens>
 
     

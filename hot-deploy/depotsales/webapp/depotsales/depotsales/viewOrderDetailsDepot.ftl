@@ -731,17 +731,17 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 			var orderType = orderData[0].orderType;
 			
 			if(orderType == "onbehalfof")
-			message += "<thead><td align='center' class='h3'>Customer Name</td><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Remarks</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td><td align='center' class='h3'> Amount</td><td align='center' class='h3'> Quota Qty</td><td align='center' class='h3'> Discount</td><td align='center' class='h3'> Other Chgs</td><td align='center' class='h3'> Payable</td>";
+			message += "<thead><td align='center' class='h3'>Passbook NO</td><td align='center' class='h3'>Customer Name</td><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Remarks</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td><td align='center' class='h3'> Amount</td><td align='center' class='h3'> Quota Qty</td><td align='center' class='h3'> Discount</td><td align='center' class='h3'> Other Chgs</td><td align='center' class='h3'> Payable</td>";
 			else
-			message += "<thead><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Remarks</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td><td align='center' class='h3'> Amount</td><td align='center' class='h3'> Quota Qty</td><td align='center' class='h3'> Discount</td><td align='center' class='h3'> Other Chgs</td><td align='center' class='h3'> Payable</td>";
+			message += "<thead><td align='center' class='h3'>Passbook NO</td><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Remarks</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td><td align='center' class='h3'> Amount</td><td align='center' class='h3'> Quota Qty</td><td align='center' class='h3'> Discount</td><td align='center' class='h3'> Other Chgs</td><td align='center' class='h3'> Payable</td>";
 			
 			
 			for (i = 0; i < orderData.length; ++i) {
 			
 			    if(orderType == "onbehalfof")
-			  	message += "<tr><td align='center' class='h4'>" + orderData[i].partyName + "</td><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='left' class='h4'>" + orderData[i].remarks + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td><td align='center' class='h4'>"+ orderData[i].itemAmt +"</td><td align='center' class='h4'>"+ Math.round(orderData[i].quotaAvbl) +"</td><td align='center' class='h4'>"+ orderData[i].adjustmentAmount +"</td><td align='center' class='h4'>"+ orderData[i].otherCharges +"</td><td align='center' class='h4'>"+ orderData[i].payableAmt +"</td>";
+			  	message += "<tr><td align='center' class='h4'>" + orderData[i].passNo + "</td><td align='center' class='h4'>" + orderData[i].partyName + "</td><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='left' class='h4'>" + orderData[i].remarks + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td><td align='center' class='h4'>"+ orderData[i].itemAmt +"</td><td align='center' class='h4'>"+ Math.round(orderData[i].quotaAvbl) +"</td><td align='center' class='h4'>"+ orderData[i].adjustmentAmount +"</td><td align='center' class='h4'>"+ orderData[i].otherCharges +"</td><td align='center' class='h4'>"+ orderData[i].payableAmt +"</td>";
 			  	else
-			  	message += "<tr><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='left' class='h4'>" + orderData[i].remarks + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td><td align='center' class='h4'>"+ orderData[i].itemAmt +"</td><td align='center' class='h4'>"+ Math.round(orderData[i].quotaAvbl) +"</td><td align='center' class='h4'>"+ orderData[i].adjustmentAmount +"</td><td align='center' class='h4'>"+ orderData[i].otherCharges +"</td><td align='center' class='h4'>"+ orderData[i].payableAmt +"</td>";
+			  	message += "<tr><td align='center' class='h4'>" + orderData[i].passNo + "</td><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='left' class='h4'>" + orderData[i].remarks + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td><td align='center' class='h4'>"+ orderData[i].itemAmt +"</td><td align='center' class='h4'>"+ Math.round(orderData[i].quotaAvbl) +"</td><td align='center' class='h4'>"+ orderData[i].adjustmentAmount +"</td><td align='center' class='h4'>"+ orderData[i].otherCharges +"</td><td align='center' class='h4'>"+ orderData[i].payableAmt +"</td>";
 			  	
 			  	orderAmt = orderAmt+orderData[i].payableAmt;
 			}
@@ -792,11 +792,16 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 		
 		
 	}
-    function cancelDepotSaleOrderCaution(orderId,partyId) {
+	
+	
+    function cancelDepotSaleOrderCaution(orderId,partyId,inventoryItemId,facilityId) {
 		var message = "";
 		
 		var orderId = orderId;
 		var partyId = partyId;
+		
+		var inventoryItemId = inventoryItemId;
+		var facilityId = facilityId;
 		
 		message += "<html><head></head><body><form action='cancelDepotSaleOrder' id='cancelDepotSaleOrder' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
 			//message += "<br/><br/>";
@@ -819,8 +824,12 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			
+			
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='orderId' value='"+orderId+"'/></td></tr>";
 			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='partyId' value='"+partyId+"'/></td></tr>";
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='inventoryItemId' value='"+inventoryItemId+"'/></td></tr>";
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='facilityId' value='"+facilityId+"'/></td></tr>";
+			
 			
             message +="<tr class='h3'><td align='center' class='h3'><input type='submit' id='submitval' value='Submit' class='smallSubmit' onclick='javascript: return submitFormParam();'/><button value='${uiLabelMap.CommonCancel}' id='cancel' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></td>  </tr>";				 		
                 		
@@ -880,6 +889,21 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 					"</select></td></tr>";
 		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 		title = "<center>Depot Sales Invoice<center><br />";
+		message += "</table></form>";
+		Alert(message, title);
+	};
+	
+	
+	function issueIndentItems(orderId, partyId) {
+		
+		var message = "";
+		message += "<form action='processIndentItemIssuance' method='post' onsubmit='return disableSubmitButton();'><table cellspacing=10 cellpadding=10>";
+		
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>OrderId:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='orderId' name='orderId' value='"+orderId+"'/></td></tr>";
+		message +=  "<tr class='h3'><td align='left' class='h3' width='50%'>Issue to Party:</td><td align='left' width='50%'><input class='h3' type='text' readonly id='partyId' name='partyId' value='"+partyId+"'/></td></tr>";
+		
+		message +=  "<tr class='h3'><td class='h3' align='center'><span align='right'><input type='submit' value='Send' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+		title = "<center>Issue Indent Items<center><br />";
 		message += "</table></form>";
 		Alert(message, title);
 	};

@@ -3669,6 +3669,7 @@ under the License.
       <field name="purAmout" type="currency-amount"></field>
       <field name="saleQuantity" type="fixed-point"></field>
       <field name="saleAmount" type="currency-amount"></field>
+      <field name="saleTenPrcAmount" type="currency-amount"></field>
       <prim-key field="orderId"/>
 <!--       <prim-key field="productId"/> -->
       

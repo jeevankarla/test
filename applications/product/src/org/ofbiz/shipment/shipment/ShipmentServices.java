@@ -1281,12 +1281,19 @@ public class ShipmentServices {
         Map<String, Object> cancelGrnShipmentResult = ServiceUtil.returnSuccess("GRN Shipment Number:"+shipmentId+" Canceled Successfully !");
         // prepare the shipment information
         GenericValue shipment = null ;
+        
+        String primaryOrderId = "";
+        
         try {
             shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+            
             if(UtilValidate.isEmpty(shipment)){
             	Debug.logError("No Shipment found with Id :"+shipmentId, module);
  			   return ServiceUtil.returnError("No Shipment found with Id :"+shipmentId);
 			}
+            
+            primaryOrderId = shipment.getString("primaryOrderId");
+            
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problem getting info from database", module);
         }
@@ -1347,6 +1354,35 @@ public class ShipmentServices {
 			}
 			shipment.set("statusId","SHIPMENT_CANCELLED");
 			shipment.store();
+			
+			String actualOrderId = "";
+			
+			 try{
+			   List<EntityCondition> conditionList = FastList.newInstance();
+			   conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
+			   EntityCondition condExpress = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
+			    actualOrderId = (EntityUtil.getFirst(orderAssocList)).getString("toOrderId");
+			    
+			      GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", actualOrderId), false);
+			      OrderHeader.set("statusId","ORDER_APPROVED");
+			      OrderHeader.store();
+			
+			 }catch (GenericEntityException e) {
+		  	  		Debug.logError("An error occurred while getting  OrderHeader "+e.toString(), module);
+		  	  	}
+			 
+			 try{
+		  			List conditions = FastList.newInstance();
+					conditions.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
+					conditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ORDER_COMPLETED"));
+					List<GenericValue> OrderStatus = delegator.findList("OrderStatus", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+					if(UtilValidate.isNotEmpty(OrderStatus)){
+						delegator.removeAll(OrderStatus);
+					}
+					}catch(GenericEntityException e){
+						Debug.logError(e, "Failed to retrive OrderStatus ", module);
+					}
 			
         }catch (GenericEntityException e) {
   	  		Debug.logError("An error occurred while getting  GRN shipments "+e.toString(), module);

@@ -29,7 +29,10 @@ context.branchList = formatList;
  partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId", userPartyId, "roleTypeId", "SUPPLIER"), false);
  if(partyRole){
 	 
+	 context.userLog = "Y";
 	context.partyId = userPartyId;
+ }else{
+     context.userLog = "N";
  }
  // To filter based on suppliers
  

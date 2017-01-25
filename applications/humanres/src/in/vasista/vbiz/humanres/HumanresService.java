@@ -1212,17 +1212,28 @@ public class HumanresService {
 	    	String partyIdTo = (String) context.get("partyId");
 	    	String partyIdFrom = (String) context.get("company");
 	    	String locationNewGeoId = (String) context.get("locationGeoId");
-	    	Timestamp fromDate = (Timestamp) context.get("fromDate");
-	    	if(UtilValidate.isEmpty(fromDate)){
-	    		fromDate = UtilDateTime.nowTimestamp();
-	    	}
-	    	Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
-	    	Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+	    	String fromDateStr = (String) context.get("fromDate");
 	    	GenericValue userLogin = (GenericValue) context.get("userLogin");
 	    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
 			Timestamp appointmentDate = null;
 			String locationGeoId = null;
+			Timestamp fromDate = null;
+			SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+			
+			if(UtilValidate.isEmpty(fromDateStr)){
+	    		fromDate = UtilDateTime.nowTimestamp();
+	    	}
+	    	
+			if(UtilValidate.isNotEmpty(fromDateStr)){
+				try {
+						fromDate = UtilDateTime.toTimestamp(sdf1.parse(fromDateStr));
+					} catch (ParseException e) {
+						}
+			}
+			Timestamp fromDateStart = UtilDateTime.getDayStart(fromDate);
+		    Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+				
 			try {
 				List conditionList = FastList.newInstance();
 				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyIdTo));
@@ -1379,6 +1390,82 @@ public class HumanresService {
 	      return result;
 	    }
 	    
+	    public static Map<String, Object> createPartyIdentificationTypeConv(DispatchContext dctx, Map context) {
+			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+			LocalDispatcher dispatcher = dctx.getDispatcher();
+			Map<String, Object> result = ServiceUtil.returnSuccess();
+			Locale locale = (Locale) context.get("locale");
+			GenericValue userLogin = (GenericValue) context.get("userLogin");
+			String partyId = (String) context.get("partyId");
+			String partyIdentificationTypeId = (String) context.get("partyIdentificationTypeId");
+			String idValue = (String) context.get("idValue");
+			String issueDate = (String) context.get("issueDate");
+			String expiryDate = (String) context.get("expiryDate");
+			String updateFlag = (String) context.get("updateFlag");
+			Timestamp issueDateTime = null;
+			Timestamp expiryDateTime = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
+			Map<String, Object> outMap = FastMap.newInstance();
+			
+			if(UtilValidate.isNotEmpty(updateFlag)){
+				if(UtilValidate.isNotEmpty(issueDate)){
+					try {
+					   		issueDateTime = UtilDateTime.toTimestamp(sdf1.parse(issueDate));
+				        	Debug.log("issueDateTime========upd============="+issueDateTime);
+						} catch (ParseException e) {
+							}
+				}
+				if(UtilValidate.isNotEmpty(expiryDate)){
+				   try {
+					   		expiryDateTime = UtilDateTime.toTimestamp(sdf.parse(expiryDate));
+						    Debug.log("expiryDateTime========upd============="+expiryDateTime);
+						} catch (ParseException e) {
+							}
+				}
+				
+				try{
+				outMap = dispatcher.runSync("updatePartyIdentification", UtilMisc.toMap("partyIdentificationTypeId",partyIdentificationTypeId,"idValue",idValue,"partyId",partyId, "issueDate", issueDateTime, "expiryDate", expiryDateTime, "userLogin", userLogin));
+				Debug.log("outMap=======upd========="+outMap);
+				if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("failed service createPartyIdentification:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		        }
+				}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError("Error while creating party Identification" + e);	
+				}
+			}else{
+				if(UtilValidate.isNotEmpty(issueDate)){
+					   try {
+						   		issueDateTime = UtilDateTime.toTimestamp(sdf.parse(issueDate));
+					        	Debug.log("issueDateTime====================="+issueDateTime);
+						} catch (ParseException e) {
+							}
+				    }
+					if(UtilValidate.isNotEmpty(expiryDate)){
+						   try {
+							   		expiryDateTime = UtilDateTime.toTimestamp(sdf.parse(expiryDate));
+						        	Debug.log("expiryDateTime====================="+expiryDateTime);
+							} catch (ParseException e) {
+								}
+					}
+				try{
+					
+					outMap = dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId",partyIdentificationTypeId,"idValue",idValue,"partyId",partyId, "issueDate", issueDateTime, "expiryDate", expiryDateTime, "userLogin", userLogin));
+					Debug.log("outMap================"+outMap);
+					if(ServiceUtil.isError(outMap)){
+			           	 	Debug.logError("failed service createPartyIdentification:"+ServiceUtil.getErrorMessage(outMap), module);
+			           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+			        }
+				}catch (Exception e) {
+					Debug.logError(e, module);
+					return ServiceUtil.returnError("Error while creating party Identification" + e);	
+				}
+			}
+			result.put("partyId", partyId);
+		    return result;
+	    }
 	    public static Map<String, Object> createNewEmployeeMasters(DispatchContext dctx, Map context) {
 			GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 			LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -1397,7 +1484,7 @@ public class HumanresService {
 			String middleName = (String) context.get("middleName");
 			String fatherName = (String) context.get("fatherName");
 			String motherName = (String) context.get("motherName");
-			Date birthDate =  (Date)context.get("birthDate");
+			String birthDate =  (String)context.get("birthDate");
 			String birthPlace = (String) context.get("birthPlace");
 			String birthState = (String) context.get("birthState");
 			String birthDistrict = (String) context.get("birthDistrict");
@@ -1449,7 +1536,7 @@ public class HumanresService {
 			String panNumber =(String)context.get("panNumber");
 			String partyIdFrom =(String)context.get("partyIdFrom");
 			Date dateOfJoining =  (Date)context.get("dateOfJoining");
-			Date employmentDate = (Date)context.get("employmentDate");
+			String employmentDate = (String)context.get("employmentDate");
 			Date passportExpireDate =  (Date)context.get("passportExpireDate");
 			String backgroundVerification =(String)context.get("backgroundVerification");
 			String emplPositionTypeId = (String) context.get("emplPositionTypeId");
@@ -1463,6 +1550,10 @@ public class HumanresService {
 			GenericValue parentFacility=null;
 			GenericValue facility;
 			GenericValue person = null;
+			Timestamp employmentDateTime = null;
+			Timestamp birthDateTime = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+			
 			try{
 				// create Person / Party 
 				/*String employeeId = null;
@@ -1476,6 +1567,7 @@ public class HumanresService {
 				}
 				Debug.log("employeeId========="+employeeId);
 				partyId = employeeId;*/
+				
 				try {
 			        person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
 			        
@@ -1485,8 +1577,14 @@ public class HumanresService {
 		        if(UtilValidate.isNotEmpty(person)){
 		        	return ServiceUtil.returnError("Error while creating  Party, PartyId already exists" +partyId); 
 		        }
+		        if(UtilValidate.isNotEmpty(birthDate)){
+			        try {
+			        	birthDateTime = UtilDateTime.toTimestamp(sdf.parse(birthDate));
+					} catch (ParseException e) {
+					}
+		        }
 				Object tempInput = "PARTY_ENABLED";
-				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "fatherName",fatherName, "motherName",motherName, "birthDate",birthDate, "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "spouseName",spouseName, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
+				input = UtilMisc.toMap("firstName", firstName, "lastName", lastName, "middleName",middleName, "fatherName",fatherName, "motherName",motherName, "birthDate",UtilDateTime.toSqlDate(birthDateTime), "placeOfBirth",birthPlace, "bloodGroup",bloodGroup,"gender",gender, "maritalStatus",maritalStatus, "spouseName",spouseName, "motherTongue",motherTongue, "religion",religion,  "nationality",nationality, "passportNumber",passportNumber, "passportExpireDate",passportExpireDate, "statusId", tempInput,"partyId",partyId);
 				resultMap = dispatcher.runSync("createPerson", input);
 				if (ServiceUtil.isError(resultMap)) {
 					Debug.logError(ServiceUtil.getErrorMessage(resultMap), module);
@@ -1545,7 +1643,26 @@ public class HumanresService {
 		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
 		            }
 				}
+				
+				if (UtilValidate.isNotEmpty(emergencyContactNumber)){
+					if (UtilValidate.isEmpty(countryCode)){
+						countryCode	="91";
+					}
+					input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("contactNumber",emergencyContactNumber);
+		            input.put("contactMechPurposeTypeId","PHONE_WORK_EMRGNCY"); 
+		            input.put("countryCode",countryCode);	
+		            input.put("partyId", ownerPartyId);
+		            outMap = dispatcher.runSync("createPartyTelecomNumber", input);
+					if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("failed service create party emergency contact telecom number:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+				}
+				
 				// create PostalAddress
+				input.clear();
 				if (UtilValidate.isNotEmpty(address1)){
 					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",address1, "address2", address2, "city", (String)context.get("city"), "birthState",birthState,  "birthDistrict",birthDistrict, "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("postalCode"), "contactMechId", contactMechId);
 					resultMap =  dispatcher.runSync("createPartyPostalAddress", input);
@@ -1554,7 +1671,7 @@ public class HumanresService {
 		                return resultMap;
 		            }
 				}
-				//input.clear();
+				input.clear();
 				if (UtilValidate.isNotEmpty(prsAddress1)){
 					input = UtilMisc.toMap("userLogin", userLogin, "partyId",ownerPartyId, "address1",prsAddress1, "address2", prsAddress2, "city", (String)context.get("prsCity"), "stateProvinceGeoId", (String)context.get("stateProvinceGeoId"), "postalCode", (String)context.get("prsPostalCode"), "contactMechTypeId","POSTAL_ADDRES2", "contactMechId", contactMechId);
 					resultMap1 =  dispatcher.runSync("createPartyPostalAddress", input);
@@ -1614,7 +1731,11 @@ public class HumanresService {
 				
 				Timestamp employmentDateStart = null;
 				if (UtilValidate.isNotEmpty(employmentDate)){
-					employmentDateStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(employmentDate));
+					try {
+						employmentDateTime = UtilDateTime.toTimestamp(sdf.parse(employmentDate));
+					} catch (ParseException e) {
+					}
+					employmentDateStart = UtilDateTime.getDayStart(employmentDateTime);
 				}else{
 					employmentDateStart =  UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 				}
@@ -2222,5 +2343,396 @@ public class HumanresService {
 		} 
 		return result;
     }
-     
+    
+    public static Map<String, Object> makeEmployeeAppraisalPromotion(DispatchContext ctx, Map<String, ? extends Object> context) {
+    	Map result = ServiceUtil.returnSuccess();
+    	Delegator delegator = ctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> inMap = FastMap.newInstance();
+        String employeeId = (String)context.get("employeeId");
+        String PerfRatingType = (String)context.get("PerfRatingType");
+        String fromDateStr = (String)context.get("fromDate");
+        String thruDateStr = (String)context.get("thruDate");
+        String emplPositionTypeId = (String) context.get("Promotion");
+        String dateOfPromotionStr = (String) context.get("dateOfPromotion");
+        String dateOfConfirmationStr = (String) context.get("dateOfConfirmation");
+        Map<String, Object> input = FastMap.newInstance();
+		Map<String, Object> outMap = FastMap.newInstance();
+		Timestamp fromDate = null;
+		Timestamp thruDate = null;
+		Timestamp dateOfPromotion = null;
+		Timestamp dateOfConfirmation = null;
+		try{
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+			 if(UtilValidate.isNotEmpty(fromDateStr)){
+				try {
+		    		fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(fromDateStr)));
+				} catch (ParseException e) {
+				}
+			 }
+			 if(UtilValidate.isNotEmpty(thruDateStr)){
+					try {
+						thruDate = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(thruDateStr)));
+					} catch (ParseException e) {
+					}
+			}
+			 if(UtilValidate.isNotEmpty(dateOfPromotionStr)){
+					try {
+						dateOfPromotion = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(dateOfPromotionStr)));
+					} catch (ParseException e) {
+					}
+			}
+			 if(UtilValidate.isNotEmpty(dateOfConfirmationStr)){
+					try {
+						dateOfConfirmation = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(dateOfConfirmationStr)));
+					} catch (ParseException e) {
+					}
+			}
+			
+			// Create Employee Position  
+			String emplPositionId = null;
+			if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+	            input.clear();
+	            input.put("userLogin", userLogin);
+	            input.put("partyId", employeeId);
+	            input.put("emplPositionTypeId", emplPositionTypeId);
+	            outMap = dispatcher.runSync("createEmplPosition", input);
+	            if(ServiceUtil.isError(outMap)){
+	           	 	Debug.logError("faild service create Employee Position:"+ServiceUtil.getErrorMessage(outMap), module);
+	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+	            }
+	            emplPositionId = (String) outMap.get("emplPositionId");
+	            // Create Employee Position Fulfillment
+				if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+		            input.clear();
+		            input.put("userLogin", userLogin);
+		            input.put("partyId", employeeId);
+		            input.put("fromDate", dateOfConfirmation);
+		            input.put("emplPositionId", emplPositionId);
+		            outMap = dispatcher.runSync("createEmplPositionFulfillment", input);
+		            if(ServiceUtil.isError(outMap)){
+		           	 	Debug.logError("faild service create Employee Position Fulfillment:"+ServiceUtil.getErrorMessage(outMap), module);
+		           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+		            }
+				}
+			}
+			
+			
+	 		 if(UtilValidate.isNotEmpty(employeeId)){
+	 			  GenericValue perfReview = delegator.makeValue("PerfReview");
+	 			  perfReview.set("employeePartyId", employeeId);
+	 			  perfReview.set("employeeRoleTypeId", "EMPLOYEE");
+	 			 if(UtilValidate.isNotEmpty(emplPositionId)){
+	 				 perfReview.set("emplPositionId", emplPositionId);
+	 			 }
+	 			 perfReview.set("fromDate", fromDate);
+	 			 perfReview.set("thruDate", thruDate);
+	 			 delegator.setNextSubSeqId(perfReview, "perfReviewId", 5, 1);
+				 delegator.create(perfReview);
+	 			//creating review item here
+	 			String perfReviewId  = (String) perfReview.get("perfReviewId");
+	 			if(UtilValidate.isNotEmpty(perfReviewId)){  	 
+	 				GenericValue perfReviewItem = delegator.makeValue("PerfReviewItem");
+				  	perfReviewItem.set("employeePartyId", employeeId);
+				  	perfReviewItem.set("employeeRoleTypeId", "EMPLOYEE");
+				  	perfReviewItem.set("perfReviewId", perfReviewId);
+				  	perfReviewItem.set("perfReviewItemTypeId", "GRADING");
+				  	perfReviewItem.set("perfRatingTypeId", PerfRatingType);
+				  	perfReviewItem.set("PromotionDate", dateOfPromotion);
+				  	perfReviewItem.set("ConfirmationDate", dateOfConfirmation);
+				  	delegator.setNextSubSeqId(perfReviewItem, "perfReviewItemSeqId", 5, 1);
+				  	delegator.create(perfReviewItem);
+	 			}
+			result = ServiceUtil.returnSuccess("Employee Performance Dating Created successfully.");
+			
+	    }
+	} catch (Exception e) {
+		Debug.logError("Error while creating Performance Rating", module);
+	  }
+		return result;	
+    }
+    
+    public static Map<String, Object> UpdatePerformanceRating(DispatchContext ctx, Map<String, ? extends Object> context) {
+    	Map result = ServiceUtil.returnSuccess();
+    	Delegator delegator = ctx.getDelegator();
+    	Locale locale = (Locale) context.get("locale");
+    	LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Map<String, Object> inMap = FastMap.newInstance();
+        String employeeId = (String)context.get("partyId");
+        String PerfRatingType = (String)context.get("PerfRatingType");
+        String perfReviewId = (String)context.get("perfReviewId");
+        String perfReviewItemSeqId = (String)context.get("perfReviewItemSeqId");
+        String fromDateStr = (String)context.get("fromDate");
+        String thruDateStr = (String)context.get("thruDate");
+        String emplPositionTypeId = (String) context.get("promotion");
+        String dateOfPromotionStr = (String) context.get("PromotionDate");
+        String dateOfConfirmationStr = (String) context.get("ConfirmationDate");
+        Map<String, Object> input = FastMap.newInstance();
+		Map<String, Object> outMap = FastMap.newInstance();
+		GenericValue perfReviewDetails = null;
+		Timestamp fromDate = null;
+		Timestamp thruDate = null;
+		Timestamp dateOfPromotion = null;
+		Timestamp dateOfConfirmation = null;
+		try{
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+			 if(UtilValidate.isNotEmpty(fromDateStr)){
+				try {
+		    		fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(fromDateStr)));
+				} catch (ParseException e) {
+				}
+			 }
+			 if(UtilValidate.isNotEmpty(thruDateStr)){
+					try {
+						thruDate = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(thruDateStr)));
+					} catch (ParseException e) {
+					}
+			}
+			 if(UtilValidate.isNotEmpty(dateOfPromotionStr)){
+					try {
+						dateOfPromotion = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(dateOfPromotionStr)));
+					} catch (ParseException e) {
+					}
+			}
+			 if(UtilValidate.isNotEmpty(dateOfConfirmationStr)){
+					try {
+						dateOfConfirmation = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(dateOfConfirmationStr)));
+					} catch (ParseException e) {
+					}
+			}
+			
+			Timestamp prevDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(dateOfConfirmation, -1));
+			 if(UtilValidate.isNotEmpty(perfReviewId)){
+				 perfReviewDetails =delegator.findOne("PerfReview", UtilMisc.toMap("employeePartyId", employeeId, "employeeRoleTypeId", "EMPLOYEE", "perfReviewId", perfReviewId), false);
+				 if(UtilValidate.isNotEmpty(perfReviewDetails)){
+					 String emplPositionId = (String)perfReviewDetails.get("emplPositionId");
+					 List designationconditionList = FastList.newInstance();
+						designationconditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,employeeId));
+						designationconditionList.add(EntityCondition.makeCondition("emplPositionId",EntityOperator.EQUALS,emplPositionId));
+						EntityCondition designationcondition = EntityCondition.makeCondition(designationconditionList,EntityOperator.AND);
+				    	List<GenericValue> emplPositionAndFulfillments = delegator.findList("EmplPositionFulfillment", designationcondition, null, null, null, false);
+						
+			        	if(UtilValidate.isNotEmpty(emplPositionAndFulfillments)){
+			        		GenericValue emplPositionFulfillments = EntityUtil.getFirst(emplPositionAndFulfillments);
+			    			emplPositionFulfillments.set("thruDate",prevDayEnd);
+			    			emplPositionFulfillments.store();
+			        		
+			        		if (UtilValidate.isNotEmpty(emplPositionTypeId)){
+			        			input.put("userLogin", userLogin);
+			    	            input.put("partyId", employeeId);
+			    	            input.put("actualFromDate",dateOfConfirmation);
+			    	            input.put("emplPositionTypeId", emplPositionTypeId);
+			    	            input.put("statusId", "EMPL_POS_ACTIVE");
+			    	            outMap = dispatcher.runSync("createEmplPosition", input);
+			    	            if(ServiceUtil.isError(outMap)){
+			    	           	 	Debug.logError("faild service create Employee Position:"+ServiceUtil.getErrorMessage(outMap), module);
+			    	           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+			    	            }
+			    	            
+			    	            	String newEmplPositionId = (String)outMap.get("emplPositionId");
+			    	            	 perfReviewDetails.set("emplPositionId",newEmplPositionId);
+			    	            	 perfReviewDetails.store();
+			    	            	if (UtilValidate.isNotEmpty(newEmplPositionId)){
+			    	            		input.clear();
+			    	            		input.put("userLogin", userLogin);
+			    			            input.put("partyId", employeeId);
+			    			            input.put("fromDate",dateOfConfirmation);
+			    			            input.put("emplPositionId", newEmplPositionId);
+			    			            outMap = dispatcher.runSync("createEmplPositionFulfillment", input);
+			    			            if(ServiceUtil.isError(outMap)){
+			    			           	 	Debug.logError("faild service create Employee Position Fulfillment:"+ServiceUtil.getErrorMessage(outMap), module);
+			    			           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+			    			            }
+			    	            	}
+			    	           
+							}
+			        		
+			        		
+			        	}
+			        	
+			        	GenericValue perfReviewItemDetails =delegator.findOne("PerfReviewItem", UtilMisc.toMap("employeePartyId", employeeId, "employeeRoleTypeId", "EMPLOYEE", "perfReviewId", perfReviewId, "perfReviewItemSeqId", perfReviewItemSeqId), false);
+		  	  			if (UtilValidate.isNotEmpty(perfReviewItemDetails)){
+		  	  				perfReviewItemDetails.set("perfRatingTypeId",PerfRatingType);
+		  	  				perfReviewItemDetails.set("PromotionDate",dateOfPromotion);
+		  	  				perfReviewItemDetails.set("ConfirmationDate",dateOfConfirmation);
+		  	  				perfReviewItemDetails.store();
+		  	  			}
+		  	  			
+			 }
+			 
+			 }	
+			 result = ServiceUtil.returnSuccess("Employee Performance Rating Updated successfully.");
+		}catch (Exception e) {
+			Debug.logError("Error while Updating Performance Rating", module);
+		  }
+			return result;	
+    }
+    public static Map<String, Object> createNewEmplTraining(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	//String partyId = (String) context.get("partyId");
+    	String nameOfInstitute = (String) context.get("nameOfInstitute");
+    	String fromDateStr = (String) context.get("fromDate");
+    	String thruDateStr = (String) context.get("thruDate");
+    	String topicsCoverd = (String) context.get("topicsCoverd");
+    	BigDecimal traingCost = (BigDecimal) context.get("traingCost");
+    	String trainingLocation = (String) context.get("trainingLocation");
+    	String duration = (String) context.get("duration");
+    	String trgCategory = (String) context.get("trgCategory");
+    	String facultyType = (String) context.get("facultyType");
+   		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		Timestamp fromDate=null;
+		Timestamp thruDate=null;
+		FastList partyIdsList = (FastList)context.get("partyIdList");
+    	String partyIds[] = ((String)partyIdsList.get(0)).split(",");
+		try {
+		    if(UtilValidate.isNotEmpty(fromDateStr)){
+				fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(fromDateStr)));
+			}
+		}catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ fromDateStr, module);
+			} 
+		try {
+		    if(UtilValidate.isNotEmpty(thruDateStr)){
+		    	thruDate = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(thruDateStr)));
+			}
+		}catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ thruDateStr, module);
+			} 
+		
+
+		try {
+			List TrainingList = FastList.newInstance();
+			 if(UtilValidate.isNotEmpty(partyIdsList)){
+				 for(int i=0;i<partyIds.length;i++){
+					 String partyId = (String)partyIds[i];
+					if(UtilValidate.isNotEmpty(partyId)){
+						TrainingList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+					}
+					if(UtilValidate.isNotEmpty(topicsCoverd)){
+						TrainingList.add(EntityCondition.makeCondition("topicsCoverd",EntityOperator.EQUALS,topicsCoverd));
+					}
+			    	EntityCondition condition = EntityCondition.makeCondition(TrainingList,EntityOperator.AND);
+			    	List<GenericValue> PersonTrainingList = delegator.findList("PersonTraining", condition, null, null, null, false);
+			    	PersonTrainingList = EntityUtil.orderBy(PersonTrainingList,UtilMisc.toList("-createdStamp"));
+			    	if(UtilValidate.isEmpty(PersonTrainingList)){
+			    		GenericValue PersonTraining = delegator.makeValue("PersonTraining");
+			    		if(UtilValidate.isNotEmpty(partyId)){
+			    			PersonTraining.set("partyId", partyId);
+			    		}
+			    		if(UtilValidate.isNotEmpty(nameOfInstitute)){
+			    			PersonTraining.set("nameOfInstitute", nameOfInstitute);
+			    		}
+			    		if(UtilValidate.isNotEmpty(fromDate)){
+			    			PersonTraining.set("fromDate", fromDate);
+			    		}
+			    		if(UtilValidate.isNotEmpty(thruDate)){
+			    			PersonTraining.set("thruDate", thruDate);
+			    		}
+			    		if(UtilValidate.isNotEmpty(topicsCoverd)){
+			    			PersonTraining.set("topicsCoverd", topicsCoverd);
+			    		}
+			    		if(UtilValidate.isNotEmpty(traingCost)){
+			    			PersonTraining.set("traingCost", traingCost);
+			    		}
+			    		if(UtilValidate.isNotEmpty(trainingLocation)){
+			    			PersonTraining.set("trainingLocation", trainingLocation);
+			    		}
+			    		if(UtilValidate.isNotEmpty(duration)){
+			    			PersonTraining.set("duration", duration);
+			    		}
+			    		if(UtilValidate.isNotEmpty(trgCategory)){
+			    			PersonTraining.set("trgCategory", trgCategory);
+			    		}
+			    		if(UtilValidate.isNotEmpty(facultyType)){
+			    			PersonTraining.set("facultyType", facultyType);
+			    		}
+			  	        delegator.createSetNextSeqId(PersonTraining);
+			  	       String trainingRequestId=(String)PersonTraining.get("trainingRequestId");
+			    	  }
+				 }
+			 }
+		}catch(GenericEntityException e){
+			Debug.logError("Error while creating PersonTraining"+e.getMessage(), module);
+		}
+		result = ServiceUtil.returnSuccess("PersonTraining Created Sucessfully for Employees ");
+		return result;
+
+    }
+    public static Map<String, Object> UpdateTraining(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String partyId = (String) context.get("partyId");
+    	String nameOfInstitute = (String) context.get("nameOfInstitute");
+    	String trainingRequestId = (String) context.get("trainingRequestId");
+    	String fromDateStr = (String) context.get("fromDate");
+    	String thruDateStr = (String) context.get("thruDate");
+    	String topicsCoverd = (String) context.get("topicsCoverd");
+    	BigDecimal traingCost = (BigDecimal) context.get("traingCost");
+    	String trainingLocation = (String) context.get("trainingLocation");
+    	String duration = (String) context.get("duration");
+    	String trgCategory = (String) context.get("trgCategory");
+    	String facultyType = (String) context.get("facultyType");
+   		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		Timestamp fromDate=null;
+		Timestamp thruDate=null;
+		try {
+		    if(UtilValidate.isNotEmpty(fromDateStr)){
+				fromDate = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(sdf.parse(fromDateStr)));
+			}
+		}catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ fromDateStr, module);
+			} 
+		try {
+		    if(UtilValidate.isNotEmpty(thruDateStr)){
+		    	thruDate = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(sdf.parse(thruDateStr)));
+			}
+		}catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ thruDateStr, module);
+			} 
+		
+
+		try {
+				List conditionList = FastList.newInstance();
+				if(UtilValidate.isNotEmpty(topicsCoverd)){
+					conditionList.add(EntityCondition.makeCondition("topicsCoverd",EntityOperator.EQUALS,topicsCoverd));
+				}
+				if(UtilValidate.isNotEmpty(trainingLocation)){
+					conditionList.add(EntityCondition.makeCondition("trainingLocation",EntityOperator.EQUALS,trainingLocation));
+				}
+				EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		    	List<GenericValue> PersonTrainingList = delegator.findList("PersonTraining", condition, null, null, null, false);
+				if(UtilValidate.isNotEmpty(PersonTrainingList)){
+		    	for(int i=0;i<PersonTrainingList.size();i++){
+					GenericValue personTrainingDetail = PersonTrainingList.get(i);
+					personTrainingDetail.set("nameOfInstitute",nameOfInstitute);
+					personTrainingDetail.set("fromDate",fromDate);
+					personTrainingDetail.set("thruDate",thruDate);
+					personTrainingDetail.set("topicsCoverd",topicsCoverd);
+					personTrainingDetail.set("traingCost",traingCost);
+					personTrainingDetail.set("trainingLocation",trainingLocation);
+					personTrainingDetail.set("duration",duration);
+					personTrainingDetail.set("trgCategory",trgCategory);
+					personTrainingDetail.set("facultyType",facultyType);
+					personTrainingDetail.store();
+				}
+			
+		    }
+		}catch(GenericEntityException e){
+			Debug.logError("Error while creating PersonTraining"+e.getMessage(), module);
+		}
+		result = ServiceUtil.returnSuccess("PersonsTraining Updated Sucessfully for Employees ");
+		return result;
+
+    }
+    
+    
+    
 }

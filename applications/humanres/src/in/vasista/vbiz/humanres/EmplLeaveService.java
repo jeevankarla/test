@@ -194,11 +194,11 @@ public class EmplLeaveService {
 				   }else{
 					   leaveBalancesMap.put(leaveTypeId, closingBalance);
 				   }
-					
+				   result.put("leaveBalanceDateStr",UtilDateTime.toDateString(leaveBalance.getTimestamp("lastUpdatedStamp"),"dd-MM-yyyy"));
 				}
 				result.put("leaveBalances", leaveBalancesMap);
 				//this is to return date for json request
-				result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
+				//result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
         		
         	}
         } catch (Exception e) {

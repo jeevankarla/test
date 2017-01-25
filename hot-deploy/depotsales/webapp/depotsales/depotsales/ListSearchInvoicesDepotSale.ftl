@@ -490,12 +490,13 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               </td>-->
               <td>${(invoice.invoiceDate)?if_exists}</td>
               <#--><td>${(invoice.dueDate)?if_exists}</td> -->
-              
                <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialShipmentOverview?shipmentId=${invoice.shipmentId}</@ofbizUrl>">${invoice.shipmentId}</a></td>
               <td>
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : invoice.statusId}, true) />
                 ${statusItem.description?default(invoice.statusId)}
               </td>
+              
+              <#assign vendorName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)/>
  		       <#if (invoice.shipmentId?has_content) && invoice.shipmentId != "OBC">
               <#assign shipmentId = invoice.shipmentId>
                <#assign shipment = delegator.findOne("Shipment", {"shipmentId" : shipmentId}, false)?if_exists />
@@ -539,7 +540,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                <td><@ofbizCurrency amount=purchaseBasicAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
+              <td><@ofbizCurrency amount=invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>       
              
                <#--<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>processSalesInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Rise Sales Invoice</a></td>-->
                
@@ -548,18 +549,23 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                   <#else>
  		   	          <td></td>
                </#if>
+               
+
+               
                <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
-              	  <#if (invoice.parentTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
+              	  <#if (invoice.invoiceTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
               		  <#if invoice.purposeTypeId?has_content>
               		  	<#assign purposeTypeId=invoice.purposeTypeId>
               		  </#if>
-              		  <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}','${purposeTypeId}');"/></td>
+              		    <td><input type="button" name="Payment" id="Payment" value="Payment" onclick="javascript:showPaymentEntryBranchPurchaseForInvoListing('${invoice.invoiceId}','${invoicePaymentInfo.amount}','${invoicePaymentInfo.outstandingAmount}','${invoice.partyId}','${invoice.partyIdFrom}','${vendorName}','${invoice.purposeTypeId}');"/></td>
                	    <#else>
                 	  <td align="center"></td>
                	  </#if>
                 <#else>
                 	<td align="center"></td>
               </#if>
+               
+              
               <#--><td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>-->
             <#--<#if invoice.parentTypeId?has_content>
               <td><#if ((invoice.statusId != "INVOICE_CANCELLED") &&(invoice.parentTypeId == "PURCHASE_INVOICE"))><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>

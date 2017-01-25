@@ -27,7 +27,6 @@
 	String actualRequest = (String) request.getAttribute("thisRequestUri");
 	String requestUrl = httpRequest.getRequestURL();
 	String source = requestUrl.replace(actualRequest, "");
-Debug.log("===============partyId="+partyId);
 	
 	partyContentDetails = delegator.findList("PartyContentDetail", EntityCondition.makeCondition([partyId : partyId, partyContentTypeId : "INTERNAL", contentTypeId : "PROFILE_PIC", statusId : "CTNT_AVAILABLE"]), null, ["-fromDate"], null, false);
 	
@@ -42,6 +41,9 @@ Debug.log("===============partyId="+partyId);
 	}
 	
 	context.imageUrl = imageUrl;
+	
+	partyClassificationDetails = delegator.findList("PartyClassification", EntityCondition.makeCondition([partyId : partyId]), null, ["-fromDate"], null, false);
+	context.partyClassificationDetails = partyClassificationDetails;
 	
 	
 	

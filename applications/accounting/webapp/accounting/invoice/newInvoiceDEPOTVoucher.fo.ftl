@@ -327,7 +327,7 @@ under the License.
 	<fo:block text-align="left" font-weight="bold"  font-size="10pt" ><#if C2E2Form?has_content><#if C2E2Form == "NO_E2_FORM">Transaction with out E2 form<#elseif C2E2Form == "E2_FORM">Transaction with E2 form<#elseif C2E2Form == "CST_NOCFORM">Transaction with out C form<#elseif C2E2Form == "CST_CFORM">AGAINST C FORM</#if></#if></fo:block>
 	<fo:block text-align="left"    font-size="10pt" >&#160;</fo:block>
 	<#if !kanAndKalRo?has_content>
-	<fo:block text-align="left"  white-space-collapse="false" font-weight="bold"   font-size="10pt" >Supplier : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}                                                         OTHER CHARGES :</fo:block>
+	<fo:block text-align="left"  white-space-collapse="false" font-weight="bold"   font-size="10pt" >Supplier : ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}                                         </fo:block>
 	</#if>
 	 <fo:block>
 	      
@@ -340,7 +340,7 @@ under the License.
 		<fo:table-body>
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell >
-				<fo:block text-align="left"    font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}</fo:block>
+				<fo:block text-align="left"    font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}                   OTHER CHARGES</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
 
@@ -445,11 +445,11 @@ under the License.
 				<fo:table-body>
 					<fo:table-row white-space-collapse="false">
 						<fo:table-cell number-columns-spanned="2" >
-						<fo:block text-align="left" font-weight="bold"   font-size="10pt" >${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(((totAmount-schemeDeductionAmt)+totTaxAmount)?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()}RUPEES ONLY.</fo:block>
+						<fo:block text-align="left" font-weight="bold"   font-size="10pt" >${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()}RUPEES ONLY.</fo:block>
 						</fo:table-cell>
 						
 					</fo:table-row>
-				<#-- <fo:table-row white-space-collapse="false" >
+				 <fo:table-row white-space-collapse="false" >
 						<fo:table-cell  border-style-right="hidden">
 						<fo:block text-align="left"  font-size="10pt" >Destination       :${destination?if_exists}</fo:block>
 						</fo:table-cell>
@@ -457,7 +457,7 @@ under the License.
 						<fo:block text-align="left" keep-together="always"    font-size="10pt" >&#160;&#160;</fo:block>
 						</fo:table-cell>  
 						
-					</fo:table-row>	-->    
+					</fo:table-row>	
 					<fo:table-row white-space-collapse="false" >
 						<#--  <fo:table-cell  border-style-right="hidden">
 						<fo:block text-align="left" keep-together="always"    font-size="10pt" >Freight (RS.)     :<#if estimatedShipCost?has_content>${estimatedShipCost?if_exists?string("#0.00")}</#if>   </fo:block>

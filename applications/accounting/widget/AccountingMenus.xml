@@ -2200,7 +2200,7 @@
 			<link target="FindDepositPaidAccount">
 			</link>
 		 </menu-item>
-		 <!-- <menu-item name="FindEmployeeAdv" title="Employee Advance">
+		 <menu-item name="FindEmployeeAdv" title="Employee Advance">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2208,9 +2208,9 @@
             </condition>
 			<link target="FindEmployeeAdv">
 			</link>
-		 </menu-item> -->
+		 </menu-item>
 		 
-		 <menu-item name="EmployeeAdvance" title="Employee Advance">
+		 <!-- <menu-item name="EmployeeAdvance" title="Employee Advance">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2218,7 +2218,7 @@
             </condition>
 			<link target="EmployeeAdvance">
 			</link>
-		 </menu-item>
+		 </menu-item> -->
 		 
 		   <!-- <menu-item name="DepositTransfer" title="Deposit Transfer">
           <condition>
@@ -2301,7 +2301,7 @@
            </condition>
 			<link target="InterUnitContraEntry">
 			</link>
-		</menu-item> -->  
+		</menu-item>   
 		<menu-item name="BatchContraEntry" title="Batch Contra">
 		  <condition>
 		   	<and>
@@ -2310,7 +2310,7 @@
            </condition>
 			<link target="BatchBankContraEntry">
 			</link>
-		</menu-item> 
+		</menu-item> -->
 		 <menu-item name="BankBook" title="Bank Book">
           <condition>
 				<or>
@@ -2384,14 +2384,14 @@
             </condition>
 			<link target="apGroupPayment"></link>
 		</menu-item> 
-		<menu-item name="cpfAccounts" title="CPF Accounts">
+		<!-- <menu-item name="cpfAccounts" title="CPF Accounts">
 		     <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
             	</or>            
             </condition>
 			<link target="cpfAccounts"></link>
-		</menu-item> 
+		</menu-item>  -->
 		<menu-item name="Reports" title="Reports">
 		     <condition>
 				<or>
@@ -3412,6 +3412,13 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
+          <menu-item name="PurchaseInvoice" title="Purchase Invoice">
+             <link target="ApInvoices">
+             	<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
+             	<parameter param-name="subTabButtonValue" value="PurchaseInvoice" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
+          </menu-item> 
           <!-- <menu-item name="SalesAndDistribution" title="Sales And Distribution">
              <link target="ApInvoices">
              	<parameter param-name="invoiceTypeId" value="SALES_DIS_OUT" />
@@ -3878,6 +3885,13 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
+          <menu-item name="salesInvoice" title="Sales Invoice">
+            <link target="ArInvoices">
+             	<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
+             	<parameter param-name="subTabButtonValue" value="salesInvoice" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" /> 
+             </link> 
+          </menu-item>
           <!-- <menu-item name="Finance" title="Finance Income">
              <link target="ArInvoices">
              	<parameter param-name="invoiceTypeId" value="FINANCE_IN" />
@@ -4305,5 +4319,21 @@
             <link target="cpfAccounts"/>
         </menu-item>
      </menu>
+     
+     <menu name="BankAccountSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="FindFinAccountAlt" title="BankAccounts">
+			<condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="FindFinAccountAlt">
+			<parameter param-name="screenFlag" value="BANKACCOUNT"/>
+			</link>
+		</menu-item>
+		<menu-item name="BankAccountDetail" title="${uiLabelMap.BankAccountDetail}">
+			<link target="BankAccountDetail"/>
+		</menu-item>
+	</menu>
 	
 </menus>

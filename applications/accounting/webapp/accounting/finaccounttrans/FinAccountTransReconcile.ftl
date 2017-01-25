@@ -233,8 +233,8 @@ function toggleFinAccntTransId(master) {
 		             <#assign paymentPartyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, payment.partyIdFrom, false)>
 		             <#assign paymentPartyId = payment.partyIdFrom>
 	             </#if>
-	       <#elseif finAccountTrans.reasonEnumId?has_content && finAccountTrans.reasonEnumId=="FATR_CONTRA" >    
-	         <#assign contraFinTransEntry = delegator.findOne("FinAccountTransAttribute", {"finAccountTransId" : finAccountTrans.finAccountTransId,"attrName" : "FATR_CONTRA"}, true)>
+	       <#elseif finAccountTrans.reasonEnumId?has_content && finAccountTrans.reasonEnumId=="FATR_CONTRA" >   
+	         <#assign contraFinTransEntry = (delegator.findOne("FinAccountTransAttribute", {"finAccountTransId" : finAccountTrans.finAccountTransId,"attrName" : "FATR_CONTRA"}, true))?if_exists />
 	           
 	           <#if contraFinTransEntry?has_content >
 	                  <#assign contraFinAccountTrans = delegator.findOne("FinAccountTrans", {"finAccountTransId" : contraFinTransEntry.finAccountTransId}, false)>

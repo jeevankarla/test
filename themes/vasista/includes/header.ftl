@@ -167,7 +167,8 @@ under the License.
           <#elseif layoutSettings.commonHeaderImageUrl?exists>
             <#assign headerImageUrl = layoutSettings.commonHeaderImageUrl>
           <#elseif layoutSettings.VT_HDR_IMAGE_URL?exists>
-            <#assign headerImageUrl = layoutSettings.VT_HDR_IMAGE_URL.get(0)>
+         <#--   <#assign headerImageUrl = layoutSettings.VT_HDR_IMAGE_URL.get(0)> -->
+				<#assign headerImageUrl="/vasista/complogos/logo_nhdc.png">
           </#if>
           <#if headerImageUrl?exists>
             <li class="logo-area"><a href="<@ofbizUrl>${logoLinkURL}</@ofbizUrl>"><img alt="${layoutSettings.companyName}" src="<@ofbizContentUrl>${StringUtil.wrapString(headerImageUrl)}</@ofbizContentUrl>"/></a></li>

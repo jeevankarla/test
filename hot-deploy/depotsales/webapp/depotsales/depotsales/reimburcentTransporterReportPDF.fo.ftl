@@ -47,7 +47,7 @@ under the License.
                   
                  <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
                  
-                 <fo:block text-align="left"    font-size="10pt" >STATEMENT SHOWING THE AGENCYWISE DETAILS OF COTTON/SILK/JUTE YARN SUPPLIED BY NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED UNDER THE SCHEME FOR SUPPLY OF YARN AT :<fo:inline font-weight="bold" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:inline></fo:block>
+                 <fo:block text-align="center"   font-weight="bold"  font-size="10pt" >STATEMENT SHOWING THE AGENCYWISE DETAILS OF COTTON/SILK/JUTE YARN SUPPLIED BY NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED UNDER THE SCHEME FOR SUPPLY OF YARN AT :<fo:inline font-weight="bold" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:inline></fo:block>
                  
                <fo:block linefeed-treatment="preserve">&#xA;</fo:block><fo:block linefeed-treatment="preserve">&#xA;</fo:block>
                 <fo:block>     
@@ -64,7 +64,7 @@ under the License.
 				
 				<#assign partyWiseDetails = finalMap.get(eachParty)>
 				
-				<#assign partyWiseDetails = partyWiseDetails.entrySet()>
+				<#--<#assign partyWiseDetails = partyWiseDetails.entrySet()>-->
 				
 				<#assign finalAddresList = "">
 				<#list partyWiseDetails as eachList>
@@ -206,16 +206,16 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>
+					            	<fo:block text-align="left" font-size="8pt" font-weight="bold" white-space-collapse="false">TOTAL</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>  
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap1.get("TotalQuantiy")} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-weight="bold" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap1.get("TotalQuantiy")} </fo:block>
 						         </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap1.get("TotalAmount")} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-weight="bold" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap1.get("TotalAmount")} </fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="8pt" white-space-collapse="false"></fo:block>
@@ -233,10 +233,10 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap1.get("totClaimAmt")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-weight="bold" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap1.get("totClaimAmt")}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap1.get("totElgibleAmt")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right"  font-weight="bold" font-size="8pt" white-space-collapse="false">${partyWiseTotalsMap1.get("totElgibleAmt")}</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 							

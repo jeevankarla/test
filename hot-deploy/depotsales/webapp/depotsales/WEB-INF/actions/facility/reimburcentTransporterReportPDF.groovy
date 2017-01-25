@@ -26,9 +26,9 @@ import org.ofbiz.party.contact.ContactMechWorker;
  
  
  
-SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
-dayend = null;
-daystart = null;
+//SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
+//dayend = null;
+//daystart = null;
  
 Timestamp fromDate;
 Timestamp thruDate;
@@ -158,8 +158,23 @@ condListCat = [];
 	 
 //}
 //Debug.log("productIds================"+productIds.size());
-   
-daystart = null;
+	daystart = null;
+	dayend = null;
+	def sdf = new SimpleDateFormat("MMMM dd, yyyy");
+	try {
+		if (UtilValidate.isNotEmpty(parameters.partyfromDate)) {
+			fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime()));
+			thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.partythruDate).getTime()));
+		}
+	} catch (ParseException e) {
+		Debug.logError(e, "Cannot parse date string: " + e, "");
+	context.errorMessage = "Cannot parse date string: " + e;
+		return;
+	}
+	
+	daystart = UtilDateTime.getDayStart(fromDate);
+	dayend = UtilDateTime.getDayEnd(thruDate);
+/*daystart = null;
 dayend = null;
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
    
@@ -185,14 +200,14 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
    } catch (ParseException e) {
 	   //////////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
-}
+}*/
  
  
  
 context.daystart = daystart;
  
 context.dayend = dayend;
-   
+//Debug.log("daystart==============="+daystart);
 reimbursmentPercentage = [:];
 reimbursmentPercentage.put("SILK", 1);
 reimbursmentPercentage.put("JUTE_YARN", 10);
@@ -313,9 +328,12 @@ finalMap = [:];
  
 partyWiseTotalsMap = [:];
  
+totalsMap=[:];
+totalSalQty=0;
+totalSalAmt=0; 
+totalClaimAmt=0
+totalEligAmt=0;
 
- 
- 
 for (eachPartyId in partyIds) {
 	 
 	 
@@ -357,7 +375,7 @@ for (eachPartyId in partyIds) {
 	 tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoiceList.invoiceDate,"dd/MM/yyyy"));
 			
 	 //Debug.log("eachInvoiceList.invoiceId================="+eachInvoiceList.invoiceId);
-	  
+	 //Debug.log("invoiceDate================="+tempMap["invoiceDate"]);
 	  
 	
 	condList.clear();
@@ -403,11 +421,12 @@ for (eachPartyId in partyIds) {
 		 
 	}
 	 
-	Debug.log("invoiceAMT================="+invoiceAMT);
+	//Debug.log("invoiceAMT================="+invoiceAMT);
 	
-	 
+	
+
 	tempMap.put("invoiceAmount", invoiceAMT);
-	 
+	totalSalAmt=totalSalAmt+invoiceAMT;
 	 
 	 
 	condListCat.clear();
@@ -443,9 +462,9 @@ for (eachPartyId in partyIds) {
 	 
 	//Debug.log("eligibleAMT==============="+eligibleAMT);
 	 
-	 
+	
 	tempMap.put("invoiceQTY", invoiceQTY);
-	 
+	totalSalQty=totalSalQty+invoiceQTY
 	 
 	//Debug.log("invoiceAMT================="+invoiceAMT);
 	condList.clear();
@@ -603,6 +622,7 @@ for (eachPartyId in partyIds) {
 		 claimAmt = Double.valueOf(reimbursentAMT);
 		 totClaimAmt=totClaimAmt+claimAmt;
 		 tempMap.put("claim", claimAmt);
+		 totalClaimAmt=totalClaimAmt+claimAmt
 		 } else{
 		 tempMap.put("claim", "");
 		 }
@@ -612,9 +632,12 @@ for (eachPartyId in partyIds) {
 		 if(maxAmt > reimbursentAMT){
 			 totElgibleAmt=totElgibleAmt+reimbursentAMT;
 			 tempMap.put("eligibleAMT", reimbursentAMT);
+			 totalEligAmt=totalEligAmt+reimbursentAMT;
+			 
 		 } else{
 			 totElgibleAmt=totElgibleAmt+maxAmt;
 			 tempMap.put("eligibleAMT", maxAmt);
+			 totalEligAmt=totalEligAmt+maxAmt;
 		 }
  
 		 
@@ -803,8 +826,16 @@ for (eachPartyId in partyIds) {
 	}
 	 
 }
- 
+
+totalsMap.put("invoiceQTY", totalSalQty);
+totalsMap.put("invoiceAmount", totalSalAmt);
+totalsMap.put("claim", totalClaimAmt);
+totalsMap.put("eligibleAMT", totalEligAmt);
+context.totalsMap=totalsMap;
 context.finalMap = finalMap;
- 
 context.partyWiseTotalsMap = partyWiseTotalsMap;
  
+
+
+
+

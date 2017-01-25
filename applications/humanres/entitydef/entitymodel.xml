@@ -281,6 +281,8 @@ under the License.
       <field name="perfReviewItemSeqId" type="id-ne"></field>
       <field name="perfRatingTypeId" type="id"></field>
       <field name="perfReviewItemTypeId" type="id"></field>
+       <field name="PromotionDate" type="date-time"></field>
+      <field name="ConfirmationDate" type="date-time"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
@@ -344,28 +346,27 @@ under the License.
       <field name="trainingRequestId" type="id-ne"></field>
       <field name="trainingClassTypeId" type="id-ne"></field>
       <field name="workEffortId" type="id-ne"></field> 
+      <field name="topicsCoverd" type="id-ne"></field>
+      <field name="trainingLocation" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="duration" type="id-ne"></field>
+      <field name="trgCategory" type="id-ne"></field>
+      <field name="facultyType" type="id-ne"></field>
+      <field name="nameOfInstitute" type="id-ne"></field>
+      <field name="traingCost" type="fixed-point"></field>
       <field name="approverId" type="id-ne"></field>
       <field name="approvalStatus" type="short-varchar"></field>
       <field name="reason" type="description"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="trainingClassTypeId"/>
-      <prim-key field="fromDate"/>
+      <prim-key field="trainingRequestId"/>
       <relation type="one" fk-name="PERS_TRNG_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="PERS_TRNG_APPR" title="Approver" rel-entity-name="Person">
           <key-map field-name="approverId" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="PERS_TRNG_TCTP" rel-entity-name="TrainingClassType">
-        <key-map field-name="trainingClassTypeId"/>
-      </relation>
       <relation type="one" fk-name="PERS_TRNG_WREF" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
-      </relation>
-      <relation type="one" fk-name="PERS_TRNG_TRNRQ" title="Training Request" rel-entity-name="TrainingRequest">
-          <key-map field-name="trainingRequestId"/>
       </relation>
     </entity>
     <entity entity-name="ResponsibilityType"
@@ -691,6 +692,7 @@ under the License.
 	      <member-entity entity-alias="CT" entity-name="CustomTimePeriod"/>
 	      <alias-all entity-alias="ELB"/>
 	      <alias-all entity-alias="CT"/>
+	      <alias entity-alias="ELB" name="lastUpdatedStamp"/>
 	      <view-link entity-alias="ELB" rel-entity-alias="CT">
 	        <key-map field-name="customTimePeriodId"/>
 	      </view-link>

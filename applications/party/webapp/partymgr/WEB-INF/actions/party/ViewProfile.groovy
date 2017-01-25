@@ -18,7 +18,8 @@
  */
 
 import org.ofbiz.base.util.UtilDateTime;
-
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.util.EntityUtil;
 
 partyId = parameters.partyId ?: parameters.party_id;
 userLoginId = parameters.userlogin_id ?: parameters.userLoginId;
@@ -45,4 +46,24 @@ context.showOld = "true".equals(parameters.SHOW_OLD);
 context.partyId = partyId;
 context.party = delegator.findByPrimaryKey("Party", [partyId : partyId]);
 context.nowStr = UtilDateTime.nowTimestamp().toString();
+partyIdentificationList = [];
 
+partyIdentifications=delegator.findByAnd("PartyIdentification",[partyId:partyId]);
+if(UtilValidate.isNotEmpty(partyIdentifications)){
+	for(int i=0;i<partyIdentifications.size();i++){
+		tempMap = [:];
+		partyIdentification = partyIdentifications.get(i);
+		tempMap.put("partyIdentificationTypeId", partyIdentification.partyIdentificationTypeId);
+		tempMap.put("partyId", partyIdentification.partyId);
+		tempMap.put("idValue", partyIdentification.idValue);
+		tempMap.put("issueDate", UtilDateTime.toDateString(partyIdentification.issueDate, "dd/MM/yyyy"));
+		tempMap.put("expiryDate", partyIdentification.expiryDate); 
+		partyIdMap = [:];
+		partyIdMap.putAll(tempMap);
+		if(UtilValidate.isNotEmpty(partyIdMap)){
+			partyIdentificationList.addAll(partyIdMap);
+		}
+	}
+}
+
+context.partyIdentificationList = partyIdentificationList;

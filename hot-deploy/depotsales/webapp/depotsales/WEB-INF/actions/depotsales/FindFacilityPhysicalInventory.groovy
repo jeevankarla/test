@@ -239,6 +239,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 	
 		double bookedQuantity = 0;
 		//==============================calculate available Stock===================
+		/*
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
 		conditionList.add(EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS, iter.inventoryItemId));
@@ -252,6 +253,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN , relaventOrderIds));
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL , "ORDER_CANCELLED"));
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL , "ORDER_APPROVED"));
 		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		orderIdsWithOutCancelledList = delegator.findList("OrderHeader",  cond,null, null, null, false );
 		
@@ -269,10 +271,31 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			bookedQuantity = bookedQuantity+eachOrderItem.quantity;
 		}
 		
-		}
-		row.putAt("bookedQuantity", bookedQuantity);
+		if(activeOrderIds){
+		row.putAt("orderId", activeOrderIds[0]);
 		
-		row.putAt("availbleQuantity", row.get("quantityOnHandTotal")-bookedQuantity);
+		OrderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", activeOrderIds[0]), false);
+		statusId = OrderHeader.statusId;
+		
+		row.putAt("statusId", statusId);
+		}else{
+		
+		row.putAt("orderId", "");
+		row.putAt("statusId", "N");
+		  
+		}
+		
+		}else{
+		
+		row.putAt("orderId", "");
+		row.putAt("statusId", "");
+		  
+		}
+		
+		*/
+		row.putAt("bookedQuantity", row.get("quantityOnHandTotal")-row.get("availableToPromiseTotal"));
+		
+		row.putAt("availbleQuantity", row.get("availableToPromiseTotal"));
 		
 		String uom ="";
 		bundleWeight =0;
@@ -305,7 +328,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 				poRefNum=orderAttributes.attrValue;
 			}
 			
-			conditionList.clear();
+			/*conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipment.primaryOrderId));
 			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_TO_CUSTOMER"));
 			expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -314,21 +337,23 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			OrderRole = EntityUtil.getFirst(OrderRoleList);
 			
 			branchId = OrderRole.partyId;
+			  
 			
-		  
-			row.putAt("productStoreId", branchId);
 			
 			PartyGroup = delegator.findOne("PartyGroup", UtilMisc.toMap("partyId", branchId), false);
 			
 			branchName = PartyGroup.groupName;
 			
 			row.putAt("branchName", branchName);
+			*/
 			
 			row.putAt("poRefNum", poRefNum);
 			row.putAt("facilityId", inventoryItem.facilityId);
 			if(UtilValidate.isNotEmpty(inventoryProdStore)){
 				row.putAt("branchId", (inventoryProdStore.get(0)).get("productStoreId"));
 			}
+			
+			row.putAt("productStoreId", (inventoryProdStore.get(0)).get("productStoreId"));
 			
 			row.putAt("facilityName", facility.facilityName);
 			row.putAt("partyName", partyName);

@@ -4035,6 +4035,29 @@ under the License.
 		<response name="success" type="view" value="ApPaymentRegister"></response>    
    </request-map> 
    
+   
+   //schedule reports
+    <request-map uri="scheduleReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="scheduleReportPdf"/>
+    </request-map>
+    <request-map uri="manufacturingAccntReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="manufacturingAccntReportPDF"/>
+    </request-map>
+    <request-map uri="tradingAccountReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="tradingAccountReportPDF"/>
+    </request-map>
+    <request-map uri="balanceSheetReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="balanceSheetReportPDF"/>
+    </request-map>
+    <request-map uri="profitAndLossAccountReport.pdf">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="profitAndLossAccountReportPDF"/>
+    </request-map>
+   
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -4159,6 +4182,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="OGAPCreateInvoiceForPayment"/>
     </request-map>
+    <request-map uri="OGAPCreateInvoiceForEmployee">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="OGAPCreateInvoiceForEmployee"/>
+    </request-map>  
     <request-map uri="EmpOGAPCreateInvoiceForPayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EmpOGAPCreateInvoiceForPayment"/>
@@ -4170,6 +4197,14 @@ under the License.
             <redirect-parameter name="paymentId"/>
         </response>
         <response name="error" type="view" value="OutgoingAdvancesPaid"/>    
+    </request-map>
+    <request-map uri="OGAPCreatePaymentAppForInvoiceEmp">
+       <security https="true" auth="false"/>
+       <event type="service"  invoke="createPaymentApplicationForInvoiceEmp"/>        
+       <response name="success" type="request-redirect" value="FindEmployeeAdv">
+            <redirect-parameter name="paymentId"/>
+        </response>
+        <response name="error" type="view" value="FindEmployeeAdv"/>    
     </request-map>
     <request-map uri="EmpOGAPCreatePaymentAppForInvoice">
        <security https="true" auth="false"/>
@@ -4248,6 +4283,26 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ContraAcctgTransDetailReportPdf"/>
     </request-map>
+     <request-map uri="devGrantReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="devGrantReportPDF"/>
+    </request-map>
+     <request-map uri="implGrantReport.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="implGrantReportPDF"/>
+    </request-map>
+    
+    <request-map uri="BankAccountDetail">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankAccountDetail"/>
+    </request-map>
+    <request-map uri="printBankAccountDetails">
+       <security https="true" auth="true"/>
+       <!-- <event type="groovy" path="component://accounting/webapp/accounting/WEB-INF/actions/"  invoke="BankAccountDetail.groovy"/> -->
+       <response name="success" type="view" value="PrintBankAccountDetails"/>
+       <response name="error" type="view" value="BankAccountDetail"/>    
+    </request-map>
+
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
     <!--================= Bank Guarantee ==================== -->
@@ -4830,14 +4885,26 @@ under the License.
    <view-map name="FindAPGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindAPGroupPayment"/>
    <view-map name="PartyPrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PartyPrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>
    <view-map name="OGAPCreateInvoiceForPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OGAPCreateInvoiceForPayment"/>
+   <view-map name="OGAPCreateInvoiceForEmployee" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#OGAPCreateInvoiceForEmployee"/>
    <view-map name="EmpOGAPCreateInvoiceForPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EmpOGAPCreateInvoiceForPayment"/>
    <view-map name="PaymentAccountingTransPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#PaymentAccountingTransPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="DepRctAcctgTransReportPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#DepRctAcctgTransReportPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="FindGrantDevelopmentalBankAccountTab" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGrantDevelopmentalBankAccountTab"/>
    <view-map name="FindGrantImplementationBankAccountTab" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGrantImplementationBankAccountTab"/>
-    <view-map name="EditGrantFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditGrantFinAccountAlt"/>
+   <view-map name="EditGrantFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EditGrantFinAccountAlt"/>
    <view-map name="FindApGrantInvoices" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindApGrantInvoices"/>
    <view-map name="CreateAPGrantInvoice" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateAPGrantInvoice"/>
    <view-map name="ContraAcctgTransDetailReportPdf" type="screenfop" page="component://accounting/widget/GlScreens.xml#ContraAcctgTransDetailReportPdf" content-type="application/pdf" encoding="none"/>
+   <view-map name="devGrantReportPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#devGrantReportPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="implGrantReportPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#implGrantReportPDF" content-type="application/pdf" encoding="none"/>
+   <view-map name="BankAccountDetail" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankAccountDetail"/>
+   <view-map name="PrintBankAccountDetails" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintBankAccountDetails" content-type="application/pdf" encoding="none"/>
+   
+   
+   <view-map name="manufacturingAccntReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#manufacturingAccntReportPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="tradingAccountReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#tradingAccountReportPDF" content-type="application/pdf" encoding="none"/>
+	<view-map name="balanceSheetReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#balanceSheetReportPDF" content-type="application/pdf" encoding="none"/>
+	<view-map name="scheduleReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#scheduleReportPdf" content-type="application/pdf" encoding="none"/>
+	<view-map name="profitAndLossAccountReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#profitAndLossAccountReportPDF" content-type="application/pdf" encoding="none"/>
    <!-- end of view mappings -->
 </site-conf>

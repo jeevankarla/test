@@ -6476,11 +6476,10 @@ public class ByProductServices {
 			 String customTimePeriodId = "";
 			try{
 				  conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS,periodTypeId));
-	 			  conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO,new java.sql.Date(fromDate.getTime())));
-	 			  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));				  
+	 			  conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,new java.sql.Date(fromDate.getTime())));
+	 			  conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime())));				  
 	 			  EntityCondition CustCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	 			  custTimePeriodList = delegator.findList("CustomTimePeriod", CustCondition, null, null, null,false); 
-	 			 // Debug.log("customTimePeriodId"+custTimePeriodList);
 	 			 if(UtilValidate.isNotEmpty(custTimePeriodList)){
 	 			      customTimePeriodId=((GenericValue)EntityUtil.getFirst(custTimePeriodList)).getString("customTimePeriodId");
 	 			      Debug.log("customTimePeriodId"+customTimePeriodId);

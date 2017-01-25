@@ -261,7 +261,7 @@ if(shipments){
 		//Debug.log("scheme============="+scheme);
 		
 	
-		
+		/*
 		
 		condExpr = [];
 		condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -278,7 +278,7 @@ if(shipments){
 			tenperValue = Double.valueOf(amount);
 		}
 		
-		context.tenperValue = tenperValue;
+		context.tenperValue = tenperValue;*/
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -448,7 +448,7 @@ if(shipments){
 		context.partyId = partyId;
 		context.billToPartyId = billToPartyId;
 		milliseconds=(shipment.estimatedShipDate).getTime();
-		context.shipmentDate = shipment.estimatedShipDate;
+		context.shipmentDate = shipment.supplierInvoiceDate;
 		context.milliseconds=milliseconds;
 		context.vehicleId = shipment.vehicleId;		
 		products = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
@@ -717,9 +717,12 @@ if(shipments){
 				
 				serviceChrg = 0;
 				if(OrderAdjustmentForServiceCha){
-					newObj.put("SERVICE_CHARGE_AMT", ((qty*unitPrice)*2)/100);
+					
+					sourcePercentage = OrderAdjustmentForServiceCha.sourcePercentage;
+					
+					newObj.put("SERVICE_CHARGE_AMT", ((qty*unitPrice)*sourcePercentage)/100);
 					newObj.put("SERVICE_CHARGE", (OrderAdjustmentForServiceCha[0].sourcePercentage));
-					serviceChrg = ((qty*unitPrice)*2)/100;
+					serviceChrg = ((qty*unitPrice)*sourcePercentage)/100;
 				}else{
 				newObj.put("SERVICE_CHARGE_AMT", 0);
 				}

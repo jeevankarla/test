@@ -32,7 +32,8 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="partyId" optional="false"/>
         <override name="partyQualTypeId" optional="false"/>
-        <override name="fromDate" optional="true"/>
+        <attribute name="fromDateStr"  mode="IN" optional="true" type="String"/>
+        <attribute name="thruDateStr" mode="IN" optional="true" type="String"/>
     </service>
     <service name="createPartyExp" engine="simple" default-entity-name="PartyQual"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPartyQual" auth="true">
@@ -40,10 +41,11 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>
         <auto-attributes mode="INOUT" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <attribute name="designation" mode="IN" optional="true" type="String"/>
+        <attribute field-name="" name="designation" mode="IN" optional="true" type="String"/>
         <override name="partyId" optional="false"/>
         <override name="partyQualTypeId" optional="false"/>
-        <override name="fromDate" optional="true"/>
+        <attribute name="fromDateStr"  mode="IN" optional="true" type="String"/>
+        <attribute name="thruDateStr" mode="IN" optional="true" type="String"/>
     </service>
 
     <service name="updatePartyQual" engine="simple" default-entity-name="PartyQual"
@@ -297,7 +299,7 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-
+	
     <service name="createPerformanceNote" engine="simple" default-entity-name="PerformanceNote"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createPerformanceNote" auth="true">
         <description>Create Performance Note</description>
@@ -314,7 +316,7 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-
+	
     <service name="deletePerformanceNote" engine="simple" default-entity-name="PerformanceNote"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deletePerformanceNote" auth="true">
         <description>Delete a Performance Note</description>
@@ -486,7 +488,9 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <override type="Timestamp" mode="IN" name="fromDate"  optional="false"/>
+         <attribute name="fromDateStr" mode="IN" type="String" optional="true"></attribute> 
+        <attribute name="thruDateStr" mode="IN" type="String" optional="true"></attribute>
+        <override type="Timestamp" mode="IN" name="fromDate"  optional="true"/>
         <override name="payGradeId" mode="IN" optional="false"></override>
         <override name="salaryStepSeqId" mode="IN" optional="false"></override>
     </service>
@@ -794,7 +798,7 @@ under the License.emplpunch
         <description>create a Dependent/Employee relationship and add the related roles</description>
         <attribute name="dependentFirstName" type="String" mode="IN" />
         <attribute name="dependentLastName" type="String" mode="IN" />
-        <attribute name="dependentBirthDate" type="Date" mode="IN"/>
+        <attribute name="dependentBirthDate" type="String" mode="IN"/>
         <attribute name="priorityTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="empPartyId" mode="IN" type="String"></attribute>
         <attribute name="partyRelationshipTypeId" mode="IN" type="String"></attribute>      
@@ -823,6 +827,18 @@ under the License.emplpunch
        <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>  
 		<attribute name="partyId" mode="IN" type="String"></attribute>
 		<attribute name="language" mode="IN" type="String" optional="false"></attribute>
+        <!-- <attribute name="partyId" mode="IN" type="String"></attribute> -->
+    </service>
+     <service name="createPartyIdentificationTypeConv" engine="java" auth="true" invoke="createPartyIdentificationTypeConv" 
+        location="in.vasista.vbiz.humanres.HumanresService">
+        <description>create New Language</description>
+       <permission-service service-name="humanResManagerPermission" main-action="EMPLOYEE_EDIT"/>  
+		<attribute name="partyId" mode="INOUT" type="String"></attribute>
+		<attribute name="updateFlag" mode="IN" type="String" optional="true"></attribute>
+		<attribute name="partyIdentificationTypeId" mode="IN" type="String"></attribute>
+		<attribute name="idValue" mode="IN" type="String" optional="true"></attribute>
+		<attribute name="issueDate" mode="IN" type="String" optional="true"></attribute>
+		<attribute name="expiryDate" mode="IN" type="String" optional="true"></attribute>
         <!-- <attribute name="partyId" mode="IN" type="String"></attribute> -->
     </service>
 	<service name="updatePreviousEmployment" engine="simple"
@@ -1115,7 +1131,67 @@ under the License.emplpunch
         <attribute name="oldAppointmentDate" mode="IN" type="String" optional="true"/>
         <attribute name="newAppointmentDate" mode="IN" type="String" optional="true"/>
     </service>
-
+	
+	
+	<service name="makeEmployeeAppraisalPromotion" engine="java" default-entity-name="Employment"
+             location="in.vasista.vbiz.humanres.HumanresService" invoke="makeEmployeeAppraisalPromotion" auth="true">
+        <description>Make appraisal and promotion</description>
+        <attribute name="employeeId" mode="IN" type="String" optional="true"/>
+        <attribute name="PerfRatingType" mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate" mode="IN" type="String" optional="true"/>
+        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+        <attribute name="Promotion" mode="IN" type="String" optional="true"/>
+        <attribute name="dateOfPromotion" mode="IN" type="String" optional="true"/>
+        <attribute name="dateOfConfirmation" mode="IN" type="String" optional="true"/>
+    </service>
+    <service name="UpdatePerformanceRating" engine="java" 
+                 location="in.vasista.vbiz.humanres.HumanresService" invoke="UpdatePerformanceRating" auth="true">
+        <description>Make appraisal and promotion</description>
+        <attribute name="partyId" mode="IN" type="String" optional="true"/>
+        <attribute name="PerfRatingType" mode="IN" type="String" optional="true"/>
+        <attribute name="perfReviewId" mode="IN" type="String" optional="true"/>
+        <attribute name="perfReviewItemSeqId" mode="IN" type="String" optional="true"/>
+        <attribute name="fromDate" mode="IN" type="String" optional="true"/>
+        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+        <attribute name="promotion" mode="IN" type="String" optional="true"/>
+        <attribute name="PromotionDate" mode="IN" type="String" optional="true"/>
+        <attribute name="ConfirmationDate" mode="IN" type="String" optional="true"/>
+    </service>
+     <service name="createNewEmplTraining"  engine="java"  auth="true"
+ 	        location="in.vasista.vbiz.humanres.HumanresService" invoke="createNewEmplTraining">
+ 	        <attribute name="partyIdList" mode="IN" type="List" optional="true"></attribute>
+ 	        <attribute name="topicsCoverd" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="trainingLocation" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="fromDate" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="duration" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="trgCategory" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="facultyType" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="nameOfInstitute" mode="IN" type="String" optional="true"></attribute>
+ 	       	<attribute name="traingCost" mode="IN" type="BigDecimal" optional="true"/>
+     </service> 
+      <service name="UpdateTraining"  engine="java"  auth="true"
+ 	        location="in.vasista.vbiz.humanres.HumanresService" invoke="UpdateTraining">
+ 	        <attribute name="partyId" mode="IN" type="String" optional="true"></attribute>
+ 	        <attribute name="trainingRequestId" mode="IN" type="String" optional="true"></attribute>
+ 	        <attribute name="topicsCoverd" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="trainingLocation" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="fromDate" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="thruDate" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="duration" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="trgCategory" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="facultyType" mode="IN" type="String" optional="true"/>
+ 	        <attribute name="nameOfInstitute" mode="IN" type="String" optional="true"></attribute>
+ 	       	<attribute name="traingCost" mode="IN" type="BigDecimal" optional="true"/>
+     </service> 
+     
+	 <service name="DeleteTraining" engine="simple" default-entity-name="PersonTraining"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="DeleteTraining" auth="true">
+        <description>Delete a Performance Review Item</description>
+        <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
     <service name="createJobRequisition" engine="simple" default-entity-name="JobRequisition"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createJobRequisition" auth="true">
         <description>Create a new Job Requisition</description>
@@ -1953,7 +2029,7 @@ under the License.emplpunch
         <attribute name="lastName" mode="IN" type="String" optional="false"></attribute>
         <attribute name="fatherName" mode="IN" type="String" optional="true"></attribute>
         <attribute name="motherName" mode="IN" type="String" optional="true"></attribute>
-        <attribute name="birthDate" mode="IN" type="Date" optional="true"></attribute> 
+        <attribute name="birthDate" mode="IN" type="String" optional="true"></attribute> 
         <attribute name="birthPlace" mode="IN" type="String" optional="true"></attribute>
         <attribute name="birthState" mode="IN" type="String" optional="true"></attribute>
         <attribute name="birthDistrict" mode="IN" type="String" optional="true"></attribute>
@@ -1997,7 +2073,7 @@ under the License.emplpunch
         <attribute name="aadharNumber" mode="IN" type="String" optional="false"></attribute>
         <attribute name="panNumber" mode="IN" type="String" optional="false"></attribute>
         <attribute name="dateOfJoining" mode="IN" type="Date" optional="true"></attribute>
-        <attribute name="employmentDate" mode="IN" type="Date" optional="true"></attribute>
+        <attribute name="employmentDate" mode="IN" type="String" optional="true"></attribute>
         <attribute name="passportExpireDate" mode="IN" type="Date" optional="true"></attribute> 
         <attribute name="caste" mode="IN" type="String" optional="true"></attribute>
         <attribute name="backgroundVerification" mode="IN" type="String" optional="true"></attribute>
@@ -2049,7 +2125,7 @@ under the License.emplpunch
         <attribute name="partyId" mode="IN" type="String" optional="false"/>
         <attribute name="company" mode="IN" type="String" optional="false"/>
         <attribute name="locationGeoId" mode="IN" type="String" optional="false"/>
-        <attribute name="fromDate" mode="IN" type="Timestamp" optional="false"/>
+        <attribute name="fromDate" mode="IN" type="String" optional="false"/>
     </service>
      <service name="createHRTimePeriod" engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="createTimePeriod" auth="true">

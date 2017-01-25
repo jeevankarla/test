@@ -28,6 +28,7 @@ $(document).ready(function(){
 			dateFormat:'d MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
+			minDate: new Date(${minimumtime?if_exists}),
 			onSelect: function( selectedDate ) {
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}

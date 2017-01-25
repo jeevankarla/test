@@ -30,16 +30,14 @@ try {
 }
 orgId=parameters.partyId;
 
-nowDate=UtilDateTime.nowTimestamp();
-fromDate = UtilDateTime.getMonthStart(nowDate);
-thruDate = UtilDateTime.getMonthEnd(nowDate,timeZone,locale);
 Flag=parameters.reportFlag;
 if(Flag=="daAmount")
-result=dispatcher.runSync("getCustomTimePeriodId", [periodTypeId:"HR_MONTH",fromDate:fromDate,thruDate:thruDate,userLogin:userLogin]);
+result=dispatcher.runSync("getCustomTimePeriodId", [periodTypeId:"HR_MONTH",fromDate:fromDateStart,thruDate:thruDateStart,userLogin:userLogin]);
 def populateChildren(org, employeeList) {
 		EmploymentsMap=HumanresService.getActiveEmployements(dctx,[userLogin:userLogin,orgPartyId:parameters.partyId,fromDate:fromDateStart,thruDate:thruDateStart]);
 		employments=EmploymentsMap.get("employementList");
 	employments.each { employment ->
+		
 		employee = [:];
 		group=delegator.findByAnd("PartyRelationshipAndDetail", [partyId: employment.partyIdFrom, partyTypeId : "PARTY_GROUP"],["groupName"]);
 		if(UtilValidate.isNotEmpty(group))
@@ -59,6 +57,66 @@ def populateChildren(org, employeeList) {
 			qual=qualifications.get(0).title;
 		 }
 		employee.put("qual",qual);
+		panId="";
+		panIds=delegator.findByAnd("PartyIdentification",[partyId:employment.partyId, partyIdentificationTypeId:"PAN_NUMBER"],["idValue"]);
+		if(UtilValidate.isNotEmpty(panIds)){
+			panId=panIds.get(0).idValue;
+		 }
+		employee.put("panId",panId);
+		aadharId = "";
+		aadharIds=delegator.findByAnd("PartyIdentification",[partyId:employment.partyId, partyIdentificationTypeId:"ADR_NUMBER"],["idValue"]);
+		if(UtilValidate.isNotEmpty(aadharIds)){
+			aadharId=aadharIds.get(0).idValue;
+		}
+		employee.put("aadharId",aadharId);
+		
+		
+		personaldetails = [];
+		String fatherName="";
+		 String motherName="";
+		String spouseName="";
+		String passportNumber="";
+		String  religion="";
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			
+		personaldetails = delegator.findOne("Person", [partyId : employment.partyId], false);
+			
+		 if(UtilValidate.isNotEmpty(employment.partyId)){
+			fatherName =personaldetails.fatherName;
+			motherName =personaldetails.motherName;
+			spouseName =personaldetails.spouseName;
+			passportNumber =personaldetails.passportNumber;
+			religion = personaldetails.religion;
+			employee.put("motherName",motherName);
+			employee.put("spouseName",spouseName);
+			employee.put("passportNumber",passportNumber);
+			employee.put("religion",religion);
+		 }
+		}
+		
+		 conditionpayList=[];
+		 PayHistoryDetails = [];
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			conditionpayList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, employment.partyId));
+		}
+			conditionpayList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		
+		condition1=EntityCondition.makeCondition(conditionpayList,EntityOperator.AND);
+		PayHistoryDetails= delegator.findList("PayHistory", condition1, null, null, null, false );
+		String emplpayGradeId = "";
+		String PayScale="";
+		if(UtilValidate.isNotEmpty(PayHistoryDetails)){
+		
+		emplpayGradeId = EntityUtil.getFirst(PayHistoryDetails).get("payGradeId");
+		}
+		payGradeDetails = delegator.findOne("PayGrade", [payGradeId : emplpayGradeId], false);
+		if(UtilValidate.isNotEmpty(payGradeDetails)){
+				PayScale=payGradeDetails.payScale;
+		}
+		context.PayScale=PayScale;
+		employee.put("PayScale", PayScale);
+		
+		
 		daAmount=0;
 		if(UtilValidate.isNotEmpty(Flag) && Flag=="daAmount"){
 			daAmountList=casteIds=delegator.findByAnd("PartyBenefit", [partyIdTo: employment.partyId,benefitTypeId:"PAYROL_BEN_DA"],["benefitTypeId"]);
@@ -116,6 +174,51 @@ def populateChildren(org, employeeList) {
 		employee.put("bloodGroup",employment.bloodGroup);
 		}
 		
+		 geodetails=[];
+		String geoname="";
+		if(UtilValidate.isNotEmpty(employment.partyId)){
+			
+		geodetails = delegator.findOne("Geo", [geoId : employment.locationGeoId], false);
+		
+		if(UtilValidate.isNotEmpty(geodetails)){
+		geoname=geodetails.geoName;
+		employee.put("geoName",geoname);
+		}
+		
+		}
+		 exprList = [];
+		deptName = "";
+		exprList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS ,"DEPATMENT_NAME"));
+		exprList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS ,"EMPLOYEE"));
+		exprList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,employment.partyId));
+		exprList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+		exprCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
+		partyRelationshipList = delegator.findList("PartyRelationship", exprCond, null, null, null, false);
+		
+		if(UtilValidate.isNotEmpty(partyRelationshipList)){
+			deptId = (EntityUtil.getFirst(partyRelationshipList)).get("partyIdFrom");
+			partyGroupDetails = delegator.findOne("PartyGroup", [partyId : deptId], false);
+			if(UtilValidate.isNotEmpty(partyGroupDetails)){
+				deptName = 	partyGroupDetails.groupName;
+			
+				}
+		}
+		employee.put("deptName",deptName);
+		
+		finAccountId="";
+		finAccountName="";
+		finAccountName="";
+		finAccountIds =delegator.findByAnd("FinAccount",[ownerPartyId:employment.partyId]);
+		if(UtilValidate.isNotEmpty(finAccountIds)){
+			finAccountCode=finAccountIds.get(0).finAccountCode;
+			finAccountName=finAccountIds.get(0).finAccountName;
+			ifscCode=finAccountIds.get(0).ifscCode;
+			employee.put("finAccountCode",finAccountCode);
+			employee.put("finAccountName",finAccountName);
+			employee.put("ifscCode",ifscCode);
+			
+		 }
+		
 		address = "";
 		if (employment.birthDate) {
 			int day =  UtilDateTime.getDayOfMonth(UtilDateTime.toTimestamp(employment.birthDate), timeZone, locale);
@@ -123,7 +226,7 @@ def populateChildren(org, employeeList) {
 			if (day == 1) { // need to take the prev month last date
 				month--;
 			}
-			int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(employment.birthDate), timeZone, locale) + 60;
+			int year = UtilDateTime.getYear(UtilDateTime.toTimestamp(employment.birthDate), timeZone, locale) + 58;
 			retirementDate = UtilDateTime.toTimestamp(month, day, year, 0, 0, 0);
 			retirementDate = UtilDateTime.getMonthEnd(UtilDateTime.toTimestamp(retirementDate), timeZone, locale);
 			retirementDate=UtilDateTime.toDateString(retirementDate,"dd/MM/yyyy");
@@ -186,11 +289,11 @@ context.employeeList=employeeList;
 if(UtilValidate.isEmpty(parameters.partyId)){
 	parameters.partyId = "Company";
 	
-}
-company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : parameters.partyId]);
-populateChildren(company, employeeList);
-JSONArray employeesJSON = new JSONArray();
-employeeList.each {employee ->
+   }
+	company = delegator.findByPrimaryKey("PartyAndGroup", [partyId : parameters.partyId]);
+	populateChildren(company, employeeList);
+	JSONArray employeesJSON = new JSONArray();
+	employeeList.each {employee ->
 	JSONArray employeeJSON = new JSONArray();
 	employeeJSON.add(employee.name);
 	employeeJSON.add(employee.employeeId);
@@ -198,8 +301,7 @@ employeeList.each {employee ->
 	employeeJSON.add(employee.position);
 	employeeJSON.add(employee.joinDate);
 	employeeJSON.add(employee.phoneNumber);
-	//employeeJSON.add(employee.address);
 	employeesJSON.add(employeeJSON);
-}
+
+	}
 context.employeesJSON = employeesJSON;
-//Debug.logError("employeesJSON="+employeesJSON,"");

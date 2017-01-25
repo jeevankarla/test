@@ -12,7 +12,17 @@ import org.ofbiz.base.util.UtilDateTime;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
-
+shipmentId="";
+if(UtilValidate.isNotEmpty(parameters.supplierInvoiceId))
+{
+	supplierInvoiceId=parameters.supplierInvoiceId;
+	shipmenmts = delegator.findList("Shipment",EntityCondition.makeCondition("supplierInvoiceId", EntityOperator.EQUALS , supplierInvoiceId)  , null, null, null, false );
+	if(UtilValidate.isNotEmpty(shipmenmts))
+	{
+		shipmentId=EntityUtil.getFirst(shipmenmts).get("shipmentId");
+	}
+}
+context.shipmentId=shipmentId;
 if(UtilValidate.isNotEmpty(parameters.invoiceSequence)){
 	invoiceSequence = parameters.invoiceSequence;
 	billOfSaleInvoiceSequence = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceSequence", EntityOperator.EQUALS , invoiceSequence)  , null, null, null, false );
@@ -105,6 +115,16 @@ if(parameters.invoiceTypeId == "PURCHASE_INVOICE"){
 		parameters.tempPartyId = "";
 	}*/
 }
-
+if(shipmentId)
+{
+	parameters.shipmentId = shipmentId;
+	parameters.shipmentId_op = "equals";
+}
+Map inputMap = FastMap.newInstance();
+inputMap.put("inputFields", parameters);
+inputMap.put("entityName", "Invoice");
+inputMap.put("orderBy", "createdStamp DESC");
+Map result = dispatcher.runSync("performFind",inputMap);
+context.result=result;
 
 

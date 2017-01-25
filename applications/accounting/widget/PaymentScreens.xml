@@ -390,7 +390,7 @@ under the License.
     <screen name="PaymentOverview">
         <section>
             <actions>
-                <set field="titleProperty" value="AP Payment Overview"/>
+                <set field="titleProperty" value="Payment Overview"/>
                 <set field="tabButtonItem" value="paymentOverview"/>
                 <set field="labelTitleProperty" value="Payment"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
@@ -398,6 +398,8 @@ under the License.
                 <entity-one entity-name="Payment" value-field="payment"/>
                 <set field="finAccountTransId" from-field="payment.finAccountTransId"/>
                 <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>
+                <set field="realisationDate" from-field="finAccountTrans.realisationDate"/>
+                 
                 <set field="appliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentApplied(payment).toString()}"/>
                 <set field="notAppliedAmount" value="${bsh:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(payment).toString()}"/>
                 <service service-name="getAcctTransEnries" result-map="AcctgTransAndEntries" auto-field-map="true"/>
@@ -1404,6 +1406,35 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
+   <screen name="devGrantReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/devGrantReportPDF.groovy"/>
+            </actions>
+           <widgets>
+                <platform-specific>
+                <html><html-template location="component://accounting/webapp/accounting/invoice/devGrantReport.fo.ftl"/></html>
+	            </platform-specific>	
+            </widgets>
+        </section>
+    </screen>
+     <screen name="implGrantReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/implGrantReportPDF.groovy"/>
+            </actions>
+           <widgets>
+                <platform-specific>
+                <html><html-template location="component://accounting/webapp/accounting/invoice/implGrantReport.fo.ftl"/></html>
+	            </platform-specific>	
+            </widgets>
+        </section>
+    </screen> 
 </screens>
 

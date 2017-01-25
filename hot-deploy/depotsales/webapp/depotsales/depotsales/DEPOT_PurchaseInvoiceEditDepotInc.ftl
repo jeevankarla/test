@@ -345,9 +345,16 @@
 		var tallyrefNoField=jQuery("<input>").attr("type", "hidden").attr("name", "tallyrefNo").val(tallyrefNo);
 		var SalesInvoiceIdField=jQuery("<input>").attr("type", "hidden").attr("name", "invoiceId").val(invoiceId);
 		
+		var purchaseTaxType=jQuery("<input>").attr("type", "hidden").attr("name", "purchaseTaxType").val(purchaseTaxType);
+		var purchaseTitleTransferEnumId=jQuery("<input>").attr("type", "hidden").attr("name", "purchaseTitleTransferEnumId").val(purchaseTitleTransferEnumId);
+		
+		
 		jQuery(formId).append(jQuery(invoiceDateField));
 		jQuery(formId).append(jQuery(tallyrefNoField));
 		jQuery(formId).append(jQuery(SalesInvoiceIdField));
+		
+		jQuery(formId).append(jQuery(purchaseTaxType));
+		jQuery(formId).append(jQuery(purchaseTitleTransferEnumId));
 		
 		jQuery(formId).attr("action", action);	
 		jQuery(formId).submit();

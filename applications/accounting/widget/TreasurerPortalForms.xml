@@ -317,13 +317,20 @@ under the License.
     </form>
      <form name="ListAdvDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <field name="finAccountId" title="AccountId"><display/></field>
+        <field name="finAccountId" title="AccountId"><display/>
+         <hyperlink target="EditFinAccount" description="${finAccountId}" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
         <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
-        <field name="finAccountName" title="Acc Name"><display/></field>
+        <!-- <field name="finAccountName" title="Acc Name"><display/></field> -->
         <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
         <field name="fromDate" title="Acc Date"><display/></field>
 <!--         <field name="finAccountType"><display></display></field> -->
-        <field name="actualBalance" title="Acc Balance"><display/></field>
+        <!-- <field name="actualBalance" title="Acc Balance"><display/></field> -->
+        <field name="depositAmt" title="Adv Paid"><display/></field>
+		<field name="adjustAmt" title="Adjusted Amt"><display/></field>
+        <field name="actualBalance" title="Adv Balance"><display/></field>
         <field name="refund" widget-style="buttontext" event="onclick" action="" >
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}','EmpAdv');" description="Refund">
             </hyperlink>
@@ -338,6 +345,13 @@ under the License.
             <hyperlink target="viewDepositTransactions" description="View Transactions" target-window="_blank">
              	<parameter param-name="finAccountId"/>
              	<parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field>
+        <field name="createInvoice" widget-style="buttontext" use-when="&quot;${actualBalance}&quot; != &quot;0&quot;">
+        	<hyperlink target="OGAPCreateInvoiceForEmployee" description="Create Invoice" target-window="_blank">
+                <parameter param-name="partyIdFrom" from-field="ownerPartyId"/>
+                <parameter param-name="partyId" value="Company"/>
+                <parameter param-name="finAccountId" from-field="finAccountId"/>
             </hyperlink>
         </field>
     </form>
@@ -466,6 +480,7 @@ under the License.
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                     <entity-constraint name="ownerPartyId" from-field="parameters.ownerPartyId"/>
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down>
@@ -551,7 +566,7 @@ under the License.
             <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
-                    <entity-constraint name="ownerPartyId" value="Company"/>
+                    <entity-constraint name="ownerPartyId" from-field="parameters.ownerPartyId"/>
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
@@ -1057,7 +1072,7 @@ under the License.
         </field> -->
         <field name="finAccountIdTo" title="From/To Account" >
             <drop-down allow-empty="false">
-            	<list-options key-name="finAccountId" list-name="companyBanksList" description="${finAccountName}"/>
+            	<list-options key-name="finAccountId" list-name="finalList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="amount" required-field="true"><text/></field>
@@ -1109,7 +1124,7 @@ under the License.
         </field> -->
         <field name="finAccountIdTo" title="From/To Account" >
             <drop-down allow-empty="false">
-            	<list-options key-name="finAccountId" list-name="companyBanksList" description="${finAccountName}"/>
+            	<list-options key-name="finAccountId" list-name="finalList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="amount" required-field="true"><text/></field>
@@ -1150,7 +1165,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="finAccountName" title="Account Name"><text size="20"/></field>
+        <field name="finAccountParentId"><hidden value="EMPLOYEE_ADV"/></field>
+        <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
@@ -1163,7 +1179,7 @@ under the License.
         </field> -->
         <field name="finAccountIdTo" title="From/To Account" >
             <drop-down allow-empty="false">
-            	<list-options key-name="finAccountId" list-name="companyBanksList" description="${finAccountName}"/>
+            	<list-options key-name="finAccountId" list-name="finalList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="amount" required-field="true"><text/></field>
@@ -2188,7 +2204,7 @@ under the License.
                     <entity-order-by field-name="groupName"/>
                 </entity-options> -->
                 <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
-                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY"/>
+                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY,HEAD_OFFICE"/>
                 </entity-options>
             </drop-down>
         </field>
@@ -2254,7 +2270,7 @@ under the License.
         <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
-                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY"/>
+                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY,HEAD_OFFICE"/>
                 </entity-options>
             </drop-down>
         </field>
@@ -3051,6 +3067,14 @@ under the License.
 	            <submit button-type="button"/>
 	        </field>
     </form>  
-    
+    <form name="FindBankAccountDetails" type="single" target="BankAccountDetail" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="finAccountTypeId"><hidden value="BANK_ACCOUNT"/></field>
+        <!-- <field name="finAccountId" position="1" tooltip="contains"><text/></field>
+        <field name="finAccountName" position="1" tooltip="contains"><text/></field>
+        <field name="ownerPartyId" position="1"><lookup target-form-name="LookupPartyName"/></field> --> 
+        <field name="asOnDate" required-field="true"><date-time type="date"/></field>       
+        <field name="searchButton" widget-style="smallSubmit"><submit/></field>
+    </form>
     
 </forms>

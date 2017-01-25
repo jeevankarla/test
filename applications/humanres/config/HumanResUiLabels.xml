@@ -2678,5 +2678,72 @@
      <property key="Type">       
         <value xml:lang="en">Type</value>        
     </property>
+    <property key="dateOfPromotion">       
+        <value xml:lang="en">Date of Promotion/Upgradation</value>        
+    </property>
+     <property key="dateOfConfirmation">       
+        <value xml:lang="en">Date of Confirmation</value>        
+    </property>
+    <property key="fromDate">       
+        <value xml:lang="en">from Date</value>        
+    </property>
+    <property key="nameOfInstitute">       
+        <value xml:lang="en">Institution/Faculty Name</value>        
+    </property>
+    <property key="duration">       
+        <value xml:lang="en">Duration</value>        
+    </property>
+    <property key="trgCategory">       
+        <value xml:lang="en">Trg.Category</value>        
+    </property>
+    <property key="TotalCost">       
+        <value xml:lang="en">Total Cost</value>        
+    </property>
+    <property key="facultyType">       
+        <value xml:lang="en">Faculty Type</value>        
+    </property>
+    <property key="trainReqId">       
+        <value xml:lang="en">Training Req Id</value>        
+    </property>    
+    <property key="empCode">       
+        <value xml:lang="en">Emp Code</value>        
+    </property>
+     <property key="HumanResEmploymentDeductions">       
+        <value xml:lang="en">Employee Deductions </value>        
+    </property>
+    
+     <property key="HumanResEmploymentBenifits">       
+        <value xml:lang="en">Employee Benifits</value>        
+    </property>
+    
+    
+    <property key="HumanResEmploymentOrganisation">       
+        <value xml:lang="en">Organisation Employee Id</value>        
+    </property>
+    
+    <property key="HumanResEmploymentPartyIdTO">       
+        <value xml:lang="en">Employee Id</value>        
+    </property>
+    
+    
+    
+     <property key="HumanResEmploymentDeductions">       
+        <value xml:lang="en">Employee Deductions </value>        
+    </property>
+    
+     <property key="HumanResEmploymentBenifits">       
+        <value xml:lang="en">Employee Benifits</value>        
+    </property>
+    
+    
+    <property key="HumanResEmploymentOrganisation">       
+        <value xml:lang="en">Organisation Employee Id</value>        
+    </property>
+    
+    <property key="HumanResEmploymentPartyIdTO">       
+        <value xml:lang="en">Employee Id</value>        
+    </property>
+    
+    
     
 </resource>

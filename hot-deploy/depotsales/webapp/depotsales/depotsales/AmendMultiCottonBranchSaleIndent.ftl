@@ -545,6 +545,15 @@
 		  		data[args.row]["totPayable"] = roundedAmount;
 			}
 		else if(args.cell == 4){
+		
+		    var minqty = parseFloat(data[args.row]["minQuantity"]);
+				if(minqty>0){
+				  alert("Sorry, already shipment done for this order");
+				  data[args.row]['unitPrice'] = data[args.row]['actualUnitPrice'];
+				  price = parseFloat(data[args.row]["unitPrice"]);
+				}
+		
+		
 			quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
 			
 			data[args.row]["bundleunitPrice"] = bundleunitPrice;

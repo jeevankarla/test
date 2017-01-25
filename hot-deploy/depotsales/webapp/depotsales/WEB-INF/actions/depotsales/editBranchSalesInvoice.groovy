@@ -123,7 +123,7 @@
 		context.customerGeoId = customerGeoId;
 		context.branchGeoId = branchGeoId;
 		
-		orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+		orderAttr = delegator.findList("InvoiceAttribute", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
 		
 		saleTaxType = null;
 		saleTitleTransferEnumId = null;
@@ -533,7 +533,7 @@
 				
 				
 				condExpr = [];
-				//condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
+				condExpr.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
 				condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
 				condExpr.add(EntityCondition.makeCondition("description", EntityOperator.EQUALS, "Service Charge"));
 				//Debug.log("condExpr ============="+condExpr);

@@ -4186,6 +4186,9 @@ public class MaterialPurchaseServices {
 		  	}
 	  	}
 	  	String primaryOrderId = "";
+	  	
+	  	String primaryPurCahseOrderId = "";
+	  	
 	    BigDecimal totalDiscount=BigDecimal.ZERO;
 
 	  	try{
@@ -4259,19 +4262,51 @@ public class MaterialPurchaseServices {
 		     		EntityCondition cond2=EntityCondition.makeCondition(conList2,EntityOperator.AND);
 					 orderAssoc = delegator.findList("OrderAssoc", cond2, null, null, null, false);
 					 indentId=(EntityUtil.getFirst(orderAssoc)).getString("orderId");
-					 
+				
+					 primaryPurCahseOrderId = indentId;
 					}catch (GenericEntityException e) {
 							Debug.logError("Failed to retrive Indent"+orderId, module);
 							request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive indent");	
 					  		return "error";
 							
 					}
+				
 				GenericValue orderItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId), false);
 				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
 
 				GenericValue indentItem = delegator.findOne("OrderItem", UtilMisc.toMap("orderId",indentId,"orderItemSeqId",orderItemSeqId), false);
 				GenericValue indentHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",indentId), false);
 
+				////Debug.log("indentId=============="+indentId);
+				
+				////Debug.log("orderItemSeqId=============="+orderItemSeqId);
+				
+				List OrderItemDetailList =null;
+				GenericValue OrderItemDetail =null;
+				BigDecimal QuotaQty = BigDecimal.ZERO;
+				try {
+				List conList3 = FastList.newInstance();
+				conList3.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
+				conList3.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,orderItemSeqId));
+	     		EntityCondition cond3=EntityCondition.makeCondition(conList3,EntityOperator.AND);
+	     		OrderItemDetailList = delegator.findList("OrderItemDetail", cond3, null, null, null, false);
+	     		
+	     		////Debug.log("OrderItemDetailList=============="+OrderItemDetailList);
+	     		
+	     		OrderItemDetail = (EntityUtil.getFirst(OrderItemDetailList));
+	     		
+	     		 QuotaQty =  OrderItemDetail.getBigDecimal("quotaQuantity");
+	     		
+	     		////Debug.log("OrderItemDetail=============="+OrderItemDetail);
+	     		
+				}catch (GenericEntityException e) {
+						Debug.logError("Failed to retrive OrderItemDetail"+indentId, module);
+						request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderItem");	
+				  		return "error";
+						
+				}
+				
+				
 				//GenericValue orderItemChange = delegator.makeValue("OrderItemChange");
 				Map<String, Object> orderItemChange = FastMap.newInstance();
 				orderItemChange.put("userLogin", userLogin);
@@ -4294,7 +4329,7 @@ public class MaterialPurchaseServices {
 					conditionlist.add(EntityCondition.makeCondition("changeTypeEnumId", EntityOperator.EQUALS, "ODR_ITM_AMEND"));
 					EntityCondition conditionMain=EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
 					List<GenericValue> OrderItemChangeDetails = delegator.findList("OrderItemChange", conditionMain , null ,null, null, false );
-					//Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
+					//////Debug.log("OrderItemChangeDetails================="+OrderItemChangeDetails);
 					 //OrderItemChangeDetails=EntityUtil.getFirst(OrderItemChangeDetails);
 					if(UtilValidate.isEmpty(OrderItemChangeDetails)){
 						orderItemChange.put("effectiveDatetime",orderHeader.getTimestamp("entryDate"));
@@ -4325,6 +4360,8 @@ public class MaterialPurchaseServices {
 					orderItemChange.put("quantity", amendedQuantity);
 					orderItem.set("quantity", amendedQuantity);
 					indentItem.set("quantity", amendedQuantity);
+					OrderItemDetail.set("quantity", amendedQuantity);
+					
 
 				}
 				if(amendedPrice.compareTo(BigDecimal.ZERO) !=0){
@@ -4333,6 +4370,7 @@ public class MaterialPurchaseServices {
 					orderItem.set("unitListPrice", amendedPrice);
 					indentItem.set("unitPrice", amendedPrice);
 					indentItem.set("unitListPrice", amendedPrice);
+					OrderItemDetail.set("unitPrice", amendedPrice);
 				}
 				orderItemChange.put("orderId", orderId);
 				Map resultMap = dispatcher.runSync("createOrderItemChange",orderItemChange);
@@ -4358,7 +4396,7 @@ public class MaterialPurchaseServices {
 				
 			List<GenericValue> scheamList = EntityUtil.filterByCondition(orderAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "SCHEME_CAT"));
 			
-			List<GenericValue> onbehalfOf = EntityUtil.filterByCondition(orderAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "SCHEME_CAT"));
+			List<GenericValue> onbehalfOf = EntityUtil.filterByCondition(orderAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "ON_BEHALF_OF"));
 			if(UtilValidate.isNotEmpty(scheamList)){
 				GenericValue orderScheme = EntityUtil.getFirst(scheamList);
 				Scheam = (String) orderScheme.get("attrValue");
@@ -4422,167 +4460,298 @@ public class MaterialPurchaseServices {
 			BigDecimal partyBalanceQuota = BigDecimal.ZERO;
 			
 			updateQuta = amendedQuantity.subtract(actualQty);
-			if(Scheam.equals("MGPS_10Pecent")){
+			
+			////Debug.log("updateQuta=====Used====3333==============="+updateQuta);
+			
+			if(Scheam.equals("MGPS_10Pecent") && onBeHalfOf.equals("N")){
 				String schemeId="TEN_PERCENT_MGPS";
 				String productCategoryId=(String)productCategoriesList.get(0);
 				Timestamp supplyDate = UtilDateTime.nowTimestamp();
                 Map<String,Object>  productCategoryQuotasMap = FastMap.newInstance();
-                Map<String, Object> resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", "C02108","effectiveDate",supplyDate,"productCategoryId",productCategoryId));
+                Map<String, Object> resultCtx = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", partyId,"effectiveDate",supplyDate,"productCategoryId",productCategoryId));
 				productCategoryQuotasMap = (Map) resultCtx.get("schemesMap");
 				partyBalanceQuota = (BigDecimal) productCategoryQuotasMap.get(productCategoryId);
+				
+				////Debug.log("partyBalanceQuota=====Used====3333==============="+partyBalanceQuota);
+				
                 int updateQuotaSign = updateQuta.signum();
-                if(updateQuta.compareTo(BigDecimal.ZERO)>0 && partyBalanceQuota.compareTo(BigDecimal.ZERO)>0){
-                Map partyBalanceHistoryContext = FastMap.newInstance();
-				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId","C02108","productCategoryId","COTTON_UPTO40","dateTimeStamp", supplyDate,"quantity",updateQuta,"userLogin", userLogin);
-                try {
+	            if(updateQuta.compareTo(BigDecimal.ZERO)>0 && partyBalanceQuota.compareTo(BigDecimal.ZERO)>0){
+	            Map partyBalanceHistoryContext = FastMap.newInstance();
+				partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"dateTimeStamp", supplyDate,"quantity",updateQuta,"userLogin", userLogin);
+	            try {
 					Map<String, Object> resultMapquota = dispatcher.runSync("createPartyQuotaBalanceHistory", partyBalanceHistoryContext);
 					//quota=(BigDecimal)resultMapquota.get("quota");
-					//Debug.log("quota=====Used====3333==============="+quota);
+					//////Debug.log("quota=====Used====3333==============="+quota);
 				} catch (Exception e) {
 					Debug.logError("Failed to retrive PartyQuotaBalanceHistory"+orderId, module);
 					request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive PartyQuotaBalanceHistory");	
 			  		return "error";
 				}
-                }else if(updateQuotaSign == -1){
-                	condsList.clear();
-    				condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,orderId));
-    				condsList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
-    				try{
-    					List<GenericValue> orderItemAndAdjustmentList =  delegator.findList("OrderAdjustment",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, null, null, true);   
-    					GenericValue orderHeaderDetail = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-    				    Timestamp  orderDate = orderHeaderDetail.getTimestamp("orderDate");
-    				    if(UtilValidate.isNotEmpty(orderItemAndAdjustmentList)&& orderItemAndAdjustmentList.size()>0){
-    						for(GenericValue orderItemAndAdjustment : orderItemAndAdjustmentList){
-    							condsList.clear();
-    							condsList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-    							if(UtilValidate.isNotEmpty( orderItemAndAdjustment.get("orderItemSeqId"))){
-    								condsList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemAndAdjustment.get("orderItemSeqId")));
-    							}
-    						  	BigDecimal quota =BigDecimal.ZERO;
-    						  	try {
-    								List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
-
-    								if(UtilValidate.isNotEmpty(OrderItemDetailList)){
-    									for(GenericValue OrderItemDetailValue : OrderItemDetailList){
-    										if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
-    											quota = OrderItemDetailValue.getBigDecimal("quotaQuantity");
-    										  	Map partyBalanceHistoryContext = FastMap.newInstance();
-    										  	partyId=(String)OrderItemDetailValue.get("partyId");
-    										  	partyBalanceHistoryContext = UtilMisc.toMap("partyId","C02108","orderItemAndAdjustment",orderItemAndAdjustment,"schemeCategoryIds",schemeCategoryIds,"schemeCategory",Scheam,"quota",updateQuta, "userLogin", userLogin,"productId",productId,"orderDate",orderDate);
-    										  	dispatcher.runSync("cancelPartyQuotaBalanceHistory", partyBalanceHistoryContext);
-    										}
-    									}
-    								}
-    							  	
-    						  	} catch (GenericEntityException e) {
-    						  		Debug.logError("Failed to  cancelPartyQuotaBalanceHistory"+orderId, module);
-    								request.setAttribute("_ERROR_MESSAGE_", "Failed to cancelPartyQuotaBalanceHistory");	
-    						  		return "error";
-    							}
-    						}
-    					}
-    				    
-    				    
-    				}catch (Exception e) {
-    					Debug.logError("Failed to retrive OrderAdjustment"+orderId, module);
-    					request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderAdjustment");	
-    			  		return "error";
-    				}
-    				
-    			}
-                Map<String, Object> resultCtx1 = dispatcher.runSync("getPartyAvailableQuotaBalanceHistory",UtilMisc.toMap("userLogin",userLogin, "partyId", "C02108","effectiveDate",supplyDate,"productCategoryId",productCategoryId));
-				Map productCategoryQuotasMap1 = (Map) resultCtx1.get("schemesMap");
-				
-				BigDecimal partyBalanceQuota1 = (BigDecimal) productCategoryQuotasMap1.get(productCategoryId);
+	            
+	            BigDecimal quotaQty = BigDecimal.ZERO;
+	            BigDecimal discountAmount = BigDecimal.ZERO;
+	            BigDecimal schemePercent = new BigDecimal("10");
+				BigDecimal percentModifier = schemePercent.movePointLeft(2);
+	            
+	            quotaQty = QuotaQty.add(updateQuta);
+	            OrderItemDetail.set("quotaQuantity",quotaQty);
+				discountAmount = ((quotaQty.multiply(amendedPrice)).multiply(percentModifier)).negate();
+	            OrderItemDetail.set("discountAmount",discountAmount);
+	            
+	            GenericValue orderAdjustment =null;
+	            List condList = FastList.newInstance();
+	           		
+				try {
+				    condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
+		            condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,orderItemSeqId));
+		            condList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+					List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+					orderAdjustment = (EntityUtil.getFirst(orderAdjustments));
+				} catch (GenericEntityException e) {
+					Debug.logError("Failed to retrive OrderAdjustment"+orderId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderAdjustment");	
+			  		return "error";
+					
+				}
+					if(UtilValidate.isNotEmpty(orderAdjustment) && onBeHalfOf.equals("N")){
+						 discountAmount = ((quotaQty.multiply(amendedPrice)).multiply(percentModifier)).negate();
+						 orderAdjustment.set("amount",discountAmount);
+						 orderAdjustment.store();
+					}
+	            }//orderItemDetail
+                
+                OrderItemDetail.store();
+  
 			}
-				//Debug.log("baleQuantityStr=="+baleQuantityStr+"remarks=="+remarks+"bundleWeightStr==="+bundleWeightStr+"yarnUOMStr==="+yarnUOMStr);
-		        request.setAttribute("orderId",orderId);
-		        
-		        if(UtilValidate.isNotEmpty(primaryOrderId)){
-			  		
-		        	List exprCdList=FastList.newInstance();
-			  		exprCdList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
-					
-					if(UtilValidate.isNotEmpty(orderItemSeqId)){
-						exprCdList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
-					}
-					
-					List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition(exprCdList,EntityOperator.AND), null, null, null, false);
-					
-					Map productSeqMap = FastMap.newInstance();
-					for(GenericValue item : orderItems){
-						productSeqMap.put(item.getString("productId"), item.getString("orderItemSeqId"));
-					List condExpr = FastList.newInstance();
-		        	condExpr.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
-		        	condExpr.add(EntityCondition.makeCondition("effectiveDatetime", EntityOperator.EQUALS, effectiveDate));
-		        	EntityCondition cond = EntityCondition.makeCondition(condExpr, EntityOperator.AND);
-		        	List<GenericValue> orderItemChanges = delegator.findList("OrderItemChange", cond, null, null, null, false);
-						String prodId = (String)item.getString("productId");
-						String SeqId = (String)item.getString("orderItemSeqId");
-						BigDecimal Kgquantity=item.getBigDecimal("quantity");
-						BigDecimal unitListPrice = (BigDecimal) item.getBigDecimal("unitListPrice");
-						List conList = FastList.newInstance();
-						conList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId));
-						
-						if(UtilValidate.isNotEmpty(prodId)){
-							conList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, prodId));
-						}
-					  	BigDecimal quotaQty =BigDecimal.ZERO;
-						try {
-							List<GenericValue> OrderItemDetailList = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(conList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
-
-							if(UtilValidate.isNotEmpty(OrderItemDetailList)){
-								for(GenericValue OrderItemDetailValue : OrderItemDetailList){
-									if(UtilValidate.isNotEmpty(OrderItemDetailValue)){
-										quotaQty =quotaQty.add(OrderItemDetailValue.getBigDecimal("quotaQuantity"));
-									}
-								}
-							}
-					  	} catch (GenericEntityException e) {
-							Debug.logError(e, "Failed to retrive QuotaQty ", module);
-							request.setAttribute("_ERROR_MESSAGE_", "Error in retriving QuotaQty");
-							return "error";
-						}
-						//Adjustment calculation
-						List condList = FastList.newInstance();
-						condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-						condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS,SeqId ));
-						List<GenericValue> orderAdjustments = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
-						for(GenericValue eachAdj : orderAdjustments){
-							//Debug.log("eachAdj=========================="+eachAdj);
-							String adjustmentTypeId = eachAdj.getString("orderAdjustmentTypeId");
-							if(adjustmentTypeId.equals("TEN_PERCENT_SUBSIDY")){
-								BigDecimal discountAmount = BigDecimal.ZERO;
-								if(quotaQty.compareTo(BigDecimal.ZERO)>0){
-									// Have to get these details from schemes. Temporarily hard coding it.
-									BigDecimal schemePercent = new BigDecimal("10");
-									BigDecimal percentModifier = schemePercent.movePointLeft(2);
-									if(Kgquantity.compareTo(quotaQty)>0){
-										discountAmount = ((quotaQty.multiply(amendedPrice)).multiply(percentModifier)).negate();
-									}
-									else{
-										discountAmount = ((Kgquantity.multiply(amendedPrice)).multiply(percentModifier)).negate();
-									}
-									//Debug.log("discountAmount===================="+discountAmount);
-								}
-								eachAdj.set("amount",discountAmount);
-								eachAdj.store();
-							}else{
-								BigDecimal sourcePercentage=eachAdj.getBigDecimal("sourcePercentage");
-								if(sourcePercentage.compareTo(BigDecimal.ZERO)>0){
-								BigDecimal baseAmt=(Kgquantity.multiply(amendedPrice));
-								BigDecimal taxAmt=baseAmt.multiply(sourcePercentage.divide( new BigDecimal("100")));
-								//Debug.log("taxAmt======================="+taxAmt);
-								eachAdj.set("amount",taxAmt);
-								eachAdj.store();
-								}
-								
-							}
-						}
-					}
-					
-			  	}
 		  	}
+		  	
+		  	//===============================================populate sale Adjustments===============
+			
+		  	////Debug.log("primaryOrderId================="+primaryOrderId);
+		  	
+			List<GenericValue> OrderItemSale =null;
+			try {
+				OrderItemSale = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId), null, null, null, false);
+			} catch (GenericEntityException e) {
+				Debug.logError("Failed to retrive OrderItemPurchase"+primaryOrderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderItemPurchase");	
+		  		return "error";
+				
+			}
+		  	
+			////Debug.log("OrderItemSale================="+OrderItemSale);
+			
+     		for(GenericValue eachOrderItemSale : OrderItemSale){
+			
+     			String saleOrder = eachOrderItemSale.getString("orderId");
+     			String saleOrderItemSeqId = eachOrderItemSale.getString("orderItemSeqId");
+     			
+     			 BigDecimal saleQuantity = BigDecimal.ZERO;
+				 BigDecimal saleUnitPrice = BigDecimal.ZERO;
+				 BigDecimal itemValue = BigDecimal.ZERO;
+				 
+				    saleQuantity = eachOrderItemSale.getBigDecimal("quantity");
+		     		saleUnitPrice = eachOrderItemSale.getBigDecimal("unitPrice");
+		     		itemValue = saleQuantity.multiply(saleUnitPrice);
+     			
+            List<GenericValue> orderAdjustmentsalechaseList = null;
+			List condListsale = FastList.newInstance();
+       		
+			try {
+				condListsale.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,saleOrder));
+				condListsale.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,saleOrderItemSeqId));
+				condListsale.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
+				orderAdjustmentsalechaseList = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(condListsale, EntityOperator.AND), null, null, null, false);
+			} catch (GenericEntityException e) {
+				Debug.logError("Failed to retrive OrderAdjustment"+primaryOrderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderAdjustment");	
+		  		return "error";
+				
+			}
+			
+			////Debug.log("orderAdjustmentsalechaseList================="+orderAdjustmentsalechaseList);
+			
+			if(UtilValidate.isNotEmpty(orderAdjustmentsalechaseList)){
+				
+				for(GenericValue eachOrderAdjSale : orderAdjustmentsalechaseList){
+					
+					BigDecimal sourcePercentage = eachOrderAdjSale.getBigDecimal("sourcePercentage");
+					BigDecimal adjAmount = (itemValue.multiply(sourcePercentage)).divide(new BigDecimal("100"));
+					
+					eachOrderAdjSale.set("amount",adjAmount);
+					eachOrderAdjSale.store();
+					
+				}
+			}
+		  	
+     		}
+		  	
+		  	
+		  	
+             //===============populate Other Adjustments in Purchase Order==========================
+			
+     		////Debug.log("primaryPurCahseOrderId================="+primaryPurCahseOrderId);
+		  	
+		  	List<GenericValue> OrderItemPurchase =null;
+			try {
+				OrderItemPurchase = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryPurCahseOrderId), null, null, null, false);
+			} catch (GenericEntityException e) {
+				Debug.logError("Failed to retrive OrderItemPurchase"+primaryPurCahseOrderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderItemPurchase");	
+		  		return "error";
+				
+			}
+			
+			////Debug.log("OrderItemPurchase================="+OrderItemPurchase);
+		  	
+     		for(GenericValue eachOrderItemPur : OrderItemPurchase){
+			
+     			String purOrder = eachOrderItemPur.getString("orderId");
+     			String purOrderItemSeqId = eachOrderItemPur.getString("orderItemSeqId");
+     			
+     			 BigDecimal purQuantity = BigDecimal.ZERO;
+				 BigDecimal purUnitPrice = BigDecimal.ZERO;
+				 BigDecimal itemValue = BigDecimal.ZERO;
+				 
+				    purQuantity = eachOrderItemPur.getBigDecimal("quantity");
+		     		purUnitPrice = eachOrderItemPur.getBigDecimal("unitPrice");
+		     		itemValue = purQuantity.multiply(purUnitPrice);
+     			
+            List<GenericValue> orderAdjustmentPurchaseList = null;
+			List condListPur1 = FastList.newInstance();
+       		
+			try {
+				condListPur1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,purOrder));
+				condListPur1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS ,purOrderItemSeqId));
+				orderAdjustmentPurchaseList = delegator.findList("OrderAdjustment", EntityCondition.makeCondition(condListPur1, EntityOperator.AND), null, null, null, false);
+			} catch (GenericEntityException e) {
+				Debug.logError("Failed to retrive OrderAdjustment"+primaryPurCahseOrderId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderAdjustment");	
+		  		return "error";
+				
+			}
+			
+			////Debug.log("orderAdjustmentPurchaseList================="+orderAdjustmentPurchaseList);
+			
+			if(UtilValidate.isNotEmpty(orderAdjustmentPurchaseList)){
+				
+				for(GenericValue eachOrderAdjPur : orderAdjustmentPurchaseList){
+					
+					BigDecimal sourcePercentage = eachOrderAdjPur.getBigDecimal("sourcePercentage");
+					
+					////Debug.log("sourcePercentage================="+sourcePercentage);
+					
+					BigDecimal adjAmount = (itemValue.multiply(sourcePercentage)).divide(new BigDecimal("100"));
+					
+					////Debug.log("sourcePercentage================="+sourcePercentage);
+					eachOrderAdjPur.set("amount",adjAmount);
+					eachOrderAdjPur.store();
+					
+				}
+			}
+		  	
+     		}
+     		
+     		//=============update Sale Grand Total =====================
+     		
+     		BigDecimal saleGrandTotal = BigDecimal.ZERO;
+     		
+     		
+            List<GenericValue> OrderItemSale1 =null;
+      			try {
+      				OrderItemSale1 = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId), null, null, null, false);
+      			} catch (GenericEntityException e) {
+      				Debug.logError("Failed to retrive OrderItemPurchase"+primaryOrderId, module);
+      				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderItemPurchase");	
+      		  		return "error";
+      				
+      			}
+           		
+      			//Debug.log("OrderItemSale1================="+OrderItemSale1);
+      			
+      			for(GenericValue eachAdj : OrderItemSale1){
+      				
+      				BigDecimal amount = eachAdj.getBigDecimal("unitPrice");
+      				BigDecimal quantity = eachAdj.getBigDecimal("quantity");
+      				BigDecimal itemValue = amount.multiply(quantity);
+      				saleGrandTotal = saleGrandTotal.add(itemValue);
+      				
+      			}
+     		
+     		List<GenericValue> orderAdjustmentsSale = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryOrderId), null, null, null, false);
+     		
+     		//Debug.log("orderAdjustmentsSale================="+orderAdjustmentsSale);
+			for(GenericValue eachAdj : orderAdjustmentsSale){
+				BigDecimal amount = eachAdj.getBigDecimal("amount");
+				saleGrandTotal = saleGrandTotal.add(amount);
+			}
+			
+     		//Debug.log("saleGrandTotal================="+saleGrandTotal);
+
+			
+			GenericValue orderHeaderDetailSale = null;
+			try{
+				orderHeaderDetailSale = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryOrderId), false);
+				orderHeaderDetailSale.set("grandTotal", saleGrandTotal);
+				orderHeaderDetailSale.store();
+			}catch (Exception e) {
+				Debug.logError(e, "Error in amending order, module");
+				request.setAttribute("_ERROR_MESSAGE_", "Error in amending order");
+				return "error";
+	  	 	}
+			
+			
+		//============================END================================
+			
+			
+             BigDecimal purchaseGrandTotal = BigDecimal.ZERO;
+             
+             
+             List<GenericValue> OrderItemPurchase1 =null;
+ 			try {
+ 				OrderItemPurchase1 = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryPurCahseOrderId), null, null, null, false);
+ 			} catch (GenericEntityException e) {
+ 				Debug.logError("Failed to retrive OrderItemPurchase"+primaryPurCahseOrderId, module);
+ 				request.setAttribute("_ERROR_MESSAGE_", "Failed to retrive OrderItemPurchase");	
+ 		  		return "error";
+ 				
+ 			}
+ 			
+ 			//Debug.log("OrderItemPurchase1================="+OrderItemPurchase1);
+      		
+ 			for(GenericValue eachAdj : OrderItemPurchase1){
+ 				
+ 				BigDecimal amount = eachAdj.getBigDecimal("unitPrice");
+ 				BigDecimal quantity = eachAdj.getBigDecimal("quantity");
+ 				BigDecimal itemValue = amount.multiply(quantity);
+ 				purchaseGrandTotal = purchaseGrandTotal.add(itemValue);
+ 				
+ 			}
+             
+ 			
+     		
+     		List<GenericValue> orderAdjustmentsPur = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, primaryPurCahseOrderId), null, null, null, false);
+     		
+			for(GenericValue eachAdj : orderAdjustmentsPur){
+				BigDecimal amount = eachAdj.getBigDecimal("amount");
+				purchaseGrandTotal = purchaseGrandTotal.add(amount);
+			}
+			
+			
+			//Debug.log("purchaseGrandTotal================="+purchaseGrandTotal);
+			GenericValue orderHeaderDetailPur = null;
+			try{
+				orderHeaderDetailPur = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", primaryPurCahseOrderId), false);
+				orderHeaderDetailPur.set("grandTotal", purchaseGrandTotal);
+				orderHeaderDetailPur.store();
+			}catch (Exception e) {
+				Debug.logError(e, "Error in amending order, module");
+				request.setAttribute("_ERROR_MESSAGE_", "Error in amending order");
+				return "error";
+	  	 	}
+			
+		  	
+			 request.setAttribute("orderId",primaryOrderId);
 		  	
 	  	}catch(Exception e){
 	  		Debug.logError(e, "Error in amending order, module");
@@ -5145,6 +5314,25 @@ public class MaterialPurchaseServices {
 	
 	            }
             }
+            
+            List<GenericValue> orderAssocItemList = null;
+            try {
+            	orderAssocItemList = delegator.findList("OrderItemAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId), null, null, null, false);            	
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                orderAssocItemList = null;
+            }
+           
+            if (UtilValidate.isNotEmpty(orderAssocItemList)) {
+	            try {
+	            	delegator.removeAll(orderAssocItemList);
+	            	Debug.log("order Item Association Removed!");
+	            } catch (GenericEntityException e) {
+	 	        	Debug.logError("error while removing order Item Association" + orderId, module);
+	
+	            }
+            }
+
 
 			
 		} catch (Exception e) {

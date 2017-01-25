@@ -77,7 +77,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	 if(OrderHeaderAct){
 		indentDate = OrderHeaderAct.get("orderDate");
 		externalOrderId = OrderHeaderAct.get("externalId");
-		destinationDepot = OrderHeaderAct.get("productStoreId");
+		//destinationDepot = OrderHeaderAct.get("productStoreId");
 		}
 	 
 	 //Debug.log("indentDate================="+indentDate);
@@ -260,7 +260,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	
 	
 	context.deliveryChallanDate = deliveryChallanDate;
-	orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+	orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,itemOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 	
 	//Debug.log("orderHeaderSequences================"+orderHeaderSequences);
 	
@@ -410,8 +410,8 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	
 	//Debug.log("orderId===============3232============="+orderId);
 	
-	if(orderId){
-	orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+	if(itemOrderId){
+	orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId), null, null, null, false);
 	OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
 	if(UtilValidate.isNotEmpty(OrderHeaderList))
 	tallyRefNo = OrderHeaderList.get("tallyRefNo");
@@ -433,33 +433,8 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	
 	purInvoiceId = "";
 	double piTotal = 0;
-	/*if(shipmentListForPOInvoiceId){
-	 purInvoiceId = shipmentListForPOInvoiceId[0].invoiceId;
-	
-	 conditionList.clear();
-	 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purInvoiceId));
-	 //conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
-	 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	 invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
-	
-	 for (eachItem in invoiceItemLists) {
-		 piTotal = piTotal+Double.valueOf(eachItem.itemValue);
-	}
-	 
-	}
-	*/
-	//Debug.log("piTotal================="+piTotal);
-	
-	
 	
 	context.piTotal = piTotal;
-	
-	/*conditionList.clear();
-	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	PurchaseOrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
-	*/
 	
 	if(purInvoiceId){
 		purInvoiceList = delegator.findOne("Invoice",[invoiceId : purInvoiceId] , false);
@@ -471,17 +446,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	tallyRefNo = tallySalesNo;
 	
 	
-	/*if(invoiceId == "10360")
-	 tallyRefNo= "YRPR/3/16-17";
-	else if(invoiceId == "10358")
-	 tallyRefNo= "YRPR/2/16-17";
-	else if(invoiceId == "10362")
-	 tallyRefNo= "YRPR/6/16-17";
-	else if(invoiceId == "10391")
-	tallyRefNo= "YRPR/5/16-17";
-	else if(invoiceId == "10390")
-	tallyRefNo= "YRPR/4/16-17";
-	*/
 	context.tallyRefNo = tallyRefNo;
 	productStoreId = OrderHeaderList.get("productStoreId");
 	branchId="";
@@ -558,7 +522,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			allDetailsMap.put("panNumber",panNumber);
 		}
 	}
-	Debug.log("allDetailsMap=========="+ allDetailsMap);
 	
 	context.allDetailsMap= allDetailsMap;
 	
@@ -572,35 +535,10 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	
 	context.grandTotal = grandTotal;
 	
-	actualOrderId = "";
+	actualOrderId = orderId;
 	destination = "";
 	
-	//Debug.log("orderAttrForPo================="+orderAttrForPo);
 	
-	if(UtilValidate.isNotEmpty(orderAttrForPo)){
-		
-		orderAttrForPo.each{ eachAttr ->
-			if(eachAttr.attrName == "PO_NUMBER"){
-				actualOrderId =  eachAttr.attrValue;
-			}
-			if(eachAttr.attrName == "DST_ADDR"){
-				destination =  eachAttr.attrValue;
-				
-				/*if(districtGeoId){
-					districtName = districtGeoId ;
-					GenericValue geo = delegator.findOne("Geo", [geoId:districtGeoId], false);
-					if(UtilValidate.isNotEmpty(geo)&& UtilValidate.isNotEmpty(geo.get("geoName"))){
-						destination = geo.get("geoName");
-						}
-				}*/
-				
-			}
-		}
-	}
-	
-	if(UtilValidate.isEmpty(destination)){
-		destination = destinationDepot;
-	}
 	
 	indentOrderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , itemOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 	if(UtilValidate.isNotEmpty(indentOrderSequences)){
@@ -631,6 +569,23 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	externalOrderId = null;
 	
 	//Debug.log("actualOrderId===============3232============="+actualOrderId);
+	
+	if(UtilValidate.isNotEmpty(orderAttrForPo)){
+		
+		orderAttrForPo.each{ eachAttr ->
+			if(eachAttr.attrName == "SCHEME_CAT"){
+				scheme =  eachAttr.attrValue;
+			}
+			if(eachAttr.attrName == "DST_ADDR"){
+				destination =  eachAttr.attrValue;
+				
+			}
+		}
+	}
+	
+	if(UtilValidate.isEmpty(destination)){
+		destination = destinationDepot;
+	}
 	
 	finalDetails = [];
 	if(actualOrderId){
@@ -713,26 +668,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		
 		double schemeDeductionAmt = 0;
 		
-		/*for (eachInvoiceList in invoiceAdjItemList) {
-			if(UtilValidate.isNotEmpty(eachInvoiceList.parentInvoiceItemSeqId) && UtilValidate.isNotEmpty(eachInvoiceList.quantity))
-			{
-			SchemeQtyMap.put(eachInvoiceList.parentInvoiceItemSeqId, eachInvoiceList.quantity);
-			}
-			if(UtilValidate.isNotEmpty(eachInvoiceList.parentInvoiceItemSeqId) && UtilValidate.isNotEmpty(eachInvoiceList.amount))
-			{
-			SchemeAmtMap.put(eachInvoiceList.parentInvoiceItemSeqId, eachInvoiceList.amount);
-			schemeDeductionAmt = schemeDeductionAmt+Math.abs(eachInvoiceList.amount);
-			}
-			
-			
-			
-			
-			
-			
-			
-		}*/
-		
-		
 		context.schemeDeductionAmt = Math.round(schemeDeductionAmt);
 		
 		
@@ -759,26 +694,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			 tempMap.put("productId", eachInvoiceList.productId);
 			 tempMap.put("prodDescription", eachInvoiceList.description);
 			 tempMap.put("rateKg", eachInvoiceList.unitPrice);
-			// tempMap.put("amount", eachInvoiceList.amount);
-			 /*String seq = String.format("%05d", i);
-			 
-			 
-			 OrderItemAttribute = EntityUtil.filterByCondition(OrderItemAttributeList, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seq));
-			 
-			  baleQty = "";
-			  if(OrderItemAttribute){
-			  OrderItemAttribute.each{ eachAttr ->
-				 if(eachAttr.attrName == "BALE_QTY"){
-					 baleQty =  eachAttr.attrValue;
-				 }
-			  }
-			}*/
-			 
-			 
-			// String seq = String.format("%05d", i);
-			 
-			 
-			 
 			
 			 
 			   conditionList.clear();
@@ -798,44 +713,6 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 			 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
-			 
-			 
-			  /*conditionList.clear();
-			 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,itemOrderId));
-			 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
-			 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			 OrderAdjustment = delegator.findList("OrderAdjustment", cond, null, null, null, false);
-			 
-			 //Debug.log("OrderAdjustment==============="+OrderAdjustment);
-			 
-			 
-			 for (eachAdj in OrderAdjustment) {
-				 
-				 mgpsAmt = mgpsAmt+eachAdj.amount;
-			 }*/
-			 
-		
-			 
-		/*	 conditionList.clear();
-			 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
-			 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seq));
-			 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			 OrderItemAttributeList1 = delegator.findList("OrderItemAttribute", cond, null, null, null, false);
-			 baleQty="";
-			 unit="";
-			 if(OrderItemAttributeList1){
-			 OrderItemAttributeList1.each{ eachAttr ->
-				if(eachAttr.attrName == "quotaQty"){
-					schemeAmt =  schemeAmt+Double.valueOf(eachAttr.attrValue);
-				}
-				if(eachAttr.attrName == "BALE_QTY"){
-					baleQty =  eachAttr.attrValue;
-				}
-				if(eachAttr.attrName == "YARN_UOM"){
-					unit =  eachAttr.attrValue;
-				}
-			 }
-		   }*/
 			 
 			 
 			 quantity = quantity+eachInvoiceList.quantity;
@@ -1379,7 +1256,7 @@ supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 
 
 context.deliveryChallanDate = deliveryChallanDate;
-orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
+orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,itemOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 
 //Debug.log("orderHeaderSequences================"+orderHeaderSequences);
 
@@ -1520,7 +1397,7 @@ GenericValue OrderHeaderList=null;
 //Debug.log("orderId===============3232============="+orderId);
 
 if(orderId){
-orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId), null, null, null, false);
 OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
 if(UtilValidate.isNotEmpty(OrderHeaderList))
 tallyRefNo = OrderHeaderList.get("tallyRefNo");
@@ -1542,34 +1419,8 @@ shipmentListForPOInvoiceId = delegator.findList("Invoice", cond, null, null, nul
 
 purInvoiceId = "";
 double piTotal = 0;
-/*if(shipmentListForPOInvoiceId){
- purInvoiceId = shipmentListForPOInvoiceId[0].invoiceId;
-
- conditionList.clear();
- conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purInvoiceId));
- //conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
- cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
- invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
-
- for (eachItem in invoiceItemLists) {
-	 piTotal = piTotal+Double.valueOf(eachItem.itemValue);
-}
- 
-}
-*/
-//Debug.log("piTotal================="+piTotal);
-
-
 
 context.piTotal = piTotal;
-
-/*conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-PurchaseOrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
-*/
-
 if(purInvoiceId){
 	purInvoiceList = delegator.findOne("Invoice",[invoiceId : purInvoiceId] , false);
 	if(purInvoiceList.referenceNumber)
@@ -1579,18 +1430,6 @@ if(purInvoiceId){
 if(tallySalesNo)
 tallyRefNo = tallySalesNo;
 
-
-/*if(invoiceId == "10360")
- tallyRefNo= "YRPR/3/16-17";
-else if(invoiceId == "10358")
- tallyRefNo= "YRPR/2/16-17";
-else if(invoiceId == "10362")
- tallyRefNo= "YRPR/6/16-17";
-else if(invoiceId == "10391")
-tallyRefNo= "YRPR/5/16-17";
-else if(invoiceId == "10390")
-tallyRefNo= "YRPR/4/16-17";
-*/
 context.tallyRefNo = tallyRefNo;
 productStoreId = OrderHeaderList.get("productStoreId");
 branchId="";
@@ -1681,35 +1520,10 @@ grandTotal = OrderHeaderList.get("grandTotal");
 
 context.grandTotal = grandTotal;
 
-actualOrderId = "";
+actualOrderId = orderId;
 destination = "";
 
-//Debug.log("orderAttrForPo================="+orderAttrForPo);
 
-if(UtilValidate.isNotEmpty(orderAttrForPo)){
-	
-	orderAttrForPo.each{ eachAttr ->
-		if(eachAttr.attrName == "PO_NUMBER"){
-			actualOrderId =  eachAttr.attrValue;
-		}
-		if(eachAttr.attrName == "DST_ADDR"){
-			destination =  eachAttr.attrValue;
-			
-			/*if(districtGeoId){
-				districtName = districtGeoId ;
-				GenericValue geo = delegator.findOne("Geo", [geoId:districtGeoId], false);
-				if(UtilValidate.isNotEmpty(geo)&& UtilValidate.isNotEmpty(geo.get("geoName"))){
-					destination = geo.get("geoName");
-					}
-			}*/
-			
-		}
-	}
-}
-
-if(UtilValidate.isEmpty(destination)){
-	destination = destinationDepot;
-}
 
 indentOrderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , itemOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 if(UtilValidate.isNotEmpty(indentOrderSequences)){
@@ -1740,6 +1554,19 @@ onbehalf = "";
 externalOrderId = null;
 
 //Debug.log("actualOrderId===============3232============="+actualOrderId);
+
+if(UtilValidate.isNotEmpty(orderAttrForPo)){
+	
+	orderAttrForPo.each{ eachAttr ->
+		if(eachAttr.attrName == "SCHEME_CAT"){
+			scheme =  eachAttr.attrValue;
+		}
+		if(eachAttr.attrName == "DST_ADDR"){
+			destination =  eachAttr.attrValue;
+			
+		}
+	}
+}
 
 finalDetails = [];
 if(actualOrderId){
@@ -1811,35 +1638,10 @@ context.onbehalf = onbehalf;
 context.externalOrderId = externalOrderId;
 
 
-
-//if(onbehalf == true){
-  // forOnbeHalf()
-//}else{
-  // context.reportTypeFlag = "DIRECT";
-	
 	SchemeQtyMap = [:];
 	SchemeAmtMap = [:];
 	
 	double schemeDeductionAmt = 0;
-	
-	/*for (eachInvoiceList in invoiceAdjItemList) {
-		if(UtilValidate.isNotEmpty(eachInvoiceList.parentInvoiceItemSeqId) && UtilValidate.isNotEmpty(eachInvoiceList.quantity))
-		{
-		SchemeQtyMap.put(eachInvoiceList.parentInvoiceItemSeqId, eachInvoiceList.quantity);
-		}
-		if(UtilValidate.isNotEmpty(eachInvoiceList.parentInvoiceItemSeqId) && UtilValidate.isNotEmpty(eachInvoiceList.amount))
-		{
-		SchemeAmtMap.put(eachInvoiceList.parentInvoiceItemSeqId, eachInvoiceList.amount);
-		schemeDeductionAmt = schemeDeductionAmt+Math.abs(eachInvoiceList.amount);
-		}
-		
-		
-		
-		
-		
-		
-		
-	}*/
 	
 	
 	context.schemeDeductionAmt = Math.round(schemeDeductionAmt);

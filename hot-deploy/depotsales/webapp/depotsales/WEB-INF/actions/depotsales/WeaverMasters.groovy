@@ -154,7 +154,7 @@
 	for(customer in groupNameList){
 	
 		i = i + 1;
-		Debug.log("count ================================="+i);
+		//Debug.log("count ================================="+i);
 		eachPartyId=String.valueOf(customer.get("partyId"));
 		branchId=String.valueOf(customer.get("partyIdFrom"));
 		

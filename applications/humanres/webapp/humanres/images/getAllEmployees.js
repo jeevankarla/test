@@ -28,3 +28,24 @@ function copyAddress(){
 	$("#prsCountry").val(country);
 }
 
+function checkPartyExistance(element){
+	var employeeId =  jQuery("[name='employeeId']").val();
+	$.ajax({
+        type: "POST",
+        url: 'checkEmployeeExistance',
+        data: {employeeId : employeeId},
+        dataType: 'json',
+        success: function(result) {
+        	 if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+        		 
+        	 }else{
+        		 partyId = result["partyId"];
+        		 var empId = partyId;
+        		 if (empId) {	
+        			 alert("Given EmployeeId is Already Existing, Please enter new employee");
+        		 }
+        	 }
+        }
+	 });
+	
+}

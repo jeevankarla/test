@@ -734,12 +734,14 @@
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
               <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/> --> 
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
             </actions>
             <widgets>
                     <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
                     <decorator-section name="body">
+                    <include-menu name="BankAccountSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     	<section>
 							<widgets>
@@ -833,8 +835,11 @@
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
                 <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
+                <set field="screenFlag" value="N"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                <script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getbankAccounts.groovy" />
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
@@ -850,7 +855,7 @@
             			</condition-list> -->
             			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+            			<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
             		</condition-list>
             	</entity-condition>
             </actions>
@@ -895,10 +900,13 @@
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
+                <set field="screenFlag" value="N"/>
                 <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getbankAccounts.groovy" />
+            	<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
             	</entity-condition>
@@ -913,7 +921,7 @@
             			</condition-list> -->
             			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+            			<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
             		</condition-list>
             	</entity-condition>
             </actions>
@@ -958,10 +966,13 @@
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
+                <set field="screenFlag" value="N"/>
                 <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
+            	<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getbankAccounts.groovy" />
+            	<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
             	</entity-condition>
@@ -976,7 +987,7 @@
             			</condition-list> -->
             			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH"/>
             			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+            			 <condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/> 
             		</condition-list>
             	</entity-condition>
             </actions>
@@ -1682,6 +1693,7 @@
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>           
             <widgets>
             <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -1821,6 +1833,7 @@
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>           
             <widgets>
             <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -4167,7 +4180,16 @@
 	            <entity-condition entity-name="InvoiceType" list="invoiceTypeList">
 	                <order-by field-name="invoiceTypeId"/>
 	            </entity-condition>
-	            
+	            <set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
+	            <entity-condition list="finAccountList" entity-name="FinAccount">
+					<having-condition-list combine="and">
+<!-- 						<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+						<!-- <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/> -->
+						<condition-expr field-name="finAccountTypeId" operator="in"  from-field="finAccountTypeIds"/>
+						<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+					</having-condition-list>
+					<order-by field-name="finAccountName"/>
+				</entity-condition>
 	            <entity-condition entity-name="PaymentMethodType" list="paymentMethodTypes">
 	            	<condition-list combine="or">
 	                    <condition-expr field-name="parentTypeId" operator="equals" value="MONEY"/>
@@ -4177,17 +4199,7 @@
 	            <entity-condition entity-name="PaymentMethod" list="paymentMethods">
 	                <order-by field-name="description"/>
 	            </entity-condition>
-	            <entity-condition entity-name="FinAccount" list="finAccountList">
-	            	<condition-list combine="and">
-	                    <condition-expr field-name="ownerPartyId" operator="equals" value="Company"/>
-	                    <condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
-	                    <condition-list combine="or">
-	                    	 <condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
-	                    	  <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
-	                    </condition-list>
-	                </condition-list>
-	                <order-by field-name="finAccountName"/>
-	            </entity-condition>
+	            
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
                 <set field="organizationPartyId" value="Company"></set>
                 <entity-condition list="customtimeperiodlist" entity-name="CustomTimePeriod"  filter-by-date="false">
@@ -4230,8 +4242,8 @@
                <entity-condition list="partyClsfList" entity-name="PartyClassificationGroup">
                	<condition-expr field-name="partyClassificationTypeId" operator="equals" value="ACCTG_TRANS_GP"/>
                </entity-condition>
-               
                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetInternalOrganisations.groovy"/>
+              <script location="component:///accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
               </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
@@ -5885,6 +5897,159 @@
     				</decorator-screen>
     			</widgets>
     		</section>
+	</screen>
+	
+	<screen name="OGAPCreateInvoiceForEmployee">
+        <section>
+            <actions>
+            <set field="titleProperty" value="Employee Outgoing Advance Receipts"/>
+                <set field="tabButtonItem" value="FindEmployeeAdv"/>
+            	<set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
+            	<set field="defaultOrganizationPartyId" value="HO"/>
+            	<set field="purposeTypeId"  value="${parameters.purposeTypeId}"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/commonInvoice.js" global="true"/>                        
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/payableInvoice.js" global="true"/>
+                <set field="headerItem" value="invoices"/>
+                <set field="screenflag" value="OutgoingAdvancesPaid"/>
+                <set field="invoiceId" value="${parameters.invoiceId}" />
+                <set field="finAccountId" value="${parameters.finAccountId}" />
+                
+               <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/createInvoice.groovy"/>
+                <entity-one entity-name="Invoice" value-field="invoice"/>
+                 <set field="prefPaymentMethodTypeId"  from-field="parameters.prefPaymentMethodTypeId"/>
+                 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
+                 <set field="titleProperty" value="${invoiceCreateScreenTitle}"/>
+                 <set field="prefPaymentMethodTypeId"  from-field="parameters.prefPaymentMethodTypeId"/>
+                <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
+                </service>
+                <set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission"/>
+                <entity-one entity-name="Invoice" value-field="invoice" />
+				<entity-one entity-name="InvoiceItem" value-field="invoiceItem" />
+				<entity-and entity-name="InvoiceItem" list="invoiceItems">
+					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
+					<order-by field-name="invoiceItemSeqId" />
+				</entity-and>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/DisplayInvoiceItemTypes.groovy" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
+				<entity-condition entity-name="InvoiceItemType"	list="PayrolGroup">
+					<condition-expr field-name="parentTypeId" value="PAYROL" />
+				</entity-condition>
+				<entity-condition entity-name="InvoiceItemType"	list="PayrolList"></entity-condition>
+				<service service-name="acctgInvoicePermissionCheck"	result-map="permResult">
+					<field-map field-name="mainAction" value="ARINVOICE_EDIT" />
+				</service>
+				<set field="invoiceId" value="${invoice.invoiceId}" />
+				<set field="showCreateButton" value="${parameters.showCreateButton}" />
+				<set field="showUpdateButton" value="${parameters.showUpdateButton}" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                    	<!-- <include-menu name="OutgoingAdvancesTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->		
+                        <section>
+                            <widgets>
+                                <screenlet title="${invoiceCreateScreenTitle}">
+                                    <include-form name="CreateInvoiceForPayment" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+							<condition>
+								<and>
+									<not><if-empty field="invoice" /></not>
+									<if-compare field="invoice.statusId" operator="equals"	value="INVOICE_IN_PROCESS" />
+									<if-compare field="invoice.invoiceTypeId" operator="not-equals"	value="PAYROL_INVOICE" />
+									<or>
+										<if-compare operator="equals" value="true" field="hasArInvoiceEditPermission" />
+										<if-compare operator="equals" value="true" field="hasApInvoiceEditPermission" />
+									</or>
+								</and>
+							</condition>
+							<widgets>
+								<platform-specific>
+					                           	<html><html-template location="component://accounting/webapp/accounting/invoice/AddPurchaseInvoiceItemsDetEmp.ftl"/></html>
+					             </platform-specific>
+							</widgets>
+						</section>
+						
+						<section><!-- Display InvoiceItem types before creating invoice -->
+							<condition>
+								<and>
+									<if-empty field="invoice" />
+									<or>
+										<if-compare operator="equals" value="true" field="hasArInvoiceEditPermission" />
+										<if-compare operator="equals" value="true" field="hasApInvoiceEditPermission" />
+									</or>
+								</and>
+							</condition>
+							<widgets>
+								 <platform-specific >
+					                           	<html><html-template location="component://accounting/webapp/accounting/invoice/DisplayInvoiceItemTypes.ftl"/></html>
+					             </platform-specific>
+							</widgets>
+						</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="BankAccountDetail">
+        <section>
+            <actions>
+            	<property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="${uiLabelMap.BankAccountDetail}"/>
+                <set field="tabButtonItem" value="FindFinAccountAlt"/>
+                <set field="tabButtonItem2" value="BankAccountDetail"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="noConditionFind" value="N"/>
+                <set field="screenFlag" value="BANKACCOUNT" /> 
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/> -->
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/BankAccountDetail.groovy"/>
+            </actions>
+            <widgets>
+                    <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+                    <decorator-section name="body">
+                    <include-menu name="BankAccountSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                  <decorator-section name="search-options">
+                                      <include-form name="FindBankAccountDetails" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                  </decorator-section>
+								</decorator-screen>
+								
+								<screenlet title="Bank Accounts List">				
+								  <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/BankAccountDetails.ftl"/></html>
+                                  </platform-specific> 
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="PrintBankAccountDetails">
+		<section>
+			<actions>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/BankAccountDetail.groovy"/>
+            </actions>
+			<widgets>
+				<platform-specific> 
+					<xsl-fo><html-template location="component://accounting/webapp/accounting/reports/BankAccountDetails.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
 	</screen>
 	  
 </screens>

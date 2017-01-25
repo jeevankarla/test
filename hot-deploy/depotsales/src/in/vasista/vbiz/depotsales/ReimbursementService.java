@@ -208,6 +208,36 @@ public class ReimbursementService {
 
 			}	 
 			
+			public static Map<String, Object> createSchemeTimePeriod(DispatchContext dctx, Map<String, Object> context) throws Exception{
+				Delegator delegator = dctx.getDelegator();
+				LocalDispatcher dispatcher = dctx.getDispatcher();
+				Map<String, Object> result = ServiceUtil.returnSuccess();	
+				GenericValue userLogin = (GenericValue) context.get("userLogin");
+				Timestamp fromDate = (Timestamp) context.get("fromDate");
+				Timestamp thruDate = (Timestamp) context.get("thruDate");
+				String periodName= (String) context.get("periodName");
+				String periodTypeId= (String) context.get("periodTypeId");
+				GenericValue periodBilling =null;
+				
+		        // Create a Scheme Time Period For Billing
+		        GenericValue newEntity = delegator.makeValue("SchemeTimePeriod");
+		        String schemeTimePeriodId = delegator.getNextSeqId("SchemeTimePeriod");
+		        newEntity.set("schemeTimePeriodId", schemeTimePeriodId);
+		        newEntity.set("periodName", periodName); 
+		        newEntity.set("periodTypeId", periodTypeId);
+		        newEntity.set("isClosed", "N");
+		        newEntity.set("fromDate", new java.sql.Date(fromDate.getTime()));
+		        newEntity.set("thruDate", new java.sql.Date(thruDate.getTime()));
+			    try {  
+			       delegator.create(newEntity);
+			    } catch (GenericEntityException e) {
+					Debug.logError(e,"Failed To Create New SchemeTimePeriod", module);
+					return ServiceUtil.returnError("Problems in service Parol Header");
+				}
+			    return result;
+
+			}	 
+			
 			public static Map<String, Object> getOwnerPartyIdList(DispatchContext dctx, Map context) throws GenericEntityException {
 				 GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 				 LocalDispatcher dispatcher = dctx.getDispatcher();

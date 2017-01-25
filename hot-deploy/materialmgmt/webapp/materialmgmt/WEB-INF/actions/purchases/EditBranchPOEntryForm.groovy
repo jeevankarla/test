@@ -65,7 +65,10 @@
 	
 	orderEditParamMap = [:];
 	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+	orderDateToCompPO=(orderHeader.orderDate).getTime();;
 	
+	context.orderDateToCompPO=orderDateToCompPO;
+	//Debug.log("orderDateToCompPO =================" +orderDateToCompPO);
 	orderAdjustments = [];
 	
 	if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
@@ -721,6 +724,8 @@
 		
 		//orderEditParamMap.putAt("orderTerms", orderTerms);
 	}
+	
+	
 	context.orderEditParam = orderEditParamMap;
 	
 	// preparing Country List Json

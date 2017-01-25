@@ -125,12 +125,15 @@
 			var Excise = data[rowCount]["Excise"];
 			var bedCess = data[rowCount]["bedCessAmount"];
 			var bedSecCess = data[rowCount]["bedSecCessAmount"];
+			
+			/*
 			var SERVICE_CHARGE_AMT = 0;
 
 	        if(data[rowCount]["SERVICE_CHARGE_PUR_AMT"])		
 			 SERVICE_CHARGE_AMT = data[rowCount]["SERVICE_CHARGE_PUR_AMT"];
 			else
 			 SERVICE_CHARGE_AMT = data[rowCount]["SERVICE_CHARGE_AMT"];
+			 */
 			
 			var VATPer = data[rowCount]["VatPercent"];
 			var CSTPer = data[rowCount]["CSTPercent"];
@@ -147,9 +150,9 @@
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				
-				var SERVICE_CHARGE = jQuery("<input>").attr("type", "hidden").attr("name", "SERVICE_CHARGE_o_" + rowCount).val(SERVICE_CHARGE_AMT);
+				//var SERVICE_CHARGE = jQuery("<input>").attr("type", "hidden").attr("name", "SERVICE_CHARGE_o_" + rowCount).val(SERVICE_CHARGE_AMT);
 				
-				jQuery(formId).append(jQuery(SERVICE_CHARGE));
+				//jQuery(formId).append(jQuery(SERVICE_CHARGE));
 				
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
@@ -206,7 +209,7 @@
 				taxList.push("CST_SALE");
 				taxList.push("VAT_SURCHARGE");
 				taxList.push("CST_SURCHARGE");
-				
+				taxList.push("SERVICE_CHARGE");
 				
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	
@@ -226,16 +229,38 @@
 						  givenType = taxType.replace("_SALE","_PUR");
 						  taxPercentage = data[rowCount][givenType];
 						  taxValue = data[rowCount][givenType + "_AMT"];
-						}else{
+						}else if(taxType != "SERVICE_CHARGE"){
 						   taxPercentage = data[rowCount][taxType+"_PUR"];
 					       taxValue = data[rowCount][taxType + "_PUR_AMT"];
+						}
+						
+						if(taxType == "SERVICE_CHARGE"){
+						
+						if(data[rowCount]["SERVICE_CHARGE_PUR"])		
+						 taxValue = data[rowCount]["SERVICE_CHARGE_PUR_AMT"];
+						else
+						 taxPercentage = data[rowCount]["SERVICE_CHARGE"];
+						
+						
+						if(data[rowCount]["SERVICE_CHARGE_PUR_AMT"])		
+						 taxValue = data[rowCount]["SERVICE_CHARGE_PUR_AMT"];
+						else
+						 taxValue = data[rowCount]["SERVICE_CHARGE_AMT"];
+						 
+						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
+						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
+						
+						}else{
+					
+						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
+					    var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
+						
 						}
 						
 						
 						
 						
-						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
-						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
+						
 						jQuery(formId).append(jQuery(inputTaxTypePerc));
 						jQuery(formId).append(jQuery(inputTaxTypeValue));
 					}

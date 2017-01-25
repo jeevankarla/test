@@ -38,9 +38,9 @@ $(document).ready(function() {
 	var datatable1 = $('#datatable1').dataTable( {
 		"data": salaryTableData,
 		"columns": [
-			{ "title": "Id" },	
+			{ "title": "Employee Id" },	
 			{ "title": "Name" },										
-			{ "title": "Dept" },	
+			{ "title": "Regional Office" },	
         <#if payheadTypes?exists> 
 	        <#list payheadTypes as payheadType>				
 				{"title":"${payheadType}", sClass: "myRightAlignClass", sType: "numeric"  },
