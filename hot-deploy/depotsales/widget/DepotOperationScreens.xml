@@ -1087,7 +1087,7 @@
 				<set field="isFormSubmitted" value="${isFormSubmitted}"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="DashBoardCommonDecorator"
+				  <decorator-screen name="DashBoardCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
