@@ -229,6 +229,9 @@
 	        <menu-item name="quotaDashboardNoAuth" title="Quata Dashboard">
         		<link target="QuotaDashboard"/>
         	</menu-item>
+        	<menu-item name="delayedIndentPOAnalyticsListingNoAuth" title="Delayed Po Listing">
+        		<link target="delayedIndentPOAnalyticsListingNoAuth"/>
+        	</menu-item>
          </menu>
         
          <!-- <menu-item name="ShipmentHistory" title="Shipment History2">

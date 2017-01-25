@@ -62,6 +62,10 @@
         <security https="true" auth="false"/>
         <response name="success" type="view" value="delayedIndentPOAnalyticsListing"/>
     </request-map>
+     <request-map uri="delayedIndentPOAnalyticsListingNoAuth">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="delayedIndentPOAnalyticsListingNoAuth"/>
+    </request-map>
          
     <request-map uri="utilizedQuotaDashboard">
         <security https="true" auth="false"/>
@@ -2780,7 +2784,7 @@
     <view-map name="QuotaDashboardAuth" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#QuotaDashboardAuth"/>
     
     <view-map name="delayedIndentPOAnalyticsListing" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#delayedIndentPOAnalyticsListing"/>
-    
+    <view-map name="delayedIndentPOAnalyticsListingNoAuth" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#delayedIndentPOAnalyticsListingNoAuth"/>
     <view-map name="utilizedQuotaDashboard" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#utilizedQuotaDashboard"/>
     
     

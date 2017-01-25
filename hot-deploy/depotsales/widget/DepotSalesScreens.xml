@@ -4330,7 +4330,43 @@
               </widgets>
           </section>
       </screen>
-      
+      <screen name="delayedIndentPOAnalyticsListingNoAuth">
+          <section>
+              <actions>
+                  <set field="titleProperty" value="Delays in processing purchase orders by more than 2 days"/>
+                  <set field="tabButtonItem1" value="analytics"/>
+                  <set field="tabButtonItem2" value="delayedIndentPOAnalyticsListing"/>
+                   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
+                    <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
+              	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
+              	  <set field="district" from-field="parameters.district" />
+              	   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/listingThePoAnalytics.groovy"/>
+              </actions>           
+                <widgets>
+               <decorator-screen name="NoAuthDepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      	<screenlet title="Find Weaver">
+                      		<!-- <include-form name="FindQuotaProducer"
+  								location="component://depotsales/widget/DepotSalesForms.xml" /> -->
+  	  							<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/delayedShipmentPO.ftl" />
+							</html>
+						</platform-specific>
+                      	</screenlet>
+                      	<decorator-section name="search-results">
+										<screenlet title="">
+											<include-form name="listOfDelayedShipment"
+												location="component://depotsales/widget/DepotSalesForms.xml" />
+										</screenlet>
+									</decorator-section>
+                      </decorator-section>
+                  </decorator-screen>
+              </widgets>
+          </section>
+      </screen>  
        <screen name="QuotaDashboard">
           <section>
               <actions>
