@@ -864,7 +864,7 @@
 	<screen name="ShipmentHistory">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Find Supplier Dispatch Items" />
+				<set field="titleProperty" value="SUPPLIER HISTORY" />
 			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
 			     <set field="tabButtonItem2" value="FindSupplierDispatchs" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
@@ -941,7 +941,7 @@
 	<screen name="ShipmentHistoryAuth">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Find Supplier Dispatch Items" />
+				<set field="titleProperty" value="SUPPLIER HISTORY" />
 			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
 			     <set field="tabButtonItem2" value="FindSupplierDispatchs" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
@@ -955,7 +955,7 @@
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/ShipmentHistory.groovy" />
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="DashBoardCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<!-- <include-menu name="SupplierReceiptTabBar"
@@ -975,7 +975,7 @@
 													location="component://depotsales/webapp/depotsales/depotsales/shipmentHistory.ftl" />
 											</html>
 											</platform-specific>
-											<link text="${uiLabelMap.AccountingExportAsCsv}"  
+											<link text="Save"  
 														style="buttontext" target="ShipmentsDispatchReport.csv">
 														<parameter param-name="fromDate" from-field="parameters.fromDate" />
 														<parameter param-name="thruDate" from-field="parameters.thruDate" />
@@ -1018,7 +1018,7 @@
 	<screen name="findDelayShipments">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Delayed Shipments From Supplier" />
+				<set field="titleProperty" value="DELAYED SHIPMENTS FROM SUPPLIER" />
 			     <set field="tabButtonItem" value="findDelayShipments"/>
 			     <set field="tabButtonItem2" value="findDelayShipments"/>
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
@@ -1074,18 +1074,20 @@
 	<screen name="findDelayShipmentsAuth">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Delayed Shipments From Supplier" />
+				<set field="titleProperty" value="DELAYED SHIPMENTS FROM SUPPLIER"/>
 			     <set field="tabButtonItem" value="analytics"/>		            
 			     <set field="tabButtonItem2" value="findDelayShipments"/>
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
 				<set field="targetRequest" value="findDelayShipments"/>
+				<set field="screenFlag" value="findDelayShipmentsAuth"/>
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/findDelayShipments.groovy" />
+				<set field="isFormSubmitted" value="${isFormSubmitted}"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="DepotSalesCommonDecorator"
+				<decorator-screen name="DashBoardCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>

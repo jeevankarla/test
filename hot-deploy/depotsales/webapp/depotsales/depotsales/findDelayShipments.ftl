@@ -76,11 +76,18 @@ under the License.
 		$('div#spinner').html('<img src="/images/ajax-loader64.gif">');
 	}
 </script>
-<h2>LISTING OF DELIVERIES DELAYED BY MORE THAN 7 DAYS BY SUPPLIERS<h2>
+<#assign action="">
+<#if screenFlag=="findDelayShipmentsAuth">
+	<#assign action="findDelayShipmentsAuth">
+<#else>
+	<#assign action="findDelayShipments">
+</#if>
+
+<#-- <h2>LISTING OF DELIVERIES DELAYED BY MORE THAN 7 DAYS BY SUPPLIERS<h2>  -->
 <div class="screenlet">
   <div class="screenlet-body">
     <div id="findPartyParameters"  >
-      <form method="post" name="findDelayShipments" id="findDelayShipments" action="<@ofbizUrl>findDelayShipments</@ofbizUrl> " class="basic-form">
+      <form method="post" name="findDelayShipments" id="findDelayShipments" action="<@ofbizUrl>${action}</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
         <tr>
         	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search By</td> 

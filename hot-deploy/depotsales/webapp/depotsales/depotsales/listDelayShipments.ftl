@@ -28,14 +28,13 @@ under the License.
 </script>
 
 <#if dataList?has_content>
-  
+  <h2> LISTING OF DELIVERIES DELAYED BY MORE THAN 7 DAYS BY SUPPLIERS </h2>
   <form name="listOrders" id="listOrders"  method="post" >
-   
     <table class="basic-table hover-bar" cellspacing="0">
       <tbody>
         <tr class="alternate-row" style="color:black; font-stlye:bold; font-size:12px; background-color:skyblue;">
           <td align="center"><b>OrderId&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b></td>
-          <td align="center"><b>order Date</b></td>
+          <td align="center"><b>Order Date</b></td>
           <td align="right"><b>Order Qty(Kgs)</b></td>
           <td align="left"><b>&nbsp;&nbsp;&nbsp;&nbsp;Supplier Name</b></td>
           <td align="center"><b>Delivery  Date</b></td>

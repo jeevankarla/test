@@ -75,6 +75,7 @@ daystart = null;
 dayend = null; 
 period=parameters.period;
 isFormSubmitted=parameters.isFormSubmitted;
+context.isFormSubmitted=isFormSubmitted
 context.period=period;
 periodFrmDate=null;
 conditionList = [];

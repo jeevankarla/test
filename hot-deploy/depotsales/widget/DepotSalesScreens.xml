@@ -81,7 +81,7 @@
 	<screen name="IndentAnalyticsTab">
         <section>
             <actions>
-               	<set field="titleProperty" value="Indent Analytics"/>
+               	<set field="titleProperty" value="SELECT CORRESPONDING ANALYTICS TO VIEW DATA"/>
   				<set field="tabButtonItem" value="analytics" />		            
 				<set field="tabButtonItem2" value="indentAnalytics" />
 				<set field="ajaxUrl" value="IndentAnalyticsInternal" type="String" global="true"/>
@@ -109,7 +109,7 @@
     <screen name="SupplierAnalyticsSubTabBar">
         <section>
             <actions>
-               	<set field="titleProperty" value="Supply Analytics"/>
+               	<set field="titleProperty" value="SELECT CORRESPONDING ANALYTICS TO VIEW DATA "/>
   				<set field="tabButtonItem" value="analytics" />		            
 				<set field="tabButtonItem2" value="IndentSupplyAnalytics" />
 				<set field="ajaxUrl" value="IndentSupplyAnalyticsInternal" type="String" global="true"/>
@@ -4457,14 +4457,15 @@
    <screen name="delayedIndentPOAnalyticsListing">
           <section>
               <actions>
-                  <set field="titleProperty" value="Delays in processing purchase orders by more than 2 days"/>
+                  <set field="titleProperty" value="DELAYS IN PROCESSING PURCHASE ORDERS BY MORE THAN 2 DAYS"/>
                   <set field="tabButtonItem1" value="analytics"/>
                   <set field="tabButtonItem2" value="delayedIndentPOAnalyticsListing"/>
                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
                     <set field="producersList" from-field="producersList" default-value="${context.producersList}"/>
               	  <set field="roleTypeId" value="EMPANELLED_CUSTOMER"/>
-              	  <set field="district" from-field="parameters.district" />
+              	  <set field="district" from-field="parameters.district" /> 
               	   <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/listingThePoAnalytics.groovy"/>
+              	   <set field="formSubmitted" value="${formSubmitted}" />
               </actions>           
                 <widgets>
                <decorator-screen name="NoAuthDepotSalesCommonDecorator"
@@ -4482,11 +4483,26 @@
 							</html>
 						</platform-specific>
                       	</screenlet>
+                      	
                       	<decorator-section name="search-results">
-										<screenlet title="">
-											<include-form name="listOfDelayedShipment"
-												location="component://depotsales/widget/DepotSalesForms.xml" />
-										</screenlet>
+                      				<section>
+											<condition>
+												<if-compare operator="equals" value="Y" field="formSubmitted"/>
+											</condition>
+										    <widgets>
+												<screenlet title="DELAYS  IN PROCESSING PURCHASE ORDERS BY MORE THAN 2 DAYS">
+													<include-form name="listOfDelayedShipment"
+														location="component://depotsales/widget/DepotSalesForms.xml" />
+												</screenlet>
+										    </widgets>
+										    <fail-widgets>
+										    	<screenlet title="">
+													<include-form name="listOfDelayedShipment"
+													location="component://depotsales/widget/DepotSalesForms.xml" />
+												</screenlet>
+										    </fail-widgets>
+										</section>
+										
 									</decorator-section>
                       </decorator-section>
                   </decorator-screen>

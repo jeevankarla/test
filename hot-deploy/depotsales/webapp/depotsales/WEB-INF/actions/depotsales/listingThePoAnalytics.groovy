@@ -354,6 +354,12 @@ for (eachOrder in FromOrders) {
 
 }
 }
+formSubmitted="N";
+if(UtilValidate.isNotEmpty(dataList)){
+	formSubmitted="Y";
+}
+context.formSubmitted=formSubmitted
+
 context.putAt("dataJSON",dataList);
 Map resultMap = FastMap.newInstance();
 resultMap = ServiceUtil.returnSuccess();
