@@ -668,5 +668,32 @@ under the License.
        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
        <attribute name="paymentId" type="String" mode="IN" optional="true"/>                                              
        <attribute name="AcctgTransAndEntries" type="List" mode="OUT"/>                                   
-    </service>       
+    </service> 
+     <service name="createPaymentRole" engine="simple" default-entity-name="PaymentRole"
+        location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="createPaymentRole">
+        <description>Create Payment Role Record</description>        
+       <attribute name="paymentId" type="String" mode="IN" optional="false"/>
+       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+       <attribute name="partyId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createAcctgTransRole" engine="simple" default-entity-name="AcctgTransRole"
+        location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createAcctgTransRole">
+        <description>Create AcctgTrans Role Record</description>        
+       <attribute name="acctgTransId" type="String" mode="IN" optional="false"/>
+       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+       <attribute name="partyId" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="createPaymentApplicationForInvoiceEmp" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createPaymentApplicationForInvoiceEmp" transaction-timeout="2000">
+        <description> Auto PaymentApplication In LIFO for Created Payment </description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoicePartyIdFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="invoicePartyIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="headerCostCenterId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
+    </service>	
 </services>
