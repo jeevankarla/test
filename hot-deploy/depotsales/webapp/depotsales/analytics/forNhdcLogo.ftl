@@ -89,11 +89,11 @@ var isFind = $("#isFind").val();
 });
 
 
-//if(n==1){
+if(n==1){
 
-  $('div#orderSpinn1').html('<img src="/images/welcome nhdc3.jpg" height="400" width="500">');
+  $('div#orderSpinn1').html('<img src="/images/welcome nhdc3.jpg" height="500" width="800">');
 
-//}  
+}  
 
 // enter event handle
 	$("input").keypress(function(e){
@@ -185,52 +185,21 @@ var isFind = $("#isFind").val();
   <div align='center' name ='displayMsg' id='orderSpinn1'/></div>
 
 <div id="counter"></div>
+
 <#--
-<div class="screenlet">
-    <div class="screenlet-title-bar">
-      <h3>Select Date</h3>
-    </div>
-    <div class="screenlet-body">
-		<span class='h3'>From Date: </span><input class='h2' type="text" id="fromDate" name="fromDate" value="${defaultEffectiveDate}" readonly="true"/>
-		<span class='h3'>Thru Date: </span><input class='h2' type="text" id="thruDate" name="thruDate" value="${defaultEffectiveThruDate}" readonly="true"/>
-		<input type="submit" value="Submit" id="getTreeGrid" class="smallSubmit" />
-		<form name="csvForm" id="csvForm" action="indentAnalytics.csv">
-		<table>
-		<tr>
-		<td>
-		<input type="hidden" name="fromDateCsv" id="fromDateCsv"/> 
-		<input type="hidden" name="thruDateCsv" id="thruDateCsv"/> 
-		<input type="hidden" name="screenFlag" id="screenFlag"/> 
-		</td>
-		<td>
-		<input type="submit" value="SAVE" id="getTreeGridCsv" class="smallSubmit" /> 
-		</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</td>
-		<td align="right">
-		</td>
-		</tr>
-		<table>
-		</form>		
-    </div>
+
+<div class="button-bar tab-bar" >
+
+<pre>
+<ul>
+<li>
+ <ul>
+  <li class="selected "><a href="/myportal/control/IndentAnalyticsTab">Indent Analytics</a></li>
+  <li><a href="/myportal/control/SupplierAnalyticsSubTabBar">Supply Analytics</a></li>
+  <li><a href="/myportal/control/QuotaDashboardAuth">Quota Dashboard</a></li>
+ </ul>
+</li>
+</ul>
+ <br class="clear">
 </div>
-
-
-<div id="loader" > 
-      <p align="center" style="font-size: large;">
-        <img src="<@ofbizContentUrl>/images/ajax-loader64.gif</@ofbizContentUrl>">
-      </p>
-</div>
-<div id="result"/>
-
-
--->
+ -->

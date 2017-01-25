@@ -204,6 +204,11 @@
 	      	<link target="Rounding">
         	</link>
 	    </menu-item> 
+	    
+	    <menu-item name="partyAllDetail" title="party Details">
+        	<link target="partDetailMain" />
+        </menu-item>
+	    
 	    <menu-item name="CustomerAssoc" title="Customer Assoc">
 	      	<link target="CustomerAssoc">
         	</link>

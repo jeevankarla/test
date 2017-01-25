@@ -412,10 +412,13 @@
             <widgets>
 <!-- 				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                     -->
 <!-- 					<decorator-section name="body"> -->
-					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
-                    		<platform-specific> 
-                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentAnalytics.ftl"></html-template></html>
+                            <platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/forNhdcLogo.ftl"></html-template></html>
                        		</platform-specific> 
+					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+                    		<!-- <platform-specific> 
+                           		<html><html-template location="component://depotsales/webapp/depotsales/analytics/IndentAnalytics.ftl"></html-template></html>
+                       		</platform-specific>  -->
 <!-- 					</decorator-section> -->
 <!-- 				</decorator-screen>	                    	                -->
             </widgets>
