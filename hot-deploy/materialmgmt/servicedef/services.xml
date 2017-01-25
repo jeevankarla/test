@@ -310,5 +310,11 @@
          <attribute name="partyId" mode="OUT" type="String" optional="true"/>
      </service>
      
+     <service name="papulateShipmentReimbursment" engine="java" auth="true" invoke="papulateShipmentReimbursment" transaction-timeout="900000"
+        location="in.vasista.vbiz.purchase.MaterialPurchaseServices" >
+        <description>Papulate Shipment Reimbursment</description>
+         <attribute name="roId" mode="IN" type="String" optional="false"/>
+     </service>
+
      
 </services>

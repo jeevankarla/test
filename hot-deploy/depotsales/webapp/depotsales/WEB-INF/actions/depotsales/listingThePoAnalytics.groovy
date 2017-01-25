@@ -20,6 +20,14 @@ import org.ofbiz.party.party.PartyHelper;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.ofbiz.service.ServiceUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.ofbiz.entity.DelegatorFactory;
+
+HttpServletRequest httpRequest = (HttpServletRequest) request;
+HttpServletResponse httpResponse = (HttpServletResponse) response;
+dctx = dispatcher.getDispatchContext();
+delegator = DelegatorFactory.getDelegator("default#NHDC");
 
 dctx = dispatcher.getDispatchContext();
 JSONArray dataList = new JSONArray();

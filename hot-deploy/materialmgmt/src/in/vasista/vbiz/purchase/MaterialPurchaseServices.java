@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -66,7 +67,6 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.base.conversion.JSONConverters.JSONToList;
 import org.ofbiz.entity.util.EntityFindOptions;
-
 
 public class MaterialPurchaseServices {
 
@@ -848,7 +848,7 @@ public class MaterialPurchaseServices {
 		
 		String Scheam = "";
  		try{
-     		List<GenericValue> orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+     		List<GenericValue> orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, rlatedId), null, null, null, false);
 			
 			List<GenericValue> scheamList = EntityUtil.filterByCondition(orderAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "SCHEME_CAT"));
 			
@@ -7427,4 +7427,92 @@ catch(Exception e){
 		return result;
 	}
 	
+	// Service to papulate Shipment Reimbursement for all Branch and Depot Shipments
+	public static Map<String, Object> papulateShipmentReimbursment(DispatchContext ctx,Map<String, ? extends Object> context) {
+	    Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+	    Map<String, Object> result = ServiceUtil.returnSuccess("Successfully Papulated all Shipments estimatedShipCost in ShipmentReimbursment...");
+	    Locale locale = (Locale) context.get("locale");
+	  	String roid = (String) context.get("roId");
+	  	boolean beganTransaction = false;
+		if (UtilValidate.isEmpty(roid)) {
+			Debug.logError("Cannot Run Service Without Regional Id",module);
+			return ServiceUtil.returnError("Cannot Run Service Without Regional Id");
+		}
+		try{
+			beganTransaction = TransactionUtil.begin(10000);
+			List roBranchIds = FastList.newInstance();
+			List roBranchOrderIds = FastList.newInstance();
+			List roBranchPoOrderIds = FastList.newInstance();
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roid));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+			List<GenericValue> partyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isEmpty(partyRelationship)){
+				Debug.logError("Unable Query Party Relationship",module);
+				return ServiceUtil.returnError("Unable Query Party Relationship");
+			}
+			roBranchIds=EntityUtil.getFieldListFromEntityList(partyRelationship,"partyIdTo",true);
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roBranchIds));
+			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			List<GenericValue> orderRole = delegator.findList("OrderRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isEmpty(orderRole)){
+				Debug.logError("No Indents Found for Given Ro",module);
+				return ServiceUtil.returnError("No Indents Found for Given Ro");
+			}
+			roBranchOrderIds=EntityUtil.getFieldListFromEntityList(orderRole,"orderId",true);
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.IN, roBranchOrderIds));
+			conditionList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+			List<GenericValue> orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isEmpty(orderAssoc)){
+				Debug.logError("No Purchase Order Found For Ro sales Orders",module);
+				return ServiceUtil.returnError("No Purchase Order Found For Ro sales Orders");
+			}
+			roBranchPoOrderIds=EntityUtil.getFieldListFromEntityList(orderAssoc,"orderId",true);
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, roBranchPoOrderIds));
+			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
+			//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "DOCUMENTS_ENDORSED"));
+			EntityFindOptions findOptions = new EntityFindOptions();
+            findOptions.setDistinct(true);
+            Set<String> fieldsToSelect = UtilMisc.toSet("shipmentId", "estimatedShipCost","estimatedShipDate");
+            List<GenericValue> shipmentAndOrderRole = delegator.findList("ShipmentAndOrderRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, UtilMisc.toList("orderId"), findOptions, false);
+	        for(GenericValue eachShipment:shipmentAndOrderRole) {
+	        	try{
+		  			GenericValue ShipmentReimbursement = delegator.makeValue("ShipmentReimbursement");
+	  				if(UtilValidate.isNotEmpty(eachShipment.get("estimatedShipCost"))){
+		  				ShipmentReimbursement.set("shipmentId", eachShipment.get("shipmentId"));
+		  				if(UtilValidate.isEmpty(eachShipment.get("estimatedShipDate"))){
+		  					ShipmentReimbursement.set("receiptDate", eachShipment.get("estimatedShipDate"));
+						}else{
+							ShipmentReimbursement.set("receiptDate", UtilDateTime.nowTimestamp());
+						}
+		  				ShipmentReimbursement.set("receiptAmount", eachShipment.get("estimatedShipCost"));
+						delegator.createSetNextSeqId(ShipmentReimbursement);
+	  				}
+		  		}catch(GenericEntityException e){
+					Debug.logError(e, "Failed to Upate  ShipmentReimbursment ", module);
+				}
+		     }
+		}catch(Exception e){
+			try {
+	  			TransactionUtil.rollback(beganTransaction, "Error while calling services", e);
+			} catch (GenericEntityException e2) {
+	  			Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  		}
+			return ServiceUtil.returnError(e.toString()); 
+		}
+		finally {
+	  		  try {
+	  			  TransactionUtil.commit(beganTransaction);
+	  		  } catch (GenericEntityException e) {
+	  			  Debug.logError(e, "Could not commit transaction for entity engine error occurred while fetching data", module);
+	  		  }
+	  	}
+		return result;
+
+	}
 }
