@@ -318,7 +318,7 @@
         	<menu-item name="findDelayShipments" title="Delay Shipments Listing">
         		<link target="findDelayShipmentsAuth"/> 
         	</menu-item>
-	    	<menu-item name="FindSupplierDispatchs" title="Shipment History">
+	    	<menu-item name="FindSupplierDispatchs" title="Supplier History">
         		<link target="ShipmentHistoryAuth"/>
         	</menu-item>
        </menu> 
