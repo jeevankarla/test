@@ -6,7 +6,6 @@
         <menu-item name="DepotTransMain" title="Depot Transactions"><link target="FindDepotTransPO"/></menu-item>
    		<menu-item name="SupplierPortal" title="Supplier Transactions"><link target="SupplierPortal"/></menu-item>
 		<menu-item name="IndentPortal" title="Indentor Transactions"><link target="SilkIndentorSalesOrder"/></menu-item>
-		
 	</menu>
     
      <menu name="DepotSaleMenuTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
@@ -204,11 +203,6 @@
 	      	<link target="Rounding">
         	</link>
 	    </menu-item> 
-	    
-	    <menu-item name="partyAllDetail" title="party Details">
-        	<link target="partDetailMain" />
-        </menu-item>
-	    
 	    <menu-item name="CustomerAssoc" title="Customer Assoc">
 	      	<link target="CustomerAssoc">
         	</link>
@@ -315,7 +309,7 @@
 			<menu-item name="IndentSupplyAnalytics" title="Supply Analytics">
         		<link target="IndentSupplyAnalytics"> <parameter param-name="isFind" value="Y"/> </link>
         	</menu-item> 
-        	<menu-item name="findDelayShipments" title="Delay Shipments Listing">
+        	<menu-item name="findDelayShipments" title="Delayed Supply Listing">
         		<link target="findDelayShipmentsAuth"/> 
         	</menu-item>
 	    	<menu-item name="FindSupplierDispatchs" title="Supplier History">
@@ -1596,12 +1590,12 @@
      <menu name="DashBoardPortalMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
            
-     <!--    <menu-item name="analytics" title="Dashboard">
+        <menu-item name="analytics" title="Dashboard">
         	<condition>
             	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>
             </condition>       
         	<link target="IndentAnalytics"/>
-        </menu-item> -->
+        </menu-item>
 	     
         
     </menu> 
