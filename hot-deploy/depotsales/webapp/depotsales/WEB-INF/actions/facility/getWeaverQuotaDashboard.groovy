@@ -100,7 +100,7 @@ stateRosList=result.get("stateRosList");*/
 branchList = [];
 
 
-if(branchId){
+if(branchId && branchId != "All"){
 branchList.add(branchId);
 }else{
 conditions = [];
@@ -240,6 +240,8 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 		
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
 	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));
+	
+	condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.NOT_EQUAL, "_NA_"));
 	
 	/*if(UtilValidate.isNotEmpty(passbookNumber) && UtilValidate.isNotEmpty(passGreater)){
 		condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.GREATER_THAN, passbookNumber));

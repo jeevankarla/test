@@ -1074,7 +1074,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="DELAYED SHIPMENTS FROM SUPPLIER"/>
-			     <set field="tabButtonItem" value="analytics"/>		            
+			     <set field="tabButtonItem3" value="IndentSupplyAnalytics"/>		            
 			     <set field="tabButtonItem2" value="findDelayShipments"/>
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"

@@ -41,7 +41,7 @@ $(".monthPicker").focus(function () {
        	var optionList = '';
 			var list= stateJSON[stateId];
 			if (list && list.length>0) {	
-				optionList += "<option value = " + " " + " >" +"All "+ "</option>";	       				        	
+				optionList += "<option value = " + "All" + " >" +"All "+ "</option>";	       				        	
 	        	for(var i=0 ; i<list.length ; i++){
 					var innerList=list[i];	     
 	                optionList += "<option value = " + innerList['value'] + " >" +innerList['label']+" </option>";          			
@@ -236,7 +236,8 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				
 			 
 			   <tr><td><br/></td></tr>
-			   
+			  
+			  <#-- 
 			    <tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Party Classification :</td>
 				  
@@ -266,7 +267,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				</tr>
 			   
 			   <tr><td><br/></td></tr>
-			   
+			   -->
 			   
 			   <tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Month :</td>
