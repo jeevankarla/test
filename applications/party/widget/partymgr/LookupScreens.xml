@@ -621,9 +621,9 @@ under the License.
     </screen>
     <screen name="LookupBranchCustomers">
         <section>
-            <condition>
+           <!--  <condition>
                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
-            </condition>
+            </condition> -->
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PartyLookupPartyByName}"/>

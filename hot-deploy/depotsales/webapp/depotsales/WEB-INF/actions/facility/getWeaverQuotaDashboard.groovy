@@ -51,6 +51,12 @@ passGreater = parameters.passGreater;
 
 stateWise = parameters.stateWise;
 
+/*Debug.log("branchId====33233======="+branchId);
+
+Debug.log("stateWise====33233======="+stateWise);
+Debug.log("partyClassification====33233======="+partyClassification);*/
+
+context.partyClassification = partyClassification;
 
 effectiveDate = parameters.effectiveDate;
 
@@ -92,6 +98,11 @@ uniqueOrderIdsList = Eval.me(uniqueOrderId)
 stateBranchsList=result.get("stateBranchsList");
 stateRosList=result.get("stateRosList");*/
 branchList = [];
+
+
+if(branchId){
+branchList.add(branchId);
+}else{
 conditions = [];
 if(UtilValidate.isNotEmpty(stateWise)){
 	conditions.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, stateWise));
@@ -110,7 +121,7 @@ stateWiseRosAndBranchList = delegator.findList("PartyContactDetailByPurpose", En
  if(UtilValidate.isNotEmpty(partyClassicationForBranch)){
 	  branchList = EntityUtil.getFieldListFromEntityList(partyClassicationForBranch, "partyId", true);
  }
- 
+}
  
 /*branchList = [];
 if(stateBranchsList){
@@ -136,6 +147,8 @@ branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo",
 
 if(UtilValidate.isEmpty(branchList))
 branchList.add(branchId);*/
+
+
 
 partyList = [];
 

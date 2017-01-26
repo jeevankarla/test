@@ -259,4 +259,8 @@ under the License.
     </div>
 <script>
      window.onload = fetchMaintenanceMsgCall();
+      $( ".user" ).click(function() {
+        localStorage.setItem("on_load_counter", 0);
+});
+     
 </script>
