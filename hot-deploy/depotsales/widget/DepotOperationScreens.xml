@@ -67,7 +67,6 @@
 		</section>
 	</screen>
 
-
 	<screen name="StockPositionDepotInternal">
 		<section>
 			<actions>
@@ -941,7 +940,7 @@
 	<screen name="ShipmentHistoryAuth">
 		<section>
 			<actions>
-				<set field="titleProperty" value="SUPPLIER HISTORY" />
+				<set field="titleProperty" value="SUPPLY HISTORY" />
 			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
 			     <set field="tabButtonItem2" value="FindSupplierDispatchs" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
@@ -992,7 +991,7 @@
 												<if-compare operator="not-equals" value="" field="customerName"/>
 											</condition>
 										    <widgets>
-										    	<screenlet id="head" title="SUPPLIERS TO ${customerName} OPERATED DEPOTS">
+										    	<screenlet id="head" title="SUPPLIES TO ${customerName} OPERATED DEPOTS">
 												</screenlet>
 												<screenlet>
 													<include-form name="listMaterialShipmentReceiptDepotTrans"
@@ -1000,7 +999,7 @@
 												</screenlet>
 										    </widgets>
 										    <fail-widgets>
-										    	<screenlet  title="SUPPLIERS TO USER AGENCY OPERATED DEPOTS">
+										    	<screenlet  title="SUPPLIES TO USER AGENCY OPERATED DEPOTS">
 													<include-form name="listMaterialShipmentReceiptDepotTrans"
 														location="component://depotsales/widget/DepotSalesForms.xml" />
 												</screenlet>

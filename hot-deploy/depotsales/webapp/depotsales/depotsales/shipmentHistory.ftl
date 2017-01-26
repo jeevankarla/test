@@ -19,7 +19,6 @@ under the License.
 -->
 
 <script type= "text/javascript">
-	
 	var stateJSON=${StringUtil.wrapString(stateJSON)!'[]'};
 	var supplierJSON=${StringUtil.wrapString(supplierJSON)!'[]'};
 	var cutomerJSON=${StringUtil.wrapString(cutomerJSON)!'[]'};
@@ -175,7 +174,7 @@ under the License.
 <#else>
 	<#assign action="ShipmentHistory">
 </#if>
-<h2>SUPPLIERS TO USER AGENCY OPERATED DEPOTS<h2>
+<h2>SUPPLIES TO USER AGENCY OPERATED DEPOTS<h2>
 <div class="screenlet">
   <div class="screenlet-body">
     <div id="findPartyParameters"  >
