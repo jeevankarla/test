@@ -208,13 +208,13 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				<tr><td><br/></td></tr>
 				
 				
-				<tr>
+			<#--	<tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Customer Name:</td>
 				  <td valign='middle'><font color="green">          
 				     <input type='text' id='partyId' name='partyId' placeholder="Enter Customer Name" onfocus='javascript:autoCompletePartyId();' size='20'/><p><label  align="left" id="partyTooltip" style="color: blue"></label><p>  		
 				  </td>
 				  <td><br/></td>
-				</tr>
+				</tr> -->  
 				
 			 
 			   <tr><td><br/></td></tr>
