@@ -294,8 +294,7 @@ for (eachOrder in FromOrders) {
 			
 			diffDays = diffHours/24;
 			
-			
-			diffDays = Math.abs(diffDays);
+			if(diffDays > 0){
 					
 			if(diffDays >= days){
 				
@@ -343,6 +342,8 @@ for (eachOrder in FromOrders) {
 				
 				dataList.add(branchMap);
 				
+			}
+			
 			}
 		
 	   }
