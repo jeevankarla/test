@@ -153,7 +153,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 		  <table width="60%" border="0" cellspacing="0" cellpadding="0" class="form-style-8">
 				<tr>
 				<td width="40%">
-				
+	  			
 				<#--
 				<tr>
 				  <td align='left' valign='middle' nowrap="nowrap">${uiLabelMap.Branch} :</td>

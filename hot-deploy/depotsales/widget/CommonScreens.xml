@@ -412,7 +412,7 @@
             <widgets>
 <!-- 				<decorator-screen name="DashBoardCommonDecorator" location="${parameters.mainDecoratorLocation}">                     -->
 <!-- 					<decorator-section name="body"> -->
-                            <platform-specific> 
+                              <platform-specific> 
                            		<html><html-template location="component://depotsales/webapp/depotsales/analytics/forNhdcLogo.ftl"></html-template></html>
                        		</platform-specific> 
 					  <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
