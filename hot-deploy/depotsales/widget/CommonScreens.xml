@@ -404,7 +404,7 @@
 				<set field="ajaxUrl" value="IndentAnalyticsInternal" type="String" global="true"/>  
 				<set field="parameters.screenflag" value="indentAnalytics"/>
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/indentAnalytics.groovy" />
-				
+				  
 				<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
 			    <set field="defaultEffectiveDate" value="April 1, 2016" /> 
 			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />          				                                                                        

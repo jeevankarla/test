@@ -149,7 +149,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 
         
       <form method="post" name="QuotaDashboard" id="QuotaDashboard" action="<@ofbizUrl>QuotaDashboardAuth</@ofbizUrl> " class="basic-form">
-        
+          
 		  <table width="60%" border="0" cellspacing="0" cellpadding="0" class="form-style-8">
 				<tr>
 				<td width="40%">

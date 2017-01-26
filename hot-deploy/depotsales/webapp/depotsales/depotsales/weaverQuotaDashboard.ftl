@@ -184,7 +184,7 @@ branchId = "INT10";
    //  alert(JSON.stringify(dataJson));
     jQuery.ajax({
                 url: 'getWeaverQuotaDashboard',
-                type: 'POST',
+                  type: 'POST',
                 data: dataJson,
                 dataType: 'json',
                success: function(result){
