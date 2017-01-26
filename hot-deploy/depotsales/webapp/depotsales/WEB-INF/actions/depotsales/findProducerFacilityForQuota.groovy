@@ -102,6 +102,13 @@ branchId = "";
 if(parameters.branchId2)
 branchId = parameters.branchId2;
 
+Debug.log("branchId============="+branchId);
+
+branchName = branchProductSroreMap.get(branchId);
+
+context.branchName = branchName;
+
+
 passbookNumber = "";
 if(parameters.passbookNumber)
 passbookNumber = parameters.passbookNumber;
@@ -130,7 +137,6 @@ stateWise = "";
 if(parameters.stateWise)
 stateWise = parameters.stateWise;
 
-Debug.log("stateWise============="+stateWise);
 
 district = "";
 if(parameters.district)
@@ -145,8 +151,8 @@ effectiveDate = "";
 
 if(parameters.effectiveDate)
 effectiveDate = parameters.effectiveDate;
-
-/*partyClassification = "";
+/*
+partyClassification = "";
 if(parameters.partyClassificationId)
 partyClassification = parameters.partyClassificationId;
 
@@ -169,10 +175,12 @@ context.effectiveDate = effectiveDate;
 context.stateWise = stateWise;
 
 
-partyClassifiName = EntityUtil.filterByCondition(partyClassificationList, EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, partyClassification));
+partyClassifiName = EntityUtil.filterByCondition(partyClassificationList, EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, partyClassification));
 partyClasificationName = "";
 if(partyClassifiName)
 partyClasificationName = partyClassifiName[0].description;
+
+
 
 context.partyClasificationName = partyClasificationName;
 
@@ -193,6 +201,41 @@ statesList.each{ eachState ->
 context.stateListJSON = stateListJSON;
 
 
+
+stateBranchsList=[];
+stateRosList =[];
+conditionDeopoList = [];
+conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+statesList = delegator.findList("Geo",conditionDepo,null,null,null,false);
+statesIdsList=EntityUtil.getFieldListFromEntityList(statesList, "geoId", true);
+
+
+
+JSONObject stateJSON = new JSONObject();
+
+for(stateid in statesIdsList){
+	result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",stateid,"userLogin",userLogin));
+	stateBranchsList=result.get("stateBranchsList");
+	stateRosList=result.get("stateRosList");
+	
+	JSONArray stateBranchAndRoJSON = new JSONArray();
+	stateBranchsList.each{ eachState ->
+			JSONObject newObj = new JSONObject();
+			newObj.put("value",eachState.partyId);
+			newObj.put("label",eachState.groupName);
+			stateBranchAndRoJSON.add(newObj);
+	}
+	/*stateRosList.each{ eachState ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachState.partyId);
+		newObj.put("label",eachState.groupName);
+		stateBranchAndRoJSON.add(newObj);
+	}*/
+	stateJSON.put(stateid, stateBranchAndRoJSON)
+}
+context.stateJSON = stateJSON;
 	
 stateNameList = EntityUtil.filterByCondition(statesList, EntityCondition.makeCondition("geoId", EntityOperator.EQUALS, stateWise));
 stateName = "";
@@ -200,137 +243,3 @@ if(stateNameList)
 stateName = stateNameList[0].geoName;
 context.stateName = stateName;
 
-/*partyRoleAndIde = new DynamicViewEntity();
-partyRoleAndIde.addMemberEntity("PRPD", "PartyRoleDetailAndPartyDetail");
-partyRoleAndIde.addMemberEntity("PID", "PartyIdentification");
-partyRoleAndIde.addMemberEntity("PRS", "PartyRelationship");
-partyRoleAndIde.addAliasAll("PRPD", null, null);
-partyRoleAndIde.addAliasAll("PID", null, null);
-partyRoleAndIde.addAliasAll("PRS", null, null);
-partyRoleAndIde.addViewLink("PRPD","PID", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId"));
-partyRoleAndIde.addViewLink("PRPD","PRS", Boolean.FALSE, ModelKeyMap.makeKeyMapList("partyId","partyIdTo"));
-
-condList = [];
-condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
-condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS, "PSB_NUMER"));
-
-if(partyId!=null && partyId!=""){
-	condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS,partyId.trim()));
-}
-if(groupName!=null && groupName!=""){
-	group1=EntityCondition.makeCondition(EntityCondition.makeCondition("firstName" ,EntityOperator.LIKE,"%"+groupName.trim()+"%") ,EntityOperator.OR,EntityCondition.makeCondition("lastName" ,EntityOperator.LIKE,"%"+groupName.trim()+"%"));
-	group2=EntityCondition.makeCondition(EntityCondition.makeCondition("middleName" ,EntityOperator.LIKE,"%"+groupName.trim()+"%") ,EntityOperator.OR,EntityCondition.makeCondition("groupName" ,EntityOperator.LIKE,"%"+groupName.trim()+"%"));
-	condList.add(EntityCondition.makeCondition(group1 ,EntityOperator.OR,group2));
-}
-if(branchId!=null && branchId!=""){
-	condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS,branchId.trim()));
-}
-if(passbookNumber!=null && passbookNumber!=""){
-	condList.add(EntityCondition.makeCondition("idValue" ,EntityOperator.EQUALS,passbookNumber.trim()));
-}
-
-cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-prodsEli = delegator.findListIteratorByCondition(partyRoleAndIde, cond, null,UtilMisc.toSet("partyId","firstName","idValue","partyIdFrom") , null, null);
-groupNameList = prodsEli.getCompleteList();
-
-finalList =[];
-
-for(customer in groupNameList){
-	eachPartyId=String.valueOf(customer.get("partyId"));
-	branchId=String.valueOf(customer.get("partyIdFrom"));
-	tempMap = [:];
-	tempMap.put("partyId",eachPartyId);
-	String partyName = PartyHelper.getPartyName(delegator,eachPartyId,false);
-	tempMap.put("groupName",partyName);
-	tempMap.put("passbookId",customer["idValue"])
-	
-	if(UtilValidate.isNotEmpty(branchId)){
-		result = EntityUtil.filterByCondition(resultCtx.get("productStoreList"), EntityCondition.makeCondition("payToPartyId", EntityOperator.EQUALS, branchId));
-		if(UtilValidate.isNotEmpty(result[0].get("storeName"))){
-			tempMap.put("storeName",result[0].get("storeName"));
-		}else{
-		  tempMap.put("storeName","");
-		}
-		
-	}else{
-		  tempMap.put("storeName","");
-		}
-	
-	finalList.addAll(tempMap);
-	
-}
-
-context.listIt = finalList;
-
-*/
-
-
-/*String partyId = parameters.partyId;
-
-String facilityPartyName = parameters.PartyName;
-
-String roleTypeId = parameters.roleTypeId;
-
-
-condList = [];
-condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"EMPANELLED_CUSTOMER"));
-partyRoleAndPartyDetail = delegator.findList("PartyRoleAndPartyDetail", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
-
-finalPartyDetails = [];
-
-  for (eachList in partyRoleAndPartyDetail) {
-	
-		tempMap = [:];
-		String partyName = PartyHelper.getPartyName(delegator,eachList.partyId,false);
-		tempMap.put("partyId", eachList.partyId);
-		if(UtilValidate.isNotEmpty(partyName)){
-		tempMap.put("partyName", partyName);
-		}
-		else{
-			tempMap.put("partyName", "");
-		}
-		
-		tempMap.put("roleTypeId", eachList.roleTypeId);
-		finalPartyDetails.add(tempMap);
-}
-
-
-  finalFilteredList = []as LinkedHashSet;
-  
-  for (eachOrderList in finalPartyDetails) {
-	  
-	 if(UtilValidate.isNotEmpty(partyId)){
-	  
-		  if(partyId.equals(eachOrderList.get("partyId"))){
-			  finalFilteredList.add(eachOrderList);
-		  }
-		 
-	 }
-	 if(UtilValidate.isNotEmpty(facilityPartyName)){
-		 
-		 if(facilityPartyName.equals(eachOrderList.get("partyName"))){
-			 
-			 finalFilteredList.add(eachOrderList);
-		 }
-		 
-	 }
-	 if(UtilValidate.isNotEmpty(roleTypeId)){
-		 
-		 if(roleTypeId.equals(eachOrderList.get("roleTypeId"))){
-			 
-			 finalFilteredList.add(eachOrderList);
-		 }
-		 
-	 }
-	 if(UtilValidate.isEmpty(partyId) && UtilValidate.isEmpty(facilityPartyName) && UtilValidate.isEmpty(roleTypeId)){
-		 
-		 Debug.log("enter3erer")
-		 
-		 finalFilteredList.add(eachOrderList);
-	 }
- }
-  
-  tempfinalFilteredList = [];
-  tempfinalFilteredList.addAll(finalFilteredList);
-
-context.partyRoleAndPartyDetail = tempfinalFilteredList;*/

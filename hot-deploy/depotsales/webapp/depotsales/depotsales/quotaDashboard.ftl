@@ -5,10 +5,14 @@
 
 
 <script type="text/javascript">
+	var stateJSON=${StringUtil.wrapString(stateJSON)!'[]'};
 	
-	
+	var branchProductSroreMap = ${StringUtil.wrapString(branchProductSroreMap)!'[]'};
 	//for Month Picker
 $(document).ready(function(){
+
+   getbranchesByState();
+
     $(".monthPicker").datepicker( {
        changeMonth: true,
        changeYear: true,
@@ -32,7 +36,19 @@ $(".monthPicker").focus(function () {
     });
 });
 	
-	
+	function getbranchesByState(){
+       	var stateId=$("#stateWise").val();
+       	var optionList = '';
+			var list= stateJSON[stateId];
+			if (list && list.length>0) {	
+				optionList += "<option value = " + " " + " >" +"All "+ "</option>";	       				        	
+	        	for(var i=0 ; i<list.length ; i++){
+					var innerList=list[i];	     
+	                optionList += "<option value = " + innerList['value'] + " >" +innerList['label']+" </option>";          			
+	      		}//end of main list for loop
+	      	}
+	      	jQuery("#branchId2").html(optionList);
+       }	
 
 	
 	
@@ -43,11 +59,16 @@ var partyId = $("#partyId1").val();
 var effectiveDate1 = $("#effectiveDate1").val();
 
   var branchList = "";
+  branchList = "<option value='' ></option>";
+  
+  <#--  
   <#list formatList as eachList>
 	branchList = branchList + "<option value='${eachList.payToPartyId}' >${eachList.productStoreName}</option>";
   </#list>
+  -->
+  
 
-     $("#branchId2").html(branchList);
+     //$("#branchId2").html(branchList);
      
      
      $("#branchId2").val(branchId);
@@ -62,8 +83,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 	
 	  var branchId2 = $("#branchId2").val();
 	
-	
-			var productStoreId = "null";
+			var productStoreId = branchProductSroreMap[branchId2];
 			
 			
 		      $("#partyId").autocomplete({ 
@@ -131,7 +151,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 	    	font-size: 13px;
 		}
 		.form-style-8{
-		    max-width: 400px;
+		    max-width: 600px;
 		    max-height: 280px;
 		    max-right: 10px;
 		    margin-top: 10px;
@@ -154,34 +174,13 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				<tr>
 				<td width="40%">
 	  			
-				<#--
-				<tr>
-				  <td align='left' valign='middle' nowrap="nowrap">${uiLabelMap.Branch} :</td>
-				  
-				  <#if productStoreId?exists && productStoreId?has_content>  
-								  	  		   
-				  <td valign='middle'><font color="green">          
-				    <select name="branchId2" id="branchId2" onchange="javascript:clearData();" >
-				    <option value >         		
-				  </td>
-				  
-				  <#else>
-				  <td valign='middle'><font color="green">          
-				    <select name="branchId2" id="branchId2" onchange="javascript:clearData();" />         		
-				  </td>
-				   </#if>
-				  
-				  <td><br/></td>
-				</tr>
-				 -->
-				 
 				 <tr>
 				  <td align='left' valign='middle' nowrap="nowrap">State :</td>
 				  
 				  <#if stateWise?exists && stateWise?has_content>  
 								  	  		   
 				  <td valign='middle'><font color="green"> 
-				   <select name="stateWise" id="stateWise" >
+				   <select name="stateWise" id="stateWise" onchange="javascript:getbranchesByState();">
 				   <option value="${stateWise}">${stateName}</option>    
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
@@ -191,7 +190,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				  
 				  <#else>
 				  <td valign='middle'><font color="green">          
-				    <select name="stateWise" id="stateWise">
+				    <select name="stateWise" id="stateWise" onchange="javascript:getbranchesByState();">
 				     <option value="IN-TN">TAMILNADU</option>
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
@@ -202,23 +201,42 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				  
 				  <td><br/></td>
 				</tr>
-				 
+				 <tr><td><br/></td></tr>
+				<tr>
 				
+				  <td align='left' valign='middle' nowrap="nowrap">${uiLabelMap.Branch} :</td>
+				  
+				  <#if branchId?exists && branchName?has_content>  
+								  	  		   
+				  <td valign='middle'><font color="green">          
+				    <select name="branchId2" id="branchId2" onchange="javascript:clearData();" >
+				    <option value="${branchId}">${branchName}</option>
+				    
+				  </td>
+				  
+				  <#else>
+				  <td valign='middle'><font color="green">          
+				    <select name="branchId2" id="branchId2" onchange="javascript:clearData();" />         		
+				  </td>
+				   </#if>
+				  
+				  <td><br/></td>
+				</tr>
 				
 				<tr><td><br/></td></tr>
 				
 				
-			<#--	<tr>
+				<tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Customer Name:</td>
 				  <td valign='middle'><font color="green">          
 				     <input type='text' id='partyId' name='partyId' placeholder="Enter Customer Name" onfocus='javascript:autoCompletePartyId();' size='20'/><p><label  align="left" id="partyTooltip" style="color: blue"></label><p>  		
 				  </td>
 				  <td><br/></td>
-				</tr> -->  
+				</tr> 
 				
 			 
 			   <tr><td><br/></td></tr>
-			   <#--
+			   
 			    <tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Party Classification :</td>
 				  
@@ -228,7 +246,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				   <select name="partyClassificationId2" id="partyClassificationId2" >
 				   <option value="${partyClassification}">${partyClasificationName}</option>    
 				     <#list  partyClassificationList as partyClassificationList>
-						<option value='${partyClassificationList.partyClassificationTypeId?if_exists}'>${partyClassificationList.description?if_exists}</option>
+						<option value='${partyClassificationList.partyClassificationGroupId?if_exists}'>${partyClassificationList.description?if_exists}</option>
 					 </#list> 
 				  </select>         		
 				  </td>
@@ -238,7 +256,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				    <select name="partyClassificationId2" id="partyClassificationId2" >
 				    <option value=""></option>     
 				     <#list  partyClassificationList as partyClassificationList>
-						<option value='${partyClassificationList.partyClassificationTypeId?if_exists}'>${partyClassificationList.description?if_exists}</option>
+						<option value='${partyClassificationList.partyClassificationGroupId?if_exists}'>${partyClassificationList.description?if_exists}</option>
 					 </#list> 
 				  </select>       		
 				  </td>
@@ -248,7 +266,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				</tr>
 			   
 			   <tr><td><br/></td></tr>
-			   -->
+			   
 			   
 			   <tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Month :</td>

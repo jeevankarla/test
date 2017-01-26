@@ -45,15 +45,21 @@ $("#counter").hide();
         localStorage.setItem("on_load_counter", 0);
 });
 
-if(n==1){
+var divload = "";
 
+if(n==1 || divload == "NOT"){
   $('div#orderSpinn1').html('<img src="/images/welcome nhdc3.jpg" height="500" width="800">');
 
+   $('div#orderSpinn1').each(function() {
+    if ($(this).find('img').length) {
+        divload = "YES";
+    }else{
+        location.reload();
+        divload = "NOT";
+    }
+});
   $("div#orderSpinn1").show().delay(3000).fadeOut();
-
 }  
-
-	
 });
 
 
