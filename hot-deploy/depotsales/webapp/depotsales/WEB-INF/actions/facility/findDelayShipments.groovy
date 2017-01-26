@@ -239,13 +239,15 @@ if("Y".equals(isFormSubmitted)){
 						  diffHours = timeDiff / (60 * 60 * 1000);
 						  int diffHours = diffHours.intValue();
 						  diffDays = diffHours/24;
-						  diffDays = Math.abs(diffDays);
+						  //diffDays = Math.abs(diffDays);
 						  for(eachRecord in Shipment){
 							  shipedQty=shipedQty+eachRecord.quantityAccepted;
 						  }
 						  for(eachRecord in orderHeaderAndRole2){
 							  ordQty=ordQty+eachRecord.quantity;
 						  }
+						  
+						  if(diffDays > 0){
 						  if(diffDays >= 7){
 							  JSONObject newObj = new JSONObject();
 							  orderHeaderSequence = EntityUtil.filterByCondition(orderHeaderSequenceList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,eachList.orderId));
@@ -266,6 +268,7 @@ if("Y".equals(isFormSubmitted)){
 							  totDelayDays=totDelayDays+diffDays;
 							  dataList.add(newObj);
 							  orderIds.add(eachList.orderId)
+						  }
 						  }
 					  }else if(UtilValidate.isNotEmpty(statusDatetime)){
 					     JSONObject newObj = new JSONObject();

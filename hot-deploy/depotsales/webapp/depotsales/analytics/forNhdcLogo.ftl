@@ -40,12 +40,14 @@ $("#counter").hide();
     }
     n++;
     localStorage.setItem("on_load_counter", n);
+    
+    var divload = localStorage.getItem("divload");
+    
     document.getElementById('counter').innerHTML = n;
     $( ".user" ).click(function() {
         localStorage.setItem("on_load_counter", 0);
 });
 
-var divload = "";
 
 if(n==1 || divload == "NOT"){
   $('div#orderSpinn1').html('<img src="/images/welcome nhdc3.jpg" height="500" width="800">');
@@ -53,15 +55,35 @@ if(n==1 || divload == "NOT"){
    $('div#orderSpinn1').each(function() {
     if ($(this).find('img').length) {
         divload = "YES";
+        divload = localStorage.setItem("divload" , divload);
     }else{
         location.reload();
         divload = "NOT";
+        divload = localStorage.setItem("divload" , divload);
     }
 });
   $("div#orderSpinn1").show().delay(3000).fadeOut();
+  
+  
 }  
 });
 
+function blinker() {
+	
+	$('div.breadcrumbs-sep').html("SELECT CORRESPONDING ANALYTICS TO VIEW DATA");
+	
+	$('div.breadcrumbs-sep').css({"color":"blue"});
+	
+    $('div.breadcrumbs-sep').show();
+    $('div.breadcrumbs-sep').fadeOut(800);
+    $('div.breadcrumbs-sep').fadeIn(800);
+} 
+	
+	$(document).ready(function(){
+	
+	setTimeout(function() { setInterval(blinker, 1000); }, 3000);
+	
+	});
 
 </script>
  
