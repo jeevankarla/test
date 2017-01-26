@@ -285,8 +285,9 @@ for (eachOrder in FromOrders) {
 			
 			long timeDiff = 0;
 			if(purchaseOrderDate && saleOrderDate)
-			  timeDiff = saleOrderDate.getTime() - purchaseOrderDate.getTime();
-			
+			  timeDiff =  purchaseOrderDate.getTime()-saleOrderDate.getTime();
+		
+			  	
 			 diffHours = timeDiff / (60 * 60 * 1000);
 			
 			
