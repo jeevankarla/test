@@ -863,7 +863,7 @@
 	<screen name="ShipmentHistory">
 		<section>
 			<actions>
-				<set field="titleProperty" value="SUPPLIER HISTORY" />
+				<set field="titleProperty" value="SUPPLY HISTORY" />
 			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
 			     <set field="tabButtonItem2" value="FindSupplierDispatchs" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
@@ -914,7 +914,7 @@
 												<if-compare operator="not-equals" value="" field="customerName"/>
 											</condition>
 										    <widgets>
-										    	<screenlet id="head" title="SUPPLIERS TO ${customerName} OPERATED DEPOTS">
+										    	<screenlet id="head" title="Supplies To ${customerName} Operated Depots">
 												</screenlet>
 												<screenlet>
 													<include-form name="listMaterialShipmentReceiptDepotTrans"
@@ -922,7 +922,7 @@
 												</screenlet>
 										    </widgets>
 										    <fail-widgets>
-										    	<screenlet  title="SUPPLIERS TO USER AGENCY OPERATED DEPOTS">
+										    	<screenlet  title="Supplies To User Agency Operated Depots">
 													<include-form name="listMaterialShipmentReceiptDepotTrans"
 														location="component://depotsales/widget/DepotSalesForms.xml" />
 												</screenlet>
@@ -946,7 +946,7 @@
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
-				<set field="targetRequest" value="ShipmentHistory" />
+				<set field="targetRequest" value="ShipmentHistoryAuth" />
 				<set field="screenFlag" value="ShipmentHistoryAuth" />
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTranspurchaseDepartments.groovy" />
@@ -976,8 +976,10 @@
 											</platform-specific>
 											<link text="Save"  
 														style="buttontext" target="ShipmentsDispatchReport.csv">
-														<parameter param-name="fromDate" from-field="parameters.fromDate" />
-														<parameter param-name="thruDate" from-field="parameters.thruDate" />
+														<parameter param-name="period" from-field="parameters.period" />
+														<parameter param-name="searchType" from-field="parameters.searchType" />
+														<parameter param-name="regionId" from-field="parameters.regionId" />
+														<parameter param-name="stateId" from-field="parameters.stateId" />
 														<parameter param-name="branchId2" from-field="parameters.branchId2" />
 														<parameter param-name="Supplier" from-field="parameters.Supplier" />
 														<parameter param-name="customer" from-field="parameters.customer" />
@@ -991,7 +993,7 @@
 												<if-compare operator="not-equals" value="" field="customerName"/>
 											</condition>
 										    <widgets>
-										    	<screenlet id="head" title="SUPPLIES TO ${customerName} OPERATED DEPOTS">
+										    	<screenlet id="head" title="Supplies To ${customerName} Operated Depots">
 												</screenlet>
 												<screenlet>
 													<include-form name="listMaterialShipmentReceiptDepotTrans"
@@ -999,7 +1001,7 @@
 												</screenlet>
 										    </widgets>
 										    <fail-widgets>
-										    	<screenlet  title="SUPPLIES TO USER AGENCY OPERATED DEPOTS">
+										    	<screenlet  title="Supplies To User Agency Operated Depots">
 													<include-form name="listMaterialShipmentReceiptDepotTrans"
 														location="component://depotsales/widget/DepotSalesForms.xml" />
 												</screenlet>

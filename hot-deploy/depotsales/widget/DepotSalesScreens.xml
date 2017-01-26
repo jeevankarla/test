@@ -9601,6 +9601,8 @@
 			<widgets>
 				<section>
 					<widgets>
+					<include-form name="ShipmentsDispatchReportCSVHeader"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
 					<include-form name="ShipmentsDispatchReportCSV"
 									location="component://depotsales/widget/DepotSalesForms.xml" />
 					</widgets>

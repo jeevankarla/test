@@ -70,7 +70,10 @@ if(UtilValidate.isNotEmpty(bId)){
 		stateWiseRosAndBranchList = delegator.findList("PartyContactDetailByPurpose", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 		if(UtilValidate.isNotEmpty(stateWiseRosAndBranchList)){
 			List roAndBranchIds = EntityUtil.getFieldListFromEntityList(stateWiseRosAndBranchList, "partyId", true);
-			partyRelationship1 = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN , roAndBranchIds)  , UtilMisc.toSet("partyIdTo"), null, null, false );
+			conditionList.clear()
+			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN , roAndBranchIds))
+			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.NOT_LIKE , "INT%"))
+			partyRelationship1 = delegator.findList("PartyRelationship",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyIdTo"), null, null, false );
 			partyIds = EntityUtil.getFieldListFromEntityList(partyRelationship1, "partyIdTo", true);
 		}	
 	}
@@ -168,6 +171,7 @@ period=parameters.period;
 context.period=period;
 periodFrmDate=null;
 isFormSubmitted=parameters.isFormSubmitted;
+
 context.period=period;
 periodFrmDate=null;
 	conditionList = [];
@@ -199,7 +203,7 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	context.branchId=branchId;
 	context.branchIdName=branchIdName;
 	regionId = parameters.regionId;
-	stateId = parameters.stateId;
+	stateId = parameters.stateId; 
 	regionIdName =  PartyHelper.getPartyName(delegator, regionId, false);
 	context.regionId=regionId;
 	context.regionIdName=regionIdName;
@@ -343,7 +347,6 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 		}
 		shipment = delegator.findList("Shipment",EntityCondition.makeCondition(innerCondition, EntityOperator.AND)  , UtilMisc.toSet("shipmentId"), null, null, false );
 		shipmentIds = EntityUtil.getFieldListFromEntityList(shipment, "shipmentId", true);
-		Debug.log("shipmentIds========"+ shipmentIds)
 		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SR_CANCELLED"));
 		shipmentDetailsItr = delegator.find("ShipmentAndReceipt", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, null);
@@ -379,4 +382,3 @@ if(UtilValidate.isNotEmpty(isFormSubmitted) && "Y".equals(isFormSubmitted)){
 	context.receiptList=receiptList;
 
 }
-
