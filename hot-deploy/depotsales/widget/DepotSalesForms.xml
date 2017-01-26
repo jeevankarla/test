@@ -3524,17 +3524,25 @@
          <field name="lrNumber" title="LR NUMBER"><display/></field>
          <field name="lrDate" title="LR DATE"><display/></field>
      </form> 
+     <form name="ShipmentsDispatchReportCSVHeader" type="list" view-size="99999">
+         <field name="shipmentId" title="_"><display/></field>
+         <field name="categoryName" title="_"><display/></field>
+         <field name="productName" title="_"><display/></field>
+         <field name="customerName" title="SUPPLIES TO USER AGENCY OPERATED DEPOTS"><display/></field> 
+         <field name="supplier" title="_"><display/></field>
+         <field name="datetimeReceived" title="_"><display/></field>
+         <field name="quantityAccepted" title="_"><display/></field>
+         <field name="unitPrice" title="_"><display/></field>
+     </form> 
      <form name="ShipmentsDispatchReportCSV" type="list" list-name="receiptList" view-size="99999">
-         <!-- <field name="receiptId" title=" GRN Item No "><display/></field> -->
-         <field name="productName" title=" PRODUCT NAME "><display/></field>
+         <field name="shipmentId" title="SHIPMENT ID "><display/></field>
          <field name="categoryName" title="CATEGORY NAME"><display/></field>
-         <field name="datetimeReceived" title=" RECEIVED DATE "><display/></field>
-         <field name="shipmentId" title=" GRN SHIPMENT ID "><display/></field>
-         <field name="orderId" title=" PO NO "><display/></field>
+         <field name="productName" title=" PRODUCT NAME "><display/></field>
+         <field name="customerName" title="AGENCY"><display/></field> 
          <field name="supplier" title="SUPPLIER"><display/></field>
-         <field name="unitPrice" title="UNIT PRICE"><display/></field>
+         <field name="datetimeReceived" title=" RECEIVED DATE "><display/></field>
          <field name="quantityAccepted" title="QUANTITY"><display/></field>
-        
+         <field name="unitPrice" title="UNIT PRICE"><display/></field>
      </form> 
        <form name="StateWiseSchemeWiseSalesConsolidatedHeaderCSV" type="list" list-name="finalCSVList2" view-size="99999">
          <field name="h1" title="____STATE" ><display/></field>
