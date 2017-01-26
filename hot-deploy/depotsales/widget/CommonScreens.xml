@@ -398,7 +398,7 @@
      <screen name="commonAnalyticsDashboard">
         <section>
             <actions>
-               	<set field="titleProperty" value="Indent Analytics"/>
+               	<set field="titleProperty" value="Select Analytics tab to view data"/>
   				<set field="tabButtonItem" value="analytics" />		            
 				<set field="tabButtonItem2" value="indentAnalytics" />
 				<set field="ajaxUrl" value="IndentAnalyticsInternal" type="String" global="true"/>  

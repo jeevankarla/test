@@ -101,7 +101,7 @@ $(document).ready(function () {
                     toolbar.append(gridTitle);
                 },           
                 columns: [
-                  { text: 'R.O.',  width:'15%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer, className:'fontSizeChange'},
+                  { text: 'Regional Office',  width:'15%', align: 'center', dataField: 'ro', cellsRenderer: cellsRenderer, className:'fontSizeChange'},
                   { text: 'Branch', width:'12%', align: 'center', dataField: 'branch',cellsalign: 'left', cellsRenderer: cellsRenderer,className:'fontSizeChange' },
                   { text: 'Total Indents', width:'8%', align: 'center', dataField: 'totalIndents', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
 		                  cellsRenderer: function (rowKey, dataField, value, data) {
@@ -109,7 +109,7 @@ $(document).ready(function () {
 										rowKey='';
 									}          
 									        
-							 return '<a href="FindIndents?partyIdFrom='+rowKey+'&statusId=ORDER_COMPLETED&estimatedDeliveryDate=${fromDate?if_exists}&estimatedDeliveryThruDate=${thruDate?if_exists}" target="_blank" >'+value+'</a>'; 
+							// return '<a href="FindIndents?partyIdFrom='+rowKey+'&statusId=ORDER_COMPLETED&estimatedDeliveryDate=${fromDate?if_exists}&estimatedDeliveryThruDate=${thruDate?if_exists}" target="_blank" >'+value+'</a>'; 
 		 				  }
 		 		  },
                   { text: 'Indent Qty (Kgs in Lakhs)', width:'10%', align: 'center', dataField: 'indentQty', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
@@ -126,7 +126,7 @@ $(document).ready(function () {
 					},
                   { text: 'PO Issued', width:'8%', align: 'center', dataField: 'totPurchases', cellsalign: 'right', cellsRenderer: cellsRenderer, className:'fontSizeChange',
                           cellsRenderer: function (rowKey, dataField, value, data) {
-							return '<a href="FindPO?partyId='+rowKey+'&statusId=ORDER_CREATED&estimatedDeliveryDate_fld0_value=${fromDate?if_exists}&estimatedDeliveryDate_fld0_op=greaterThanFromDayStart&estimatedDeliveryDate_fld1_value=${thruDate?if_exists}&estimatedDeliveryDate_fld1_op=opLessThan" target="_blank" >'+value+'</a>'; 
+							//return '<a href="FindPO?partyId='+rowKey+'&statusId=ORDER_CREATED&estimatedDeliveryDate_fld0_value=${fromDate?if_exists}&estimatedDeliveryDate_fld0_op=greaterThanFromDayStart&estimatedDeliveryDate_fld1_value=${thruDate?if_exists}&estimatedDeliveryDate_fld1_op=opLessThan" target="_blank" >'+value+'</a>'; 
 		 				  }
 		 		  },
                   { text: 'PO Qty (Kgs in Lakhs)', width:'12%', align: 'center', dataField: 'totalPoQty', cellsalign: 'right', cellsRenderer: cellsRenderer,className:'fontSizeChange',
@@ -147,7 +147,7 @@ $(document).ready(function () {
 					                if(rowKey=='NHDC'){
 												rowKey='';
 									}
-								return '<a href="FindIndents?partyIdFrom='+rowKey+'&statusId=ORDER_CREATED&noConditionFind=Y&estimatedDeliveryDate=${fromDate?if_exists}&estimatedDeliveryThruDate=${thruDate?if_exists}" target="_blank" >'+value+'</a>'; 
+								//return '<a href="FindIndents?partyIdFrom='+rowKey+'&statusId=ORDER_CREATED&noConditionFind=Y&estimatedDeliveryDate=${fromDate?if_exists}&estimatedDeliveryThruDate=${thruDate?if_exists}" target="_blank" >'+value+'</a>'; 
 					 		}
               	 },
                
@@ -159,6 +159,6 @@ $(document).ready(function () {
         });
     </script>
 	
-       <div id="treeGrid" style='height: 1200px'>
+       <div id="treeGrid" style='height: 800px'>
 		</div>   		
  
