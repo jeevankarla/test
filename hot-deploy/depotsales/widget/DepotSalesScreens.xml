@@ -4456,7 +4456,7 @@
    <screen name="delayedIndentPOAnalyticsListing">
           <section>
               <actions>
-                  <set field="titleProperty" value="DELAYS IN PROCESSING PURCHASE ORDERS BY 2 WORKING DAYS"/>
+                  <set field="titleProperty" value="DELAYS IN PROCESSING PURCHASE ORDERS BY MORE THAN 2 WORKING DAYS"/>
                   <set field="tabButtonItem" value="analytics"/>
                   <set field="tabButtonItem2" value="delayedIndentPOAnalyticsListing"/>
                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
@@ -4489,7 +4489,7 @@
 												<if-compare operator="equals" value="Y" field="formSubmitted"/>
 											</condition>
 										    <widgets>
-												<screenlet title="DELAYS  IN PROCESSING PURCHASE ORDERS BY MORE THAN 2 DAYS">
+												<screenlet title="DELAYS  IN PROCESSING PURCHASE ORDERS BY MORE THAN 2 WORKING DAYS">
 													<include-form name="listOfDelayedShipment"
 														location="component://depotsales/widget/DepotSalesForms.xml" />
 												</screenlet>
