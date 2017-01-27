@@ -1582,7 +1582,6 @@ public class DepotSalesApiServices{
 		String partyId = (String) context.get("partyId");
 		String orderId = (String) context.get("orderId");
 		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
-		
 		Map inputMap = FastMap.newInstance();
 		inputMap.put("userLogin", userLogin);
 		inputMap.put("partyId", partyId);
@@ -1590,20 +1589,18 @@ public class DepotSalesApiServices{
 		if(UtilValidate.isNotEmpty(salesChannelEnumId)){
 			inputMap.put("salesChannelEnumId", salesChannelEnumId);
 		}
-		
 		try{
 			result  = dispatcher.runSync("cancelIndentOrder", inputMap);
 		} catch(Exception e){
 			Debug.logError("Problem occured while Cancelling Indent with: "+partyId, module);
 			return ServiceUtil.returnError("Problem while Cancelling Indent with: "+partyId);
 		}
-		
 		if (ServiceUtil.isError(result)) {
 			String errMsg = ServiceUtil.getErrorMessage(result);
 			Debug.logError(errMsg, module);
 			return ServiceUtil.returnError(errMsg);
         }
-		return result;
+		return ServiceUtil.returnSuccess("Indent successfully Cancelled");;
     }
     
     public static Map<String, Object> getTransporters(DispatchContext ctx,Map<String, ? extends Object> context) {
