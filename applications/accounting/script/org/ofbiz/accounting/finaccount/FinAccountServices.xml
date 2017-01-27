@@ -1633,4 +1633,11 @@ under the License.
         </then>
       </if>  
     </simple-method>
+    <simple-method method-name="createFinAcctTransRole" short-description="Create a FinAcctTrans Role">
+        <make-value value-field="newEntity" entity-name="FinAccountTransRole"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.datetimePerformed"><now-timestamp field="newEntity.datetimePerformed"/></if-empty>
+        <create-value value-field="newEntity"/>
+    </simple-method>
 </simple-methods>

@@ -2096,6 +2096,7 @@ under the License.
                         <set field="debitEntry.partyId" from-field="invoice.partyIdFrom"/>
                         <set field="debitEntry.roleTypeId" value="BILL_FROM_VENDOR"/>
                         <set field="debitEntry.productId" from-field="invoiceItem.productId"/>
+                        <set field="debitEntry.costCenterId" from-field="invoiceItem.costCenterId"/>
                         <set field="debitEntry.glAccountTypeId" value="PURCHASE_PRICE_VAR"/>
                         <calculate field="origAmount" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
                             <calcop operator="subtract">
@@ -2114,6 +2115,7 @@ under the License.
                 <set field="debitEntry.partyId" from-field="invoice.partyIdFrom"/>
                 <set field="debitEntry.roleTypeId" value="BILL_FROM_VENDOR"/>
                 <set field="debitEntry.productId" from-field="invoiceItem.productId"/>
+               	<set field="debitEntry.costCenterId" from-field="invoiceItem.costCenterId"/> 
                 <set field="debitEntry.glAccountTypeId" from-field="invoiceItem.invoiceItemTypeId"/>
                 <set field="debitEntry.glAccountId" from-field="invoiceItem.overrideGlAccountId"/>
                 <if-compare field="amountFromOrder" operator="greater" value="0" type="BigDecimal">
@@ -2234,6 +2236,7 @@ under the License.
                 <set field="creditEntry.glAccountTypeId" from-field="invoiceItem.invoiceItemTypeId"/>
                 <set field="creditEntry.organizationPartyId" from-field="invoice.partyIdFrom"/>
                 <set field="creditEntry.productId" from-field="invoiceItem.productId"/>
+                <set field="creditEntry.costCenterId" from-field="invoiceItem.costCenterId"/>
                 <set field="creditEntry.origAmount" from-field="origAmount"/>
                 <set field="creditEntry.origCurrencyUomId" from-field="invoice.currencyUomId"/>
                 <set field="creditEntry.glAccountId" from-field="invoiceItem.overrideGlAccountId"/>
@@ -2976,5 +2979,12 @@ under the License.
            <field-map field-name="invoicePurposeTypeId" from-field="invoice.purposeTypeId"/>
         </entity-one>
         <log level="verbose" message="InvoicePurposeTypeGlAccountDefault============${invoicePurposeTypeGlAccountDefault}"></log>
+    </simple-method>
+    <simple-method method-name="createAcctgTransRole" short-description="Create a AcctgTrans Role">
+        <make-value value-field="newEntity" entity-name="AcctgTransRole"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.datetimePerformed"><now-timestamp field="newEntity.datetimePerformed"/></if-empty>
+        <create-value value-field="newEntity"/>
     </simple-method>
 </simple-methods>

@@ -743,4 +743,11 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
     </service>
+     <service name="createFinAcctTransRole" engine="simple" default-entity-name="FinAccountTransRole"
+        location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAcctTransRole">
+        <description>Create FinAccount Trans Role Record</description>        
+       <attribute name="finAccountTransId" type="String" mode="IN" optional="false"/>
+       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+       <attribute name="partyId" type="String" mode="IN" optional="true"/>
+    </service>
 </services>
