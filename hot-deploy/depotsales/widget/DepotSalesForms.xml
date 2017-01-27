@@ -1899,8 +1899,8 @@
       	<field name="orderNo" title="Indent No."><display/></field>
       	<field name="branchIdName" title="Branch"><display/></field>
       	<field name="saleOrderDate" title="Indent Date"><display/></field>
-      	<field name="purchaseOrderDate" title="Po Date"><display/></field>
-        <field name="orderQuantity" title="Indent Quantity"><display/></field>
+      	<field name="purchaseOrderDate" title="PO Date"><display/></field>
+        <field name="orderQuantity" title="Indent Quantity(Kgs)"><display/></field>
         <field name="diffDays" title="No.of Days" ><display/></field>
     </form>
     
