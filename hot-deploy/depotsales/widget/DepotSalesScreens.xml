@@ -10217,6 +10217,15 @@
     				</decorator-screen>
     			</widgets>
     		</section>
+    </screen>
+    		<screen name="AirtelPaymentReceipt">
+    		<section>    			
+    			<widgets>    					    							
+					<platform-specific>
+							<html><html-template location="component://depotsales/webapp/depotsales/depotsales/AirtelPaymentReceipt.ftl" /></html>
+					</platform-specific>    							    								
+    			</widgets>
+    		</section>
 	</screen>
 	
 	
