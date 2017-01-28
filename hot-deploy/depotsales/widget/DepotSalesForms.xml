@@ -874,7 +874,10 @@
       		<set field="customerId" value="${orderRoleList[0].partyId}"/>
       		<set field="supplierId" value="${orderRoleSuppList[0].partyId}"/>
       		<entity-condition entity-name="Shipment" list="ShipmentList" >
-      			<condition-expr field-name="primaryOrderId" operator="equals" value="${orderId}"/>
+      		<condition-list>
+				<condition-expr field-name="primaryOrderId" operator="equals" value="${orderId}"/>
+				<condition-expr field-name="statusId" operator="not-equals" value="SHIPMENT_CANCELLED" />
+			</condition-list>
       		</entity-condition>
       		<set field="shipmentDone" value="${groovy: return (ShipmentList.size() > 0)? 'Y' : 'N';}"/>
       		
