@@ -1600,7 +1600,7 @@ public class DepotSalesApiServices{
 			Debug.logError(errMsg, module);
 			return ServiceUtil.returnError(errMsg);
         }
-		return ServiceUtil.returnSuccess("Indent successfully Cancelled");;
+		return ServiceUtil.returnSuccess("Indent successfully Cancelled");
     }
     
     public static Map<String, Object> getTransporters(DispatchContext ctx,Map<String, ? extends Object> context) {
