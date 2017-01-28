@@ -250,10 +250,10 @@ $(document).ready(function(){
 	 $('#selectedCustList').find("option:selected").remove();
 	 
 	 $("#remove-permis-all").click(function() {
-	 	$('.selectedPermissionList').find("option").remove();
+	 	$('#selectedPermissionList').find("option").remove();
 	 });
 	 $("#remove-permis").click(function() {
-	 	$('.selectedPermissionList').find("option:selected").remove();
+	 	$('#selectedPermissionList').find("option:selected").remove();
 	 });
 	 
 	 $("#remove-cust-all").click(function() {
