@@ -57,11 +57,17 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 				name=BankAdvicePayRollMap.get(emplId).get("empName");
 				acNo=BankAdvicePayRollMap.get(emplId).get("acNo");
 				netAmt=BankAdvicePayRollMap.get(emplId).get("netAmt");
+				ifscCode=BankAdvicePayRollMap.get(emplId).get("ifscCode");
+				branchName=BankAdvicePayRollMap.get(emplId).get("finAccountBranch");
+				placeOfPosting=BankAdvicePayRollMap.get(emplId).get("placeOfPosting");
 				finalMap.put("bankName",bankName);
 				finalMap.put("emplId",emplId);
 				finalMap.put("name",name);
 				finalMap.put("acNo",acNo);
 				finalMap.put("netAmt",netAmt);
+				finalMap.put("ifscCode",ifscCode);
+				finalMap.put("branchName",branchName);
+				finalMap.put("placeOfPosting",placeOfPosting);
 			}
 			if(UtilValidate.isNotEmpty(finalMap)){
 				finalList.add(finalMap);
@@ -94,12 +100,17 @@ if(UtilValidate.isNotEmpty(CanaraBankMap)){
 				name=BankAdvicePayRollMap.get(emplId).get("empName");
 				acNo=BankAdvicePayRollMap.get(emplId).get("acNo");
 				netAmt=BankAdvicePayRollMap.get(emplId).get("netAmt");
+				ifscCode=BankAdvicePayRollMap.get(emplId).get("ifscCode");
+				branchName=BankAdvicePayRollMap.get(emplId).get("finAccountBranch");
+				placeOfPosting=BankAdvicePayRollMap.get(emplId).get("placeOfPosting");
 				finalMap.put("bankName",bankName);
 				finalMap.put("emplId",emplId);
 				finalMap.put("name",name);
 				finalMap.put("acNo",acNo);
 				finalMap.put("netAmt",netAmt);
-				
+				finalMap.put("ifscCode",ifscCode);
+				finalMap.put("branchName",branchName);
+				finalMap.put("placeOfPosting",placeOfPosting);
 			}
 			if(UtilValidate.isNotEmpty(finalMap)){
 				finalList.add(finalMap);
