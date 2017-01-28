@@ -123,7 +123,7 @@ under the License.
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
                 <set field="viewSize" value="50" type="Integer"/>
                 <set field="nextFlag" type="String" default-value="Y"/>
-                <set field="prevFlag" type="String" default-value="N"/>
+                <set field="prevFlag" type="String" default-value="N"/>             
                 <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>
@@ -131,6 +131,7 @@ under the License.
                 </service>
                 <set field="invoices" from-field="result.listIt"/>
                 <set field="tabButtonItem" value="viewInvoices"/>
+                <set field="maximumSize"  from-field="parameters.maximumSize" global="true" type="Integer"/>     
            		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
            		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/InvoiceSearchFilter.groovy"/>
             </actions>
