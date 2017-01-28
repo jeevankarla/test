@@ -38,10 +38,14 @@ def populateChildren(org, employeeList) {
 		}
 		employee.put("position", employeePosition);
 		String lastName="";
+		String middleName="";
 		if(employment.lastName!=null){
 			lastName=employment.lastName;
 		}
-		employee.put("name", employment.firstName + " " + lastName);
+		if(employment.middleName!=null){
+			middleName=employment.middleName;
+		}
+		employee.put("name", employment.firstName+" "+middleName+" "+lastName);
 		employee.put("employeeId", employment.partyId);
 		joinDate = "";
 		employeeDetails = delegator.findOne("EmployeeDetail", [partyId : employment.partyId], false);
