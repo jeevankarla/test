@@ -1044,6 +1044,15 @@
 													location="component://depotsales/webapp/depotsales/depotsales/findDelayShipments.ftl" />
 											</html>
 											</platform-specific>
+											<link text="Save" 
+														style="buttontext" target="DelayShipmentReport.csv">
+														<parameter param-name="searchType" from-field="parameters.searchType" />
+														<parameter param-name="regionId" from-field="parameters.regionId" />
+														<parameter param-name="stateId" from-field="parameters.stateId" />
+														<parameter param-name="branchId2" from-field="parameters.branchId2" />
+														<parameter param-name="period" from-field="parameters.period" />
+														<parameter param-name="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+													</link>
 											<!-- <link text="${uiLabelMap.AccountingExportAsCsv}"  
 														style="buttontext" target="ShipmentsDispatchReport.csv">
 														<parameter param-name="fromDate" from-field="parameters.fromDate" />
@@ -1104,6 +1113,15 @@
 													location="component://depotsales/webapp/depotsales/depotsales/findDelayShipments.ftl" />
 											</html>
 											</platform-specific>
+											<link text="Save"  
+														style="buttontext" target="DelayShipmentReport.csv">
+														<parameter param-name="searchType" from-field="parameters.searchType" />
+														<parameter param-name="regionId" from-field="parameters.regionId" />
+														<parameter param-name="stateId" from-field="parameters.stateId" />
+														<parameter param-name="branchId2" from-field="parameters.branchId2" />
+														<parameter param-name="period" from-field="parameters.period" />
+														<parameter param-name="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+													</link>
 											<!-- <link text="${uiLabelMap.AccountingExportAsCsv}"  
 														style="buttontext" target="ShipmentsDispatchReport.csv">
 														<parameter param-name="fromDate" from-field="parameters.fromDate" />

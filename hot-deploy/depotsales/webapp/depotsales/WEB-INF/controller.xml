@@ -2559,6 +2559,12 @@
          <response name="success" type="view" value="ShipmentsDispatchReportCSV"/>
 	     <response name="error" type="view" value="ShipmentsDispatchReportCSV"/>
     </request-map>
+    <request-map uri="DelayShipmentReport.csv">
+        <security auth="false" https="false"/>
+         <response name="success" type="view" value="DelayShipmentReportCSV"/>
+	     <response name="error" type="view" value="DelayShipmentReportCSV"/>
+    </request-map>
+    
      <request-map uri="depotReimburcentSummaryReport.pdf">
          <security auth="true" https="true"/>
          <response name="success" type="view" value="depotReimburcentSummaryReportPDF"/>
@@ -2677,7 +2683,9 @@
 	 <view-map name="reimburcentTransporterReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#reimburcentTransporterReportCSV" content-type="text/csv"/>
 	 <view-map name="depotReimburcentSummaryReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#depotReimburcentSummaryReportCSV" content-type="text/csv"/>
 	 
-	 <view-map name="ShipmentsDispatchReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#ShipmentsDispatchReportCSV" content-type="application/ms-excel"/>
+	 <view-map name="ShipmentsDispatchReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#ShipmentsDispatchReportCSV" content-type="application/ms-excel"/> 
+	 
+	 <view-map name="DelayShipmentReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#DelayShipmentReportCSV" content-type="application/ms-excel"/>	 
 	 <view-map name="depotReimburcentReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#depotReimburcentReportCSV" content-type="application/ms-excel"/>
 	 <view-map name="indentAnalyticsCsv" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#indentAnalyticsCSV" content-type="text/csv"/>
 	<view-map name="depotReimburcentSummaryReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReimbursement.xml#depotReimburcentSummaryReportPDF" content-type="application/pdf"/>

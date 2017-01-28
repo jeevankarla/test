@@ -3544,6 +3544,28 @@
          <field name="quantityAccepted" title="QUANTITY"><display/></field>
          <field name="unitPrice" title="UNIT PRICE"><display/></field>
      </form> 
+      <form name="DelayShipmentReportCSVHeader" type="list" view-size="99999">
+         <field name="orderId" title="_"><display/></field>
+         <field name="orderDate" title="_"><display/></field>
+         <field name="ordQty" title="_"><display/></field>
+         <field name="supplierName" title="LISTING OF DELIVERIES DELAYED BY MORE THAN 7 DAYS BY SUPPLIERS"><display/></field> 
+         <field name="shipDate" title="_"><display/></field>
+         <field name="noOfShipments" title="_"><display/></field>
+         <field name="shipedQty" title="_"><display/></field>
+         <field name="diffDays" title="_"><display/></field>
+     </form> 
+     
+      <form name="DelayShipmentReportCSV" type="list" list-name="dataList" view-size="99999">
+         <field name="orderId" title="ORDER ID"><display/></field>
+         <field name="orderDate" title="ORDER DATE"><display/></field>
+         <field name="ordQty" title=" ORDER QTY(Kgs) "><display/></field>
+         <field name="supplierName" title="SUPPLIER NAME"><display/></field> 
+         <field name="shipDate" title="DELIVERY DATE"><display/></field>
+         <field name="noOfShipments" title=" NO OF SHIPMENTS"><display/></field>
+         <field name="shipedQty" title="DELIVERED QTY(Kgs)"><display/></field>
+         <field name="diffDays" title="DELIVERY DELAYED"><display/></field>
+     </form>
+      
        <form name="StateWiseSchemeWiseSalesConsolidatedHeaderCSV" type="list" list-name="finalCSVList2" view-size="99999">
          <field name="h1" title="____STATE" ><display/></field>
          <field name="h2" title="____TOTAL"><display/></field>
