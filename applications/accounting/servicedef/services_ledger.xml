@@ -237,12 +237,13 @@ under the License.
     <service name="interfaceAcctgTrans" default-entity-name="AcctgTrans" engine="interface" location="" invoke="">
         <auto-attributes include="nonpk" mode="IN" optional="true">
             <exclude field-name="isPosted"/>
-            <exclude field-name="postedDate"/>
+<!--             <exclude field-name="postedDate"/> -->
             <exclude field-name="createdByUserLogin"/>
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
         <override name="acctgTransTypeId" optional="false"/>
         <override name="transactionDate" optional="false"/>
+        <override name="postedDate" optional="true"/>
         <override name="glFiscalTypeId" optional="false"/>
     </service>
     <service name="createAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
