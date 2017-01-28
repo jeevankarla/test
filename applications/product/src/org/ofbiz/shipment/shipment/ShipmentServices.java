@@ -1355,6 +1355,11 @@ public class ShipmentServices {
 			shipment.set("statusId","SHIPMENT_CANCELLED");
 			shipment.store();
 			
+			
+			
+			
+			
+			
 			String actualOrderId = "";
 			
 			 try{
@@ -1365,6 +1370,10 @@ public class ShipmentServices {
 			    actualOrderId = (EntityUtil.getFirst(orderAssocList)).getString("toOrderId");
 			    
 			      GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", actualOrderId), false);
+			      
+			      GenericValue	primaryOrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", primaryOrderId), false);
+			      
+			      primaryOrderHeader.set("statusId","ORDER_CREATED");
 			      OrderHeader.set("statusId","ORDER_APPROVED");
 			      OrderHeader.store();
 			

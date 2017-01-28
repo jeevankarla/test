@@ -100,6 +100,7 @@ stateRosList=result.get("stateRosList");*/
 branchList = [];
 
 
+
 if(branchId && branchId != "All"){
 branchList.add(branchId);
 }else{
@@ -257,7 +258,8 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 	
 	List<String> payOrderBy = UtilMisc.toList("idValue");
 	
-	
+	resultList = null;
+	if(branchpartyIdsList){
 	resultList = delegator.find("PartyRelationAndIdentificationAndPerson", cond, null, fieldsToSelect, payOrderBy, null);
 	
 	partyList = resultList.getPartialList(Integer.valueOf(parameters.low),Integer.valueOf(parameters.high)-Integer.valueOf(parameters.low));
@@ -270,7 +272,7 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 		totalIndents = forIndentsCount.size();
 	}
 	
-
+	}
 
 partyIdRepeat = []as HashSet;
 partyList.each{ partyList ->

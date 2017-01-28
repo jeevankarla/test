@@ -169,8 +169,8 @@ $(function(){
 
 
 
-if(branchId.length == 0)
-branchId = "INT10";
+//if(branchId.length == 0)
+//branchId = "INT10";
 
 
   function recursively_ajax(){
