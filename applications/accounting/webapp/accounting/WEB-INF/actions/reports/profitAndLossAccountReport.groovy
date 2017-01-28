@@ -65,6 +65,9 @@ prevsYear=customTimePeriodId;
 context.prevsYear=customTimePeriodId;
 customTimePeriodIds.add(customTimePeriodId);
 partyIds=[];
+if(UtilValidate.isNotEmpty(parameters.roPartyId)){
+	parameters.organizationPartyId=parameters.roPartyId;
+}
 if(!(parameters.organizationPartyId).equalsIgnoreCase("Company")){
 	partyIds.clear();
 	partyIds.add(parameters.organizationPartyId);
