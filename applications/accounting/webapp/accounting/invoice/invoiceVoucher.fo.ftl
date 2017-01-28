@@ -62,7 +62,7 @@ under the License.
 				                                <fo:block text-align="center" white-space-collapse="false" font-weight="bold" font-size="12pt" keep-together="always">&#160;INVOICE DETAILS</fo:block>
 				                               </fo:table-cell>
 		    								<fo:table-cell border-style="solid">
-				                               <fo:block text-align="center" font-family="Courier,monospace"  font-size="12pt">&#160;</fo:block>
+				                               <fo:block text-align="left" font-family="Courier,monospace"  font-size="12pt" font-weight="bold">&#160;&#160;SupplierInvoiceId: ${(supplierInvoiceid)?if_exists}</fo:block>
 		    									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;VOUCHER DATE: ${invoiceDate?if_exists}</fo:block>
 		    									</fo:table-cell>
 		    						</fo:table-row>	

@@ -39,6 +39,7 @@ import org.ofbiz.service.ServiceUtil;
 paymentId = parameters.paymentId;
 invoiceId = parameters.get("invoiceId");
 reportTypeFlag = context.reportTypeFlag;
+supplierInvoiceId = parameters.get("supplierInvoiceId");
 
 invoiceDebit = delegator.findByPrimaryKey("Invoice", [invoiceId : invoiceId]);
 context.invoiceDebit = invoiceDebit;
@@ -155,9 +156,7 @@ if (invoice) {
 	productMrpPriceMap = FastMap.newInstance();
 	invoiceItems.each { invoiceItem ->
 		
-		
-		Debug.log("invoiceItem========="+invoiceItem);
-		
+				
 		invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate);
 		invoiceItemsConv.add(invoiceItem);
 		glAccountId = null;
@@ -198,7 +197,6 @@ if (invoice) {
 			productMrpPriceList.each{ productMrp ->
 				productMrpPriceMap[productMrp.productId] = productMrp.price;
 			}
-			Debug.log("productMrpPriceMap==="+productMrpPriceMap);
 		}
 		
 		productDetail=delegator.findOne("Product",[productId : invoiceItem.productId] , false);
@@ -231,9 +229,7 @@ if (invoice) {
 			vatTaxesByType.put(taxRate.taxAuthorityRateSeqId, vatTaxesByTypeAmount + invoiceItem.amount);
 		}
 	}
-	
-	Debug.log("invoiceItemList======="+invoiceItemList);
-	
+		
 	context.put("invoiceItemList",invoiceItemList);
 	context.vatTaxesByType = vatTaxesByType;
 	context.vatTaxIds = vatTaxesByType.keySet().asList();
@@ -349,7 +345,11 @@ if (invoice) {
 	  companyTinNumber=companyDetail.get('TIN_NUMBER');
 	}
 	context.put("companyTinNumber",companyTinNumber);
-    
+   
+	Details=delegator.findList("Shipment",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , invoice.shipmentId)  , null, null, null, false );
+	supplierInvoiceIdDetails = EntityUtil.getFirst(Details);
+	supplierInvoiceid = supplierInvoiceIdDetails.supplierInvoiceId;
+	context.supplierInvoiceid = supplierInvoiceid;
 }
 
 context.paymentId = paymentId;
