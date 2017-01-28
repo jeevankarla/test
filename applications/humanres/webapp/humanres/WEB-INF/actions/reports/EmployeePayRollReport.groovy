@@ -179,7 +179,7 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 	if(UtilValidate.isEmpty(parameters.employeeId)){
 		payConList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN ,employementIds));
 		
-		Debug.log("employementIds==============================")
+		//Debug.log("employementIds==============================")
 		
 	}
 	/*if(UtilValidate.isNotEmpty(deptId)){
@@ -297,6 +297,29 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 						}
 						unitIdMap.put(partyId,locationGeoId);
 					}
+					partyIdFrom = "";
+					placeOfPosting="";
+					condList=[];
+					condList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+					condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, timePeriodEnd));
+					condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+							EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)));
+						cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+						employeeDetails = delegator.findList("Employment", cond, null, null, null, false);
+						//Debug.log("employeeDetails========@========"+employeeDetails);
+						if(UtilValidate.isNotEmpty(employeeDetails)){
+							partyIdFromDetails = EntityUtil.getFirst(employeeDetails);
+							partyIdFrom= partyIdFromDetails.partyIdFrom;
+						//Debug.log("partyIdFrom========@========"+partyIdFrom);
+						}
+						
+						empDetailsList = delegator.findList("PartyGroup", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , partyIdFrom), null, null, null, false);
+					if(UtilValidate.isNotEmpty(empDetailsList)){
+						placeOfPostingDetails = EntityUtil.getFirst(empDetailsList);	
+						placeOfPosting= placeOfPostingDetails.groupName;
+						//Debug.log("placeOfPosting========@========"+placeOfPosting);
+					}
+					bankAdviceDetailsMap.put("placeOfPosting",placeOfPosting);
 					payRateList=[];
 					payRateList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS ,partyId));
 					payRateList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS ,parameters.OrganizationId));
@@ -353,13 +376,21 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 				bankAdviceDetailsMap.put("emplNo",partyId);
 			}
 			if(UtilValidate.isNotEmpty(partyDetails.firstName)){
-				if(UtilValidate.isNotEmpty(partyDetails.lastName)){
+				if(UtilValidate.isNotEmpty(partyDetails.middleName) && (partyDetails.lastName)){
+					bankAdviceDetailsMap["empName"]=partyDetails.firstName+" "+partyDetails.middleName+" "+partyDetails.lastName;
+				}
+				else if(UtilValidate.isNotEmpty(partyDetails.lastName)){
 					bankAdviceDetailsMap["empName"]=partyDetails.firstName+" "+partyDetails.lastName;
-				}else{
+				}
+				else if(UtilValidate.isNotEmpty(partyDetails.middleName)){
+					bankAdviceDetailsMap["empName"]=partyDetails.firstName+" "+partyDetails.middleName;
+				}
+				else{
 					bankAdviceDetailsMap["empName"]=partyDetails.firstName;
 				}
 			}
 			bankAdviceDetailsMap.put("netAmt",netAmount);
+			
 			if(UtilValidate.isNotEmpty(bankAdviceDetailsMap) && (netAmount !=0)){
 				BankAdvicePayRollMap.put(partyId,bankAdviceDetailsMap);
 			}	
