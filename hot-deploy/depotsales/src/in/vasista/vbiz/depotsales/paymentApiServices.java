@@ -75,6 +75,10 @@ import java.util.Map.Entry;
 
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class paymentApiServices {
 	
 	
@@ -82,6 +86,9 @@ public class paymentApiServices {
 	private static int decimals;
 	private static int rounding;
     public static final String resource = "AccountingUiLabels";
+    private static String SucUrl = "https:%2F%2Fnhdc-test.vasista.in/myportal/control/paymentSucUrl";
+    private static String failUrl = "https:%2F%2Fnhdc-test.vasista.in/myportal/control/paymentFailUrl";
+    private static String airtelBaseUrl = "https://sit.airtelmoney.in/ecom/v2/";
     
     static {
         decimals = 2;// UtilNumber.getBigDecimalScale("order.decimals");
@@ -233,6 +240,134 @@ public class paymentApiServices {
 
        return result;
 	}
-	
+    
+    
+    public static Map<String, Object> createPaymentGateWayTrans(DispatchContext dctx,Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		
+		String orderId = (String)context.get("orderId");       
+        String partyId = (String)context.get("partyId");
+        String amt = (String)context.get("amount");
+        Double amount = Double.valueOf(amt);
+        String amtStr = amount.toString();
+        String paymentMode = (String)context.get("paymentMode");
+        String service = (String)context.get("service");
+        String mobileNumber = (String)context.get("mobileNumber");
+        String email = "";
+        if (UtilValidate.isNotEmpty((String)context.get("email"))) {
+        	email = (String)context.get("email");
+        }
+        	       
+        Date txnDate = new Date();
+        if(paymentMode.equalsIgnoreCase("airtel"))
+        {
+        	
+        	String mId = "25649255";
+        	String salt = "34602fa0";
+        	String txnRefNo = generateTxnNum(txnDate,partyId, orderId);
+        	String date = getDateInFormat(txnDate, "ddMMyyyyHHmmss");
+        	String cur = "INR";        	
+        	String url = initiatePaymentUrl(mId,txnRefNo,amtStr,date,salt,SucUrl,failUrl,cur,service,mobileNumber,email);
+        	
+        	Map resultMap = FastMap.newInstance();
+    		resultMap.put("mId",mId);
+    		resultMap.put("salt",salt);
+    		resultMap.put("txnRefNo",txnRefNo);
+    		resultMap.put("su", SucUrl);
+    		resultMap.put("fu", failUrl);    	
+    		resultMap.put("amt", amtStr);
+    		resultMap.put("date", date);
+    		resultMap.put("cur", cur);
+    		resultMap.put("service", service);
+    		resultMap.put("mobile", mobileNumber);
+    		resultMap.put("email", email);
+    		resultMap.put("msg","success");
+    		resultMap.put("url",url);
+    		
+    		
+    		result.put("resultMap",resultMap);
+    		return result;
+        }
+                               
+		return result;
+    }
+    
+    public static String generateTxnNum(Date date,String partyId,String orderId) {  
+    	String txnNum="";
+        String tempDate = getDateInFormat(date,"ddMMmmss");
+        if(orderId != null && orderId.length() != 0){
+            txnNum = orderId+tempDate;
+        }
+        else{
+            txnNum = partyId+tempDate;
+        }
+        return txnNum;
+    }
+    
+    public static String getDateInFormat(Date d,String format){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(d);
+    }
+
+    public static String initiatePaymentUrl(String mid,String txnRefNo,String amt,String date,String salt,String su,String fu,String cur,String service,String mobile,String email) {
+        String hash = "";
+        try{
+            hash=generateHash(mid,txnRefNo,amt,date,service,salt);
+        } catch (UnsupportedEncodingException e) {
+        }
+        
+        String action = "initiatePayment";
+        String url = airtelBaseUrl+action+"?";
+        url = url + "MID="+mid+"&";
+        url = url + "TXN_REF_NO="+txnRefNo+"&";
+        url = url + "SU="+su+"&";
+        url = url + "FU="+fu+"&";
+        url = url + "AMT="+amt+"&";
+        url = url + "DATE="+date+"&";
+        url = url + "CUR="+cur+"&";
+        url = url + "HASH="+hash+"&";
+        url = url + "service="+service+"&";
+        url = url + "CUST_MOBILE="+mobile+"&";
+        url = url + "CUST_EMAIL="+email;
+        /*Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("sit.airtelmoney.in")
+                .appendPath("ecom")
+                .appendPath("v2")
+                .appendPath("initiatePayment")
+                .appendQueryParameter("MID", mid)
+                .appendQueryParameter("TXN_REF_NO", txnRefNo)
+                .appendQueryParameter("SU", su)
+                .appendQueryParameter("FU", fu)
+                .appendQueryParameter("AMT", amt)
+                .appendQueryParameter("DATE", date)
+                .appendQueryParameter("CUR", cur)
+                .appendQueryParameter("HASH", hash)
+                .appendQueryParameter("service",service)
+                .appendQueryParameter("CUST_MOBILE",mobile)
+                .appendQueryParameter("CUST_EMAIL",email);
+
+        return builder.build().toString();*/
+        
+        return url;
+    }
+    
+    public static String generateHash(String mid,String txnRefNo,String amt,String date,String service,String salt) throws  UnsupportedEncodingException{
+        String text = mid+"#"+txnRefNo+"#"+amt+"#"+date+"#"+service+"#"+salt;
+        StringBuffer sb = new StringBuffer();
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            md.update(text.getBytes());
+            byte byteData[] = md.digest();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+        }catch (NoSuchAlgorithmException e) {
+        }
+
+        return sb.toString();
+    }
 	
 }

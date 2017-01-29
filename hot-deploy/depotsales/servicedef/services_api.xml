@@ -209,5 +209,20 @@
        <attribute name="partyId" type="String" mode="IN" optional="false"/>
        <attribute type="Map" mode="OUT" name="stockMap" optional="true"/>
     </service>
+    
+    <service name="createPaymentGateWayTrans" engine="java" auth="true" export="true" 
+           location="in.vasista.vbiz.depotsales.paymentApiServices" invoke="createPaymentGateWayTrans">
+       <description>Fetch the Depot stock for the party</description>
+       <attribute name="partyId" type="String" mode="IN" optional="false"/>
+       <attribute name="orderId" type="String" mode="IN" optional="false"/>
+       <attribute name="amount" type="String" mode="IN" optional="false"/>
+       <attribute name="mobileNumber" type="String" mode="IN" optional="false"/>
+       <attribute name="email" type="String" mode="IN" optional="true"/>
+       <attribute name="paymentMode" type="String" mode="IN" optional="false"/>
+       <attribute name="service" type="String" mode="IN" optional="true"/>
+       
+       <attribute type="Map" mode="OUT" name="resultMap" optional="true"/>
+    </service>
+    
 </services>
 
