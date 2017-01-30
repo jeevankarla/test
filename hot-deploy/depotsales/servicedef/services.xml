@@ -717,6 +717,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="saleBillQty" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="saleBillAmt" mode="OUT" type="BigDecimal" optional="false"></attribute>
+        <attribute name="saleBillTenPrcAmt" mode="OUT" type="BigDecimal" optional="false"></attribute>
     </service>
     <service name="getPurchaseBillDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getPurchaseBillDetails">
         <description>Populate Purchase Invoice Details </description>
