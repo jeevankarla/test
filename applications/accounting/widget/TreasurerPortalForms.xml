@@ -2070,7 +2070,7 @@ under the License.
 			</drop-down>
 		</field>
         <field name="invoiceId"><text-find ignore-case="true"/></field>
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+        <!-- <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field> -->
         <field name="description"><text-find ignore-case="true"/></field>
         <field name="invoiceTypeId"><display/></field>
         <field name="subTabButtonValue"><hidden/></field>
@@ -2385,7 +2385,7 @@ under the License.
         <field name="transactionDate" title="Tally Reference Date"><date-find type="date" default-option-from="sameDay"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListTreasurerPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
+    <form name="ListTreasurerPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findTreasurerPayments" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
             
