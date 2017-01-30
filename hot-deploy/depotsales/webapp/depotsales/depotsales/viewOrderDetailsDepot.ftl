@@ -131,7 +131,7 @@
 	}
 	
 	function cancelForm(){
-		cancelShowSpinner();		 
+		//cancelShowSpinner();		 
 		return false;
 	}
 	
@@ -695,7 +695,7 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 		partyName = partyName;
 		
 		var dataJson = {"orderId": orderId};
-		showSpinner();
+		//showSpinner();
 		jQuery.ajax({
                 url: 'getOrderInformation',
                 type: 'POST',
@@ -745,7 +745,7 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 			  	
 			  	orderAmt = orderAmt+orderData[i].payableAmt;
 			}
-			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();' class='submit'>Close</button></span></td><td></td></tr>";
+			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();'>Close</button></span></td><td></td></tr>";
 			title = "<center>Order : " + orderId + "  <br>Party Name : " +partyName+ "<center><br /> Total Order Value = "+ orderAmt +" ";
 			message += "</table>";
 			Alert(message, title);
