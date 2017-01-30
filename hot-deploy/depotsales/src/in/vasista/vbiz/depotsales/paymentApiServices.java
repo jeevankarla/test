@@ -65,8 +65,12 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.order.order.OrderReadHelper;
+
+import net.sf.json.JSONSerializer; 
+
 import org.json.JSONArray;
-import org.json.JSONObject;
+import net.sf.json.JSONObject;
+
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.party.party.PartyHelper;
@@ -78,6 +82,16 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.net.HttpURLConnection;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 
 public class paymentApiServices {
 	
@@ -242,7 +256,7 @@ public class paymentApiServices {
 	}
     
     
-    public static Map<String, Object> createPaymentGateWayTrans(DispatchContext dctx,Map<String, Object> context) {
+    public static Map<String, Object> createPaymentGatewayTrans(DispatchContext dctx,Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -252,8 +266,8 @@ public class paymentApiServices {
         String amt = (String)context.get("amount");
         Double amount = Double.valueOf(amt);
         String amtStr = amount.toString();
+        String paymentChannel = (String)context.get("paymentChannel");
         String paymentMode = (String)context.get("paymentMode");
-        String service = (String)context.get("service");
         String mobileNumber = (String)context.get("mobileNumber");
         String email = "";
         if (UtilValidate.isNotEmpty((String)context.get("email"))) {
@@ -261,32 +275,51 @@ public class paymentApiServices {
         }
         	       
         Date txnDate = new Date();
-        if(paymentMode.equalsIgnoreCase("airtel"))
-        {
-        	
+        if(paymentChannel.equalsIgnoreCase("airtel"))
+        {        	
         	String mId = "25649255";
         	String salt = "34602fa0";
         	String txnRefNo = generateTxnNum(txnDate,partyId, orderId);
         	String date = getDateInFormat(txnDate, "ddMMyyyyHHmmss");
         	String cur = "INR";        	
-        	String url = initiatePaymentUrl(mId,txnRefNo,amtStr,date,salt,SucUrl,failUrl,cur,service,mobileNumber,email);
+        	String url = initiatePaymentUrl(mId,txnRefNo,amtStr,date,salt,SucUrl,failUrl,cur,paymentMode,mobileNumber,email);
         	
         	Map resultMap = FastMap.newInstance();
-    		resultMap.put("mId",mId);
-    		resultMap.put("salt",salt);
-    		resultMap.put("txnRefNo",txnRefNo);
+        	
+        	try{
+        		Map transMap = FastMap.newInstance();
+        		Timestamp transDate = null;
+        		transMap.put("transactionId",txnRefNo);
+        		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmss");
+            	try {
+            		transDate = new java.sql.Timestamp(sdf.parse(date).getTime());
+            	} catch (ParseException e) {
+            		Debug.logError(e, "Cannot parse date string: " + date, "");
+            	}
+        		transMap.put("transactionDate",transDate);
+        		transMap.put("partyId",partyId);
+        		transMap.put("orderId",orderId);
+        		
+        		transMap.put("paymentChannel",paymentChannel);
+        		transMap.put("paymentMode",paymentMode);
+        		transMap.put("mobileNumber",mobileNumber);
+        		transMap.put("email",email);
+        		transMap.put("transactionStatus","IN_PROCESS");  
+        		BigDecimal tranAmount = new BigDecimal(amtStr);
+        		transMap.put("amount",tranAmount);
+        		      		
+				GenericValue PaymentGatewayTrans = delegator.makeValue("PaymentGatewayTrans", transMap);
+				delegator.createOrStore(PaymentGatewayTrans);
+			}catch (Exception e) {
+				Debug.logError(e, "Error While Creating paymentGateWayTrans ", module);
+				return ServiceUtil.returnError("Error While paymentGateWayTrans : "+txnRefNo);
+	  	 	}
+        	   
+    		resultMap.put("msg","success");    	
     		resultMap.put("su", SucUrl);
-    		resultMap.put("fu", failUrl);    	
-    		resultMap.put("amt", amtStr);
-    		resultMap.put("date", date);
-    		resultMap.put("cur", cur);
-    		resultMap.put("service", service);
-    		resultMap.put("mobile", mobileNumber);
-    		resultMap.put("email", email);
-    		resultMap.put("msg","success");
+    		resultMap.put("fu", failUrl);
     		resultMap.put("url",url);
-    		
-    		
+    		    		
     		result.put("resultMap",resultMap);
     		return result;
         }
@@ -331,26 +364,7 @@ public class paymentApiServices {
         url = url + "service="+service+"&";
         url = url + "CUST_MOBILE="+mobile+"&";
         url = url + "CUST_EMAIL="+email;
-        /*Uri.Builder builder = new Uri.Builder();
-        builder.scheme("https")
-                .authority("sit.airtelmoney.in")
-                .appendPath("ecom")
-                .appendPath("v2")
-                .appendPath("initiatePayment")
-                .appendQueryParameter("MID", mid)
-                .appendQueryParameter("TXN_REF_NO", txnRefNo)
-                .appendQueryParameter("SU", su)
-                .appendQueryParameter("FU", fu)
-                .appendQueryParameter("AMT", amt)
-                .appendQueryParameter("DATE", date)
-                .appendQueryParameter("CUR", cur)
-                .appendQueryParameter("HASH", hash)
-                .appendQueryParameter("service",service)
-                .appendQueryParameter("CUST_MOBILE",mobile)
-                .appendQueryParameter("CUST_EMAIL",email);
-
-        return builder.build().toString();*/
-        
+    
         return url;
     }
     
@@ -368,6 +382,102 @@ public class paymentApiServices {
         }
 
         return sb.toString();
+    }
+    
+    public static Map<String, Object> transactionInquiryApi(DispatchContext dctx,Map<String, Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		
+		String transactionId = (String)context.get("transactionId");       
+		Timestamp transactionDate = (Timestamp)context.get("transactionDate");
+        String amount = (String)context.get("amount");
+        
+        Double amt = Double.valueOf(amount);
+        String amtStr = amount.toString();
+        
+        String feSessionId = "F1223ee323";
+        String txnDate = getDateInFormat(transactionDate,"ddMMyyyyHHmmss");
+        String request = "ECOMM_INQ";
+        String mId = "25649255";
+    	String salt = "34602fa0";
+        String hash = "";
+        
+        try{
+            hash=generateHash(mId,transactionId,amount,txnDate,"",salt);
+        } catch (UnsupportedEncodingException e) {
+        }
+		
+		String action = "inquiry";
+        String baseURL = airtelBaseUrl+action+"?";                      
+        
+        Debug.log("txnDate================="+txnDate);
+        Debug.log("hash===================="+hash);
+        
+        JSONObject postDataObject = new JSONObject();
+        
+        try{
+        	
+        	/*postDataObject.put("feSessionId",feSessionId);
+    		postDataObject.put("txnRefNO", transactionId);
+    		postDataObject.put("txnDate", txnDate);
+    		postDataObject.put("request", request);
+    		postDataObject.put("merchantId", mId);
+    		postDataObject.put("hash", hash);
+    		postDataObject.put("amount", amtStr);*/
+        	
+        	postDataObject.put("feSessionId","4323878555");
+    		postDataObject.put("txnRefNO", "452345435");
+    		postDataObject.put("txnDate", "28012017204540");
+    		postDataObject.put("request", "ECOMM_INQ");
+    		postDataObject.put("merchantId", "25649255");
+    		postDataObject.put("hash", "a4e8f86a55b85fefa675bb85ac52e8ca8fc5113b5ad364c0c6cd3b1d60c3c83c8cffae9ecd18a2bc446168ec7505a0a1485c1f19b8bea993f33240272d695b63");
+    		postDataObject.put("amount", "14");
+    		
+        	URL url = new URL(baseURL);
+            HttpURLConnection urlconnection = (HttpURLConnection) url.openConnection();
+    		urlconnection.setRequestMethod("POST");
+    		urlconnection.setRequestProperty("Content-Type", "application/json");
+    		urlconnection.setRequestProperty("Accept", "application/json");
+    		urlconnection.setDoOutput(true);
+    		OutputStreamWriter out = new OutputStreamWriter(urlconnection.getOutputStream());
+    		out.write((postDataObject).toString());
+    		out.close();
+    		int status = ((HttpURLConnection) urlconnection).getResponseCode();
+    		
+    		BufferedReader in = new BufferedReader(	new InputStreamReader(urlconnection.getInputStream()));
+			String decodedString = "";
+			String retval = "";
+			while ((decodedString = in.readLine()) != null) {
+				retval += decodedString;
+			}
+			in.close();
+            Debug.log("retval============="+retval);
+            
+        } catch (UnsupportedEncodingException e) {
+            String errMsg = "UnsupportedEncodingException when sending payment ";
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);			
+		} catch (MalformedURLException e) {
+            String errMsg = "MalformedURLException when sending payment ";
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);            
+		} catch (IOException e) {
+            String errMsg = "IOException when doing payment ";
+            Debug.logError(e, errMsg, module);
+            return ServiceUtil.returnError(errMsg);            
+		}
+        
+
+		return result;
+    }
+    
+    public static Map<String, Object> transactionReversalApi(DispatchContext dctx,Map<String, Object> context) {
+    	Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		
+		return result;
     }
 	
 }

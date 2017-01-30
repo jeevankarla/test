@@ -3882,5 +3882,48 @@
          <field name="DurBWSoAndPo" title="__"><display/></field>
          <field name="DurBwSoAndShip" title="__"><display/></field>
      </form>
+     
+     <form name="FindPayments" type="single" target="TrackPayments" >
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="transactionId" title="Transaction Id"><text-find/></field>
+		<field name="transactionDate" title="Transaction Date"><date-find/></field>
+		<field name="partyId" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+    </form>
+    <form name="ListPayments" type="list" list-name="listIt" target="TrackPayments" odd-row-style="alternate-row" header-row-style="header-row"
+      	default-table-style="basic-table hover-bar" separate-columns="true">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+             <field-map field-name="inputFields" from-field="parameters"/>
+             <field-map field-name="entityName" value="PaymentGatewayTrans"/>
+             <field-map field-name="orderBy" value="transactionId"/>
+             <field-map field-name="viewIndex" from-field="viewIndex"/>
+             <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions> 
+    	<field name="transactionId" title="Transaction Id"><display></display></field>
+		<field name="transactionDate" title="Transaction Date"><display></display></field>
+		<field name="transactionStatus" title="Status"><display></display></field>
+		<field name="partyId" title="partyId"><display></display></field>
+		<field name="orderId" title="Order Id"><display></display></field>
+		<field name="amount" title="Amount(Rs)"><display></display></field>
+		<field name="paymentChannel" title="Payment Channel"><display></display></field>
+		<field name="paymentMode" title="Payment Mode"><display></display></field>
+		<field name="inquiry" title="Inquiry" use-when="true" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="Inquiry" target="TransactionInquiry" target-window="_blank">
+                <parameter param-name="transactionId"/>
+                <parameter param-name="amount"/>
+                <parameter param-name="transactionDate"/>
+           </hyperlink>
+        </field>
+        <field name="refund" title="Refund" use-when="true" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="Refund" target="TransactionRefund" target-window="_blank">
+                <parameter param-name="transactionId"/>
+                <parameter param-name="transactionDate"/>
+           </hyperlink>
+        </field>         
+        
+		<!-- <field name="lastUpdatedStamp" title="last Updated"><display></display></field> -->
+    </form>
     
 </forms>

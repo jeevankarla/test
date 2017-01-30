@@ -217,6 +217,16 @@
        	<menu-item name="CreateUserLogin" title="Create User Login">
         	<link target="CreateUserLogin"/>
         </menu-item>
+        
+        <menu-item name="TrackPayments" title="Track Payments">        
+        	<!-- <condition>
+       		 <or>
+        		<if-has-permission permission="PAYMENT" action="_TRACKING_VIEW"/>
+			 </or>
+	        </condition> -->
+        	<link target="TrackPayments"/>
+        </menu-item>
+        
         <menu name="SupplierAnalyticsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="tabButtonItem2">
           	<menu-item name="delayShipmentListingNoAuth" title="Delay Shipment Listing">
