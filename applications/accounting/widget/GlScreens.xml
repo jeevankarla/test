@@ -1272,6 +1272,22 @@ reportType:byAccount -->
 	<screen name="AcctgTransEntriesSearchResultsNewPdf">
 		<section>
 			<actions>
+			    <entity-one value-field="Name" entity-name="PartyGroup">
+				<field-map field-name="partyId" value="${parameters.organizationPartyId}" />
+				<select-field field-name="groupName" />
+			</entity-one>
+			<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+			<service service-name="getPartyAccountingPreferences"
+				result-map="result">
+				<field-map field-name="organizationPartyId" />
+			</service>
+			<set field="partyIds"
+				value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}"
+				type="List" />
+			<entity-condition entity-name="Party" list="parties">
+				<condition-expr field-name="partyId" operator="in"
+					from-field="partyIds" />
+			</entity-condition>
 			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
 			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrailBalanceTransactions.groovy" />
 			 <set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>

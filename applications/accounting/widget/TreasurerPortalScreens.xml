@@ -2975,7 +2975,7 @@
                                         		<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
                                         		<parameter param-name="showCreateButton" value="Y"></parameter>
                                         	</link>
-                                        	<link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link>
+                                        	<!-- <link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link> -->
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -3462,7 +3462,7 @@
 		                                        		<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
 		                                        		<parameter param-name="showCreateButton" value="Y"></parameter>
 		                                        	</link>
-		                                        	<link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link>
+		                                        	<!-- <link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link> -->
                                        			 </container>
                                        		</widgets>
                                        		</section>	 
@@ -4165,7 +4165,7 @@
 		        <entity-condition entity-name="FinAccount" list="finAccounts">
 		           <condition-list> 
 		           <condition-expr field-name="finAccountTypeId" operator="equals" from-field="parameters.finAccountTypeId"/>
-				   <condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId" />
+				 <!--   <condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId" /> --> 
 				   </condition-list> 
 				</entity-condition>  
 				<entity-condition entity-name="PaymentType" list="paymentTypes">
