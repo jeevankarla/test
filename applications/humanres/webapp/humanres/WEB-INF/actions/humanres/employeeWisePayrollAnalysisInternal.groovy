@@ -331,6 +331,9 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 				empCpf += regionPayMap["PAYROL_BEN_DA"];
 			}
 			empCpf*=0.12;
+			if(regionPayMap["PAYROL_DD_CF_FUND"]){
+				empCpf = regionPayMap["PAYROL_DD_CF_FUND"];
+			}
 			regionPayMap.put("empCpf",empCpf);
 			grossTotal = regionPayMap["totalBenifit"]+empCpf;
 			regionPayMap.put("grossTotal",grossTotal);
