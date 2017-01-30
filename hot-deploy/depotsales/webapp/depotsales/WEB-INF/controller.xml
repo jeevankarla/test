@@ -2677,7 +2677,23 @@
        <response name="success" type="view"  value="paymentFailUrl"/>
        <response name="error" type="view" value="paymentFailUrl"/>
      </request-map>
-     
+     <request-map uri="TrackPayments">
+       <security https="true" auth="true"/>
+       <response name="success" type="view"  value="TrackPayments"/>
+       <response name="error" type="view" value="TrackPayments"/>
+     </request-map>
+     <request-map uri="TransactionInquiry">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="transactionInquiryApi"></event>
+       <response name="success" type="view"  value="TrackPayments"/>
+       <response name="error" type="view" value="TrackPayments"/>
+     </request-map>
+     <request-map uri="TransactionRefund">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="transactionReversalApi"></event>
+       <response name="success" type="view"  value="TrackPayments"/>
+       <response name="error" type="view" value="TrackPayments"/>
+     </request-map>
 
 
      <!-- View Mappings -->
@@ -3039,4 +3055,5 @@
 
     <view-map name="paymentSucUrl" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#AirtelPaymentReceipt"/>
     <view-map name="paymentFailUrl" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#AirtelPaymentReceipt"/>
+    <view-map name="TrackPayments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#TrackPayments"/>
 </site-conf>
