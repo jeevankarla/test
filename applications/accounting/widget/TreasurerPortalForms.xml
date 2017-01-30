@@ -35,10 +35,13 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field> -->
+       <field name="finAccountCode" title ="Bank Code"><display/></field>
+        <field name="finAccountBranch" title ="Branch"><display/></field>
         <field name="finAccountId"><hidden></hidden></field>
          <field name="gbCode"><ignored></ignored></field>
           <field name="bCode"><ignored></ignored></field>
            <field name="bPlace"><ignored></ignored></field>
+            <field name="finAccPrefix"><ignored></ignored></field>
             <field name="categoryTypeEnum"><ignored></ignored></field>
              <field name="organizationPartyId"><ignored></ignored></field>
               <field name="ownerPartyId"><ignored></ignored></field>
@@ -54,7 +57,7 @@ under the License.
                             <field name="thruDate"><ignored></ignored></field>
       
        <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field> -->
-        <field name="finAccountName">
+        <field name="finAccountName" title="Bank Name">
             <hyperlink description="${finAccountName}" target="EditFinAccountAlt">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
@@ -1209,7 +1212,7 @@ under the License.
         <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId!=null" tooltip="${uiLabelMap.CommonCannotBeFound}: [${finAccountId}]"><display also-hidden="false"/></field>
 		<field name="finAccountBranch"><text size="20"/></field>
 
-        <field name="finAccountCode"><text size="20"/></field>
+        <field name="finAccountCode"><text size="20" /></field>
         <field name="finAccountCode" use-when="!hasFinEditPermission"><display/></field>
        <!--  <field name="categoryTypeEnum">
 			<drop-down>
