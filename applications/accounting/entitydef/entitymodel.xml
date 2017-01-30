@@ -3271,6 +3271,7 @@
 		<field name="internalCode" type="id"></field>
 		<field name="externalGlCode" type="id"></field>
 		<field name="description" type="description" not-null="false"></field>
+		<field name="shortName" type="description" not-null="false"></field>
 		<prim-key field="deductionTypeId" />
 		<relation type="one" fk-name="DEDCTN_FORMULA"
 			rel-entity-name="AcctgFormula">
