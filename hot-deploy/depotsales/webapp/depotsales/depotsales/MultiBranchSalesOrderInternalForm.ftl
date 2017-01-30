@@ -1192,7 +1192,7 @@
 					}
 				}
 				else{
-					data[i]["quota"] = lineQuota;
+					//data[i]["quota"] = lineQuota;
 					data[i]["usedQuota"] = takenQty;
 					
 					updateSubsidyAmt(i);
