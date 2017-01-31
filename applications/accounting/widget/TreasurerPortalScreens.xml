@@ -318,6 +318,7 @@
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
                 <set field="noConditionFind" value="N"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>

@@ -217,7 +217,7 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
         <field name="finAccountId" position="1"><text-find/></field>
-          <field name="AccDate" position="2"><date-time type="date"/></field>
+        <field name="AccDate" position="2"  event="onclick" action="javascript:datepick2();" id-name ="AccDate"><text  size="12"/></field> 
         <field name="finAccountName" position="1"><text-find/></field>
         <field name="amount" position="2"><text/></field>
         <field name="finAccountTypeId" position="1">
@@ -1161,13 +1161,20 @@ under the License.
         	<hidden value="DEPOSIT_PAID"/>
         </field>
         <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId==null"><ignored/></field>
-      	<field name="finAccountTypeId" id-name="finTypeId" use-when="finAccountId ==null" title="Deposit Account Type" >
+      	<field name="finAccountTypeId" id-name="finTypeId" use-when="finAccountId ==null" title="Advance Account Type" >
             <drop-down no-current-selected-key="DEPOSIT_ACCOUNT">
                 <entity-options description="${description}" entity-name="FinAccountType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
+         <field name="ro/bo" title="Party RO/BO"><text/>
+         	<drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
+                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY,HEAD_OFFICE"/>
+                </entity-options>
+            </drop-down>
+         </field>
         <field name="finAccountParentId"><hidden value="EMPLOYEE_ADV"/></field>
         <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
