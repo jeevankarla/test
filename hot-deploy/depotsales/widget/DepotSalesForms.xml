@@ -335,6 +335,7 @@
         <field name="tallyRefNO" title="Tally Ref No"><text/></field>
         <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}"><text-find/></field>
         <field name="shipmentId" title="${uiLabelMap.ShipmentId}"><text-find/></field>
+        <field name="partyIdTo" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="SupplierLookupPartyName"/></field> 
 <!--         <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><text-find/></field> -->
         <field name="statusId" title="${uiLabelMap.CommonStatus}"  >
