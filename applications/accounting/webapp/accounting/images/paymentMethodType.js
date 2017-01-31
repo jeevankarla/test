@@ -1,3 +1,21 @@
+jQuery(document).ready(function() {	
+	datepick2();
+	paymentFieldsOnchange();
+});	
+
+function datepick2()
+{		
+	
+	jQuery("#AccDate").datepicker({
+		dateFormat:'dd-mm-yy',
+		changeMonth: true,
+		numberOfMonths: 1,
+		onSelect: function(selectedDate) {
+			jQuery("#date").datepicker('setDate', selectedDate);
+		}
+	});
+	
+}
 function paymentFieldsOnchange(){
 	var str=jQuery("select[name='paymentMethodTypeId']").val();	
 	if((str.search(/(CASH)+/g) >= 0) ||(str.search(/(CREDITNOTE)+/g) >= 0)||(str.search(/(DEBITNOTE)+/g) >= 0)){
@@ -23,7 +41,7 @@ function paymentFieldsOnchange(){
 	
 }
 	
-jQuery(document).ready(function() {		
-	paymentFieldsOnchange();
-});	
+
+
+
 
