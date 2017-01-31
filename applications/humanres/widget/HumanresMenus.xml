@@ -119,13 +119,13 @@
             <link target="employeesAnalytics"/>
         </menu-item> 
         <menu-item name="newReports" title="Reports">
-             <condition >
-             	<or>
-             	<if-has-permission permission="HR"  action="_LEAVE_REPORTS_VIEW"></if-has-permission>
-            	<if-has-permission permission="HR"  action="_REPORTS_VIEW"/>
-            	</or>
-            </condition>
-        		<link target="LeaveReports"/>
+        	<condition>
+        		<or>
+        		<if-has-permission permission="HR" action="_PAYROLL_REPORTS_VIEW"/>
+        		<if-has-permission permission="HR"  action="_REPORTS_VIEW"/>
+        		</or>
+        	</condition>
+        		<link target="PayrollReports"></link>
         </menu-item>
         <menu-item name="AnnualIT" title="Annual IT">
         	<condition>
