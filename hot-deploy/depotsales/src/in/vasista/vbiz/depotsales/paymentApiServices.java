@@ -92,6 +92,9 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import javax.net.ssl.HttpsURLConnection;
+import java.text.DecimalFormat;
+
 
 public class paymentApiServices {
 	
@@ -186,7 +189,9 @@ public class paymentApiServices {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
-    
+		
+		Debug.log("context==================="+context);
+		
 		 String paymentDate = (String) context.get("paymentDate");
 		 String partyIdFrom = (String) context.get("partyId");
 		 String orderId = (String) context.get("orderId");
@@ -370,6 +375,26 @@ public class paymentApiServices {
     
     public static String generateHash(String mid,String txnRefNo,String amt,String date,String service,String salt) throws  UnsupportedEncodingException{
         String text = mid+"#"+txnRefNo+"#"+amt+"#"+date+"#"+service+"#"+salt;
+        
+        Debug.log("text=================================="+text);
+        StringBuffer sb = new StringBuffer();
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            md.update(text.getBytes());
+            byte byteData[] = md.digest();
+            for (int i = 0; i < byteData.length; i++) {
+                sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+            }
+        }catch (NoSuchAlgorithmException e) {
+        }
+
+        return sb.toString();
+    }
+    
+    public static String generateInquiryORRefundHash(String mid,String txnRefNo,String amt,String date,String service,String salt) throws  UnsupportedEncodingException{
+        String text = mid+"#"+txnRefNo+"#"+amt+"#"+date+"#"+salt;
+        
+        Debug.log("text=================================="+text);
         StringBuffer sb = new StringBuffer();
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-512");
@@ -392,9 +417,11 @@ public class paymentApiServices {
 		String transactionId = (String)context.get("transactionId");       
 		Timestamp transactionDate = (Timestamp)context.get("transactionDate");
         String amount = (String)context.get("amount");
-        
+        Debug.log("context================="+context);
         Double amt = Double.valueOf(amount);
-        String amtStr = amount.toString();
+                
+        DecimalFormat df = new DecimalFormat("###.##");                       
+        String amtStr = df.format(amt);
         
         String feSessionId = "F1223ee323";
         String txnDate = getDateInFormat(transactionDate,"ddMMyyyyHHmmss");
@@ -404,7 +431,7 @@ public class paymentApiServices {
         String hash = "";
         
         try{
-            hash=generateHash(mId,transactionId,amount,txnDate,"",salt);
+            hash=generateInquiryORRefundHash(mId,transactionId,amtStr,txnDate,"",salt);
         } catch (UnsupportedEncodingException e) {
         }
 		
@@ -435,7 +462,7 @@ public class paymentApiServices {
     		postDataObject.put("amount", "14");
     		
         	URL url = new URL(baseURL);
-            HttpURLConnection urlconnection = (HttpURLConnection) url.openConnection();
+        	HttpsURLConnection  urlconnection = (HttpsURLConnection ) url.openConnection();
     		urlconnection.setRequestMethod("POST");
     		urlconnection.setRequestProperty("Content-Type", "application/json");
     		urlconnection.setRequestProperty("Accept", "application/json");
@@ -477,7 +504,102 @@ public class paymentApiServices {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		
+		String transactionId = (String)context.get("transactionId");       
+		Timestamp transactionDate = (Timestamp)context.get("transactionDate");
+		String amount = (String)context.get("amount");
+        Debug.log("context================="+context);
+        Double amt = Double.valueOf(amount);
+                
+        DecimalFormat df = new DecimalFormat("###.##");                       
+        String amtStr = df.format(amt);
+        
+        String feSessionId = "F1223ee323";
+        String txnDate = getDateInFormat(transactionDate,"ddMMyyyyHHmmss");
+        String request = "ECOMM_REVERSAL";
+        String mId = "25649255";
+    	String salt = "34602fa0";
+        String hash = "";
+        
+        GenericValue pgTrans = null;
+	    try {
+	    	pgTrans = delegator.findOne("PaymentGatewayTrans", UtilMisc.toMap("transactionId", transactionId), false);
+	    } catch (GenericEntityException e) {
+            Debug.logError(e, "error fetching transactionId :"+transactionId, module);
+            return ServiceUtil.returnError("error fetching transactionId :"+transactionId);
+        }
+        
+	    if (UtilValidate.isNotEmpty(pgTrans)) {
+	    	
+	    	String pgTransId = pgTrans.getString("pgTransId");
+	    	try{
+	            hash=generateInquiryORRefundHash(mId,transactionId,amtStr,txnDate,"",salt);
+	        } catch (UnsupportedEncodingException e) {
+	        }
+			
+			String action = "reversal";
+	        String baseURL = airtelBaseUrl+action+"?";                      
+	        
+	        Debug.log("txnDate================="+txnDate);
+	        Debug.log("hash===================="+hash);
+	        
+	        JSONObject postDataObject = new JSONObject();
+	        
+	        try{
+	        	
+	        	/*postDataObject.put("feSessionId",feSessionId);
+	    		postDataObject.put("txnRefNO", transactionId);
+	    		postDataObject.put("txnDate", txnDate);
+	    		postDataObject.put("request", request);
+	    		postDataObject.put("merchantId", mId);
+	    		postDataObject.put("hash", hash);
+	    		postDataObject.put("amount", amtStr);*/
+	        	
+	        	postDataObject.put("feSessionId","4323878555");
+	    		postDataObject.put("txnRefNO", "452345435");
+	    		postDataObject.put("txnDate", "28012017204540");
+	    		postDataObject.put("request", "ECOMM_REVERSAL");
+	    		postDataObject.put("merchantId", "25649255");
+	    		postDataObject.put("hash", "a4e8f86a55b85fefa675bb85ac52e8ca8fc5113b5ad364c0c6cd3b1d60c3c83c8cffae9ecd18a2bc446168ec7505a0a1485c1f19b8bea993f33240272d695b63");
+	    		postDataObject.put("amount", "14");
+	    		
+	        	URL url = new URL(baseURL);
+	        	HttpsURLConnection  urlconnection = (HttpsURLConnection ) url.openConnection();
+	    		urlconnection.setRequestMethod("POST");
+	    		urlconnection.setRequestProperty("Content-Type", "application/json");
+	    		urlconnection.setRequestProperty("Accept", "application/json");
+	    		urlconnection.setDoOutput(true);
+	    		OutputStreamWriter out = new OutputStreamWriter(urlconnection.getOutputStream());
+	    		out.write((postDataObject).toString());
+	    		out.close();
+	    		int status = ((HttpURLConnection) urlconnection).getResponseCode();
+	    		
+	    		BufferedReader in = new BufferedReader(	new InputStreamReader(urlconnection.getInputStream()));
+				String decodedString = "";
+				String retval = "";
+				while ((decodedString = in.readLine()) != null) {
+					retval += decodedString;
+				}
+				in.close();
+	            Debug.log("retval=====refund========"+retval);
+	            
+	        } catch (UnsupportedEncodingException e) {
+	            String errMsg = "UnsupportedEncodingException when sending payment ";
+	            Debug.logError(e, errMsg, module);
+	            return ServiceUtil.returnError(errMsg);			
+			} catch (MalformedURLException e) {
+	            String errMsg = "MalformedURLException when sending payment ";
+	            Debug.logError(e, errMsg, module);
+	            return ServiceUtil.returnError(errMsg);            
+			} catch (IOException e) {
+	            String errMsg = "IOException when doing payment ";
+	            Debug.logError(e, errMsg, module);
+	            return ServiceUtil.returnError(errMsg);            
+			}
+	    }
+        
+                        
 		return result;
     }
 	
+    
 }
