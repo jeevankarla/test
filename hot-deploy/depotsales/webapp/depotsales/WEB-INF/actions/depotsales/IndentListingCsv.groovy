@@ -150,22 +150,27 @@ BranchList=[];
 		orderRoles = delegator.findList("OrderRole", custCond, null, null, null, false);
 		branchBasedOrderIds = EntityUtil.getFieldListFromEntityList(orderRoles, "orderId", true);
 	}
-		
 	custOrderRoles =[];
 	custBasededOrderIds=[];
 	if(UtilValidate.isNotEmpty(facilityPartyId)){
 		custCondList = [];
 		custCondList.add(EntityCondition.makeCondition("partyId",  EntityOperator.EQUALS, facilityPartyId));
+		if(branchBasedOrderIds){
 		custCondList.add(EntityCondition.makeCondition("orderId",  EntityOperator.IN, branchBasedOrderIds));
+		}
 		custCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
 		custCond = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
 		custOrderRoles = delegator.findList("OrderRole", custCond, null, null, null, false);
-		branchBasedOrderIds = EntityUtil.getFieldListFromEntityList(custOrderRoles, "orderId", true);
+		custBasededOrderIds = EntityUtil.getFieldListFromEntityList(custOrderRoles, "orderId", true);
 	}
-	
-	if(branchBasedOrderIds)
-	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, branchBasedOrderIds));
-	
+		
+
+	if(UtilValidate.isNotEmpty(facilityPartyId)){
+	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, custBasededOrderIds));
+	}
+	else if(branchBasedOrderIds){
+		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, branchBasedOrderIds));
+	}
   if(dayStart){
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
@@ -204,7 +209,7 @@ BranchList=[];
 	totalSalVal=0;
 	orderHeader = delegator.findList("OrderHeader", cond, null, payOrderBy, null, false);
 	orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
-	
+
 	if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
 	headerData2=[:];
 	headerData2.put("orderDate", " ");
@@ -303,9 +308,11 @@ BranchList=[];
 	headerData.put("supplierName", "Supplier");
 	orderList.add(headerData);
 	}
+	if(orderHeader){
 	Map orderPrepMap=[:];
 	//totalsMap=[:];
 	tempTotMap=[:];
+	
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
 		JSONObject tempData = new JSONObject();
@@ -573,7 +580,8 @@ BranchList=[];
 	tempTotMap.put("poQty", totalPoQty);
 	tempTotMap.put("salVal", totalSalVal);
 	orderList.add(tempTotMap);
+}	
 	context.orderList=orderList;
-	
+
 	
 	
