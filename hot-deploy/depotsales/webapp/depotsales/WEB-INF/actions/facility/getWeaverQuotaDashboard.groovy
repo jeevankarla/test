@@ -51,6 +51,11 @@ passGreater = parameters.passGreater;
 
 stateWise = parameters.stateWise;
 
+findData = parameters.findData;
+roWise = parameters.roWise;
+
+lom = parameters.lom;
+
 /*Debug.log("branchId====33233======="+branchId);
 
 Debug.log("stateWise====33233======="+stateWise);
@@ -100,7 +105,7 @@ stateRosList=result.get("stateRosList");*/
 branchList = [];
 
 
-
+/*
 if(branchId && branchId != "All"){
 branchList.add(branchId);
 }else{
@@ -122,7 +127,7 @@ stateWiseRosAndBranchList = delegator.findList("PartyContactDetailByPurpose", En
  if(UtilValidate.isNotEmpty(partyClassicationForBranch)){
 	  branchList = EntityUtil.getFieldListFromEntityList(partyClassicationForBranch, "partyId", true);
  }
-}
+}*/
  
 /*branchList = [];
 if(stateBranchsList){
@@ -135,34 +140,44 @@ stateBranchsList.each{ eachState ->
 double totalIndents = 0;
 JSONArray weaverDetailsList = new JSONArray();
 
+if(!lom)
+lom = "stateRadio";
 
-/*if(roPartyIds){
-condListb = [];
-condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, roPartyIds));
-condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
-condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 
-PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+
+if(roWise && lom == "RoRadio"){
+roWisecondListb = [];
+roWisecondListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roWise));
+roWisecondListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+roWisecondList = EntityCondition.makeCondition(roWisecondListb, EntityOperator.AND);
+
+PartyRelationship = delegator.findList("PartyRelationship", roWisecondList,UtilMisc.toSet("partyIdTo"), null, null, false);
 branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+
 }
 
-if(UtilValidate.isEmpty(branchList))
-branchList.add(branchId);*/
 
+
+if(UtilValidate.isNotEmpty(branchList) && branchId !="All" && lom == "RoRadio"){
+branchList.clear();
+branchList.add(branchId);
+}
 
 
 partyList = [];
 
+if(branchList && lom=="RoRadio"){
 condListba = [];
 condListba.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
 condListba.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
-condListb = EntityCondition.makeCondition(condListba, EntityOperator.AND);
+condListb22 = EntityCondition.makeCondition(condListba, EntityOperator.AND);
 
-partyIdsList = delegator.find("PartyRelationship", condListb, null, UtilMisc.toSet("partyIdTo"), null, null);
-
-
+partyIdsList = delegator.find("PartyRelationship", condListb22, null, UtilMisc.toSet("partyIdTo"), null, null);
 branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList, "partyIdTo", true);
+}
+
+
 
 
 	PartyClassificationPartyIds = [];
@@ -226,10 +241,26 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 	}
 	
 	
+	if(stateWise && lom=="stateRadio"){
+		condListb5 = [];
+		//if(branchpartyIdsList)
+		//condListb5.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchpartyIdsList));
+		condListb5.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+		condListb5.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, stateWise));
+		condListb = EntityCondition.makeCondition(condListb5, EntityOperator.AND);
+		
+		PartyContactDetailByDistrict = delegator.find("PartyContactDetailByPurpose", condListb, null, UtilMisc.toSet("partyId"), null, null);
+		
+		branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(PartyContactDetailByDistrict, "partyId", true);
+	
+		
+	}
+	
+	
 	List condList = [];
 	if((branchpartyIdsList || branchId || partyClassification || isDepot || state || district) && !partyId)
 	condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, branchpartyIdsList));
-	else if(UtilValidate.isNotEmpty(partyId))
+	else if(UtilValidate.isNotEmpty(partyId) && lom=="RoRadio")
 		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, partyId));
 	
 		
