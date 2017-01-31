@@ -246,7 +246,16 @@ under the License.
     	<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     	<field name="deleteLink" title="Delete" widget-style="buttontext">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="DeleteTraining">
-                 <parameter param-name="trainingRequestId" from-field="trainingRequestId"/>
+                 <parameter param-name="topicsCoverd" from-field="topicsCoverd"/>
+                 <parameter param-name="trainingLocation" from-field="trainingLocation"/>
+                 <parameter param-name="fromDate" from-field="fromDate"/>
+                 <parameter param-name="thruDate" from-field="thruDate"/>
+                 <parameter param-name="duration" from-field="duration"/>
+                 <parameter param-name="trgCategory" from-field="trgCategory"/>
+                 <parameter param-name="facultyType" from-field="facultyType"/>
+                 <parameter param-name="nameOfInstitute" from-field="nameOfInstitute"/>
+                 <parameter param-name="traingCost" from-field="traingCost"/>
+                 
            </hyperlink>
            </field>
    </form>

@@ -74,6 +74,16 @@ if(UtilValidate.isNotEmpty(personTrainingList)){
 prevTrainingList = [];
 trainingList = [];
 prevTempMap = [:];
+tempMap1 = [:];
+tempMap1.put("topicsCoverd", prevTopicCoverd);
+tempMap1.put("trainingLocation", prevTrainingLocation);
+tempMap1.put("fromDate", prevfromDate);
+tempMap1.put("thruDate", prevthruDate);
+tempMap1.put("duration", prevduration);
+tempMap1.put("trgCategory", prevtrgCategory);
+tempMap1.put("facultyType", prevfacultyType);
+tempMap1.put("nameOfInstitute", prevnameOfInstitute);
+tempMap1.put("traingCost", prevtraingCost);
 if(UtilValidate.isNotEmpty(personTrainingList)){
 		for(int i=0;i<personTrainingList.size();i++){
 		tempMap = [:];
@@ -144,8 +154,8 @@ if(UtilValidate.isNotEmpty(personTrainingList)){
 	}
 }
 if(UtilValidate.isNotEmpty(parameters.topicsCoverd)){
-	if(UtilValidate.isNotEmpty(tempMap)){
-		trainingList.addAll(tempMap);
+	if(UtilValidate.isNotEmpty(tempMap1)){
+		trainingList.addAll(tempMap1);
 	}
 }
 context.trainingList = trainingList;

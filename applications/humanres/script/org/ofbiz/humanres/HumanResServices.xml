@@ -243,8 +243,36 @@
     </simple-method>
 	
 	<simple-method method-name="DeleteTraining" short-description="Delete Person Training">
-        <entity-one entity-name="PersonTraining" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
+       	<set field="fromDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def fromDateTime = sdf.parse(parameters.fromDate);
+            return fromDateTime;
+        }" type="Timestamp"/>
+        	<set field="thruDateTime" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(parameters.thruDate);
+            return thruDateTime;
+        }" type="Timestamp"/>
+        <set field="thruDate" type="Timestamp" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(thruDateTime)}"/>
+		 <entity-and list="personTrainingList" entity-name="PersonTraining">
+               <field-map field-name="topicsCoverd" from-field="parameters.topicsCoverd"/>
+               <field-map field-name="trainingLocation" from-field="parameters.trainingLocation"/>
+               <field-map field-name="duration" from-field="parameters.duration"/>
+               <field-map field-name="trgCategory" from-field="parameters.trgCategory"/>
+               <field-map field-name="duration" from-field="parameters.duration"/>
+               <field-map field-name="facultyType" from-field="parameters.facultyType"/>
+               <field-map field-name="nameOfInstitute" from-field="parameters.nameOfInstitute"/>
+               <field-map field-name="traingCost" from-field="parameters.traingCost"/>
+               <field-map field-name="fromDate" from-field="fromDate"/>
+               <field-map field-name="thruDate" from-field="thruDate"/>
+         </entity-and>
+         <if-not-empty field="personTrainingList">
+         	<remove-list list="personTrainingList"/> 
+         	<set field="responseMessage" value="Program Deleted successfully."/>
+         	<field-to-result field="responseMessage" result-name="successMessage"/>
+         </if-not-empty>
     </simple-method>
     
     <simple-method method-name="createPerformanceNote" short-description="Create Performance Note">
