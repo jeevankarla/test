@@ -940,7 +940,7 @@
 	<screen name="ShipmentHistoryAuth">
 		<section>
 			<actions>
-				<set field="titleProperty" value="SUPPLY HISTORY" />
+				<set field="titleProperty" value="Supply History" />
 			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
 			     <set field="tabButtonItem2" value="FindSupplierDispatchs" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
@@ -1084,7 +1084,7 @@
 	<screen name="findDelayShipmentsAuth">
 		<section>
 			<actions>
-				<set field="titleProperty" value="DELAYED SHIPMENTS FROM SUPPLIER"/>
+				<set field="titleProperty" value="Delayed Shipments From Supplier"/>
 			     <set field="tabButtonItem3" value="IndentSupplyAnalytics"/>		            
 			     <set field="tabButtonItem2" value="findDelayShipments"/>
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
