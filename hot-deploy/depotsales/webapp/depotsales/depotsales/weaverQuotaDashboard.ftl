@@ -45,6 +45,10 @@ under the License.
 <input type="hidden" name="stateWise1" id="stateWise1" value="${stateWise}">
 <input type="hidden" name="passGreater" id="passGreater" value="${passGreater}">
 <input type="hidden" name="effectiveDate1" id="effectiveDate1" value="${effectiveDate}">
+<input type="hidden" name="findData1" id="findData1" value="${findData}">
+<input type="hidden" name="roWise1" id="roWise1" value="${roWise}">
+<input type="hidden" name="lom1" id="lom1" value="${lom}">
+
 
 <input type="hidden" name="noOFIndentsFlag" id="noOFIndentsFlag" >
 
@@ -57,6 +61,7 @@ var partyId = $("#partyId1").val();
 var passbookNumber = $("#passbookNumber").val();
 var partyClassification = $("#partyClassification1").val();
 
+var lom = $("#lom1").val();
 
 var isDepot = $("#isDepot").val();
 var stateWise = $("#stateWise1").val();
@@ -64,6 +69,12 @@ var district = $("#district").val();
 var passGreater = $("#passGreater").val();
 
 var effectiveDate = $("#effectiveDate1").val();
+
+var findData = $("#findData1").val();
+
+var roWise1 = $("#roWise1").val();
+
+//alert(findData);
 
 var effDate=effectiveDate.toString();
 
@@ -177,7 +188,8 @@ $(function(){
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
            
-		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"passGreater":passGreater,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"stateWise":stateWise,"effectiveDate":effectiveDate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
+           
+		var dataJson = {"branchId":branchId,"partyId":partyId,"lom":lom,"findData":findData,"roWise":roWise1,"passbookNumber":passbookNumber,"passGreater":passGreater,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"stateWise":stateWise,"effectiveDate":effectiveDate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
 	 $('div#blink').hide();
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');

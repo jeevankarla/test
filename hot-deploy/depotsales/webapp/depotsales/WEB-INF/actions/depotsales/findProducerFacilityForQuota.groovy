@@ -58,18 +58,34 @@ context.formatList = formatList;*/
 Map formatMap = [:];
 List formatList = [];
 
+List formatROList = [];
+
 JSONObject branchProductSroreMap = new JSONObject();
 	
 	List<GenericValue> partyClassificationList = null;
-		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("BRANCH_OFFICE","REGIONAL_OFFICE")), UtilMisc.toSet("partyId","partyClassificationGroupId"), null, null,false);
 	if(partyClassificationList){
 		for (eachList in partyClassificationList) {
 			//Debug.log("eachList========================"+eachList.get("partyId"));
+			
+			if(eachList.partyClassificationGroupId == "BRANCH_OFFICE"){
 			formatMap = [:];
 			partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
 			   formatMap.put("productStoreName",partyName);
 			formatMap.put("payToPartyId",eachList.get("partyId"));
 			formatList.addAll(formatMap);
+			
+			}
+			
+			if(eachList.partyClassificationGroupId == "REGIONAL_OFFICE"){
+			formatMapRO = [:];
+			
+			partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
+			formatMapRO.put("productStoreName",partyName);
+		    formatMapRO.put("payToPartyId",eachList.get("partyId"));
+		    formatROList.addAll(formatMapRO);
+			
+			}
 			
 			  
 			
@@ -87,6 +103,11 @@ JSONObject branchProductSroreMap = new JSONObject();
 
 	context.formatList = formatList;
 	
+	context.formatROList = formatROList;
+	
+	Debug.log("formatROList============="+formatROList);
+	
+	
 	context.branchProductSroreMap = branchProductSroreMap;
 
 
@@ -102,8 +123,6 @@ branchId = "";
 if(parameters.branchId2)
 branchId = parameters.branchId2;
 
-Debug.log("branchId============="+branchId);
-
 branchName = branchProductSroreMap.get(branchId);
 
 context.branchName = branchName;
@@ -112,6 +131,10 @@ context.branchName = branchName;
 passbookNumber = "";
 if(parameters.passbookNumber)
 passbookNumber = parameters.passbookNumber;
+
+findData = "";
+if(parameters.findData)
+findData = parameters.findData;
 
 
 partyId = "";
@@ -151,6 +174,16 @@ effectiveDate = "";
 
 if(parameters.effectiveDate)
 effectiveDate = parameters.effectiveDate;
+
+roWise = "";
+if(parameters.roWise)
+roWise = parameters.roWise;
+
+lom = "";
+if(parameters.lom)
+lom = parameters.lom;
+
+
 /*
 partyClassification = "";
 if(parameters.partyClassificationId)
@@ -173,6 +206,12 @@ context.district = district;
 context.passGreater = passGreater;
 context.effectiveDate = effectiveDate;
 context.stateWise = stateWise;
+context.roWise = roWise;
+context.lom = lom;
+
+context.findData = findData;
+
+
 
 
 partyClassifiName = EntityUtil.filterByCondition(partyClassificationList, EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, partyClassification));
@@ -242,4 +281,33 @@ stateName = "";
 if(stateNameList)	
 stateName = stateNameList[0].geoName;
 context.stateName = stateName;
+
+JSONObject branchByState1 = new JSONObject();
+for (eachRoList in formatROList) {
+	
+	condListb = [];
+	
+	condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, eachRoList.payToPartyId));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+	
+	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+	
+	branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+	
+	JSONArray branchByState = new JSONArray();
+	branchList.each{ eachBranch ->
+		partyName = PartyHelper.getPartyName(delegator, eachBranch, false);
+			JSONObject newObj = new JSONObject();
+			newObj.put("value",eachBranch);
+			newObj.put("label",partyName);
+			branchByState.add(newObj);
+	}
+	branchByState1.put(eachRoList.payToPartyId,branchByState);
+	
+	
+}
+
+context.branchByState1 = branchByState1;
+
 
