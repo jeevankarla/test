@@ -199,10 +199,10 @@
         	</link>
 	    </menu-item>
 	    
-	    <menu-item name="Rounding" title="Rounding">
+	    <!-- <menu-item name="Rounding" title="Rounding">
 	      	<link target="Rounding">
         	</link>
-	    </menu-item> 
+	    </menu-item> --> 
 	    <menu-item name="CustomerAssoc" title="Customer Assoc">
 	      	<link target="CustomerAssoc">
         	</link>
