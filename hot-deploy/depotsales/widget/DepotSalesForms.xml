@@ -3919,6 +3919,7 @@
         <field name="refund" title="Refund" use-when="true" widget-style="buttontext">
            <hyperlink also-hidden="false" description="Refund" target="TransactionRefund" target-window="_blank">
                 <parameter param-name="transactionId"/>
+                <parameter param-name="amount"/>
                 <parameter param-name="transactionDate"/>
            </hyperlink>
         </field>         

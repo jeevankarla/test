@@ -5576,7 +5576,7 @@
 		</relation>
 	</entity>
 	
-	<!-- <entity entity-name="PaymentGatewayTrans" package-name="org.ofbiz.accounting.payment"
+	<entity entity-name="PaymentGatewayTrans" package-name="org.ofbiz.accounting.payment"
 		title="Payment Gateway Trans">
 		<field name="transactionId" type="id-ne"></field>
 		<field name="transactionDate" type="date-time"></field>
@@ -5588,10 +5588,12 @@
 		<field name="paymentMode" type="id-ne"></field>
 		<field name="pgTransId" type="id-ne"></field>
 		<field name="pgTransDate" type="date-time"></field>
+		<field name="pgTransStatus" type="id-ne"></field>
+		<field name="pgTransMessage" type="id-ne"></field>
 		<field name="paymentId" type="id-ne"></field>
 		<field name="mobileNumber" type="id-ne"></field>
 		<field name="email" type="email"></field>
 		<prim-key field="transactionId" />						
-	</entity> -->
+	</entity>
 	
 </entitymodel>
