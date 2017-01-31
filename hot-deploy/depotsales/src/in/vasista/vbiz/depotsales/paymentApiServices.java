@@ -103,8 +103,8 @@ public class paymentApiServices {
 	private static int decimals;
 	private static int rounding;
     public static final String resource = "AccountingUiLabels";
-    private static String SucUrl = "https:%2F%2Fnhdc-test.vasista.in/myportal/control/paymentSucUrl";
-    private static String failUrl = "https:%2F%2Fnhdc-test.vasista.in/myportal/control/paymentFailUrl";
+    private static String SucUrl = "https://nhdc-test.vasista.in/myportal/control/paymentSucUrl";
+    private static String failUrl = "https://nhdc-test.vasista.in/myportal/control/paymentFailUrl";
     private static String airtelBaseUrl = "https://sit.airtelmoney.in/ecom/v2/";
     
     static {
@@ -215,9 +215,12 @@ public class paymentApiServices {
 		    
 		    Timestamp eventDate = null;
 			Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
-			  	
+			  
+			SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+			
 			if (UtilValidate.isNotEmpty(paymentDate)) {
-				SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
+				 
 				try {
 					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
 				} catch (ParseException e) {
@@ -278,47 +281,48 @@ public class paymentApiServices {
         if (UtilValidate.isNotEmpty((String)context.get("email"))) {
         	email = (String)context.get("email");
         }
-        	       
+        Map resultMap = FastMap.newInstance();	       
         Date txnDate = new Date();
+        String txnRefNo = generateTxnNum(txnDate,partyId, orderId);
+    	String date = getDateInFormat(txnDate, "ddMMyyyyHHmmss");
+        
+        
+        try{
+    		Map transMap = FastMap.newInstance();
+    		Timestamp transDate = null;
+    		transMap.put("transactionId",txnRefNo);
+    		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmss");
+        	try {
+        		transDate = new java.sql.Timestamp(sdf.parse(date).getTime());
+        	} catch (ParseException e) {
+        		Debug.logError(e, "Cannot parse date string: " + date, "");
+        	}
+    		transMap.put("transactionDate",transDate);
+    		transMap.put("partyId",partyId);
+    		transMap.put("orderId",orderId);
+    		
+    		transMap.put("paymentChannel",paymentChannel);
+    		transMap.put("paymentMode",paymentMode);
+    		transMap.put("mobileNumber",mobileNumber);
+    		transMap.put("email",email);
+    		transMap.put("transactionStatus","IN_PROCESS");  
+    		BigDecimal tranAmount = new BigDecimal(amtStr);
+    		transMap.put("amount",tranAmount);
+    		      		
+			GenericValue PaymentGatewayTrans = delegator.makeValue("PaymentGatewayTrans", transMap);
+			delegator.createOrStore(PaymentGatewayTrans);
+		}catch (Exception e) {
+			Debug.logError(e, "Error While Creating paymentGateWayTrans ", module);
+			return ServiceUtil.returnError("Error While paymentGateWayTrans : "+txnRefNo);
+  	 	}
+        
         if(paymentChannel.equalsIgnoreCase("airtel"))
         {        	
         	String mId = "25649255";
         	String salt = "34602fa0";
-        	String txnRefNo = generateTxnNum(txnDate,partyId, orderId);
-        	String date = getDateInFormat(txnDate, "ddMMyyyyHHmmss");
+        	
         	String cur = "INR";        	
         	String url = initiatePaymentUrl(mId,txnRefNo,amtStr,date,salt,SucUrl,failUrl,cur,paymentMode,mobileNumber,email);
-        	
-        	Map resultMap = FastMap.newInstance();
-        	
-        	try{
-        		Map transMap = FastMap.newInstance();
-        		Timestamp transDate = null;
-        		transMap.put("transactionId",txnRefNo);
-        		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmss");
-            	try {
-            		transDate = new java.sql.Timestamp(sdf.parse(date).getTime());
-            	} catch (ParseException e) {
-            		Debug.logError(e, "Cannot parse date string: " + date, "");
-            	}
-        		transMap.put("transactionDate",transDate);
-        		transMap.put("partyId",partyId);
-        		transMap.put("orderId",orderId);
-        		
-        		transMap.put("paymentChannel",paymentChannel);
-        		transMap.put("paymentMode",paymentMode);
-        		transMap.put("mobileNumber",mobileNumber);
-        		transMap.put("email",email);
-        		transMap.put("transactionStatus","IN_PROCESS");  
-        		BigDecimal tranAmount = new BigDecimal(amtStr);
-        		transMap.put("amount",tranAmount);
-        		      		
-				GenericValue PaymentGatewayTrans = delegator.makeValue("PaymentGatewayTrans", transMap);
-				delegator.createOrStore(PaymentGatewayTrans);
-			}catch (Exception e) {
-				Debug.logError(e, "Error While Creating paymentGateWayTrans ", module);
-				return ServiceUtil.returnError("Error While paymentGateWayTrans : "+txnRefNo);
-	  	 	}
         	   
     		resultMap.put("msg","success");    	
     		resultMap.put("su", SucUrl);
@@ -328,7 +332,17 @@ public class paymentApiServices {
     		result.put("resultMap",resultMap);
     		return result;
         }
-                               
+        
+        if(paymentChannel.equalsIgnoreCase("atom"))
+        {
+    		resultMap.put("mId", "21089");
+    		resultMap.put("password", "NHDC@1234");
+    		resultMap.put("url","https://payment.atomtech.in/mobilesdk/param");
+    		    		
+    		result.put("resultMap",resultMap);
+    		return result;
+        }
+        
 		return result;
     }
     
@@ -480,6 +494,7 @@ public class paymentApiServices {
 			}
 			in.close();
             Debug.log("retval============="+retval);
+            result = ServiceUtil.returnSuccess(retval);
             
         } catch (UnsupportedEncodingException e) {
             String errMsg = "UnsupportedEncodingException when sending payment ";
@@ -532,7 +547,7 @@ public class paymentApiServices {
 	    	
 	    	String pgTransId = pgTrans.getString("pgTransId");
 	    	try{
-	            hash=generateInquiryORRefundHash(mId,transactionId,amtStr,txnDate,"",salt);
+	            hash=generateInquiryORRefundHash(mId,pgTransId,amtStr,txnDate,"",salt);
 	        } catch (UnsupportedEncodingException e) {
 	        }
 			
@@ -547,7 +562,7 @@ public class paymentApiServices {
 	        try{
 	        	
 	        	/*postDataObject.put("feSessionId",feSessionId);
-	    		postDataObject.put("txnRefNO", transactionId);
+	    		postDataObject.put("txnId", pgTransId);
 	    		postDataObject.put("txnDate", txnDate);
 	    		postDataObject.put("request", request);
 	    		postDataObject.put("merchantId", mId);
@@ -581,6 +596,7 @@ public class paymentApiServices {
 				}
 				in.close();
 	            Debug.log("retval=====refund========"+retval);
+	            result = ServiceUtil.returnSuccess(retval);
 	            
 	        } catch (UnsupportedEncodingException e) {
 	            String errMsg = "UnsupportedEncodingException when sending payment ";
