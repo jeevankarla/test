@@ -694,6 +694,12 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="orderIdList" type="List" mode="IN" optional="true"/>
     </service>
+    <service name="getIndentAndUpdateIndenSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getIndentAndUpdateIndenSummaryDetails">
+        <description>get Indent And Update IndenSummaryDetails Entity</description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+    </service>
      <service name="runPeriodPopulateIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulationIndentSummaryDetails" transaction-timeout="6000000">
          <description>populate Order Summary </description>
          <attribute mode="IN" name="fromDate" optional="false" type="String"/>
