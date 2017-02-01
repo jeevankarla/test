@@ -5106,6 +5106,13 @@
 	                </condition-list>
 	                <order-by field-name="description"/>
 	            </entity-condition>
+	            <entity-condition list="partyRelationList" entity-name="PartyRelationship">
+	            	<condition-list combine="and">
+	            		<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+	            		<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+	            		<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
+	            	</condition-list>
+				</entity-condition>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
 			</actions>
 			<widgets>
