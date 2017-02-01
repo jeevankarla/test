@@ -18,13 +18,21 @@ import java.util.Set;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.ofbiz.service.ServiceUtil;
+import java.text.DecimalFormat;
 
 dctx = dispatcher.getDispatchContext();
-dataList = [];
-
+//JSONArray dataList = new JSONArray();
+dataList=[];
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 fromDate=null;
 thruDate=null;
+
+analyticsThruDate=UtilDateTime.nowTimestamp();
+analyticsFrmDate= UtilDateTime.addDaysToTimestamp(analyticsThruDate,-90);
+defaultEffectiveThruDateStr=UtilDateTime.toDateString(analyticsThruDate,"MMMM dd, yyyy");
+defaultEffectiveDateStr=UtilDateTime.toDateString(analyticsFrmDate,"MMMM dd, yyyy");
+context.defaultEffectiveDateStr=defaultEffectiveDateStr
+context.defaultEffectiveThruDateStr=defaultEffectiveThruDateStr;
 try {
 	   if (parameters.fromDateCsv) {
 			   fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDateCsv).getTime()));
@@ -39,11 +47,17 @@ try {
 	   context.errorMessage = "Cannot parse date string: " + e;
 	   return;
 }
+//isFind = parameters.isFind;
+
+
+//context.isFind = isFind;
 
 if(UtilValidate.isNotEmpty(fromDate)){
+	context.fromDate=fromDate;
 	context.defaultEffectiveDate=UtilDateTime.toDateString(fromDate,"MMMM dd, yyyy");
 }
 if(UtilValidate.isNotEmpty(thruDate)){
+	context.thruDate=thruDate;
 	context.defaultEffectiveThruDate=UtilDateTime.toDateString(thruDate,"MMMM dd, yyyy");
 }
  dctx = dispatcher.getDispatchContext();
@@ -69,11 +83,9 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			for (int j = 0; j < branchParties.size(); j++) {
 				branchParty = branchParties.get(j);
 				partyIdNameMap.put(branchParty.partyId, branchParty.groupName);
-				branchROMap.put(branchParty.partyIdTo, ro.ownerPartyId);	
+				branchROMap.put(branchParty.partyIdTo, ro.ownerPartyId);
 			}
 		}
-//	 Debug.log("===partyIdNameMap=====>"+partyIdNameMap);			 	
-//	 Debug.log("===branchROMap=====>"+branchROMap);
 		
  conditionList.clear();
  
@@ -91,37 +103,70 @@ if(UtilValidate.isNotEmpty(thruDate)){
  
 
  conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED")));
- conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
+// conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
  
-conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+//conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+
  
  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
- salesOrderList = delegator.findList("OrderHeaderAndRoles", condition, UtilMisc.toSet("orderId","statusId","partyId","grandTotal"), null, null, false);
+
  
- //Debug.log("===salesOrderList=="+salesOrderList+"==condition=="+condition);
-	  
- ROOT_ID = "NHDC"; //::TODO::	  
+ salesOrderList = delegator.findList("IndentSummaryDetails", condition,null, null, null, false);
+ 
+ 	  
+ ROOT_ID = "NHDC"; //::TODO::
  SortedMap DataMap = new TreeMap();
 	if(salesOrderList){
 		 salesOrderList.each{eachItem ->
-		 	partyId = eachItem.getAt("partyId");
+		 partyId = eachItem.getAt("branchId");
 		 	completed = 0;
 		 		if (eachItem.get("statusId") == "ORDER_COMPLETED") {
 		 			completed = 1;
 		 		}
-
-		 	roId = branchROMap.get(partyId);	
-		 	grandTotal = (new BigDecimal(eachItem.getAt("grandTotal"))).setScale(0, RoundingMode.HALF_UP);	 	
+				 
+		 	roId = branchROMap.get(partyId);
+		 	grandTotal = (new BigDecimal(eachItem.getAt("totalAmount"))).setScale(0, RoundingMode.HALF_UP);	 
+			totalQty = new BigDecimal(eachItem.getAt("quantity")).setScale(2, 0);
+			totalPoQty=0;
+			totalshipQty = 0;
+			totalPoAmt = 0;
+			if(UtilValidate.isNotEmpty(eachItem.getAt("poQuantity"))){
+			    totalPoQty = new BigDecimal(eachItem.getAt("poQuantity")).setScale(2, 0);
+		    } 
+			if(UtilValidate.isNotEmpty(eachItem.getAt("shippedQty"))){
+		        totalshipQty = new BigDecimal(eachItem.getAt("shippedQty")).setScale(2, 0);
+		    }
+			if(UtilValidate.isNotEmpty(eachItem.getAt("poAmount"))){
+			   totalPoAmt =  new BigDecimal(eachItem.getAt("poAmount")).setScale(2, 0);
+			}
 		 	if (DataMap.containsKey(partyId)) {
 		 		branchDetails = DataMap.get(partyId);
 		 		totIndents = branchDetails.get("totIndents");
 		 		branchDetails.putAt("totIndents", ++totIndents);
-		 		branchDetails.putAt("completed", completed + branchDetails.get("completed"));		 		
+		 		BigDecimal totPurchases = branchDetails.get("totPurchases");				 
+				if(totalPoQty>0){					
+					branchDetails.putAt("totPurchases", ++totPurchases);
+				}
+				branchDetails.putAt("poQty", totalPoQty+ branchDetails.get("poQty"));
+				branchDetails.putAt("poAmt", totalPoAmt+ branchDetails.get("poAmt"));
+				branchDetails.putAt("totQty", totalQty + branchDetails.get("totQty"));
+				branchDetails.putAt("shipQty", totalshipQty + branchDetails.get("shipQty"));
+		 		branchDetails.putAt("completed", completed + branchDetails.get("completed"));
 		 		branchDetails.putAt("totRevenue", grandTotal + branchDetails.get("totRevenue"));		 		
 		 	}
 		 	else {
 		 		branchDetails = [:];
 		 		branchDetails.putAt("totIndents", 1);
+				if(totalPoQty>0){
+					 branchDetails.putAt("totPurchases", 1);
+				}else{
+				branchDetails.putAt("totPurchases", 0);
+				
+				}
+				branchDetails.putAt("poQty", totalPoQty);
+				branchDetails.putAt("poAmt", totalPoAmt);
+				branchDetails.putAt("shipQty", totalshipQty);
+				branchDetails.putAt("totQty", totalQty);
 		 		branchDetails.putAt("totRevenue", grandTotal);
 		 		branchDetails.putAt("completed", completed);		 		
 		 		DataMap.putAt(partyId, branchDetails);		 	
@@ -129,6 +174,14 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 	if (DataMap.containsKey(roId)) {
 		 		roDetails = DataMap.get(roId);
 		 		totIndents = roDetails.get("totIndents");
+				totPurchases = roDetails.get("totPurchases");
+				roDetails.putAt("totQty", totalQty + roDetails.get("totQty"));
+				if(totalPoQty>0){
+					roDetails.putAt("totPurchases", ++totPurchases);
+				}
+			    roDetails.putAt("poQty", totalPoQty+roDetails.get("poQty"));
+				roDetails.putAt("poAmt", totalPoAmt+ roDetails.get("poAmt"));
+				roDetails.putAt("shipQty", totalshipQty + roDetails.get("shipQty"));
 		 		roDetails.putAt("totIndents", ++totIndents);
 		 		roDetails.putAt("completed", completed + roDetails.get("completed"));		 				 		
 		 		roDetails.putAt("totRevenue", grandTotal + roDetails.get("totRevenue"));		 				 		
@@ -136,6 +189,15 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 	else {
 		 		roDetails = [:];
 		 		roDetails.putAt("totIndents", 1);
+				if(totalPoQty>0){
+					 roDetails.putAt("totPurchases", 1);
+				}else{
+					roDetails.putAt("totPurchases", 0);
+				}
+				roDetails.putAt("totQty", totalQty);
+				roDetails.putAt("poQty", totalPoQty);
+				roDetails.putAt("poAmt", totalPoAmt);
+				roDetails.putAt("shipQty", totalshipQty);
 		 		roDetails.putAt("totRevenue", grandTotal);	
 		 		roDetails.putAt("completed", completed);		 				 			 		
 		 		DataMap.putAt(roId, roDetails);	 	
@@ -143,13 +205,27 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 	if (DataMap.containsKey(ROOT_ID)) {
 		 		totDetails = DataMap.get(ROOT_ID);
 		 		totIndents = totDetails.get("totIndents");
+				totPurchases = totDetails.get("totPurchases");
+				if(totalPoQty>0){
+					 totDetails.putAt("totPurchases", ++totPurchases);
+				}
 		 		totDetails.putAt("totIndents", ++totIndents);
+				poQty = totDetails.get("poQty");
+				totDetails.putAt("poQty", totalPoQty+poQty);
+				totDetails.putAt("poAmt", totalPoAmt+ totDetails.get("poAmt"));
+				totDetails.putAt("shipQty", totalshipQty + totDetails.get("shipQty"));
+				totDetails.putAt("totQty", totalQty + totDetails.get("totQty"));
 		 		totDetails.putAt("completed", completed + totDetails.get("completed"));		 				 		
 		 		totDetails.putAt("totRevenue", grandTotal + totDetails.get("totRevenue"));		 				 		
 		 	}
 		 	else {
 		 		totDetails = [:];
 		 		totDetails.putAt("totIndents", 1);
+				totDetails.putAt("totPurchases", 1);
+				totDetails.putAt("totQty", totalQty);
+				totDetails.putAt("poQty", totalPoQty);
+				totDetails.putAt("poAmt", totalPoAmt);
+				totDetails.putAt("shipQty", totalshipQty);
 		 		totDetails.putAt("totRevenue", grandTotal);	
 		 		totDetails.putAt("completed", completed);		 				 			 		
 		 		DataMap.putAt(ROOT_ID, totDetails);	 	
@@ -157,52 +233,132 @@ conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQU
 		 }
 	 }
 	
-
-
-//Debug.log("===DataMap=="+DataMap);
- 
-	 for(Map.Entry entry : DataMap.entrySet()){
-	 		newObj = [:];
-	 		partyId = entry.getKey();
-	 		entryValue = entry.getValue();
-	 		if (branchROMap.containsKey(partyId)) {
-	 			roId = branchROMap.get(partyId);
-				newObj.put("partyId", partyId );						
-				newObj.put("branch", partyIdNameMap.get(partyId));
-				newObj.put("ReportsTo", roId);
-				newObj.put("ro","");
-				newObj.put("avgTAT","");			
-				newObj.put("totalRevenue", entryValue.get("totRevenue"));
-				newObj.put("totalIndents", entryValue.get("totIndents"));				
-				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed"));		
-	 		}
-	 		else if (partyId == ROOT_ID) {
-				newObj.put("partyId", ROOT_ID );						
-				newObj.put("branch", "");
-				newObj.put("ReportsTo", "");
-				newObj.put("ro", ROOT_ID);
-				newObj.put("avgTAT","");	
-				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
-				newObj.put("totalIndents", entryValue.get("totIndents"));
-				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed"));	 		
-	 		}	 		
-	 		else {
-				newObj.put("partyId", partyId );						
-				newObj.put("branch", "");
-				newObj.put("ReportsTo", ROOT_ID);
-				newObj.put("ro", partyIdNameMap.get(partyId));
-				newObj.put("avgTAT","");	
-				newObj.put("totalRevenue", entryValue.get("totRevenue"));						
-				newObj.put("totalIndents", entryValue.get("totIndents"));
-				newObj.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
-				newObj.put("completed", entryValue.get("completed"));	 		
-	 		}
-	 		dataList.add(newObj);			
-	 }		
+	DecimalFormat df = new DecimalFormat("0.00");
+	
+	//NHDC
+	entryValue =DataMap.get("NHDC") ;
+	tempMap=[:];
+		pendingQty= entryValue.get("poQty") - entryValue.get("shipQty");
+		shippedAmt= entryValue.get("totRevenue") - entryValue.get("poAmt");
+		pendingAmt = entryValue.get("poAmt") - shippedAmt;
+		if(entryValue.get("totPurchases") !=null){
+			pendingPOs = entryValue.get("totIndents") - entryValue.get("totPurchases");
+		}
+		tempMap.put("partyId", ROOT_ID );
+		tempMap.put("branch", "");
+		tempMap.put("ReportsTo", "");
+		tempMap.put("ro", ROOT_ID);
+		tempMap.put("avgTAT","");
+		tempMap.put("indentQtyInKgs",entryValue.get("totQty"));
+		tempMap.put("indentQty",df.format((entryValue.get("totQty")/100000)));
+		tempMap.put("totalRevenueInRs", entryValue.get("totRevenue"));
+		tempMap.put("totalRevenue", df.format((entryValue.get("totRevenue")/100000)));
+		tempMap.put("totPurchases", entryValue.get("totPurchases"));
+		tempMap.put("totalPoQtyInKgs",entryValue.get("poQty"));
+		tempMap.put("totalPoQty", df.format((entryValue.get("poQty")/100000)));
+		tempMap.put("totalPoAmtInRs", entryValue.get("poAmt"));
+		tempMap.put("totalPoAmt", df.format((entryValue.get("poAmt")/100000)));
+		tempMap.put("pendingQty", pendingQty);
+		tempMap.put("pendingAmt", pendingAmt);
+		tempMap.put("totalShippedQty",entryValue.get("shipQty"));
+		tempMap.put("totalShippedAmt", shippedAmt);
+		tempMap.put("totalIndents", entryValue.get("totIndents"));
+		tempMap.put("inProcess",entryValue.get("totIndents") - entryValue.get("completed"));
+		tempMap.put("completed", entryValue.get("completed")+"["+entryValue.get("shipQty")+"]");
+		tempMap.put("pendingPOs",pendingPOs);
+		dataList.add(tempMap);
+		
+		//conditionList.clear();
+		//conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "RO"));
+		//condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		
+		//roPartyIdList = delegator.findList("Facility", condition , UtilMisc.toSet("ownerPartyId"), null, null, false );
+		roPartyIdList = EntityUtil.getFieldListFromEntityList(roList, "ownerPartyId", true);
+		for(int i=0; i<roPartyIdList.size(); i++){
+			newObj=[:];
+			pendingPOs = 0;
+			roId = roPartyIdList.get(i);
+			partyId = roId;
+			roWiseEntryValue =DataMap.get(roId) ;
+			if(roWiseEntryValue){
+			pendingQty= roWiseEntryValue.get("poQty") - roWiseEntryValue.get("shipQty");
+			shippedAmt= roWiseEntryValue.get("totRevenue") - roWiseEntryValue.get("poAmt");
+			pendingAmt = roWiseEntryValue.get("poAmt") - shippedAmt;
+			if(roWiseEntryValue.get("totPurchases") !=null){
+				pendingPOs = roWiseEntryValue.get("totIndents") - roWiseEntryValue.get("totPurchases");
+			}
+			newObj.put("partyId", partyId);
+			newObj.put("branch", "");
+			newObj.put("ReportsTo", ROOT_ID);
+			newObj.put("ro", partyIdNameMap.get(partyId));
+			newObj.put("avgTAT","");
+			newObj.put("indentQtyInKgs",roWiseEntryValue.get("totQty"));
+			newObj.put("indentQty",df.format((roWiseEntryValue.get("totQty")/100000)));
+			newObj.put("totalRevenueInRs", roWiseEntryValue.get("totRevenue"));
+			newObj.put("totalRevenue", df.format((roWiseEntryValue.get("totRevenue")/100000)));
+			newObj.put("totPurchases", roWiseEntryValue.get("totPurchases"));
+			newObj.put("totalPoQtyInKgs",roWiseEntryValue.get("poQty"));
+			newObj.put("totalPoQty", df.format((roWiseEntryValue.get("poQty")/100000)));
+			newObj.put("totalPoAmtInRs", roWiseEntryValue.get("poAmt"));
+			newObj.put("totalPoAmt", df.format((roWiseEntryValue.get("poAmt")/100000)));
+			newObj.put("pendingQty", pendingQty);
+			newObj.put("pendingAmt", pendingAmt);
+			newObj.put("totalShippedQty",roWiseEntryValue.get("shipQty"));
+			newObj.put("totalIndents", roWiseEntryValue.get("totIndents"));
+			newObj.put("totalShippedAmt", shippedAmt);
+			newObj.put("inProcess",roWiseEntryValue.get("totIndents") - roWiseEntryValue.get("completed"));
+			newObj.put("completed", roWiseEntryValue.get("completed")+"["+roWiseEntryValue.get("shipQty")+"]");
+			newObj.put("pendingPOs",pendingPOs);
+			dataList.add(newObj);
+			}
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+//			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "GROUP_ROLLUP"));
+			
+			branchParties = delegator.findList("PartyRelationshipAndDetail", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
+			branchPartyIds=EntityUtil.getFieldListFromEntityList(branchParties, "partyId", true);
+			for(int j=0; j<branchPartyIds.size(); j++){
+				newObj1=[:];
+				branchId=branchPartyIds.get(j);
+				partyId = branchId;
+				branchWiseEntryValue =DataMap.get(branchId);
+				if(branchWiseEntryValue){
+				pendingQty= branchWiseEntryValue.get("poQty") - branchWiseEntryValue.get("shipQty");
+				shippedAmt= branchWiseEntryValue.get("totRevenue") - branchWiseEntryValue.get("poAmt");
+				pendingAmt = branchWiseEntryValue.get("poAmt") - shippedAmt;
+				if(branchWiseEntryValue.get("totPurchases") !=null){
+					pendingPOs = branchWiseEntryValue.get("totIndents") - branchWiseEntryValue.get("totPurchases");
+				}
+				newObj1.put("partyId", "");
+				newObj1.put("branch", partyIdNameMap.get(partyId));
+				newObj1.put("ReportsTo", roId);
+				newObj1.put("ro","");
+				newObj1.put("avgTAT","");
+				newObj1.put("indentQtyInKgs",branchWiseEntryValue.get("totQty"));
+				newObj1.put("indentQty",df.format((branchWiseEntryValue.get("totQty")/100000)));
+				newObj1.put("totalRevenueInRs", branchWiseEntryValue.get("totRevenue"));
+				newObj1.put("totalRevenue", df.format((branchWiseEntryValue.get("totRevenue")/100000)));
+				newObj1.put("totPurchases", branchWiseEntryValue.get("totPurchases"));
+				newObj1.put("totalPoQtyInKgs",branchWiseEntryValue.get("poQty"));
+				newObj1.put("totalPoQty",df.format((branchWiseEntryValue.get("poQty")/100000)));
+				newObj1.put("totalPoAmtInRs", branchWiseEntryValue.get("poAmt"));
+				newObj1.put("totalPoAmt", df.format((branchWiseEntryValue.get("poAmt")/100000)));
+				newObj1.put("pendingQty", pendingQty);
+				newObj1.put("pendingAmt", pendingAmt);
+				newObj1.put("totalShippedQty",branchWiseEntryValue.get("shipQty"));
+				newObj1.put("totalShippedAmt", shippedAmt);
+				newObj1.put("totalIndents", branchWiseEntryValue.get("totIndents"));
+				newObj1.put("inProcess",branchWiseEntryValue.get("totIndents") - branchWiseEntryValue.get("completed"));
+				newObj1.put("completed", branchWiseEntryValue.get("completed")+"["+branchWiseEntryValue.get("shipQty")+"]");
+				newObj1.put("pendingPOs",pendingPOs);
+				dataList.add(newObj1);
 				
+				}
 				
-context.put("dataList",dataList);
-
-
+				}
+			
+			}
+		
+context.dataList=dataList;
