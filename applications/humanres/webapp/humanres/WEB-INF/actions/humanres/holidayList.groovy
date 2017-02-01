@@ -54,7 +54,7 @@ if(UtilValidate.isNotEmpty(customTimePeriodId)){
 	if(UtilValidate.isNotEmpty(customTimePeriodId)){
 		conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS,customTimePeriodId ));
 	}
-	if(UtilValidate.isNotEmpty(regionId) && !(regionId.equals("COMPANY"))){
+	if(UtilValidate.isNotEmpty(regionId) && !(regionId.equals("COMPANY-All"))){
 		conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, regionId ));
 	}
 	if(UtilValidate.isNotEmpty(holidayDatestart)){
@@ -70,9 +70,11 @@ if(UtilValidate.isNotEmpty(holidayDetails)){
 		holidayDetailsMap = [:];
 		holidayDetailsMap.put("customTimePeriodId", holiday.get("customTimePeriodId"));
 		holidayDetailsMap.put("organizationPartyId", holiday.get("organizationPartyId"));
-		holidayDetailsMap.put("holiDayDate", holiday.get("holiDayDate"));
-		holidayDetailsMap.put("description", holiday.get("description"));
 		holidayDate = holiday.get("holiDayDate");
+		holidayDateStr = UtilDateTime.toDateString(holidayDate, "dd-MM-yyyy");
+		holidayDetailsMap.put("holiDayDate", holidayDateStr);
+		holidayDetailsMap.put("prevHoliDayDate", holidayDate);
+		holidayDetailsMap.put("description", holiday.get("description"));
 		String dayOfWeek = (UtilDateTime.getDayOfWeek(holidayDate, timeZone, locale)).toString();
 		String weekDay = weekMap[dayOfWeek];
 		if(UtilValidate.isNotEmpty(weekDay)){

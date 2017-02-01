@@ -2023,6 +2023,17 @@ under the License.
 		<event type="service" invoke="createHoliday"/>
 		<response name="success" type="view" value="FindHoliday" />
    	</request-map>
+   	<request-map uri="updateHoliday">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateHoliday"/>
+		<response name="success" type="view" value="FindHoliday" />
+   	</request-map>
+   	<request-map uri="DeleteHoliday">
+		<security https="true" auth="true" />
+		<event type="service" invoke="DeleteHoliday"/>
+		<response name="success" type="view" value="FindHoliday" />
+   	</request-map>
+   	
      <request-map uri="waterElectricityCharges">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="WaterElectricityCharges"></response>

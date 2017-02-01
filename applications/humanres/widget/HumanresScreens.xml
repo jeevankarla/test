@@ -303,6 +303,7 @@
 				<set field="titleProperty" value="Holiday Entry Screen" />
 				<set field="newHolidayFlag" value=""/>
 				<set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/humanres/images/employeeDate.js" global="true"/>
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/RosHoCompanyList.groovy"/>
 				<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/holidayList.groovy"/>
 			</actions>
