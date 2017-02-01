@@ -3736,13 +3736,21 @@
        <field name="completed" title="Shipped Qty"><display/></field>
      </form> 
           <form name="indentAnalyticsCSV" type="list" list-name="dataList" view-size="99999">
-<!--         <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
-                 <field name="partyId" title="RO"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field>   
-                 <field name="branch" title="Branch"><display/></field>   
-       <field name="totalRevenue" title=" Total Revenue"><display/></field>
+<!--        <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
+                 <field name="ro" title="Regional Office"><display /></field>
+                 <!-- <field name="partyId" title="partyId"><display/></field>  -->
+                 <field name="branch" title="Branch"><display /></field>  
        <field name="totalIndents" title="Total Indents"><display/></field>
-       <field name="inProcess" title="Pending "><display/></field>
-       <field name="completed" title="completed"><display/></field>
+       <field name="indentQtyInKgs" title="Indent Qty(Kgs)"><display/></field>
+       <field name="indentQty" title="Indent Qty(Kgs in Lakhs)"><display/></field>
+       <field name="totalRevenueInRs" title="Indent Amt(Rs)"><display/></field>
+        <field name="totalRevenue" title="Indent Amt(Rs in Lakhs)"><display/></field>
+       <field name="totPurchases" title="PO Issued"><display/></field>
+       <field name="totalPoQtyInKgs" title="Po Qty(Kgs)"><display/></field>
+        <field name="totalPoQty" title="Po Qty(Kgs in Lakhs)"><display/></field>
+       <field name="totalPoAmtInRs" title="Po Amt(Rs)"><display/></field>
+       <field name="totalPoAmt" title="Po Amt(Rs in Lakhs)"><display/></field>
+       <field name="pendingPOs" title="Pending POs"><display/></field>
      </form> 
     
      <form name="FindStockDetails" title="" type="single" target="StockDetails" header-row-style="header-row" default-table-style="basic-table">
