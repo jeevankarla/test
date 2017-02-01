@@ -2222,7 +2222,6 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
   	}
   	
 	public static Map<String, Object> populateIndentSummaryDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
-    	
 		Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();   
         Map<String, Object> result = new HashMap<String, Object>();
@@ -2261,7 +2260,6 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
             Roles = delegator.find("OrderRole", cond1, null, null, null, null);
             List<GenericValue> orderRoles = Roles.getCompleteList();
     		Roles.close();
-    		
             if (eli != null) {
                 // reset each order
                 GenericValue orderHeader = null;
@@ -2385,6 +2383,65 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         }
         result = ServiceUtil.returnSuccess("Successfully Populated Data In IndentSummaryDetails : ");
         return result;	
+	}
+	public static Map<String,Object> getIndentAndUpdateIndenSummaryDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");
+        String shipmentId = (String) context.get("shipmentId");
+        String invoiceId = (String) context.get("invoiceId");
+        GenericValue orderAssoc =null;
+        boolean enableIndentSummaryDetails=true;
+        try {
+        	 GenericValue tenantConfig = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyName", "Enable-Indent-Summary-Detail-Updation","propertyTypeEnumId","DASHBOARD-ANALYTICS"), false);
+             if(UtilValidate.isNotEmpty(tenantConfig) && "N".equals(tenantConfig.get("propertyValue"))){
+             	enableIndentSummaryDetails=false;
+             	return result;
+             }
+        	 GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+            // Getting indent Id from Purchase Order Id 
+            if(UtilValidate.isNotEmpty(orderHeader) && "PURCHASE_ORDER".equals(orderHeader.get("orderTypeId"))){
+            	orderId=(String)orderHeader.get("externalId");
+            }
+            // Getting Indent Id from Shipment Id 
+            if(UtilValidate.isNotEmpty(shipmentId)){
+            	GenericValue shipmentDeatil = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+            	if(UtilValidate.isNotEmpty(shipmentDeatil)){
+            		List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipmentDeatil.get("primaryOrderId")), null, null, null, false);
+                	orderAssoc=EntityUtil.getFirst(orderAssocList);
+                	orderId=(String)orderAssoc.get("toOrderId");
+            	}
+            }
+            // Getting Indent Id from Purchase Invoice 
+            if(UtilValidate.isNotEmpty(invoiceId)){
+            	GenericValue invoiceDeatil = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+            	if(UtilValidate.isNotEmpty(invoiceDeatil)){
+            		GenericValue shipmentDeatil = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", invoiceDeatil.get("shipmentId")), false);
+            		if(UtilValidate.isNotEmpty(shipmentDeatil)){
+                		List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipmentDeatil.get("primaryOrderId")), null, null, null, false);
+                    	orderAssoc=EntityUtil.getFirst(orderAssocList);
+                    	orderId=(String)orderAssoc.get("toOrderId");
+                	}
+            	}
+            }
+            // enable Tenant Configuration to papulate indent summary Details for analytics Screen Data 
+            if(enableIndentSummaryDetails){
+            	try{
+         			Map serviceResult  = dispatcher.runSync("runPopulateIndentSummaryDetails", UtilMisc.toMap("orderId", orderId));
+         			if (ServiceUtil.isError(serviceResult)) {
+         				result = ServiceUtil.returnSuccess("Error While Updating Indent Summary Details ");
+                    }
+          		}catch(GenericServiceException e){
+        			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+        		}
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+	   return result;
 	}
 	public static Map<String,Object> getOrderSummary(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();

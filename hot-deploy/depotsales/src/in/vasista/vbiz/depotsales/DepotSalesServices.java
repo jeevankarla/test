@@ -5074,7 +5074,14 @@ public class DepotSalesServices{
 			}
 			
 		}
-		 
+		try{
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", orderId));
+ 			if (ServiceUtil.isError(serviceResult)) {
+ 				Debug.logError("Error While Updateing Indent Summary Details", module);
+            }
+  		}catch(GenericServiceException e){
+			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+		} 
 		//Debug.log("orderId=========Final============"+orderId);
 		
 		result.put("orderId", orderId);
@@ -9789,6 +9796,14 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 			  return ServiceUtil.returnError("Problem cancelling OrderHeader");
 		}
 		
+	  try{
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", orderId));
+ 			if (ServiceUtil.isError(serviceResult)) {
+ 				return ServiceUtil.returnError("Error While Updateing Indent Summary Details");
+            }
+  		}catch(GenericServiceException e){
+			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+		}
 		result.put("salesChannelEnumId", salesChannelEnumId);
 		return result;
 	}

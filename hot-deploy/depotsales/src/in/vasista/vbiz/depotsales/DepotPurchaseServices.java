@@ -801,12 +801,17 @@ public class DepotPurchaseServices{
     			Debug.logError(e, "Failed to Populate Invoice ", module);
     		}*/
 	    	 
-		
-		
-		
+	    	try{
+	  			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("invoiceId", invoiceId));
+	  			if (ServiceUtil.isError(serviceResult)) {
+	  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+	  				return "error";
+	             }
+	   		}catch(GenericServiceException e){
+	 			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+	 		}
 	 		String invoiceSeq = org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, invoiceId);
 	 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId+" and Sequence : "+invoiceSeq);	  	 
-	 		
 	 		return "success";
 	 	}
 	
@@ -1992,8 +1997,16 @@ public class DepotPurchaseServices{
    	 
 	   //======================================================================================
     	 */
-		   
-		   
+	   
+	   try{
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("invoiceId", invoiceId));
+ 			if (ServiceUtil.isError(serviceResult)) {
+ 				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+ 				return "error";
+            }
+  		}catch(GenericServiceException e){
+			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+		} 
 		   
 
     	String invoiceSeq = org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, invoiceId);
@@ -3008,7 +3021,15 @@ public class DepotPurchaseServices{
     		}
         	
     	 }
-		
+    	 try{
+  			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("invoiceId", invoiceId));
+  			if (ServiceUtil.isError(serviceResult)) {
+  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+  				return "error";
+             }
+   		}catch(GenericServiceException e){
+ 			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+ 		}
 		
 
 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
@@ -4859,7 +4880,15 @@ public class DepotPurchaseServices{
         	
     	 }
 		
-		
+    	 try{
+  			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("invoiceId", invoiceId));
+  			if (ServiceUtil.isError(serviceResult)) {
+  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+  				return "error";
+             }
+   		}catch(GenericServiceException e){
+ 			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+ 		}
 
 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
 	
@@ -7946,7 +7975,14 @@ public class DepotPurchaseServices{
 						 } 
 					     
 					}
-			    
+					try{
+			 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", result.get("orderId")));
+			 			if (ServiceUtil.isError(serviceResult)) {
+			 				Debug.logError("Error While Updateing Indent Summary Details", module);
+			            }
+			  		}catch(GenericServiceException e){
+						Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+					}
 					
 					
 			request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	

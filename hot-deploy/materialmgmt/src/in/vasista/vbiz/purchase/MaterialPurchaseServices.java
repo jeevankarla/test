@@ -889,20 +889,17 @@ public class MaterialPurchaseServices {
 			}
 		
  		}
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-  		
-		
+ 		try{
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("shipmentId", shipmentId));
+ 			if (ServiceUtil.isError(serviceResult)) {
+ 				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+ 				return "error";
+            }
+  		}catch(GenericServiceException e){
+			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+		}
+ 		
+ 		
 		request.setAttribute("_EVENT_MESSAGE_", "Successfully made shipment with ID:"+shipmentId);
 		return "success";
 	}
@@ -4190,7 +4187,8 @@ public class MaterialPurchaseServices {
 	  	String primaryPurCahseOrderId = "";
 	  	
 	    BigDecimal totalDiscount=BigDecimal.ZERO;
-
+	    String indentId=null;
+	    
 	  	try{
 	  		//
 		  	for (int i = 0; i < rowCount; i++) {
@@ -4255,7 +4253,6 @@ public class MaterialPurchaseServices {
 						
 				}
 				List<GenericValue> orderAssoc =null;
-				String indentId=null;
 				try {
 					List conList2 = FastList.newInstance();
 					conList2.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS ,orderId));
@@ -4737,7 +4734,6 @@ public class MaterialPurchaseServices {
 				purchaseGrandTotal = purchaseGrandTotal.add(amount);
 			}
 			
-			
 			//Debug.log("purchaseGrandTotal================="+purchaseGrandTotal);
 			GenericValue orderHeaderDetailPur = null;
 			try{
@@ -4749,9 +4745,12 @@ public class MaterialPurchaseServices {
 				request.setAttribute("_ERROR_MESSAGE_", "Error in amending order");
 				return "error";
 	  	 	}
-			
-		  	
-			 request.setAttribute("orderId",primaryOrderId);
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", indentId));
+ 			if (ServiceUtil.isError(serviceResult)) {
+ 				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+ 				return "error";
+ 			}
+			request.setAttribute("orderId",primaryOrderId);
 		  	
 	  	}catch(Exception e){
 	  		Debug.logError(e, "Error in amending order, module");
@@ -5364,9 +5363,14 @@ public class MaterialPurchaseServices {
 			
 			
 		}
-		
-		
-		
+		try{
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", SaleOrderId));
+ 			if (ServiceUtil.isError(serviceResult)) {
+ 				Debug.logError("Error While Updateing Indent Summary Details", module);
+            }
+  		}catch(GenericServiceException e){
+			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+		}
 		return result;
 	}
 	

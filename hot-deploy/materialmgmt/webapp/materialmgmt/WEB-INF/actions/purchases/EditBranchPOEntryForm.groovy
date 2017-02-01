@@ -70,7 +70,7 @@
 	context.orderDateToCompPO=orderDateToCompPO;
 	//Debug.log("orderDateToCompPO =================" +orderDateToCompPO);
 	orderAdjustments = [];
-	
+	additionalChgs = [];
 	if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 		
 		orderInfoDetail = [:];
@@ -504,7 +504,7 @@
 		orderAdjustmentTypeIdsList = EntityUtil.getFieldListFromEntityList(orderAdjustmentTypeList, "orderAdjustmentTypeId", true);
 		
 		
-		additionalChgs = [];
+		
 		if(UtilValidate.isNotEmpty(orderAdjustments)){
 			additionalChgs = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.IN, orderAdjustmentTypeIdsList));
 		}
