@@ -274,7 +274,10 @@
          	<field-to-result field="responseMessage" result-name="successMessage"/>
          </if-not-empty>
     </simple-method>
-    
+    <simple-method method-name="DeleteHoliday" short-description="Delete Holiday Calender">
+        <entity-one entity-name="HolidayCalendar" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
     <simple-method method-name="createPerformanceNote" short-description="Create Performance Note">
         <make-value entity-name="PerformanceNote" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/>

@@ -14,9 +14,13 @@ import in.vasista.vbiz.byproducts.ByProductServices;
 RosHoList = [];
 tempMap1 = [:];
 if(!newHolidayFlag.equals("Y")){
-	tempMap1.put("orgPartyId", "COMPANY");
-	tempMap1.put("groupName", "NHDC");
+	tempMap1.put("orgPartyId", "COMPANY-All");
+	tempMap1.put("groupName", "All");
 	RosHoList.add(tempMap1);
+}else{
+tempMap1.put("orgPartyId", "COMPANY");
+tempMap1.put("groupName", "NHDC");
+RosHoList.add(tempMap1);
 }
 RosHoListIds = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"Company") , null, null, null, false );
 if(UtilValidate.isNotEmpty(RosHoListIds)){
@@ -30,6 +34,7 @@ if(UtilValidate.isNotEmpty(RosHoListIds)){
 			RosHoListName = EntityUtil.getFirst(RosHoListNames);
 			groupName = RosHoListName.groupName;
 			tempMap.put("groupName", groupName);
+			
 		}
 		RosHoList.add(tempMap);
 	}

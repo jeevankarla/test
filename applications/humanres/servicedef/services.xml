@@ -177,6 +177,26 @@ under the License.emplpunch
 		<attribute name="description" type="String" mode="IN"
 			optional="false"></attribute>
 	</service>
+	<service name="updateHoliday" engine="java"
+		location="in.vasista.vbiz.humanres.HumanresService" invoke="updateHoliday">
+		<description>Update a Holiday</description>
+		<attribute name="customTimePeriodId" type="String" mode="IN"
+			optional="true" />
+        <attribute name="organizationPartyId" mode="IN" type="String"></attribute>
+        <attribute name="prevHoliDayDate" mode="IN" type="Timestamp"
+			optional="true"></attribute>
+		<attribute name="holiDayDate" mode="IN" type="String"
+			optional="false"></attribute>
+		
+		<attribute name="description" type="String" mode="IN"
+			optional="false"></attribute>
+	</service>
+    <service name="DeleteHoliday" engine="simple" default-entity-name="HolidayCalendar"
+             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="DeleteHoliday" auth="true">
+        <description>Delete a PartySkill</description>
+        <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
     <service name="updateLateMins" engine="java" default-entity-name="EmplDailyAttendanceDetail"
     		location="in.vasista.vbiz.humanres.PayrollService" invoke="UpdateLateMins" auth="true">
     	<description>Upadate Late Minutes</description>
@@ -227,7 +247,6 @@ under the License.emplpunch
         <attribute name="payableDays" mode="IN" type="BigDecimal" optional="true"/> 
         <attribute name="remarks" mode="IN" type="String" optional="true"/>
     </service>
-
     <service name="deletePartySkill" engine="simple" default-entity-name="PartySkill"
              location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="deletePartySkill" auth="true">
         <description>Delete a PartySkill</description>

@@ -118,6 +118,16 @@ function datePicker1(){
 		}
 	});
 	
+	jQuery("#holiDayDate").datepicker({
+		dateFormat:'dd-mm-yy',
+		showSecond: true,
+		changeMonth: true,
+		changeYear: true,
+		yearRange: "-30:+0",
+		onSelect: function(selectedDate) {
+			jQuery("#holiDayDate").datepicker('setDate', selectedDate);
+		}
+	});
 	
 }
 function datePicker2(monthYearpckr){
