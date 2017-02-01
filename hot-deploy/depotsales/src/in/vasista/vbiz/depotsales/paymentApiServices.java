@@ -92,10 +92,12 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+
 import javax.net.ssl.HttpsURLConnection;
+
 import java.text.DecimalFormat;
 
-
+import java.util.Arrays;
 public class paymentApiServices {
 	
 	
@@ -215,36 +217,64 @@ public class paymentApiServices {
 		    
 		    Timestamp eventDate = null;
 			Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
-			  
-			SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-			SimpleDateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 			
-			if (UtilValidate.isNotEmpty(paymentDate)) {
-				 
-				try {
-					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
-				} catch (ParseException e) {
-					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
-					eventDate = UtilDateTime.nowTimestamp();
-					Debug.log("paymentDate============="+paymentDate);
-				} catch (NullPointerException e) {
-					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
-					eventDate = UtilDateTime.nowTimestamp();
-					Debug.log("paymentDate============="+paymentDate);
-				}
-			}
+			String txnRefNo = (String) context.get("txnRefNo");
+			GenericValue pgTrans = null;
+		    try {
+		    	pgTrans = delegator.findOne("PaymentGatewayTrans", UtilMisc.toMap("transactionId", txnRefNo), false);
+		    } catch (GenericEntityException e) {
+	            Debug.logError(e, "error fetching transactionId :"+txnRefNo, module);
+	            return ServiceUtil.returnError("error fetching transactionId :"+txnRefNo);
+	        }
+			
+		    if (UtilValidate.isNotEmpty(pgTrans)) {
+		    	String paymentChannel = pgTrans.getString("paymentChannel");
+		    	if(paymentChannel.equalsIgnoreCase("airtel")){
+		    		SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmmss");
+		    		try {
+						eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+					} catch (ParseException e) {
+						Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+						eventDate = UtilDateTime.nowTimestamp();
+						Debug.log("paymentDate============="+paymentDate);
+					} catch (NullPointerException e) {
+						Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+						eventDate = UtilDateTime.nowTimestamp();
+						Debug.log("paymentDate============="+paymentDate);
+					}
+		    	}
+		    	if(paymentChannel.equalsIgnoreCase("atom")){
+		    		SimpleDateFormat sdf1 = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+		    		try {
+						eventDate = new java.sql.Timestamp(sdf1.parse(paymentDate).getTime());
+					} catch (ParseException e) {
+						Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+						eventDate = UtilDateTime.nowTimestamp();
+						Debug.log("paymentDate============="+paymentDate);
+					} catch (NullPointerException e) {
+						Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+						eventDate = UtilDateTime.nowTimestamp();
+						Debug.log("paymentDate============="+paymentDate);
+					}
+		    	}
+		    	
+		    		    			  
+		    }
+			
+						  					
 	      
 			if (UtilValidate.isEmpty(paymentDate)) {
 	    	  eventDate = UtilDateTime.nowTimestamp();
 			}
 		    Debug.log("eventDate=============="+eventDate);
+		    String paymentId = "";
 		    try {
 		    	 Map<String, Object> OrderPref = ServiceUtil.returnSuccess();
 		    	 OrderPref = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
 		         orderPaymentPreferenceId = (String) OrderPref.get("orderPaymentPreferenceId");
 		         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"userLogin", userLogin, "purposeTypeId",purposeTypeId);
 		         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
-		         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
+		         paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
 		         result.put("paymentId",paymentId);
 		         GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
 		         if(UtilValidate.isNotEmpty(payment)){
@@ -258,6 +288,32 @@ public class paymentApiServices {
 					 Debug.logError(e, e.toString(), module);
 					  return ServiceUtil.returnError("AccountingTroubleCallingCreateOrderPaymentPreferenceService");	
 		  	}
+		    try {
+		    	String pgTransStatus = (String)context.get("txnStatus");
+			    String txnMessage = (String)context.get("txnMessage");
+		    	pgTrans.set("pgTransId",paymentRefNum);
+		    	pgTrans.set("pgTransDate",eventDate);
+		    	
+		    	if (UtilValidate.isNotEmpty(paymentId)) {
+		    		pgTrans.set("paymentId",paymentId);
+		    	}
+		    	if (UtilValidate.isNotEmpty(txnMessage)) {
+		    		pgTrans.set("pgTransMessage",txnMessage);
+		    	}
+		    	if(pgTransStatus.equalsIgnoreCase("SUC")){
+		    		pgTrans.set("pgTransStatus","SUCCESS");
+		    	}
+		    	else{
+		    		pgTrans.set("pgTransStatus","FAILED");
+		    	}
+		    	pgTrans.store();
+		    }
+		    catch (GenericEntityException e) {
+		    	Debug.logError("Error While Payment gateway trans", module);
+		    	return ServiceUtil.returnError("Error While Payment gateway trans" + txnRefNo);
+		    }	
+		    
+		    
 		 }
 
        return result;
@@ -268,6 +324,7 @@ public class paymentApiServices {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		
 		String orderId = (String)context.get("orderId");       
         String partyId = (String)context.get("partyId");
@@ -285,8 +342,7 @@ public class paymentApiServices {
         Date txnDate = new Date();
         String txnRefNo = generateTxnNum(txnDate,partyId, orderId);
     	String date = getDateInFormat(txnDate, "ddMMyyyyHHmmss");
-        
-        
+          
         try{
     		Map transMap = FastMap.newInstance();
     		Timestamp transDate = null;
@@ -317,9 +373,61 @@ public class paymentApiServices {
   	 	}
         
         if(paymentChannel.equalsIgnoreCase("airtel"))
-        {        	
-        	String mId = "25649255";
-        	String salt = "34602fa0";
+        {   
+        	String rosList[] = {"INT28","INT26","INT4","INT6","INT3","INT1","INT47","INT2"};
+        	String midList[] = {"25672457","25672458","25672459","25672460","25672461","25672462","25672463","25672464"};
+        	String saltList[] = {"fghjfgh456","fghjfgh457","fghjfgh458","fghjfgh459","fghjfgh460","fghjfgh461","fghjfgh462","fghjfgh463"};
+        	
+        	String userLoginParty = null;
+            if (userLogin != null && userLogin.get("partyId") != null) {
+        		userLoginParty = (String)userLogin.get("partyId");
+            }
+            Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+        	List conditionList = FastList.newInstance();
+            conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, userLoginParty));
+            conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
+            conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER" ));
+    		conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+    		conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+    		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+    				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
+    		List branchList = FastList.newInstance();
+    		try{
+    			branchList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
+        	}catch (GenericEntityException e) {
+    			// TODO: handle exception
+        		Debug.logError(e, module);
+    		}
+    		String roId = "";
+    		if(UtilValidate.isNotEmpty(branchList)){
+    			conditionList.clear();
+    			List roList = FastList.newInstance();
+    			try{
+    				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(branchList, "partyIdFrom", true)));
+    		        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION" ));
+    		        conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
+    				conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+    				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+    				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+    						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
+    				roList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
+    				if(UtilValidate.isNotEmpty(roList)){
+    					roId = EntityUtil.getFirst(roList).getString("partyIdFrom");
+    				}
+    	    	}catch (GenericEntityException e) {
+    				// TODO: handle exception
+    	    		Debug.logError(e, module);
+    			}
+    		}
+        	
+        	
+        	
+        	
+        	/*String mId = "25649255";
+        	String salt = "34602fa0";*/
+    		
+    		String mId = midList[Arrays.asList(rosList).indexOf(roId)];
+        	String salt = saltList[Arrays.asList(rosList).indexOf(roId)];
         	
         	String cur = "INR";        	
         	String url = initiatePaymentUrl(mId,txnRefNo,amtStr,date,salt,SucUrl,failUrl,cur,paymentMode,mobileNumber,email);
@@ -335,7 +443,10 @@ public class paymentApiServices {
         
         if(paymentChannel.equalsIgnoreCase("atom"))
         {
-    		resultMap.put("mId", "21089");
+            String transdate = getDateInFormat(txnDate, "dd/mm/yyyy HH:mm:ss");
+    		resultMap.put("txnId", txnRefNo);
+            resultMap.put("date", transdate);
+            resultMap.put("mId", "21089");
     		resultMap.put("password", "NHDC@1234");
     		resultMap.put("url","https://payment.atomtech.in/mobilesdk/param");
     		    		
