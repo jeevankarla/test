@@ -13834,7 +13834,8 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
    	    		schemeProductCategoryList = UtilMisc.toList("COTTON_40ABOVE","COTTON_UPTO40","SILK_YARN","WOOLYARN_BELOW10NM","WOOLYARN_10STO39NM","WOOLYARN_40SNMABOVE");
    	    	}
    	    	else if(schemeCategory.equals("MGPS")){
-   	    		schemeProductCategoryList.add("HANK"); 
+   	    		schemeProductCategoryList.add("HANK");
+   	    		schemeProductCategoryList.add("CONE");
    	    	}
    	    }
    	    
