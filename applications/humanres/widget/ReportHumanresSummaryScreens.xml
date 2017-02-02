@@ -2520,6 +2520,7 @@
    	<screen name="RegionalOfficeTotalsPdf">
 		<section>
 			<actions>
+			<set field="PayrollAnalysisFlag" value="RegionalOfficeTotalsPdf"/>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysisInternal.groovy"/>
 			</actions>
@@ -2534,6 +2535,7 @@
 	<screen name="NoteSheetReportPdf">
 		<section>
 			<actions>
+			<set field="PayrollAnalysisFlag" value=""/>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysisInternal.groovy"/>
 			</actions>
@@ -2548,6 +2550,7 @@
 	<screen name="EmployerCpfReportPdf">
 		<section>
 			<actions>
+			<set field="PayrollAnalysisFlag" value=""/>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/EmployeePayRollReport.groovy"/>
 			<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/employeeWisePayrollAnalysisInternal.groovy"/>
 			</actions>

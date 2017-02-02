@@ -23,7 +23,7 @@ under the License.
     
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"
-        margin-top="0.3in" margin-bottom="0.3in" margin-left=".5in" margin-right=".5in">
+        margin-top="0.3in" margin-bottom="0.3in" margin-left=".1in" margin-right=".5in">
           <fo:region-body margin-top="1.2in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
@@ -74,15 +74,22 @@ under the License.
                     	<fo:block text-align="center" font-weight="bold" font-size="10pt">Region</fo:block>
                     </fo:table-cell>
                     <#list columnKeys as columnKey>
+                    <#if (columnKey=="PAYROL_BEN_HRA=HRA") || (columnKey=="PAYROL_BEN_SALARY=Basic") || (columnKey=="PAYROL_DD_CF_FUND=CP Fund") || (columnKey=="PAYROL_BEN_DA=DA")>
                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="50px">
                     	<fo:block text-align="center" font-weight="bold" font-size="10pt">${columnKey.getValue()}</fo:block>
                     </fo:table-cell>
+                     <#else>
+                    <fo:table-cell number-columns-spanned="1" border-style="solid" width="40px">
+                    	<fo:block text-align="center" font-weight="bold" font-size="10pt">${columnKey.getValue()}</fo:block>
+                    </fo:table-cell>
+                     </#if>
+                    
                     </#list>
                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="50px">
                     	<fo:block text-align="center" font-weight="bold" font-size="10pt">Total Benefit</fo:block>
                     </fo:table-cell>
                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="50px">
-                    	<fo:block text-align="center" font-weight="bold" font-size="10pt">Total Deduction</fo:block>
+                    	<fo:block text-align="center" font-weight="bold" font-size="10pt">Total De- duction</fo:block>
                     </fo:table-cell>
                     <fo:table-cell number-columns-spanned="1" border-style="solid" width="50px">
                     	<fo:block text-align="center" font-weight="bold" font-size="10pt">Net Amt</fo:block>
@@ -121,7 +128,7 @@ under the License.
 	                    		<fo:block text-align="center">${slNo}</fo:block>
 	                    	</fo:table-cell>-->
 	                    	<fo:table-cell border-style="solid">
-	                    		<fo:block text-align="left" font-weight="bold">${region}</fo:block>
+	                    		<fo:block text-align="left" font-weight="bold">${region?if_exists}</fo:block>
 	                    	</fo:table-cell>
 	                    	<#list columnKeys as columnKey>
                     		<fo:table-cell border-style="solid">
@@ -149,6 +156,7 @@ under the License.
 	                    </fo:table-row>	
 	                    <#assign slNo = slNo+1>
 	        		</#list>
+	        		
 	        		<fo:table-row><fo:table-cell></fo:table-cell></fo:table-row>
 	        		<fo:table-row border-style="solid">
 	        			<#--><fo:table-cell>
@@ -182,7 +190,7 @@ under the License.
 			<fo:page-sequence master-reference="main">
 				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 			   		 <fo:block font-size="14pt">
-			        	${uiLabelMap.NoOrdersFound}.
+			        	         No Orders Found.
 			   		 </fo:block>
 				</fo:flow>
 			</fo:page-sequence>	
