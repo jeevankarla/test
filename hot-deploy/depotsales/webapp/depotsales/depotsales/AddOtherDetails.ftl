@@ -3,8 +3,6 @@
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/liquidmetal.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jquery.flexselect-0.5.3/jquery.flexselect.js</@ofbizContentUrl>"></script>
-<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.js</@ofbizContentUrl>"></script>
-<link type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/multiSelect/jquery.multiselect.css</@ofbizContentUrl>" rel="Stylesheet" />
 
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />
 <link href="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.css</@ofbizContentUrl>" rel="stylesheet">
@@ -49,7 +47,7 @@ function getFecilityAddressDetailAjax(){
 
           //alert(supplierId);
           
-          $('div#orderSpinn').html('<img src="/images/gears.gif" height="50" width="50">');
+          $('div#orderSpinn').html('<img src="/images/supplier_loading.gif" height="50" width="50">');
 
          var dataJson = {"supplierId": supplierId};
 					      
@@ -133,7 +131,7 @@ function drawRow(rowData) {
     
     var TstateProvinceGeoIdVal = '\'' + rowData.TstateProvinceGeoIdVal + '\'';
     
-    var viewButton = rowData.facilityName+"/"+rowData.Ncity;
+    var viewButton = '\'' + rowData.facilityName+" ("+rowData.Ncity+")" + '\'';
     
     var customMethod = "javascript:viewFacilityAddressDetail("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+")";
     var inputbox ='<input type=button name="viewAddress" id=viewAddress value='+viewButton+' onclick="'+customMethod+'">';
@@ -159,7 +157,7 @@ function drawRow(rowData) {
     var TcontactMechId = '\'' + rowData.TcontactMechId + '\'';    
     
     var removeAddress = "javascript:removeFacilityAddress("+ facilityId + ","+ NcontactMechId + ","+TcontactMechId+")";
-    var removeFaciAddress ='<input type=button name="removeFaci" id=removeFaci value="Remove" onclick="'+removeAddress+'">';
+    var removeFaciAddress ='<input type=button name="removeFaci" class="delete" id=removeFaci value="Remove" onclick="'+removeAddress+'">';
     
     row.append($("<td>" +  removeFaciAddress  +"</td>"));
   
@@ -237,10 +235,11 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 		}); 
          
 
-         $('#addressTable tr').click(function () {
-           var rowIndex = $('#addressTable tr').index(this); 
-             if(rowIndex != -1)
-              document.getElementById("addressTable").deleteRow(rowIndex);  
+           $('#addressTable tr').click(function () {
+             $(".delete").live('click', function(event) {
+	          $(this).parent().parent().remove();
+           });
+              
           });
 
 }
@@ -435,7 +434,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	   
 	      $("#saveButton").hide();
 	   
-	      $('div#orderSpinn').html('<img src="/images/gears.gif" height="50" width="50">');
+	      $('div#orderSpinn').html('<img src="/images/supplier_loading.gif" height="50" width="50">');
 	   
 	      
 	     
@@ -512,7 +511,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	 
 if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && facilityName.length !=0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && supplierId.length != 0){
 		
-		    $('div#orderSpinn').html('<img src="/images/gears.gif" height="50" width="50">');
+		    $('div#orderSpinn').html('<img src="/images/supplier_loading.gif" height="50" width="50">');
 		   jQuery.ajax({
                 url: 'otherAddressStore',
                 type: 'POST',
