@@ -1862,7 +1862,7 @@
        		<link target="OrderAnalytics"/>
        	</menu-item> -->		          
 		<menu-item name="BranchSalesOrder" title="${uiLabelMap.IndentEntry}">
-       		<link target="SilkBranchSalesOrder"/>
+       		<link target="DyesSalesOrder"/>
        	</menu-item>
        	<!-- <menu-item name="FindRequirement" title="${uiLabelMap.Requirements}">
         	<link target="FindRequirement">
