@@ -2765,13 +2765,13 @@
     
     
     <view-map name="CottonBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CottonBranchSalesOrder"/>
-    <view-map name="DyesSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DyesSalesOrder"/>
-    <view-map name="DyesMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DyesMultiBranchSalesOrder"/>
-    <view-map name="ChemicalMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChemicalMultiBranchSalesOrder"/>
+    <view-map name="DyesSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DyesSalesOrder"/>
+    <view-map name="DyesMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DyesMultiBranchSalesOrder"/>
+    <view-map name="ChemicalMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#ChemicalMultiBranchSalesOrder"/>
     
     
     
-    <view-map name="ChemicalSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ChemicalSalesOrder"/>
+    <view-map name="ChemicalSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#ChemicalSalesOrder"/>
     <view-map name="OtherBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#OtherBranchSalesOrder"/>
     <view-map name="MultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MultiBranchSalesOrder"/>
     <view-map name="SilkMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SilkMultiBranchSalesOrder"/>
