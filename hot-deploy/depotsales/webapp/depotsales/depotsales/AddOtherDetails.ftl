@@ -47,7 +47,7 @@ function getFecilityAddressDetailAjax(){
 
           //alert(supplierId);
           
-          $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="50" width="50">');
+          $('div#orderSpinn').html('<img src="/images/supplier_loading.gif" height="50" width="50">');
 
          var dataJson = {"supplierId": supplierId};
 					      
@@ -434,7 +434,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	   
 	      $("#saveButton").hide();
 	   
-	      $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="50" width="50">');
+	      $('div#orderSpinn').html('<img src="/images/supplier_loading.gif" height="50" width="50">');
 	   
 	      
 	     
@@ -511,7 +511,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	 
 if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && facilityName.length !=0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && supplierId.length != 0){
 		
-		    $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="50" width="50">');
+		    $('div#orderSpinn').html('<img src="/images/supplier_loading.gif" height="50" width="50">');
 		   jQuery.ajax({
                 url: 'otherAddressStore',
                 type: 'POST',
