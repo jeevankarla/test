@@ -3918,6 +3918,13 @@
 		<field name="amount" title="Amount(Rs)"><display></display></field>
 		<field name="paymentChannel" title="Payment Channel"><display></display></field>
 		<field name="paymentMode" title="Payment Mode"><display></display></field>
+		
+		<field name="pgTransId" title="PG Trans Id"><display></display></field>
+		<field name="pgTransDate" title="PG Trans Date"><display></display></field>
+		<field name="pgTransStatus" title="PG Trans Status"><display></display></field>
+		<field name="pgTransMessage" title="PG Trans Message"><display></display></field>
+		<field name="paymentId" title="ERP Payment Id"><display></display></field>		
+		
 		<field name="inquiry" title="Inquiry" use-when="true" widget-style="buttontext">
            <hyperlink also-hidden="false" description="Inquiry" target="TransactionInquiry" target-window="_blank">
                 <parameter param-name="transactionId"/>

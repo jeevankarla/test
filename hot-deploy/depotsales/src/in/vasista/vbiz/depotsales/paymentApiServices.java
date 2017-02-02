@@ -302,9 +302,11 @@ public class paymentApiServices {
 		    	}
 		    	if(pgTransStatus.equalsIgnoreCase("SUC")){
 		    		pgTrans.set("pgTransStatus","SUCCESS");
+		    		pgTrans.set("transactionStatus","SUCCESS");
 		    	}
 		    	else{
 		    		pgTrans.set("pgTransStatus","FAILED");
+		    		pgTrans.set("transactionStatus","FAILED");
 		    	}
 		    	pgTrans.store();
 		    }
