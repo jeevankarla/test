@@ -213,6 +213,67 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				
 			</form>
           </tr>
+          <tr class="alternate-row">
+      	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCrDepot.pdf</@ofbizUrl>" target="_blank">        
+             <td width="10%">Party Financial History With Dr/Cr</td>
+             <td width="10%">From</br><input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></br>
+      		 To</br><input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
+             <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></br>
+            Party Type :</br><select name="partyClassificationGroupId" id="partyClassificationGroupId">
+			    <option value=''></option>
+                <option value='INDIVIDUAL_WEAVERS'>Individual Weavers</option>
+                <option value='OTHERS'>Others</option>
+  			 </select></td>	
+            <td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  						<#list roleTypeAttrList as list>
+                         <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
+                         </#list> 
+  						</select></br>
+             <span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+				 <option value=""></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
+			   <td width="10%"></td>
+             <td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
+             <td width="10%"></td>
+           </form>
+        </tr>
+        <tr class="alternate-row">
+    	<form id="CashPaymentCheckList" name="CashierPaymentCheckList" method="post"  target="_blank" action="<@ofbizUrl>CashierPaymentCheckListDepot</@ofbizUrl>">	
+  			<td width="30%">Cash Payment CheckList Report<input  type="hidden"  value="CashPaymentCheckList"   name="reportTypeFlag"/> 
+  				<input  type="hidden"  value="CASH_PAYIN"   name="paymentMethodTypeId"/>
+  			</td>
+  			<td width="15%">Date<input  type="text" size="18pt" id="CASHFromDateId" readonly  name="paymentDate"/></td>
+  			<td width="15%">
+  			    <input  type="hidden"  name="routeId" value="All"/>
+  			</td>
+  			<td width="10%"></td>
+  			<td width="10%"></td>
+			<td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>
+			<td width="10%"></td>
+		</form>	
+      </tr>
+      <tr class="alternate-row">
+    	<form id="agencyWiseInvoiceOutstandingReport" name="agencyWiseInvoiceOutstandingReport" method="post"  target="_blank" action="<@ofbizUrl>agencyWiseInvoiceOutstandingReport</@ofbizUrl>">	
+  			<td width="30%"> Agency Wise Invoice Outstanding Report</td>
+  			<td width="15%">Date<input  type="text" size="18pt" id="AWIORDate"   name="AWIORDate"/></td>
+  			
+			<td width="10%">ReportType :<select name="reportType" id="reportType">
+                <option value='CREDITORS'>CREDITORS</option>
+                <option value='DEBITORS'>DEBITORS</option>
+  			 </select></td>	
+			<td width="10%"></td>
+			<td width="10%"></td>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('agencyWiseInvoiceOutstandingReport', '<@ofbizUrl>agencyWiseInvoiceOutstandingReport.pdf</@ofbizUrl>');" class="buttontext"/></td> 
+				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('agencyWiseInvoiceOutstandingReport', '<@ofbizUrl>agencyWiseInvoiceOutstandingReport.csv</@ofbizUrl>');" class="buttontext"/></td> 	       			
+				
+		</form>	
+      </tr>
 		</#if>
 		<#if ReportsType?has_content &&  ReportsType=="INDENT_REPORTS">
 			 <tr class="alternate-row">
@@ -308,6 +369,47 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			</td>
   			<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('indentVsDispatch', '<@ofbizUrl>IndentVsDispatch.pdf</@ofbizUrl>');" class="buttontext"/></td>        			
 			<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('indentVsDispatch', '<@ofbizUrl>IndentVsDispatchCSV.csv</@ofbizUrl>');" class="buttontext"/></td>        			
+		</form>	
+      </tr>
+      <tr class="alternate-row">
+      	   <form id="partyAbsractDetails" name="partyAbsractDetails" method="post" action="<@ofbizUrl>partyAbsractDetails.csv</@ofbizUrl>" target="_blank">        
+             <td width="10%">Party Quota Details</td>
+             <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="abstrctFromDate" readonly  name="abstrctFromDate"/></br>
+      		 To</br><input  type="text" size="15pt" id="abstrctThruDate" readonly  name="abstrctThruDate"/></td>
+             <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="partyAbsractDetails" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
+           <#-->  <td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  						<#list roleTypeAttrList as list>
+                         <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
+                         </#list> 
+  						</select></td>
+  		   <td width="10%">Party Type :<select name="partyClassificationGroupId" id="partyClassificationGroupId">
+			    <option value=''></option>
+                <option value='INDIVIDUAL_WEAVERS'>Individual Weavers</option>
+                <option value='OTHERS'>Others</option>
+  			 </select></td>	 -->			
+             <td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+				 	<option value=""></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
+			  <td width="10%"></td>
+			  <td width="10%"></td>
+             <td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
+           </form>
+        </tr>
+        <tr class="alternate-row">
+    	<form id="mobilehits" name="mobilehits" method="post"  target="_blank" action="<@ofbizUrl>MobileHitsReport.csv</@ofbizUrl>">	
+  			<td width="30%" nowrap>Mobile Hits Report</td>
+  			<td width="15%">From</br><input  type="text" size="18pt" id="mobileHitsFromDate" readonly  name="mobileHitsFromDate"/></td>
+  			<td width="15%">To</br><input  type="text" size="18pt" id="mobileHitsThruDate" readonly  name="mobileHitsThruDate"/></td>
+  			<td width="10%"></td>
+  			<td width="10%"></td>
+			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
+			<td width="10%"></td>
 		</form>	
       </tr>
 		</#if>
@@ -808,13 +910,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
  		
           
            
-          <tr class="alternate-row">
+          <#--<tr class="alternate-row">
       	   <form id="PartyFinancialHistoryWithDrCr" name="PartyFinancialHistoryWithDrCr" method="post" action="<@ofbizUrl>PartyFinancialHistoryWithDrCrDepot.pdf</@ofbizUrl>" target="_blank">        
              <td width="10%">Party Financial History With Dr/Cr</td>
              <td width="10%">From</br><input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></br>
       		 To</br><input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
              <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
-            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></br>
+            <#--> 
+            <#--<input type="text" name="partyId" id="partyId" size="10" maxlength="22"></br>
             Party Type :</br><select name="partyClassificationGroupId" id="partyClassificationGroupId">
 			    <option value=''></option>
                 <option value='INDIVIDUAL_WEAVERS'>Individual Weavers</option>
@@ -844,7 +947,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
              <td width="10%">Party Quota Details</td>
              <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="abstrctFromDate" readonly  name="abstrctFromDate"/></br>
       		 To</br><input  type="text" size="15pt" id="abstrctThruDate" readonly  name="abstrctThruDate"/></td>
-             <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="partyAbsractDetails" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+             <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="partyAbsractDetails" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>-->
             <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
            <#-->  <td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
   						<#list roleTypeAttrList as list>
@@ -856,7 +959,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
                 <option value='INDIVIDUAL_WEAVERS'>Individual Weavers</option>
                 <option value='OTHERS'>Others</option>
   			 </select></td>	 -->			
-             <td width="15%"><span class='h3'>Branch
+             <#--<td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId">
 				 	<option value=""></option>
 				     <#list  formatList as formatList>
@@ -899,7 +1002,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('agencyWiseInvoiceOutstandingReport', '<@ofbizUrl>agencyWiseInvoiceOutstandingReport.csv</@ofbizUrl>');" class="buttontext"/></td> 	       			
 				
 		</form>	
-      </tr>
+      </tr>-->
       <#--<tr class="alternate-row">
     	<form id="stockStatement" name="stockStatement" method="post"  target="_blank" action="<@ofbizUrl>StockStatementReport.pdf</@ofbizUrl>">	
   			<td width="30%" nowrap>Stock Statement Report</td>
@@ -912,7 +1015,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 		</form>	
       </tr>-->
       
-      <tr class="alternate-row">
+      <#--<tr class="alternate-row">
     	<form id="mobilehits" name="mobilehits" method="post"  target="_blank" action="<@ofbizUrl>MobileHitsReport.csv</@ofbizUrl>">	
   			<td width="30%" nowrap>Mobile Hits Report</td>
   			<td width="15%">From</br><input  type="text" size="18pt" id="mobileHitsFromDate" readonly  name="mobileHitsFromDate"/></td>
@@ -922,7 +1025,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			<td width="10%"><input type="submit" value="CSV" class="buttontext"/></td>
 			<td width="10%"></td>
 		</form>	
-      </tr>
+      </tr>-->
      
      
        
@@ -938,7 +1041,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
       </tr>-->
      
      
-      <#--> <tr class="alternate-row">
+      <#-- <tr class="alternate-row">
       	   <form id="reimburcentTransporterReport" name="reimburcentTransporterReport" method="post" action="<@ofbizUrl>reimburcentTransporterReport.csv</@ofbizUrl>" target="_blank">        
              <td width="10%">Reimbursment Transporter Report</td>
              <td width="10%">&nbsp;From<input  type="text" size="15pt" id="reimburcentTransporterFRO" readonly  name="partyfromDate"/></td>

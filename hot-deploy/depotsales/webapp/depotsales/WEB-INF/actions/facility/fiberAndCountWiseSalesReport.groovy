@@ -171,20 +171,20 @@ headerData2=[:];
 headerData2.put("prodcatName", "______");
 headerData2.put("productName", "______");
 headerData2.put("partyName", "______");
-headerData2.put("orderQty", "___Fiberand___");
+headerData2.put("orderQty", "___Fiber and___");
 /*headerData2.put("BdlWt", "___Fiberand___");*/
 headerData2.put("rate", "_ Countwise");
-headerData2.put("orderValue", "____ SalesReport_______");
+headerData2.put("orderValue", "____ Sales Report_______");
 finalCSVList.add(headerData2);
 
 headerData=[:];
-headerData.put("prodcatName", "Product category");
-headerData.put("productName", "product count");
-headerData.put("partyName", "partyName");
-headerData.put("orderQty", "orderQty");
+headerData.put("prodcatName", "Product Category");
+headerData.put("productName", "Product Count");
+headerData.put("partyName", "Party Name");
+headerData.put("orderQty", "Order Qty(kgs)");
 /*headerData.put("BdlWt", "BdlWt");*/
-headerData.put("rate", "rate");
-headerData.put("orderValue", "orderValue");
+headerData.put("rate", "Rate");
+headerData.put("orderValue", "Order Value");
 finalCSVList.add(headerData);
 for(productCategoryId in productCategoryIds){
 	tempCSVMap1=[:];
@@ -194,12 +194,12 @@ for(productCategoryId in productCategoryIds){
 	if(UtilValidate.isNotEmpty(productCategoryDetails)){
 		prodCatName=productCategoryDetails.description
 	}
-	tempCSVMap1.put("partyName", "");
+	/*tempCSVMap1.put("partyName", "");
 	tempCSVMap1.put("orderQty", "");
-	/*tempCSVMap1.put("BdlWt", "");*/
+	//tempCSVMap1.put("BdlWt", "");
 	tempCSVMap1.put("rate", "");
 	tempCSVMap1.put("orderValue", "");
-	finalCSVList.add(tempCSVMap1);
+	finalCSVList.add(tempCSVMap1);*/
 	singleCatProducts = EntityUtil.filterByCondition(produtCategorieMember, EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
 	singleProductIds=EntityUtil.getFieldListFromEntityList(singleCatProducts, "productId", true);
 	
@@ -217,12 +217,12 @@ for(productCategoryId in productCategoryIds){
 		
 		if(UtilValidate.isNotEmpty(singleCatProductsOrdersDetail)){
 			productDetails = delegator.findOne("Product",[productId : singleCatProductsOrdersDetail.productId] , false);
-			tempCSVMap2.put("partyName", "");
+			/*tempCSVMap2.put("partyName", "");
 			tempCSVMap2.put("orderQty", "");
-			/*tempCSVMap2.put("BdlWt", "");*/
+			//tempCSVMap2.put("BdlWt", "");
 			tempCSVMap2.put("rate", "");
 			tempCSVMap2.put("orderValue", "");
-			finalCSVList.add(tempCSVMap2);
+			finalCSVList.add(tempCSVMap2);*/
 			
 		}
 		
