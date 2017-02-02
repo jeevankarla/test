@@ -9797,7 +9797,7 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 		}
 		
 	  try{
- 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", orderId));
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", orderId,"puposeType","CancelSaleOrder"));
  			if (ServiceUtil.isError(serviceResult)) {
  				return ServiceUtil.returnError("Error While Updateing Indent Summary Details");
             }

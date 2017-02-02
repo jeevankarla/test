@@ -2392,9 +2392,16 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         String orderId = (String) context.get("orderId");
         String shipmentId = (String) context.get("shipmentId");
         String invoiceId = (String) context.get("invoiceId");
+        String puposeType = (String) context.get("puposeType");
         GenericValue orderAssoc =null;
         boolean enableIndentSummaryDetails=true;
         try {
+        	 if("CancelSaleOrder".equals(puposeType)){
+        		 GenericValue indentSummaryDetails = delegator.findOne("IndentSummaryDetails", UtilMisc.toMap("orderId", orderId), false);
+        		 if(UtilValidate.isNotEmpty(indentSummaryDetails)){
+        			 indentSummaryDetails.remove();
+        		 }
+        	 }
         	 GenericValue tenantConfig = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyName", "Enable-Indent-Summary-Detail-Updation","propertyTypeEnumId","DASHBOARD-ANALYTICS"), false);
              if(UtilValidate.isNotEmpty(tenantConfig) && "N".equals(tenantConfig.get("propertyValue"))){
              	enableIndentSummaryDetails=false;
@@ -2689,28 +2696,35 @@ public static Map<String, Object> periodPopulateShipmentTotals(DispatchContext d
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp thruDate = (Timestamp) context.get("thruDate");
+        String inShipmentId = (String) context.get("shipmentId");
 
         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
         EntityCondition cond = null;
         List condList = FastList.newInstance();
-        if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+        if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate) && UtilValidate.isEmpty(inShipmentId)){
         	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
         	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
         }
-		//condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_PURCHASE"));
-		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
-		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-        cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+        if(UtilValidate.isEmpty(inShipmentId)){ 
+        	//condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_PURCHASE"));
+    		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+    		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+    		cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+        }
         EntityListIterator orderItr = null;
         try {
-        	    orderItr = delegator.find("OrderHeader", cond, null,  UtilMisc.toSet("orderId"), null, null);
-                // reset each order
-            	List orderIdList=EntityUtil.getFieldListFromEntityListIterator(orderItr, "orderId", true);
-            	List conditionlist = FastList.newInstance();
-				conditionlist.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.IN, orderIdList));
-				conditionlist.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+        	    List conditionlist = FastList.newInstance();
+        	    if(UtilValidate.isEmpty(inShipmentId)){
+        	    	orderItr = delegator.find("OrderHeader", cond, null,  UtilMisc.toSet("orderId"), null, null);
+                    // reset each order
+                	List orderIdList=EntityUtil.getFieldListFromEntityListIterator(orderItr, "orderId", true);
+    				conditionlist.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.IN, orderIdList));
+    				conditionlist.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+        	    }
+        	    if(UtilValidate.isNotEmpty(inShipmentId)){ 
+        	    	conditionlist.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS,inShipmentId));
+                }
 				EntityCondition condition =EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
-				
 				try{
 					EntityListIterator shipmentItr = delegator.find("Shipment", condition, null,  UtilMisc.toSet("shipmentId","primaryOrderId","createdDate"), null, null);
 					if (shipmentItr != null) {
