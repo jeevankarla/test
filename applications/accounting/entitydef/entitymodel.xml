@@ -420,6 +420,7 @@
 		<field name="categoryTypeEnum" type="id"></field>
 		<field name="finAccountPin" type="long-varchar" encrypt="true"></field>
 		<field name="currencyUomId" type="id-ne" />
+		<field name="costCenterId" type="id"></field>
 		<field name="organizationPartyId" type="id">
 			<description>The internal organization Party that owns (or rather, is liable for) the account.</description>
 		</field>
@@ -594,6 +595,7 @@
 		<field name="contraRefNum" type="short-varchar"></field>
 		<field name="performedByPartyId" type="id"></field>
 		<field name="reasonEnumId" type="id"></field>
+		<field name="costCenterId" type="id"></field>
 		<field name="realisationDate" type="date-time"></field>
 		<field name="comments" type="comment"></field>
 		<field name="statusId" type="id"></field>
