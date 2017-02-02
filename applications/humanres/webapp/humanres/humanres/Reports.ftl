@@ -873,7 +873,6 @@ function setOrgPartyId() {
 										<td width="23%"><span class='h3'>Bank Request Letter</span></td>
 										<td width="30%"><span class='h3'>Bank</span>
 											<select name="finAccountId" class='h4'>
-												<option value='All'>All</option>
 												<#list companyAccList as bank>    
 													<option value='${bank.finAccountId?if_exists}'>${bank.finAccountName?if_exists}</option>
 												</#list> 
