@@ -58,18 +58,23 @@ if(UtilValidate.isNotEmpty(selectedInvoicesList)){
 	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	
 	invoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
-	
+ 
 	double totalAmout = 0;
 	BigDecimal totalQuantity = 0;
 	
 	for (eachItem in invoiceItem) {
-		 totalAmout = totalAmout+eachItem.itemValue;
-		 
-		 if(eachItem.invoiceItemTypeId == "INV_FPROD_ITEM" || eachItem.invoiceItemTypeId == "INV_RAWPROD_ITEM")
-		 totalQuantity = totalQuantity.add(eachItem.quantity);
+		if(UtilValidate.isNotEmpty(eachItem.itemValue)){
+			totalAmout = totalAmout+eachItem.itemValue;
+		}else{		
+		  totalAmout = totalAmout+Math.round(eachItem.amount*eachItem.quantity);
+		}
+		 if(eachItem.invoiceItemTypeId == "INV_FPROD_ITEM" || eachItem.invoiceItemTypeId == "INV_RAWPROD_ITEM"){
+			 
+			 if(eachItem.quantity)
+			 totalQuantity = totalQuantity.add(eachItem.quantity);
+		 }
 	}
 	 totalQuantity = (totalQuantity.setScale(2, rounding));
-	
 	JSONObject tempMap = new JSONObject();
 	
 	tempMap.put("totalAmout", totalAmout);

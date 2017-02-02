@@ -103,15 +103,59 @@ function datepick()
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 	}
-//<![CDATA[
+//<![CDATA[	
 
-    function toggleInvoiceId(master) {
+function getInvoiceRunning(){
+		
+		var selectedInvoices = [];
+		var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
+		
+		 jQuery.each(invoices, function() {
+            if (jQuery(this).is(':checked')) {
+            	var invId = $(this).val();        
+            	selectedInvoices.push(invId);
+            }          
+        });      	 
+         if(selectedInvoices.length){
+        var dataJson = {"selectedInvoices": JSON.stringify(selectedInvoices)};       			    			 
+        jQuery.ajax({
+        		
+                url: 'getSalePurchaseValues',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+               
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						var invoiceItemList = result["invoiceItemList"];
+					var totalAmout = invoiceItemList[0].totalAmout;
+					
+					var totalQuantity = invoiceItemList[0].totalQuantity;
+						
+						jQuery('#showInvoiceRunningTotal').html(totalAmout + '  (' + selectedInvoices.length + ')');
+						
+						jQuery('#showInvoiceRunningTotalQuantity').html(totalQuantity);
+               		}
+               	}							
+		});
+        
+        }else{
+        
+             jQuery('#showInvoiceRunningTotal').html('')
+        
+        		jQuery('#showInvoiceRunningTotalQuantity').html('');
+        }             
+        }
+		
+      function toggleInvoiceId(master) {
         var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
 
         jQuery.each(invoices, function() {
             this.checked = master.checked;
         });
-        getInvoiceRunningTotal();
+        getInvoiceRunning();
     }
 
     function getInvoiceRunningTotal() {
@@ -354,6 +398,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
     <span class="label">${uiLabelMap.AccountingTotalInvoicesCount} :${invoiceList?size}</span>  
     <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} (${uiLabelMap.AccountingSelectedInvoicesCount}) :</span>
     <span class="label" id="showInvoiceRunningTotal"></span>
+    <span class="label">Quantity : </span> 
+    <span class="label" id="showInvoiceRunningTotalQuantity"></span>
   </div>
   <form name="listInvoices" id="listInvoices"  method="post" action="">
     <div align="right">
@@ -404,9 +450,9 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>Invoice voucher</td>
           <td>Cancel</td> 
          <#--- <td>Invoice voucher</td>-->
-         <#-- <td>Make Payment</td> 
+         <#-- <td>Make Payment</td> -->
          
-         <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>-->
+         <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>
       </thead>
       <tbody>
@@ -475,8 +521,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 <#else>
                <td align="center"></td>
                </#if> -->
-              <#-->
-              <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>-->
+              
+              <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunning();"/></td>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>

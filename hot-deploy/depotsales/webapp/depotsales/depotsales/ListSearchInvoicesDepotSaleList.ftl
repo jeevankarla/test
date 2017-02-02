@@ -152,8 +152,8 @@ var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
             }
             
         });
-        
-        
+       
+       
         if(selectedInvoices.length){
         var dataJson = {"selectedInvoices": JSON.stringify(selectedInvoices)};
 		
@@ -521,7 +521,7 @@ function roundingInvoiceItems(invoiceId){
     <span class="label" id="showInvoiceRunningTotal"></span>
     
     
-      <span class="label">Quntity : </span>
+      <span class="label">Quantity : </span>
     
     <span class="label" id="showInvoiceRunningTotalQuantity"></span>
     
