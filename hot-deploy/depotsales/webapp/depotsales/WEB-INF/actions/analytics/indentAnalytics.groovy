@@ -222,7 +222,11 @@ if(UtilValidate.isNotEmpty(thruDate)){
 		 	else {
 		 		totDetails = [:];
 		 		totDetails.putAt("totIndents", 1);
-				totDetails.putAt("totPurchases", 1);
+				if (DataMap.containsKey(partyId) && DataMap.get(partyId).get("totPurchases")>0 ) {
+					totDetails.putAt("totPurchases", 1);
+				}else{
+					totDetails.putAt("totPurchases", 0);
+				}
 				totDetails.putAt("totQty", totalQty);
 				totDetails.putAt("poQty", totalPoQty);
 				totDetails.putAt("poAmt", totalPoAmt);

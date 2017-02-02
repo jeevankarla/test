@@ -696,9 +696,10 @@
     </service>
     <service name="getIndentAndUpdateIndenSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getIndentAndUpdateIndenSummaryDetails">
         <description>get Indent And Update IndenSummaryDetails Entity</description>
-        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/> 
         <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+        <attribute name="puposeType" type="String" mode="IN" optional="true"/>
     </service>
      <service name="runPeriodPopulateIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulationIndentSummaryDetails" transaction-timeout="6000000">
          <description>populate Order Summary </description>
@@ -724,6 +725,7 @@
         <attribute name="saleBillQty" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="saleBillAmt" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="saleBillTenPrcAmt" mode="OUT" type="BigDecimal" optional="false"></attribute>
+        <attribute name="invoiceIds" mode="OUT" type="List" optional="false"></attribute>
     </service>
     <service name="getPurchaseBillDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getPurchaseBillDetails">
         <description>Populate Purchase Invoice Details </description>

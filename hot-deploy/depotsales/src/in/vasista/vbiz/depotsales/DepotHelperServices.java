@@ -2326,8 +2326,17 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillAmt"))){
 	                        saleBillAmt=(BigDecimal)saleBillresultCtx.get("saleBillAmt");
 	                    } 
-	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillTenPrcAmt"))){
-	                    	saleBillTenPrcAmt=(BigDecimal)saleBillresultCtx.get("saleBillTenPrcAmt");
+	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("invoiceIds"))){
+	                    	conditionList.clear();
+	                    	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, saleBillresultCtx.get("invoiceIds")));
+	                    	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+							EntityListIterator invoiceItemItr = delegator.find("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null,UtilMisc.toSet("amount"), null, null);
+							GenericValue invoiceItem = null;
+							 while ((invoiceItem = invoiceItemItr.next()) != null) {
+								 saleBillTenPrcAmt=saleBillTenPrcAmt.add(invoiceItem.getBigDecimal("amount"));
+							 }
+							 invoiceItemItr.close();
+	                    	//saleBillTenPrcAmt=(String)saleBillresultCtx.get("invoiceId");
 	                    } 
 	                    Map purBillresultCtx = dispatcher.runSync("getPurchaseBillDetails", UtilMisc.toMap("userLogin", userLogin, "orderId", indentId));
                         if (ServiceUtil.isError(purBillresultCtx)) {
@@ -2367,7 +2376,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    indentSummaryDetails.set("purAmout", purAmout);
 	                    indentSummaryDetails.set("saleQuantity", saleBillQty);
 	                    indentSummaryDetails.set("saleAmount", saleBillAmt);
-	                    indentSummaryDetails.set("saleTenPrcAmount", saleBillTenPrcAmt);
+	                    indentSummaryDetails.set("saleTenPrcAmount", saleBillTenPrcAmt.negate());
 						delegator.createOrStore(indentSummaryDetails);
                     
                     } catch (GenericServiceException e) {
@@ -2589,7 +2598,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         BigDecimal saleBillTenPrcAmt =BigDecimal.ZERO;
         BigDecimal saleBillQty =BigDecimal.ZERO;
         BigDecimal price =BigDecimal.ZERO;
-
+        List invoiceIds = FastList.newInstance();
         List condList = FastList.newInstance();
         condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
         condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -2601,14 +2610,15 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			                // reset each order
 	                GenericValue item = null;
 	                while ((item = orderItemBillingItr.next()) != null) {
-	             if("TEN_PERCENT_SUBSIDY".equals(item.getString("invoiceItemTypeId"))){
-	            	 saleBillTenPrcAmt=item.getBigDecimal("amount");
-	             }else{
-	                	saleBillQty = saleBillQty.add(item.getBigDecimal("quantity"));
-	                	price = item.getBigDecimal("amount");
-	                	BigDecimal amount = (item.getBigDecimal("quantity")).multiply(item.getBigDecimal("amount"));
-	                	saleBillAmt = saleBillAmt.add(amount);
-	             }
+			             if("TEN_PERCENT_SUBSIDY".equals(item.getString("invoiceItemTypeId"))){
+			            	 saleBillTenPrcAmt=item.getBigDecimal("amount");
+			             }else{
+			                	saleBillQty = saleBillQty.add(item.getBigDecimal("quantity"));
+			                	price = item.getBigDecimal("amount");
+			                	BigDecimal amount = (item.getBigDecimal("quantity")).multiply(item.getBigDecimal("amount"));
+			                	saleBillAmt = saleBillAmt.add(amount);
+			             }
+			             invoiceIds.add(item.getString("invoiceId"));
 	                }
 	                orderItemBillingItr.close();
 			     }
@@ -2616,7 +2626,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	            Debug.logError(e, module);
 	            return ServiceUtil.returnError(e.getMessage());
 	        }
-		
+        result.put("invoiceIds",invoiceIds);
         result.put("saleBillQty",saleBillQty.setScale(2, BigDecimal.ROUND_HALF_UP));
         result.put("saleBillTenPrcAmt",saleBillTenPrcAmt.setScale(2, BigDecimal.ROUND_HALF_UP));
         result.put("saleBillAmt",saleBillAmt.setScale(2, BigDecimal.ROUND_HALF_UP));
