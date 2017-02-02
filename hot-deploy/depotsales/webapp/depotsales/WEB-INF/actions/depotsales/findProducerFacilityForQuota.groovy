@@ -105,8 +105,6 @@ JSONObject branchProductSroreMap = new JSONObject();
 	
 	context.formatROList = formatROList;
 	
-	Debug.log("formatROList============="+formatROList);
-	
 	
 	context.branchProductSroreMap = branchProductSroreMap;
 
@@ -289,6 +287,7 @@ for (eachRoList in formatROList) {
 	
 	condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, eachRoList.payToPartyId));
 	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 	condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 	
 	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);

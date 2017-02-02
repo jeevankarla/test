@@ -8110,7 +8110,7 @@
                 <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/VendorValidations.js" global="true" />
                 <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
                 <script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/forCountriesAndCities.groovy" />
 					
 					
 					
