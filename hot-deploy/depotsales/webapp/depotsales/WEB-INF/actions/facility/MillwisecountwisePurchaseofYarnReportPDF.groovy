@@ -184,13 +184,13 @@ headerData2.put("orderValue", " ");
 finalCSVList.add(headerData2);
 
 headerData=[:];
-headerData.put("prodcatName", "PRODUCT CATEGORY");
-headerData.put("productName", "PRODUCT COUNT");
-headerData.put("partyName", "PARTY NAME");
-headerData.put("orderQty", "ORDERQTY");
+headerData.put("prodcatName", "Product Category");
+headerData.put("productName", "Product Count");
+headerData.put("partyName", "Party Name");
+headerData.put("orderQty", "Order Qty");
 /*headerData.put("BdlWt", "BdlWt");*/
-headerData.put("rate", "RATE");
-headerData.put("orderValue", "ORDERVALUE");
+headerData.put("rate", "Rate");
+headerData.put("orderValue", "Order Value");
 finalCSVList.add(headerData);
 for(productCategoryId in productCategoryIds){
 	//tempCSVMap1=[:];

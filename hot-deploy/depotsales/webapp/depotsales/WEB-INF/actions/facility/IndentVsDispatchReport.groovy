@@ -192,16 +192,16 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 			headerData1.put("diffQty", " ");
 			finalCSVList.add(headerData1);
 			headerData2=[:];
-			headerData2.put("orderNo", "ORDER ID");
-			headerData2.put("orderDate", "ORDER DATE");
-			headerData2.put("partyName", "PARTY NAME");
-			headerData2.put("productName", "PRODUCT NAME");
-			headerData2.put("supplierName", "SUPPLIER NAME");
-			headerData2.put("initialQty", "INDENTED QUANTITY");
-			headerData2.put("indentValue", "INDENT VALUE");
-			headerData2.put("finalQty", "DISPATCHED QUANTITY");
-			headerData2.put("dispatchValue", "DISPATCH VALUE");
-			headerData2.put("diffQty", "DIFFERENCE QUANTITY");
+			headerData2.put("orderNo", "Order Id");
+			headerData2.put("orderDate", "Order Date");
+			headerData2.put("partyName", "Party Name");
+			headerData2.put("productName", "Product Name");
+			headerData2.put("supplierName", "Supplier Name");
+			headerData2.put("initialQty", "Indented Quantity");
+			headerData2.put("indentValue", "Indent Value");
+			headerData2.put("finalQty", "Dispatched Quantity");
+			headerData2.put("dispatchValue", "Dispatch Value");
+			headerData2.put("diffQty", "Difference Quantity");
 			finalCSVList.add(headerData2);
 			
 			//}
