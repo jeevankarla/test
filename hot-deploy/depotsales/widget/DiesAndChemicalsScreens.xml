@@ -37,7 +37,7 @@
 <screen name="DyesSalesOrder">
 		<section>
 			<actions>
-				<set field="titleProperty" value="DiesAndChemicals" />
+				<set field="titleProperty" value="Dies And Chemicals" />
 				<set field="tabButtonItem" value="BranchSalesOrder" />
 				<set field="tabButtonItem2" value="BranchSalesOrder" />
 				<set field="tabButtonItem3"  value="${parameters.menuName}" default-value="DyesIndent"/>
@@ -104,8 +104,6 @@
 					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
 					<select-field field-name="propertyValue" />
 				</entity-one>
-
-
 				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
 				<set field="effectiveDate" value="${parameters.effectiveDate}" />

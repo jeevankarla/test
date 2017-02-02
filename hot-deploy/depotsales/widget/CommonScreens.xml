@@ -559,7 +559,7 @@
                                 <if-has-permission permission="DEPOTSALES" action="_VIEW"/>
                             </condition>
                             <widgets>
-                            	<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="BranchTransactionsTabBar"/>
+                            	<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="BaanTransactionsTabBar"/>
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
