@@ -66,54 +66,54 @@ under the License.
 			                <fo:table-row>
 								
 			                    <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INDENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">NO</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Indent</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">No</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">INDENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DATE</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Indent</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Date</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INDENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QTY</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Indent</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Qty</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">UNIT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PRICE</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Unit</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Price</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INDENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VALUE</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Indent</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Value</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PO NO</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PO No</fo:block>
 					            	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PO</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DATE</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Date</fo:block>
 					            </fo:table-cell>
 								 <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SUPPLIER</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Supplier</fo:block>
 					            	
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SHIP</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DATE</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Ship</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">ment</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Date</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SHIP</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QTY</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Ship</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">ment</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Qty</fo:block>
 					            </fo:table-cell>
  								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DUR B/W SO</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">AND PO</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Dur B/W SO</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">And PO</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DUR B/W PO</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">AND SHIP</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Dur B/W PO</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">And Ship</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 						  <#assign totalIdnQty1 = 0>  
