@@ -746,7 +746,7 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 			  	orderAmt = orderAmt+orderData[i].payableAmt;
 			}
 			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();'>Close</button></span></td><td></td></tr>";
-			title = "<center>Order : " + orderId + "  <br>Party Name : " +partyName+ "<center><br /> Total Order Value = "+ orderAmt +" ";
+			title = "<center>Order : " + orderId + "  <br>Party Name : " +partyName+ "<br /> <center>Supplier Name : " + orderData[0].supplierpartyName + "<center><br>Total Order Value = "+ orderAmt +" ";
 			message += "</table>";
 			Alert(message, title);
 		}
