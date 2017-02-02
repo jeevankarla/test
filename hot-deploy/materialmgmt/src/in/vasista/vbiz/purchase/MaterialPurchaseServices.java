@@ -895,8 +895,13 @@ public class MaterialPurchaseServices {
  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
  				return "error";
             }
+ 			Map serviceResult2  = dispatcher.runSync("periodPopulateShipmentTotals", UtilMisc.toMap("shipmentId", shipmentId));
+ 			if (ServiceUtil.isError(serviceResult2)) {
+ 				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Shipment GrandTotal");
+ 				return "error";
+            }
   		}catch(GenericServiceException e){
-			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+			Debug.logError(e, "Exception cought while updating Indent Summary Details and Shipment Grand Total", module);
 		}
  		
  		
