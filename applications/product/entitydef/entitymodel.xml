@@ -5391,6 +5391,9 @@ under the License.
       <field name="quantityUomId" type="id"></field>
       <field name="agreementId" type="id"></field>
       <field name="agreementItemSeqId" type="id"></field>
+      <field name="facilityId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <field name="lastPrice" type="currency-precise"></field>
       <field name="shippingPrice" type="currency-precise"></field>
       <field name="currencyUomId" type="id"></field>
@@ -5425,6 +5428,9 @@ under the License.
       <relation type="one" fk-name="SUPPL_PROD_AGRIT" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="SUPPL_PROD_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
       </relation>
     </entity>
     <view-entity entity-name="SupplierProductAndProduct"
