@@ -5391,7 +5391,7 @@ under the License.
       <field name="quantityUomId" type="id"></field>
       <field name="agreementId" type="id"></field>
       <field name="agreementItemSeqId" type="id"></field>
-      <field name="facilityId" type="id"></field>
+      <field name="facilityId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="lastPrice" type="currency-precise"></field>
@@ -5404,6 +5404,8 @@ under the License.
       <field name="comments" type="comment"></field>
       <prim-key field="productId"/>
       <prim-key field="partyId"/>
+      <prim-key field="facilityId"/>
+      <prim-key field="fromDate"/>
       <prim-key field="currencyUomId"/>
       <prim-key field="minimumOrderQuantity"/>
       <prim-key field="availableFromDate"/>
