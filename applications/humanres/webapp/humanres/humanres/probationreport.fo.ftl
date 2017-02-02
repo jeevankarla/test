@@ -152,7 +152,7 @@ under the License.
 	       						 	 <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 	       						 	 <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 	       						 	 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
-	       						     <fo:block text-align="left" font-size="13pt">&#160;&#160;&#160;&#160;${probationDetails.getValue().get("firstName")?if_exists}</fo:block>
+	       						     <fo:block text-align="left" font-size="13pt">&#160;&#160;&#160;&#160;${probationDetails.getValue().get("firstName")?if_exists} ${probationDetails.getValue().get("middleName")?if_exists} ${probationDetails.getValue().get("lastName")?if_exists}</fo:block>
 	       						     <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	       		                     <fo:block text-align="left" font-size="13pt">&#160;&#160;&#160;&#160;${probationDetails.getValue().get("designation")?if_exists}</fo:block>
 	       			                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
