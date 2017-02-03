@@ -804,7 +804,7 @@
 								<platform-specific>
 										<html>
 											<html-template
-												location="component://depotsales/webapp/depotsales/depotsales/generatePODC.ftl" />
+												location="component://depotsales/webapp/depotsales/depotsales/generatePO.ftl" />
 										</html>
 									</platform-specific>
 									<platform-specific>
