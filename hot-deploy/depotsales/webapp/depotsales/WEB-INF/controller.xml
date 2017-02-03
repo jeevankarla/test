@@ -173,7 +173,14 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindIndents"/>   
        <response name="failed" type="view" value="FindIndents"/>  
-    </request-map>   
+    </request-map>
+    
+    <request-map uri="FindIndentsDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindIndentsDC"/>   
+       <response name="failed" type="view" value="FindIndentsDC"/>  
+    </request-map>
+       
     <request-map uri="processIndentPortalBranchSales">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="processIndentPortalBranchSales"/>   
@@ -184,8 +191,6 @@
         <response name="success" type="view" value="ProcessIndentBranchOrders"/>   
        <response name="failed" type="view" value="ProcessIndentBranchOrders"/>  
     </request-map>
-    
-    
     
     <request-map uri="getStoreCatalogCatagory">
        <security https="true" auth="true"/>
@@ -284,6 +289,13 @@
     <request-map uri="getIndentListingDetails">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getIndentListingDetails.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <request-map uri="getIndentListingDetailsDC">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getIndentListingDetailsDC.groovy"/> 
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
@@ -2050,6 +2062,12 @@
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/"  invoke="getCountryStates.groovy"/>
         <response name="success" type="request" value="json"/>  
     </request-map>
+    
+    <request-map uri="getCountryStateListDC">
+          <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/"  invoke="getCountryStatesDC.groovy"/>
+        <response name="success" type="request" value="json"/>  
+    </request-map>
     <request-map uri="getBranchCutomers">
         <security https="false" auth="false"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/"  invoke="ShipmentHistory.groovy"/>
@@ -2826,6 +2844,9 @@
     <view-map name="OtherMultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/IndentorScreens.xml#OtherMultiIndentorSalesOrder"/>
 
 <!--     indentor portal screens end -->
+    
+    <view-map name="FindIndentsDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#ProcessBranchOrdersDC"/>
+    
     
     
     <view-map name="FindIndents" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProcessBranchOrders"/>
