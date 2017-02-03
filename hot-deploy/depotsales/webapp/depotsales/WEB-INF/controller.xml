@@ -226,6 +226,13 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
+    <request-map uri="getPaymentDetailsDC">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getPaymentDetailsDC.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
     <request-map uri="getWeaverMasterDetails">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getWeaverMasterDetails.groovy"/> 
@@ -1175,7 +1182,7 @@
     <request-map uri="BranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="BranchSalesOrder"/></request-map>
     <request-map uri="SilkBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkBranchSalesOrder"/><response name="error" type="view" value="SilkBranchSalesOrder"/></request-map>
     <request-map uri="CottonBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="CottonBranchSalesOrder"/></request-map>
-    <request-map uri="DyesSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DyesSalesOrder"/></request-map>
+    <request-map uri="DyesSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DyesSalesOrder"/></request-map>    
     <request-map uri="DyesMultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DyesMultiBranchSalesOrder"/></request-map>
     <request-map uri="ChemicalSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="ChemicalSalesOrder"/></request-map>
     <request-map uri="OtherBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="OtherBranchSalesOrder"/></request-map>
@@ -1446,6 +1453,16 @@
 	        <response name="success" type="view" value="orderPayment"/>   
 	       <response name="failed" type="view" value="orderPayment"/>  
 	    </request-map>
+	      
+	    
+	     <request-map uri="OrderPaymentDC">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="OrderPaymentDC"/>   
+	       <response name="failed" type="view" value="OrderPaymentDC"/>  
+	    </request-map>
+	    
+	    
+	    
 	     <request-map uri="orderAmend">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="orderAmend"/>   
@@ -2746,6 +2763,7 @@
     <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
     <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
     <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>
+     <view-map name="OrderPaymentDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#OrderPaymentDC"/>
     <view-map name="orderAmend" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderAmend"/>
     <view-map name="amendOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#amendOrder"/>
   
@@ -2766,6 +2784,7 @@
     
     <view-map name="CottonBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CottonBranchSalesOrder"/>
     <view-map name="DyesSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DyesSalesOrder"/>
+    
     <view-map name="DyesMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DyesMultiBranchSalesOrder"/>
     <view-map name="ChemicalMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#ChemicalMultiBranchSalesOrder"/>
     
