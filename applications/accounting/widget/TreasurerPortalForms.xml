@@ -185,42 +185,42 @@ under the License.
         <form name="FindDepositReceivedAccount" type="single" target="FindDepositReceivedAccount" header-row-style="header-row" default-table-style="basic-table">        
         <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="finAccountId" position="1"><text-find/></field>
-          <field name="AccDate" position="2"><date-time type="date"/></field>
-        <field name="finAccountName" position="1"><text-find/></field>
+        <field name="finAccountId" position="1" title="Deposit Id"><text-find/></field>
+          <field name="AccDate" position="2" title="Deposit Date"><date-time type="date"/></field>
+        <field name="finAccountName" position="1" title="Name"><text-find/></field>
         <field name="amount" position="2"><text/></field>
-        <field name="finAccountTypeId" position="1">
+        <field name="finAccountTypeId" position="1" title="Deposit Type Id">
         	<drop-down allow-empty="true">
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
         	</drop-down>
         </field>
-        <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>        
+        <field name="ownerPartyId" position="2" title="Received From"><lookup target-form-name="LookupPartyName"/></field>        
         <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>
         <form name="FindDepositPaidAccount" type="single" target="FindDepositPaidAccount" header-row-style="header-row" default-table-style="basic-table">        
         <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="finAccountId" position="1"><text-find/></field>
-          <field name="AccDate" position="2"><date-time type="date"/></field>
-        <field name="finAccountName" position="1"><text-find/></field>
+        <field name="finAccountId" position="1" title="Deposit Id"><text-find/></field>
+          <field name="AccDate" position="2" title="Deposit Date"><date-time type="date"/></field>
+        <field name="finAccountName" position="1" title="Name"><text-find/></field>
         <field name="amount" position="2"><text/></field>
-        <field name="finAccountTypeId" position="1">
+        <field name="finAccountTypeId" position="1" title="Deposit Type Id">
         	<drop-down allow-empty="true">
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
         	</drop-down>
         </field>
-        <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>        
+        <field name="ownerPartyId" position="2" title="Paid To"><lookup target-form-name="LookupPartyName"/></field>        
         <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>
      <form name="FindEmployeeAdvance" type="single" target="FindEmployeeAdv" header-row-style="header-row" default-table-style="basic-table">        
         <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
-        <field name="finAccountId" position="1"><text-find/></field>
-        <field name="AccDate" position="2"  event="onclick" action="javascript:datepick2();" id-name ="AccDate"><text  size="12"/></field> 
-        <field name="finAccountName" position="1"><text-find/></field>
+        <field name="finAccountId" position="1" title="Employee Id"><text-find/></field>
+        <field name="AccDate" position="2" title="Date" event="onclick" action="javascript:datepick2();" id-name ="AccDate"><text  size="12"/></field> 
+        <field name="finAccountName" position="1" title="Name"><text-find/></field>
         <field name="amount" position="2"><text/></field>
-        <field name="finAccountTypeId" position="1">
+        <field name="finAccountTypeId" position="1" title="Advance Type Id">
         	<drop-down allow-empty="true">
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
         	</drop-down>
@@ -279,12 +279,12 @@ under the License.
              	<parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field>
-        <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
+       <!--  <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
             <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
-        </field>
+        </field> -->
     </form>
      <form name="ListDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -311,12 +311,12 @@ under the License.
              	<parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field>
-        <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
+      <!--   <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
             <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
-        </field>
+        </field> -->
     </form>
      <form name="ListAdvDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -375,6 +375,13 @@ under the License.
              <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field> 
+        <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
+            <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field> 
+       
     </form>
     
     <!-- <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="FindDepositAccount" paginate="true"
