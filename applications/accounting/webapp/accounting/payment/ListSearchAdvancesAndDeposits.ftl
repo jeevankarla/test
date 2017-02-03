@@ -160,8 +160,8 @@ function setVoidPaymentParameters(currentPayment){
           <td>Outstanding Advance</td> 
          <#if hasPaymentCancelPermission?has_content && nowDate?has_content>
           <td>Cancel</td> 
-           </#if>
-          <td>Create Invoice</td>
+          </#if>
+         <#-- <td>Create Invoice</td>-->
           <td>PrintReceipt</td>
           <td>Voucher</td>
           <#-- <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>-->
@@ -205,7 +205,7 @@ function setVoidPaymentParameters(currentPayment){
               </td>
                </#if>
                
-            <#if amountToApply!=0 && (payment.statusId=="PMNT_CONFIRMED" || payment.statusId=="PMNT_SENT" || payment.statusId=="PMNT_RECEIVED")>
+            <#-- <#if amountToApply!=0 && (payment.statusId=="PMNT_CONFIRMED" || payment.statusId=="PMNT_SENT" || payment.statusId=="PMNT_RECEIVED")>
               	<td>
               	<#assign action="">
               	<#if screenflag?has_content && screenflag="OutgoingAdvancesPaid">
@@ -221,7 +221,7 @@ function setVoidPaymentParameters(currentPayment){
               	</td>
               <#else>
               	<td></td>
-              </#if>
+               </#if>-->
              
               <td>
               	<a target="_blank" class="buttontext" href="<@ofbizUrl>printAdvAndDepositReceipt.pdf?paymentIds=${payment.paymentId}</@ofbizUrl>" >
