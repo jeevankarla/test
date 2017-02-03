@@ -1094,12 +1094,20 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotSalesInvoice"/>
     </request-map>
+    <request-map uri="DepotSalesInvoiceDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotSalesInvoiceDC"/>
+    </request-map>
     
      <request-map uri="DepotSalesInvoiceView">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotSalesInvoiceView"/>
     </request-map>
     
+      <request-map uri="DepotSalesInvoiceViewDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotSalesInvoiceViewDC"/>
+    </request-map>
      <request-map uri="createApDepotApPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createVoucherPayment"/>
@@ -1115,6 +1123,10 @@
      <request-map uri="APInvoiceOverview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="APInvoiceOverview"/>
+    </request-map>
+     <request-map uri="APInvoiceOverviewDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="APInvoiceOverviewDC"/>
     </request-map>
     <request-map uri="DepotTransAPInvoiceOverview">
         <security https="true" auth="true"/>
@@ -1137,6 +1149,10 @@
      <request-map uri="partyFinanHistory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PartyFinHistory"/>
+    </request-map>
+    <request-map uri="partyFinanHistoryDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="partyFinanHistoryDC"/>
     </request-map>
     <request-map uri="createPhysicalInventoryVariances">
         <security https="true" auth="true"/>
@@ -2649,6 +2665,16 @@
         </response>
         <response name="error" type="view" value="DepotSalesInvoice"/>
     </request-map>
+    
+    
+    <request-map uri="cancelSalesInvoiceDC">
+        <security https="true" auth="true"/>
+        <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>
+        <response name="success" type="request-redirect" value="DepotSalesInvoiceDC">
+            <redirect-parameter name="invoiceTypeId" value="SALES_INVOICE"/>
+        </response>
+        <response name="error" type="view" value="DepotSalesInvoiceDC"/>
+    </request-map>
     <request-map uri="saveBranchSaleOrder">
         <security auth="true" https="true"/>
         <event type="java" global-transaction="true" invoke="saveBranchSaleOrderEvent" path="in.vasista.vbiz.depotsales.DepotSalesServices"/>
@@ -3007,18 +3033,19 @@
    	<view-map name="DepotPurchaseInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoice"/>
    	
    	<view-map name="DepotSalesInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoice"/>
-   	
+   	<view-map name="DepotSalesInvoiceDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DepotSalesInvoiceDC"/>
    	<view-map name="DepotSalesInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoiceView"/>
-   	
+   	<view-map name="DepotSalesInvoiceViewDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DepotSalesInvoiceViewDC"/>
    	
    	<view-map name="FindTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindTransporter"/>
    	<view-map name="CreateNewTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewTransporter"/>
    	<view-map name="addOtherAddressView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#AddOtherDetails"/>
    	
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
+    <view-map name="APInvoiceOverviewDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#APInvoiceOverviewDC"/>
     <view-map name="PaymentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PaymentOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>
-    
+    <view-map name="partyFinanHistoryDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#PartyFinHistoryDC"/>
     <view-map name="ViewIndentRequest" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewIndentRequest"/>
     
     <view-map name="StockVariance" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockVariance"/>
