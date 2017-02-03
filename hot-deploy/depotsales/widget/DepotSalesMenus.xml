@@ -1870,6 +1870,12 @@
 				<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT" />
 			</link>
 		</menu-item>
+		<menu-item name="processOrdersBranchSalesDC" title="${uiLabelMap.IndentListing}">
+        	<link target="FindIndentsDC">
+        		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
+        		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
+        	</link>
+	    </menu-item>
        	<!-- <menu-item name="FindRequirement" title="${uiLabelMap.Requirements}">
         	<link target="FindRequirement">
         		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
