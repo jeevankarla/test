@@ -1864,6 +1864,12 @@
 		<menu-item name="BranchSalesOrder" title="${uiLabelMap.IndentEntry}">
        		<link target="DyesSalesOrder"/>
        	</menu-item>
+       	<menu-item name="OrderPaymentDC" title="${uiLabelMap.IndentPayment}">
+			<link target="OrderPaymentDC">
+				<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL" />
+				<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT" />
+			</link>
+		</menu-item>
        	<!-- <menu-item name="FindRequirement" title="${uiLabelMap.Requirements}">
         	<link target="FindRequirement">
         		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
