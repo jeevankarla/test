@@ -1876,6 +1876,16 @@
         		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
         	</link>
 	    </menu-item>
+	    <menu-item name="FindPODC" title="${uiLabelMap.PurchaseOrder}">
+        	<condition>
+       		  <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+	        	
+			 </or>
+	        </condition>
+	        	<link target="FindPODC"/>
+	    </menu-item>
        	<!-- <menu-item name="FindRequirement" title="${uiLabelMap.Requirements}">
         	<link target="FindRequirement">
         		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
@@ -2125,6 +2135,10 @@
     			 
     </menu> 
 	
-	
+	<menu name="FindPOSubTabBarDC" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindPOSubTabBarDC" title="Find Purchase Order">
+        	<link target="FindPODC"/>
+        </menu-item>
+    </menu>
     
 </menus>
