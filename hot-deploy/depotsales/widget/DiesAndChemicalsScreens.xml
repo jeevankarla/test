@@ -92,6 +92,79 @@
 		</section>
 	</screen>
 	
+<screen name="FindPODC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Find Purchase Order for DC" />
+				<set field="tabButtonItem" value="FindPODC" />
+				<set field="tabButtonItem2" value="FindPOSubTabBarDC" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<!-- <set field="ChannalType" value="MATERIAL_PUR_CHANNEL" />
+				<set field="roleTypeId" value="BILL_TO_CUSTOMER" />
+				<set field="parameters.salesChannelEnumId" value="MATERIAL_PUR_CHANNEL"></set>
+				<set field="parameters.findPoFlag" value="Y" />
+				<set field="parameters.orderTypeId" value="PURCHASE_ORDER" /> -->
+				<set field="parameters.roleTypeId" from-field="roleTypeId" />
+				<set field="parameters.noConditionFind" default-value="N" from-field="parameters.noConditionFind"></set>
+				<set field="parameters.hideSearch" default-value="N" from-field="parameters.hideSearch"></set>
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="10" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ROSearchFilterDC.groovy" />
+				<service service-name="performFind" result-map="result"
+					result-map-list="listIt">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles" />
+					<field-map field-name="orderBy" value="-orderDate" />
+					<field-map field-name="viewIndex"  from-field="viewIndex"/>
+					<field-map field-name="viewSize" from-field="viewSize"/>
+				</service>
+				<set field="parameters.partyId" value="${tempPartyId}" />
+				<set field="targetRequest" value="FindPODC" />
+				
+
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilterDC.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="FindPOSubTabBarDC" />
+						<section>
+							<widgets>
+								<!-- <section>
+                             		<condition>
+                            			<if-has-permission permission="DEPOTSALES"  action="_CREATE_PO"/>
+                            		</condition>
+									<widgets>
+										<link target="CreatePO" text="Create PO" style="buttontext" />
+									</widgets>
+								</section> -->
+								<screenlet title="search-options">
+									<include-form name="FindPurchaseOrderDC"
+										location="component://depotsales/widget/DepotSalesForms.xml" />
+								</screenlet>
+								<platform-specific>
+							       <html>
+								      <html-template
+									      location="component://depotsales/webapp/depotsales/depotsales/agencyAddressDetailsDC.ftl" />
+							          </html>
+						        </platform-specific>
+								<screenlet title="Search-results">
+									<include-form name="listPurchaseOrdersDC"
+										location="component://depotsales/widget/DepotSalesForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
 	<screen name="DyesBranchSaleInner">
 		<section>
 			<actions>
