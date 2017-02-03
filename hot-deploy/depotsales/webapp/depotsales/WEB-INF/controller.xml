@@ -966,6 +966,13 @@
        <response name="success" type="view" value="FindPO"/>
        <response name="error" type="view" value="FindPO"/>
    </request-map>
+   <request-map uri="FindPODC">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindPODC"/>
+       <response name="error" type="view" value="FindPODC"/>
+   </request-map>
+   
+   
     <request-map uri="CreatePO">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="CreatePO"/>
@@ -1031,6 +1038,12 @@
         <response name="error" type="view" value="FindPO"/>
     </request-map>
     
+    <request-map uri="CancelOrderDC">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPOStatus"/>
+        <response name="success" type="view" value="FindPODC"/>
+        <response name="error" type="view" value="FindPODC"/>
+    </request-map>
     <request-map uri="raiseGRN">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="POMaterialReceipts"/>
@@ -2952,6 +2965,8 @@
     <view-map name="NewDepotSalesReceipt" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewDepotSalesReceipt"/>
     
     <view-map name="FindPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPO"/>
+    <view-map name="FindPODC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#FindPODC"/>
+    
     <view-map name="CreatePO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreatePO"/>
     <view-map name="PurchaseOrderViewDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDepotSalesPDF" content-type="application/pdf"/>
    
