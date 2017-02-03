@@ -298,7 +298,7 @@ public class paymentApiServices {
 		    		pgTrans.set("paymentId",paymentId);
 		    	}
 		    	if (UtilValidate.isNotEmpty(txnMessage)) {
-		    		pgTrans.set("pgTransMessage",txnMessage);
+		    		//pgTrans.set("pgTransMessage",txnMessage);
 		    	}
 		    	if(pgTransStatus.equalsIgnoreCase("SUC")){
 		    		pgTrans.set("pgTransStatus","SUCCESS");
