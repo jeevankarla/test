@@ -128,7 +128,7 @@ var stateListJSON;
  function setServiceName(selection) {
  var country=selection.value;
   jQuery.ajax({
-                url: 'getCountryStateList',
+                url: 'getCountryStateListDC',
                 type: 'POST',
                 async: true,
                 data: {countryGeoId:country} ,
