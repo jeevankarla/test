@@ -32,7 +32,74 @@
 			</widgets>
 		</section>
 	</screen>
-
+ <screen name="OrderPaymentDC">
+    		<section>
+    			<actions>
+    				<set field="titleProperty" value="Indent Payment" />
+    				<set field="tabButtonItem" value="OrderPaymentDC" />
+    				<set field="tabButtonItem2" value="OrderPaymentDC" />
+    				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
+    				<set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
+                    <set field="viewSize" value="50" type="Integer"/>
+                    <set field="nextFlag" type="String" default-value="Y"/>
+                    <set field="prevFlag" type="String" default-value="N"/>
+                      <service service-name="performFind" result-map="result">
+                       <field-map field-name="inputFields" from-field="parameters"/>
+                       <field-map field-name="entityName" value="OrderHeader"/>
+                    </service>
+    				<set field="defaultEffectiveDateTime"
+    					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
+    				<set field="defaultEffectiveDate"
+    					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+    				<set field="shipmentTypeId" from-field="parameters.shipmentTypeId" />
+    				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+    				<set field="screenFlag" value="depotSales" />
+    				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
+    					/> -->
+    				<script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderPaymentParamDC.groovy" />
+    			  <!--   <script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" />  -->
+    			</actions>
+    			<widgets>
+    				<decorator-screen name="BaanTransactionsCommonDecorator"
+    					location="component://depotsales/widget/CommonScreens.xml">
+    					<decorator-section name="body">
+    						<!-- <include-menu name="BranchSalesIndentTabBar"
+    							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+    						<section>
+    							<widgets>
+    							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                        <decorator-section name="menu-bar">
+                                        	 
+                                        </decorator-section>
+    							 		<decorator-section name="search-options">
+                                            <include-form name="FindOrderPaymentSeachDC" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                        </decorator-section>
+                                        <decorator-section name="search-results">
+    							<!-- 	<screenlet title="Sale Indents &#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;     Total Indents:     ${orderListSize}">   -->
+    								<platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/generatePODC.ftl" />
+    										</html>
+    									</platform-specific>
+    									<platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/ListSearchOrderPaymentsDC.ftl" />
+    										</html>
+    									</platform-specific>
+    							<!-- 	</screenlet>  -->
+    								</decorator-section>
+    								</decorator-screen>
+    							</widgets>
+    						</section>
+    					</decorator-section>
+    				</decorator-screen>
+    			</widgets>
+    		</section>
+    	</screen>
 
 <screen name="DyesSalesOrder">
 		<section>
