@@ -646,6 +646,11 @@
        <response name="success" type="view" value="MaterialSalesEditInvoiceInit"/>
        <response name="error" type="view" value="MaterialSalesEditInvoiceInit"/>
      </request-map>
+     <request-map uri="MaterialSalesEditInvoiceInitDC">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialSalesEditInvoiceInitDC"/>
+       <response name="error" type="view" value="MaterialSalesEditInvoiceInitDC"/>
+     </request-map>
      
        <request-map uri="MaterialDepotSalesEditInvoiceInit">
        <security https="true" auth="true"/>
@@ -2958,6 +2963,7 @@
     
     
     <view-map name="MaterialSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialSalesEditInvoiceInit"/>
+    <view-map name="MaterialSalesEditInvoiceInitDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#MaterialSalesEditInvoiceInitDC"/>
     
     <view-map name="MaterialDepotSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialDepotSalesEditInvoiceInit"/>
     <view-map name="purchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#purchaseInvoiceEdit"/>

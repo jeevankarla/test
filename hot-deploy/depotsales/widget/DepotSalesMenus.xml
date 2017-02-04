@@ -1886,7 +1886,39 @@
 	        </condition>
 	        	<link target="FindPODC"/>
 	    </menu-item>
-	       	<!-- <menu-item name="FindRequirement" title="${uiLabelMap.Requirements}">
+	    
+	      <menu-item name="salesInvoiceDC" title="${uiLabelMap.SalesInvoices}">
+		    <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+            </condition> 
+			<link target="DepotSalesInvoiceDC">
+				<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
+				<parameter param-name="purposeTypeId" value="YARN_SALE" />
+				<parameter param-name="subTabButtonValue" value="Manufacturing" />
+				<parameter param-name="actionSubTabButtonValue" value="find" />
+			</link>
+		</menu-item>
+		<menu-item name="invoiceOverViewDC" title="Invoice OverView">
+       	<condition>
+       	<not>
+<if-empty  field="parameters.invoiceId"/>
+</not>
+       	</condition>
+       	<link target="APInvoiceOverviewDC"> <parameter param-name="invoiceId" from-field="parameters.invoiceId" /> </link>
+       	</menu-item> 
+       	
+		
+		
+		<menu name="editSalesMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+       		selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="MaterialEditInvoiceInit" title="Edit Invoice">	
+            <link target="MaterialSalesEditInvoiceInit">
+            </link>
+        </menu-item>
+      </menu>   	<!-- <menu-item name="FindRequirement" title="${uiLabelMap.Requirements}">
         	<link target="FindRequirement">
         		<parameter param-name="salesChannelEnumId" value="BRANCH_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
