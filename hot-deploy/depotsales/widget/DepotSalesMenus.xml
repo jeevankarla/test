@@ -220,11 +220,11 @@
         </menu-item>
         
         <menu-item name="TrackPayments" title="Track Payments">        
-        	<!-- <condition>
+        	<condition>
        		 <or>
-        		<if-has-permission permission="PAYMENT" action="_TRACKING_VIEW"/>
+        		<if-has-permission permission="TRACK" action="_PAYMENTS_VIEW"/>
 			 </or>
-	        </condition> -->
+	        </condition>
         	<link target="TrackPayments"/>
         </menu-item>
         
