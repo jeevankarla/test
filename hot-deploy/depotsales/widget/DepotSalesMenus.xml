@@ -1886,6 +1886,15 @@
 	        </condition>
 	        	<link target="FindPODC"/>
 	    </menu-item>
+	    <menu-item name="FindGRNReceiptsDC" title="${uiLabelMap.ReceiptOfGoods}">
+       		 <condition>
+       		  <or>
+	        		<if-has-permission permission="DEPOTSALES" action="_GRECEIPTS_VIEW"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+			 </or>
+	        </condition>
+	        	<link target="FindGRNShipmentsDepotDC"/>
+	     </menu-item> 
 	    
 	    <menu-item name="purchaseinvoiceDC" title="${uiLabelMap.PurchaseInvoices}">
 		    <condition>
@@ -2172,5 +2181,69 @@
         	<link target="FindPODC"/>
         </menu-item>
     </menu>
+    
+    <menu name="ReceiptTabBarDC" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+       		selected-menuitem-context-field-name="tabButtonItem2">
+        <!-- <menu-item name="FindGRNReceipts" title="Find GRN Items">
+        	<link target="FindGRNReceiptsDepot"/>
+        </menu-item> -->
+        <!--  <menu-item name="POMaterialReceipts" title="GRN Entry">
+        	<link target="POMaterialReceiptsDepot"/>
+        </menu-item> -->
+        <menu-item name="FindGRNShipmentsDC" title="${uiLabelMap.FindShipment}">
+        	<link target="FindGRNShipmentsDepotDC"/>
+        </menu-item>
+       <!--  <menu-item name="MaterialShipmentOverview" title="Material Shipment Overview">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="MaterialShipmentOverview">
+            </link>
+        </menu-item> -->
+        <menu-item name="MaterialInvoiceInitDC" title="Invoice For Shipment">	
+        	<condition>
+        		<if-compare operator="not-equals" value="" field="shipmentId"/>
+        	</condition>
+            <link target="MaterialInvoiceInitDC">
+            </link>
+        </menu-item>
+  
+        <!-- <menu-item name="POoverView" title="Purchase Order OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="POoverview"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item> -->
+      </menu>
+      
+      <menu name="FindDepotTransPOSubTabBarDC" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindDepotTransPODC" title="Find Purchase Order">
+        	<link target="FindDepotTransPODC"/>
+        </menu-item>
+           <!--<menu-item name="ProcessOrdersSuppliersDepotTrans" title="Process Purchase Order">
+            	<link target="ProcessOrdersSuppliersDepotTrans">
+            	<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+    	        <parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+            	</link>
+            </menu-item>
+             <menu-item name="FindDepotTransPurchaseShipment" title="Find Purchase Shipment">
+            	<link target="FindDepotTransPurchaseShipment"/>
+        </menu-item>-->
+        <menu-item name="POoverViewDC" title="Purchase Order OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="POoverviewDC"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+      </menu>
+      
+      
+      
+      
+      
     
 </menus>
