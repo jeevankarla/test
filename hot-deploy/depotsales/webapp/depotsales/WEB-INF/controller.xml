@@ -664,6 +664,12 @@
        <response name="error" type="view" value="purchaseInvoiceEdit"/>
      </request-map>
      
+     <request-map uri="purchaseInvoiceEditDC">
+		       <security https="true" auth="true"/>
+		       <response name="success" type="view" value="purchaseInvoiceEditDC"/>
+		       <response name="error" type="view" value="purchaseInvoiceEditDC"/>
+	</request-map>
+     
      <request-map uri="DepotpurchaseInvoiceEdit">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="DepotpurchaseInvoiceEdit"/>
@@ -1091,6 +1097,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotPurchaseInvoice"/>
     </request-map>
+    
+    <request-map uri="DepotPurchaseInvoiceDC">
+		             <security https="true" auth="true"/>
+		             <response name="success" type="view" value="DepotPurchaseInvoiceDC"/>
+    </request-map>
+    
     <request-map uri="DepotPurchaseInvoiceView">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotPurchaseInvoiceView"/>
@@ -2654,6 +2666,15 @@
         </response>
         <response name="error" type="view" value="DepotPurchaseInvoice"/>
     </request-map>
+    
+    <request-map uri="cancelPurchaseInvoiceDC">
+			        <security https="true" auth="true"/>
+			        <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>
+			        <response name="success" type="request-redirect" value="DepotPurchaseInvoiceDC">
+			            <redirect-parameter name="invoiceTypeId" value="PURCHASE_INVOICE"/>
+			        </response>
+			        <response name="error" type="view" value="DepotPurchaseInvoiceDC"/>
+    </request-map>
     <request-map uri="cancelDepotPurchaseInvoice">
         <security https="true" auth="true"/>
         <event type="service" invoke="setInvoiceStatus"/>
@@ -2968,6 +2989,8 @@
     <view-map name="MaterialDepotSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialDepotSalesEditInvoiceInit"/>
     <view-map name="purchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#purchaseInvoiceEdit"/>
     
+    <view-map name="purchaseInvoiceEditDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#purchaseInvoiceEditDC"/>
+   
     <view-map name="DepotpurchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotpurchaseInvoiceEdit"/>
    
    
@@ -3038,6 +3061,8 @@
    <!-- 	<view-map name="FindApInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindApInvoices"/> -->
    	<view-map name="DepotPurchaseInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoice"/>
    	
+   	<view-map name="DepotPurchaseInvoiceDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DepotPurchaseInvoiceDC"/>
+   	
    	<view-map name="DepotSalesInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoice"/>
    	<view-map name="DepotSalesInvoiceDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DepotSalesInvoiceDC"/>
    	<view-map name="DepotSalesInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoiceView"/>
@@ -3051,7 +3076,7 @@
     <view-map name="APInvoiceOverviewDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#APInvoiceOverviewDC"/>
     <view-map name="PaymentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PaymentOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>
-    <view-map name="partyFinanHistoryDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#PartyFinHistoryDC"/>
+    <view-map name="partyFinanHistoryDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#PartyFinanHistoryDC"/>
     <view-map name="ViewIndentRequest" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewIndentRequest"/>
     
     <view-map name="StockVariance" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockVariance"/>
