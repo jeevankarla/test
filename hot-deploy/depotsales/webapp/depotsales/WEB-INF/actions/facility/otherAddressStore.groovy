@@ -49,12 +49,14 @@ FcontactNumber = parameters.FcontactNumber;
 facicontactMechType = parameters.facicontactMechType;
 facilityName = parameters.facilityName;
 postalCode = parameters.postalCode;
+tinNumber = parameters.tinNumber;
 TFcountry = parameters.TFcountry;
 TFstate = parameters.TFstate;
 TFaddress1 = parameters.TFaddress1;
 TFaddress2 = parameters.TFaddress2;
 TFcity = parameters.TFcity;
 TFpostalCode = parameters.TFpostalCode;
+TFtinNumber = parameters.TFtinNumber;
 NcontactMechId = parameters.NcontactMechId;
 TcontactMechId = parameters.TcontactMechId;
 
@@ -96,6 +98,13 @@ createdStatus="C"
 if(UtilValidate.isEmpty(NcontactMechId) && UtilValidate.isEmpty(TcontactMechId)){
 resultcreateFacilityPostalAddress = dispatcher.runSync("createFacilityPostalAddress", FacilityPostalAddress);
 
+attributeMap = [:];
+attributeMap.put("facilityId",facilityId);
+attributeMap.put("attrName","TIN_NUMBER");
+attributeMap.put("attrValue",tinNumber);
+
+facilityAttribute = dispatcher.runSync("createOrUpdateFcilityAttribute", attributeMap);
+
 
 }
 else{
@@ -104,14 +113,25 @@ else{
  
  resultEditedFacilityPostalAddress = dispatcher.runSync("updateFacilityPostalAddressDetails", FacilityPostalAddress);
  
- if(parameters.facilityId){
- facilityUpdate = [:];
- facilityUpdate.put("userLogin",userLogin);
- facilityUpdate.put("facilityId",parameters.facilityId);
- facilityUpdate.put("facilityTypeId",facicontactMechType);
- facilityUpdate.put("facilityName",facilityName);
  
- resultfacilityUpdate = dispatcher.runSync("updateFacility", facilityUpdate);
+ Debug.log("parameters.facilityId==========="+parameters.facilityId);
+ 
+ if(parameters.facilityId){
+	 facilityUpdate = [:];
+	 facilityUpdate.put("userLogin",userLogin);
+	 facilityUpdate.put("facilityId",parameters.facilityId);
+	 facilityUpdate.put("facilityTypeId",facicontactMechType);
+	 facilityUpdate.put("facilityName",facilityName);
+	 
+	 resultfacilityUpdate = dispatcher.runSync("updateFacility", facilityUpdate);
+	 
+	 attributeMap = [:];
+	 attributeMap.put("facilityId",parameters.facilityId);
+	 attributeMap.put("attrName","TIN_NUMBER");
+	 attributeMap.put("attrValue",tinNumber);
+	 
+	 facilityAttribute = dispatcher.runSync("createOrUpdateFcilityAttribute", attributeMap);
+ 
  
  }
  

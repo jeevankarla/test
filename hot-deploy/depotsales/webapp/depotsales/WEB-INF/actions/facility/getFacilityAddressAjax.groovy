@@ -6,22 +6,30 @@
 
 
 import org.ofbiz.base.util.UtilDateTime;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import javolution.util.FastList;
+
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.base.util.*;
+
 import net.sf.json.JSONObject;
+
 import org.ofbiz.entity.util.*;
+
 import net.sf.json.JSONArray;
+
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityOperator;
+
 import java.sql.*;
+
 import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
+
 import org.ofbiz.party.party.PartyHelper;
 
 
@@ -41,8 +49,11 @@ conditionList.add(EntityCondition.makeCondition("closedReason", EntityOperator.E
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 FacilityList = delegator.findList("Facility", condition, null, null, null, false);
 
-
-
+/*conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS,attrName));
+FacilityAttributeList = delegator.findList("FacilityAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+*/
 
 JSONArray facilityAddressJSON = new  JSONArray();
 
@@ -63,6 +74,15 @@ for (eachFacility in FacilityList) {
 	
 	  contactMechIds = EntityUtil.getFieldListFromEntityList(FacilityContactMechList, "contactMechId", true);
 	
+	  
+	  
+	  conditionList.clear();
+	  conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, eachFacility.facilityId));
+	  conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS,"TIN_NUMBER"));
+	  FacilityAttributeList = delegator.findList("FacilityAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+	  
+	  
+	  
 		
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("contactMechId", EntityOperator.IN ,contactMechIds));
@@ -85,6 +105,11 @@ for (eachFacility in FacilityList) {
 			tempMap.put("Naddress2", "");
 			tempMap.put("Ncity", PostalAddressList[0].city);
 			tempMap.put("NcountryGeoId", PostalAddressList[0].countryGeoId);
+			
+			if(FacilityAttributeList)
+			tempMap.put("tinNumber", FacilityAttributeList[0].attrValue);
+			else
+			tempMap.put("tinNumber", "");
 			
 			
 		    geo=delegator.findOne("Geo",[geoId : PostalAddressList[0].stateProvinceGeoId], false);

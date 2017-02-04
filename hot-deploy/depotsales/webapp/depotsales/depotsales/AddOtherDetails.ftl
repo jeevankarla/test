@@ -126,6 +126,7 @@ function drawRow(rowData) {
     var facilityName = '\'' + rowData.facilityName + '\'';
     var facilityId = '\'' + rowData.facilityId + '\'';
     var facilityTypeId = '\'' + rowData.facilityTypeId + '\'';
+    var tinNumber = '\'' + rowData.tinNumber + '\'';
     
     var NstateProvinceGeoIdVal = '\'' + rowData.NstateProvinceGeoIdVal + '\'';
     
@@ -133,7 +134,7 @@ function drawRow(rowData) {
     
     var viewButton = '\'' + rowData.facilityName+" ("+rowData.Ncity+")" + '\'';
     
-    var customMethod = "javascript:viewFacilityAddressDetail("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+")";
+    var customMethod = "javascript:viewFacilityAddressDetail("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+","+tinNumber+")";
     var inputbox ='<input type=button name="viewAddress" id=viewAddress value='+viewButton+' onclick="'+customMethod+'">';
     row.append($("<td>" +  inputbox  +"</td>"));
      
@@ -143,7 +144,7 @@ function drawRow(rowData) {
      var NcontactMechId = '\'' + rowData.NcontactMechId + '\'';
       var TcontactMechId = '\'' + rowData.TcontactMechId + '\'';
      
-      var editAddress = "javascript:editFaciAddress("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+","+NcontactMechId+","+TcontactMechId+","+facilityId+","+facilityTypeId+","+NstateProvinceGeoIdVal+","+TstateProvinceGeoIdVal+")";
+      var editAddress = "javascript:editFaciAddress("+ Naddress1 + ","+ Naddress2 + ","+ Ncity + ","+ tinNumber + ","+ NcountryGeoId + ","+ NstateProvinceGeoId + ","+ NcontactMechPurposeTypeId + ","+ NpostalCode + ","+ Taddress1 + ","+ Taddress2 + ","+ Tcity + ","+ TcountryGeoId + ","+ TstateProvinceGeoId + ","+ TcontactMechPurposeTypeId + ","+ TpostalCode + ","+facilityName+","+NcontactMechId+","+TcontactMechId+","+facilityId+","+facilityTypeId+","+NstateProvinceGeoIdVal+","+TstateProvinceGeoIdVal+")";
     var editFaciAddress ='<input type=button name="EditFac" id=EditFac value=EditFacilityAddress onclick="'+editAddress+'">';
     row.append($("<td>" +  editFaciAddress  +"</td>"));
   
@@ -168,7 +169,7 @@ function drawRow(rowData) {
 
 
 
-function editFaciAddress( Naddress1 , Naddress2 , Ncity , NcountryGeoId , NstateProvinceGeoId , NcontactMechPurposeTypeId , NpostalCode , Taddress1 , Taddress2 , Tcity , TcountryGeoId , TstateProvinceGeoId , TcontactMechPurposeTypeId , TpostalCode , facilityName,NcontactMechId,TcontactMechId,facilityId,facilityTypeId , NstateProvinceGeoIdVal, TstateProvinceGeoIdVal){
+function editFaciAddress( Naddress1 , Naddress2 , Ncity , tinNumber, NcountryGeoId , NstateProvinceGeoId , NcontactMechPurposeTypeId , NpostalCode , Taddress1 , Taddress2 , Tcity , TcountryGeoId , TstateProvinceGeoId , TcontactMechPurposeTypeId , TpostalCode , facilityName,NcontactMechId,TcontactMechId,facilityId,facilityTypeId , NstateProvinceGeoIdVal, TstateProvinceGeoIdVal){
 
 
           $("#facicontactMechType").val(facilityTypeId);
@@ -201,6 +202,7 @@ function editFaciAddress( Naddress1 , Naddress2 , Ncity , NcountryGeoId , Nstate
           $("#TcontactMechId").val(TcontactMechId);
           $("#NcontactMechId").val(NcontactMechId);
           $("#facilityId").val(facilityId);
+            $("#tinNumber").val(tinNumber);
           
           
 
@@ -259,6 +261,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	var finalAddressList = [];
 		
     $(document).ready(function(){
+    getFecilityAddressDetailAjax();
       	      $("#wizard-2").steps({
                 headerTag: "h3",
                 bodyTag: "section",
@@ -443,6 +446,8 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	     var address2 = $("#Faddress2").val();
 	     var city = $("#Fcity").val();
 	     var postalCode = $("#postalCode").val();
+	     var tinNumber = $("#tinNumber").val();
+	     
 	     var facilityName = $("#facilityName").val();
 	     var facicontactMechType = $("#facicontactMechType").val();
 	     var FcontactNumber = $("#FcontactNumber").val();
@@ -456,6 +461,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	     var TFaddress2 = $("#TFaddress2").val();
 	     var TFcity = $("#TFcity").val();
 	     var TFpostalCode = $("#TFpostalCode").val();
+	     var TFtinNumber = $("#TFtinNumber").val();
 	     
 	     var NcontactMechId = $("#NcontactMechId").val();
 	     var TcontactMechId = $("#TcontactMechId").val();
@@ -467,6 +473,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	     addressFaciMap['address2'] = address2;
 	     addressFaciMap['city'] = city;
 	     addressFaciMap['postalCode'] = postalCode;
+	     addressFaciMap['tinNumber'] = tinNumber;
 	     addressFaciMap['country'] = country;
 	     addressFaciMap['state'] = state;
 	     addressFaciMap['FcontactNumber'] = FcontactNumber;
@@ -479,6 +486,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	     addressFaciMap['TFaddress2'] = TFaddress2;
 	     addressFaciMap['TFcity'] = TFcity;
 	     addressFaciMap['TFpostalCode'] = TFpostalCode;
+	     addressFaciMap['TFtinNumber'] = TFtinNumber;
 	     addressFaciMap['NcontactMechId'] = NcontactMechId;
 	     addressFaciMap['TcontactMechId'] = TcontactMechId;
 	     
@@ -502,6 +510,8 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	 	var address2 = addressFaciMap.address2;
 		var countryName = addressFaciMap.countryName;
 	 	var postalCode = addressFaciMap.postalCode;
+	 	var tinNumber = addressFaciMap.tinNumber;
+	 	
 	 	var stateName = addressFaciMap.stateName;
 	    var facilityName = addressFaciMap.facilityName;
 	    var facicontactMechType = addressFaciMap.facicontactMechType;
@@ -509,7 +519,7 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	 	
 	 	
 	 
-if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && facilityName.length !=0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && supplierId.length != 0){
+if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && facilityName.length !=0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && supplierId.length != 0 && tinNumber.length != 0){
 		
 		    $('div#orderSpinn').html('<img src="/images/supplier_loading.gif" height="50" width="50">');
 		   jQuery.ajax({
@@ -554,6 +564,8 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 		}
 		else{
 		  alert("Please Fill The Values");
+		  $('div#orderSpinn').html('');
+		  $("#saveButton").show();
 		}
 	}
 	
@@ -736,6 +748,13 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 									    </td>
 									</tr>
 									
+									<tr>
+									    <td class="label"><FONT COLOR="red">*</font><b> TIN Number</b></td>
+									    <td>
+									      	<input type="text" name="tinNumber" id="tinNumber" size="30" maxlength="60" value="0" autocomplete="off" />
+									    </td>
+									</tr>
+									
 									
 								<#-->	<tr>
 									    <td class="label"><b> Postal Code</b></td>
@@ -824,11 +843,17 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 								    </tr>
 									<tr>
 									<tr>
-									    <td class="label"><b> Postal Code</b></td>
+									    <td class="label"><FONT COLOR="red">*</font><b> Postal Code</b></td>
 									    <td>
 									      	<input type="text" name="postalCode" id="TFpostalCode" size="30" maxlength="60" value="0" autocomplete="off" />
 									    </td>
 									</tr>
+									<#--<tr>
+									    <td class="label"><FONT COLOR="red">*</font><b> TIN Number</b></td>
+									    <td>
+									      	<input type="text" name="TFtinNumber" id="TFtinNumber" size="30" maxlength="60" value="0" autocomplete="off" />
+									    </td>
+									</tr>-->
 									
 									<tr>
 									    <td>

@@ -397,7 +397,7 @@ function cancelviewOrderForm(){
 	};
 	
     
-	function viewFacilityAddressDetail( Naddress1 , Naddress2 , Ncity , NcountryGeoId , NstateProvinceGeoId , NcontactMechPurposeTypeId , NpostalCode , Taddress1 , Taddress2 , Tcity , TcountryGeoId , TstateProvinceGeoId , TcontactMechPurposeTypeId , TpostalCode , facilityName){
+	function viewFacilityAddressDetail( Naddress1 , Naddress2 , Ncity , NcountryGeoId , NstateProvinceGeoId , NcontactMechPurposeTypeId , NpostalCode , Taddress1 , Taddress2 , Tcity , TcountryGeoId , TstateProvinceGeoId , TcontactMechPurposeTypeId , TpostalCode , facilityName, tinNumber){
 
              
    var message = "";
@@ -406,7 +406,7 @@ function cancelviewOrderForm(){
 			message += "<table cellspacing=10 cellpadding=10 border=2  width=520>" ;
 			message += "<thead><td align='left' class='h3'> <font color='red'><b>Normal Address</b></font></td>";
 			
-			
+			message += "<thead><tr class='h3'><td align='left' class='h3'> Tin Number :</td><td align='left' class='h3'>"+tinNumber+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> Address1 :</td><td align='left' class='h3'>"+Naddress1+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> Address2 :</td><td align='left' class='h3'>"+Naddress2+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> City :</td><td align='left' class='h3'>"+Ncity+"</td><tr>";
