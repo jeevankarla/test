@@ -14028,6 +14028,51 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
    	    return result;
    	}
  	
+ 	
+ 	
+ 	public static Map<String, Object> createOrUpdateFcilityAttribute(DispatchContext dctx, Map<String, ? extends Object> context){
+   	    Delegator delegator = dctx.getDelegator();
+   	    LocalDispatcher dispatcher = dctx.getDispatcher();
+   	    GenericValue userLogin = (GenericValue) context.get("userLogin");
+   	    String contactMechId = (String) context.get("contactMechId");
+   	    String facilityId = (String) context.get("facilityId");
+   	    String attrName = (String) context.get("attrName");
+   	    String attrValue = (String) context.get("attrValue");
+   	   
+		List conditionList = FastList.newInstance();
+		
+		List FacilityAttributeList = FastList.newInstance();
+    	
+    	conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
+    	conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS,attrName));
+    	 try{
+    		 FacilityAttributeList = delegator.findList("FacilityAttribute", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+    		 if(UtilValidate.isNotEmpty(FacilityAttributeList)){
+					delegator.removeAll(FacilityAttributeList);
+				}
+    	 }catch(GenericEntityException e){
+				//Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+			}
+   	    Map result = ServiceUtil.returnSuccess();
+   	    
+     	 if(UtilValidate.isNotEmpty(facilityId)){
+			try{
+			GenericValue FacilityAttribute = delegator.makeValue("FacilityAttribute");
+			FacilityAttribute.set("facilityId", facilityId);
+			FacilityAttribute.set("attrName", attrName);
+			FacilityAttribute.set("attrValue", attrValue);
+			delegator.createOrStore(FacilityAttribute);
+			}catch (GenericEntityException e) {
+					Debug.logError(e, "Could not add role to order for OnBeHalf  party " + facilityId, module);
+ 					return ServiceUtil.returnError(" Could not add Attribute tax type ");
+			}
+     	 }
+	  	
+   	    result.put("facilityId",facilityId);
+   	    return result;
+   	}
+ 	
+ 	
  	public static Map<String, Object> updateIndentPO(DispatchContext ctx, Map<String, ? extends Object> context){ 
 		Map<String, Object> result = FastMap.newInstance();
 		Delegator delegator = ctx.getDelegator();

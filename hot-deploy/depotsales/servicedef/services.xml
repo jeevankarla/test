@@ -33,6 +33,13 @@
         <attribute name="postalCode" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="createOrUpdateFcilityAttribute" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrUpdateFcilityAttribute">
+        <description>Approve Depot Orders</description>
+        <attribute name="facilityId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="attrName" type="String" mode="IN" optional="false"/>
+        <attribute name="attrValue" type="String" mode="IN" optional="false"/>
+    </service>
     
      <service name="CreditapproveDepotSalesOrder" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreditapproveDepotOrder">
