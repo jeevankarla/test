@@ -211,6 +211,39 @@ BranchList=[];
 	orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
 
 	if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
+	
+		headerData4=[:];
+		headerData4.put("orderDate", " ");
+		headerData4.put("orderId", " ");
+		if(facilityPartyId){
+			customerName="";
+			customer = PartyHelper.getPartyName(delegator, facilityPartyId, false);
+			customerName=customer.toUpperCase();
+			headerData4.put("orderNo", "MONTHLY INFORMATION ON YARN SUPPLY FROM NHDC FOR"+" "+customerName);
+			}
+		else{
+			headerData4.put("orderNo", "MONTHLY INFORMATION ON YARN SUPPLY FROM NHDC");
+		}
+		headerData4.put("Qty", " ");
+		headerData4.put("productNameCSV", " ");
+		headerData4.put("indentPrice", " ");
+		headerData4.put("indentValue", " ");
+		headerData4.put("poQty", " ");
+		headerData4.put("salInv", " ");
+		headerData4.put("salDate", " ");
+		headerData4.put("salVal", " ");
+		headerData4.put("transporter", " ");
+		headerData4.put("milInv", " ");
+		headerData4.put("value", " ");
+		headerData4.put("paymentReceipt", " ");
+		headerData4.put("amount", " ");
+		headerData4.put("weaverName", " ");
+		headerData4.put("poNo", " ");
+		headerData4.put("poSequenceNo", " ");
+		headerData4.put("poDate", " ");
+		headerData4.put("supplierName", " ");
+		orderList.add(headerData4);
+		
 	headerData2=[:];
 	headerData2.put("orderDate", " ");
 	headerData2.put("orderId", " ");
@@ -254,7 +287,7 @@ BranchList=[];
 	headerData1.put("amount", " ");
 	headerData1.put("weaverName", " ");
 	headerData1.put("poNo", " ");
-	headerData2.put("poSequenceNo", " ");
+	headerData1.put("poSequenceNo", " ");
 	headerData1.put("poDate", " ");
 	headerData1.put("supplierName", " ");
 	orderList.add(headerData1);
@@ -279,7 +312,7 @@ BranchList=[];
 	headerData3.put("amount", " ");
 	headerData3.put("weaverName", " ");
 	headerData3.put("poNo", " ");
-	headerData2.put("poSequenceNo", " ");
+	headerData3.put("poSequenceNo", " ");
 	headerData3.put("poDate", " ");
 	headerData3.put("supplierName", " ");
 	orderList.add(headerData3);
