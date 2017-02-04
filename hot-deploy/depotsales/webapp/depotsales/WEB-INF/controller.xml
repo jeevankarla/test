@@ -2635,7 +2635,7 @@
     </request-map>
     <request-map uri="cancelDepotPurchaseInvoice">
         <security https="true" auth="true"/>
-        <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>
+        <event type="service" invoke="setInvoiceStatus"/>
         <response name="success" type="request-redirect" value="DepotPurchaseInvoiceView">
             <redirect-parameter name="invoiceTypeId" value="PURCHASE_INVOICE"/>
         </response>
@@ -2643,7 +2643,7 @@
     </request-map>
     <request-map uri="cancelSalesInvoice">
         <security https="true" auth="true"/>
-        <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>
+        <event type="service" invoke="setInvoiceStatus"/>
         <response name="success" type="request-redirect" value="DepotSalesInvoice">
             <redirect-parameter name="invoiceTypeId" value="SALES_INVOICE"/>
         </response>

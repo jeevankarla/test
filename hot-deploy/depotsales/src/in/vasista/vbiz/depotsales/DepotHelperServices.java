@@ -2403,19 +2403,21 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         String invoiceId = (String) context.get("invoiceId");
         String puposeType = (String) context.get("puposeType");
         GenericValue orderAssoc =null;
+        
         boolean enableIndentSummaryDetails=true;
         try {
-        	 if("CancelSaleOrder".equals(puposeType)){
+        	GenericValue tenantConfig = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyName", "Enable-Indent-Summary-Detail-Updation","propertyTypeEnumId","DASHBOARD-ANALYTICS"), false);
+            if(UtilValidate.isNotEmpty(tenantConfig) && "N".equals(tenantConfig.get("propertyValue"))){
+            	enableIndentSummaryDetails=false;
+            	return result;
+            }
+        	 if("CancelSaleOrder".equals(puposeType) && enableIndentSummaryDetails){
         		 GenericValue indentSummaryDetails = delegator.findOne("IndentSummaryDetails", UtilMisc.toMap("orderId", orderId), false);
         		 if(UtilValidate.isNotEmpty(indentSummaryDetails)){
         			 indentSummaryDetails.remove();
         		 }
         	 }
-        	 GenericValue tenantConfig = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyName", "Enable-Indent-Summary-Detail-Updation","propertyTypeEnumId","DASHBOARD-ANALYTICS"), false);
-             if(UtilValidate.isNotEmpty(tenantConfig) && "N".equals(tenantConfig.get("propertyValue"))){
-             	enableIndentSummaryDetails=false;
-             	return result;
-             }
+        	 
         	 GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
             // Getting indent Id from Purchase Order Id 
             if(UtilValidate.isNotEmpty(orderHeader) && "PURCHASE_ORDER".equals(orderHeader.get("orderTypeId"))){

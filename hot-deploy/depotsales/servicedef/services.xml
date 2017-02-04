@@ -131,7 +131,26 @@
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
     </service>
-    
+    <service name="setInvoiceStatus" engine="simple"  transaction-timeout="7200"
+        location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="setInvoiceStatus">
+        <description>Set the Invoice  Status</description>
+        <required-permissions join-type="OR">
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="ARINVOICE_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="PAYMENT_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="APINVOICE_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="INVOICE_APPROVE"/>
+        </required-permissions>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="cancelComments" type="String" mode="IN" optional="true"/>
+        <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paidDate" type="Timestamp" mode="IN" optional="true"/> <!-- only relevant for changes to PAID -->
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
+    </service>
      <service name="editPartyLooms" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="editPartyLooms" >
         <description>Create a new Depot Sales ReturnHeader</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
