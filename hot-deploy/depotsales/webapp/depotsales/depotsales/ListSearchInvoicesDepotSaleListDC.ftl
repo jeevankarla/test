@@ -685,7 +685,7 @@ function roundingInvoiceItems(invoiceId){
                 	<td align="center"></td>
               </#if> -->
               
-              <#if invoice.statusId != "INVOICE_CANCELLED"> <td><a class="buttontext" target='_blank' href="<@ofbizUrl>APInvoiceOverviewDC?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
+              <#if invoice.statusId != "INVOICE_CANCELLED"> <td><a class="buttontext" target='_blank' href="<@ofbizUrl>MaterialSalesEditInvoiceInitDC?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
                 <#else>
  		   	       <td></td>
               </#if>
