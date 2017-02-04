@@ -104,6 +104,7 @@ under the License.
         <condition field-name="invoiceId" operator="is-not-empty"/>
         <condition field-name="statusId" operator="equals" value="INVOICE_CANCELLED"/>
         <action service="cancelInvoice" mode="sync"/>
+       <action service="getIndentAndUpdateIndenSummaryDetails" mode="sync"/>
     </eca>
 
     <!-- accounting transactions for Incoming Payment (AR) -->
