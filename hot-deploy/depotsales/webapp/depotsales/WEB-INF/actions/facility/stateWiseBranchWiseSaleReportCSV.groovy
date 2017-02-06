@@ -322,8 +322,14 @@ for (eachInvoiceList in Invoice) {
 		}
 		
 	}
-	  	}
+		product = delegator.findList("OrderHeaderItemAndRoles",EntityCondition.makeCondition("productId", EntityOperator.EQUALS , InvoiceItem[0].productId)  , null, null, null, false );
+		productdetails=EntityUtil.getFirst(product);
+			if(UtilValidate.isNotEmpty(productdetails)){
+				productName=productdetails.itemDescription;
+			}
+	  }
 	tempMap.put("invoiceAmount", invoiceAMT);
+	tempMap.put("productName",productName);
 	tempMap.put("invoiceQTY", invoiceQTY);
 	if(invoiceQTY.compareTo(BigDecimal.ZERO)==1){
 		invoicprice=invoiceAMT.divide(invoiceQTY,4,BigDecimal.ROUND_HALF_UP);
