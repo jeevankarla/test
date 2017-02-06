@@ -34,7 +34,6 @@ branchIds=[];
 branchId = parameters.branchId;
 DateMap = [:];
 branchName = "";
-
 if(branchId){
 branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 branchName = branch.get("groupName");
@@ -50,12 +49,24 @@ condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
 
 branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-
+if(!branchList){
+	condListb2 = [];
+	//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
+	condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+	condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+	
+	PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+	branchDetails = EntityUtil.getFirst(PartyRelationship1);
+	branchIdForAdd=branchDetails.partyIdFrom;
+}
+else{
+	branchIdForAdd=branchId;
+}
 if(!branchList)
 branchList.add(branchId);
 }
-//Debug.log("branchName=================="+branchName);
-//Debug.log("branchList=================="+branchList);
 
 branchBasedWeaversList = [];
 condListb1 = [];
@@ -70,7 +81,6 @@ branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, 
 if(!branchBasedWeaversList)
 branchBasedWeaversList.add(branchId);
 }
-//Debug.log("branchBasedWeaversList=================="+branchBasedWeaversList);
 
 productCategory=parameters.categoryId;
 context.partyfromDate=partyfromDate;
@@ -96,8 +106,7 @@ if(UtilValidate.isNotEmpty(partythruDate)){
 context.daystart=daystart
 context.dayend=dayend
 branchContext=[:];
-branchContext.put("branchId","INT15");
-
+branchContext.put("branchId",branchIdForAdd);
 BOAddress="";
 BOEmail="";
 try{
@@ -122,7 +131,6 @@ try{
 }
 context.BOAddress=BOAddress;
 context.BOEmail=BOEmail;
-
 conditionList = [];
 productIds = [];
 purchaseOrderIds =[];
@@ -160,7 +168,6 @@ conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOpera
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
 invoiceItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productId","quantity","itemValue","amount","partyId"), null, null, false);
-//Debug.log("invoiceItems=================="+invoiceItems);
 finalCSVList=[];
 totalQty=0 
 totalValue=0;

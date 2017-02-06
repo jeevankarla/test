@@ -3677,12 +3677,12 @@
     </form>
     <form name="fiberAndCountWiseSalesReportCSV" type="list" list-name="finalCSVList" view-size="99999">
     	 <field name="prodcatName" title="___"><display/></field>
-    	 <field name="productName" title="____"><display/></field>
-    	 <field name="partyName" title="_"><display/></field>
-    	 <field name="orderQty" title="_"><display/></field>
+    	 <field name="productName" title="__National Handloom__"><display/></field>
+    	 <field name="partyName" title="__Development__"><display/></field>
+    	 <field name="orderQty" title="__Corporation Ltd__"><display/></field>
          <!-- <field name="BdlWt" title="__National Handloom__"><display/></field> -->
-         <field name="rate" title="_Development"><display/></field>
-         <field name="orderValue" title="_ Corporation Ltd__"><display/></field>
+         <field name="rate" title="_"><display/></field>
+         <field name="orderValue" title="_"><display/></field>
     </form>
 
     <form name="IndentCsvReportList" type="list" list-name="orderInformationDetails" view-size="99999">
