@@ -4198,8 +4198,14 @@
      <form name="FindPayments" type="single" target="TrackPayments" >
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="transactionId" title="Transaction Id"><text-find/></field>
-		<field name="transactionDate" title="Transaction Date"><date-find/></field>
-		<field name="partyId" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field> 
+		    <field name="transactionDate" title="Transaction Date"><date-find/></field>
+		    <field name="partyId" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentChannel" title="Payment Channel">
+            <drop-down allow-empty="true">
+              <option key="atom" description="ATOM"/>
+               <option key="airtel" description="AIRTEL"/>               
+            </drop-down>
+        </field> 
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="ListPayments" type="list" list-name="listIt" target="TrackPayments" odd-row-style="alternate-row" header-row-style="header-row"
