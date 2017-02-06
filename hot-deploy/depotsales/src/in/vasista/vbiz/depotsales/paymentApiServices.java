@@ -376,9 +376,9 @@ public class paymentApiServices {
         
         if(paymentChannel.equalsIgnoreCase("airtel"))
         {   
-        	String rosList[] = {"INT28","INT26","INT4","INT6","INT3","INT1","INT47","INT2"};
-        	String midList[] = {"25672457","25672458","25672459","25672460","25672461","25672462","25672463","25672464"};
-        	String saltList[] = {"fghjfgh456","fghjfgh457","fghjfgh458","fghjfgh459","fghjfgh460","fghjfgh461","fghjfgh462","fghjfgh463"};
+        	String rosList[] = {"INT5","INT28","INT26","INT4","INT6","INT3","INT1","INT47","INT2"};
+        	String midList[] = {"25649255","25672457","25672458","25672459","25672460","25672461","25672462","25672463","25672464"};
+        	String saltList[] = {"34602fa0","fghjfgh456","fghjfgh457","fghjfgh458","fghjfgh459","fghjfgh460","fghjfgh461","fghjfgh462","fghjfgh463"};
         	
         	String userLoginParty = null;
             if (userLogin != null && userLogin.get("partyId") != null) {
