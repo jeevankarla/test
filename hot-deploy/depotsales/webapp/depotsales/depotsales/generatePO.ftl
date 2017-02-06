@@ -405,7 +405,6 @@ function cancelviewOrderForm(){
 			var orderAmt = 0;
 			message += "<table cellspacing=10 cellpadding=10 border=2  width=520>" ;
 			message += "<thead><td align='left' class='h3'> <font color='red'><b>Normal Address</b></font></td>";
-			
 			message += "<thead><tr class='h3'><td align='left' class='h3'> Tin Number :</td><td align='left' class='h3'>"+tinNumber+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> Address1 :</td><td align='left' class='h3'>"+Naddress1+"</td><tr>";
 			message += "<thead><tr class='h3'><td align='left' class='h3'> Address2 :</td><td align='left' class='h3'>"+Naddress2+"</td><tr>";
