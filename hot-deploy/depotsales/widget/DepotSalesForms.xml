@@ -3803,6 +3803,7 @@
          <!--  <field name="billno" title="Sale Invo.No"><display/></field> -->
           <field name="billno" title="Sale Invoice No"><display/></field>
          <field name="invoiceDate" title="Invoice Date"><display/></field>
+         <field name="productName" title="Product Name"><display/></field> 
          <field name="invoiceQTY" title="Quantity(kg)"><display/></field>
          <field name="invoicprice" title="Invoice Price"><display/></field>
          <field name="invoiceAmount" title="Amount"><display/></field>
