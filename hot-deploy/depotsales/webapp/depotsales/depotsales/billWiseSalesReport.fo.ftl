@@ -20,7 +20,7 @@ under the License.
 <#escape x as x?xml>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
-        <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-left=".3in" margin-right=".3in" margin-top=".1in">
+        <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-left=".3in" margin-right=".8in" margin-top=".1in">
             <fo:region-body margin-top="0.1in"/>
             <fo:region-before extent="1in"/>
             <fo:region-after extent="1.5in"/>
@@ -37,7 +37,7 @@ under the License.
 			<fo:block text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOAddress?if_exists}</fo:block>
     		<fo:block keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
             <fo:block text-align="right" font-size="10pt" >Page - <fo:page-number/></fo:block>
-            <fo:block text-align="center" font-size="10pt" >BILL WISE SALE REPORT:<fo:inline font-weight="bold" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:inline></fo:block>
+            <fo:block text-align="center" font-size="10pt" font-weight="bold">BILL WISE SALE REPORT:<fo:inline font-weight="bold" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:inline></fo:block>
             <fo:block linefeed-treatment="preserve">&#xA;</fo:block><fo:block linefeed-treatment="preserve">&#xA;</fo:block>
         
 	        <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -47,70 +47,70 @@ under the License.
     		<fo:block>
          		<fo:table border-style="solid">
          		    <fo:table-column column-width="2%"/>
-		            <fo:table-column column-width="6%"/>
-		            <fo:table-column column-width="10%"/>
-		            <fo:table-column column-width="10%"/>
-		            
-		            <fo:table-column column-width="12%"/>
-		            <fo:table-column column-width="7%"/>
-		            <fo:table-column column-width="6%"/>
-		            
-		            <fo:table-column column-width="6%"/>
-		            <fo:table-column column-width="6%"/>
-		            <fo:table-column column-width="5%"/>
-		            <fo:table-column column-width="7%"/>
-		            
-		            <fo:table-column column-width="7%"/>
-		            <fo:table-column column-width="5%"/>
-		            <fo:table-column column-width="7%"/>
+		            <fo:table-column column-width="8%"/>
+		            <fo:table-column column-width="8%"/>
 		            <fo:table-column column-width="9%"/>
+		            
+		            <fo:table-column column-width="10%"/>
+		            <fo:table-column column-width="7%"/>
+		            <fo:table-column column-width="6%"/>
+		            
+		            <fo:table-column column-width="6%"/>
+		            <fo:table-column column-width="6%"/>
+		            <fo:table-column column-width="6%"/>
+		            <fo:table-column column-width="7%"/>
+		            
+		            <fo:table-column column-width="6%"/>
+		            <fo:table-column column-width="6%"/>
+		            <fo:table-column column-width="7%"/>
+		            <fo:table-column column-width="10%"/>
 		            
 		            <fo:table-body>
 		                <fo:table-row>
 		                    <fo:table-cell border-style="solid">
-				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false">S No</fo:block>
+				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">S No</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Date</fo:block>
+				            	<fo:block keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Date</fo:block>
 				            </fo:table-cell >
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">Bill No.</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Bill No.</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">Party Name</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Party Name</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">Type</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Type</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">District</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">District</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">Branch</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Branch</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">State</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">State</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">RO</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">RO</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">Qty</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Qty</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">Amount</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Amount</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">Vat/Other Amt</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Vat/Other Amt</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">Subsidy Qty</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Subsidy Qty</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">10% Subsidy</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">10% Subsidy</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false">Scheme</fo:block>
+				            	<fo:block text-align="center" font-size="10pt" white-space-collapse="false" font-weight="bold">Scheme</fo:block>
 				            </fo:table-cell>
 						</fo:table-row>
 						
@@ -172,7 +172,7 @@ under the License.
 				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
+				            	<fo:block keep-together="always" text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">TOTAL</fo:block>
 				            </fo:table-cell >
 				            <fo:table-cell border-style="solid">
 				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
@@ -196,19 +196,19 @@ under the License.
 				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false">${totQty}</fo:block>
+				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${totQty}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false">${totAmount}</fo:block>
+				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${totAmount}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
 				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false"></fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false">${totsubquant}</fo:block>
+				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${totsubquant}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
-				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false">${totsubAmount}</fo:block>
+				            	<fo:block text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${totsubAmount?if_exists?string("##0.00")}</fo:block>
 				            </fo:table-cell>
 				            <fo:table-cell border-style="solid">
 				            	<fo:block text-align="left" font-size="10pt" white-space-collapse="false"></fo:block>

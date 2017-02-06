@@ -41,11 +41,11 @@ DateList.add(DateMap);
 context.DateList=DateList;
  
 branchName = "";
-if(branchId){
+/*if(branchId){
 	branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 	branchName = branch.get("groupName");
 	DateMap.put("branchName", branchName);
-}
+}*/
 branchList = [];
 condListb = [];
 if(branchId){
@@ -217,6 +217,7 @@ for(int i=0;i < Invoice.size();i++){
 	invoiceDetailMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd/MM/yyyy"));
 	invoiceDetailMap.put("partyId",eachInvoice.partyId);
 	custPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachInvoice.partyId, false);
+	branchName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachInvoice.partyIdFrom, false);
 	invoiceDetailMap.put("partyName",custPartyName);
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,eachInvoice.partyId));
@@ -345,11 +346,19 @@ for(int i=0;i < Invoice.size();i++){
 	condListb = [];
 	condListb.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
 	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 	condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
-	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdFrom"), null, null, false);
-	if(UtilValidate.isNotEmpty(PartyRelationship)){
+	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdFrom","partyIdTo"), null, null, false);
+	
+	if(UtilValidate.isNotEmpty(PartyRelationship)){		
 		roId = EntityUtil.getFirst(PartyRelationship).get("partyIdFrom");
-		roDetails = delegator.findOne("PartyGroup",[partyId : roId] , false);
+		
+		if(roId != "Company")
+		roId = EntityUtil.getFirst(PartyRelationship).get("partyIdFrom");
+		else
+		roId = EntityUtil.getFirst(PartyRelationship).get("partyIdTo");
+		
+		roDetails = delegator.findOne("PartyGroup",[partyId : roId] , false);		
 		roName = roDetails.groupName;
 	}
 	
