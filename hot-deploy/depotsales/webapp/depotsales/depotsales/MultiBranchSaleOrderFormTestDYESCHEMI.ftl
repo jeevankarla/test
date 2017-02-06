@@ -473,6 +473,7 @@
 	       	  				  var tableElement="";
 	       	  				  
 	       	  				   $.each(SchemeList, function(key, item){
+	       	  				       if(item['schemeId'] == "General")
 		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
 		       	  				 });
 		       	  			$('#schemeCategory').empty().append(tableElement);	 
