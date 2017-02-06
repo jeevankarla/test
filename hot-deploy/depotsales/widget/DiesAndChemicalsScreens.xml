@@ -2562,7 +2562,7 @@
 			<actions>
 				<set field="titleProperty"
 					value="Purchase Order OverView - OrderId - ${parameters.orderId}" />
-				<set field="tabButtonItem" value="FindDepotTransPODC" />
+				<set field="tabButtonItem" value="FindPODC" />
 				<set field="tabButtonItem2" value="POoverViewDC" />
 				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js"
 					global="true" />
@@ -2721,7 +2721,7 @@
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
-				<set field="targetRequest" value="FindGRNReceiptsDC" />
+				<set field="targetRequest" value="FindGRNReceipts" />
 				<service service-name="performFind" result-map="result"
 					result-map-list="listIt">
 					<field-map field-name="inputFields" from-field="parameters" />
@@ -2741,5 +2741,89 @@
 		</section>
 	</screen>
 	
+	
+	
+	<screen name="FindDepotTransPODC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Find Purchase Order" />
+				<set field="tabButtonItem" value="FindDepotTransPODC" />
+				<set field="tabButtonItem2" value="FindDepotTransPODC" />
+				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/poRefNoSearch.groovy"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/DepotTransROSearchFilter.groovy" />
+				<service service-name="performFind" result-map="result"
+					result-map-list="listIt">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles" />
+					<field-map field-name="orderBy" value="-orderDate" />
+				</service>
+				<set field="targetRequest" value="FindDepotTransPODC" />
+			<!-- 	<set field="ChannalType" value="MATERIAL_PUR_CHANNEL" />  -->
+				<!-- <set field="partyId" from-field="parameters.partyId" /> -->
+				<set field="roleTypeId" value="BILL_FROM_VENDOR" />
+				<set field="parameters.roleTypeId" from-field="roleTypeId" />
+				<set field="parameters.noConditionFind" value="N"></set>
+				<set field="parameters.purposeTypeId" value="DEPOT_PURCHASE"></set>
+			<!-- 	<set field="parameters.salesChannelEnumId" value="MATERIAL_PUR_CHANNEL"></set>  -->
+				<set field="parameters.partyId" value="${tempPartyId}" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsTabBar" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="FindDepotTransPOSubTabBarDC" />
+						<section>
+							<widgets>
+								<section>
+                             		<condition>
+                            			<if-has-permission permission="DEPOTSALES"  action="_CREATE_PO"/>
+                            		</condition>
+									<widgets>
+										<link target="CreateDepotTransPO" text="Create PO" style="buttontext" />
+									</widgets>
+								</section>
+								<screenlet title="search-options">
+									<include-form name="FindDepotTransPurchaseOrder"
+										location="component://depotsales/widget/DepotOperationForms.xml" />
+								</screenlet>
+								<screenlet title="Search-results">
+									<include-form name="listDepotTransPurchaseOrders"
+										location="component://depotsales/widget/DepotOperationForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="orderAssoc">
+		<section>
+			<actions>
+				<entity-condition list="OrderAssocList"
+					entity-name="OrderAssoc">
+					<condition-list combine="or">
+						<condition-expr field-name="orderId" from-field="parameters.orderId" />
+						<condition-expr field-name="toOrderId" from-field="parameters.orderId" />
+					</condition-list>
+				</entity-condition>
+				<set field="assocId" value="${parameters.orderId}" />
+			</actions>
+			<widgets>
+				<screenlet title="Order Associations">
+					<include-form
+						location="component://materialmgmt/widget/materialmgmtForms.xml"
+						name="listOrderAssoc" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	 
 
 </screens>

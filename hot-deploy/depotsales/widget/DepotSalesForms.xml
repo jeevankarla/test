@@ -1073,7 +1073,7 @@
       		<set field="vehicleId" value="${ShipmentList[0].vehicleId}"/> -->
       	</row-actions>   
       	<field name="orderId" widget-style="buttontext">
-      	<hyperlink target="POoverview" description="${groovy: if(orderNo !=null) return orderNo; else return orderId;}" target-window="_blank">
+      	<hyperlink target="POoverviewDC" description="${groovy: if(orderNo !=null) return orderNo; else return orderId;}" target-window="_blank">
       			<parameter param-name="orderId"/>
       		</hyperlink>
        </field>
