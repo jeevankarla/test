@@ -410,12 +410,14 @@
 			var orderId = $("#orderId").val();
 			var productStoreId = $("#productStoreId").val();
 			var refNo = $("#refNo").val();
+			var dyesChemicals = $("#dyesChemicals").val();
 			var quotationNo = $("#quotationNo").val();			
 			var party = jQuery("<input>").attr("type", "hidden").attr("name", "supplierId").val(supplierId);
 			var order = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(orderId);
 			var orderDesc = jQuery("<input>").attr("type", "hidden").attr("name", "orderName").val(orderName);
 		    var POField = jQuery("<input>").attr("type", "hidden").attr("name", "PONumber").val(poNumber);
 		    var refNum= jQuery("<input>").attr("type", "hidden").attr("name", "refNo").val(refNo);
+		    var dyesChemicals= jQuery("<input>").attr("type", "hidden").attr("name", "dyesChemicals").val(dyesChemicals);
 		    var quotationNum = jQuery("<input>").attr("type", "hidden").attr("name", "quotationNo").val(quotationNo);
 			var productStore = jQuery("<input>").attr("type", "hidden").attr("name", "productStoreId").val(productStoreId);
 			if(isIncTax){
@@ -433,6 +435,7 @@
 			jQuery(formId).append(jQuery(party));
 			jQuery(formId).append(jQuery(POField));
             jQuery(formId).append(jQuery(refNum));
+            jQuery(formId).append(jQuery(dyesChemicals));
             jQuery(formId).append(jQuery(quotationNum)); 
 			jQuery(formId).append(jQuery(productStore));            
 		</#if>
