@@ -149,6 +149,18 @@ totalValue=0;
 totalRate=0;
 prodCatMap=[:];
 totalsMap=[:];
+
+headerData3=[:];
+headerData3.put("prodcatName", "");
+headerData3.put("productName", "");
+headerData3.put("partyName", "__M1 Report__");
+headerData3.put("orderQty", "");
+/*headerData2.put("BdlWt", "____");*/
+headerData3.put("rate", "");
+headerData3.put("orderValue", " ");
+finalCSVList.add(headerData3);
+
+
 headerData2=[:];
 headerData2.put("prodcatName", "");
 headerData2.put("productName", "");
@@ -163,7 +175,7 @@ headerData=[:];
 headerData.put("prodcatName", "Product Category");
 headerData.put("productName", "Product Count");
 headerData.put("partyName", "Party Name");
-headerData.put("orderQty", "Order Qty");
+headerData.put("orderQty", "Order Qty(kgs)");
 /*headerData.put("BdlWt", "BdlWt");*/
 headerData.put("rate", "Rate");
 headerData.put("orderValue", "Order Value");
