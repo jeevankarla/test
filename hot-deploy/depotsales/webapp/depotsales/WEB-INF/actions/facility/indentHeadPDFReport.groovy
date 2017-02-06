@@ -623,7 +623,7 @@ if(invoice){
 
 					////Debug.log("eachAdjustment.itemValue================"+eachAdjustment.itemValue);
 
-					if(eachAdjustment.invoiceItemTypeId != "INVOICE_ITM_ADJ")
+					//if(eachAdjustment.invoiceItemTypeId != "INVOICE_ITM_ADJ")
 					allAdjWitOutTEN = allAdjWitOutTEN+eachAdjustment.itemValue;
 				}
 			}

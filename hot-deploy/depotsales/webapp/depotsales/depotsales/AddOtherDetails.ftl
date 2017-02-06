@@ -39,6 +39,22 @@
 
 <script>
 
+
+
+function makeDatePicker(fromDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+			}
+	});
+		
+ }		
+
+
+
+
 var data;
 
 function getFecilityAddressDetailAjax(){
@@ -373,7 +389,9 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	
 	
 			$(document).ready(function(){
-	
+	   
+	         makeDatePicker("facilityDate","fromDateId");
+	         
 	           
 	      	var branchAutoJSON = ${StringUtil.wrapString(branchJSON)!'[]'};
 			var catgoryOptionList=[];
@@ -689,6 +707,14 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 							      	<input type="hidden" name="facilityId" id="facilityId"  />
 							    </td>
 							</tr>
+							
+						<#--	<tr>
+							    <td class="label"><FONT COLOR="red">*</font><b>Facility Date</b></td>
+							    <td>
+							      	<input type="text" name="facilityDate" id="facilityDate" size="30" maxlength="60" autocomplete="off" />
+							      	<input type="hidden" name="facilityDate" id="facilityDate"  />
+							    </td>
+							</tr>-->
 									
                          
 									    <td class="label"><FONT COLOR="red">*</font><b>Address1</b></td>
