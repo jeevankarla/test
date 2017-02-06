@@ -2822,7 +2822,7 @@ under the License.
         </field> -->
     </form>
     
-    <form name="ListGrantDevelopmentalAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
+    <form name="ListGrantDevelopmentalAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="developmentGrantAccountsList" paginate-target="${targetRequest}" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
          <row-actions>
          <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/GrantBalances.groovy"/>
@@ -2895,7 +2895,7 @@ under the License.
         </field> -->
     </form>
     
-     <form name="ListGrantImplementationAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
+     <form name="ListGrantImplementationAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="implementationGrantAccountsList" paginate-target="${targetRequest}" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
          <row-actions>
          <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/GrantBalances.groovy"/>
