@@ -324,7 +324,7 @@ function drawRow(rowData) {
 	     
 	     }else{
 	     
-	       var DraftPoButton = '<a class="buttontext" href="<@ofbizUrl>CreateBranchTransPO?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">DraftPO</a>'; 
+	       var DraftPoButton = '<a class="buttontext" href="<@ofbizUrl>CreateBranchTransPODC?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">DraftPO</a>'; 
 	       row.append($("<td>" +  DraftPoButton  +"</td>"));  
 	     
 	      }

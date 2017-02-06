@@ -1,0 +1,2791 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="IndentorPortalScreen">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Process Indent" />
+				<set field="tabButtonItem" value="IndentPortalPayment" />
+				<set field="tabButtonItem2" value="IndentPortalPayment" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
+				<set field="defaultEffectiveDateTime"
+					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="shipmentTypeId" from-field="parameters.shipmentTypeId" />
+				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+				<set field="screenFlag" value="depotSales" />
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
+					/> -->
+			<!-- 	<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderSearchResults.groovy" /> -->
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanPortalCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="BranchTransactionsTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+ <screen name="OrderPaymentDC">
+    		<section>
+    			<actions>
+    				<set field="titleProperty" value="Indent Payment" />
+    				<set field="tabButtonItem" value="OrderPaymentDC" />
+    				<set field="tabButtonItem2" value="OrderPaymentDC" />
+    				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
+    				<set field="viewIndex" from-field="parameters.VIEW_INDEX_1" type="Integer" default-value="0"/>
+                    <set field="viewSize" value="50" type="Integer"/>
+                    <set field="nextFlag" type="String" default-value="Y"/>
+                    <set field="prevFlag" type="String" default-value="N"/>
+                      <service service-name="performFind" result-map="result">
+                       <field-map field-name="inputFields" from-field="parameters"/>
+                       <field-map field-name="entityName" value="OrderHeader"/>
+                    </service>
+    				<set field="defaultEffectiveDateTime"
+    					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
+    				<set field="defaultEffectiveDate"
+    					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+    				<set field="shipmentTypeId" from-field="parameters.shipmentTypeId" />
+    				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+    				<set field="screenFlag" value="depotSales" />
+    				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
+    					/> -->
+    				<script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderPaymentParamDC.groovy" />
+    			  <!--   <script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" />  -->
+    			</actions>
+    			<widgets>
+    				<decorator-screen name="BaanTransactionsCommonDecorator"
+    					location="component://depotsales/widget/CommonScreens.xml">
+    					<decorator-section name="body">
+    						<!-- <include-menu name="BranchSalesIndentTabBar"
+    							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+    						<section>
+    							<widgets>
+    							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                        <decorator-section name="menu-bar">
+                                        	 
+                                        </decorator-section>
+    							 		<decorator-section name="search-options">
+                                            <include-form name="FindOrderPaymentSeachDC" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                        </decorator-section>
+                                        <decorator-section name="search-results">
+    							<!-- 	<screenlet title="Sale Indents &#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;     Total Indents:     ${orderListSize}">   -->
+    								<platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/generatePODC.ftl" />
+    										</html>
+    									</platform-specific>
+    									<platform-specific>
+    										<html>
+    											<html-template
+    												location="component://depotsales/webapp/depotsales/depotsales/ListSearchOrderPaymentsDC.ftl" />
+    										</html>
+    									</platform-specific>
+    							<!-- 	</screenlet>  -->
+    								</decorator-section>
+    								</decorator-screen>
+    							</widgets>
+    						</section>
+    					</decorator-section>
+    				</decorator-screen>
+    			</widgets>
+    		</section>
+    	</screen>
+
+<screen name="DepotPurchaseInvoiceDC">
+			<section>
+				<actions>
+					<set field="titleProperty" value="Find Purchase Invoices" />
+					<set field="filterByDate" value="true" />
+					<set field="parameters.purposeTypeId" value="YARN_SALE"/>
+					<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/sequenceFilterDC.groovy"/>
+					
+					<!-- <service service-name="performFind" result-map="result">
+						<field-map field-name="inputFields" from-field="parameters" />
+						<field-map field-name="entityName" value="Invoice" />
+						
+						<field-map field-name="orderBy" value="createdStamp DESC" />
+					</service> -->
+					<set field="parameters.partyId" value="${parameters.tempPartyId}" />
+					<set field="invoices" from-field="result.listIt" />
+					<set field="tabButtonItem" value="purchaseinvoiceDC" />
+					<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
+					<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" />
+					<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
+					<script
+						location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethodDC.groovy" />
+				</actions>
+				<widgets>
+					<decorator-screen name="BaanTransactionsCommonDecorator"
+						location="component://depotsales/widget/CommonScreens.xml">
+						<decorator-section name="body">
+							<!-- <include-menu name="InvoiceTypesTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/> -->
+							<!-- <include-menu name="APInvoiceTabBar" location="component://depotsales/widget/DepotSalesMenus.xml" 
+								/> -->
+							<section>
+								<widgets>
+									<decorator-screen name="FindScreenDecorator"
+										location="component://common/widget/CommonScreens.xml">
+										<decorator-section name="menu-bar">
+											<container style="button-bar">
+												<!-- <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" 
+													style="buttontext create"/> --> <!-- NewPurchaseInvoice -->
+												<!-- <link target="newInvoice" text="New Cash Voucher" style="buttontext 
+													create"><parameter param-name="prefPaymentMethodTypeId" value="CASH"/></link> 
+													<link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter 
+													param-name="prefPaymentMethodTypeId" value="BANK"/></link> <link target="partyFinanHistory" 
+													text="Party Financial History" style="buttontext create"></link> -->
+												<!-- <link target="CreateAPInvoice" text="Create Cash Voucher" 
+													style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" 
+													value="CASH"></parameter> <parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter> 
+													<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter> 
+													<parameter param-name="showCreateButton" value="Y"></parameter> </link> <link 
+													target="CreateAPInvoice" text="Create Bank Voucher" style="buttontext create" 
+													> <parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter> 
+													<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter> 
+													<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter> 
+													<parameter param-name="showCreateButton" value="Y"></parameter> </link> -->
+												<link target="partyFinanHistoryDC" text="Party Financial History"
+													style="buttontext create"></link>
+											</container>
+										</decorator-section>
+										<decorator-section name="search-options">
+											<include-form name="FindApInvoicesDC"
+												location="component://depotsales/widget/DepotSalesForms.xml" />
+										</decorator-section>
+										<decorator-section name="search-results">
+											<screenlet title="Invoices List">
+												<section>
+													<condition>
+														<not>
+															<if-empty field="invoices" />
+														</not>
+													</condition>
+													<widgets>
+														<link text="${uiLabelMap.AccountingExportAsCsv}"
+															style="buttontext" target="InvoiceSearchResultsCsv.csv">
+															<parameter param-name="parentTypeId" from-field="parameters.parentTypeId" />
+															<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op" />
+															<parameter param-name="invoiceId" from-field="parameters.invoiceId" />
+															<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic" />
+															<parameter param-name="description_op"
+																from-field="parameters.description_op" />
+															<parameter param-name="description" from-field="parameters.description" />
+															<parameter param-name="description_ic"
+																from-field="parameters.description_ic" />
+															<parameter param-name="invoiceTypeId"
+																from-field="parameters.invoiceTypeId" />
+															<parameter param-name="statusId" from-field="parameters.statusId" />
+															<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom" />
+															<parameter param-name="partyId" from-field="parameters.partyId" />
+															<parameter param-name="invoiceDate_fld0_value"
+																from-field="parameters.invoiceDate_fld0_value" />
+															<parameter param-name="invoiceDate_fld0_op"
+																from-field="parameters.invoiceDate_fld0_op" />
+															<parameter param-name="invoiceDate_fld1_value"
+																from-field="parameters.invoiceDate_fld1_value" />
+															<parameter param-name="invoiceDate_fld1_op"
+																from-field="parameters.invoiceDate_fld1_op" />
+															<parameter param-name="dueDate_fld0_value"
+																from-field="parameters.dueDate_fld0_value" />
+															<parameter param-name="dueDate_fld0_op"
+																from-field="parameters.dueDate_fld0_op" />
+															<parameter param-name="dueDate_fld1_value"
+																from-field="parameters.dueDate_fld1_value" />
+															<parameter param-name="dueDate_fld1_op"
+																from-field="parameters.dueDate_fld1_op" />
+														</link>
+													</widgets>
+												</section>
+												<platform-specific>
+													<html>
+														<html-template
+															location="component://accounting/webapp/accounting/invoice/massPaymentsDC.ftl" />
+													</html>
+												</platform-specific>
+												<platform-specific>
+													<html>
+														<html-template
+															location="component://depotsales/webapp/depotsales/depotsales/ListSearchInvoicesDepotSaleDC.ftl" />
+													</html>
+												</platform-specific>
+											</screenlet>
+										</decorator-section>
+									</decorator-screen>
+								</widgets>
+							</section>
+						</decorator-section>
+					</decorator-screen>
+				</widgets>
+			</section>
+		</screen>
+		
+		<screen name="PartyFinanHistoryDC">
+			<section>
+				<actions>
+					<set field="tabButtonItem" value="purchaseinvoiceDC" />
+					<set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+					<set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set>
+				</actions>
+				<widgets>
+					<decorator-screen name="BaanTransactionsCommonDecorator"
+						location="component://depotsales/widget/CommonScreens.xml">
+						<decorator-section name="body">
+							<container>
+								<label style="h1">Party Financial History</label>
+							</container>
+							<screenlet title="Party Search">
+								<include-form name="findPartyFinHistory"
+									location="component://accounting/widget/ap/forms/InvoiceForms.xml" />
+							</screenlet>
+							<include-screen name="PartyFinanHistory"
+								location="component://accounting/widget/ap/InvoiceScreens.xml" />
+						</decorator-section>
+					</decorator-screen>
+				</widgets>
+			</section>
+		</screen>
+		
+		<screen name="APInvoiceOverviewDC">
+			<section>
+				<actions>
+					<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+						global="true" />
+					<set field="titleProperty" value="PageTitleInvoiceOverview" />
+					<set field="tabButtonItem" value="invoiceOverViewDC" />
+					<!-- <set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
+					<set field="tabButtonItem2" value="invoiceOverview" /> -->
+					<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
+					<set field="invoiceId" from-field="parameters.invoiceId" />
+					<set field="catflag" value="Ap" global="true" />
+					<entity-one entity-name="Invoice" value-field="invoice" />
+					<entity-and entity-name="InvoiceRole" list="invoiceRoles">
+						<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+						<order-by field-name="partyId" />
+					</entity-and>
+					<entity-and entity-name="InvoiceStatus" list="invoiceStatus">
+						<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+						<order-by field-name="statusDate" />
+					</entity-and>
+					<entity-and entity-name="InvoiceTerm" list="invoiceTerms">
+						<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+						<order-by field-name="invoiceTermId" />
+					</entity-and>
+					<entity-and entity-name="TimeEntry" list="timeEntries">
+						<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+						<order-by field-name="invoiceItemSeqId" />
+					</entity-and>
+					<!-- <entity-and entity-name="PaymentApplication" list="paymentApplications"> 
+						<field-map from-field="parameters.invoiceId" field-name="invoiceId" /> <order-by 
+						field-name="paymentApplicationId" /> </entity-and> -->
+					<entity-and entity-name="PaymentAndApplication" list="payment">
+						<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+						<order-by field-name="paymentId" />
+					</entity-and>
+					<script
+						location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/CreateApplicationList.groovy" />
+					<script
+						location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/OrderListInvoiceItem.groovy" />
+					<set field="invoiceAmount"
+						value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice)}"
+						type="BigDecimal" />
+					<set field="notAppliedAmount"
+						value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"
+						type="BigDecimal" />
+					<set field="appliedAmount"
+						value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceApplied(invoice)}"
+						type="BigDecimal" />
+					<!-- <entity-condition entity-name="AcctgTransAndEntries"
+						list="AcctgTransAndEntries">
+						<condition-expr field-name="invoiceId" operator="equals"
+							from-field="invoiceId" />
+						<order-by field-name="acctgTransId" />
+					</entity-condition> -->
+					<service service-name="getAcctTransEnries" result-map="AcctgTransAndEntries" auto-field-map="true"/>
+				    <set field="AcctgTransAndEntries" type="List" from-field="AcctgTransAndEntries.AcctgTransAndEntries"/>
+					<service service-name="acctgInvoicePermissionCheck"
+						result-map="permResult">
+						<field-map field-name="mainAction" value="ARINVOICE_EDIT" />
+					</service>
+					<set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission" />
+					<service service-name="acctgInvoicePermissionCheck"
+						result-map="permResult">
+						<field-map field-name="mainAction" value="INVOICE_APPROVE" />
+					</service>
+					<set field="hasApproveInvoiceEditPermission" from-field="permResult.hasPermission" />
+					<service service-name="acctgInvoicePermissionCheck"
+						result-map="permResult">
+						<field-map field-name="mainAction" value="APINVOICE_EDIT" />
+					</service>
+					<set field="hasApInvoiceEditPermission" from-field="permResult.hasPermission" />
+					<set field="localDispatcherName" value="${parameters.localDispatcherName}" />
+					<set field="requestUri" value="${parameters.targetRequestUri}" />
+				</actions>
+				<widgets>
+					<decorator-screen name="BaanTransactionsCommonDecorator"
+						location="component://depotsales/widget/CommonScreens.xml">
+						<decorator-section name="body">
+							<section>
+								<widgets>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://accounting/webapp/accounting/invoice/setInvoiceStatus.ftl" />
+										</html>
+									</platform-specific>
+								</widgets>
+							</section>
+							<!-- <include-menu name="InvoiceTypesTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+							<!-- <include-menu name="APInvoiceTabBar" location="component://accounting/widget/AccountingMenus.xml" 
+								/> -->
+							<!-- <include-menu name="CreateAPInvoiceSubTabBar"
+								location="component://accounting/widget/AccountingMenus.xml" /> -->
+							<container style="h1">
+								<label>For: ${invoice.description} [${invoice.invoiceId}]</label>
+							</container>
+							<section>
+								<condition>
+									<and>
+										<if-compare field="invoice.statusId" operator="equals"
+											value="INVOICE_IN_PROCESS" />
+										<if-compare field="invoice.invoiceTypeId" operator="equals"
+											value="PETTYCASH_INVOICE" />
+										<if-compare field="requestUri" operator="equals"
+											value="/createInvoice" />
+									</and>
+								</condition>
+								<actions>
+									<script
+										location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
+								</actions>
+								<widgets>
+									<screenlet title="${uiLabelMap.AccountingInvoiceItems}">
+										<include-form name="EditInvoiceItems"
+											location="component://accounting/widget/InvoiceForms.xml" />
+									</screenlet>
+									<section>
+										<condition>
+											<and>
+												<if-compare field="invoice.invoiceTypeId"
+													operator="not-equals" value="PAYROL_INVOICE" />
+												<or>
+													<if-compare operator="equals" value="true"
+														field="hasArInvoiceEditPermission" />
+													<if-compare operator="equals" value="true"
+														field="hasApInvoiceEditPermission" />
+												</or>
+											</and>
+										</condition>
+										<widgets>
+											<screenlet title="${uiLabelMap.AccountingInvoiceItemAdd}">
+												<section>
+													<widgets>
+														<include-form name="EditInvoiceItem"
+															location="component://accounting/widget/InvoiceForms.xml" />
+													</widgets>
+												</section>
+											</screenlet>
+										</widgets>
+									</section>
+								</widgets>
+								<fail-widgets>
+									<section>
+										<condition>
+											<and>
+												<if-compare field="invoice.statusId" operator="equals"
+													value="INVOICE_IN_PROCESS" />
+												<or>
+													<if-compare operator="equals" value="true"
+														field="hasArInvoiceEditPermission" />
+													<if-compare operator="equals" value="true"
+														field="hasApInvoiceEditPermission" />
+												</or>
+											</and>
+										</condition>
+										<widgets>
+											<screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
+												<link target="editInvoice" text="${uiLabelMap.CommonUpdate}"
+													style="buttontext">
+													<parameter param-name="invoiceId" />
+												</link>
+												<include-form name="invoiceHeader"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+											<container style="lefthalf">
+												<screenlet title="${uiLabelMap.CommonStatus}"
+													navigation-form-name="ListInvoiceStatus">
+													<include-form name="ListInvoiceStatus"
+														location="component://accounting/widget/InvoiceForms.xml" />
+												</screenlet>
+												<!-- <screenlet title="${uiLabelMap.AccountingAppliedPayments} 
+													${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} 
+													${notAppliedAmount?currency(${invoice.currencyUomId})}" navigation-form-name="ListInvoiceApplications"> 
+													<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}" 
+													style="buttontext"> <parameter param-name="invoiceId" /> </link> <include-form 
+													name="ListInvoiceApplications" location="component://accounting/widget/InvoiceForms.xml" 
+													/> </screenlet> -->
+											</container>
+											<container style="righthalf">
+												<screenlet
+													title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
+													navigation-form-name="ListInvoiceApplications">
+													<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
+														style="buttontext">
+														<parameter param-name="invoiceId" />
+													</link>
+													<include-form name="ListInvoiceApplications"
+														location="component://accounting/widget/InvoiceForms.xml" />
+												</screenlet>
+												<!-- <screenlet title="${uiLabelMap.AccountingInvoiceRoles}" navigation-form-name="invoiceRoles"> 
+													<container> <link target="invoiceRoles" text="${uiLabelMap.CommonUpdate}" 
+													style="buttontext"> <parameter param-name="invoiceId" /> </link> </container> 
+													<include-form name="invoiceRoles" location="component://accounting/widget/InvoiceForms.xml" 
+													/> </screenlet> <screenlet title="${uiLabelMap.PartyTerms}"> <include-form 
+													name="ListInvoiceTerms" location="component://accounting/widget/InvoiceForms.xml" 
+													/> <include-form name="ListInvoicePaymentInfo" location="component://accounting/widget/InvoiceForms.xml" 
+													/> </screenlet> -->
+											</container>
+											<container style="clear" />
+											<screenlet title="${uiLabelMap.AccountingInvoiceItems}"
+												navigation-form-name="invoiceItems">
+												<link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
+													style="buttontext">
+													<parameter param-name="invoiceId" />
+												</link>
+												<include-form name="invoiceItems"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+											<section>
+												<condition>
+													<not>
+														<if-empty field="timeEntries" />
+													</not>
+												</condition>
+												<widgets>
+													<screenlet title="${uiLabelMap.AccountingInvoiceTimeEntries}"
+														navigation-form-name="ListTimeEntries">
+														<link target="editInvoiceTimeEntries" text="${uiLabelMap.CommonUpdate}"
+															style="buttontext">
+															<parameter param-name="invoiceId" />
+														</link>
+														<include-form name="ListTimeEntries"
+															location="component://accounting/widget/InvoiceForms.xml" />
+													</screenlet>
+												</widgets>
+											</section>
+											<screenlet title="${uiLabelMap.AccountingTransactions}"
+												navigation-form-name="AcctgTransAndEntries">
+												<include-form name="AcctgTransAndEntries"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+										</widgets>
+										<fail-widgets>
+											<screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
+												<include-form name="invoiceHeader"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+											<container style="lefthalf">
+												<screenlet title="${uiLabelMap.CommonStatus}"
+													navigation-form-name="ListInvoiceStatus">
+													<include-form name="ListInvoiceStatus"
+														location="component://accounting/widget/InvoiceForms.xml" />
+												</screenlet>
+												<screenlet
+													title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
+													navigation-form-name="ListInvoiceApplications">
+													<include-form name="ListInvoiceApplications"
+														location="component://accounting/widget/InvoiceForms.xml" />
+												</screenlet>
+											</container>
+											<container style="righthalf">
+												<screenlet title="${uiLabelMap.AccountingInvoiceRoles}"
+													navigation-form-name="invoiceRoles">
+													<include-form name="invoiceRoles"
+														location="component://accounting/widget/InvoiceForms.xml" />
+												</screenlet>
+												<screenlet title="${uiLabelMap.PartyTerms}">
+													<include-form name="ListInvoiceTerms"
+														location="component://accounting/widget/InvoiceForms.xml" />
+													<include-form name="ListInvoicePaymentInfo"
+														location="component://accounting/widget/InvoiceForms.xml" />
+												</screenlet>
+											</container>
+											<container style="clear" />
+											<screenlet title="${uiLabelMap.AccountingInvoiceItems}"
+												navigation-form-name="invoiceItems">
+												<include-form name="invoiceItems"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+											<section>
+												<condition>
+													<not>
+														<if-empty field="timeEntries" />
+													</not>
+												</condition>
+												<widgets>
+													<screenlet title="${uiLabelMap.AccountingInvoiceTimeEntries}"
+														navigation-form-name="ListTimeEntries">
+														<include-form name="ListTimeEntries"
+															location="component://accounting/widget/InvoiceForms.xml" />
+													</screenlet>
+												</widgets>
+											</section>
+											<screenlet title="${uiLabelMap.AccountingTransactions}"
+												navigation-form-name="AcctgTransAndEntries">
+												<include-form name="AcctgTransAndEntries"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+										</fail-widgets>
+									</section>
+								</fail-widgets>
+							</section>
+	
+						</decorator-section>
+					</decorator-screen>
+				</widgets>
+			</section>
+		</screen>
+		
+		<screen name="purchaseInvoiceEditDC">
+			<section>
+				<actions>
+					<set field="titleProperty" value="Material Invoice Entry" />
+					<set field="tabButtonItem" value="FindGRNReceipts" />
+					<set field="tabButtonItem2" value="purchaseInvoiceEditDC" />
+					<set field="shipmentId" from-field="parameters.shipmentId" />
+					<set field="invoiceId" from-field="parameters.invoiceId" />
+					<set field="supplyDate" from-field="parameters.supplyDate" />
+					<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+					<set field="defaultEffectiveDateTime" value="${supplyDate}"
+						default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+					<set field="defaultEffectiveDate"
+						value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+					<script
+						location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/editBranchPurchaseInvoice.groovy" />
+				</actions>
+				<widgets>
+					<decorator-screen name="BaanTransactionsCommonDecorator"
+						location="component://depotsales/widget/CommonScreens.xml">
+						<decorator-section name="body">
+							<include-menu name="editPurchseInvoiceMenuDC"
+								location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<section>
+								<condition>
+									<if-compare operator="equals" field="isFormSubmitted"
+										value="" />
+								</condition>
+								<widgets>
+									<include-screen name="PurchaseEditInvoiceInnerDC" />
+								</widgets>
+							</section>
+							<section>
+								<condition>
+									<if-compare operator="equals" field="isFormSubmitted"
+										value="YES" />
+								</condition>
+								<widgets>
+									<include-screen name="PurchaseEditInvoiceEntryDC" />
+								</widgets>
+							</section>
+						</decorator-section>
+					</decorator-screen>
+				</widgets>
+			</section>
+		</screen>
+		
+		<screen name="PurchaseEditInvoiceInnerDC">
+			<section>
+				<actions>
+					<set field="changeFlag" from-field="changeFlag" />
+					<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+					<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+					<entity-one value-field="showBoothAutoSuggestConf"
+						entity-name="TenantConfiguration">
+						<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+						<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+						<select-field field-name="propertyValue" />
+					</entity-one>
+					<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+					<set field="supplyDate" from-field="parameters.supplyDate" />
+					<set field="effectiveDate" value="${parameters.effectiveDate}" />
+					<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+	
+					<script
+						location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy" />
+					<script
+						location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy" />
+				</actions>
+				<widgets>
+					<section>
+						<widgets>
+							<platform-specific>
+								<html>
+									<html-template
+										location="component://depotsales/webapp/depotsales/depotsales/PurchaseInvoiceEditDepot.ftl" />
+								</html>
+							</platform-specific>
+						</widgets>
+						<fail-widgets>
+							<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+							</label>
+						</fail-widgets>
+					</section>
+				</widgets>
+			</section>
+		</screen>
+	
+		<screen name="PurchaseEditInvoiceEntryDC">
+			<section>
+				<actions>
+					<set field="changeFlag" from-field="changeFlag" />
+					<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+					<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+					<set field="boothId" from-field="parameters.boothId" />
+					<set field="checkListType" value="indentEntry" />
+					<set field="effectiveDate" value="${parameters.effectiveDate}" />
+					<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+					<set field="priceTypeId" from-field="parameters.priceTypeId" />
+					<set field="productCatageoryId" from-field="parameters.productCatageoryId" />
+					<set field="vehicleId" from-field="parameters.vehicleId" />
+					<script
+						location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy" />
+				</actions>
+				<widgets>
+					<section>
+						<widgets>
+							<platform-specific>
+								<html>
+									<html-template
+										location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl" />
+								</html>
+							</platform-specific>
+						</widgets>
+						<fail-widgets>
+							<platform-specific>
+								<html>
+									<html-template
+										location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl" />
+								</html>
+							</platform-specific>
+						</fail-widgets>
+					</section>
+				</widgets>
+			</section>
+		</screen>
+<screen name="DyesSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Dyes And Chemicals" />
+				<set field="tabButtonItem" value="BranchSalesOrder" />
+				<set field="tabButtonItem2" value="BranchSalesOrder" />
+				<set field="tabButtonItem3"  value="${parameters.menuName}" default-value="DyesIndent"/>
+				<set field="tabButtonItem4" value="DirectIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.screenFlag" value="DyesIndent"/>
+				<set field="parameters.formAction" value="DyesSalesOrder"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="BaanVariantIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="DyesIndentBranchIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="DyesBranchSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="DyesBranchSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+<screen name="FindPODC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Find Purchase Order for DC" />
+				<set field="tabButtonItem" value="FindPODC" />
+				<set field="tabButtonItem2" value="FindPOSubTabBarDC" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<!-- <set field="ChannalType" value="MATERIAL_PUR_CHANNEL" />
+				<set field="roleTypeId" value="BILL_TO_CUSTOMER" />
+				<set field="parameters.salesChannelEnumId" value="MATERIAL_PUR_CHANNEL"></set>
+				<set field="parameters.findPoFlag" value="Y" />
+				<set field="parameters.orderTypeId" value="PURCHASE_ORDER" /> -->
+				<set field="parameters.roleTypeId" from-field="roleTypeId" />
+				<set field="parameters.noConditionFind" default-value="N" from-field="parameters.noConditionFind"></set>
+				<set field="parameters.hideSearch" default-value="N" from-field="parameters.hideSearch"></set>
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="10" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ROSearchFilterDC.groovy" />
+				<service service-name="performFind" result-map="result"
+					result-map-list="listIt">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles" />
+					<field-map field-name="orderBy" value="-orderDate" />
+					<field-map field-name="viewIndex"  from-field="viewIndex"/>
+					<field-map field-name="viewSize" from-field="viewSize"/>
+				</service>
+				<set field="parameters.partyId" value="${tempPartyId}" />
+				<set field="targetRequest" value="FindPODC" />
+				
+
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilterDC.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="FindPOSubTabBarDC" />
+						<section>
+							<widgets>
+								<!-- <section>
+                             		<condition>
+                            			<if-has-permission permission="DEPOTSALES"  action="_CREATE_PO"/>
+                            		</condition>
+									<widgets>
+										<link target="CreatePO" text="Create PO" style="buttontext" />
+									</widgets>
+								</section> -->
+								<screenlet title="search-options">
+									<include-form name="FindPurchaseOrderDC"
+										location="component://depotsales/widget/DepotSalesForms.xml" />
+								</screenlet>
+								<platform-specific>
+							       <html>
+								      <html-template
+									      location="component://depotsales/webapp/depotsales/depotsales/agencyAddressDetailsDC.ftl" />
+							          </html>
+						        </platform-specific>
+								<screenlet title="Search-results">
+									<include-form name="listPurchaseOrdersDC"
+										location="component://depotsales/widget/DepotSalesForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+	<screen name="DyesBranchSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+    <screen name="DyesBranchSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<set field="cfcs" from-field="parameters.cfcs" />
+				<set field="salesChannel" from-field="parameters.salesChannel" />
+				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
+				<set field="referenceNo" from-field="parameters.referenceNo" />
+				<set field="tallyReferenceNo" from-field="parameters.tallyReferenceNo" />
+				<set field="contactMechId" from-field="parameters.contactMechId" />
+				<set field="transporterId" from-field="parameters.transporterId" />
+				<set field="suplierAdd" from-field="parameters.suplierAdd" />
+				
+				
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="ChemicalSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
+				<set field="tabButtonItem" value="BranchSalesOrder" />
+				<set field="tabButtonItem2" value="BranchSalesOrder" />
+				<set field="tabButtonItem3"  value="${parameters.menuName}" default-value="ChemicalIndent"/>
+				<set field="tabButtonItem4" value="DirectIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.screenFlag" value="ChemicalIndent"/>
+				<set field="parameters.formAction" value="ChemicalSalesOrder"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="BaanVariantIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="ChemicalIndentBranchIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="ChemicalBranchSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="ChemicalBranchSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="ChemicalBranchSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+    <screen name="ChemicalBranchSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<set field="cfcs" from-field="parameters.cfcs" />
+				<set field="salesChannel" from-field="parameters.salesChannel" />
+				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
+				<set field="referenceNo" from-field="parameters.referenceNo" />
+				<set field="tallyReferenceNo" from-field="parameters.tallyReferenceNo" />
+				<set field="contactMechId" from-field="parameters.contactMechId" />
+				<set field="transporterId" from-field="parameters.transporterId" />
+				<set field="suplierAdd" from-field="parameters.suplierAdd" />
+				
+				
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/BranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+
+<screen name="DyesMultiBranchSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
+				<set field="tabButtonItem" value="BranchSalesOrder" />
+				<set field="tabButtonItem2" value="BranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="DyesIndent" />
+				<set field="tabButtonItem4" value="onBeHalfIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.formAction" value="DyesMultiBranchSalesOrder"/>
+				<set field="parameters.screenFlag" value="DyesIndent"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="BaanVariantIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="DyesIndentBranchIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="DyesMultiBranchSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="DyesMultiBranchSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+   
+   <screen name="DyesMultiBranchSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiBranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="DyesMultiBranchSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<set field="cfcs" from-field="parameters.cfcs" />
+				<set field="salesChannel" from-field="parameters.salesChannel" />
+				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiBranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiBranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	<screen name="ChemicalMultiBranchSalesOrder">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
+				<set field="tabButtonItem" value="BranchSalesOrder" />
+				<set field="tabButtonItem2" value="BranchSalesOrder" />
+				<set field="tabButtonItem3" value="${parameters.menuName}" default-value="ChemicalIndent" />
+				<set field="tabButtonItem4" value="onBeHalfIndent" />
+				<set field="changeFlag" value="DepotSales" />
+				<set field="parameters.formAction" value="ChemicalMultiBranchSalesOrder"/>
+				<set field="parameters.screenFlag" value="ChemicalIndent"/>
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="indentReceivedDate" value="${parameters.indentReceivedDate}" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <container><label text="isFormSubmitted:${isFormSubmitted}" ></label></container> -->
+						<!-- <include-menu name="BranchSalesEntryIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+							<include-menu name="BaanVariantIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+							<include-menu name="ChemicalIndentBranchIndentPortalTab"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="ChemicalMultiBranchSaleInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="ChemicalMultiBranchSalesInnerScreen" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+   
+   <screen name="ChemicalMultiBranchSaleInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+
+
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<entity-condition entity-name="Enumeration" list="prodSubTypes"
+					use-cache="true">
+					<condition-list>
+						<condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="CARD" />
+						<condition-expr field-name="enumId" operator="not-equals"
+							value="LEAK" />
+					</condition-list>
+					<order-by field-name="sequenceId" />
+				</entity-condition>
+
+				<!-- <entity-condition entity-name="Product" list="productList" use-cache="true"> 
+					</entity-condition> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<set field="routeId" from-field="parameters.routeId" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiBranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="ChemicalMultiBranchSalesInnerScreen">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<!-- <entity-condition entity-name="Enumeration" list="prodSubTypes" 
+					use-cache="true"> <condition-expr field-name="enumTypeId" value="SUB_PROD_TYPE"/> 
+					<order-by field-name="sequenceId"/> </entity-condition> -->
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="orderDate" value="${parameters.orderDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="PONumber" from-field="parameters.PONumber" />
+				<set field="insuranceNum" from-field="parameters.insuranceNum" />
+				<set field="insCompany" from-field="parameters.insCompany" />
+				<set field="promotionAdj" from-field="parameters.promotionAdj" />
+				<set field="productCategoryId" from-field="parameters.productCategoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<set field="disableAcctgFlag" value="Y" />
+				<set field="productStoreId" from-field="parameters.productStoreIdFrom" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<set field="cfcs" from-field="parameters.cfcs" />
+				<set field="salesChannel" from-field="parameters.salesChannel" />
+				<set field="partyGeoId" from-field="parameters.partyGeoId" />
+				<set field="branchGeoId" from-field="parameters.branchGeoId" />
+				<set field="supplierGeoId" from-field="parameters.supplierGeoId" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+				<!-- <script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/EditStoreOrderForm.groovy" /> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/recentChangeIndents.groovy"/> -->
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiBranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/MultiBranchSaleOrderFormTestDYESCHEMI.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+			
+	<screen name="ProcessBranchOrdersDC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
+				<set field="tabButtonItem" value="processOrdersBranchSalesDC" />
+				<set field="tabButtonItem2" value="processOrdersBranchSalesDC" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" />
+				<set field="defaultEffectiveDateTime"
+					value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<set field="shipmentTypeId" from-field="parameters.shipmentTypeId" />
+				<set field="salesChannelEnumId" value="BRANCH_CHANNEL"/>
+				<set field="screenFlag" value="depotSales" />
+				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/getIcpSalesOrder.groovy" 
+					/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesResultsForInfinityScrollDC.groovy" />
+			 <!--  <script
+    					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ListSalesOrderAdvancePayments.groovy" /> -->  
+					
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <include-menu name="BranchSalesIndentTabBar"
+							location="component://depotsales/widget/DepotSalesMenus.xml" /> -->
+						<section>
+							<widgets>
+							<decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                    	 <container style="button-bar">
+											<link target="DyesSalesOrder" text="${uiLabelMap.CreateNewIndent}" style="buttontext create h2">
+											</link>
+										</container>
+                                    </decorator-section>
+							 		<decorator-section name="search-options">
+                                        <include-form name="FindTankerSalesOrderDC" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+								<platform-specific>
+										<html>
+											<html-template
+												location="component://depotsales/webapp/depotsales/depotsales/generatePO.ftl" />
+										</html>
+									</platform-specific>
+									<platform-specific>
+							        <html>
+								      <html-template
+									      location="component://depotsales/webapp/depotsales/depotsales/agencyAddressDetailsDC.ftl" />
+							          </html>
+						           </platform-specific>
+									<!-- <platform-specific>
+										<html>
+											<html-template
+												location="component://byproducts/webapp/byproducts/byproducts/viewOrderDetails.ftl" />
+										</html>
+									</platform-specific> -->
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://depotsales/webapp/depotsales/depotsales/ListSearchOrdersDepotDC.ftl" />
+										</html>
+									</platform-specific>
+								</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	
+	<screen name="DepotSalesInvoiceDC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Find Sales Invoices" />
+				<set field="filterByDate" value="true" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/sequenceFilterDC.groovy"/>
+				<service service-name="performFind" result-map="result">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="Invoice" />
+					<field-map field-name="orderBy" value="createdStamp DESC" />
+				</service>
+				<!-- <set field="parameters.invoiceId" value="" /> -->				
+				<set field="parameters.partyIdFrom" value="${parameters.tempPartyIdFrom}" />				
+				<set field="invoices" from-field="result.listIt" />
+				<set field="tabButtonItem" value="salesInvoiceDC" />
+				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
+				<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" />
+				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
+				<script
+					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethodDC.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<!-- <include-menu name="InvoiceTypesTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/> -->
+						<!-- <include-menu name="APInvoiceTabBar" location="component://depotsales/widget/DepotSalesMenus.xml" 
+							/> -->
+						<section>
+							<widgets>
+								<decorator-screen name="FindScreenDecorator"
+									location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="menu-bar">
+										<container style="button-bar">
+											<!-- <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" 
+												style="buttontext create"/> --> <!-- NewPurchaseInvoice -->
+											<!-- <link target="newInvoice" text="New Cash Voucher" style="buttontext 
+												create"><parameter param-name="prefPaymentMethodTypeId" value="CASH"/></link> 
+												<link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter 
+												param-name="prefPaymentMethodTypeId" value="BANK"/></link> <link target="partyFinanHistory" 
+												text="Party Financial History" style="buttontext create"></link> -->
+											<!-- <link target="CreateAPInvoice" text="Create Cash Voucher" 
+												style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" 
+												value="CASH"></parameter> <parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter> 
+												<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter> 
+												<parameter param-name="showCreateButton" value="Y"></parameter> </link> <link 
+												target="CreateAPInvoice" text="Create Bank Voucher" style="buttontext create" 
+												> <parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter> 
+												<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter> 
+												<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter> 
+												<parameter param-name="showCreateButton" value="Y"></parameter> </link> -->
+											<link target="partyFinanHistoryDC" text="Party Financial History"
+												style="buttontext create"></link>
+										</container>
+									</decorator-section>
+									<decorator-section name="search-options">
+										<include-form name="FindSalesApInvoicesDC"
+											location="component://depotsales/widget/DepotSalesForms.xml" />
+									</decorator-section>
+									<decorator-section name="search-results">
+										<screenlet title="Invoices List">
+											<section>
+												<condition>
+													<not>
+														<if-empty field="invoices" />
+													</not>
+												</condition>
+												<widgets>
+													<link text="${uiLabelMap.AccountingExportAsCsv}"
+														style="buttontext" target="InvoiceSearchResultsCsv.csv">
+														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId" />
+														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op" />
+														<parameter param-name="invoiceId" from-field="parameters.invoiceId" />
+														<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic" />
+														<parameter param-name="description_op"
+															from-field="parameters.description_op" />
+														<parameter param-name="description" from-field="parameters.description" />
+														<parameter param-name="description_ic"
+															from-field="parameters.description_ic" />
+														<parameter param-name="invoiceTypeId"
+															from-field="parameters.invoiceTypeId" />
+														<parameter param-name="statusId" from-field="parameters.statusId" />
+														<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom" />
+														<parameter param-name="shipmentId" from-field="parameters.shipmentId" />
+														<parameter param-name="partyId" from-field="parameters.partyId" />
+														<parameter param-name="invoiceDate_fld0_value"
+															from-field="parameters.invoiceDate_fld0_value" />
+														<parameter param-name="invoiceDate_fld0_op"
+															from-field="parameters.invoiceDate_fld0_op" />
+														<parameter param-name="invoiceDate_fld1_value"
+															from-field="parameters.invoiceDate_fld1_value" />
+														<parameter param-name="invoiceDate_fld1_op"
+															from-field="parameters.invoiceDate_fld1_op" />
+														<parameter param-name="dueDate_fld0_value"
+															from-field="parameters.dueDate_fld0_value" />
+														<parameter param-name="dueDate_fld0_op"
+															from-field="parameters.dueDate_fld0_op" />
+														<parameter param-name="dueDate_fld1_value"
+															from-field="parameters.dueDate_fld1_value" />
+														<parameter param-name="dueDate_fld1_op"
+															from-field="parameters.dueDate_fld1_op" />
+														<parameter param-name="purposeTypeId"
+															value="YARN_SALE" />
+													</link>
+												</widgets>
+											</section>
+											<platform-specific>
+												<html>
+													<html-template
+														location="component://accounting/webapp/accounting/invoice/massPaymentsDC.ftl" />
+												</html>
+											</platform-specific>
+											<platform-specific>
+												<html>
+													<html-template
+														location="component://depotsales/webapp/depotsales/depotsales/ListSearchInvoicesDepotSaleListDC.ftl" />
+												</html>
+											</platform-specific>
+										</screenlet>
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="PartyFinHistoryDC">
+		<section>
+			<actions>
+				<set field="tabButtonItem" value="purchaseinvoice" />
+				<set field="parameters.hideSearch" value="${parameters.hideSearch}"></set>
+				<set field="parameters.noConditionFind" value="${parameters.noConditionFind}"></set>
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<container>
+							<label style="h1">Party Financial History for DC</label>
+						</container>
+						<screenlet title="Party Search">
+							<include-form name="findPartyFinHistoryDC"
+								location="component://accounting/widget/ap/forms/InvoiceForms.xml" />
+						</screenlet>
+						<include-screen name="PartyFinanHistoryDC"
+							location="component://accounting/widget/ap/InvoiceScreens.xml" />
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	
+	<screen name="DepotSalesInvoiceViewDC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Find Sales Invoices" />
+				<set field="filterByDate" value="true" />
+				<set field="parameters.invoiceDate" value=""/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/sequenceFilterDC.groovy"/>
+				<service service-name="performFind" result-map="result">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="InvoiceAndType" />
+					<field-map field-name="orderBy" value="invoiceDate DESC" />
+				</service>
+				<set field="invoices" from-field="result.listIt" />
+				<set field="tabButtonItem" value="salesInvoiceView" />
+				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
+				<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" />
+				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
+				<script
+					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethodDC.groovy" />
+			</actions>
+			<widgets>
+			
+			<decorator-screen name="DepotTransCommonDecorator" location="${parameters.mainDecoratorLocation}">
+    					<decorator-section name="body">
+    						
+						<!-- <include-menu name="InvoiceTypesTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/> -->
+						<!-- <include-menu name="APInvoiceTabBar" location="component://depotsales/widget/DepotSalesMenus.xml" 
+							/> -->
+						<section>
+							<widgets>
+								<decorator-screen name="FindScreenDecorator"
+									location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="menu-bar">
+										<container style="button-bar">
+											<!-- <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" 
+												style="buttontext create"/> --> <!-- NewPurchaseInvoice -->
+											<!-- <link target="newInvoice" text="New Cash Voucher" style="buttontext 
+												create"><parameter param-name="prefPaymentMethodTypeId" value="CASH"/></link> 
+												<link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter 
+												param-name="prefPaymentMethodTypeId" value="BANK"/></link> <link target="partyFinanHistory" 
+												text="Party Financial History" style="buttontext create"></link> -->
+											<!-- <link target="CreateAPInvoice" text="Create Cash Voucher" 
+												style="buttontext create" > <parameter param-name="prefPaymentMethodTypeId" 
+												value="CASH"></parameter> <parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter> 
+												<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter> 
+												<parameter param-name="showCreateButton" value="Y"></parameter> </link> <link 
+												target="CreateAPInvoice" text="Create Bank Voucher" style="buttontext create" 
+												> <parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter> 
+												<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter> 
+												<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter> 
+												<parameter param-name="showCreateButton" value="Y"></parameter> </link> -->
+											<link target="partyFinanHistoryDC" text="Party Financial History"
+												style="buttontext create"></link>
+										</container>
+									</decorator-section>
+									<decorator-section name="search-options">
+										<include-form name="FindSalesApInvoicesForDepotDC"
+											location="component://depotsales/widget/DepotSalesForms.xml" />
+									</decorator-section>
+									<decorator-section name="search-results">
+										<screenlet title="Invoices List">
+											<section>
+												<condition>
+													<not>
+														<if-empty field="invoices" />
+													</not>
+												</condition>
+												<widgets>
+													<link text="${uiLabelMap.AccountingExportAsCsv}"
+														style="buttontext" target="InvoiceSearchResultsCsv.csv">
+														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId" />
+														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op" />
+														<parameter param-name="invoiceId" from-field="parameters.invoiceId" />
+														<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic" />
+														<parameter param-name="description_op"
+															from-field="parameters.description_op" />
+														<parameter param-name="description" from-field="parameters.description" />
+														<parameter param-name="description_ic"
+															from-field="parameters.description_ic" />
+														<parameter param-name="invoiceTypeId"
+															from-field="parameters.invoiceTypeId" />
+														<parameter param-name="statusId" from-field="parameters.statusId" />
+														<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom" />
+														<parameter param-name="partyId" from-field="parameters.partyId" />
+														<parameter param-name="invoiceDate_fld0_value"
+															from-field="parameters.invoiceDate_fld0_value" />
+														<parameter param-name="invoiceDate_fld0_op"
+															from-field="parameters.invoiceDate_fld0_op" />
+														<parameter param-name="invoiceDate_fld1_value"
+															from-field="parameters.invoiceDate_fld1_value" />
+														<parameter param-name="invoiceDate_fld1_op"
+															from-field="parameters.invoiceDate_fld1_op" />
+														<parameter param-name="dueDate_fld0_value"
+															from-field="parameters.dueDate_fld0_value" />
+														<parameter param-name="dueDate_fld0_op"
+															from-field="parameters.dueDate_fld0_op" />
+														<parameter param-name="dueDate_fld1_value"
+															from-field="parameters.dueDate_fld1_value" />
+														<parameter param-name="dueDate_fld1_op"
+															from-field="parameters.dueDate_fld1_op" />
+													</link>
+												</widgets>
+											</section>
+											<platform-specific>
+												<html>
+													<html-template
+														location="component://accounting/webapp/accounting/invoice/massPaymentsDC.ftl" />
+												</html>
+											</platform-specific>
+											<platform-specific>
+												<html>
+													<html-template
+														location="component://depotsales/webapp/depotsales/depotsales/ListSearchInvoicesDepotSaleListViewDC.ftl" />
+												</html>
+											</platform-specific>
+										</screenlet>
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="APInvoiceOverviewDC">
+		<section>
+			<actions>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<set field="titleProperty" value="PageTitleInvoiceOverview" />
+				<set field="tabButtonItem" value="invoiceOverViewDC" />
+				<!-- <set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
+				<set field="tabButtonItem2" value="invoiceOverview" /> -->
+				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
+				<set field="invoiceId" from-field="parameters.invoiceId" />
+				<set field="catflag" value="Ap" global="true" />
+				<entity-one entity-name="Invoice" value-field="invoice" />
+				<entity-and entity-name="InvoiceRole" list="invoiceRoles">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="partyId" />
+				</entity-and>
+				<entity-and entity-name="InvoiceStatus" list="invoiceStatus">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="statusDate" />
+				</entity-and>
+				<entity-and entity-name="InvoiceTerm" list="invoiceTerms">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="invoiceTermId" />
+				</entity-and>
+				<entity-and entity-name="TimeEntry" list="timeEntries">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="invoiceItemSeqId" />
+				</entity-and>
+				<!-- <entity-and entity-name="PaymentApplication" list="paymentApplications"> 
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" /> <order-by 
+					field-name="paymentApplicationId" /> </entity-and> -->
+				<entity-and entity-name="PaymentAndApplication" list="payment">
+					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
+					<order-by field-name="paymentId" />
+				</entity-and>
+				<script
+					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/CreateApplicationList.groovy" />
+				<script
+					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/OrderListInvoiceItem.groovy" />
+				<set field="invoiceAmount"
+					value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice)}"
+					type="BigDecimal" />
+				<set field="notAppliedAmount"
+					value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceNotApplied(invoice)}"
+					type="BigDecimal" />
+				<set field="appliedAmount"
+					value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceApplied(invoice)}"
+					type="BigDecimal" />
+				<!-- <entity-condition entity-name="AcctgTransAndEntries"
+					list="AcctgTransAndEntries">
+					<condition-expr field-name="invoiceId" operator="equals"
+						from-field="invoiceId" />
+					<order-by field-name="acctgTransId" />
+				</entity-condition> -->
+				<service service-name="getAcctTransEnries" result-map="AcctgTransAndEntries" auto-field-map="true"/>
+			    <set field="AcctgTransAndEntries" type="List" from-field="AcctgTransAndEntries.AcctgTransAndEntries"/>
+				<service service-name="acctgInvoicePermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="ARINVOICE_EDIT" />
+				</service>
+				<set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission" />
+				<service service-name="acctgInvoicePermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="INVOICE_APPROVE" />
+				</service>
+				<set field="hasApproveInvoiceEditPermission" from-field="permResult.hasPermission" />
+				<service service-name="acctgInvoicePermissionCheck"
+					result-map="permResult">
+					<field-map field-name="mainAction" value="APINVOICE_EDIT" />
+				</service>
+				<set field="hasApInvoiceEditPermission" from-field="permResult.hasPermission" />
+				<set field="localDispatcherName" value="${parameters.localDispatcherName}" />
+				<set field="requestUri" value="${parameters.targetRequestUri}" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://accounting/webapp/accounting/invoice/setInvoiceStatus.ftl" />
+									</html>
+								</platform-specific>
+							</widgets>
+						</section>
+						<!-- <include-menu name="InvoiceTypesTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+						<!-- <include-menu name="APInvoiceTabBar" location="component://accounting/widget/AccountingMenus.xml" 
+							/> -->
+						<!-- <include-menu name="CreateAPInvoiceSubTabBar"
+							location="component://accounting/widget/AccountingMenus.xml" /> -->
+						<container style="h1">
+							<label>For: ${invoice.description} [${invoice.invoiceId}]</label>
+						</container>
+						<section>
+							<condition>
+								<and>
+									<if-compare field="invoice.statusId" operator="equals"
+										value="INVOICE_IN_PROCESS" />
+									<if-compare field="invoice.invoiceTypeId" operator="equals"
+										value="PETTYCASH_INVOICE" />
+									<if-compare field="requestUri" operator="equals"
+										value="/createInvoice" />
+								</and>
+							</condition>
+							<actions>
+								<script
+									location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
+							</actions>
+							<widgets>
+								<screenlet title="${uiLabelMap.AccountingInvoiceItems}">
+									<include-form name="EditInvoiceItems"
+										location="component://accounting/widget/InvoiceForms.xml" />
+								</screenlet>
+								<section>
+									<condition>
+										<and>
+											<if-compare field="invoice.invoiceTypeId"
+												operator="not-equals" value="PAYROL_INVOICE" />
+											<or>
+												<if-compare operator="equals" value="true"
+													field="hasArInvoiceEditPermission" />
+												<if-compare operator="equals" value="true"
+													field="hasApInvoiceEditPermission" />
+											</or>
+										</and>
+									</condition>
+									<widgets>
+										<screenlet title="${uiLabelMap.AccountingInvoiceItemAdd}">
+											<section>
+												<widgets>
+													<include-form name="EditInvoiceItem"
+														location="component://accounting/widget/InvoiceForms.xml" />
+												</widgets>
+											</section>
+										</screenlet>
+									</widgets>
+								</section>
+							</widgets>
+							<fail-widgets>
+								<section>
+									<condition>
+										<and>
+											<if-compare field="invoice.statusId" operator="equals"
+												value="INVOICE_IN_PROCESS" />
+											<or>
+												<if-compare operator="equals" value="true"
+													field="hasArInvoiceEditPermission" />
+												<if-compare operator="equals" value="true"
+													field="hasApInvoiceEditPermission" />
+											</or>
+										</and>
+									</condition>
+									<widgets>
+										<screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
+											<link target="editInvoice" text="${uiLabelMap.CommonUpdate}"
+												style="buttontext">
+												<parameter param-name="invoiceId" />
+											</link>
+											<include-form name="invoiceHeader"
+												location="component://accounting/widget/InvoiceForms.xml" />
+										</screenlet>
+										<container style="lefthalf">
+											<screenlet title="${uiLabelMap.CommonStatus}"
+												navigation-form-name="ListInvoiceStatus">
+												<include-form name="ListInvoiceStatus"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+											<!-- <screenlet title="${uiLabelMap.AccountingAppliedPayments} 
+												${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} 
+												${notAppliedAmount?currency(${invoice.currencyUomId})}" navigation-form-name="ListInvoiceApplications"> 
+												<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}" 
+												style="buttontext"> <parameter param-name="invoiceId" /> </link> <include-form 
+												name="ListInvoiceApplications" location="component://accounting/widget/InvoiceForms.xml" 
+												/> </screenlet> -->
+										</container>
+										<container style="righthalf">
+											<screenlet
+												title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
+												navigation-form-name="ListInvoiceApplications">
+												<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
+													style="buttontext">
+													<parameter param-name="invoiceId" />
+												</link>
+												<include-form name="ListInvoiceApplications"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+											<!-- <screenlet title="${uiLabelMap.AccountingInvoiceRoles}" navigation-form-name="invoiceRoles"> 
+												<container> <link target="invoiceRoles" text="${uiLabelMap.CommonUpdate}" 
+												style="buttontext"> <parameter param-name="invoiceId" /> </link> </container> 
+												<include-form name="invoiceRoles" location="component://accounting/widget/InvoiceForms.xml" 
+												/> </screenlet> <screenlet title="${uiLabelMap.PartyTerms}"> <include-form 
+												name="ListInvoiceTerms" location="component://accounting/widget/InvoiceForms.xml" 
+												/> <include-form name="ListInvoicePaymentInfo" location="component://accounting/widget/InvoiceForms.xml" 
+												/> </screenlet> -->
+										</container>
+										<container style="clear" />
+										<screenlet title="${uiLabelMap.AccountingInvoiceItems}"
+											navigation-form-name="invoiceItems">
+											<link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
+												style="buttontext">
+												<parameter param-name="invoiceId" />
+											</link>
+											<include-form name="invoiceItems"
+												location="component://accounting/widget/InvoiceForms.xml" />
+										</screenlet>
+										<section>
+											<condition>
+												<not>
+													<if-empty field="timeEntries" />
+												</not>
+											</condition>
+											<widgets>
+												<screenlet title="${uiLabelMap.AccountingInvoiceTimeEntries}"
+													navigation-form-name="ListTimeEntries">
+													<link target="editInvoiceTimeEntries" text="${uiLabelMap.CommonUpdate}"
+														style="buttontext">
+														<parameter param-name="invoiceId" />
+													</link>
+													<include-form name="ListTimeEntries"
+														location="component://accounting/widget/InvoiceForms.xml" />
+												</screenlet>
+											</widgets>
+										</section>
+										<screenlet title="${uiLabelMap.AccountingTransactions}"
+											navigation-form-name="AcctgTransAndEntries">
+											<include-form name="AcctgTransAndEntries"
+												location="component://accounting/widget/InvoiceForms.xml" />
+										</screenlet>
+									</widgets>
+									<fail-widgets>
+										<screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
+											<include-form name="invoiceHeader"
+												location="component://accounting/widget/InvoiceForms.xml" />
+										</screenlet>
+										<container style="lefthalf">
+											<screenlet title="${uiLabelMap.CommonStatus}"
+												navigation-form-name="ListInvoiceStatus">
+												<include-form name="ListInvoiceStatus"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+											<screenlet
+												title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
+												navigation-form-name="ListInvoiceApplications">
+												<include-form name="ListInvoiceApplications"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+										</container>
+										<container style="righthalf">
+											<screenlet title="${uiLabelMap.AccountingInvoiceRoles}"
+												navigation-form-name="invoiceRoles">
+												<include-form name="invoiceRoles"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+											<screenlet title="${uiLabelMap.PartyTerms}">
+												<include-form name="ListInvoiceTerms"
+													location="component://accounting/widget/InvoiceForms.xml" />
+												<include-form name="ListInvoicePaymentInfo"
+													location="component://accounting/widget/InvoiceForms.xml" />
+											</screenlet>
+										</container>
+										<container style="clear" />
+										<screenlet title="${uiLabelMap.AccountingInvoiceItems}"
+											navigation-form-name="invoiceItems">
+											<include-form name="invoiceItems"
+												location="component://accounting/widget/InvoiceForms.xml" />
+										</screenlet>
+										<section>
+											<condition>
+												<not>
+													<if-empty field="timeEntries" />
+												</not>
+											</condition>
+											<widgets>
+												<screenlet title="${uiLabelMap.AccountingInvoiceTimeEntries}"
+													navigation-form-name="ListTimeEntries">
+													<include-form name="ListTimeEntries"
+														location="component://accounting/widget/InvoiceForms.xml" />
+												</screenlet>
+											</widgets>
+										</section>
+										<screenlet title="${uiLabelMap.AccountingTransactions}"
+											navigation-form-name="AcctgTransAndEntries">
+											<include-form name="AcctgTransAndEntries"
+												location="component://accounting/widget/InvoiceForms.xml" />
+										</screenlet>
+									</fail-widgets>
+								</section>
+							</fail-widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="MaterialSalesEditInvoiceInitDC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Material Invoice Entry" />
+				<set field="tabButtonItem" value="invoiceOverViewDC" />
+				<set field="tabButtonItem2" value="MaterialEditInvoiceInit" />
+				<set field="shipmentId" from-field="parameters.shipmentId" />
+				<set field="invoiceId" from-field="parameters.invoiceId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/editBranchSalesInvoice.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu name="editSalesMenu"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="SalesEditInvoiceInner" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="SalesEditInvoiceEntry" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	
+	<screen name="SalesEditInvoiceInner">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+
+				<script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/SalesEditInvoiceDepot.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+<screen name="FindGRNShipmentsDC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Find GRN Shipments" />
+				<set field="tabButtonItem" value="FindGRNReceiptsDC" />
+				<set field="tabButtonItem2" value="FindGRNShipmentsDC" />
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="20" />
+				<set field="targetRequest" value="FindGRNShipmentsDepotDC" />
+				<!-- <set field="noConditionFind" value="Y" /> -->
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/ROSearchFilterDC.groovy" />
+				<service service-name="performFind" result-map="result"
+					result-map-list="listIt">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="ShipmentAndOrderRole" />
+					<field-map field-name="orderBy" value="-estimatedShipDate" />
+					<field-map field-name="viewIndex" from-field="viewIndex" />
+					<field-map field-name="viewSize" from-field="viewSize" />
+				</service>
+				<set field="parameters.partyId" value="${tempPartyId}" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PartyShipmentViewDC.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartmentsDC.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu name="ReceiptTabBarDC"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/LinkGRNWithPoDepotDC.ftl" />
+									</html>
+								</platform-specific>
+								<decorator-screen name="FindScreenDecorator"
+									location="component://common/widget/CommonScreens.xml">
+									<decorator-section name="search-options">
+										<include-form name="FindMaterialShipmentDC"
+											location="component://depotsales/widget/DepotSalesForms.xml" />
+									</decorator-section>
+									<decorator-section name="search-results">
+										<screenlet title="">
+											<include-form name="listMaterialShipmentsDC"
+												location="component://depotsales/widget/DepotSalesForms.xml" />
+										</screenlet>
+										<platform-specific>
+											<html>
+												<html-template
+													location="component://depotsales/webapp/depotsales/depotsales/qcApprovalDepotDC.ftl" />
+											</html>
+										</platform-specific>
+									</decorator-section>
+								</decorator-screen>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>	
+	
+	<screen name="MaterialInvoiceInitDC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Material Invoice Entry" />
+				<set field="tabButtonItem" value="FindGRNReceiptsDC" />
+				<set field="tabButtonItem2" value="MaterialInvoiceInitDC" />
+				<set field="shipmentId" from-field="parameters.shipmentId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/PurchaseInvoiceEntryForm.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu name="ReceiptTabBarDC"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="PurchaseInvoiceInnerDC" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="PurchaseInvoiceEntryDC" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="PurchaseInvoiceInnerDC">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+
+				<script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/PurchaseInvoiceDepot.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="PurchaseInvoiceEntryDC">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="productCatageoryId" from-field="parameters.productCatageoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="MaterialSalesInvoiceInitDC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Material Invoice Entry" />
+				<set field="tabButtonItem" value="FindGRNReceiptsDC" />
+				<set field="tabButtonItem2" value="MaterialInvoiceInitDC" />
+				<set field="shipmentId" from-field="parameters.shipmentId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/SalesInvoiceEntryForm.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu name="ReceiptTabBarDC"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="" />
+							</condition>
+							<widgets>
+								<include-screen name="SalesInvoiceInnerDC" />
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="isFormSubmitted"
+									value="YES" />
+							</condition>
+							<widgets>
+								<include-screen name="SalesInvoiceEntryDC" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="SalesInvoiceInnerDC">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" value="${parameters.productSubscriptionTypeId}" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<entity-one value-field="showBoothAutoSuggestConf"
+					entity-name="TenantConfiguration">
+					<field-map field-name="propertyTypeEnumId" value="FACILITY_AUTOSUGGEST" />
+					<field-map field-name="propertyName" value="showBoothAutoSuggest" />
+					<select-field field-name="propertyValue" />
+				</entity-one>
+				<set field="showBoothAutoSuggest" value="${showBoothAutoSuggestConf.propertyValue}" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+
+				<script
+					location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/SalesInvoiceDepot.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<label style="h3">${uiLabelMap.ProductFacilityViewPermissionError}
+						</label>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="SalesInvoiceEntryDC">
+		<section>
+			<actions>
+				<set field="changeFlag" from-field="changeFlag" />
+				<set field="productSubscriptionTypeId" from-field="parameters.productSubscriptionTypeId" />
+				<set field="subscriptionTypeId" from-field="parameters.subscriptionTypeId" />
+				<set field="boothId" from-field="parameters.boothId" />
+				<set field="checkListType" value="indentEntry" />
+				<set field="effectiveDate" value="${parameters.effectiveDate}" />
+				<set field="shipmentTypeId" value="${parameters.shipmentTypeId}" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="productCatageoryId" from-field="parameters.productCatageoryId" />
+				<set field="vehicleId" from-field="parameters.vehicleId" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNew.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl" />
+							</html>
+						</platform-specific>
+					</widgets>
+					<fail-widgets>
+						<platform-specific>
+							<html>
+								<html-template
+									location="component://materialmgmt/webapp/materialmgmt/purchase/PurchaseOrder.ftl" />
+							</html>
+						</platform-specific>
+					</fail-widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+
+
+	<screen name="PurchageOrderOverViewDC">
+		<section>
+			<actions>
+				<set field="titleProperty"
+					value="Purchase Order OverView - OrderId - ${parameters.orderId}" />
+				<set field="tabButtonItem" value="FindDepotTransPODC" />
+				<set field="tabButtonItem2" value="POoverViewDC" />
+				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js"
+					global="true" />
+				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/OrderShippingInfo.js"
+					global="true" />
+				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/geoAutoCompleter.js"
+					global="true" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchageOrderView.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POViewWebSecure.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator" location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu name="FindDepotTransPOSubTabBarDC"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<container style="lefthalf">
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/PurchageOrderInfo.ftl" />
+										</html>
+									</platform-specific>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POItems.ftl" />
+										</html>
+									</platform-specific>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POterms.ftl" />
+										</html>
+									</platform-specific>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POSuspend.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Order Amendments">
+										<include-form
+											location="component://depotsales/widget/DepotSalesForms.xml"
+											name="orderAmendmentsDC" />
+									</screenlet>
+									<screenlet title="Order Attributes">
+										<include-screen name="orderAttributesDC" />
+									</screenlet>
+									<include-screen name="orderAssoc" />
+								</container>
+								<container style="righthalf">
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfo.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Receipts For Order">
+										<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" 
+											name="listMaterialShipmentReceipt"/> -->
+										<include-screen name="listMaterialShipmentReceiptDC" />
+									</screenlet>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POpaymentInfo.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Invoices For Order">
+										<include-form
+											location="component://materialmgmt/widget/MaterialPurchaseForms.xml"
+											name="invoiceDetailListDC" />
+									</screenlet>
+									<!-- <screenlet title="Content">
+										<include-screen name="POcontent" />
+									</screenlet> -->
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Supply Products Till Date">
+										<include-screen name="supplyProductsTillDateDC" />
+									</screenlet>
+								</container>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="orderAttributesDC">
+		<section>
+			<actions>
+				<entity-and entity-name="OrderAttribute" list="OrderAttributeList">
+					<field-map field-name="orderId" from-field="parameters.orderId" />
+				</entity-and>
+			</actions>
+			<widgets>
+				<!-- <include-form
+					location="component://materialmgmt/widget/materialmgmtForms.xml"
+					name="addAttribute" /> -->
+				<screenlet>
+					<include-form
+						location="component://materialmgmt/widget/materialmgmtForms.xml"
+						name="listAttributeDC" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="listMaterialShipmentReceiptDC">
+		<section>
+			<actions>
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="20" />
+				<set field="targetRequest" value="FindGRNReceiptsDC" />
+				<service service-name="performFind" result-map="result"
+					result-map-list="listIt">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="ShipmentReceipt" />
+					<field-map field-name="orderBy" value="-receiptId" />
+					<field-map field-name="viewIndex" from-field="viewIndex" />
+					<field-map field-name="viewSize" from-field="viewSize" />
+				</service>
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="listMaterialShipmentReceipt"
+					location="component://materialmgmt/widget/MaterialPurchaseForms.xml" />
+				<platform-specific>
+					<html>
+						<html-template
+							location="component://materialmgmt/webapp/materialmgmt/purchase/qcApproval.ftl" />
+					</html>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="supplyProductsTillDateDC">
+		<section>
+			<actions>
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="20" />
+				<set field="targetRequest" value="FindGRNReceiptsDC" />
+				<service service-name="performFind" result-map="result"
+					result-map-list="listIt">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="ShipmentReceipt" />
+					<field-map field-name="orderBy" value="-receiptId" />
+					<field-map field-name="viewIndex" from-field="viewIndex" />
+					<field-map field-name="viewSize" from-field="viewSize" />
+				</service>
+				<!-- <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/> -->
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="supplyProductstilldateDC"
+					location="component://materialmgmt/widget/MaterialPurchaseForms.xml" />
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="CreateBranchTransPODC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Purchase Order" />
+    				<set field="tabButtonItem" value="processOrdersBranchSales" />
+    				<set field="tabButtonItem2" value="DraftPurchaseOrder" />
+				<set field="targetRequest" value="FindDepotTransPO" />
+				<!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/> -->
+				<set field="parameters.roleTypeId" value="SUPPLIER" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="changeFlag" value="PurchaseOrder" />
+				<set field="parameters.POId" from-field="orderId" />
+				<set field="parameters.changeFlag" value="PurchaseOrder" />
+				 <script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/orgnigationDept.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchaseEntryFormNewDC.groovy" /> 
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/EditBranchPOEntryFormDC.groovy" />
+				<set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag" />
+				</actions>
+			<widgets>
+				<decorator-screen name="BaanTransactionsCommonDecorator"
+					location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+					<include-menu name="BranchSalesIndentWithPoTabBar"
+    							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<!-- <label style="h1">New PO</label> -->
+								<platform-specific>
+									<html>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/CreateBranchTransPoDC.ftl" />
+									</html>
+								</platform-specific>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+
+</screens>

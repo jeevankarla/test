@@ -1591,7 +1591,7 @@
 					</#if>
 					<div id="myGrid1" style="width:100%;height:210px;"></div>
 						  
-						<#assign formAction='processBranchSalesOrder'>			
+						<#assign formAction='processOrdersBranchSalesDyes'>			
 						
 						
 						<#if booth?exists || party?exists || partyId?exists >
