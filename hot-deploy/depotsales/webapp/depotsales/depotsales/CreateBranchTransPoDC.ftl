@@ -586,6 +586,7 @@ function populateData(){
                    <tr>
 						<td class="label">Order Type(<font color="red">*</font>) :</td>
 					    <td>
+					    <input type="hidden" name="dyesChemicals" id="dyesChemicals" value="dyesChemicals"/>
 						<select name="orderTypeId" id="orderTypeId" onchange="javascript: hideExtPO();">
 					      	   <#list orderTypes as orderType>
 					      	   		<#if orderId?exists && (orderTypeId == orderType.orderTypeId)>

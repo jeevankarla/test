@@ -7311,6 +7311,7 @@ public class DepotPurchaseServices{
 		String refNo = (String) request.getParameter("refNo");
 		String quotationNo = (String) request.getParameter("quotationNo");
 		String orderDateStr = (String) request.getParameter("orderDate");
+		String dyesChemicals = (String) request.getParameter("dyesChemicals");
 		
 		//Debug.log("orderDateStr=================="+orderDateStr);
 		
@@ -7795,6 +7796,7 @@ public class DepotPurchaseServices{
 				processOrderContext.put("productStoreId", productStoreId);
 				processOrderContext.put("PONumber", orderId);
 				processOrderContext.put("refNo", refNo);
+				processOrderContext.put("dyesChemicals", dyesChemicals);
 				processOrderContext.put("quotationNo", quotationNo);
 				processOrderContext.put("orderName", orderName);
 				processOrderContext.put("districtGeoId", districtGeoId);
@@ -8024,6 +8026,7 @@ public class DepotPurchaseServices{
 		String fileNo = (String)context.get("fileNo");
 		String quotationNo = (String)context.get("quotationNo");
 		String refNo = (String)context.get("refNo");
+		String dyesChemicals = (String)context.get("dyesChemicals");
 		String orderId = (String)context.get("orderId");	
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -8559,7 +8562,11 @@ public class DepotPurchaseServices{
 				//update PurposeType
 				try{
 					GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-					orderHeaderPurpose.set("purposeTypeId", "BRANCH_PURCHASE");
+					if(UtilValidate.isNotEmpty(dyesChemicals) && dyesChemicals.equals("dyesChemicals"))
+					orderHeaderPurpose.set("purposeTypeId", "DC_PURCHASE");
+					else
+				    orderHeaderPurpose.set("purposeTypeId", "BRANCH_PURCHASE");
+					
 					orderHeaderPurpose.store();
 				}catch (Exception e) {
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
