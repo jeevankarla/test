@@ -242,28 +242,6 @@
        <attribute type="Map" mode="OUT" name="resultMap" optional="true"/>
     </service>
     
-    <service name="createPaymentGatewayTrans" engine="java" auth="true" export="true" 
-           location="in.vasista.vbiz.depotsales.paymentApiServices" invoke="createPaymentGatewayTrans">
-       <description>Create payment gateway transaction</description>
-       <attribute name="partyId" type="String" mode="IN" optional="false"/>
-       <attribute name="orderId" type="String" mode="IN" optional="false"/>
-       <attribute name="amount" type="String" mode="IN" optional="false"/>
-       <attribute name="mobileNumber" type="String" mode="IN" optional="false"/>
-       <attribute name="email" type="String" mode="IN" optional="true"/>
-       <attribute name="paymentChannel" type="String" mode="IN" optional="false"/>
-       <attribute name="paymentMode" type="String" mode="IN" optional="false"/>
-       
-       <attribute type="Map" mode="OUT" name="resultMap" optional="true"/>
-    </service>
-    
-    <service name="updatePaymentGatewayTrans" engine="java" auth="true" export="true" 
-           location="in.vasista.vbiz.depotsales.paymentApiServices" invoke="updatePaymentGatewayTrans">
-       <description>Update payment gateway transaction</description>
-       <attribute name="transactionStatus" type="String" mode="IN" optional="false"/>
-       <attribute name="pgTransId" type="String" mode="IN" optional="false"/>
-       <attribute name="pgTransDate" type="String" mode="IN" optional="false"/>
-    </service>
-    
     <service name="transactionInquiryApi" engine="java" auth="true" export="true" 
            location="in.vasista.vbiz.depotsales.paymentApiServices" invoke="transactionInquiryApi">
        <description>Transaction Inquiry API</description>
