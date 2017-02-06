@@ -1035,6 +1035,16 @@
          <response name="success"  type="request-redirect-noparam" value="FindIndents"></response>
         <response name="error" type="view" value="FindIndents"/>
     </request-map>
+    
+    <request-map uri="createPOByOrderDC">
+        <security https="true" auth="true"/>
+        <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
+        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="CreatePOByOrder" global-transaction="true"/>
+         <response name="success"  type="request-redirect-noparam" value="FindIndentsDC"></response>
+        <response name="error" type="view" value="FindIndentsDC"/>
+    </request-map>
+    
+    
      <request-map uri="PurchaseOrderViewDepotSales.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseOrderViewDepotSalesPDF"/>
@@ -1311,6 +1321,19 @@
      		<redirect-parameter name="supplyDate"/></response>
         <response name="error" type="view" value="FindSalesIndentPayment"/>
     </request-map>
+    
+    
+     <request-map uri="processOrdersBranchSalesDyes">
+      <security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.depotsales.DepotSalesServices"  invoke="processBranchSaleEventDyes" global-transaction="true"/>
+        <response name="success"  type="request-redirect-noparam" value="OrderPaymentDC">
+        <redirect-parameter name="orderStatus"/>
+     		<redirect-parameter name="orderId"/>
+     		<redirect-parameter name="supplyDate"/></response>
+        <response name="error" type="view" value="OrderPaymentDC"/>
+    </request-map>
+    
+    
     
     
      <request-map uri="IndentorprocessBranchSalesOrder">
@@ -1809,6 +1832,13 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="CreateBranchTransPO"/>
     </request-map>
+    
+    <request-map uri="CreateBranchTransPODC">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateBranchTransPODC"/>
+    </request-map>
+    
+    
     <request-map uri="CreateMaterialDepotTransPO">
         <security https="true" auth="true"/>
         <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
@@ -2885,7 +2915,7 @@
     <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
     <view-map name="ViewFacilityGeoPoint" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewFacilityGeoPoint"/>
     <view-map name="orderPayment" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderPayment"/>
-     <view-map name="OrderPaymentDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#OrderPaymentDC"/>
+     <view-map name="OrderPaymentDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#OrderPaymentDC"/>
     <view-map name="orderAmend" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#orderAmend"/>
     <view-map name="amendOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#amendOrder"/>
   
@@ -2905,14 +2935,14 @@
     
     
     <view-map name="CottonBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CottonBranchSalesOrder"/>
-    <view-map name="DyesSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DyesSalesOrder"/>
+    <view-map name="DyesSalesOrder" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#DyesSalesOrder"/>
     
-    <view-map name="DyesMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DyesMultiBranchSalesOrder"/>
-    <view-map name="ChemicalMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#ChemicalMultiBranchSalesOrder"/>
+    <view-map name="DyesMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#DyesMultiBranchSalesOrder"/>
+    <view-map name="ChemicalMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#ChemicalMultiBranchSalesOrder"/>
     
     
     
-    <view-map name="ChemicalSalesOrder" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#ChemicalSalesOrder"/>
+    <view-map name="ChemicalSalesOrder" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#ChemicalSalesOrder"/>
     <view-map name="OtherBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#OtherBranchSalesOrder"/>
     <view-map name="MultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MultiBranchSalesOrder"/>
     <view-map name="SilkMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SilkMultiBranchSalesOrder"/>
@@ -2936,7 +2966,7 @@
 
 <!--     indentor portal screens end -->
     
-    <view-map name="FindIndentsDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#ProcessBranchOrdersDC"/>
+    <view-map name="FindIndentsDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#ProcessBranchOrdersDC"/>
     
     
     
@@ -3012,31 +3042,31 @@
     <view-map name="POMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#POMaterialReceiptsDepot"/>
     <view-map name="FindGRNShipmentsDepot" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindGRNShipments"/>
     
-    <view-map name="FindGRNShipmentsDepotDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#FindGRNShipmentsDC"/>
+    <view-map name="FindGRNShipmentsDepotDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#FindGRNShipmentsDC"/>
     
     <view-map name="MaterialShipmentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialShipmentOverview"/>
     <view-map name="PurchageOrderOverView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PurchageOrderOverView"/>
     
-    <view-map name="PurchageOrderOverViewDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#PurchageOrderOverViewDC"/>
+    <view-map name="PurchageOrderOverViewDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#PurchageOrderOverViewDC"/>
     
     <view-map name="MRRreportDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#MRRreportPDF" content-type="application/pdf"/>
     <view-map name="MaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialInvoiceInit"/>
-    <view-map name="MaterialInvoiceInitDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#MaterialInvoiceInitDC"/>
+    <view-map name="MaterialInvoiceInitDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#MaterialInvoiceInitDC"/>
     
     <view-map name="MaterialSalesInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialSalesInvoiceInit"/>
-    <view-map name="MaterialSalesInvoiceInitDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#MaterialSalesInvoiceInitDC"/>
+    <view-map name="MaterialSalesInvoiceInitDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#MaterialSalesInvoiceInitDC"/>
     <view-map name="DepotMaterialSalesInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotMaterialSalesInvoiceInit"/>
     
     
     
     
     <view-map name="MaterialSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialSalesEditInvoiceInit"/>
-    <view-map name="MaterialSalesEditInvoiceInitDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#MaterialSalesEditInvoiceInitDC"/>
+    <view-map name="MaterialSalesEditInvoiceInitDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#MaterialSalesEditInvoiceInitDC"/>
     
     <view-map name="MaterialDepotSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialDepotSalesEditInvoiceInit"/>
     <view-map name="purchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#purchaseInvoiceEdit"/>
     
-    <view-map name="purchaseInvoiceEditDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#purchaseInvoiceEditDC"/>
+    <view-map name="purchaseInvoiceEditDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#purchaseInvoiceEditDC"/>
    
     <view-map name="DepotpurchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotpurchaseInvoiceEdit"/>
    
@@ -3088,7 +3118,7 @@
     <view-map name="NewDepotSalesReceipt" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#NewDepotSalesReceipt"/>
     
     <view-map name="FindPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindPO"/>
-    <view-map name="FindPODC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#FindPODC"/>
+    <view-map name="FindPODC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#FindPODC"/>
     
     <view-map name="CreatePO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreatePO"/>
     <view-map name="PurchaseOrderViewDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDepotSalesPDF" content-type="application/pdf"/>
@@ -3108,22 +3138,22 @@
    <!-- 	<view-map name="FindApInvoices" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindApInvoices"/> -->
    	<view-map name="DepotPurchaseInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoice"/>
    	
-   	<view-map name="DepotPurchaseInvoiceDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DepotPurchaseInvoiceDC"/>
+   	<view-map name="DepotPurchaseInvoiceDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#DepotPurchaseInvoiceDC"/>
    	
    	<view-map name="DepotSalesInvoice" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoice"/>
-   	<view-map name="DepotSalesInvoiceDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DepotSalesInvoiceDC"/>
+   	<view-map name="DepotSalesInvoiceDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#DepotSalesInvoiceDC"/>
    	<view-map name="DepotSalesInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoiceView"/>
-   	<view-map name="DepotSalesInvoiceViewDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#DepotSalesInvoiceViewDC"/>
+   	<view-map name="DepotSalesInvoiceViewDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#DepotSalesInvoiceViewDC"/>
    	
    	<view-map name="FindTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindTransporter"/>
    	<view-map name="CreateNewTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewTransporter"/>
    	<view-map name="addOtherAddressView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#AddOtherDetails"/>
    	
     <view-map name="APInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#APInvoiceOverview"/>
-    <view-map name="APInvoiceOverviewDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#APInvoiceOverviewDC"/>
+    <view-map name="APInvoiceOverviewDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#APInvoiceOverviewDC"/>
     <view-map name="PaymentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PaymentOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>
-    <view-map name="partyFinanHistoryDC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#PartyFinanHistoryDC"/>
+    <view-map name="partyFinanHistoryDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#PartyFinanHistoryDC"/>
     <view-map name="ViewIndentRequest" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewIndentRequest"/>
     
     <view-map name="StockVariance" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockVariance"/>
@@ -3146,9 +3176,10 @@
     <view-map name="DepotTransMaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialInvoiceInit"/>
     <view-map name="FindDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindDepotTransPO"/>
     
-     <view-map name="FindDepotTransPODC" type="screen" page="component://depotsales/widget/DiesAndChemicalsScreens.xml#FindDepotTransPODC"/>
+     <view-map name="FindDepotTransPODC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#FindDepotTransPODC"/>
     <view-map name="CreateDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#CreateDepotTransPO"/>
     <view-map name="CreateBranchTransPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateBranchTransPO"/>
+    <view-map name="CreateBranchTransPODC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#CreateBranchTransPODC"/>
     <view-map name="ProcessOrdersSuppliersDepotTrans" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessOrderAndShipmentGeneration"/>
     <view-map name="EditMaterialDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#EditMaterialDepotTransPO"/>
     <view-map name="DepotTransPOMaterialReceipts" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotTransPOMaterialReceiptsDepot"/>

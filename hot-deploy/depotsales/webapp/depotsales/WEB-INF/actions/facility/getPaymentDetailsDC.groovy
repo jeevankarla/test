@@ -157,7 +157,7 @@ if(UtilValidate.isNotEmpty(facilityStatusId)){
 else{
 	condList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL,"ORDER_CANCELLED"));
 }
-	condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "BRANCH_SALES"));
+	condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "DC_SALES"));
 	condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review
 if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateStart));

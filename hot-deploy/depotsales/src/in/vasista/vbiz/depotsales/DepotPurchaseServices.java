@@ -7312,7 +7312,7 @@ public class DepotPurchaseServices{
 		String quotationNo = (String) request.getParameter("quotationNo");
 		String orderDateStr = (String) request.getParameter("orderDate");
 		
-		Debug.log("orderDateStr=================="+orderDateStr);
+		//Debug.log("orderDateStr=================="+orderDateStr);
 		
 		String effectiveDateStr = (String) request.getParameter("orderDate");
 		String partyIdTo = (String) request.getParameter("shipToPartyId");
