@@ -87,7 +87,7 @@ under the License.
 					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Date  of Joining </fo:block>
 					                 </fo:table-cell>
 					                  <fo:table-cell>
-					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Place of Posting <fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:block>
+					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Location <fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:block>
 					                 </fo:table-cell>
 					                  <fo:table-cell>
 					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Regional Office <fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:block>

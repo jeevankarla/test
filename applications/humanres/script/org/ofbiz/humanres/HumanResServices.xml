@@ -464,6 +464,22 @@
         <make-value entity-name="PartyBenefit" value-field="newEntity"/>
         <set-pk-fields value-field="newEntity" map="parameters"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-not-empty field="parameters.fromDateStr">
+	        <set field="newEntity.fromDate" value="${groovy:
+	            import java.text.SimpleDateFormat;
+	            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+	            def fromDateTime = sdf.parse(parameters.fromDateStr);
+	            return fromDateTime;
+	        }" type="Timestamp"/>
+        </if-not-empty>
+        <if-not-empty field="parameters.thruDateStr">
+        	<set field="newEntity.thruDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(parameters.thruDateStr);
+            return thruDateTime;
+        }" type="Timestamp"/>
+        </if-not-empty>
         <if-empty field="newEntity.fromDate">
             <now-timestamp field="nowTimeStamp"/>
             <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
@@ -475,6 +491,22 @@
         <make-value entity-name="PartyDeduction" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <if-not-empty field="parameters.fromDateStr">
+	        <set field="newEntity.fromDate" value="${groovy:
+	            import java.text.SimpleDateFormat;
+	            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+	            def fromDateTime = sdf.parse(parameters.fromDateStr);
+	            return fromDateTime;
+	        }" type="Timestamp"/>
+        </if-not-empty>
+        <if-not-empty field="parameters.thruDateStr">
+        	<set field="newEntity.thruDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(parameters.thruDateStr);
+            return thruDateTime;
+        }" type="Timestamp"/>
+        </if-not-empty>
         <if-empty field="newEntity.fromDate">
             <now-timestamp field="nowTimeStamp"/>
             <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
@@ -486,11 +518,27 @@
 
     <simple-method method-name="updatePartyBenefit" short-description="Update Party Benefit">
         <entity-one entity-name="PartyBenefit" value-field="lookedUpValue"/>
+        <if-not-empty field="parameters.thruDate">
+        	<set field="parameters.thruDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(parameters.thruDate);
+            return thruDateTime;
+        }" type="Timestamp"/>
+		</if-not-empty>        
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 	<simple-method method-name="updatePartyDeduction" short-description="Update Party Deduction">
         <entity-one entity-name="PartyDeduction" value-field="lookedUpValue"/>
+        <if-not-empty field="parameters.thruDate">
+        	<set field="parameters.thruDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(parameters.thruDate);
+            return thruDateTime;
+        }" type="Timestamp"/>
+		</if-not-empty>        
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
@@ -643,6 +691,12 @@
 
     <simple-method method-name="updatePayHistory" short-description="Update Pay History">
         <entity-one entity-name="PayHistory" value-field="lookedUpValue"/>
+        <set field="parameters.thruDate" value="${groovy:
+            import java.text.SimpleDateFormat;
+            def sdf = new SimpleDateFormat(&quot;dd-MM-yyyy&quot;);
+            def thruDateTime = sdf.parse(parameters.thruDate);
+            return thruDateTime;
+        }" type="Timestamp"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>

@@ -66,17 +66,52 @@ if(UtilValidate.isNotEmpty(partyId)){
 		lapsedDays = emplLeaveBalanceStatus.lapsedDays;
 	}
 	if(UtilValidate.isNotEmpty(leaveBalanceFlag) && leaveBalanceFlag.equals("leaveBalanceStatus")){
-		conditionList = []; leaveBalanceFlag
-		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , partyId));
-		if(UtilValidate.isNotEmpty(customTimePeriodId)){
-			conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS ,customTimePeriodId));
+		EmplLeaveBalanceStatusList = [];
+		employmentsList = [];
+		if(UtilValidate.isEmpty(partyId)){
+			emplInputMap = [:];
+			emplInputMap.put("userLogin", userLogin);
+			emplInputMap.put("orgPartyId", "Company");
+			emplInputMap.put("fromDate", fromDateStart);
+			emplInputMap.put("thruDate", thruDateEnd);
+			Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+			employments=EmploymentsMap.get("employementList");
+			employments = UtilMisc.sortMaps(employments, UtilMisc.toList("partyIdTo"));
+			
+			if(UtilValidate.isNotEmpty(employments)){
+				employmentsList = EntityUtil.getFieldListFromEntityList(employments, "partyIdTo", true);
+			}
+		}else{
+			employmentsList.add(partyId);
 		}
-		if(UtilValidate.isNotEmpty(leaveTypeId)){
-			conditionList.add(EntityCondition.makeCondition("leaveTypeId", EntityOperator.EQUALS ,leaveTypeId));
+		for(int i=0;i<employmentsList.size();i++){
+			emplLeaveMap = [:];
+			inputMap =[:]
+			employeeId = employmentsList.get(i);
+			inputMap.put("balanceDate", UtilDateTime.toSqlDate(thruDateEnd));
+			inputMap.put("employeeId", employeeId);
+			if(UtilValidate.isNotEmpty(leaveTypeId)){
+				inputMap.put("leaveTypeId", leaveTypeId);
+			}
+			inputMap.put("flag","creditLeaves");
+			
+			Map cLEmplLeaveBalanceMap = EmplLeaveService.getEmployeeLeaveBalance(dctx,inputMap);
+			if(UtilValidate.isNotEmpty(cLEmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId))){
+				leaveBalances=cLEmplLeaveBalanceMap.get("leaveBalances").get(leaveTypeId);
+				emplLeaveMap.put("leaveBalances", leaveBalances);
+			}
+			emplLeaveMap.put("partyId", employeeId);
+			emplLeaveMap.put("leaveTypeId", leaveTypeId);
+			if(UtilValidate.isNotEmpty(customTimePeriodId)){
+				emplLeaveMap.put("customTimePeriodId", customTimePeriodId);
+			}
+		
+			if(UtilValidate.isNotEmpty(emplLeaveMap)){
+				EmplLeaveBalanceStatusList.addAll(emplLeaveMap);
+			}
 		}
-		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		EmplLeaveBalanceStatusList = delegator.findList("EmplLeaveBalanceStatus", condition, null, null, null, false);
 		context.EmplLeaveBalanceStatusList = EmplLeaveBalanceStatusList;
+		
 	}
 	Map getEmplLeaveBalMap = [:];
 	getEmplLeaveBalMap.put("userLogin",userLogin);

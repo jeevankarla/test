@@ -9396,7 +9396,60 @@ public class PayrollService {
     	
 		return result;
   	}
-  	
+  	public static Map<String, Object> createSupplyTimePeriod(DispatchContext dctx, Map context) {
+    	Map<String, Object> result = ServiceUtil.returnSuccess();
+    	String periodTypeId = (String) context.get("periodTypeId");
+    	String organizationPartyId = (String) context.get("organizationPartyId");
+    	String fromDate = (String) context.get("fromDate");
+    	String thruDate = (String) context.get("thruDate");
+    	String periodName = (String) context.get("periodName");
+    	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Locale locale = new Locale("en","IN");
+		TimeZone timeZone = TimeZone.getDefault();
+    	Map<String, Object> serviceResult = ServiceUtil.returnSuccess();
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");	
+    	Timestamp fromDateStart = null;
+		Timestamp fromDateEnd = null;
+    	try {
+    		fromDateStart = UtilDateTime.toTimestamp(sdf.parse(fromDate));
+        	fromDateEnd = UtilDateTime.toTimestamp(sdf.parse(thruDate));
+		} catch (ParseException e) {
+		}
+    	java.sql.Date fromDatesql = new java.sql.Date(fromDateStart.getTime()); 
+    	java.sql.Date thruDatesql = new java.sql.Date(fromDateEnd.getTime()); 
+    	String startDate = UtilDateTime.toDateString(fromDateStart, "dd");
+    	String endDate = UtilDateTime.toDateString(fromDateEnd, "mm-dd");
+    	try {
+		    if(UtilValidate.isNotEmpty(periodTypeId)){
+    			Map getTimePeriodMap = FastMap.newInstance();
+    			getTimePeriodMap.put("userLogin",userLogin);
+    			getTimePeriodMap.put("periodTypeId",periodTypeId);
+    			getTimePeriodMap.put("organizationPartyId",organizationPartyId);
+    			getTimePeriodMap.put("fromDate",fromDatesql);
+    			getTimePeriodMap.put("thruDate",thruDatesql);
+    			if(UtilValidate.isNotEmpty(periodName)){
+    				getTimePeriodMap.put("periodName",periodName);
+    			}
+    			if(UtilValidate.isNotEmpty(getTimePeriodMap)){
+    				try{
+    					serviceResult = dispatcher.runSync("createCustomTimePeriod", getTimePeriodMap);
+    		            if (ServiceUtil.isError(serviceResult)){
+    		            	return ServiceUtil.returnError("Time period already exists");
+    		            }else{
+    		            	result = ServiceUtil.returnSuccess("Time Period Successfully created");
+    		            }
+    				}catch(Exception e){
+    					Debug.logError("Error while creating Time period"+e.getMessage(), module);
+    				}
+    			}
+	    	}
+    	}catch(Exception e){
+			Debug.logError("Error while getting Time period Details"+e.getMessage(), module);
+		}
+		return result;
+  	}
   	public static Map<String, Object> createOrUpdatePayHeadRules(DispatchContext dctx, Map context) {
     	Map<String, Object> result = ServiceUtil.returnSuccess();
     	String ruleName = (String) context.get("ruleName");
