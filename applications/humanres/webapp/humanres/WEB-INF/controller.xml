@@ -2129,6 +2129,24 @@ under the License.
         <response name="success" type="view" value="createTimePeriod"/>
         <response name="error" type="view" value="createTimePeriod"/>
     </request-map>
+     <request-map uri="createSupplyTimePeriod">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="createSupplyTimePeriod"></response>
+    </request-map>
+    <request-map uri="findCreateSupplyTimePeriod">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createSupplyTimePeriod"/>
+    </request-map>
+    <request-map uri="CreateNewSupplyTimePeriod">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateNewSupplyTimePeriod"></response>
+    </request-map>
+     <request-map uri="createSupplymentaryTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createSupplymentaryTimePeriod"/>
+        <response name="success" type="view" value="createSupplyTimePeriod"/>
+        <response name="error" type="view" value="createSupplyTimePeriod"/>
+    </request-map>
      <request-map uri="EmployeeAttendanceInternal">
        <security https="true" auth="true"/>
         <response name="success" type="view" value="EmployeeAttendanceInternal"/>
@@ -2929,6 +2947,8 @@ under the License.
     <view-map name="CreateNewEmployee" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewEmployee"></view-map>
     <view-map name="createTimePeriod" type="screen" page="component://humanres/widget/HumanresScreens.xml#createTimePeriod"></view-map>
 	<view-map name="CreateNewTimePeriod" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewTimePeriod"></view-map>
+	<view-map name="createSupplyTimePeriod" type="screen" page="component://humanres/widget/HumanresScreens.xml#createSupplyTimePeriod"></view-map>
+	<view-map name="CreateNewSupplyTimePeriod" type="screen" page="component://humanres/widget/HumanresScreens.xml#CreateNewSupplyTimePeriod"></view-map>
 	
  <!--====================Reports View===================================-->
     <view-map name="HRReports" type="screen" page="component://humanres/widget/ReportHumanresSummaryScreens.xml#LeaveTypes"/>

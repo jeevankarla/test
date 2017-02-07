@@ -194,9 +194,9 @@ public class EmplLeaveService {
 				   }else{
 					   leaveBalancesMap.put(leaveTypeId, closingBalance);
 				   }
-				   result.put("leaveBalanceDateStr",UtilDateTime.toDateString(leaveBalance.getTimestamp("lastUpdatedStamp"),"dd-MM-yyyy"));
 				}
 				result.put("leaveBalances", leaveBalancesMap);
+				result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
 				//this is to return date for json request
 				//result.put("leaveBalanceDateStr",UtilDateTime.toDateString((java.sql.Date)result.get("leaveBalanceDate"),"dd-MM-yyyy"));
         		
@@ -1010,7 +1010,7 @@ public class EmplLeaveService {
 		}
 		return result;
     }
-  //Earned Leave,Half Pay Leave and Casual Leave Half Yearly Credit
+  //Earned Leave,Restricted Holidays, Medical Leave and Casual Leave Half Yearly Credit
     public static Map<String, Object> populateELCLAndHPLBalanceCredit(DispatchContext dctx, Map context) {
     	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -1018,20 +1018,9 @@ public class EmplLeaveService {
 	    String customTimePeriodId = (String) context.get("customTimePeriodId");
 	    String partyIdFrom = (String) context.get("partyIdFrom");
 	    String leaveTypeId = (String) context.get("leaveTypeId");
-	    
 	    Map<String, Object> result = ServiceUtil.returnSuccess(" "+ leaveTypeId + " leaves credited sucessfully..!");
 	    
 	    BigDecimal allotedDays = BigDecimal.ZERO;
-	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL")){
-	    	allotedDays = new BigDecimal(15);
-	    }
-	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("HPL")){
-	    	allotedDays = new BigDecimal(10);
-	    }
-	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CL")){
-	    	allotedDays = new BigDecimal(15);
-	    }
-	    
 	    
 	    Locale locale = new Locale("en","IN");
 		TimeZone timeZone = TimeZone.getDefault();
@@ -1069,6 +1058,8 @@ public class EmplLeaveService {
     	Map resultMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
     	List<GenericValue> activeEmployementList = (List<GenericValue>)resultMap.get("employementList");
     	List<String> partyIdList = EntityUtil.getFieldListFromEntityList(activeEmployementList, "partyIdTo", true);
+    	
+      
     	// filtering probationary staff
     	try{
     		if(UtilValidate.isNotEmpty(activeEmployementList)){
@@ -1093,17 +1084,62 @@ public class EmplLeaveService {
             		}
             		partyIdList.removeAll(probStaffPartyList);
             	}*/
-	    		List partyClassList = FastList.newInstance();
-	    		partyClassList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIdList));
-	    		partyClassList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, "PROB_STAFF"));
-	            EntityCondition partyClassCond = EntityCondition.makeCondition(partyClassList,EntityOperator.AND);
-	            List<GenericValue> partyClassificationList = delegator.findList("PartyClassification",partyClassCond, null, UtilMisc.toList("-thruDate"), null, false);
-	            List partyClassIdList = EntityUtil.getFieldListFromEntityList(partyClassificationList, "partyId", true);
-	            partyIdList.removeAll(partyClassIdList);
+    			List emplPositionCondList = FastList.newInstance();
+    	    	emplPositionCondList.add(EntityCondition.makeCondition("emplPositionTypeId", EntityOperator.EQUALS, "MGT_TRAIN_COMM"));
+    	    	emplPositionCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+    	        EntityCondition emplPositionCond = EntityCondition.makeCondition(emplPositionCondList,EntityOperator.AND);
+    	        List<GenericValue> EmplPositionAndFulfillmentList = delegator.findList("EmplPositionAndFulfillment",emplPositionCond, null, null, null, false);
+    	        List managementTraineeIds = EntityUtil.getFieldListFromEntityList(EmplPositionAndFulfillmentList, "employeePartyId", true);
+    			try{
+	    	        for (int i = 0; i < managementTraineeIds.size(); ++i) {	
+	    	    		String managementTraineeId = (String) managementTraineeIds.get(i);
+	    	    		if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CL")){
+		    				if(UtilValidate.isNotEmpty(customTimePeriodId) && monthName.equals("January")){
+		    					allotedDays = new BigDecimal(20);
+	    	    		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId", managementTraineeId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
+	    	    		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
+	    	    		    		if(UtilValidate.isNotEmpty(allotedDays)) {
+	    	    						emplLeaveBalanceStatus = delegator.makeValue("EmplLeaveBalanceStatus");
+	    	    						emplLeaveBalanceStatus.set("customTimePeriodId",customTimePeriodId);
+	    	    						emplLeaveBalanceStatus.set("leaveTypeId",leaveTypeId);
+	    	    						emplLeaveBalanceStatus.set("partyId",managementTraineeId);
+	    	    						emplLeaveBalanceStatus.set("openingBalance",BigDecimal.ZERO);
+	    	    						emplLeaveBalanceStatus.set("allotedDays", allotedDays);
+	    		    					emplLeaveBalanceStatus.create();
+	    	    					}
+	    	    				}else{
+	    	    					if(UtilValidate.isNotEmpty(allotedDays)){
+	    	    						emplLeaveBalanceStatus.set("openingBalance",BigDecimal.ZERO);
+	    	    		    			emplLeaveBalanceStatus.set("allotedDays", allotedDays);
+	    		    					emplLeaveBalanceStatus.store();
+	    	    		    		}
+	    	    				}
+	    	    		    }
+		    			}
+	    	    		
+	    	    		
+	    	        }
+    			}catch(Exception e){
+    				Debug.logError("Error while creating CL leaves for management trainees"+e.getMessage(), module);
+    			}
+    			partyIdList.removeAll(managementTraineeIds);
         	}
     	}catch(Exception e){
-			Debug.logError("Error while getting Employement"+e.getMessage(), module);
+			Debug.logError("Error while getting EmplPositionAndFulfillment"+e.getMessage(), module);
 		}
+    	
+    	if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("RH")){
+ 	    	allotedDays = new BigDecimal(2);
+ 	    }
+ 	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("ML")){
+ 	    	allotedDays = new BigDecimal(10);
+ 	    }
+ 	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL")){
+ 	    	allotedDays = new BigDecimal(15);
+ 	    }
+ 	    if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CL")){
+ 	    	allotedDays = new BigDecimal(12);
+ 	    }
         for (int j = 0; j < partyIdList.size(); ++j) {	
     		String partyId = (String) partyIdList.get(j);
     		try{
@@ -1126,7 +1162,10 @@ public class EmplLeaveService {
         	    			if((leaveTypeId.equals("EL") && leaveClosingBalance.compareTo(new BigDecimal(285)) >0)){
         	    				leaveClosingBalance = new BigDecimal(285);
         	    			}
-        	    			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL")){
+        	    			if((leaveTypeId.equals("ML") && leaveClosingBalance.compareTo(new BigDecimal(170)) >0)){
+        	    				leaveClosingBalance = new BigDecimal(170);
+        	    			}
+        	    			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL")){
         	    				if(UtilValidate.isNotEmpty(customTimePeriodId) && monthName.equals("July") || monthName.equals("January")){
             	    		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
             	    		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
@@ -1147,7 +1186,30 @@ public class EmplLeaveService {
             	    				}
             	    		    }
         	    			}
-        	    			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CL")){
+        	    			
+        	    			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("ML")){
+        	    				if(UtilValidate.isNotEmpty(customTimePeriodId) && monthName.equals("January")){
+            	    		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
+            	    		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
+            	    		    		if (UtilValidate.isNotEmpty(leaveClosingBalance) && UtilValidate.isNotEmpty(allotedDays)) {
+            	    						emplLeaveBalanceStatus = delegator.makeValue("EmplLeaveBalanceStatus");
+            	    						emplLeaveBalanceStatus.set("customTimePeriodId",customTimePeriodId);
+            	    						emplLeaveBalanceStatus.set("leaveTypeId",leaveTypeId);
+            	    						emplLeaveBalanceStatus.set("partyId",partyId);
+            	    						emplLeaveBalanceStatus.set("openingBalance",leaveClosingBalance);
+                    	    		        emplLeaveBalanceStatus.set("allotedDays",allotedDays);
+            		    					emplLeaveBalanceStatus.create();
+            	    					}
+            	    				}else{
+            	    					if(UtilValidate.isNotEmpty(allotedDays)){
+            	    		    			emplLeaveBalanceStatus.set("allotedDays",allotedDays);
+            		    					emplLeaveBalanceStatus.store();
+            	    		    		}
+            	    				}
+            	    		    }
+        	    			}
+        	    			
+        	    			if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("CL") || leaveTypeId.equals("RH")){
         	    				if(UtilValidate.isNotEmpty(customTimePeriodId) && monthName.equals("January")){
             	    		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
             	    		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
@@ -1228,7 +1290,7 @@ public class EmplLeaveService {
     				return customTimePeriodIdMap;
     			}
 			}*/
-    		if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL") || leaveTypeId.equals("CL")){
+    		if(UtilValidate.isNotEmpty(leaveTypeId) && leaveTypeId.equals("EL") || leaveTypeId.equals("HPL") || leaveTypeId.equals("CL") || leaveTypeId.equals("ML") || leaveTypeId.equals("RH")){
 		    	GenericValue emplLeaveBalanceStatus = delegator.findOne("EmplLeaveBalanceStatus",UtilMisc.toMap("partyId",partyId, "leaveTypeId", leaveTypeId, "customTimePeriodId",customTimePeriodId), false);
 		    	if(UtilValidate.isEmpty(emplLeaveBalanceStatus)){
 					emplLeaveBalanceStatus = delegator.makeValue("EmplLeaveBalanceStatus");

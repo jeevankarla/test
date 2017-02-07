@@ -409,6 +409,8 @@ under the License.emplpunch
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override type="Timestamp" mode="IN" name="fromDate" optional="true"/>
+        <attribute name="fromDateStr" mode="IN" type="String" optional="true"></attribute> 
+        <attribute name="thruDateStr" mode="IN" type="String" optional="true"></attribute>
     </service>
 
     <service name="updatePartyBenefit" engine="simple" default-entity-name="PartyBenefit"
@@ -417,6 +419,7 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>        
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override type="String" mode="IN" name="thruDate" optional="true"/>
     </service>
 
     <service name="deletePartyBenefit" engine="simple" default-entity-name="PartyBenefit"
@@ -507,7 +510,7 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-         <attribute name="fromDateStr" mode="IN" type="String" optional="true"></attribute> 
+        <attribute name="fromDateStr" mode="IN" type="String" optional="true"></attribute> 
         <attribute name="thruDateStr" mode="IN" type="String" optional="true"></attribute>
         <override type="Timestamp" mode="IN" name="fromDate"  optional="true"/>
         <override name="payGradeId" mode="IN" optional="false"></override>
@@ -520,6 +523,8 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+         <override name="thruDate" mode="IN" type="String" optional="true"></override>
+       <!--  <attribute name="thruDate" mode="IN" type="String" optional="true"></attribute>  -->
     </service>
 
     <service name="deletePayHistory" engine="simple" default-entity-name="PayHistory"
@@ -535,6 +540,8 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="fromDateStr" mode="IN" type="String" optional="true"></attribute> 
+        <attribute name="thruDateStr" mode="IN" type="String" optional="true"></attribute>
         <!-- <attribute name="payrollPreferenceSeqId" mode="OUT" type="String" optional="false"/> -->
       <!--   <override type="String" mode="IN" name="payrollPreferenceSeqId" optional="true"/> -->
     </service>
@@ -544,6 +551,7 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>        
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override type="String" mode="IN" name="thruDate" optional="true"/>
     </service>
 
     <service name="deletePartyDeduction" engine="simple" default-entity-name="PartyDeduction"
@@ -2172,6 +2180,15 @@ under the License.emplpunch
          <attribute name="thruDate" mode="IN" type="Date" optional="false"/>
          <attribute name="customTimePeriodId" mode="OUT" type="String" optional="false"/>
          <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+     <service name="createSupplymentaryTimePeriod" engine="java"
+                location="in.vasista.vbiz.humanres.PayrollService" invoke="createSupplyTimePeriod" auth="true">
+         <description>Create a CustomTimePeriod record</description>
+         <attribute name="periodTypeId" mode="IN" type="String" optional="false"/>
+         <attribute name="organizationPartyId" mode="IN" type="String" optional="true"/>
+         <attribute name="fromDate" mode="IN" type="String" optional="false"/>
+         <attribute name="thruDate" mode="IN" type="String" optional="false"/>
+         <attribute name="periodName" mode="IN" type="String" optional="true"/>
     </service>
     <service name="createOrUpdatePayHeadRules" engine="java"
                 location="in.vasista.vbiz.humanres.PayrollService" invoke="createOrUpdatePayHeadRules" 
