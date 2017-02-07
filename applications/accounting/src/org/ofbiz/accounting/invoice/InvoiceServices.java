@@ -6792,6 +6792,7 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	        if(UtilValidate.isNotEmpty(acctgTransId)){
 	        	createRoleContext.put("acctgTransId", acctgTransId);
 	        	GenericValue AcctgTrans = delegator.findOne("AcctgTrans", UtilMisc.toMap("acctgTransId",acctgTransId), true);
+	        	String finAccountTransId=(String) AcctgTrans.getString("finAccountTransId");
 	        	String acctgTransType=(String) AcctgTrans.getString("acctgTransTypeId");
 	        	String acctgPaymentId=null;
 	        	String acctgInvoiceId=null;
@@ -6837,6 +6838,11 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	    	        }
 	    	        Debug.log("partyId==============="+partyId);
 	    	        Debug.log("orgPartyId==============="+orgPartyId);
+	    	        if(UtilValidate.isNotEmpty(finAccountTransId)){
+	    	        	GenericValue finAcctTrans = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId",finAccountTransId), true);
+	    	        	partyId=(String)finAcctTrans.getString("costCenterId");
+	    	        	  Debug.log("coset==============="+partyId);
+	    	        }
 	    	        if(UtilValidate.isEmpty(partyId)&&"JOURNAL".equals(acctgTransType)&&!"Company".equals(orgPartyId)){
 	    	        	partyId=orgPartyId;
 	    	        }
@@ -6881,12 +6887,15 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	        	createRoleContext.put("finAccountTransId", finAccountTransId);
 	        	GenericValue finAcctTrans = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId",finAccountTransId), true);
 	        	GenericValue finAcctTransAttb = delegator.findOne("FinAccountTransAttribute", UtilMisc.toMap("finAccountTransId",finAccountTransId,"attrName","FATR_CONTRA"), true);
+	        	Debug.log("finAcctTransAttb==========="+finAcctTransAttb);
 	        	String finAcctPaymentId=null;
 	        	if(UtilValidate.isNotEmpty(finAcctTrans)){
 	        		finAcctPaymentId=(String) finAcctTrans.getString("paymentId");	       
-	        		GenericValue finAccnt = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId",finAcctTrans.getString("finAccountId")), true);	        		
-	        		String finAcctParty=(String) finAccnt.get("ownerPartyId");
-	        		if(UtilValidate.isNotEmpty(finAcctParty)){
+	        		//GenericValue finAccnt = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId",finAcctTrans.getString("finAccountId")), true);	        		
+	        		//String finAcctParty=(String) finAccnt.get("ownerPartyId");
+	        		String finAcctParty=(String) finAcctTrans.get("costCenterId");
+	        		Debug.log("costCenter==========="+finAcctParty);
+	        		/*if(UtilValidate.isNotEmpty(finAcctParty)){
 	        			GenericValue partyRole = delegator.findOne("PartyRole", UtilMisc.toMap("partyId",finAcctParty,"roleTypeId","INTERNAL_ORGANIZATIO"), true);
 	        			if(UtilValidate.isEmpty(partyRole)){
 	        				if(UtilValidate.isNotEmpty(finAcctTransAttb)){
@@ -6894,10 +6903,11 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 		        				GenericValue finTransAtt = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId",finTransAttributeId), true);
 		        				String finAttributeId=(String)finTransAtt.get("finAccountId");
 		        				GenericValue finTransAttFinAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId",finAttributeId), true);
-		        				finAcctParty=(String)finTransAttFinAccount.get("ownerPartyId");
+		        				finAcctParty=(String)finTransAttFinAccount.get("costCenterId");
 	        				}
 	        			}
-	        		}
+	        		}*/
+	        		Debug.log("finAcctParty====after======="+finAcctParty);
 	        		partyId=finAcctParty;
 	        		
 	        	}	        	
@@ -6913,6 +6923,7 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 		                	   }else if("DISBURSEMENT".equals(parentTypeId)){
 		                		   partyId=(String) paymentDetail.getString("partyIdFrom");
 		                	   }
+		                	   Debug.log("partyId====paymebnts======="+partyId);
 		                   }
 		                }  
 	        	}
@@ -6921,6 +6932,7 @@ Debug.log("acctgTransId========before========="+acctgTransId);
     	        if (ServiceUtil.isError(createAcctgRoleResult)) {
     	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
     	        }
+    	        Debug.log("partyId============"+partyId);
     	        if(UtilValidate.isNotEmpty(partyId)){
     	        	createRoleContext.put("partyId",partyId);	    	        	
     	        	createRoleContext.put("roleTypeId","INTERNAL_ORGANIZATIO");
