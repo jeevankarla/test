@@ -118,14 +118,18 @@ under the License.
 				<fo:block text-align="center"    font-size="10pt" >Total Qty</fo:block>
 				<fo:block text-align="center"     font-size="10pt" >(Kgs)</fo:block>
 				</fo:table-cell>
+				<#if scheme == "MGPS_10Pecent">
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="10pt" >10%</fo:block>
 				<fo:block text-align="center"     font-size="10pt" >Qty(Kgs)</fo:block>
 				</fo:table-cell>
+				</#if>
+				<#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="10pt" >MGPS</fo:block>
 				<fo:block text-align="center"     font-size="10pt" >Qty(Kgs)</fo:block>
 				</fo:table-cell>
+				</#if>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Rate/</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >Kg/bundle</fo:block>
@@ -239,6 +243,7 @@ under the License.
 				 
 				 				
 				</fo:table-cell>
+				<#if scheme == "MGPS_10Pecent">
 				<fo:table-cell border-style="solid">
 				<#if invoiceDetail.get("schemeQty")?has_content>
 				<#assign totSchemeQty = totSchemeQty+invoiceDetail.get("schemeQty")>
@@ -246,13 +251,15 @@ under the License.
 				
 				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("schemeQty")?has_content>${invoiceDetail.get("schemeQty")?if_exists}<#else>${0.00}</#if></fo:block>
 				</fo:table-cell>
+				</#if>
+				<#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 				<#if invoiceDetail.get("mgpsQty")?has_content>
 				<#assign TotalmgpsQty=TotalmgpsQty+(invoiceDetail.get("mgpsQty"))>
 				</#if>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" >${invoiceDetail.get("mgpsQty")}</fo:block>
 				</fo:table-cell>
-				
+				</#if>
 				<fo:table-cell border-style="solid">
 					
 			    <#if kanAndKalRo?has_content> 
@@ -319,13 +326,17 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >${totQuantity} </fo:block>
 				
 				</fo:table-cell>
+				<#if scheme == "MGPS_10Pecent">
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" >${totSchemeQty}</fo:block>
+				
 				</fo:table-cell>
+				</#if>
+				<#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" >${TotalmgpsQty}</fo:block>
 				</fo:table-cell>
-				
+				</#if>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" ></fo:block>
 				</fo:table-cell>
