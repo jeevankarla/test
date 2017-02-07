@@ -2723,6 +2723,13 @@
 	     <response name="error" type="view" value="DelayShipmentReportCSV"/>
     </request-map>
     
+    
+    <request-map uri="ListingPOAnalytics.csv">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="ListingPOAnalyticsReportCSV"/>
+	     <response name="error" type="view" value="ListingPOAnalyticsReportCSV"/>
+    </request-map>
+    
      <request-map uri="depotReimburcentSummaryReport.pdf">
          <security auth="true" https="true"/>
          <response name="success" type="view" value="depotReimburcentSummaryReportPDF"/>
@@ -2890,7 +2897,9 @@
 	 
 	 <view-map name="ShipmentsDispatchReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#ShipmentsDispatchReportCSV" content-type="application/ms-excel"/> 
 	 
-	 <view-map name="DelayShipmentReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#DelayShipmentReportCSV" content-type="application/ms-excel"/>	 
+	 <view-map name="DelayShipmentReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#DelayShipmentReportCSV" content-type="application/ms-excel"/>
+	 <view-map name="ListingPOAnalyticsReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#ListingPOAnalyticsReportCSV" content-type="text/csv"/>	 
+	 
 	 <view-map name="depotReimburcentReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#depotReimburcentReportCSV" content-type="application/ms-excel"/>
 	 <view-map name="indentAnalyticsCsv" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#indentAnalyticsCSV" content-type="text/csv"/>
 	<view-map name="depotReimburcentSummaryReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReimbursement.xml#depotReimburcentSummaryReportPDF" content-type="application/pdf"/>

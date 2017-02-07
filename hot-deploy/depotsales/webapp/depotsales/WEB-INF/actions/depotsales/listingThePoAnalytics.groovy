@@ -31,6 +31,7 @@ delegator = DelegatorFactory.getDelegator("default#NHDC");
 */
 dctx = dispatcher.getDispatchContext();
 JSONArray dataList = new JSONArray();
+POList = [];
 period = parameters.periodName;
 
 isFormSubmitted=parameters.isFormSubmitted;
@@ -342,7 +343,7 @@ for (eachOrder in FromOrders) {
 				branchMap.put("diffDays", Math.round(diffDays)+" Days");
 				
 				dataList.add(branchMap);
-				
+				POList.add(branchMap);
 			}
 			
 			}
@@ -363,6 +364,7 @@ if(UtilValidate.isNotEmpty(dataList)){
 context.formSubmitted=formSubmitted
 
 context.putAt("dataJSON",dataList);
+context.POList=POList;
 Map resultMap = FastMap.newInstance();
 resultMap = ServiceUtil.returnSuccess();
 resultMap.put("data",dataList);

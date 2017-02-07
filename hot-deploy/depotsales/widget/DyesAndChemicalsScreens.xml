@@ -2562,7 +2562,7 @@
 			<actions>
 				<set field="titleProperty"
 					value="Purchase Order OverView - OrderId - ${parameters.orderId}" />
-				<set field="tabButtonItem" value="FindDepotTransPODC" />
+				<set field="tabButtonItem" value="FindPODC" />
 				<set field="tabButtonItem2" value="POoverViewDC" />
 				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js"
 					global="true" />
@@ -2787,5 +2787,28 @@
 		</section>
 	</screen>
 	
+	
+	
+	<screen name="orderAssoc">
+		<section>
+			<actions>
+				<entity-condition list="OrderAssocList"
+					entity-name="OrderAssoc">
+					<condition-list combine="or">
+						<condition-expr field-name="orderId" from-field="parameters.orderId" />
+						<condition-expr field-name="toOrderId" from-field="parameters.orderId" />
+					</condition-list>
+				</entity-condition>
+				<set field="assocId" value="${parameters.orderId}" />
+			</actions>
+			<widgets>
+				<screenlet title="Order Associations">
+					<include-form
+						location="component://materialmgmt/widget/materialmgmtForms.xml"
+						name="listOrderAssoc" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
 
 </screens>
