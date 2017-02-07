@@ -745,6 +745,12 @@
         <attribute name="poAmount" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="shippedAmount" mode="OUT" type="BigDecimal" optional="false"></attribute>
     </service>
+    <service name="getSupplierProductPrice" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getSupplierProductPrice">
+        <description>Returns Supplier Product active Price</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+    </service>
      <service name="getOrderSaleBillQty" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderSaleBillQty">
         <description>Populate Order Details </description>
         <attribute name="orderId" type="String" mode="IN" optional="true"/>

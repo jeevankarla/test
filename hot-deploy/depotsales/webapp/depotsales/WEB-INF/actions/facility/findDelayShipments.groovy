@@ -286,14 +286,16 @@ if("Y".equals(isFormSubmitted)){
 						for(eachRecord in orderHeaderAndRole2){
 							ordQty=ordQty+eachRecord.quantity;
 						}
-						newObj.put("diffDays",(int)diffDays)
-						newObj.put("supplierName",supplierName)
-						newObj.put("shipedQty","-")
-						newObj.put("ordQty",ordQty)
-						totordQty=totordQty+ordQty;
-						totDelayDays=totDelayDays+(int)diffDays;
-						dataList.add(newObj);
-						orderIds.add(eachList.orderId)
+						if(diffDays >= 7){
+							newObj.put("diffDays",(int)diffDays)
+							newObj.put("supplierName",supplierName)
+							newObj.put("shipedQty","-")
+							newObj.put("ordQty",ordQty)
+							totordQty=totordQty+ordQty;
+							totDelayDays=totDelayDays+(int)diffDays;
+							dataList.add(newObj);
+							orderIds.add(eachList.orderId)
+						}
 					  }
 				  }
 			  }
