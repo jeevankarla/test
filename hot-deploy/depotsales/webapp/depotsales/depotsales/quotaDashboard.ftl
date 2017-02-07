@@ -74,7 +74,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 
 $("#branchId2").parent().parent().parent().hide();
 $("#roWise").parent().parent().parent().hide();
-$("#partyId").parent().parent().parent().hide();
+$("#partyClassificationId2").parent().parent().parent().hide();
 
 <#if findData?has_content>
 <#if findData?has_content && lom=='stateRadio'>
@@ -82,7 +82,8 @@ $("#partyId").parent().parent().parent().hide();
 	 $("#branchId2").parent().parent().parent().hide();
 	 $("#stateWise").parent().parent().parent().show();
 	 $("#roWise").parent().parent().parent().hide();
-	  $("#partyId").parent().parent().parent().hide();
+	  $("#partyId").parent().parent().parent().show();
+	  $("#partyClassificationId2").parent().parent().parent().hide();
 
 <#else>
  
@@ -90,6 +91,7 @@ $("#partyId").parent().parent().parent().hide();
 	  $("#roWise").parent().parent().parent().show();
 	  $("#branchId2").parent().parent().parent().show();
 	  $("#partyId").parent().parent().parent().show();
+	  $("#partyClassificationId2").parent().parent().parent().show();
 	  $("#stateWise").parent().parent().parent().hide();
  
  </#if>
@@ -104,13 +106,17 @@ $("#partyId").parent().parent().parent().hide();
 	     $("#branchId2").parent().parent().parent().hide();
 	     $("#stateWise").parent().parent().parent().show();
 	      $("#roWise").parent().parent().parent().hide();
-	      $("#partyId").parent().parent().parent().hide();
+	      $("#partyId").parent().parent().parent().show();
+	      $("#partyClassificationId2").parent().parent().parent().hide();
+	      
      }else  if(selected == 'RoRadio'){
           getbranchesByRO();
           $("#roWise").parent().parent().parent().show();
 	      $("#branchId2").parent().parent().parent().show();
 	      $("#stateWise").parent().parent().parent().hide();
-	      if($("#branchId2").val() != "All")
+	      $("#partyClassificationId2").parent().parent().parent().show();
+	     // if($("#branchId2").val() != "All")
+	     
 	       $("#partyId").parent().parent().parent().show();
 	       
 	        getbranchesByRO();
@@ -146,6 +152,7 @@ $("#partyId").parent().parent().parent().hide();
      $("#stateWise").val(localStorage.getItem("state"));
      $("#branchId2").val(localStorage.getItem("branch"));
      $("#roWise").val(localStorage.getItem("rovar"));
+     $("#partyClassificationId2").val(localStorage.getItem("partyClassificationId"));
      </#if>
       $("#effectiveDate").val(effectiveDate1);
      
@@ -156,9 +163,30 @@ $("#partyId").parent().parent().parent().hide();
 	
 	function autoCompletePartyId(){
 	
-	  var branchId2 = $("#branchId2").val();
-	
-			var productStoreId = branchProductSroreMap[branchId2];
+	   var branchId2 = $("#branchId2").val();
+	   if(branchId2 == "All")
+	    branchId2 = "";
+	   var stateWise = $("#stateWise").val();
+	   var roWise = $("#roWise").val();
+	   var partyClassificationId = $("#partyClassificationId2").val();
+	   
+	   
+	   var stateRadio = $("#stateRadio").val();
+	   var RoRadio = $("#RoRadio").val();
+	   
+	    var selected = $('input[name=lom]:checked').val();
+	   
+	   
+	   
+	   if(selected == "RoRadio"){
+	     stateWise = "";
+	   }else if(selected == "stateRadio"){
+	      branchId2 = "";
+	      partyClassificationId = "";
+	      roWise = "";
+	   }
+	   
+			//var productStoreId = branchProductSroreMap[branchId2];
 			
 			
 		      $("#partyId").autocomplete({ 
@@ -171,7 +199,10 @@ $("#partyId").parent().parent().parent().hide();
 	          					data: {
 	            					ajaxLookup: "Y",
 	            					term : request.term,
-	            					productStoreId : productStoreId
+	            					state:stateWise,
+	            					roWise:roWise,
+	            					partyIdFrom:branchId2,
+	            					partyClassificationGroupId : partyClassificationId
 	          					},
 	          					success: function( data ) {
 	          						var dom = $(data);
@@ -223,7 +254,9 @@ $("#partyId").parent().parent().parent().hide();
 	 	 
 	 	 localStorage.setItem("branch", $("#branchId2").val());
 	 	 
-	 	  localStorage.setItem("rovar", $("#roWise").val());
+	 	 localStorage.setItem("rovar", $("#roWise").val());
+	 	  
+	 	 localStorage.setItem("partyClassificationId", $("#partyClassificationId2").val());
 	 	
 	 	  $("#findData").val("Y");
 	 
@@ -313,6 +346,20 @@ $("#partyId").parent().parent().parent().hide();
 				
 				<tr><td><br/></td></tr>
 				
+				 <tr>
+				  <td align='left' valign='middle' nowrap="nowrap">Party Classification :</td>
+				  <td valign='middle'><font color="green"> 
+				    <select name="partyClassificationId2" id="partyClassificationId2" >
+				    <option value=""></option>     
+				     <#list  partyClassificationList as partyClassificationList>
+						<option value='${partyClassificationList.partyClassificationGroupId?if_exists}'>${partyClassificationList.description?if_exists}</option>
+					 </#list> 
+				  </select>       		
+				  </td>
+				  <td><br/></td>
+				</tr>
+			   
+				<tr><td><br/></td></tr>
 				
 				<tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Customer Name:</td>
@@ -325,38 +372,6 @@ $("#partyId").parent().parent().parent().hide();
 			 
 			   <tr><td><br/></td></tr>
 			  
-			  <#-- 
-			    <tr>
-				  <td align='left' valign='middle' nowrap="nowrap">Party Classification :</td>
-				  
-				  <#if partyClasificationName?exists && partyClasificationName?has_content>  
-								  	  		   
-				  <td valign='middle'><font color="green"> 
-				   <select name="partyClassificationId2" id="partyClassificationId2" >
-				   <option value="${partyClassification}">${partyClasificationName}</option>    
-				     <#list  partyClassificationList as partyClassificationList>
-						<option value='${partyClassificationList.partyClassificationGroupId?if_exists}'>${partyClassificationList.description?if_exists}</option>
-					 </#list> 
-				  </select>         		
-				  </td>
-				  
-				  <#else>
-				  <td valign='middle'><font color="green"> 
-				    <select name="partyClassificationId2" id="partyClassificationId2" >
-				    <option value=""></option>     
-				     <#list  partyClassificationList as partyClassificationList>
-						<option value='${partyClassificationList.partyClassificationGroupId?if_exists}'>${partyClassificationList.description?if_exists}</option>
-					 </#list> 
-				  </select>       		
-				  </td>
-				   </#if>
-				  
-				  <td><br/></td>
-				</tr>
-			   
-			   <tr><td><br/></td></tr>
-			   -->
-			   
 			   <tr>
 				  <td align='left' valign='middle' nowrap="nowrap">Month :</td>
 				  <td valign='middle'><font color="green">          

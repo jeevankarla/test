@@ -3404,6 +3404,7 @@ under the License.
       <member-entity entity-alias="PTYGRP" entity-name="PartyGroup"/>
       <member-entity entity-alias="PTYREL" entity-name="PartyRelationship"/>
       <member-entity entity-alias="RTP" entity-name="PartyRole"></member-entity>
+       <member-entity entity-alias="PTC" entity-name="PartyClassification"></member-entity>
       <alias entity-alias="RTP" name="roleTypeId"></alias>
       <alias entity-alias="PI" name="partyIdentificationTypeId"></alias>
       <alias entity-alias="PI" name="idValue"></alias>
@@ -3426,6 +3427,7 @@ under the License.
       <alias entity-alias="PTYREL" name="roleTypeIdFrom"/>
       <alias entity-alias="PTYREL" name="roleTypeIdTo"/>
       <alias entity-alias="PTYREL" name="partyRelationshipTypeId"/>
+      <alias entity-alias="PTC" name="partyClassificationGroupId"/>
       
       <view-link entity-alias="PI" rel-entity-alias="PTY">
         <key-map field-name="partyId"/>
@@ -3441,6 +3443,9 @@ under the License.
       </view-link>
       <view-link entity-alias="PTY" rel-entity-alias="PTYREL" rel-optional="true">
         <key-map field-name="partyId" rel-field-name="partyIdTo" />
+      </view-link>
+      <view-link entity-alias="PTY" rel-entity-alias="PTC" rel-optional="true">
+        <key-map field-name="partyId"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
