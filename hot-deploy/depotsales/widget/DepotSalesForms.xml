@@ -3874,6 +3874,32 @@
          <field name="diffDays" title="DELIVERY DELAYED"><display/></field>
      </form>
       
+      
+      
+      <form name="POAnalyticsReportCSV" type="list" list-name="POList" view-size="99999">
+        <!-- odd-row-style="alternate-row" header-row-style="header-row"  target="sendReceiptQtyForQC" default-table-style="basic-table hover-bar"> -->
+      	<field name="orderNo" title="Indent No."><display/></field>
+      	<field name="branchIdName" title="Branch"><display/></field>
+      	<field name="saleOrderDate" title="Indent Date"><display/></field>
+      	<field name="purchaseOrderDate" title="PO Date"><display/></field>
+        <field name="orderQuantity" title="Indent Quantity(Kgs)"><display/></field>
+        <field name="diffDays" title="No.of Days" ><display/></field>
+    </form>
+      
+      
+     
+       <form name="DelaListingPOAnalyticsReportCSVHeader" type="list" view-size="99999">
+         <field name="orderNo" title="_"><display/></field>
+         <field name="branchIdName" title="_"><display/></field>
+         <field name="dateStr" title="LISTING OF DELIVERIES DELAYED"><display/></field>
+         <field name="shptDateStr" title="BY MORE THAN 7 DAYS BY SUPPLIERS"><display/></field> 
+         <field name="orderQuantity" title="_"><display/></field>
+         <field name="differDays" title="_"><display/></field>
+          
+     </form> 
+      
+     
+      
        <form name="StateWiseSchemeWiseSalesConsolidatedHeaderCSV" type="list" list-name="finalCSVList2" view-size="99999">
          <field name="h1" title="____STATE" ><display/></field>
          <field name="h2" title="____TOTAL"><display/></field>

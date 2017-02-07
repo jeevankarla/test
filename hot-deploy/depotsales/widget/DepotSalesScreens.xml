@@ -4481,6 +4481,16 @@
 									location="component://depotsales/webapp/depotsales/depotsales/delayedShipmentPO.ftl" />
 							</html>
 						</platform-specific>
+						
+  	  							 <link text="Save" 
+														style="buttontext" target="ListingPOAnalytics.csv">
+														<parameter param-name="searchType" from-field="parameters.searchType" />
+														<parameter param-name="regionId" from-field="parameters.regionId" />
+														<parameter param-name="stateId" from-field="parameters.stateId" />
+														<parameter param-name="branchId2" from-field="parameters.branchId2" />
+														<parameter param-name="period" from-field="parameters.period" />
+														<parameter param-name="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+													</link>
                       	</screenlet>
                       	
                       	<decorator-section name="search-results">
@@ -9636,6 +9646,35 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	
+	
+	<screen name="ListingPOAnalyticsReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/listingThePoAnalytics.groovy"/>	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+					<include-form name="DelaListingPOAnalyticsReportCSVHeader"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					<include-form name="POAnalyticsReportCSV"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
 	
 	<screen name="StateWiseSchemeWiseSalesConsolidatedCSV">
 		<section>
