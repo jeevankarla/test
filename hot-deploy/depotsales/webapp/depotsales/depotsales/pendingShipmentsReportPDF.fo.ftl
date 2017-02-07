@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml> 
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".2in" margin-top=".1in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".1in" margin-right=".1in" margin-top=".1in">
                 <fo:region-body margin-top="0.1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1.5in"/>
@@ -51,14 +51,14 @@ under the License.
              		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="6.5%"/>
              		    <fo:table-column column-width="6.5%"/>
-             		    <fo:table-column column-width="9%"/>
+             		    <fo:table-column column-width="10%"/>
              		    <fo:table-column column-width="12%"/>
              		    <fo:table-column column-width="8.5%"/>
-             		    <fo:table-column column-width="12%"/>
+             		    <fo:table-column column-width="14%"/>
              		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="6.5%"/>
              		    <fo:table-column column-width="5%"/>
-             		    <fo:table-column column-width="5%"/>
+             		    <fo:table-column column-width="4%"/>
              		              		    
 			            
 			            <fo:table-body>
@@ -129,13 +129,13 @@ under the License.
 					            	<fo:block  text-align="left" font-size="9pt"  white-space-collapse="false">${eachList.IndentDate?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indQty?if_exists?string("##0.00")}</fo:block>
+					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indQty?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indUnitPrice?if_exists?string("##0.00")}</fo:block>
+					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indUnitPrice?if_exists}</fo:block>
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indentValue?if_exists?string("##0.00")}</fo:block>
+					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indentValue?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="9pt"  white-space-collapse="false">${eachList.PoNo?if_exists}</fo:block>
