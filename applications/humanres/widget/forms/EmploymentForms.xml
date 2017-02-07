@@ -392,7 +392,9 @@
         <field name="availableTime"><hidden/></field>   
         <field name="tenantId"><hidden/></field>      
         <field name="fromDate"><hidden/></field>  
-        <field name="thruDate"><hidden/></field>         
+        <field name="thruDate"><hidden/></field>
+        <field name="createdByUserLogin"><hidden/></field>       
+        <field name="lastModifiedByUserLogin"><hidden/></field>
         <field name="benefitTypeId" tooltip="${uiLabelMap.CommonRequired}" event="onchange" action="javascript:getPartyBenefitCost(${partyIdTo}, this.value);">
             <drop-down allow-empty="false">
                 <list-options list-name="benefitTypes" key-name="benefitTypeId" 
@@ -503,7 +505,9 @@
         <field name="percentage"><hidden/></field>          
         <field name="routingNumber"><hidden/></field>  
         <field name="accountNumber"><hidden/></field>    
-        <field name="bankName"><hidden/></field>                      
+        <field name="bankName"><hidden/></field>    
+        <field name="createdByUserLogin"><hidden/></field>       
+        <field name="lastModifiedByUserLogin"><hidden/></field>                  
         <field name="deductionTypeId"  id-name="Deductionevent" event="onchange" action="javascript:getPartyDeductionAmount(${partyIdTo}, this.value);">
             <drop-down allow-empty="false" >
                 <list-options list-name="deductionTypes" key-name="deductionTypeId" 

@@ -484,6 +484,8 @@
             <now-timestamp field="nowTimeStamp"/>
             <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
         </if-empty>
+        <set field="newEntity.createdByUserLogin" from-field="userLogin.userLoginId"/>
+         <set field="newEntity.lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
     
@@ -511,6 +513,8 @@
             <now-timestamp field="nowTimeStamp"/>
             <set field="newEntity.fromDate" from-field="nowTimeStamp"/>
         </if-empty>
+        <set field="newEntity.createdByUserLogin" from-field="userLogin.userLoginId"/>
+         <set field="newEntity.lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
        <!--  <sequenced-id sequence-name="PayrollPreference" field="newEntity.payrollPreferenceSeqId"/>
         <field-to-result field="payrollPreferenceSeqId" result-name="payrollPreferenceSeqId"/> -->
         <create-value value-field="newEntity"/>
@@ -525,8 +529,9 @@
             def thruDateTime = sdf.parse(parameters.thruDate);
             return thruDateTime;
         }" type="Timestamp"/>
-		</if-not-empty>        
+		</if-not-empty>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+         <set field="lookedUpValue.lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
 	<simple-method method-name="updatePartyDeduction" short-description="Update Party Deduction">
@@ -540,6 +545,7 @@
         }" type="Timestamp"/>
 		</if-not-empty>        
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+         <set field="lookedUpValue.lastModifiedByUserLogin" from-field="userLogin.userLoginId"/>
         <store-value value-field="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deletePartyBenefit" short-description="Delete Party Benefit">

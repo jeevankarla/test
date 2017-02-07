@@ -1262,6 +1262,16 @@ public class EmplLeaveService {
 	    if (UtilValidate.isNotEmpty(openingBalance) && (openingBalance.compareTo(BigDecimal.ZERO) < 0)) {
 			return ServiceUtil.returnError("You cannot give negative balance.");
 		}
+	    if(leaveTypeId.equals("EL")){
+		    if (UtilValidate.isNotEmpty(openingBalance) && (openingBalance.compareTo(new BigDecimal(285)) > 0) ) {
+				return ServiceUtil.returnError("You cannot give EL opening balance more than 285.");
+			}
+	    }
+	    if(leaveTypeId.equals("ML")){
+		    if (UtilValidate.isNotEmpty(openingBalance) && (openingBalance.compareTo(new BigDecimal(170)) > 0) ) {
+				return ServiceUtil.returnError("You cannot give EL opening balance more than 170.");
+			}
+	    }
 	    if (UtilValidate.isNotEmpty(allotedDays) && (allotedDays.compareTo(BigDecimal.ZERO) < 0)) {
 			return ServiceUtil.returnError("You cannot give negative balance.");
 		}
