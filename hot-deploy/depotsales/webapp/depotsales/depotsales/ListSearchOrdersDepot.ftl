@@ -177,7 +177,7 @@ $(function(){
     
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
 		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"indentEntryFromDate":paramindentEntryFromDate,"indentEntryThruDate":paramEstimatedindentEntryThruDate,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"scheme":scheme,"salesChannel":salesChannel, "partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
-	
+	    $('div#blink').hide();
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
      
     jQuery.ajax({
@@ -569,7 +569,6 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
     
     
     var dataJson = {"orderId":orderId,"statusId":statusMap[statusId],"partyId":partyId};
-    
      $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
     
     jQuery.ajax({
