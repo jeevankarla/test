@@ -4185,12 +4185,12 @@
          <field name="IndentNo" title="__"><display/></field>
          <field name="IndentDate" title="__"><display/></field>
          <field name="indQty" title="__"><display/></field>
-         <field name="indUnitPrice" title="__"><display/></field>
-         <field name="indentValue" title="__"><display/></field>
-         <field name="PoNo" title="__"><display/></field>
-         <field name="PoDate" title="__pending_"><display/></field>
-         <field name="supplier" title="__Shipments__"><display/></field>
-         <field name="shipmentDate" title="__Report"><display/></field>
+         <field name="indUnitPrice" title="__Pending__"><display/></field>
+         <field name="indentValue" title="__Shipments__"><display/></field>
+         <field name="PoNo" title="__Report__"><display/></field>
+         <field name="PoDate" title="__"><display/></field>
+         <field name="supplier" title="__"><display/></field>
+         <field name="shipmentDate" title="__"><display/></field>
          <field name="shipQty" title="__"><display/></field>
          <field name="DurBWSoAndPo" title="__"><display/></field>
          <field name="DurBwSoAndShip" title="__"><display/></field>
