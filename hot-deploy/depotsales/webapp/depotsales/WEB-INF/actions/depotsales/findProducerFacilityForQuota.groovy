@@ -32,11 +32,11 @@ import org.ofbiz.entity.DelegatorFactory;
 
 
 
-HttpServletRequest httpRequest = (HttpServletRequest) request;
+/*HttpServletRequest httpRequest = (HttpServletRequest) request;
 HttpServletResponse httpResponse = (HttpServletResponse) response;
 dctx = dispatcher.getDispatchContext();
 delegator = DelegatorFactory.getDelegator("default#NHDC");
-
+*/
 
 //resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 

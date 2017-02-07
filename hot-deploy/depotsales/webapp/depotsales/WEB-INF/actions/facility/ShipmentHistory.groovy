@@ -34,10 +34,10 @@ import net.sf.json.JSONArray;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.service.GenericDispatcher;
 
-HttpServletRequest httpRequest = (HttpServletRequest) request;
+/*HttpServletRequest httpRequest = (HttpServletRequest) request;
 HttpServletResponse httpResponse = (HttpServletResponse) response;
 dctx = dispatcher.getDispatchContext();
-delegator = DelegatorFactory.getDelegator("default#NHDC");
+delegator = DelegatorFactory.getDelegator("default#NHDC");*/
 
 isReport=parameters.isReport;
 isFormSubmitted=parameters.isFormSubmitted;

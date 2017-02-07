@@ -179,7 +179,7 @@ function drawRow(rowData) {
     row.append($("<td>" +  removeFaciAddress  +"</td>"));
   
    
-     $("#approveOrder").hide();
+   //  $("#approveOrder").hide();
   
 }
 
@@ -908,7 +908,7 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
                               <div class="righthalf">
 						          
 						          
-						          <td><input type="button" name="approveOrder" id="approveOrder" value="ViewFacilityAdresses" onclick="javascript: getFecilityAddressDetailAjax();"/></td>
+						       <#--   <td><input type="button" name="approveOrder" id="approveOrder" value="ViewFacilityAdresses" onclick="javascript: getFecilityAddressDetailAjax();"/></td>-->
 						          
 						          
 						          <table>
