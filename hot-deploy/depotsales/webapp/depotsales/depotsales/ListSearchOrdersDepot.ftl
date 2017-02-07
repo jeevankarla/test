@@ -160,7 +160,7 @@ $(function(){
   function recursively_ajax(orderIdFroApp){
     
         
-     
+     /*
          if(typeof(orderIdFroApp) != 'undefined' && orderIdFroApp != ''){
            orderId = orderIdFroApp;
            
@@ -175,6 +175,7 @@ $(function(){
             
            }
     
+      */
            var uniqueOrderId = JSON.stringify(uniqueOrderIdsList);
 		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"indentEntryFromDate":paramindentEntryFromDate,"indentEntryThruDate":paramEstimatedindentEntryThruDate,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"tallyRefNO":tallyRefNO,"statusId":paramStatusId,"scheme":scheme,"salesChannel":salesChannel, "partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	    $('div#blink').hide();
