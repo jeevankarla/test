@@ -1589,6 +1589,14 @@
          <response name="failed" type="view" value="orderPayment"/>  
       </request-map>
       
+        <request-map uri="createOrderPaymentDC">
+          <security https="true" auth="true"/>
+        <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->
+           <event type="service" path="" invoke="createOrderPayment"/>
+          <response name="success" type="view" value="FindIndentsDC"/>   
+         <response name="failed" type="view" value="orderPaymentDC"/>  
+      </request-map>
+      
       <request-map uri="createDepotOrderPayment">
           <security https="true" auth="true"/>
         <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->

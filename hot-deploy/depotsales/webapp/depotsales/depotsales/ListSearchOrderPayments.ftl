@@ -151,7 +151,7 @@ $(function(){
              orderId = '';
            
 		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
-	
+	    $('div#blink').hide();
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
      
     jQuery.ajax({

@@ -151,7 +151,7 @@ $(function(){
              orderId = '';
            
 		var dataJson = {"orderId":orderId,"partyId":paramFacilityId,"estimatedDeliveryDate":paramEstimatedDeliveryDate,"estimatedDeliveryThruDate":paramEstimatedDeliveryThruDate,"statusId":paramStatusId,"partyIdFrom":paramBranch,"indentDateSort":indentDateSort,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
-	
+	    $('div#blink').hide();
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
      
     jQuery.ajax({
@@ -237,7 +237,7 @@ function drawRow(rowData) {
    {
     var partyName = "'" + rowData.partyName + "'";
     var methodParam = '\'' + rowData.orderId + '\',\'' + rowData.partyId+'\','+partyName+','+rowData.orderTotal+','+rowData.balance;
-    var customMethod = "javascript:showPaymentEntryForIndentPayment("+ methodParam + ")";
+    var customMethod = "javascript:showPaymentEntryForIndentPaymentDC("+ methodParam + ")";
     var inputbox ='<input type=button name="Payment" id=Payment value="Indent Payment" onclick="'+customMethod+'">';
     row.append($("<td align=center>" +  inputbox  +"</td>"));
     }else{
