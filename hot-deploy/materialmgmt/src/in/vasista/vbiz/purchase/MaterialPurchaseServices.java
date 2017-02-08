@@ -5297,7 +5297,7 @@ public class MaterialPurchaseServices {
 			}
 			
 			
-			List<GenericValue> orderAssocList = null;
+			/*List<GenericValue> orderAssocList = null;
 			
 			
 
@@ -5335,7 +5335,7 @@ public class MaterialPurchaseServices {
 	 	        	Debug.logError("error while removing order Item Association" + orderId, module);
 	
 	            }
-            }
+            }*/
 
 
 			
