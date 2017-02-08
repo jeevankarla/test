@@ -151,9 +151,9 @@
 	        	    <option key="APPROVE_LEVEL2" description="Level2Approved"/>
 	        	    <option key="APPROVE_LEVEL3" description="Level3Approved"/>
 	        		<option key="ORDER_APPROVED" description="Approved"/>
-	        		<option key="ORDER_PENDING" description="Pending"/>
+	        		<!-- <option key="ORDER_PENDING" description="Pending"/> -->
 	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
-	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
+	        		<!-- <option key="ORDER_SUSPENDED" description="Suspended"/> -->
 	        		<option key="ORDER_COMPLETED" description="Completed"/>
 	        	</drop-down>
         </field>
