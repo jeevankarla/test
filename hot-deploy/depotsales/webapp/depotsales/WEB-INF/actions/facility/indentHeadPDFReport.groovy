@@ -966,9 +966,9 @@ if(invoice){
 					
 					for (eachAssoc in OrderItemAssoc) {
 						
-						poInvoiceList = delegator.findOne("OrderHeader",[orderId : eachAssoc.toOrderId] , false);
+						OrderHeaderAss = delegator.findOne("OrderHeader",[orderId : eachAssoc.toOrderId] , false);
 						
-						if(poInvoiceList.statusId != "ORDER_CANCELLED"){
+						if(OrderHeaderAss.statusId != "ORDER_CANCELLED"){
 						 poOrderId  = OrderItemAssoc[0].toOrderId;
 						 poOrderItemSeqId  = OrderItemAssoc[0].toOrderItemSeqId;
 						 break;
