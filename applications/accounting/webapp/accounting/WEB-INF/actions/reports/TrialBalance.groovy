@@ -42,18 +42,19 @@ parties.each { party ->
 	partyNameList.add(partyName);
 }
 context.partyNameList = partyNameList;
-
+division = parameters.division;
 asOnDate = parameters.asOnDate;
   dctx = dispatcher.getDispatchContext();
  glAccountAndHistories =[];
  condList = [];
- condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.IN, partyIds));
+ condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.EQUALS, "Company"));
+ if(!division.equals("Company"))
+ condList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.EQUALS, division));
  condList.add(EntityCondition.makeCondition("customTimePeriodId" , EntityOperator.EQUALS,parameters.customTimePeriodId));
-  List tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+  List tempGlAccountAndHistories = delegator.findList("GlAccountAndPartyHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
 //Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalance(dctx, UtilMisc.toMap("organizationPartyId", parameters.organizationPartyId,"customTimePeriodId",parameters.customTimePeriodId));
 lastClosedGlBalanceList =[];
 //lastClosedGlBalanceList = lastClosedGlBalances.get("openingGlHistory");
-
 Set<String> partySet = new HashSet<String>(partyIds);
 
 for (String eachParty : partySet) {
@@ -61,9 +62,7 @@ for (String eachParty : partySet) {
 	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
 
 }
-
 tempGlAccountAndHistories.each { tempGlAccountAndHistory ->
-	 
 	 tempGlAccountAndHistoryMap =[:];
 	 tempGlAccountAndHistoryMap.putAll(tempGlAccountAndHistory);
 	 lastClosedGlBalance = EntityUtil.getFirst(EntityUtil.filterByAnd(lastClosedGlBalanceList, UtilMisc.toMap("glAccountId",tempGlAccountAndHistory.get("glAccountId"))))
@@ -96,7 +95,6 @@ tempGlAccountAndHistories.each { tempGlAccountAndHistory ->
 	tempGlAccountAndHistoryMap.putAt("totalEndingBalance", ((tempGlAccountAndHistoryMap.get("totalPostedDebits")+tempGlAccountAndHistoryMap.get("openingD"))-(tempGlAccountAndHistoryMap.get("totalPostedCredits")+tempGlAccountAndHistoryMap.get("openingC"))));
 	glAccountAndHistories.add(tempGlAccountAndHistoryMap);
 }
- 
 if(UtilValidate.isNotEmpty(lastClosedGlBalanceList)){
 	 lastClosedGlBalanceList.each{ tempGlAccountAndHistory ->
 		 
@@ -186,6 +184,13 @@ for(k=0;k<glAccountAndHistories.size();k++){
 }
 
 finalList = [];
+grandTotMap = [:];
+totOpeningBal = 0;
+totOpeningD = 0;
+totOpeningC = 0;
+totDebtAmt = 0;
+totCredAmt = 0;
+totEndingBal = 0;
 for(t=0;t<prevGlList.size();t++){
   glAccountId = prevGlList[t];
   eachGllist = prevTmp.get(glAccountId);
@@ -200,13 +205,27 @@ for(t=0;t<prevGlList.size();t++){
   tMap.put("openingC",eachGllist.get("openingC"));
   tMap.put("openingD",eachGllist.get("openingD"));
   
+  
+  totOpeningBal = totOpeningBal + (eachGllist.get("openingD") - eachGllist.get("openingC"));
+  totOpeningD = totOpeningD + eachGllist.get("openingD");
+  totOpeningC = totOpeningC + eachGllist.get("openingC");
+  totDebtAmt = totDebtAmt + eachGllist.get("totalPostedDebits");
+  totCredAmt = totCredAmt + eachGllist.get("totalPostedDebits");
+  totEndingBal = totEndingBal + eachGllist.get("totalEndingBalance");
+  
   tempMap = [:];
   tempMap.putAll(tMap);
   finalList.add(tempMap);
 }
-
+grandTotMap.put("accountName","TOTAL");
+grandTotMap.put("totalOpening",totOpeningBal);
+grandTotMap.put("openingD",totOpeningD);
+grandTotMap.put("openingC",totOpeningC);
+grandTotMap.put("totalPostedDebits",totDebtAmt);
+grandTotMap.put("totalPostedCredits",totCredAmt);
+grandTotMap.put("totalEndingBalance",totEndingBal);
+finalList.add(grandTotMap);
 context.finalList = finalList;
-
 accountCodeList=[];
 if(UtilValidate.isNotEmpty(parameters.customTimePeriodId)){
   GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);

@@ -295,9 +295,6 @@
 	<screen name="TrialBalanceInternal">
 		<section>
 			<widgets>
-				<container style="h3">
-					<label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}" />
-				</container>
 				<include-form name="TrialBalanceFinancialTimePeriodSelection"
 					location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 				<section>
@@ -313,23 +310,18 @@
 								<parameter param-name="organizationPartyId"
 									from-field="organizationPartyId" />
 								<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
+								<parameter param-name="division" from-field="parameters.division" />
 							</link>
 							<link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext"
 								target="TrialBalanceSearchResultsPdf.pdf">
 								<parameter param-name="organizationPartyId"
 									from-field="organizationPartyId" />
 								<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
+								<parameter param-name="division" from-field="parameters.division" />
 							</link>
 							<include-form name="ListTrialBalance"
 								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
-							<container style="h3">
-								<label
-									text="${uiLabelMap.AccountingDebitFlag}: ${grandTotalPostedRecord.totalPostedDebits}" />
-							</container>
-							<container style="h3">
-								<label
-									text="${uiLabelMap.AccountingCreditFlag}: ${grandTotalPostedRecord.totalPostedCredits}" />
-							</container>
+							
 						</screenlet>
 					</widgets>
 				</section>
@@ -842,16 +834,7 @@
 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 						<include-form name="TrialBalanceReport"
 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
-						<include-form name="TrialBalanceGrandTotalReport" 
- 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
-						<!-- <container style="h3">
-							<label
-								text="${uiLabelMap.AccountingDebitFlag}: ${grandTotalPostedRecord.totalPostedDebits}" />
-						</container>
-						<container style="h3">
-							<label
-								text="${uiLabelMap.AccountingCreditFlag}: ${grandTotalPostedRecord.totalPostedCredits}" />
-						</container> -->
+						
 					</decorator-section>
 				</decorator-screen>
 			</widgets>
