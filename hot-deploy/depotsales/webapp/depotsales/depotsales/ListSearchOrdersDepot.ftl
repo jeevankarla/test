@@ -497,7 +497,7 @@ function drawRow(rowData) {
     }
     
     
-    if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_CREATED"){
+    if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId != "ORDER_CREATED"){
       var amendButton = '<a class="buttontext" href="<@ofbizUrl>amendOrder?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Amend Indent</a>';
       row.append($("<td>" +  amendButton  +"</td>"));  
    }else{
