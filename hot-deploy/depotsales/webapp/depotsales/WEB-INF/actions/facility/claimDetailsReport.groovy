@@ -178,6 +178,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 			 conditionList.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "POSTAL_ADDRESS"));
+			 conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
 			 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			 partyPostalAddress = delegator.findList("PartyContactDetailByPurpose", condition, null, null, null, false);
 			 partyPostalAddress= EntityUtil.getFirst(partyPostalAddress);
@@ -211,11 +212,11 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 temMap.put("categoryname", categoryname);
 			 quantity = eachInvoiceItem.get("quantity");
 			 temMap.put("quantity", df.format(quantity.setScale(0, 0)));
-			 totalQty=totalQty+quantity;
+			 
 			 value=eachInvoiceItem.get("itemValue");
 		
 			 temMap.put("value", df.format(value.setScale(2, 0)));
-			 totalvalue=totalvalue+value
+			 
 			 BigDecimal serviceCharg= BigDecimal.ZERO;
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("parentInvoiceId",EntityOperator.EQUALS,invoiceId));
@@ -228,14 +229,19 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 				 subsidyAmt= (invoiceSubsidyDetails.itemValue)*(-1);
 			 }
 			 temMap.put("subsidyAmt", df.format(subsidyAmt.setScale(0, 0)));
-			 totalsubsidyAmt=totalsubsidyAmt+subsidyAmt
+			
 			 serviceCharg= (value*0.005);
 			 temMap.put("serviceCharg", df.format(serviceCharg.setScale(0, 0)));
-			 totalserviceCharg=totalserviceCharg+serviceCharg
+			
 			 BigDecimal claimTotal = (subsidyAmt +serviceCharg).setScale(0, 0);
 			 temMap.put("claimTotal", claimTotal);
-			 totalclaimTotal=totalclaimTotal+claimTotal
+			 
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
+				 totalQty=totalQty+quantity;
+				 totalvalue=totalvalue+value;
+				 totalsubsidyAmt=totalsubsidyAmt+subsidyAmt
+				 totalserviceCharg=totalserviceCharg+serviceCharg
+				 totalclaimTotal=totalclaimTotal+claimTotal
 				temMap.put("sNo", String.valueOf(sNo));
 				sNo = sNo+1;
 			    finalList.add(temMap);
