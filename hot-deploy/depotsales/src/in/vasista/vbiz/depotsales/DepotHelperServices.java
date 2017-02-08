@@ -3620,7 +3620,7 @@ public static Map<String,Object> getSupplierProductPrice(DispatchContext dctx, M
     	condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
     	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
     	condList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
-    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO GREATER_THAN_EQUAL_TO, nowTimeStamp));
+    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
     	condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
         List<GenericValue> supplierProductList = delegator.findList("SupplierProduct", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("lastPrice"), null, null, false);
         if(UtilValidate.isEmpty(supplierProductList)){
