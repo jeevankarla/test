@@ -959,7 +959,7 @@ if(invoice){
 				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 				cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				OrderItemAssoc = delegator.findList("OrderItemAssoc", cond, null, null, null, false);
-
+             
 				poOrderId = "";
 				poOrderItemSeqId = "";
 				if(OrderItemAssoc){
