@@ -2322,6 +2322,7 @@
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field> 
+         <field name="raiseInvoice" title="Raise Invoice" use-when="(&quot;${invSize}&quot; != &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}"><display></display></field>
     </form>   
     
     <form name="FindPhysicalInventoryDepotForSale" title="" type="single" target="DepotSalesInventorySales" header-row-style="header-row" default-table-style="basic-table">
