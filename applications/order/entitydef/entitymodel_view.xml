@@ -75,6 +75,25 @@ under the License.
         <key-map field-name="orderId"/>
       </view-link>
     </view-entity>
+    
+    <view-entity entity-name="OrderHeaderAndItemAssoc"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Order Items Assoc View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OIA" entity-name="OrderItemAssoc"/>
+      <alias entity-alias="OH" name="orderId"/>
+       <alias entity-alias="OIA" name="orderItemSeqId"/>
+      <alias entity-alias="OIA" name="toOrderId"/>
+      <alias entity-alias="OIA" name="toOrderItemSeqId"/>
+      <alias entity-alias="OH" name="orderStatusId" field="statusId"/>
+      <alias entity-alias="OH" name="statusId"/>
+      <alias entity-alias="OIA" name="orderItemAssocTypeId"/>
+      <view-link entity-alias="OH" rel-entity-alias="OIA">
+        <key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
+    
     <view-entity entity-name="OrderHeaderItemProductAndFacility"
             package-name="org.ofbiz.order.order"
             never-cache="true"
