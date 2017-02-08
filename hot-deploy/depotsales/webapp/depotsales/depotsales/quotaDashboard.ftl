@@ -108,6 +108,8 @@ $("#partyClassificationId2").parent().parent().parent().hide();
 	      $("#roWise").parent().parent().parent().hide();
 	      $("#partyId").parent().parent().parent().show();
 	      $("#partyClassificationId2").parent().parent().parent().hide();
+	      $("#partyId").val('');
+	      getbranchesByRO();
 	      
      }else  if(selected == 'RoRadio'){
           getbranchesByRO();
@@ -115,11 +117,9 @@ $("#partyClassificationId2").parent().parent().parent().hide();
 	      $("#branchId2").parent().parent().parent().show();
 	      $("#stateWise").parent().parent().parent().hide();
 	      $("#partyClassificationId2").parent().parent().parent().show();
-	     // if($("#branchId2").val() != "All")
-	     
 	       $("#partyId").parent().parent().parent().show();
-	       
-	        getbranchesByRO();
+	        
+	         $("#partyId").val('');
       }
       
     });

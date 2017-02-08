@@ -260,7 +260,7 @@ branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList,
 	List condList = [];
 	if((branchpartyIdsList || branchId || partyClassification || isDepot || state || district) && !partyId)
 	condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, branchpartyIdsList));
-	else if(UtilValidate.isNotEmpty(partyId) && lom=="RoRadio")
+	else if(UtilValidate.isNotEmpty(partyId))
 		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS, partyId));
 	
 		
