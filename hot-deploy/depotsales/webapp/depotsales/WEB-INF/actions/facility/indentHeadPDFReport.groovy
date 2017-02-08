@@ -957,15 +957,25 @@ if(invoice){
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId));
 				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
-				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 				cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				OrderItemAssoc = delegator.findList("OrderHeaderAndItemAssoc", cond, null, null, null, false);
-
+				OrderItemAssoc = delegator.findList("OrderItemAssoc", cond, null, null, null, false);
+             
 				poOrderId = "";
 				poOrderItemSeqId = "";
 				if(OrderItemAssoc){
-					poOrderId  = OrderItemAssoc[0].toOrderId;
-					poOrderItemSeqId  = OrderItemAssoc[0].toOrderItemSeqId;
+					
+					for (eachAssoc in OrderItemAssoc) {
+						
+						OrderHeaderAss = delegator.findOne("OrderHeader",[orderId : eachAssoc.toOrderId] , false);
+						
+						if(OrderHeaderAss.statusId != "ORDER_CANCELLED"){
+						 poOrderId  = OrderItemAssoc[0].toOrderId;
+						 poOrderItemSeqId  = OrderItemAssoc[0].toOrderItemSeqId;
+						 break;
+						}
+						
+					}
+					
 				}
 
 				////Debug.log("poOrderId============="+poOrderId);
