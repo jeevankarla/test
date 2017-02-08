@@ -954,13 +954,12 @@ if(invoice){
 				////Debug.log("itemOrderId============="+itemOrderId);
 				////Debug.log("orderItemSeqId============="+orderItemSeqId);
 
-
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId));
 				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 				cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-				OrderItemAssoc = delegator.findList("OrderItemAssoc", cond, null, null, null, false);
-
+				OrderItemAssoc = delegator.findList("OrderHeaderAndItemAssoc", cond, null, null, null, false);
 
 				poOrderId = "";
 				poOrderItemSeqId = "";
@@ -971,7 +970,6 @@ if(invoice){
 
 				////Debug.log("poOrderId============="+poOrderId);
 				////Debug.log("poOrderItemSeqId============="+poOrderItemSeqId);
-
 				////Debug.log("eachInvoice.shipmentId============="+eachInvoice.shipmentId);
 
 
