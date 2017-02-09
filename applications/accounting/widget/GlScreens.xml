@@ -1272,8 +1272,6 @@ reportType:byAccount -->
 	<screen name="AcctgTransEntriesSearchResultsNewPdf">
 		<section>
 			<actions>
-			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
-			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrailBalanceTransactions.groovy" />
 			 <set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
 			    <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
               
@@ -1290,6 +1288,15 @@ reportType:byAccount -->
 			    <set field="thruDate" type="Date" value="${parameters.thruDate}"
 					global="true" />
 				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="partyIds"
+					value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}"
+					type="List" />
+				<entity-condition entity-name="Party" list="parties">
+					<condition-expr field-name="partyId" operator="in"
+						from-field="partyIds" />
+				</entity-condition>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrailBalanceTransactions.groovy" />
 				<!-- <entity-condition entity-name="AcctgTransAndEntries"
 					list="acctgTransEntryList">
 					<condition-list>
@@ -1363,8 +1370,6 @@ reportType:byAccount -->
 	<screen name="AcctgTransEntriesSearchResultsNewCsv">
 		<section>
 			<actions>
-			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
-			<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrailBalanceTransactions.groovy" />
 			 <set field="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
 			    <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
               
@@ -1382,6 +1387,15 @@ reportType:byAccount -->
 					global="true" />
 				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
      			<set field="viewSize" value="99999999" />
+     			<set field="partyIds"
+					value="${groovy:org.ofbiz.party.party.PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP')}"
+					type="List" />
+				<entity-condition entity-name="Party" list="parties">
+					<condition-expr field-name="partyId" operator="in"
+						from-field="partyIds" />
+				</entity-condition>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrailBalanceTransactions.groovy" />
 			</actions>
 			<widgets>
 				<section>
