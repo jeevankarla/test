@@ -754,7 +754,7 @@ under the License.
             </drop-down>
         </field>
         <field name="division" title="Regional Office" id-name="division">
-        	<drop-down allow-empty="true">
+        	<drop-down allow-empty="flase">
         		<option key="Company" description="NHDC"/>
                <entity-options entity-name="PartyRelationshipAndDetail" key-field-name="partyId" description="${groupName}" filter-by-date="false">
                     <entity-constraint name="partyIdFrom" operator="equals" value="${organizationPartyId}"/>
