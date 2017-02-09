@@ -540,6 +540,7 @@ under the License.emplpunch
         <permission-service service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override type="Timestamp" mode="IN" name="fromDate" optional="true"/>
         <attribute name="fromDateStr" mode="IN" type="String" optional="true"></attribute> 
         <attribute name="thruDateStr" mode="IN" type="String" optional="true"></attribute>
         <!-- <attribute name="payrollPreferenceSeqId" mode="OUT" type="String" optional="false"/> -->
