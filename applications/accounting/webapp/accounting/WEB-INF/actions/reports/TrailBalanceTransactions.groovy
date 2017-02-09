@@ -48,12 +48,30 @@ reportTypeFlag=parameters.reportTypeFlag;
 result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)),userLogin:userLogin]);
 context.put("openingBal",result.get("openingBal"));
  findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
-  conditionList = [];
+
+ division = parameters.division;
+ acctgTransIds = [];
+ condList = [];
+ if(UtilValidate.isNotEmpty(division) && !division.equals("Company")){
+	 condList.add(EntityCondition.makeCondition("roleTypeId" , EntityOperator.EQUALS,"INTERNAL_ORGANIZATIO"));
+	 condList.add(EntityCondition.makeCondition("partyId" , EntityOperator.EQUALS,division));
+	 AcctgTransRoleIter = delegator.find("AcctgTransRole", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, ['acctgTransId'], findOpts);
+	 if(UtilValidate.isNotEmpty(AcctgTransRoleIter)){
+		 while(acctgTransRole= AcctgTransRoleIter.next()) {
+			 acctgTransIds.add(acctgTransRole.acctgTransId);
+		 }
+		 AcctgTransRoleIter.close();
+	 }
+ }
+   conditionList = [];
  glAccountIdList.each{glAccountId->
  conditionList.clear();
  conditionList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.EQUALS,parameters.organizationPartyId));
  if(reportTypeFlag.equals("condensed")){
   conditionList.add(EntityCondition.makeCondition("isPosted" , EntityOperator.EQUALS,"Y"));
+ }
+ if(UtilValidate.isNotEmpty(acctgTransIds)){
+	 conditionList.add(EntityCondition.makeCondition("acctgTransId" , EntityOperator.IN, acctgTransIds));
  }
  conditionList.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,glAccountId));
  conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate))));

@@ -48,11 +48,11 @@ asOnDate = parameters.asOnDate;
  glAccountAndHistories =[];
  condList = [];
  condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.EQUALS, "Company"));
- if(!division.equals("Company"))
+ if(UtilValidate.isNotEmpty(division) && !division.equals("Company"))
  condList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.EQUALS, division));
  condList.add(EntityCondition.makeCondition("customTimePeriodId" , EntityOperator.EQUALS,parameters.customTimePeriodId));
-  List tempGlAccountAndHistories = delegator.findList("GlAccountAndPartyHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
-//Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalance(dctx, UtilMisc.toMap("organizationPartyId", parameters.organizationPartyId,"customTimePeriodId",parameters.customTimePeriodId));
+ List tempGlAccountAndHistories = delegator.findList("GlAccountAndPartyHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+  //Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalance(dctx, UtilMisc.toMap("organizationPartyId", parameters.organizationPartyId,"customTimePeriodId",parameters.customTimePeriodId));
 lastClosedGlBalanceList =[];
 //lastClosedGlBalanceList = lastClosedGlBalances.get("openingGlHistory");
 Set<String> partySet = new HashSet<String>(partyIds);
