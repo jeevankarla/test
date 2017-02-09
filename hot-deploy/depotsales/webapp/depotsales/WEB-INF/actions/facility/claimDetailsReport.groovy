@@ -32,6 +32,7 @@ reportTypeFlag=parameters.reportTypeFlag;
 context.reportTypeFlag=reportTypeFlag;
 claimFromDate=parameters.claimFromDate;
 claimThruDate=parameters.claimThruDate;
+rounding = RoundingMode.HALF_UP;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
@@ -211,12 +212,10 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 }
 			 temMap.put("categoryname", categoryname);
 			 quantity = eachInvoiceItem.get("quantity");
-			 temMap.put("quantity", df.format(quantity.setScale(0, 0)));
-			 
+			 //temMap.put("quantity", df.format(quantity.setScale(0, 0)));
+			 temMap.put("quantity", df.format(quantity.setScale(0, rounding)));
 			 value=eachInvoiceItem.get("itemValue");
-		
-			 temMap.put("value", df.format(value.setScale(2, 0)));
-			 
+			 temMap.put("value", df.format(value.setScale(2, rounding)));
 			 BigDecimal serviceCharg= BigDecimal.ZERO;
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("parentInvoiceId",EntityOperator.EQUALS,invoiceId));
@@ -228,12 +227,12 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetails) && (invoiceSubsidyDetails.amount)){
 				 subsidyAmt= (invoiceSubsidyDetails.itemValue)*(-1);
 			 }
-			 temMap.put("subsidyAmt", df.format(subsidyAmt.setScale(0, 0)));
+			 temMap.put("subsidyAmt", df.format(subsidyAmt.setScale(0, rounding)));
 			
 			 serviceCharg= (value*0.005);
-			 temMap.put("serviceCharg", df.format(serviceCharg.setScale(0, 0)));
+			 temMap.put("serviceCharg", df.format(serviceCharg.setScale(0, rounding)));
 			
-			 BigDecimal claimTotal = (subsidyAmt +serviceCharg).setScale(0, 0);
+			 BigDecimal claimTotal = (subsidyAmt +serviceCharg).setScale(0, rounding);
 			 temMap.put("claimTotal", claimTotal);
 			 
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
@@ -253,10 +252,10 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 					existingMap["userAgency"]=existingMap.get("userAgency");
 					existingMap["productName"]=existingMap.get("productName");
 					existingMap["categoryname"]=existingMap.get("categoryname");
-					existingMap["quantity"]=df.format(quantity.add(new BigDecimal(existingMap.get("quantity"))).setScale(0, 0));
-					existingMap["value"]=df.format(value.add(new BigDecimal(existingMap.get("value"))).setScale(0, 0));
-					existingMap["subsidyAmt"]=df.format(subsidyAmt.add(new BigDecimal(existingMap.get("subsidyAmt"))).setScale(0, 0));
-					existingMap["serviceCharg"]=df.format(serviceCharg.add(new BigDecimal(existingMap.get("serviceCharg"))).setScale(0, 0));
+					existingMap["quantity"]=df.format(quantity.add(new BigDecimal(existingMap.get("quantity"))).setScale(0, rounding));
+					existingMap["value"]=df.format(value.add(new BigDecimal(existingMap.get("value"))).setScale(0, rounding));
+					existingMap["subsidyAmt"]=df.format(subsidyAmt.add(new BigDecimal(existingMap.get("subsidyAmt"))).setScale(0, rounding));
+					existingMap["serviceCharg"]=df.format(serviceCharg.add(new BigDecimal(existingMap.get("serviceCharg"))).setScale(0, rounding));
 					existingMap["claimTotal"]=claimTotal.add(new BigDecimal(existingMap.get("claimTotal")));
 					DistrictWiseMap.put(districtName,existingMap);
 				}else{
@@ -282,7 +281,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 totalsMap.put("quantity", totalQty);
 totalsMap.put("value", totalvalue);
 totalsMap.put("subsidyAmt", totalsubsidyAmt);
-totalsMap.put("serviceCharg", totalserviceCharg);
+totalsMap.put("serviceCharg", totalserviceCharg.setScale(0, rounding));
 totalsMap.put("claimTotal", totalclaimTotal);
 context.totalsMap=totalsMap; 
 context.totalsubsidyAmt=totalsubsidyAmt;
@@ -321,7 +320,7 @@ desList.each{ eachdesc ->
 	totMap.put("quantity", totalQty);
 	totMap.put("value", totalvalue);
 	totMap.put("subsidyAmt", totalsubsidyAmt);
-	totMap.put("serviceCharg", totalserviceCharg);
+	totMap.put("serviceCharg", totalserviceCharg.setScale(0, rounding));
 	totMap.put("claimTotal", String.valueOf(totalclaimTotal));	
 //}
 finalList.add(totMap);
