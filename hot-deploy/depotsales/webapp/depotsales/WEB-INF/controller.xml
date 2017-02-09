@@ -306,6 +306,12 @@
         <response name="success" type="view" value="FindIndents"/>
         <response name="error" type="view" value="FindIndents"/>
     </request-map>
+    <request-map uri="approveOrderreloadDC">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="approveOrdersAjax.groovy"/> 
+        <response name="success" type="view" value="FindIndentsDC"/>
+        <response name="error" type="view" value="FindIndentsDC"/>
+    </request-map>
     
     <request-map uri="fetchCitesForState">
         <security https="true" auth="true"/>
