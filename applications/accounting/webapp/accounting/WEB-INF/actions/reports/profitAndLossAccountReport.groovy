@@ -147,11 +147,11 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 			condList = [];
 			condList.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,glAccountId));
 			condList.add(EntityCondition.makeCondition("customTimePeriodId" , EntityOperator.EQUALS,eachCustmTime));
-			condList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, partyIds));
-			tempGlAccountAndHistories = delegator.findList("GlAccountAndPartyHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description","organizationPartyId"), null, null, false);
+			condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.IN, partyIds));
+			tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description","organizationPartyId"), null, null, false);
 			if(UtilValidate.isNotEmpty(tempGlAccountAndHistories)){
 				if(UtilValidate.isNotEmpty(parameters.organizationPartyId) && "Company".equalsIgnoreCase(parameters.organizationPartyId)){
-					tempGlAccountAndHistories = EntityUtil.getFirst(EntityUtil.filterByCondition(tempGlAccountAndHistories,EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,organizationPartyId)));
+					tempGlAccountAndHistories = EntityUtil.getFirst(EntityUtil.filterByCondition(tempGlAccountAndHistories,EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS,organizationPartyId)));
 				}else{
 					tempGlAccountAndHistories = EntityUtil.getFirst(tempGlAccountAndHistories);
 				}
