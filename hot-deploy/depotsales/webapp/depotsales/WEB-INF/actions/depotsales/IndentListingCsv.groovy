@@ -125,7 +125,7 @@ BranchList=[];
 	inputFields = [:];
 	inputFields.put("noConditionFind", "Y");
 	inputFields.put("hideSearch","Y");
-	
+	branchIdForAdd="";
 	branchList=[];
 	condListb = [];
 	if(UtilValidate.isNotEmpty(branchId)){
@@ -144,11 +144,15 @@ BranchList=[];
 		cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
 		
 		PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+		if(PartyRelationship1){
 		branchDetails = EntityUtil.getFirst(PartyRelationship1);
 		branchIdForAdd=branchDetails.partyIdFrom;
+		}
 	}
 	else{
+		if(branchId){
 		branchIdForAdd=branchId;
+		}
 	}
 	if(!branchList)
 	branchList.add(branchId);
@@ -629,6 +633,7 @@ BranchList=[];
 	tempTotMap.put("salVal", totalSalVal);
 	orderList.add(tempTotMap);
 }
+	if(branchIdForAdd){
 	branchContext=[:];
 	branchContext.put("branchId",branchIdForAdd);
 	BOAddress="";
@@ -655,6 +660,7 @@ BranchList=[];
 	}
 	context.BOAddress=BOAddress;
 	context.BOEmail=BOEmail;
+	}
 	context.orderList=orderList;
 
 	
