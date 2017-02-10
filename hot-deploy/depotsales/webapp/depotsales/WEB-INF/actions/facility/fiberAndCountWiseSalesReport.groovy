@@ -39,6 +39,7 @@ branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 branchName = branch.get("groupName");
 DateMap.put("branchName", branchName);
 }
+branchIdForAdd="";
 branchList = [];
 condListb = [];
 if(branchId){

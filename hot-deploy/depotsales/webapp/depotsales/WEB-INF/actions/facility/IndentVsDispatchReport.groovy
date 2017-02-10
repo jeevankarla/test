@@ -19,6 +19,8 @@ import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.util.EntityUtil;
 import java.math.RoundingMode;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ServiceUtil;
 
 DateList=[];
 DateMap = [:];
@@ -47,6 +49,7 @@ if(branchId){
 	branchName = branch.get("groupName");
 	DateMap.put("branchName", branchName);
 }
+branchIdForAdd = "";
 	branchList = [];
 	
 	condListb = [];
@@ -58,7 +61,21 @@ if(branchId){
 	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
 	
 	branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-	
+	if(!branchList){
+		condListb2 = [];
+		//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
+		condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+		condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+		condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+		cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+		
+		PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+		branchDetails = EntityUtil.getFirst(PartyRelationship1);
+		branchIdForAdd=branchDetails.partyIdFrom;
+	}
+	else{
+		branchIdForAdd=branchId;
+	}
 	//if(!branchList)
 	branchList.add(branchId);
 	}
@@ -134,6 +151,7 @@ context.errorMessage = "Cannot parse date string: " + e;
 
 dayStart = UtilDateTime.getDayStart(fromDate);
 dayEnd = UtilDateTime.getDayEnd(thruDate);
+branchBasedOrderIds=[];
 if(UtilValidate.isNotEmpty(branchList)){
 		custCondList = [];
 		if((UtilValidate.isNotEmpty(branchList))){
@@ -149,13 +167,42 @@ if(UtilValidate.isNotEmpty(branchList)){
 		branchBasedOrderIds = EntityUtil.getFieldListFromEntityList(orderRoles, "orderId", true);
 	}
 //Debug.log("branchBasedOrderIds=================="+branchBasedOrderIds);
+
+branchContextForAdd=[:];
+branchContextForAdd.put("branchId",branchIdForAdd);
+BOAddress="";
+BOEmail="";
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContextForAdd);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in BO Header ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+	}
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
 rounding = RoundingMode.HALF_UP;
 Map finalMap = FastMap.newInstance();
 tempTotMap=[:];
 finalCSVList=[];
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+if(branchBasedOrderIds){
 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, branchBasedOrderIds));
+}
 conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart));
 			conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd));
 			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));

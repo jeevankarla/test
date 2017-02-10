@@ -546,15 +546,15 @@ function makeDatePicker3(fromDateId ,thruDateId){
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
 				  </select>    								
-			  </span></br>
-			   <span class='h3'>State</br> 
+			  </span></td>
+			   <#--<span class='h3'>State</br> 
 				 <select name="state" id="state">
 				     <option value=''></option>
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
 					 </#list> 
 				  </select>    								
-			  </span></td>
+			  </span></td>-->
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
 				     <option value=''></option>
@@ -581,16 +581,16 @@ function makeDatePicker3(fromDateId ,thruDateId){
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
 				 </select>    								
-			  </span></br>
+			  </span>
 			 
-			<span class='h3'>State</br>
+			<#--<span class='h3'>State</br>
 				 <select name="state" id="state">
 				     <option value=''></option>
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
 					 </#list> 
 				  </select>    								
-			  </span>
+			  </span>-->
 			 </td>
 			 <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
@@ -654,14 +654,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
 				  </select>    								
-			  </span></br>
+			  <#--</span></br>
 			  <span class='h3'>State</br> 
 				 <select name="state" id="state">
 				     <option value=''></option>
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
 					 </#list> 
-				  </select>    								
+				  </select>-->   								
 			  </span></td>
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
@@ -691,14 +691,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
 				  </select>    								
-			  </span></br>
+			  <#--</span></br>
 			   <span class='h3'>State</br> 
 				 <select name="state" id="state">
 				     <option value=''></option>
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
 					 </#list> 
-				  </select>    								
+				  </select>-->   								
 			  </span></td>
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
