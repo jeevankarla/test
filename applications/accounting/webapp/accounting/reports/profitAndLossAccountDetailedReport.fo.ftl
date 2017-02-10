@@ -30,7 +30,12 @@ under the License.
 		<#if lossChildWiseMap?has_content || profitChildWiseMap?has_content>	
 		<fo:page-sequence master-reference="main">
 			<fo:static-content font-size="13pt" font-family="Courier,monospace"  flow-name="xsl-region-before" font-weight="bold">
-				<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+				<#assign reportHeader ={}>
+				<#if parameters.organizationPartyId !="Company">
+				<#assign reportHeader= delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "${parameters.organizationPartyId}_HEADER"}, true)>
+				<#else>
+				<#assign reportHeader= delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+				</#if>
 	      		<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
 				<#assign reportSecSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable_01"}, true)>
 				<fo:block font-family="Courier,monospace">
@@ -52,7 +57,7 @@ under the License.
 					  </fo:table-body>
 					</fo:table>
 			    </fo:block>
-				<fo:block text-align="center" keep-together="always"  >&#160;TAMILNADU CO-OPERATIVE MILK PRODUCERS' FEDERATION LIMITED, CHENNAI-51</fo:block>
+				<fo:block text-align="center" keep-together="always"  >${reportHeader.description?if_exists} </fo:block>
 				<#if parameters.glAccountCategoryTypeId?has_content>
 					<#if parameters.glAccountCategoryTypeId == "BS">
                		 <fo:block text-align="center" white-space-collapse="false">&#160;  BALANCE SHEET AS ON 31.03.2016 </fo:block>
@@ -242,7 +247,9 @@ under the License.
 													 </#if>
 													 <#assign glCategry ={} >
 													 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",category.getKey(),"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+													 <#if glCategry.parentCategoryId?has_content>
 													 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",glCategry.parentCategoryId,"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+													 </#if>
 													 <#if categoryId=="" || categoryId!=glCategry.glAccountCategoryId>
 													 <#assign categoryId=glCategry.glAccountCategoryId>
 													 <#if glCategry.parentCategoryId?has_content && (parentCategoryId="" || parentCategoryId!=glCategry.parentCategoryId)>
@@ -339,7 +346,9 @@ under the License.
 														 </#if>
 														 <#assign glCategry = {}>
 														 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",category.getKey(),"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+														 <#if glCategry.parentCategoryId?has_content>
 														 <#assign glCategry = delegator.findOne("GlAccountCategory",{"glAccountCategoryId",glCategry.parentCategoryId,"glAccountCategoryTypeId",parameters.glAccountCategoryTypeId},false)>
+														 </#if>
 														 <#if categoryId=="" || categoryId!=glCategry.glAccountCategoryId>
 														 <#assign categoryId=glCategry.glAccountCategoryId>
 														  <#if glCategry.parentCategoryId?has_content && (parentCategoryId="" || parentCategoryId!=glCategry.parentCategoryId)>
