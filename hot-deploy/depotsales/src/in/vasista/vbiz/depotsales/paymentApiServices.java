@@ -185,9 +185,80 @@ public class paymentApiServices {
 	}
     
     
-    
-    
     public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+    
+		 String paymentDate = (String) context.get("paymentDate");
+		 String partyIdFrom = (String) context.get("partyId");
+		 String orderId = (String) context.get("orderId");
+		 String partyIdTo = "";
+		 String amount = (String) context.get("amount");
+		 String paymentRefNum = (String) context.get("transactionId");
+		 GenericValue userLogin = (GenericValue) context.get("userLogin");
+		 String orderPaymentPreferenceId = null;
+		 Map<String, Object> createCustPaymentFromPreferenceMap = new HashMap();
+		 if(UtilValidate.isNotEmpty(amount)){
+			 Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"paymentMethodTypeId", "MOBILE_PAYIN","statusId","PMNT_RECEIVED", "userLogin", userLogin);
+			 
+			 String purposeTypeId = null;
+		  	GenericValue orderHeader = null;
+		    try {
+		    	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+		    } catch (GenericEntityException e) {
+	            Debug.logError(e, "error fetching order with order id :"+orderId, module);
+	            return ServiceUtil.returnError("error fetching order with order id :"+orderId);
+	        }
+		    
+		    Timestamp eventDate = null;
+			Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+			  	
+			if (UtilValidate.isNotEmpty(paymentDate)) {
+				SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");  
+				try {
+					eventDate = new java.sql.Timestamp(sdf.parse(paymentDate).getTime());
+				} catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+					eventDate = UtilDateTime.nowTimestamp();
+					Debug.log("paymentDate============="+paymentDate);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: " + paymentDate, module);
+					eventDate = UtilDateTime.nowTimestamp();
+					Debug.log("paymentDate============="+paymentDate);
+				}
+			}
+	      
+			if (UtilValidate.isEmpty(paymentDate)) {
+	    	  eventDate = UtilDateTime.nowTimestamp();
+			}
+		    Debug.log("eventDate=============="+eventDate);
+		    try {
+		    	 Map<String, Object> OrderPref = ServiceUtil.returnSuccess();
+		    	 OrderPref = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
+		         orderPaymentPreferenceId = (String) OrderPref.get("orderPaymentPreferenceId");
+		         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"userLogin", userLogin, "purposeTypeId",purposeTypeId);
+		         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
+		         String paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
+		         result.put("paymentId",paymentId);
+		         GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
+		         if(UtilValidate.isNotEmpty(payment)){
+		        	 result.put("paymentMethodTypeId",payment.getString("paymentMethodTypeId"));
+	        		 payment.set("paymentRefNum", paymentRefNum);
+	        		 payment.store();
+		         }
+		         
+		         
+		  	} catch (Exception e) {
+					 Debug.logError(e, e.toString(), module);
+					  return ServiceUtil.returnError("AccountingTroubleCallingCreateOrderPaymentPreferenceService");	
+		  	}
+		 }
+
+       return result;
+	}
+    
+    /*public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -319,7 +390,7 @@ public class paymentApiServices {
 		 }
 
        return result;
-	}
+	}*/
     
     
     public static Map<String, Object> createPaymentGatewayTrans(DispatchContext dctx,Map<String, Object> context) {
