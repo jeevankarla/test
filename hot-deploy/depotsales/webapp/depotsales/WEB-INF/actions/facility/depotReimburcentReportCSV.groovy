@@ -47,40 +47,12 @@ branchId = parameters.branchId;
 
 branchName = "";
 
-branchContext=[:];
-branchContext.put("branchId",branchId);
-
-BOAddress="";
-BOEmail="";
-try{
-	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
-	if(ServiceUtil.isError(resultCtx)){
-		Debug.logError("Problem in BO Header ", module);
-		return ServiceUtil.returnError("Problem in fetching financial year ");
-	}
-	if(resultCtx.get("boHeaderMap")){
-		boHeaderMap=resultCtx.get("boHeaderMap");
-		
-		if(boHeaderMap.get("header0")){
-			BOAddress=boHeaderMap.get("header0");
-		}
-		if(boHeaderMap.get("header1")){
-			BOEmail=boHeaderMap.get("header1");
-		}
-	}
-}catch(GenericServiceException e){
-	Debug.logError(e, module);
-	return ServiceUtil.returnError(e.getMessage());
-}
-context.BOAddress=BOAddress;
-context.BOEmail=BOEmail;
-
-
 if(branchId){
 branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 branchName = branch.get("groupName");
 DateMap.put("branchName", branchName);
 }
+branchIdForAdd="";
 branchList = [];
 
 condListb = [];
@@ -92,7 +64,21 @@ condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
 
 branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-
+if(!branchList){
+	condListb2 = [];
+	//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
+	condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+	condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+	
+	PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+	branchDetails = EntityUtil.getFirst(PartyRelationship1);
+	branchIdForAdd=branchDetails.partyIdFrom;
+}
+else{
+	branchIdForAdd=branchId;
+}
 if(!branchList)
 branchList.add(branchId);
 }
@@ -175,6 +161,33 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 		}
 }
   
+branchContext=[:];
+branchContext.put("branchId",branchIdForAdd);
+
+BOAddress="";
+BOEmail="";
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in BO Header ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+	}
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
 
 
 
@@ -250,7 +263,7 @@ invoice = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, nul
 //////////////Debug.log("invoice========================="+invoice);
 invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
 
-Debug.log("invoiceIds======2222==========="+invoiceIds.size());
+//Debug.log("invoiceIds======2222==========="+invoiceIds.size());
 
 
 conditionList1 = [];
@@ -263,7 +276,7 @@ OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem"
 orderIds=EntityUtil.getFieldListFromEntityList(OrderItemBilling, "orderId", true);
 
 
-Debug.log("orderIds==============="+orderIds.size());
+//Debug.log("orderIds==============="+orderIds.size());
 
 
 conditionList1.clear();

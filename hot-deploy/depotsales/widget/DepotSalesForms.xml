@@ -3954,14 +3954,14 @@
          <field name="poDate" title="_"><display/></field>
         <field name="supplierName" title="_"><display/></field>
         <field name="poQty" title="_"><display/></field>
-        <field name="salInv" title="_"><display/></field>
+        <!-- <field name="salInv" title="_"><display/></field>
         <field name="salDate" title="_"><display/></field>
         <field name="salVal" title="_"><display/></field>
         <field name="transporter" title="_"><display/></field>
         <field name="milInv" title="_"><display/></field>
         <field name="value" title="_"><display/></field>
         <field name="paymentReceipt" title="_"><display/></field>
-        <field name="amount" title="_"><display/></field>
+        <field name="amount" title="_"><display/></field> -->
         <!-- <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
         <field name="storeName" title="Store Name"><display/></field>
         <field name="poSquenceNo" title="PO Squence No"><display/></field>
