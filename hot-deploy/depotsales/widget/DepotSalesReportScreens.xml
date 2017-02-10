@@ -1078,7 +1078,26 @@
                 </platform-specific>
 			</widgets>
 		</section>
-	</screen>	
+	</screen>
+	<screen name="billWiseSalesReportCSV">
+		<section>
+		   <actions>
+   				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true" />
+   				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
+   				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true" />
+   				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true" />
+			    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/billWiseSalesReportCSV.groovy"/> 
+   			</actions>
+   			<widgets>
+			<section>
+					<widgets>
+						<include-form name="billWiseSalesReportCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+				</widgets>
+		</section>
+	</screen>
+		
 	<screen name="pendingShipmentsReportPDF">
 		<section>
 			<actions>

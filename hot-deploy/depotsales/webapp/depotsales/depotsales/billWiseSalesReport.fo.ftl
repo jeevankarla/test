@@ -20,7 +20,7 @@ under the License.
 <#escape x as x?xml>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
-        <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-left=".3in" margin-right=".8in" margin-top=".1in">
+        <fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-left=".1in" margin-right=".1in" margin-top=".1in">
             <fo:region-body margin-top="0.1in"/>
             <fo:region-before extent="1in"/>
             <fo:region-after extent="1.5in"/>
@@ -47,13 +47,13 @@ under the License.
     		<fo:block>
          		<fo:table border-style="solid">
          		    <fo:table-column column-width="2%"/>
+		            <fo:table-column column-width="6%"/>
 		            <fo:table-column column-width="8%"/>
+		            <fo:table-column column-width="10%"/>
+		            
 		            <fo:table-column column-width="8%"/>
 		            <fo:table-column column-width="9%"/>
-		            
-		            <fo:table-column column-width="10%"/>
 		            <fo:table-column column-width="7%"/>
-		            <fo:table-column column-width="6%"/>
 		            
 		            <fo:table-column column-width="6%"/>
 		            <fo:table-column column-width="6%"/>
@@ -63,7 +63,7 @@ under the License.
 		            <fo:table-column column-width="6%"/>
 		            <fo:table-column column-width="6%"/>
 		            <fo:table-column column-width="7%"/>
-		            <fo:table-column column-width="10%"/>
+		            <fo:table-column column-width="6%"/>
 		            
 		            <fo:table-body>
 		                <fo:table-row>

@@ -2847,6 +2847,11 @@
         <response name="success" type="view" value="billWiseSalesReport"/>
         <response name="error" type="view" value="billWiseSalesReport"/>
     </request-map>
+    <request-map uri="billWiseSalesReport.csv">
+        <security auth="true" https="true"/>    
+        <response name="success" type="view" value="billWiseSalesReportCSV"/>
+        <response name="error" type="view" value="billWiseSalesReportCSV"/>
+    </request-map>
     <request-map uri="CreateUserLogin">
         <security auth="true" https="true"/>    
         <response name="success" type="view" value="CreateUserLogin"/>
@@ -3267,6 +3272,7 @@
 	<view-map name="CustomerDetails" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerDetails" content-type="text/csv"/>
 	<view-map name="claimReportDetailsPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsPDF" content-type="application/pdf"/>
 	<view-map name="billWiseSalesReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#billWiseSalesReport" content-type="application/pdf"/>
+	<view-map name="billWiseSalesReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#billWiseSalesReportCSV" content-type="text/csv"/>
 	<view-map name="CreateUserLogin" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateUserLogin"/>
 
     <view-map name="paymentSucUrl" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#AirtelPaymentReceipt"/>
