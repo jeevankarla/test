@@ -4222,6 +4222,22 @@
          <field name="DurBWSoAndPo" title="__"><display/></field>
          <field name="DurBwSoAndShip" title="__"><display/></field>
      </form>
+     <form name="billWiseSalesReportCSV" type="list" list-name="finalList" view-size="99999">
+         <field name="invoiceDate" title="__"><display/></field>
+         <field name="billno" title="__"><display/></field>
+         <field name="partyName" title="__NATIONAL HANDLOOM__"><display/></field>
+         <field name="partyType" title="__DEVELOPMENT __"><display/></field>
+         <field name="district" title="__CORPORATION LTD__"><display/></field>
+         <field name="branch" title="__"><display/></field>
+         <field name="state" title="__"><display/></field>
+         <field name="ro" title="__"><display/></field>
+         <field name="qty" title="__"><display/></field>
+         <field name="amount" title="__"><display/></field>
+         <field name="VatOrOtherAmt" title="__"><display/></field>
+         <field name="subsidyQty" title="__"><display/></field>
+         <field name="subsidyAmount" title="__"><display/></field>
+         <field name="scheme" title="__"><display/></field>
+     </form>
      
      <form name="FindPayments" type="single" target="TrackPayments" >
         <field name="noConditionFind"><hidden value="Y"/></field>
