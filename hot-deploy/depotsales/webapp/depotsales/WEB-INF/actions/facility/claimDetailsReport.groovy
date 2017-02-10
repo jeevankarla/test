@@ -210,6 +210,32 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 				     categoryname= productCategory.description;
 				 }		 
 			 }
+			 BigDecimal value= BigDecimal.ZERO;
+			 conditionList.clear();
+			 conditionList.add(EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"ADDITIONAL_CHARGES"));
+			 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			 invoiceItemSubsidyDetails = delegator.findList("InvoiceItemType",condition, null, null, null, false );
+			 invoiceItemTypeIdList= EntityUtil.getFieldListFromEntityList(invoiceItemSubsidyDetails,"invoiceItemTypeId", true);
+			 invoiceItemTypeIdList.add("TEN_PERCENT_SUBSIDY");
+			 invoiceItemTypeIdList.add("INV_FPROD_ITEM");
+			 conditionList.clear();
+			 conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoiceId));
+			 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.IN,invoiceItemTypeIdList));
+			 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+			 invoiceSubsidyDetails1 = delegator.findList("InvoiceItem",condition, null, null, null, false );
+			 conditionList.clear();
+			 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
+			 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
+			 invoiceSubsidyDetails2 = EntityUtil.filterByCondition(invoiceSubsidyDetails1, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
+			 conditionList.clear();
+			 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
+			 conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
+			 invoiceSubsidyDetails3 = EntityUtil.filterByCondition(invoiceSubsidyDetails1, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
+			 invoiceSubsidyDetails2.addAll(invoiceSubsidyDetails3);
+			 for(eachItem in invoiceSubsidyDetails2)
+			 {
+				 value=value.add(eachItem.get("itemValue"));
+			 }
 			 temMap.put("categoryname", categoryname);
 			 quantity = eachInvoiceItem.get("quantity");
 			 //temMap.put("quantity", df.format(quantity.setScale(0, 0)));
@@ -218,12 +244,12 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 temMap.put("value", df.format(value.setScale(2, rounding)));
 			 BigDecimal serviceCharg= BigDecimal.ZERO;
 			 conditionList.clear();
-			 conditionList.add(EntityCondition.makeCondition("parentInvoiceId",EntityOperator.EQUALS,invoiceId));
-			 conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
 			 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
-			 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-			 invoiceSubsidyDetails = delegator.findList("InvoiceItem",condition, null, null, null, false );
+			 conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
+			 invoiceSubsidyDetails = EntityUtil.filterByCondition(invoiceSubsidyDetails1, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
 			 invoiceSubsidyDetails= EntityUtil.getFirst(invoiceSubsidyDetails);
+			 
+			 
 			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetails) && (invoiceSubsidyDetails.amount)){
 				 subsidyAmt= (invoiceSubsidyDetails.itemValue)*(-1);
 			 }
