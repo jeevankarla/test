@@ -37,11 +37,11 @@ partythruDate=parameters.partythruDate;
 
 partyId = parameters.partyId;
 
-DateMap.put("partyfromDate", partyfromDate);
-DateMap.put("partythruDate", partythruDate);
+//DateMap.put("partyfromDate", partyfromDate);
+//DateMap.put("partythruDate", partythruDate);
 
-DateList.add(DateMap);
-context.DateList=DateList;
+//DateList.add(DateMap);
+//context.DateList=DateList;
 branchId = parameters.branchId;
 branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 branchName = branch.get("groupName");
@@ -156,7 +156,7 @@ fieldsToSelect = ["invoiceId", "invoiceDate", "shipmentId", "partyIdFrom", "refe
 
 invoice = delegator.findList("Invoice", cond, fieldsToSelect, null, null, false);
 
-Debug.log("condList========================="+condList.size());
+//Debug.log("condList========================="+condList.size());
 
 
 if(UtilValidate.isEmpty(invoice)){
@@ -972,7 +972,7 @@ if(invoice){
 					tempMap.put("orderNo", actualOrderId);
 
 				if(orderDate)
-					tempMap.put("indentDate",UtilDateTime.toDateString(orderDate,"dd-MM-yyyy"));
+					tempMap.put("indentDate",UtilDateTime.toDateString(orderDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("indentDate","");
 
@@ -1214,7 +1214,7 @@ if(invoice){
 				}
 
 				if(PorderDate)
-					tempMap.put("poorderDate", UtilDateTime.toDateString(PorderDate,"dd-MM-yyyy"));
+					tempMap.put("poorderDate", UtilDateTime.toDateString(PorderDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("poorderDate", "");
 
@@ -1234,7 +1234,7 @@ if(invoice){
 					deliveryChallanDate = shipmentList.get("deliveryChallanDate");
 
 					if(deliveryChallanDate)
-						tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd-MM-yyyy") );
+						tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd/MM/yyyy") );
 					else
 						tempMap.put("lrDate", "");
 
@@ -1273,7 +1273,7 @@ if(invoice){
 					supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 
 					if(supplierInvoiceDate)
-						tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd-MM-yyyy"));
+						tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd/MM/yyyy"));
 					else
 						tempMap.put("supplierInvoiceDate", "");
 
