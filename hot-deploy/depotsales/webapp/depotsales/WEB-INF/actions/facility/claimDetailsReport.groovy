@@ -156,7 +156,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 	summarySNo=0;
 	for(i=0; i<InvoiceItem.size(); i++){
 		
-		 quantity =0;
+		 BigDecimal quantity= BigDecimal.ZERO; 
 		 temMap = [:];
 		 invoiceDate = "";
 		 productName = "";
@@ -172,12 +172,13 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 invoiceDate = UtilDateTime.toDateString(invoice.invoiceDate,"dd/MM/yyyy");
 			 temMap.put("invoiceDate", invoiceDate);
 			 partyId = invoice.partyId;
+			 partyIdFrom = invoice.partyIdFrom;
 			 userAgency = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
 			 temMap.put("userAgency", userAgency);
 			 districtName = "";
 			 districtGeoId ="";
 			 conditionList.clear();
-			 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom));
 			 conditionList.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "POSTAL_ADDRESS"));
 			 conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
 			 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
@@ -185,11 +186,12 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 partyPostalAddress= EntityUtil.getFirst(partyPostalAddress);
 			 if(UtilValidate.isNotEmpty(partyPostalAddress) && (partyPostalAddress.stateProvinceGeoId)){
 				 stateProvinceGeoId=partyPostalAddress.stateProvinceGeoId;
+				 geo=delegator.findOne("Geo",[geoId : stateProvinceGeoId], false);
+				 if(UtilValidate.isNotEmpty(geo)){
+					 districtName= geo.geoName;
+				 }
 			 }
-			 geo=delegator.findOne("Geo",[geoId : stateProvinceGeoId], false);
-			 if(UtilValidate.isNotEmpty(geo)){
-				 districtName= geo.geoName;
-			 }
+			 
 			 temMap.put("districtName", districtName);
 			 productId = eachInvoiceItem.get("productId");
 			 productDetails = delegator.findOne("Product",["productId":productId],false);
@@ -238,9 +240,10 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 }
 			 temMap.put("categoryname", categoryname);
 			 quantity = eachInvoiceItem.get("quantity");
+			 quantity= (quantity).setScale(0, rounding);
 			 //temMap.put("quantity", df.format(quantity.setScale(0, 0)));
-			 temMap.put("quantity", df.format(quantity.setScale(0, rounding)));
-			 value=eachInvoiceItem.get("itemValue");
+			 temMap.put("quantity", quantity);
+			 //value=eachInvoiceItem.get("itemValue");
 			 temMap.put("value", df.format(value.setScale(2, rounding)));
 			 BigDecimal serviceCharg= BigDecimal.ZERO;
 			 conditionList.clear();
@@ -253,10 +256,12 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetails) && (invoiceSubsidyDetails.amount)){
 				 subsidyAmt= (invoiceSubsidyDetails.itemValue)*(-1);
 			 }
-			 temMap.put("subsidyAmt", df.format(subsidyAmt.setScale(0, rounding)));
+			 subsidyAmt= (subsidyAmt).setScale(0, rounding);
+			 temMap.put("subsidyAmt", subsidyAmt);
 			
 			 serviceCharg= (value*0.005);
-			 temMap.put("serviceCharg", df.format(serviceCharg.setScale(0, rounding)));
+			 serviceCharg= (serviceCharg).setScale(0, rounding);
+			 temMap.put("serviceCharg", serviceCharg);
 			
 			 BigDecimal claimTotal = (subsidyAmt +serviceCharg).setScale(0, rounding);
 			 temMap.put("claimTotal", claimTotal);
