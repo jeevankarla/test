@@ -673,9 +673,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></br>
 				Party Code <@htmlTemplate.lookupField size="10" maxlength="22" formName="reimburcentTransporterReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	</td> 
 				<td width="10%"></td>
+				<#--
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('reimburcentTransporterReport', '<@ofbizUrl>reimburcentTransporterReport.pdf</@ofbizUrl>');" class="buttontext"/></td>
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('reimburcentTransporterReport', '<@ofbizUrl>reimburcentTransporterReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
-				
+				-->
            </form>
         </tr> 
    
@@ -710,9 +711,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></br>
 				Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="depotReimburcentReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	
 				<td width="10%"></td>
+				<#--
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('depotReimburcentReport', '<@ofbizUrl>depotReimburcentReport.pdf</@ofbizUrl>');" class="buttontext"/></td>
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('depotReimburcentReport', '<@ofbizUrl>depotReimburcentReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
-				
+				-->
 			 
            </form>
         </tr> 
@@ -759,8 +761,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			 
 			<#-- 	<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="depotReimburcentSummaryReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> -->
 			<td width="10%"></td>
+			    <#--
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('depotReimburcentSummaryReport', '<@ofbizUrl>depotReimburcentSummaryReport.pdf</@ofbizUrl>');" class="buttontext"/></td>	
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('depotReimburcentSummaryReport', '<@ofbizUrl>depotReimburcentSummaryReport.csv</@ofbizUrl>');" class="buttontext"/></td>	
+                -->
            </form>
         </tr> 
         
@@ -799,9 +803,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			 
 			<#-- 	<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="depotReimburcentSummaryReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> -->
 			<td width="10%"></td>
+			<#--
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('StateWiseSchemeWiseSalesConsolidated', '<@ofbizUrl>StateWiseSchemeWiseSalesConsolidated.pdf</@ofbizUrl>');" class="buttontext"/></td>	
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('StateWiseSchemeWiseSalesConsolidated', '<@ofbizUrl>StateWiseSchemeWiseSalesConsolidated.csv</@ofbizUrl>');" class="buttontext"/></td>	
-			
+			-->
            </form>
         </tr> 
 		</#if>

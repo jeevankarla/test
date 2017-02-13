@@ -184,7 +184,7 @@
 		      </condition> -->
 		           <link target="findTransporter"/>
 	   </menu-item>
-       <!--  <menu-item name="DepotSalesReports" title="${uiLabelMap.Reports}">
+         <menu-item name="DepotSalesReports" title="${uiLabelMap.Reports}">
 	   		 <condition>
 	 			<or>
 	        		<if-has-permission permission="DEPOTSALES" action="_REPORTS_VIEW"/>
@@ -192,7 +192,7 @@
             	</or>            
 	        </condition>
 	      	<link target="DepotSalesReports" />
-	    </menu-item> -->
+	    </menu-item> 
 	     <menu-item name="ShippingReimbursement" title="Reimbursement">
 	      	<link target="ShippingReimbursement">
         		<parameter param-name="shipmentTypeId" value="BRANCH_SHIPMENT"/>
@@ -2139,6 +2139,7 @@
     </menu>  
 	  <menu name="SubReportsTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
        		selected-menuitem-context-field-name="tabButtonItem2">
+        <!-- 
         <menu-item name="MANAGEMENT_REPORTS" title="Management Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="MANAGEMENT_REPORTS"/>
@@ -2154,16 +2155,19 @@
         		<parameter param-name="ReportsType" value="PURCHASE_REPORTS"/>
         	</link>
         </menu-item>
+         -->
          <menu-item name="SALE_REPORTS" title="Sale Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="SALE_REPORTS"/>
         	</link>
         </menu-item>
+       
          <menu-item name="REIMBURSMENT_REPORTS" title="Reimbursment Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="REIMBURSMENT_REPORTS"/>
         	</link>
         </menu-item>
+         <!-- 
         <menu-item name="CLUSTER_REPORTS" title="Cluster Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="CLUSTER_REPORTS"/>
@@ -2174,6 +2178,7 @@
         		<parameter param-name="ReportsType" value="MASTER_REPORTS"/>
         	</link>
         </menu-item>
+         -->
         
       </menu>
 	

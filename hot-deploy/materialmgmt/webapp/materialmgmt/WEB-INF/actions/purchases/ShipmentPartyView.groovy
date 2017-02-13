@@ -188,14 +188,13 @@ noConditionFind = parameters.noConditionFind;
 		if(UtilValidate.isNotEmpty(invoiceidslist)){
 			invoicesqnce=invoiceidslist.invoiceId;
 		}
+		invoicesqnce = "";
 		billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoicesqnce)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
 		if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 			invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
 			invoiceSequence = invoiceSeqDetails.invoiceSequence;			
-			context.invoiceId = invoiceSequence;
 			tempMap.putAt("raiseInvoice", invoiceSequence);
 		}else{
-			context.invoiceId = invoiceId;
 			tempMap.putAt("raiseInvoice", null);
 		}
 		
@@ -238,7 +237,7 @@ noConditionFind = parameters.noConditionFind;
 				   else{
 					   tempMap.put("partyName","");
 				   }
-				   
+				   invoicesqnce = "";
 				   invoiceids=delegator.findList("Invoice",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , list.shipmentId)  , null, null, null, false );
 				   invoiceidslist=EntityUtil.getFirst(invoiceids);
 				   if(UtilValidate.isNotEmpty(invoiceidslist)){
@@ -248,10 +247,8 @@ noConditionFind = parameters.noConditionFind;
 				   if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 					   invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
 					   invoiceSequence = invoiceSeqDetails.invoiceSequence;
-					   context.invoiceId = invoiceSequence;
 					   tempMap.putAt("raiseInvoice", invoiceSequence);
 				   }else{
-					   context.invoiceId = invoiceId;
 					   tempMap.putAt("raiseInvoice", null);
 				   }
 				newFinalList.add(tempMap);
