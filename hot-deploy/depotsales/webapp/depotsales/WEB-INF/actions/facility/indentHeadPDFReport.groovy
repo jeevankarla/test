@@ -53,6 +53,7 @@ condListb = [];
 
 condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
 condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 
 PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
@@ -61,8 +62,33 @@ branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo",
 
 if(!branchList)
 	branchList.add(branchId);
+	
+	////Debug.log("branchId=================="+branchId);
+	
+	
+	//========================checking is it kannur Ro=====================
+	
+	isKunnur = "";
+	if(branchList.size() == 1){
+	condListb =[];
+	condListb.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	condListb1 = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+	PartyRelationship1 = EntityUtil.getFirst(delegator.findList("PartyRelationship", condListb1,UtilMisc.toSet("partyIdFrom"), null, null, false));
+	
+	isKunnur = PartyRelationship1.partyIdFrom;
+	
+	}else{
+	
+	isKunnur = branchId;
+	}
+	
+	//Debug.log("isKunnur=================="+isKunnur);
+	
 
-////Debug.log("branchList=================="+branchList);
+	 
+//Debug.log("branchList=================="+branchList);
 
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
 
@@ -97,7 +123,9 @@ dayend = UtilDateTime.getDayEnd(thruDate);
 purposeType = parameters.purposeType;
 
 condList = [];
-//condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "29375"));
+
+if(parameters.invoceId)
+condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, parameters.invoceId));
 
 if(UtilValidate.isNotEmpty(daystart)){
 	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
@@ -105,6 +133,7 @@ if(UtilValidate.isNotEmpty(daystart)){
 }
 
 condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+if(branchList)
 condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
 if(partyId)
 	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
@@ -120,7 +149,7 @@ fieldsToSelect = ["invoiceId", "invoiceDate", "shipmentId", "partyIdFrom", "refe
 
 invoice = delegator.findList("Invoice", cond, fieldsToSelect, null, null, false);
 
-////Debug.log("invoice========================="+invoice);
+Debug.log("condList========================="+condList.size());
 
 
 if(UtilValidate.isEmpty(invoice)){
@@ -663,8 +692,6 @@ if(invoice){
 
 				// tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
 
-				tempMap.put("invoiceAmount", eachItem.itemValue);
-
 				// invoiceNetAmt = invoiceNetAmt+Double.valueOf((eachItem.amount*eachItem.quantity));
 
 				invoiceNetAmt = invoiceNetAmt+eachItem.itemValue;
@@ -804,12 +831,26 @@ if(invoice){
 				invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
 
 				double taxAmt = 0;
+				double taxAmtkannur = 0;
+				
 				if(invoiceVatCstList){
 					for (eachAdj in invoiceVatCstList) {
-						taxAmt = taxAmt+eachAdj.itemValue;
+						
+						if(isKunnur == "INT6" && (eachAdj.invoiceItemTypeId =="CST_SALE" || eachAdj.invoiceItemTypeId =="CST_SURCHARGE")){
+						  taxAmtkannur = taxAmtkannur+eachAdj.itemValue;
+						}else{
+						 taxAmt = taxAmt+eachAdj.itemValue;
+						}
 					}
 				}
 
+				
+				
+				if(isKunnur == "INT6")
+				tempMap.put("invoiceAmount", eachItem.itemValue+taxAmtkannur);
+			    else
+				tempMap.put("invoiceAmount", eachItem.itemValue);
+				
 				////Debug.log("taxAmt======================"+taxAmt);
 				////Debug.log("allAdjWitOutTEN======================"+allAdjWitOutTEN);
 
@@ -821,7 +862,9 @@ if(invoice){
 				else
 					tempMap.put("allAdjWitOutTEN", "");
 
-
+			    if(isKunnur == "INT6")
+				invoiceNetAmt = invoiceNetAmt+taxAmt+taxAmtkannur;
+				else
 				invoiceNetAmt = invoiceNetAmt+taxAmt;
 
 				//=====================================================================
@@ -1060,15 +1103,81 @@ if(invoice){
 						tempMap.put("millInvoiceDate","");
 
 
-					//tempMap.put("poInvoiceAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
-
-					tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
-
-					//tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
-
-					tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].itemValue);
-
+					 double purInvoiceNetAmt = 0;
+					 
+					 purInvoiceNetAmt = purInvoiceNetAmt+POInvoiceItemList[0].itemValue;
+					//================purcahse Tax=========================
+					
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, poInvoiceId));
+					conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,poInvoiceItemSeqId));
+					conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
+					cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+					invoiceVatCstListPO = delegator.findList("InvoiceItem", cond, null, null, null, false);
+	
+					double purTax = 0;
+					double purTaxAmtkannur = 0;
+					
+					if(invoiceVatCstListPO){
+						for (eachAdj in invoiceVatCstListPO) {
+							
+							if(isKunnur == "INT6" && (eachAdj.invoiceItemTypeId =="CST_PUR" || eachAdj.invoiceItemTypeId =="CST_SURCHARGE")){
+							  purTaxAmtkannur = purTaxAmtkannur+eachAdj.itemValue;
+							}else{
+							 purTax = purTax+eachAdj.itemValue;
+							}
+						}
+					}
+					
+					
+					tempMap.put("purTax", purTax);
+					
+					purInvoiceNetAmt = purInvoiceNetAmt+purTax;
+					
+					purInvoiceNetAmt = purInvoiceNetAmt+purTaxAmtkannur;
+					
+				//=====================Purchase adjustments=====================
+					
+				
+						double allAdjPur = 0;
+						
+						condList.clear();
+						condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
+						condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_RAWPROD_ITEM", "TEN_PERCENT_SUBSIDY", "VAT_PUR", "CST_PUR", "CST_SALE", "VAT_SALE", "CESS_SALE", "CESS_PUR", "VAT_SURCHARGE", "CST_SURCHARGE", "TEN_PER_CHARGES", "TEN_PER_DISCOUNT", "ENTRY_TAX"]));
+						
+						invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+						
+						InvoiceRemainItemAdjustmentPO = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
+						
+						if(InvoiceRemainItemAdjustmentPO){
+							for (eachAdjustment in InvoiceRemainItemAdjustmentPO) {
+								////Debug.log("eachAdjustment.itemValue================"+eachAdjustment.itemValue);
+							   //if(eachAdjustment.invoiceItemTypeId != "INVOICE_ITM_ADJ")
+								allAdjPur = allAdjPur+eachAdjustment.itemValue;
+							}
+						}
+						
+						if(dontRepeat.size() == 1)
+						tempMap.put("allAdjPur", allAdjPur);
+						else
+						tempMap.put("allAdjPur", "");
+						
+						if(dontRepeat.size() == 1)
+						purInvoiceNetAmt = purInvoiceNetAmt+allAdjPur;
+						
+						if(isKunnur == "INT6")
+						tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue+purTaxAmtkannur);
+						else
+						tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
+						
+						
+						tempMap.put("purInvoiceNetAmt", purInvoiceNetAmt);
+					
+					
+					
 				}
+				
+				
 
 				if(TallyPoNumber)
 					tempMap.put("TallyPoNumber", TallyPoNumber);
@@ -1735,7 +1844,6 @@ if(invoice){
 
 				// tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
 
-				tempMap.put("invoiceAmount", eachItem.itemValue);
 
 				// invoiceNetAmt = invoiceNetAmt+Double.valueOf((eachItem.amount*eachItem.quantity));
 
@@ -1879,11 +1987,26 @@ if(invoice){
 				invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
 
 				double taxAmt = 0;
+				double taxAmtkannur = 0;
+				
 				if(invoiceVatCstList){
 					for (eachAdj in invoiceVatCstList) {
-						taxAmt = taxAmt+eachAdj.itemValue;
+						
+						if(isKunnur == "INT6" && (eachAdj.invoiceItemTypeId =="CST_SALE" || eachAdj.invoiceItemTypeId =="CST_SURCHARGE")){
+						   taxAmtkannur = taxAmtkannur+eachAdj.itemValue;
+						}else{
+						   taxAmt = taxAmt+eachAdj.itemValue;
+						 
+						}
+						
+						
 					}
 				}
+				
+				if(isKunnur == "INT6")
+				tempMap.put("invoiceAmount", eachItem.itemValue+taxAmtkannur);
+			   else
+				tempMap.put("invoiceAmount", eachItem.itemValue);
 
 				////Debug.log("taxAmt======================"+taxAmt);
 				////Debug.log("allAdjWitOutTEN======================"+allAdjWitOutTEN);
@@ -1897,8 +2020,11 @@ if(invoice){
 					tempMap.put("allAdjWitOutTEN", "");
 
 
+				if(isKunnur == "INT6")
+				invoiceNetAmt = invoiceNetAmt+taxAmt+taxAmtkannur;
+                else
 				invoiceNetAmt = invoiceNetAmt+taxAmt;
-
+				
 				//=====================================================================
 
 				/*if(quantity > quotaQuantity)
@@ -2081,6 +2207,7 @@ if(invoice){
 
 				if(poInvoices){
 					poInvoiceId = poInvoices[0].invoiceId;
+					poInvoiceItemSeqId = "00001";
 				}
 
 
@@ -2140,6 +2267,79 @@ if(invoice){
 					//tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
 
 					tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].itemValue);
+					
+					
+					double purInvoiceNetAmt = 0;
+					
+					purInvoiceNetAmt = purInvoiceNetAmt+POInvoiceItemList[0].itemValue;
+				   //================purcahse Tax=========================
+				   
+				   conditionList.clear();
+				   conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, poInvoiceId));
+				   conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,poInvoiceItemSeqId));
+				   conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
+				   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				   invoiceVatCstListPO = delegator.findList("InvoiceItem", cond, null, null, null, false);
+   
+				   double purTax = 0;
+				   double purTaxAmtkannur = 0;
+				   
+				   if(invoiceVatCstListPO){
+					   for (eachAdj in invoiceVatCstListPO) {
+						   
+						   if(isKunnur == "INT6" && (eachAdj.invoiceItemTypeId =="CST_PUR" || eachAdj.invoiceItemTypeId =="CST_SURCHARGE")){
+							 purTaxAmtkannur = purTaxAmtkannur+eachAdj.itemValue;
+						   }else{
+							purTax = purTax+eachAdj.itemValue;
+						   }
+					   }
+				   }
+				   
+				   
+				   tempMap.put("purTax", purTax);
+				   
+				   purInvoiceNetAmt = purInvoiceNetAmt+purTax;
+				   
+				   purInvoiceNetAmt = purInvoiceNetAmt+purTaxAmtkannur;
+				   
+			   //=====================Purchase adjustments=====================
+				   
+			   
+					   double allAdjPur = 0;
+					   
+					   condList.clear();
+					   condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
+					   condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_RAWPROD_ITEM", "TEN_PERCENT_SUBSIDY", "VAT_PUR", "CST_PUR", "CST_SALE", "VAT_SALE", "CESS_SALE", "CESS_PUR", "VAT_SURCHARGE", "CST_SURCHARGE", "TEN_PER_CHARGES", "TEN_PER_DISCOUNT", "ENTRY_TAX"]));
+					   
+					   invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+					   
+					   InvoiceRemainItemAdjustmentPO = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
+					   
+					   if(InvoiceRemainItemAdjustmentPO){
+						   for (eachAdjustment in InvoiceRemainItemAdjustmentPO) {
+							   ////Debug.log("eachAdjustment.itemValue================"+eachAdjustment.itemValue);
+							  //if(eachAdjustment.invoiceItemTypeId != "INVOICE_ITM_ADJ")
+							   allAdjPur = allAdjPur+eachAdjustment.itemValue;
+						   }
+					   }
+					   
+					   if(dontRepeat.size() == 1)
+					   tempMap.put("allAdjPur", allAdjPur);
+					   else
+					   tempMap.put("allAdjPur", "");
+					   
+					   if(dontRepeat.size() == 1)
+					   purInvoiceNetAmt = purInvoiceNetAmt+allAdjPur;
+					   
+					   if(isKunnur == "INT6")
+					   tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue+purTaxAmtkannur);
+					   else
+					   tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
+					   
+					   
+					   tempMap.put("purInvoiceNetAmt", purInvoiceNetAmt);
+					
+					
 
 				}
 
