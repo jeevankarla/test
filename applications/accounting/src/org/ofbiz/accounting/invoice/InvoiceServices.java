@@ -6213,6 +6213,24 @@ public class InvoiceServices {
         return invoiceItemBasicVal; 
     }
 	
+	public static String invoicetypeinfo(Delegator delegator, String shipmentId,String invoiceTypeId) {
+		String invoicess = "";
+		try {     							
+	    		List conditionList = FastList.newInstance();
+	    		List<GenericValue> Invoice = FastList.newInstance();
+	    		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	    		conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId));
+    			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+    			Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList,EntityOperator.AND), UtilMisc.toSet("shipmentId","invoiceTypeId","statusId","invoiceId"), null, null, true);    			
+    			if (UtilValidate.isNotEmpty(Invoice)) {           		
+            		GenericValue invoiceFirst = EntityUtil.getFirst(Invoice);
+            		invoicess = (String) invoiceFirst.getString("invoiceId");  			
+    			}
+		}catch (GenericEntityException e) {
+            Debug.logError(e, "Error,while getting Invoice", module);
+        }
+        return invoicess; 
+	}
 	
 	public static String getInvoiceFromShipment(Delegator delegator, String invoiceId) {
 		BigDecimal invoiceItemBasicVal = BigDecimal.ZERO;

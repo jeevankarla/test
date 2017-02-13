@@ -412,7 +412,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
     <span class="label" id="showInvoiceRunningTotal"></span>
     
     
-    <span class="label">Quntity : </span>
+    <span class="label">Quantity : </span>
     
     <span class="label" id="showInvoiceRunningTotalQuantity"></span>
     
@@ -535,6 +535,9 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               
               
               <#assign purchaseBasicAmt = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceBasicValue(delegator, invoice.invoiceId)?if_exists/>
+				
+			<#assign invoicetypes = Static["org.ofbiz.accounting.invoice.InvoiceServices"].invoicetypeinfo(delegator, invoice.shipmentId, "SALES_INVOICE")?if_exists/>
+			
               <#--><#assign outStanding = (invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount)>-->
               
                <td><@ofbizCurrency amount=purchaseBasicAmt isoCode=defaultOrganizationPartyCurrencyUomId/></td>
@@ -571,8 +574,12 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><#if ((invoice.statusId != "INVOICE_CANCELLED") &&(invoice.parentTypeId == "PURCHASE_INVOICE"))><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>
               <#else>
                <td align="center"></td>
-               </#if> -->
+               </#if> -->				
+              <#if !(invoicetypes)?has_content>
               <td align="center"><#if invoice.statusId != "INVOICE_CANCELLED"><input type="button" name="cancel" value="Cancel" onclick="javascript:confirmInvoiceCancel('${invoice.invoiceId}')"/></#if></td>
+              	<#else>
+ 		   	          <td></td>
+			  </#if>
               <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunning();"/></td>
             </tr>
             <#-- toggle the row color -->
