@@ -3581,6 +3581,9 @@
 			<field name="millInvoiceId" title="Purchase Invoice No"><display/></field>
 			<field name="millInvoiceDate" title="Purchase Invoice Date"><display/></field>
 			<field name="poInvoiceAmt" title="Purchase Invoice Amount"><display/></field>
+			<field name="purTax" title="Purchase Tax"><display/></field>
+			<field name="allAdjPur" title="Purchase Adjustments"><display/></field>
+			<field name="purInvoiceNetAmt" title="Purchase Invoice Net Amount"><display/></field>
 			<field name="transporter" title="Transporter Name"><display/></field>
 			<field name="lrNumber" title="Lr Number"><display/></field>
 			<field name="lrDate" title="Lr Date"><display/></field>
