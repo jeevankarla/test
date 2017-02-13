@@ -29,10 +29,6 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
  DateMap = [:];
 partyfromDate=parameters.abstrctFromDate;
 partythruDate=parameters.abstrctThruDate;
-DateMap.put("partyfromDate", partyfromDate);
-DateMap.put("partythruDate", partythruDate);
-DateList.add(DateMap);
-context.DateList=DateList;
 
 partyId=parameters.partyId;
 
@@ -68,6 +64,13 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
   
   daystart = UtilDateTime.getDayStart(fromDate);
   dayend = UtilDateTime.getDayEnd(thruDate);
+  
+  partyfromDateForCsv=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+  partythruDateForCsv=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+  DateMap.put("partyfromDate", partyfromDateForCsv);
+  DateMap.put("partythruDate", partythruDateForCsv);
+  DateList.add(DateMap);
+  context.DateList=DateList;
   
   //Debug.log("daystart==================="+daystart);
   

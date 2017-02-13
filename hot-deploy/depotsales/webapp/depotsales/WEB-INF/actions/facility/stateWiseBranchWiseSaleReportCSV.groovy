@@ -500,7 +500,7 @@ for (eachInvoiceList in Invoice) {
 		 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 		 
 		 if(supplierInvoiceDate)
-		 tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd-MM-yyyy"));
+		 tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd/MM/yyyy"));
 		 else
 		 tempMap.put("supplierInvoiceDate", "");
 		 

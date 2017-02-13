@@ -36,6 +36,7 @@ salesChannelEnumId = parameters.salesChannel;
 context.fromDate=fromDate;
 context.thruDate=thruDate;
 
+
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 try {
 	if (UtilValidate.isNotEmpty(fromDate)) {
@@ -69,6 +70,11 @@ entryDayEnd = UtilDateTime.getDayEnd(entryThruDate);
 
 }
 
+fromDateForFtl=UtilDateTime.toDateString(dayStart, "dd/MM/yyyy");
+thruDateForFtl=UtilDateTime.toDateString(dayEnd, "dd/MM/yyyy");
+
+context.fromDateForFtl=fromDateForFtl;
+context.thruDateForFtl=thruDateForFtl;
 
 BranchList=[];
 	branchMap = [:];
@@ -290,7 +296,7 @@ BranchList=[];
 	headerData1=[:];
 	headerData1.put("orderDate"," ");
 	headerData1.put("orderId", " ");
-	headerData1.put("orderNo", parameters.IndentRegisterFromDate+" "+"to"+" "+parameters.IndentRegisterThruDate);
+	headerData1.put("orderNo", fromDateForFtl+" "+"to"+" "+thruDateForFtl);
 	headerData1.put("Qty", " ");
 	headerData1.put("productNameCSV", " ");
 	headerData1.put("indentPrice", " ");
@@ -448,7 +454,7 @@ BranchList=[];
 		tempData.put("orderNo", orderNo);
 		
 		tempData.put("orderId", eachHeader.orderId);
-		tempData.put("orderDate", UtilDateTime.toDateString(eachHeader.estimatedDeliveryDate, "MM/dd/yyyy"));
+		tempData.put("orderDate", UtilDateTime.toDateString(eachHeader.estimatedDeliveryDate, "dd/MM/yyyy"));
 		tempData.put("statusId", eachHeader.statusId);
 		if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 			tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
@@ -525,12 +531,11 @@ BranchList=[];
 			tempData.put("poQty",poQty);
 			tempData.put("Qty", ordQty.setScale(2, rounding));
 			tempData.put("indentPrice", indentPrice.setScale(2, rounding));
-			tempData.put("indentValue", indentValue.setScale(2, rounding));
-			
-					
+			tempData.put("indentValue", indentValue.setScale(2, rounding));		
 			orderHeader = delegator.findOne("OrderHeader",[orderId : poId] , false);
 			if(orderHeader){
-				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "MM/dd/yyyy"));
+				
+				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "dd/MM/yyyy"));
 			}
 			shipments = delegator.findList("Shipment", EntityCondition.makeCondition("primaryOrderId",  EntityOperator.EQUALS, poId), null, null, null, false);
 			if(shipments){
@@ -558,7 +563,7 @@ BranchList=[];
 					tempData.put("salVal", salValue);
 					tempData.put("salInv", OrderItemBilling.invoiceId);
 					Invoice = delegator.findOne("Invoice",[invoiceId : OrderItemBilling.invoiceId] , false);
-					tempData.put("salDate", UtilDateTime.toDateString(Invoice.invoiceDate, "MM/dd/yyyy"));
+					tempData.put("salDate", UtilDateTime.toDateString(Invoice.invoiceDate, "dd/MM/yyyy"));
 				}
 			}
 			
