@@ -151,6 +151,11 @@ context.errorMessage = "Cannot parse date string: " + e;
 
 dayStart = UtilDateTime.getDayStart(fromDate);
 dayEnd = UtilDateTime.getDayEnd(thruDate);
+fromDateForFtl=UtilDateTime.toDateString(dayStart, "dd/MM/yyyy");
+thruDateForFtl=UtilDateTime.toDateString(dayEnd, "dd/MM/yyyy");
+
+context.fromDateForFtl=fromDateForFtl;
+context.thruDateForFtl=thruDateForFtl;
 branchBasedOrderIds=[];
 if(UtilValidate.isNotEmpty(branchList)){
 		custCondList = [];
@@ -168,32 +173,34 @@ if(UtilValidate.isNotEmpty(branchList)){
 	}
 //Debug.log("branchBasedOrderIds=================="+branchBasedOrderIds);
 
-branchContextForAdd=[:];
-branchContextForAdd.put("branchId",branchIdForAdd);
-BOAddress="";
-BOEmail="";
-try{
-	resultCtx = dispatcher.runSync("getBoHeader", branchContextForAdd);
-	if(ServiceUtil.isError(resultCtx)){
-		Debug.logError("Problem in BO Header ", module);
-		return ServiceUtil.returnError("Problem in fetching financial year ");
-	}
-	if(resultCtx.get("boHeaderMap")){
-		boHeaderMap=resultCtx.get("boHeaderMap");
-		
-		if(boHeaderMap.get("header0")){
-			BOAddress=boHeaderMap.get("header0");
+if(branchIdForAdd){
+	branchContext=[:];
+	branchContext.put("branchId",branchIdForAdd);
+	BOAddress="";
+	BOEmail="";
+	try{
+		resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+		if(ServiceUtil.isError(resultCtx)){
+			Debug.logError("Problem in BO Header ", module);
+			return ServiceUtil.returnError("Problem in fetching financial year ");
 		}
-		if(boHeaderMap.get("header1")){
-			BOEmail=boHeaderMap.get("header1");
+		if(resultCtx.get("boHeaderMap")){
+			boHeaderMap=resultCtx.get("boHeaderMap");
+			
+			if(boHeaderMap.get("header0")){
+				BOAddress=boHeaderMap.get("header0");
+			}
+			if(boHeaderMap.get("header1")){
+				BOEmail=boHeaderMap.get("header1");
+			}
 		}
+	}catch(GenericServiceException e){
+		Debug.logError(e, module);
+		return ServiceUtil.returnError(e.getMessage());
 	}
-}catch(GenericServiceException e){
-	Debug.logError(e, module);
-	return ServiceUtil.returnError(e.getMessage());
-}
-context.BOAddress=BOAddress;
-context.BOEmail=BOEmail;
+	context.BOAddress=BOAddress;
+	context.BOEmail=BOEmail;
+	}
 rounding = RoundingMode.HALF_UP;
 Map finalMap = FastMap.newInstance();
 tempTotMap=[:];
@@ -344,7 +351,7 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 							tempMap["productCode"]=(product.internalName).substring(0, 8);
 						}
 						tempMap["partyName"] = PartyHelper.getPartyName(delegator, orderRole.partyId, false);
-						tempMap["orderDate"]=UtilDateTime.toDateString(productEntry.orderDate, "dd-MM-yy");
+						tempMap["orderDate"]=UtilDateTime.toDateString(productEntry.orderDate, "dd/MM/yyyy");
 						//Debug.log("orderDate======="+tempMap["orderDate"]);
 						tempMap["orderNo"]=orderNo;
 						supplierPartyId="";

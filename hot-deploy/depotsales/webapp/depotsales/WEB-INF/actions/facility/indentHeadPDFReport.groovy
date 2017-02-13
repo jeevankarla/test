@@ -116,6 +116,13 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 daystart = UtilDateTime.getDayStart(fromDate);
 dayend = UtilDateTime.getDayEnd(thruDate);
 
+partyfromDateForCsv=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+partythruDateForCsv=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+DateMap.put("partyfromDate", partyfromDateForCsv);
+DateMap.put("partythruDate", partythruDateForCsv);
+DateList.add(DateMap);
+context.DateList=DateList;
+
 ////Debug.log("daystart==================="+daystart);
 
 ////Debug.log("dayend==================="+dayend);
@@ -2123,7 +2130,7 @@ if(invoice){
 					tempMap.put("orderNo", actualOrderId);
 
 				if(orderDate)
-					tempMap.put("indentDate",UtilDateTime.toDateString(orderDate,"dd-MM-yyyy"));
+					tempMap.put("indentDate",UtilDateTime.toDateString(orderDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("indentDate","");
 
@@ -2255,7 +2262,7 @@ if(invoice){
 
 
 					if(poinvoiceDate)
-						tempMap.put("millInvoiceDate", UtilDateTime.toDateString(poinvoiceDate,"dd-MM-yyyy"));
+						tempMap.put("millInvoiceDate", UtilDateTime.toDateString(poinvoiceDate,"dd/MM/yyyy"));
 					else
 						tempMap.put("millInvoiceDate","");
 
@@ -2366,7 +2373,7 @@ if(invoice){
 				}
 
 				if(PorderDate)
-					tempMap.put("poorderDate", UtilDateTime.toDateString(PorderDate,"dd-MM-yyyy"));
+					tempMap.put("poorderDate", UtilDateTime.toDateString(PorderDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("poorderDate", "");
 
@@ -2384,7 +2391,7 @@ if(invoice){
 					deliveryChallanDate = shipmentList.get("deliveryChallanDate");
 
 					if(deliveryChallanDate)
-						tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd-MM-yyyy") );
+						tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd/MM/yyyy") );
 					else
 						tempMap.put("lrDate", "");
 
@@ -2425,7 +2432,7 @@ if(invoice){
 					supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 
 					if(supplierInvoiceDate)
-						tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd-MM-yyyy"));
+						tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd/MM/yyyy"));
 					else
 						tempMap.put("supplierInvoiceDate", "");
 
@@ -2501,7 +2508,7 @@ if(invoice){
 				tempMap.put("tallyRefNo", tallyRefNo);
 
 				if(eachInvoice.invoiceDate)
-					tempMap.put("tallyRefDate", UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd-MM-yyyy"));
+					tempMap.put("tallyRefDate", UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("tallyRefDate", "");
 
