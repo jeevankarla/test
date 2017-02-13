@@ -60,6 +60,27 @@ if(UtilValidate.isNotEmpty(dateStr)){
 	frthMnthfromDate = UtilDateTime.addDaysToTimestamp(frthMnththruDate,-30);
 
 }
+BOAddress="";
+BOEmail="";
+boHeaderMap=[:];
+condList=[];
+condList.add(EntityCondition.makeCondition("propertyName", EntityOperator.LIKE,"HO%"));
+condList.add(EntityCondition.makeCondition("propertyTypeEnumId", EntityOperator.EQUALS, "COMPANY_HEADER"));
+condList.add(EntityCondition.makeCondition("propertyValue", EntityOperator.EQUALS, "Y"));
+EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND);
+tenantConfigCheck = delegator.findList("TenantConfiguration",cond, null , null, null, false);
+if (UtilValidate.isNotEmpty(tenantConfigCheck)) {
+	for (int i = 0; i < tenantConfigCheck.size(); i++) {						
+		GenericValue eachProductList = (GenericValue)tenantConfigCheck.get(i);					
+		String header=(String)eachProductList.get("description");
+		boHeaderMap.put("header"+i,header);
+	}
+	
+}
+BOAddress=boHeaderMap["header0"]+boHeaderMap["header1"];
+BOEmail=boHeaderMap["header2"];
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
 
 conditionList = [];
 
