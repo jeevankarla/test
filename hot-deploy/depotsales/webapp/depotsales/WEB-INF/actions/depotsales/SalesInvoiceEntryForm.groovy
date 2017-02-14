@@ -447,7 +447,7 @@ if(shipments){
 		context.orderId = orderId;
 		context.partyId = partyId;
 		context.billToPartyId = billToPartyId;
-		milliseconds=(shipment.estimatedShipDate).getTime();
+		milliseconds=(shipment.supplierInvoiceDate).getTime();
 		context.shipmentDate = shipment.supplierInvoiceDate;
 		context.milliseconds=milliseconds;
 		context.vehicleId = shipment.vehicleId;		
