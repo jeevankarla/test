@@ -47,7 +47,7 @@ under the License.
              		    <fo:table-column column-width="11%"/>
              		    <fo:table-column column-width="14%"/>
              		    <fo:table-column column-width="15%"/>
-             		    <fo:table-column column-width="13%"/>
+             		    <fo:table-column column-width="17%"/>
              		    <fo:table-column column-width="10%"/>
              		    <fo:table-column column-width="10%"/>
              		    <fo:table-column column-width="11%"/>
