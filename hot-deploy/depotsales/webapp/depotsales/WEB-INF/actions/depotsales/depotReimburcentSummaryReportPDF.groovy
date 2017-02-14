@@ -40,7 +40,9 @@ context.partythruDate=partythruDate;
 productCategoryDetails = delegator.findOne("ProductCategory",[productCategoryId : productCategory] , false);
 if(UtilValidate.isNotEmpty(productCategoryDetails)){
 	prodCatName=productCategoryDetails.description
-}else{
+}else if(productCategory == "ALL"){
+	prodCatName="ALL CATEGORIES"
+	}else{
  	prodCatName="PRODUCTS OTHER THAN SILK AND JUTE"
 }
 
@@ -66,46 +68,29 @@ if("ALL".equals(state)){
 productIds = [];
 productCategoryIds = [];
 
-conditionList.clear();
-if(productCategory != "OTHER"){
-	conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS, productCategory));
-	condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	ProductCategory = delegator.findList("ProductCategory", condition1,UtilMisc.toSet("productCategoryId"), null, null, false);
-	productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
+condListCat = [];
+if(productCategory == "ALL"){
+	productCategoris = delegator.findList("ProductCategory", EntityCondition.makeCondition("productCategoryTypeId" ,EntityOperator.EQUALS,"NATURAL_FIBERS"), null, null, null ,false);
+	productCategoryIds=EntityUtil.getFieldListFromEntityList(productCategoris, "productCategoryId", true);
+	
+	productPrimaryCategories = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.IN,productCategoryIds), null, null, null ,false);
+	productCategoryIds=EntityUtil.getFieldListFromEntityList(productPrimaryCategories, "productCategoryId", true);
 }else if(productCategory == "OTHER"){
-	conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.NOT_IN, ["SILK","JUTE_YARN"]));
-	condition1 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	ProductCategory = delegator.findList("ProductCategory", condition1,UtilMisc.toSet("productCategoryId"), null, null, false);
-	productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
-}
-// block of code for getting product category wise transportation percentage reimbursement ===============================
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.IN, ["SILK","JUTE_YARN","COTTON"]));
-produtCategoriesForPer = delegator.findList("ProductCategory", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productCategoryId"), null, null, false);
-allCategories = EntityUtil.getFieldListFromEntityList(produtCategoriesForPer, "productCategoryId", true);
+	productCategoris = delegator.findList("ProductCategory", EntityCondition.makeCondition([EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "NATURAL_FIBERS"), EntityCondition.makeCondition("productCategoryId", EntityOperator.NOT_IN, UtilMisc.toList("COTTON","SILK"))], EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null ,false);
+	productCategoryIds=EntityUtil.getFieldListFromEntityList(productCategoris, "productCategoryId", true);
+	
+	productPrimaryCategories = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.IN,productCategoryIds), null, null, null ,false);
+	productCategoryIds=EntityUtil.getFieldListFromEntityList(productPrimaryCategories, "productCategoryId", true);
+}else{
+	productCategoris = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.EQUALS,productCategory), UtilMisc.toSet("productCategoryId","primaryParentCategoryId"), null, null ,false);
+	productCategoryIds=EntityUtil.getFieldListFromEntityList(productCategoris, "productCategoryId", true);
+	}
 
-silkCategories =EntityUtil.filterByCondition(produtCategoriesForPer, EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,"SILK"));
+condListCat.clear();
+condListCat.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIds));
+condList1 = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
+ProductCategoryMember = delegator.findList("ProductCategoryMember", condList1,UtilMisc.toSet("productId"), null, null, false);
 
-juteCategories =EntityUtil.filterByCondition(statesList, EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,"JUTE_YARN"));
-
-otherAllCategories =EntityUtil.filterByCondition(statesList, EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.NOT_IN,["SILK","JUTE_YARN"]));
-
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, allCategories));
-produtCategorieMemberForPer = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productId","productCategoryId"), null, null, false);
-
-silkCategoriesProducts =EntityUtil.filterByCondition(produtCategorieMemberForPer, EntityCondition.makeCondition("productCategoryId", EntityOperator.IN,silkCategories));
-
-juteCategoriesProducts =EntityUtil.filterByCondition(produtCategorieMemberForPer, EntityCondition.makeCondition("productCategoryId", EntityOperator.IN,juteCategories));
-
-otherAllCategoriesProducts =EntityUtil.filterByCondition(produtCategorieMemberForPer, EntityCondition.makeCondition("productCategoryId", EntityOperator.IN,otherAllCategories));
-
-// block end ================================
-
-conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIds));
-condition2 = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-ProductCategoryMember = delegator.findList("ProductCategoryMember", condition2,UtilMisc.toSet("productId"), null, null, false);
 productIds = EntityUtil.getFieldListFromEntityList(ProductCategoryMember, "productId", true);
   
 daystart = null;
