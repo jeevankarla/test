@@ -149,8 +149,8 @@ totMap = [:];
 totalQty=0
 totalvalue=0
 totalsubsidyAmt=0
-totalserviceCharg=0;
-totalclaimTotal=0
+BigDecimal totalserviceCharg= BigDecimal.ZERO;
+BigDecimal totalclaimTotal= BigDecimal.ZERO;
 if(UtilValidate.isNotEmpty(InvoiceItem)){
 	sNo=1;
 	summarySNo=0;
@@ -255,15 +255,14 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 }
 			 quantity=subsidyAmt/invoiceSubsidyDetail4.get("amount");
 			 quantity=quantity*10;
+			 temMap.put("subsidyAmt", subsidyAmt.setScale(0, rounding));
 			 quantity= (quantity).setScale(2, rounding);
-			 subsidyAmt= (subsidyAmt).setScale(0, rounding);
-			 temMap.put("subsidyAmt", subsidyAmt);
 			 temMap.put("quantity", quantity);
-			 temMap.put("value", df.format(value.setScale(2, rounding)));
+			 temMap.put("value", value.setScale(2, rounding));
 			 serviceCharg= (value*0.005);
 			 temMap.put("serviceCharg", (serviceCharg).setScale(0, rounding));
-			 BigDecimal claimTotal = (subsidyAmt +serviceCharg).setScale(0, rounding);
-			 temMap.put("claimTotal", claimTotal);
+			 BigDecimal claimTotal = subsidyAmt +serviceCharg;
+			 temMap.put("claimTotal", claimTotal.setScale(0, rounding));
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
 				 totalQty=totalQty+quantity;
 				 totalvalue=totalvalue+value;
@@ -310,7 +309,9 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 totalsMap.put("quantity", totalQty);
 totalsMap.put("value", totalvalue);
 totalsMap.put("subsidyAmt", totalsubsidyAmt);
-totalsMap.put("serviceCharg", totalserviceCharg.setScale(0, rounding));
+totalserviceCharg= (totalserviceCharg).setScale(2, rounding);
+totalsMap.put("serviceCharg", totalserviceCharg);
+totalclaimTotal= (totalclaimTotal).setScale(2, rounding);
 totalsMap.put("claimTotal", totalclaimTotal);
 context.totalsMap=totalsMap; 
 context.totalsubsidyAmt=totalsubsidyAmt;
