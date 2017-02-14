@@ -28,6 +28,7 @@ import net.sf.json.JSONObject;
 import net.sf.json.JSONArray;
 
 import org.ofbiz.party.party.PartyHelper;
+import java.math.RoundingMode;
 
 facilityId = parameters.facilityId;
 
@@ -309,12 +310,14 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 		
 		shipmentReceiptEach = EntityUtil.getFirst(inventoryShipmentList);
 		if(shipmentReceiptEach) {
+			unitCost=inventoryItem.unitCost;
+			unitCost=Math.round(unitCost * 100) / 100;
+			context.unitCost=unitCost;
 			row.putAt("shipmentId", shipmentReceiptEach.shipmentId);
 			//Debug.log("shipmentId=============================="+shipmentReceiptEach.shipmentId+"==iter.inventoryItemId="+iter.inventoryItemId);
 			shipment = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentReceiptEach.shipmentId), false);
 			facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", inventoryItem.facilityId), false);
 			
-			Debug.log("inventoryItem.facilityId================="+inventoryItem.facilityId);
 			
 			product = delegator.findOne("Product", UtilMisc.toMap("productId", row.productId), false);
 			partyName=PartyHelper.getPartyName(delegator, shipment.partyIdFrom, false);
@@ -355,6 +358,7 @@ if(UtilValidate.isNotEmpty(parameters.noConditionFind) && parameters.noCondition
 			row.putAt("partyName", partyName);
 			row.putAt("productName", product.productName);
 			row.putAt("estimatedShipDate", shipment.estimatedShipDate);
+			row.putAt("unitCost", unitCost);
 		}else{
 			row.putAt("shipmentId", "");
 		}
