@@ -2144,18 +2144,19 @@
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="MANAGEMENT_REPORTS"/>
         	</link>
-        </menu-item>
+        </menu-item>  -->
          <menu-item name="INDENT_REPORTS" title="Indent Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="INDENT_REPORTS"/>
         	</link>
         </menu-item>
+        <!-- 
          <menu-item name="PURCHASE_REPORTS" title="Purchase Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="PURCHASE_REPORTS"/>
         	</link>
         </menu-item>
-         -->
+        -->
          <menu-item name="SALE_REPORTS" title="Sale Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="SALE_REPORTS"/>
@@ -2173,12 +2174,13 @@
         		<parameter param-name="ReportsType" value="CLUSTER_REPORTS"/>
         	</link>
         </menu-item>
+         -->
         <menu-item name="MASTER_REPORTS" title="Master Reports">
         	<link target="DepotSalesReports">
         		<parameter param-name="ReportsType" value="MASTER_REPORTS"/>
         	</link>
         </menu-item>
-         -->
+        
         
       </menu>
 	

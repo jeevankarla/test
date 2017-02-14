@@ -71,7 +71,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			}
 			
 			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-			minimumtime=(shipment.estimatedShipDate).getTime();
+			minimumtime=(shipment.supplierInvoiceDate).getTime();
 			context.minimumtime=minimumtime;			
 			poValue = 0;
 			if(orderHeader){
