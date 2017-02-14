@@ -333,9 +333,11 @@ for(productCategoryId in productCategoryIds){
 	}
 
 }
+totalsMap.put("prodcatName", "TOTAL");
 totalsMap.put("orderQty", totalQty);
 totalsMap.put("orderValue", totalValue);
-totalsMap.put("rate", totalRate);
+//totalsMap.put("rate", totalRate);
+finalCSVList.add(totalsMap)
 context.totalsMap=totalsMap;
 context.prodCatMap=prodCatMap;
 context.finalCSVList=finalCSVList;
