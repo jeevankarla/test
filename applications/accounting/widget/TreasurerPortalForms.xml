@@ -490,7 +490,7 @@ under the License.
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
-                     <entity-constraint name="ownerPartyId" from-field="parameters.ownerPartyId"/>
+                     <!-- <entity-constraint name="ownerPartyId" from-field="ownerPartyId"/> -->
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down>
