@@ -461,7 +461,7 @@ function datepick()	{
 									<td class="label"><b>Country :</b></td>
 									<td>
 									<select name="Country" id="Country">
-				                            <option value="India" selected="selected">India</option>
+				                            <option value="IND" selected="selected">India</option>
 				                            
 							            </select>
 									  </td>  
