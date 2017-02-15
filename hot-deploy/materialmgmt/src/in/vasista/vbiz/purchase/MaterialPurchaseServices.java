@@ -6473,7 +6473,7 @@ catch(Exception e){
 	             Debug.logError(e, module);
 	             return ServiceUtil.returnError("Service Exception: " + e.getMessage());
 	          }
-				Debug.log("partyId============================"+partyId);
+				//Debug.log("partyId============================"+partyId);
 		
 		}else{
 			try {
@@ -6556,6 +6556,40 @@ catch(Exception e){
 	  		Debug.logError(e, e.toString(), module);
 	  		return ServiceUtil.returnError(e.toString());
   		}
+        
+        
+        String taxContactMech = "";
+        try{
+        List conditionList = FastList.newInstance();
+		conditionList.add(EntityCondition.makeCondition("infoString", EntityOperator.EQUALS, stateProvinceGeoId));
+		List<GenericValue> ContactMech = delegator.findList("ContactMech", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		
+		GenericValue ContactMech1 = EntityUtil.getFirst(ContactMech);
+		
+		taxContactMech = ContactMech1.getString("contactMechId");
+        }catch(Exception e){
+	  		Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+  		}
+		//Debug.log("taxContactMech=================="+taxContactMech);
+		
+        inMap.clear();
+        inMap.put("userLogin", userLogin);
+        inMap.put("partyId", partyId);
+        inMap.put("contactMechId", taxContactMech);
+        inMap.put("fromDate",  UtilDateTime.nowTimestamp());
+        
+        try{
+        	outMap = dispatcher.runSync("createPartyContactMech", inMap);
+            if(ServiceUtil.isError(outMap)){
+           	 	Debug.logError("faild service create party postal Address:"+ServiceUtil.getErrorMessage(outMap), module);
+           	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
+            }
+	    }catch(GenericServiceException e){
+	  		Debug.logError(e, e.toString(), module);
+	  		return ServiceUtil.returnError(e.toString());
+  		}
+        
         
         
         // create phone number
