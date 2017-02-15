@@ -74,7 +74,26 @@ under the License.
         	<field-map field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
         	<field-map field-name="partyId" value="Company"/>
         	<field-map field-name="roleTypeId" value="ACCOUNTING"/>        	
-        </entity-one>       
+        </entity-one>     
+         <entity-condition list="acctransDetails" entity-name="AcctgTransRole">
+        	<condition-expr field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
+        	<condition-expr field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+        </entity-condition>	
+        <if-not-empty field="acctgTrans.finAccountTransId">
+        	<entity-one value-field="finAccntTrns" entity-name="FinAccountTrans">
+        		<field-map field-name="finAccountTransId" value="${acctgTrans.finAccountTransId}"/>
+        	</entity-one>
+        	<if-not-empty field="finAccntTrns.segmentId">
+        		<log message="=================${finAccntTrns.segmentId}" level="always"/>
+        		<set field="newEntity.purposeTypeId" value="${finAccntTrns.segmentId}"/>
+        	</if-not-empty>
+        </if-not-empty>
+        <log message="acctransDetails==========${acctransDetails[1].partyId}" level="always"/> 
+        <if-empty field="newEntity.costCenterId">
+        	<if-not-empty field="acctransDetails[1].partyId">
+        		<set field="newEntity.costCenterId" value="${acctransDetails[1].partyId}"/>
+        	</if-not-empty>
+        </if-empty> 
         <if-not-empty field="acctgTransRole">
         	<set field="parameters.organizationPartyId" value="Company"/>
         	<set field="newEntity.organizationPartyId" value="Company"/>
@@ -451,6 +470,8 @@ under the License.
                 <iterate entry="customTimePeriod" list="customTimePeriodList">
                     <entity-one entity-name="GlAccountHistory" value-field="glAccountHistory">
                         <field-map field-name="glAccountId" from-field="acctgTransEntry.glAccountId"/>
+                        <field-map field-name="costCenterId" from-field="acctgTransEntry.costCenterId"/>
+                        <field-map field-name="segmentId" from-field="acctgTransEntry.purposeTypeId"/>
                         <field-map field-name="organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
                         <field-map field-name="customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
                     </entity-one>
@@ -459,6 +480,8 @@ under the License.
                         <make-value value-field="glAccountHistory" entity-name="GlAccountHistory"/>
                         <set from-field="acctgTransEntry.glAccountId" field="glAccountHistory.glAccountId"/>
                         <set from-field="acctgTransEntry.organizationPartyId" field="glAccountHistory.organizationPartyId"/>
+                        <set from-field="acctgTransEntry.costCenterId" field="glAccountHistory.costCenterId"/>
+                        <set from-field="acctgTransEntry.purposeTypeId" field="glAccountHistory.segmentId"/>
                         <set from-field="customTimePeriod.customTimePeriodId" field="glAccountHistory.customTimePeriodId"/>
                         <set field="glAccountHistory.postedDebits" value="0.0" type="BigDecimal"/>
                         <set field="glAccountHistory.postedCredits" value="0.0" type="BigDecimal"/>
@@ -497,7 +520,8 @@ under the License.
 	                     <entity-one entity-name="GlAccountHistoryPartyWise" value-field="glAccountHistoryPartyWise">
 	                        <field-map field-name="glAccountId" from-field="acctgTransEntry.glAccountId"/>
 	                        <field-map field-name="partyId" from-field="acctgTransEntry.partyId"/>
-	                        <field-map field-name="costCenterId" from-field="acctransDetails[1].partyId"/>
+	                        <field-map field-name="costCenterId" from-field="acctgTransEntry.costCenterId"/>
+	                        <field-map field-name="segmentId" from-field="acctgTransEntry.purposeTypeId"/>
 	                        <field-map field-name="acctgTransTypeId" from-field="acctgTrans.acctgTransTypeId"/>
 	                        <field-map field-name="organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
 	                        <field-map field-name="customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
@@ -508,7 +532,8 @@ under the License.
 	                        <set from-field="acctgTransEntry.glAccountId" field="glAccountHistoryPartyWise.glAccountId"/>
 	                        <set from-field="acctgTransEntry.organizationPartyId" field="glAccountHistoryPartyWise.organizationPartyId"/>
 	                        <set from-field="acctgTransEntry.partyId" field="glAccountHistoryPartyWise.partyId"/>
-	                        <set value="${acctransDetails[1].partyId}" field="glAccountHistoryPartyWise.costCenterId"/>
+	                        <set from-field="acctgTransEntry.purposeTypeId" field="glAccountHistoryPartyWise.segmentId"/>
+	                        <set from-field="acctgTransEntry.costCenterId" field="glAccountHistoryPartyWise.costCenterId"/>
 	                        <set from-field="acctgTrans.acctgTransTypeId" field="glAccountHistoryPartyWise.acctgTransTypeId"/>
 	                        <set from-field="customTimePeriod.customTimePeriodId" field="glAccountHistoryPartyWise.customTimePeriodId"/>
 	                        <set field="glAccountHistoryPartyWise.postedDebits" value="0.0" type="BigDecimal"/>

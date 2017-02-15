@@ -596,6 +596,7 @@
 		<field name="performedByPartyId" type="id"></field>
 		<field name="reasonEnumId" type="id"></field>
 		<field name="costCenterId" type="id"></field>
+		<field name="segmentId" type="id"></field>
 		<field name="realisationDate" type="date-time"></field>
 		<field name="comments" type="comment"></field>
 		<field name="statusId" type="id"></field>
@@ -614,6 +615,10 @@
 		<relation type="one" fk-name="FIN_ACT_TX_PARTY"
 			rel-entity-name="Party">
 			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one" fk-name="FIN_ACT_TX_SEG"
+			rel-entity-name="Enumeration">
+			<key-map field-name="segmentId" rel-field-name="enumId"/>
 		</relation>
 		<relation type="one" fk-name="FIN_ACT_TX_PMT"
 			rel-entity-name="Payment">
@@ -2652,9 +2657,13 @@
 		<field name="postedDebits" type="currency-amount"></field>
 		<field name="postedCredits" type="currency-amount"></field>
 		<field name="endingBalance" type="currency-amount"></field>
+		<field name="costCenterId" type="id-ne"></field>
+		<field name="segmentId" type="id-ne"></field>
 		<prim-key field="glAccountId" />
 		<prim-key field="organizationPartyId" />
 		<prim-key field="customTimePeriodId" />
+		<prim-key field="costCenterId" />
+		<prim-key field="segmentId" />
 		<relation type="one" fk-name="GLACCT_HST_GLA"
 			rel-entity-name="GlAccount">
 			<key-map field-name="glAccountId" />
@@ -2662,6 +2671,14 @@
 		<relation type="one" fk-name="GLACCT_HST_PARTY"
 			rel-entity-name="Party">
 			<key-map field-name="organizationPartyId" rel-field-name="partyId" />
+		</relation>
+		<relation type="one" fk-name="GLACCT_HST_COST"
+			rel-entity-name="Party">
+			<key-map field-name="costCenterId" rel-field-name="partyId" />
+		</relation>		
+		<relation type="one" fk-name="GLACCT_HST_SEG"
+			rel-entity-name="Enumeration">
+			<key-map field-name="segmentId" rel-field-name="enumId"/>
 		</relation>
 		<relation type="one" fk-name="GLACCT_HST_CTP"
 			rel-entity-name="CustomTimePeriod">
@@ -2679,12 +2696,14 @@
 		<field name="postedDebits" type="currency-amount"></field>
 		<field name="postedCredits" type="currency-amount"></field>
 		<field name="endingBalance" type="currency-amount"></field>
+		<field name="segmentId" type="id-ne"></field>
 		<prim-key field="glAccountId" />
 		<prim-key field="organizationPartyId" />
 		<prim-key field="partyId" />
 		<prim-key field="customTimePeriodId" />
 		<prim-key field="acctgTransTypeId" />
 		<prim-key field="costCenterId" />
+		<prim-key field="segmentId" />
 		<relation type="one" fk-name="GLACCT_HSTP_GLA"
 			rel-entity-name="GlAccount">
 			<key-map field-name="glAccountId" />
@@ -2703,6 +2722,10 @@
 		<relation type="one" fk-name="GLACCT_HSTP_PPARTY"
 			rel-entity-name="Party">
 			<key-map field-name="partyId" rel-field-name="partyId" />
+		</relation>		
+		<relation type="one" fk-name="GLACCT_HSTP_SEG"
+			rel-entity-name="Enumeration">
+			<key-map field-name="segmentId" rel-field-name="enumId"/>
 		</relation>
 		<relation type="one" fk-name="GLACCT_HSTP_CTP"
 			rel-entity-name="CustomTimePeriod">

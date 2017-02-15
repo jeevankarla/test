@@ -1954,6 +1954,7 @@ under the License.
 	         <!--set field="debitEntry.glAccountTypeId" value=""/-->
 	         <set field="debitEntry.origAmount" from-field="payment.amount"/>
 	         <set field="debitEntry.origCurrencyUomId" from-field="origCurrencyUomId"/>
+	          <set field="debitEntry.costCenterId" from-field="payment.partyIdTo"/>
 	         <set field="debitEntry.organizationPartyId" from-field="organizationPartyId"/>
 	         <set field="acctgTransEntries[]" from-field="debitEntry" type="Object"/>
 	
@@ -2170,6 +2171,7 @@ under the License.
             <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
             <set field="creditEntry.debitCreditFlag" value="C"/>
             <set field="creditEntry.organizationPartyId" from-field="invoice.partyId"/>
+            <set field="creditEntry.costCenterId" from-field="invoice.partyId"/>
             <set field="creditEntry.glAccountTypeId" value="ACCOUNTS_PAYABLE"/>
             <calculate field="totalAmountFromInvoice" type="BigDecimal" decimal-scale="${ledgerDecimals}" rounding-mode="${roundingMode}">
                 <calcop operator="add">
@@ -2324,6 +2326,7 @@ under the License.
             </calculate>
             <set field="debitEntry.origAmount" from-field="totalOrigAmount"/>
             <set field="debitEntry.origCurrencyUomId" from-field="invoice.currencyUomId"/>
+            <set field="debitEntry.costCenterId" from-field="invoice.partyIdFrom"/>
             <set field="debitEntry.partyId" from-field="invoice.partyId"/>
             <set field="debitEntry.roleTypeId" value="BILL_TO_CUSTOMER"/>
             <set field="acctgTransEntries[]" from-field="debitEntry" type="Object"/>
@@ -2368,6 +2371,7 @@ under the License.
             <set field="creditEntry.origCurrencyUomId" from-field="payment.currencyUomId"/>
             <set field="creditEntry.organizationPartyId" from-field="payment.partyIdFrom"/>
             <set field="creditEntry.partyId" from-field="payment.partyIdTo"/>
+            <set field="creditEntry.costCenterId" from-field="payment.partyIdFrom"/>
             <set field="creditEntry.roleTypeId" value="BILL_FROM_VENDOR"/>
             <set field="acctgTransEntries[]" from-field="creditEntry" type="Object"/>
             <!-- This is now delegated to the createAcctgTransAndEntriesForPaymentApplication calls at the bottom of this service
@@ -2563,6 +2567,7 @@ under the License.
             <set field="debitEntry.debitCreditFlag" value="D"/>
             <set field="debitEntry.organizationPartyId" from-field="payment.partyIdTo"/>
             <set field="debitEntry.partyId" from-field="payment.partyIdFrom"/>
+            <set field="debitEntry.costCenterId" from-field="payment.partyIdTo"/>
             <set field="debitEntry.roleTypeId" value="BILL_TO_CUSTOMER"/>
             <set field="debitEntry.origAmount" from-field="paymentApplication.amountApplied"/>
             <set field="debitEntry.origCurrencyUomId" from-field="payment.currencyUomId"/>
@@ -2575,6 +2580,7 @@ under the License.
             <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
             <set field="creditEntry.debitCreditFlag" value="C"/>
             <set field="creditEntry.organizationPartyId" from-field="payment.partyIdTo"/>
+             <set field="debitEntry.costCenterId" from-field="payment.partyIdTo"/>
             <set field="creditEntry.partyId" from-field="payment.partyIdFrom"/>
             <set field="creditEntry.roleTypeId" value="BILL_TO_CUSTOMER"/>
             <set field="creditEntry.origAmount" from-field="paymentApplication.amountApplied"/>
@@ -2596,6 +2602,7 @@ under the License.
             <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
             <set field="creditEntry.debitCreditFlag" value="C"/>
             <set field="creditEntry.organizationPartyId" from-field="payment.partyIdFrom"/>
+            <set field="creditEntry.costCenterId" from-field="payment.partyIdFrom"/>
             <set field="creditEntry.partyId" from-field="payment.partyIdTo"/>
             <set field="creditEntry.roleTypeId" value="BILL_FROM_VENDOR"/>
             <set field="creditEntry.origAmount" from-field="paymentApplication.amountApplied"/>
@@ -2609,6 +2616,7 @@ under the License.
             <make-value entity-name="AcctgTransEntry" value-field="debitEntry"/>
             <set field="debitEntry.debitCreditFlag" value="D"/>
             <set field="debitEntry.organizationPartyId" from-field="payment.partyIdFrom"/>
+            <set field="debitEntry.costCenterId" from-field="payment.partyIdFrom"/>
             <set field="debitEntry.partyId" from-field="payment.partyIdTo"/>
             <set field="debitEntry.roleTypeId" value="BILL_FROM_VENDOR"/>
             <set field="debitEntry.origAmount" from-field="paymentApplication.amountApplied"/>

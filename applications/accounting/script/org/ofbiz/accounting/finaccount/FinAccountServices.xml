@@ -285,6 +285,8 @@ under the License.
 			<if-not-empty field="parameters.amount">			
 				<set field="createFinAccountTransMap.amount" from-field="parameters.amount"/>			
 			</if-not-empty>		
+			<log message="==============${parameters.segmentId}" level="always"/>
+			<set field="createFinAccountTransMap.segmentId" from-field="parameters.segmentId"/>
 			<set field="createFinAccountTransMap.finAccountId" from-field="parameters.finAccountId"/>
 			<set field="createFinAccountTransMap.partyId" from-field="parameters.partyId"/>	
 			<if-empty field="parameters.partyId">
@@ -334,6 +336,7 @@ under the License.
 					<set field="createContraFinAccountTransMap.finAccountTransTypeId" value="DEPOSIT"/>
 				</else>
 			</if-compare>
+			<set field="createContraFinAccountTransMap.segmentId" from-field="parameters.segmentId"/>
 			<set field="createContraFinAccountTransMap.finAccountId" from-field="parameters.contraFinAccountId"/>
 			<entity-one value-field="finContraAccount" entity-name="FinAccount">
 			<field-map field-name="finAccountId" from-field="parameters.contraFinAccountId" />

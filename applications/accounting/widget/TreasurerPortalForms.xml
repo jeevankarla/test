@@ -735,6 +735,12 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+         <field name="segmentId"  title="Segment Id">
+            <drop-down>
+                <option key="YARN_SALE" description="Yarn Sale"/>
+                <option key="DIES_AND_CHEM_SALE" description="Dies And Chemicals"/>                
+            </drop-down>
+        </field>
          <field name="contraFinAccountId"  title="To Financial Account"  >
             <drop-down>
                 <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
