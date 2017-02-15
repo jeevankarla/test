@@ -24,6 +24,34 @@ JSONArray dataList = new JSONArray();
 def sdf = new SimpleDateFormat("MMMM dd, yyyy");
 fromDate=null;
 thruDate=null;
+
+
+analyticsThruDate=UtilDateTime.nowTimestamp();
+analyticsFrmDate= UtilDateTime.addDaysToTimestamp(analyticsThruDate,-90);
+defaultEffectiveThruDateStr=UtilDateTime.toDateString(analyticsThruDate,"MMMM dd, yyyy");
+defaultEffectiveDateStr=UtilDateTime.toDateString(analyticsFrmDate,"MMMM dd, yyyy");
+context.defaultEffectiveDateStr=defaultEffectiveDateStr
+context.defaultEffectiveThruDateStr=defaultEffectiveThruDateStr;
+try {
+	   if (parameters.fromDateCsv) {
+			   fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDateCsv).getTime()));
+	   }
+	   if (parameters.thruDateCsv) {
+			   thruDate = UtilDateTime.getDayEnd(new java.sql.Timestamp(sdf.parse(parameters.thruDateCsv).getTime()));
+	   }else {
+			   thruDate = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+	   }
+} catch (ParseException e) {
+	   Debug.logError(e, "Cannot parse date string: " + e, "");
+	   context.errorMessage = "Cannot parse date string: " + e;
+	   return;
+}
+
+
+
+
+
+
 try {
 	   if (parameters.fromDate) {
 			   fromDate = UtilDateTime.getDayStart(new java.sql.Timestamp(sdf.parse(parameters.fromDate).getTime()));
@@ -70,8 +98,6 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				branchROMap.put(branchParty.partyIdTo, ro.ownerPartyId);
 			}
 		}
-//	 Debug.log("===partyIdNameMap=====>"+partyIdNameMap);
-//	 Debug.log("===branchROMap=====>"+branchROMap);
 		
  conditionList.clear();
  
@@ -96,7 +122,6 @@ if(UtilValidate.isNotEmpty(thruDate)){
  condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
  salesOrderList = delegator.findList("IndentSummaryDetails", condition,null, null, null, false);
  
- //Debug.log("===salesOrderList=="+salesOrderList+"==condition=="+condition);
  DecimalFormat df = new DecimalFormat("0.00");
  ROOT_ID = "NHDC"; //::TODO::
  SortedMap DataMap = new TreeMap();
@@ -114,7 +139,7 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			 totalSaleQty=0;
 			 if(eachItem.getAt("saleQuantity")){
 			    totalSaleQty = new BigDecimal(eachItem.getAt("saleQuantity")).setScale(2, 0);
-			 }
+				}
 			 totalSaleAmount =0;
 			 if(eachItem.getAt("saleAmount")){
 				 totalSaleAmount = new BigDecimal(eachItem.getAt("saleAmount")).setScale(2, 0);
@@ -185,59 +210,98 @@ if(UtilValidate.isNotEmpty(thruDate)){
 
 //Debug.log("===DataMap=="+DataMap);
  
-	 for(Map.Entry entry : DataMap.entrySet()){
-			 JSONObject newObj = new JSONObject();
-			 partyId = entry.getKey();
-			 entryValue = entry.getValue();
-			 if (branchROMap.containsKey(partyId)) {
-				 roId = branchROMap.get(partyId);
-				newObj.put("partyId", partyId );
-				newObj.put("branch", partyIdNameMap.get(partyId));
-				newObj.put("ReportsTo", roId);
-				newObj.put("ro","");
-				newObj.put("avgTAT","");
-				newObj.put("totalRevenue", df.format((entryValue.get("totQty")/100000)));
-				newObj.put("totalIndents", df.format((entryValue.get("saleQty")/100000)));
-				newObj.put("purAmout", df.format((entryValue.get("purAmout")/100000)));
-				newObj.put("saleAmt", df.format((entryValue.get("saleAmt")/100000)));
-				newObj.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000)));
-				newObj.put("completed", entryValue.get("completed"));
-			 }
-			 else if (partyId == ROOT_ID) {
-				newObj.put("partyId", ROOT_ID );
-				newObj.put("branch", "");
-				newObj.put("ReportsTo", "");
-				newObj.put("ro", ROOT_ID);
-				newObj.put("avgTAT","");
-				newObj.put("totalRevenue", df.format((entryValue.get("totQty")/100000)));
-				newObj.put("totalIndents", df.format((entryValue.get("saleQty")/100000)));
-				newObj.put("purAmout", df.format((entryValue.get("purAmout")/100000)));
-				newObj.put("saleAmt", df.format((entryValue.get("saleAmt")/100000)));
-				newObj.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000)));
-				newObj.put("completed", entryValue.get("completed"));
-			 }
-			 else {
-				newObj.put("partyId", partyId );
+	  	
+	entryValue =DataMap.get("NHDC") ;
+	tempMap=[:];
+	saleAmt= totalSaleAmount+ totDetails.get("saleAmt");
+	saleQty = totDetails.get("saleQty");
+	saleQty= totalSaleQty+saleQty
+	
+	purAmout= totalPurAmount+ totDetails.get("purAmout");
+	completed= completed + totDetails.get("completed");
+	totQty =totalQty + totDetails.get("totQty");
+	
+	
+				tempMap.put("partyId",ROOT_ID);
+				tempMap.put("branch", "");
+				tempMap.put("ReportsTo", "");
+				tempMap.put("ro",ROOT_ID);
+				tempMap.put("avgTAT","");
+				tempMap.put("totalRevenue", df.format((entryValue.get("totQty")/100000)));
+				tempMap.put("saleQty", df.format((entryValue.get("saleQty")/100000)));
+				tempMap.put("totalIndents", df.format((entryValue.get("saleQty")/100000)));
+				tempMap.put("purAmout", df.format((entryValue.get("purAmout")/100000)));
+				tempMap.put("saleAmt", df.format((entryValue.get("saleAmt")/100000)));
+				tempMap.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000)));
+				tempMap.put("completed", entryValue.get("completed"));
+		dataList.add(tempMap);
+		
+		//conditionList.clear();
+		//conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "RO"));
+		//condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		
+		//roPartyIdList = delegator.findList("Facility", condition , UtilMisc.toSet("ownerPartyId"), null, null, false );
+		roPartyIdList = EntityUtil.getFieldListFromEntityList(roList, "ownerPartyId", true);
+		for(int i=0; i<roPartyIdList.size(); i++){
+			newObj=[:];
+			roId = roPartyIdList.get(i);
+			partyId = roId;
+			roWiseEntryValue =DataMap.get(roId) ;
+			 
+			if(roWiseEntryValue){
+			
+			    newObj.put("partyId",partyId);
 				newObj.put("branch", "");
 				newObj.put("ReportsTo", ROOT_ID);
-				newObj.put("ro", partyIdNameMap.get(partyId));
+				newObj.put("ro",partyIdNameMap.get(partyId));
 				newObj.put("avgTAT","");
-				newObj.put("totalRevenue", df.format((entryValue.get("totQty")/100000)));
-				newObj.put("totalIndents", df.format((entryValue.get("saleQty")/100000)));
-				newObj.put("purAmout", df.format((entryValue.get("purAmout")/100000)));
-				newObj.put("saleAmt", df.format((entryValue.get("saleAmt")/100000)));
-				newObj.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000)));
-				newObj.put("completed", entryValue.get("completed"));
+				newObj.put("totalRevenue", df.format((roWiseEntryValue.get("totQty")/100000)));
+				newObj.put("totalIndents", df.format((roWiseEntryValue.get("saleQty")/100000)));
+				newObj.put("purAmout", df.format((roWiseEntryValue.get("purAmout")/100000)));
+				newObj.put("saleAmt", df.format((roWiseEntryValue.get("saleAmt")/100000)));
+				newObj.put("saleQty", df.format((roWiseEntryValue.get("saleQty")/100000)));
+				newObj.put("inProcess",df.format(((roWiseEntryValue.get("totQty") - roWiseEntryValue.get("saleQty"))/100000)));
+				newObj.put("completed", roWiseEntryValue.get("completed"));
+			
+				
+				dataList.add(newObj);
 			 }
-			 dataList.add(newObj);
-	 }
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+//			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "GROUP_ROLLUP"));
+			
+			branchParties = delegator.findList("PartyRelationshipAndDetail", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
+			branchPartyIds=EntityUtil.getFieldListFromEntityList(branchParties, "partyId", true);
+			for(int j=0; j<branchPartyIds.size(); j++){
+				newObj1=[:];
+				branchId=branchPartyIds.get(j);
+				partyId = branchId;
+				branchWiseEntryValue =DataMap.get(branchId);
 				
-//Debug.log("===dataList=="+dataList);
+				if(branchWiseEntryValue){
 				
-context.putAt("dataJSON",dataList);
-Map resultMap = FastMap.newInstance();
-resultMap = ServiceUtil.returnSuccess();
-resultMap.put("data",dataList);
-
-return resultMap;
+				newObj1.put("partyId","");
+				newObj1.put("branch", partyIdNameMap.get(partyId));
+				newObj1.put("ReportsTo", roId);
+				newObj1.put("ro","");
+				newObj1.put("avgTAT","");
+				newObj1.put("totalRevenue", df.format((branchWiseEntryValue.get("totQty")/100000)));
+				newObj1.put("totalIndents", df.format((branchWiseEntryValue.get("saleQty")/100000)));
+				newObj1.put("purAmout", df.format((branchWiseEntryValue.get("purAmout")/100000)));
+				newObj1.put("saleAmt", df.format((branchWiseEntryValue.get("saleAmt")/100000)));
+				newObj1.put("saleQty", df.format((branchWiseEntryValue.get("saleQty")/100000)));
+				newObj1.put("inProcess",df.format(((branchWiseEntryValue.get("totQty") - branchWiseEntryValue.get("saleQty"))/100000)));
+				newObj1.put("completed", branchWiseEntryValue.get("completed"));
+				dataList.add(newObj1);
+				
+				  }
+				
+			
+			}
+			
+		}
+	
+	 context.dataList =  dataList;
 
