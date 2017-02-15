@@ -327,8 +327,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td>
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
+				     <option value="ALL">ALL</option>
+				     <option value='COTTON'>COTTON</option>
 				     <option value='SILK'>SILK</option>
-				     <option value='JUTE_YARN'>JUTE</option>
 				     <option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></td>
@@ -361,9 +362,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  <td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="indentVsDispatch" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>	
   			<td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
-				     <option value=''></option>
+				     <option value="ALL">ALL</option>
+				     <option value='COTTON'>COTTON</option>
 				     <option value='SILK'>SILK</option>
-				     <option value='JUTE_YARN'>JUTE</option>
 				     <option value='OTHER'>OTHERS</option>
 				  </select>
 			</td>
@@ -557,9 +558,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td>-->
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
-				     <option value=''></option>
+				     <option value="ALL">ALL</option>
+				     <option value='COTTON'>COTTON</option>
 				     <option value='SILK'>SILK</option>
-				     <option value='JUTE_YARN'>JUTE</option>
 				     <option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></td>
@@ -594,9 +595,9 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			 </td>
 			 <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
-				     <option value=''></option>
+				     <option value="ALL">ALL</option>
+				     <option value='COTTON'>COTTON</option>
 				     <option value='SILK'>SILK</option>
-				     <option value='JUTE_YARN'>JUTE</option>
 				     <option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span>
@@ -665,10 +666,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td>
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
-				     <option value=''></option>
-				     <option value='SILK'>SILK</option>
-				     <option value='JUTE_YARN'>JUTE</option>
-				     <option value='OTHER'>OTHERS</option>
+				    <option value='ALL'>ALL</option>
+					<option value='COTTON'>COTTON</option>
+					<option value='SILK'>SILK</option>
+					<option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></br>
 				Party Code <@htmlTemplate.lookupField size="10" maxlength="22" formName="reimburcentTransporterReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	</td> 
@@ -703,10 +704,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td>
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
-				     <option value=''></option>
-				     <option value='SILK'>SILK</option>
-				     <option value='JUTE_YARN'>JUTE</option>
-				     <option value='OTHER'>OTHERS</option>
+					<option value='ALL'>ALL</option>
+					<option value='COTTON'>COTTON</option>
+					<option value='SILK'>SILK</option>
+					<option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></br>
 				Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="depotReimburcentReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	
@@ -747,9 +748,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  
 			  <td width="15%"><span class='h3'>Category 
 				 <select name="productCategory" id="productCategory">
-				     <option value='SILK'>SILK</option>
-				     <option value='JUTE_YARN'>JUTE</option>
-				     <option value='OTHER'>OTHERS</option>
+					<option value="ALL">ALL</option>
+					<option value='COTTON'>COTTON</option>
+					<option value='SILK'>SILK</option>
+					<option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></br>
 				 <span class='h3'>Report Type 
@@ -764,7 +766,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			    <#--
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('depotReimburcentSummaryReport', '<@ofbizUrl>depotReimburcentSummaryReport.pdf</@ofbizUrl>');" class="buttontext"/></td>	
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('depotReimburcentSummaryReport', '<@ofbizUrl>depotReimburcentSummaryReport.csv</@ofbizUrl>');" class="buttontext"/></td>	
-                -->
+               	-->
            </form>
         </tr> 
         
@@ -788,10 +790,11 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td>
 			  
 			  <td width="15%"><span class='h3'>Category 
-				 <select name="productCategory" id="productCategory">
-				     <option value='SILK'>SILK</option>
-				     <option value='JUTE_YARN'>JUTE</option>
-				     <option value='OTHER'>OTHERS</option>
+				 <select name="productCategory" id="productCategory">				     
+					<option value="ALL">ALL</option>
+					<option value='COTTON'>COTTON</option>
+					<option value='SILK'>SILK</option>
+					<option value='OTHERS'>OTHERS</option>
 				  </select>    								
 			  </span></br>
 				 <span class='h3'>Report Type 
