@@ -79,8 +79,21 @@ context.formatList = formatList;
 
 branchList = EntityUtil.getFieldListFromEntityList(productStoreList, "payToPartyId", true);
 if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
-	branchList.clear();
-	branchList.add(parameters.partyIdFrom)
+	branchList.clear();	
+	branchList = [];	
+	condListb = [];	
+	condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, parameters.partyIdFrom));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+	
+	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+	
+	branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+	
+	if(!branchList)
+		branchList.add(parameters.partyIdFrom);
+		
 }
 
 
