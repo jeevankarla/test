@@ -6680,7 +6680,8 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	        //Let's populate InvoiceRole
 	        if(UtilValidate.isNotEmpty(invoiceId)){
 	        	createRoleContext.put("invoiceId", invoiceId);
-	        	 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), true);
+	        	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), true);
+	        	/* GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",invoiceId), true);
 	                if(UtilValidate.isNotEmpty(invoice)){
 	                   String invoicetypeId = (String) invoice.getString("invoiceTypeId");
 	                   GenericValue invoiceTypeDetails = delegator.findOne("InvoiceType", UtilMisc.toMap("invoiceTypeId",invoicetypeId), true);
@@ -6692,7 +6693,7 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	                		   partyId=(String) invoice.getString("partyIdFrom");
 	                	   }
 	                   }
-	                }  
+	                } */ 
 	                Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createRoleContext);
 	    	        if (ServiceUtil.isError(createInvoiceRoleResult)) {
 	    	            return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createRoleContext);
@@ -6818,8 +6819,15 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	        	}
 	        	if(UtilValidate.isNotEmpty(acctgInvoiceId)){
 	        		 GenericValue invoiceDetails = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId",acctgInvoiceId), true);
-	                if(UtilValidate.isNotEmpty(invoiceDetails)){
-	 	                   String invoicetypeId = (String) invoiceDetails.getString("invoiceTypeId");
+	        		 List andExprs1=FastList.newInstance();
+	        		 andExprs1.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "COST_CENTER_ID"));
+	    		     andExprs1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, acctgInvoiceId));
+	    		     List invRoleList = delegator.findList("InvoiceRole", EntityCondition.makeCondition(andExprs1,EntityOperator.AND), null, null, null, false);
+
+	                if(UtilValidate.isNotEmpty(invRoleList)){
+	                	  GenericValue invRoleVal = EntityUtil.getFirst(invRoleList);
+	                	  partyId=(String) invRoleVal.get("partyId");
+	 	                  /* String invoicetypeId = (String) invoiceDetails.getString("invoiceTypeId");
 	 	                   GenericValue invoiceTypeDetails = delegator.findOne("InvoiceType", UtilMisc.toMap("invoiceTypeId",invoicetypeId), true);
 	 	                   if(UtilValidate.isNotEmpty(invoiceTypeDetails)){
 	 	                	   String invoiceTypeParent=(String)invoiceTypeDetails.getString("parentTypeId");
@@ -6828,7 +6836,7 @@ Debug.log("acctgTransId========before========="+acctgTransId);
 	 	                	   }else if(UtilValidate.isNotEmpty(invoiceTypeParent)&&"SALES_INVOICE".equals(invoiceTypeParent)){
 	 	                		   partyId=(String) invoiceDetails.getString("partyIdFrom");
 	 	                	   }
-	 	                   }
+	 	                   }*/
 	 	                
 	                }
 	        	}
