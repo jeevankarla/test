@@ -458,8 +458,15 @@ function datepick()	{
 									    </td>
 									</tr>
 									<tr>
-								      <td class="label"><b>${uiLabelMap.CommonCountry} :</b></td>
-								      <td>
+									<td class="label"><b>Country :</b></td>
+									<td>
+									<select name="Country" id="Country">
+				                            <option value="India" selected="selected">India</option>
+				                            
+							            </select>
+									  </td>  
+								      <#--<td class="label"><b>${uiLabelMap.CommonCountry} :</b></td>-->
+								      <#--<td>
 								        <select name="countryGeoId" id="editcontactmechform_countryId"  onchange="javascript:setServiceName(this);">
 										<#assign defaultCountryGeoId = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "country.geo.id.default")>
 								          <option selected="selected" value="${defaultCountryGeoId}">
@@ -469,30 +476,29 @@ function datepick()	{
 								          <option></option>
 								          ${screens.render("component://common/widget/CommonScreens.xml#countries")}
 								        </select>
-								      </td>
+								      </td>-->
 	    							</tr>
 	    							 <tr>
-								      <td class="label"><b>${uiLabelMap.PartyState} :</b></td>
+								      <td class="label"><b><FONT COLOR="red">*</font>${uiLabelMap.PartyState} :</b></td>
 								      <td>
 								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
-										
-							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)>
+							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,"IND")>
 								         <#list stateAssocs as stateAssoc>
 							   					 <option value='${stateAssoc.geoId}'>${stateAssoc.geoName?default(stateAssoc.geoId)}</option>
 										</#list>
-								          <option></option>
+								          <#--<option></option>-->
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
 								        </select>
 								      </td>
 								    </tr>	   								 
 	   								 <tr>
-								      <td class="label"><b>Branch :</b></td>
+								      <td class="label"><b><FONT COLOR="red">*</font>Branch :</b></td>
 								      <td>
 								        <select name="productStoreId" id="productStoreId">
 								         <#list productStoreDetails as eachstore>
 							   					 <option value='${eachstore.payToPartyId}'>${eachstore.productStoreId}</option>
 										</#list>
-								          <option></option>
+								          <#--<option></option>-->
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
 								        </select>
 								      </td>
