@@ -194,7 +194,7 @@ if(n==1){
 		<span class='h3'>From Date: </span><input class='h2' type="text" id="fromDate" name="fromDate" value="${defaultEffectiveDate}" readonly="true"/>
 		<span class='h3'>Thru Date: </span><input class='h2' type="text" id="thruDate" name="thruDate" value="${defaultEffectiveThruDate}" readonly="true"/>
 		<input type="submit" value="Submit" id="getTreeGrid" class="smallSubmit" />
-		<form name="csvForm" id="csvForm" action="indentAnalytics.csv">
+		<form name="csvForm" id="csvForm" action="indentSupplyAnalytics.csv">
 		<table>
 		<tr>
 		<td>

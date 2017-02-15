@@ -9937,6 +9937,32 @@
         </section>
     </screen>
     
+    
+    
+    
+        <screen name="indentSupplyAnalyticsCsv">
+        <section>      
+    		<actions>
+    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+    			<set field="parameters.screenflag" from-field="parameters.screenFlag"/>
+    		    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/IndentSupplyAnalyticsCSV.groovy" />
+    		</actions>          
+            <widgets>
+             <section>
+                  <condition>
+					<if-compare field="parameters.screenflag" operator="equals" value="indentSupplyAnalytics"  />
+				 </condition>
+				 <widgets>
+                          <include-form name="indentSupplyAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                 </widgets>
+			 </section>	
+			 </widgets> 
+        </section>
+    </screen>
+    
+    
      <screen name="DepotSalesOrderNew">
 		<section>
 			<actions>
