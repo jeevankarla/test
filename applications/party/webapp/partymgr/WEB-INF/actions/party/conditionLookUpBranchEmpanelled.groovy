@@ -147,7 +147,7 @@
 			
 		*/}
 		
-		conditionFields.partyIdentificationTypeId=["PSB_NUMER"];
+		conditionFields.partyIdentificationTypeId=["PSB_NUMER","REGISTRATION_NUMBER"];
 		if(roleTypeId)
 		conditionFields.roleTypeId=roleTypeId;
 		if(partyIdFrom)
