@@ -806,10 +806,8 @@
 					<field-map field-name="viewIndex" from-field="viewIndex" />
 					<field-map field-name="viewSize" from-field="viewSize" />
 				</service>
-				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTranspurchaseDepartments.groovy" />
-				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTransSupplyTillDate.groovy" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTranspurchaseDepartments.groovy" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTransSupplyTillDate.groovy" />
 			</actions>
 			<widgets>
 				<decorator-screen name="DepotSalesCommonDecorator"
@@ -843,8 +841,8 @@
 											<include-form name="listMaterialShipmentReceiptDepotTrans"
 												location="component://depotsales/widget/DepotSalesForms.xml" />
 										</screenlet>
-										<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
-					                    <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="IndentAnalyticsSubTabBar" />
+										<!-- <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					                    <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="IndentAnalyticsSubTabBar" /> -->
 										<platform-specific>
 											<html>
 												<html-template
