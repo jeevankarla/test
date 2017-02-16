@@ -1419,10 +1419,13 @@ function fillPartyQuota(partyId){
 						        	<#if parameters.suplierAdd?exists && parameters.suplierAdd?has_content>  
 						        	  <td width="10%" keep-together="always" align="left"> Supplier Address : </td><td width="50%"> <label  align="left" id="supplierAddress" style="color: green">${parameters.suplierAdd}</label></td>
 									<#else>
+									<#if (supplierAddress?has_content)>
+									  <td width="10%" align="left"> Supplier Address : </td><td width="50%"> <label  align="left" id="supplierAdd" style="color: green">${supplierAddress?if_exists}</label></td>
+									<#else>
 									  <td width="10%" keep-together="always" align="left"><font color="green" > Supplier Address : </font></td><td width="50%"><span  align="left" id="suplierPartyName" style="color: blue"></span> <p><label  align="left" id="supplierAddress" style="color: blue"></label><p></td>
 									  <input type="hidden" name="suplierAdd" id="suplierAdd" />  
 									</#if>
-									
+									</#if>
 									
 				               	</tr>
 				               	<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>

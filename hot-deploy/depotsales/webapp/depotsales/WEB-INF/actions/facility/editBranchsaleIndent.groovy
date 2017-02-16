@@ -198,7 +198,37 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	context.suplierPartyName=suppPartyName;
 	parameters.suplierPartyId=suplierPartyId;
 	parameters.suplierPartyName=suppPartyName;
-	parameters.societyPartyId=partyId
+	parameters.societyPartyId=partyId;
+	
+	if(UtilValidate.isNotEmpty(suplierPartyId)){
+		suplierAdd="";
+		try{
+			 partyPostalAddress= dispatcher.runSync("getPartyPostalAddress", [partyId:suplierPartyId, userLogin: userLogin]);
+		 if(UtilValidate.isNotEmpty(partyPostalAddress)){
+			 if(UtilValidate.isNotEmpty(partyPostalAddress.address1)){
+			  supAddress1=partyPostalAddress.address1;
+			 }else{
+			    supAddress1="";			 
+			 }
+			if(UtilValidate.isNotEmpty(partyPostalAddress.address2)){
+				supAddress2=partyPostalAddress.address2;
+			}else{
+				supAddress2="";
+			}
+			if(UtilValidate.isNotEmpty(partyPostalAddress.city)){
+				supCity=partyPostalAddress.city;
+			}else{
+				supCity="";
+			}
+		 }
+		 
+		}catch(Exception e){}
+		
+	}
+	
+	suplierAdd=supAddress1+" "+supAddress2+" "+supCity;
+	context.supplierAddress=suplierAdd;
+	
 	schemeCategory="";
 	
 	orderTaxType="";
