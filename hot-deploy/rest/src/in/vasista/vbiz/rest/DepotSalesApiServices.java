@@ -2101,7 +2101,7 @@ public class DepotSalesApiServices {
 				@FormParam("partyId") String partyId,
 				@FormParam("supplierPartyId") String supplierPartyId,
 				@FormParam("effectiveDate") Timestamp effectiveDate,
-				@FormParam("indentItems") JSONArray indentProducts,
+				@FormParam("indentItems") JSONArray indentItems,
 				
 				@FormParam("productStoreId") String productStoreId,
 				@FormParam("referenceNo") String referenceNo,
@@ -2226,14 +2226,29 @@ public class DepotSalesApiServices {
 			effectiveDate = (Timestamp) context.get("estimatedDeliveryDate");
 		}*/
 		
-		//List<Map<String, Object>> indentItems = (List<Map<String, Object>>) context.get("indentItems");
-		List<Map<String, Object>> indentItems = (List<Map<String, Object>>) indentProducts;
-		Debug.log("indentItems ==================="+indentItems);
-		String infoString = "processChangeIndent:: indentItems: " + indentItems;
-		Debug.logInfo(infoString, module);
-		if (indentItems.isEmpty()) {
-			Debug.logError("No indent items found; " + infoString, module);
-			return ServiceUtil.returnError("No indent items found; "+ infoString);
+		if (indentItems.length()==0) {
+			Debug.logError("No indent items found; " , module);
+			return ServiceUtil.returnError("No indent items found; ");
+		}
+		
+		List<Map> indentProducts = new ArrayList<Map>();
+		try{
+			for (int i=0; i<indentItems.length(); i++) {
+				JSONObject indentProductWiseDetMap = new JSONObject();
+				indentProductWiseDetMap = (JSONObject)indentItems.get(i);
+				HashMap indentItemMap = new HashMap();
+				Iterator keys = indentProductWiseDetMap.keys();
+				while (keys.hasNext()) {
+					String key = (String) keys.next();
+					indentItemMap.put(key,(indentProductWiseDetMap.get(key)).toString());
+				}
+				indentProducts.add(indentItemMap);
+			}
+		}catch (Exception e) {
+			Debug.logError(e, "Error getting  product Details list");
+			result = ServiceUtil.returnError("Error getting  product Details list");
+			return result;	  
+
 		}
 		
 		List productIds = FastList.newInstance();
@@ -2241,9 +2256,9 @@ public class DepotSalesApiServices {
 		List indentItemProductList = FastList.newInstance();
 		Map<String, Object> indentResults = FastMap.newInstance();
 		Map consolMap=FastMap.newInstance();
-		for (int i = 0; i < indentItems.size(); ++i) {
+		for (int i = 0; i < indentProducts.size(); ++i) {
 			Map productQtyMap = FastMap.newInstance();
-			Map indentItem = indentItems.get(i);
+			Map indentItem = indentProducts.get(i);
 			Debug.log("indentItem ==================="+indentItem);
 			BigDecimal quantity = BigDecimal.ZERO;
 			if(UtilValidate.isNotEmpty( indentItem.get("quantity"))){
