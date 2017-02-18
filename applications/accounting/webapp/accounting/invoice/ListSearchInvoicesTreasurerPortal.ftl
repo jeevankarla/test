@@ -197,7 +197,7 @@ function datepick()
     }
 //]]>
 	
-
+	var purposeTypeId;
    var partyIdFrom;
 	var partyIdTo;
 	var invoiceId;
@@ -205,7 +205,7 @@ function datepick()
 	var amount;
 	var partyName;
 	var comments;
-function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,amount1,partyNameTemp) {
+function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,amount1,partyNameTemp,purposeTypeId1) {
 		var message = "";
 		 partyIdFrom=partyIdFrom1;
 	     partyIdTo=partyIdTo1;
@@ -215,6 +215,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 		 partyName=partyNameTemp;
 		 var methodOptionList =[];
 		 var payMethodList="";
+		 purposeTypeId=purposeTypeId1;		 		 
 		 
 		 if(voucherType != undefined && voucherType != "" && voucherPaymentMethodTypeMap != undefined){
 		  payMethodList=voucherPaymentMethodTypeMap[voucherType];
@@ -254,6 +255,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 						   "<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 					 	   "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>";
 			}-->
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='paymentPurposeType' value='"+purposeTypeId+"'/></td></tr>";			
 			message += "<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 			message +=	"</table></form></body></html>";
 		var title = "Payment Entry : ";
@@ -290,6 +292,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
             	var fromPartyIdObj = $(domObj).find("#fromPartyId");
             	var partyIdNameObj = $(domObj).find("#partyIdName");
             	var voucherTypeIdObj = $(domObj).find("#voucherTypeId");
+            	var purposeTypeIdObj = $(domObj).find("#purposeTypeId");
             	
             	var invId = $(this).val();
             	var amt = $(amtObj).val();
@@ -297,12 +300,14 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
             	var fromPartyId = $(fromPartyIdObj).val();
             	var partyIdName = $(partyIdNameObj).val();
             	var voucherTypeId = $(voucherTypeIdObj).val();
+            	var purposeTypeId = $(purposeTypeIdObj).val();
             	
             	appendStr += "<tr><td><input type=hidden name=invId id=invId value="+invId+" />";
             	appendStr += "<input type=hidden name=partyId id=partyId value="+partyId+" />";
             	appendStr += "<input type=hidden name=fromPartyId id=fromPartyId value="+fromPartyId+" />";
             	appendStr += "<input type=hidden name=partyIdName id=partyIdName value="+partyIdName+" />";
             	appendStr += "<input type=hidden name=voucherTypeId id=voucherTypeId value="+voucherTypeId+" />";
+            	appendStr += "<input type=hidden name=paymentPurposeType id=purposeTypeId value="+purposeTypeId+" />";
             	appendStr += "<input type=hidden name=amt id=amt value="+amt+" /></td></tr>";
                 
             }
@@ -412,8 +417,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <input type = "hidden" name = "invId" id = "invId" value = "${invoice.invoiceId}">
               <input type = "hidden" name = "partyIdName" id = "partyIdName" value = "${partyName}">
               <input type = "hidden" name = "voucherTypeId" id = "voucherTypeId" value = "${invoice.prefPaymentMethodTypeId?if_exists}">
-              
-              
+			  <input type = "hidden" name = "purposeTypeId" id = "purposeTypeId" value = "${invoice.purposeTypeId?if_exists}">            
+
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${partyName}[${(invoice.partyIdFrom)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)?if_exists} [${(invoice.partyId)?if_exists}]</a></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
@@ -421,7 +426,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
                <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
               	  <#if (invoice.parentTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
-              		  <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}');"/></td>
+              		  <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}','${invoice.purposeTypeId}');"/></td>
                	    <#else>
                 	  <td align="center"></td>
                	  </#if>

@@ -650,6 +650,7 @@ public class PaymentWorker {
 	  	  String invoiceId = "";
 	  	  String partyIdTo = "";
 	  	  String partyIdFrom = "";
+	  	  String purposeTypeId = "";
 	  	  String comments = "";
   	
 		  	Map invoiceAmountMap = FastMap.newInstance();
@@ -691,8 +692,8 @@ public class PaymentWorker {
 			  	instrumentDateStr = (String) paramMap.get("instrumentDate");
 			  	paymentDateStr = (String) paramMap.get("paymentDate");
 			  	paymentRefNum = (String) paramMap.get("paymentRefNum");
+			  	purposeTypeId = (String) paramMap.get("paymentPurposeType");
 			  	comments = (String) paramMap.get("comments");
-		  	
 			  	Timestamp instrumentDate=UtilDateTime.nowTimestamp();
 			  	//Timestamp instrumentDate = null;
 		        if (UtilValidate.isNotEmpty(instrumentDateStr)) {
@@ -735,6 +736,7 @@ public class PaymentWorker {
 			  	        paymentCtx.put("userLogin", userLogin);
 			  	        paymentCtx.put("amount", totalAmount);
 			  	        paymentCtx.put("comments", comments);
+			  	        paymentCtx.put("paymentPurposeType", purposeTypeId);
 			  	        paymentCtx.put("invoices", invoicesList);
 			  	        paymentCtx.put("invoiceAmountMap", invoiceAmountMap);
 			  			try{
