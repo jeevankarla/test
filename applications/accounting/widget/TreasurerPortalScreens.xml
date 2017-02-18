@@ -3254,16 +3254,46 @@
 											field="hasApInvoiceEditPermission" />
 									</or>
 								</and>
-							</condition>
-							<widgets>
-								<screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
-									<link target="editInvoice" text="${uiLabelMap.CommonUpdate}"
-										style="buttontext">
-										<parameter param-name="invoiceId" />
-									</link>
-									<include-form name="invoiceHeader"
-										location="component://accounting/widget/InvoiceForms.xml" />
-								</screenlet>
+							</condition>	
+						<widgets>
+							<screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
+							   <section>
+							        <condition>
+									   <and>
+									   		<if-compare field="invoice.invoiceTypeId" operator="equals"
+												value="ADMIN_OUT" />
+									   </and>
+									</condition>
+							   		<widgets>	 	
+									 		<link target="editInvoice" text="${uiLabelMap.CommonUpdate}" 
+												style="buttontext">
+												<parameter param-name="invoiceId" />
+											</link>					  
+							 		</widgets>
+							   			
+							   		<fail-widgets>
+							   			<section>
+							   				<condition>
+										   		<and>
+										   			<if-compare field="invoice.invoiceTypeId" operator="equals"
+														value="PURCHASE_INVOICE" />
+			                                    	<if-has-permission permission="ACCNT_IN" action="_UPDATE"/>
+										   		</and>
+									   		</condition>
+							   		  <widgets>
+							   		 	
+									 		<link target="editInvoice" text="${uiLabelMap.CommonUpdate}" 
+												style="buttontext">
+												<parameter param-name="invoiceId" />
+											</link>				   
+							   		   </widgets>
+							   		</section>							   		
+							   		</fail-widgets>		
+							   </section>
+							   
+								<include-form name="invoiceHeader"
+												location="component://accounting/widget/InvoiceForms.xml" />
+							</screenlet>
 								<container style="lefthalf">
 									<screenlet title="${uiLabelMap.CommonStatus}"
 										navigation-form-name="ListInvoiceStatus">
@@ -3285,10 +3315,42 @@
 								 	<screenlet
 										title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
 										navigation-form-name="ListInvoiceApplications">
-										<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
+										
+										
+										<section>
+							        <condition>
+									   <and>
+									   		<if-compare field="invoice.invoiceTypeId" operator="equals"
+												value="ADMIN_OUT" />
+									   </and>
+									</condition>
+							   		<widgets>	 	
+									 		<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
 											style="buttontext">
 											<parameter param-name="invoiceId" />
-										</link>
+										</link>					  
+							 		</widgets>
+							   			
+							   		<fail-widgets>
+							   			<section>
+							   				<condition>
+										   		<and>
+										   			<if-compare field="invoice.invoiceTypeId" operator="equals"
+														value="PURCHASE_INVOICE" />
+			                                    	<if-has-permission permission="ACCNT_IN" action="_UPDATE"/>
+										   		</and>
+									   		</condition>
+							   		  <widgets>
+							   		 	
+									 		<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
+											style="buttontext">
+											<parameter param-name="invoiceId" />
+										</link>				   
+							   		   </widgets>
+							   		</section>							   		
+							   		</fail-widgets>		
+							   </section>
+												
 										<include-form name="ListInvoiceApplications"
 											location="component://accounting/widget/InvoiceForms.xml" />
 									</screenlet>
@@ -3313,10 +3375,41 @@
 								<container style="clear" />
 								<screenlet title="${uiLabelMap.AccountingInvoiceItems}"
 									navigation-form-name="invoiceItems">
-									<link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
+						
+									<section>
+							        <condition>
+									   <and>
+									   		<if-compare field="invoice.invoiceTypeId" operator="equals"
+												value="ADMIN_OUT" />
+									   </and>
+									</condition>
+							   		<widgets>	 	
+									 		<link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
+										style="buttontext">
+										<parameter param-name="invoiceId" />
+									</link>				  
+							 		</widgets>
+							   			
+							   		<fail-widgets>
+							   			<section>
+							   				<condition>
+										   		<and>
+										   			<if-compare field="invoice.invoiceTypeId" operator="equals"
+														value="PURCHASE_INVOICE" />
+			                                    	<if-has-permission permission="ACCNT_IN" action="_UPDATE"/>
+										   		</and>
+									   		</condition>
+							   		  <widgets>
+							   		 	
+									 		<link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
 										style="buttontext">
 										<parameter param-name="invoiceId" />
 									</link>
+							   		   </widgets>
+							   		</section>							   		
+							   		</fail-widgets>		
+							   </section>
+					
 									<include-form name="invoiceItems"
 										location="component://accounting/widget/InvoiceForms.xml" />
 								</screenlet>
@@ -3749,11 +3842,42 @@
 								</and>
 							</condition>
 							<widgets>
-								<screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
-									<link target="editInvoice" text="${uiLabelMap.CommonUpdate}"
+							<screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
+								<section>
+							        <condition>
+									   <and>
+									   		<if-compare field="invoice.invoiceTypeId" operator="equals"
+												value="MIS_INCOME_IN" />
+									   </and>
+									</condition>
+							   		<widgets>	 	
+									 		<link target="editInvoice" text="${uiLabelMap.CommonUpdate}"
 										style="buttontext">
 										<parameter param-name="invoiceId" />
-									</link>
+										</link>				  
+							 		</widgets>
+							   			
+							   		<fail-widgets>
+							   			<section>
+							   				<condition>
+										   		<and>
+										   			<if-compare field="invoice.invoiceTypeId" operator="equals"
+														value="SALES_INVOICE" />
+			                                    	
+														<if-has-permission permission="ACCNT_IN" action="_UPDATE"/>
+										   		</and>
+									   		</condition>
+							   		  <widgets>
+							   		 	
+									 		<link target="editInvoice" text="${uiLabelMap.CommonUpdate}"
+										style="buttontext">
+										<parameter param-name="invoiceId" />
+											</link>				   
+							   		   </widgets>
+							   		</section>							   		
+							   		</fail-widgets>		
+							   	</section>
+									
 									<include-form name="invoiceHeader"
 										location="component://accounting/widget/InvoiceForms.xml" />
 								</screenlet>
@@ -3778,13 +3902,44 @@
 								 	<screenlet
 										title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
 										navigation-form-name="ListInvoiceApplications">
-										<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
+										
+										<section>
+							        	<condition>
+									   		<and>
+									   			<if-compare field="invoice.invoiceTypeId" operator="equals"
+												value="MIS_INCOME_IN" />
+									   		</and>
+										</condition>
+							   			<widgets>	 	
+									 		<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
 											style="buttontext">
 											<parameter param-name="invoiceId" />
-										</link>
+											</link>				  
+							 			</widgets>
+							   			
+							   			<fail-widgets>
+							   				<section>
+							   					<condition>
+										   			<and>
+										   				<if-compare field="invoice.invoiceTypeId" operator="equals"
+														value="SALES_INVOICE" />
+			                                    		<if-has-permission permission="ACCNT_IN" action="_UPDATE"/>
+										   			</and>
+									   			</condition>
+							   		  		<widgets>
+							   		 	
+									 			<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
+												style="buttontext">
+												<parameter param-name="invoiceId" />
+												</link>				   
+							   		   		</widgets>
+							   				</section>							   		
+							   			</fail-widgets>		
+							   		</section>
+			
 										<include-form name="ListInvoiceApplications"
 											location="component://accounting/widget/InvoiceForms.xml" />
-									</screenlet>
+								</screenlet>
 									<!-- <screenlet title="${uiLabelMap.AccountingInvoiceRoles}"
 										navigation-form-name="invoiceRoles">
 										<container>
@@ -3806,10 +3961,41 @@
 								<container style="clear" />
 								<screenlet title="${uiLabelMap.AccountingInvoiceItems}"
 									navigation-form-name="invoiceItems">
-									<link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
-										style="buttontext">
-										<parameter param-name="invoiceId" />
-									</link>
+									
+									<section>
+							        	<condition>
+									   		<and>
+									   			<if-compare field="invoice.invoiceTypeId" operator="equals"
+												value="MIS_INCOME_IN" />
+									   		</and>
+										</condition>
+							   			<widgets>	 	
+									 		<link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
+												style="buttontext">
+												<parameter param-name="invoiceId" />
+											</link>				  
+							 			</widgets>
+							   			
+							   			<fail-widgets>
+							   				<section>
+							   					<condition>
+										   			<and>
+										   				<if-compare field="invoice.invoiceTypeId" operator="equals"
+														value="SALES_INVOICE" />
+			                                    		<if-has-permission permission="ACCNT_IN" action="_UPDATE"/>
+										   			</and>
+									   			</condition>
+							   		  		<widgets>
+							   		 	
+									 			<link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
+													style="buttontext">
+													<parameter param-name="invoiceId" />
+												</link>				   
+							   		   		</widgets>
+							   				</section>							   		
+							   			</fail-widgets>		
+							   		</section>
+		
 									<include-form name="invoiceItems"
 										location="component://accounting/widget/InvoiceForms.xml" />
 								</screenlet>

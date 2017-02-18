@@ -86,5 +86,6 @@
      <Enumeration createdStamp="2016-01-05 13:18:14.0" createdTxStamp="2016-01-05 13:18:14.0" enumId="NHDC_RECEIPT" lastUpdatedStamp="2016-01-05 13:18:14.0" lastUpdatedTxStamp="2016-01-05 13:18:14.0"/>
      
       <TenantConfiguration createdStamp="2014-12-01 17:44:21.0" createdTxStamp="2014-12-01 17:44:21.0" description="Enable Indent Summary Details table Updation" lastUpdatedStamp="2014-12-01 17:44:21.0" lastUpdatedTxStamp="2014-12-01 17:44:21.0" propertyName="Enable-Indent-Summary-Detail-Updation" propertyTypeEnumId="DASHBOARD-ANALYTICS" propertyValue="Y"/> 
-         
+        <SecurityPermission description="Accounting Invoice Update Button Permission" permissionId="ACCNT_IN_UPDATE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCNT_IN_UPDATE"/> 
 </entity-engine-xml>
