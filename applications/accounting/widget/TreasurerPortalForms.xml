@@ -1326,7 +1326,7 @@ under the License.
     <form name="NewIncomingAdvanceReceipt" type="single" target="createNewIncomingAdvanceReceipt" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table" >
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
-           <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
+           <!-- <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field> -->
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
@@ -1362,7 +1362,15 @@ under the License.
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}"><text/></field>
         <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
-        <field name="transactionDate" position="2" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
+        <field name="transactionDate" position="1" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
+        <field name="paymentPurposeType" position="2" title="Payment PurposeType"><text/>
+        	<drop-down allow-empty="true">
+               <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
+                   <entity-constraint name="enumTypeId" operator="equals" value="SEGMENTS"/>
+                   <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+               </entity-options>
+           </drop-down>
+        </field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>       
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="tallyRefNo" position="1" title="Tally Reference No"><text/></field>
@@ -1565,7 +1573,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
-        <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field>
+        <!-- <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field> -->
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
          <field position="1" name="organizationPartyId" id-name="organizationPartyId"  parameter-name="partyIdFrom" event="onchange"  action="javascript:paymentMethodType();">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
@@ -1594,7 +1602,15 @@ under the License.
         </field>
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}"><text/></field>
         <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
-        <field name="transactionDate" position="2" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
+        <field name="transactionDate" position="1" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
+        <field name="paymentPurposeType" position="2" title="Payment PurposeType"><text/>
+	           	<drop-down allow-empty="true">
+	                  <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
+	                      <entity-constraint name="enumTypeId" operator="equals" value="SEGMENTS"/>
+	                      <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+	                  </entity-options>
+	              </drop-down>
+        </field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>          
         <field name="amount" position="1" required-field="true"><text/></field>
         <field name="tallyRefNo" position="1" title="Tally Reference No"><text/></field>
