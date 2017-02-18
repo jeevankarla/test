@@ -9909,6 +9909,9 @@
                  <condition>
 					<if-compare field="parameters.screenflag" operator="equals" value="indentSupplyAnalytics"  />
 				 </condition>
+				 <actions>
+    		    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/IndentSupplyAnalyticsCSV.groovy" />
+    		</actions> 
 				 <widgets>
                           <include-form name="indentSupplyAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
                  </widgets>
@@ -9940,7 +9943,7 @@
     
     
     
-        <screen name="indentSupplyAnalyticsCsv">
+        <!-- <screen name="indentSupplyAnalyticsCsv">
         <section>      
     		<actions>
     			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
@@ -9961,7 +9964,7 @@
 			 </widgets> 
         </section>
     </screen>
-    
+  -->
     
      <screen name="DepotSalesOrderNew">
 		<section>
