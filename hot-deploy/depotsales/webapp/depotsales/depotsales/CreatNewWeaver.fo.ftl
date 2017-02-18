@@ -122,7 +122,27 @@ function datepick()	{
 							  	 }
 							  	 
 							  	 
-                 	                 	
+                 	            var state=$('#editcontactmechform_stateId').val();
+			             		  if( (state).length < 1 ) {
+									 $('#editcontactmechform_stateId').css('background', 'red'); 
+									  jQuery('#editcontactmechform_stateId').after("<div class='STATELabel'><font color='red'>Please Select State.</font></div>");
+									 setTimeout(function () {
+									        $('#editcontactmechform_stateId').css('background', 'white').focus(); 
+									        $('.STATELabel').remove();
+									     	}, 800);
+								  	return false;
+							  	 }   
+							  	  
+							  	 var branch=$('#productStoreId').val();
+			             		  if( (branch).length < 1 ) {
+									 $('#productStoreId').css('background', 'red'); 
+									  jQuery('#productStoreId').after("<div class='BRANCHLabel'><font color='red'>Please Select Branch.</font></div>");
+									 setTimeout(function () {
+									        $('#productStoreId').css('background', 'white').focus(); 
+									        $('.BRANCHLabel').remove();
+									     	}, 800);
+								  	return false;
+							  	 }   	
                  	   }	
                  	  if(currentIndex==2){
                  	  	var  partyClassificationTypeId      =$( "#partyClassificationTypeId      option:selected" ).val();
@@ -483,6 +503,7 @@ function datepick()	{
 								      <td>
 								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
 							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,"IND")>
+								         <option></option>
 								         <#list stateAssocs as stateAssoc>
 							   					 <option value='${stateAssoc.geoId}'>${stateAssoc.geoName?default(stateAssoc.geoId)}</option>
 										</#list>
@@ -495,10 +516,10 @@ function datepick()	{
 								      <td class="label"><b><FONT COLOR="red">*</font>Branch :</b></td>
 								      <td>
 								        <select name="productStoreId" id="productStoreId">
+								         <option></option>
 								         <#list productStoreDetails as eachstore>
 							   					 <option value='${eachstore.payToPartyId}'>${eachstore.productStoreId}</option>
 										</#list>
-								          <#--<option></option>-->
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
 								        </select>
 								      </td>
