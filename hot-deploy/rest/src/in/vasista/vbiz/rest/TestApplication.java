@@ -20,7 +20,7 @@ public class TestApplication extends Application {
 	      classes.add(FetchProcurementPriceData.class);
 	      classes.add(MaterialManagementResource.class);
 	      classes.add(CreateWeighBridgeData.class);
-	      classes.add(DepotSalesApiServices.class);
+	      classes.add(MobileAppApiServices.class);
 	      
 	      return classes;
 	  }
