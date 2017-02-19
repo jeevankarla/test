@@ -69,6 +69,7 @@ public class MobileAppApiServices {
 	HttpHeaders headers;
 	@Context
 	HttpServletRequest request;
+	public static final String module = MobileAppApiServices.class.getName();
 
 	void populateHitMap(Delegator delegator, String methodName, String userName) {
 		Map<String, Object> hitMap = FastMap.newInstance();
@@ -90,7 +91,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -109,12 +110,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -122,7 +123,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -168,7 +169,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -187,12 +188,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -200,7 +201,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -248,7 +249,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -267,12 +268,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -280,7 +281,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -318,7 +319,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -337,12 +338,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -350,7 +351,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -385,7 +386,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -404,12 +405,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -417,7 +418,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -452,7 +453,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -471,12 +472,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -484,7 +485,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -522,7 +523,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -541,12 +542,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -554,7 +555,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -588,7 +589,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -607,12 +608,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -620,7 +621,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -653,7 +654,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -672,12 +673,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -685,7 +686,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -740,7 +741,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -759,12 +760,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -772,7 +773,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -828,7 +829,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -848,12 +849,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -861,7 +862,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}        
 
@@ -897,7 +898,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -917,12 +918,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -930,7 +931,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}        
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -968,7 +969,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -987,12 +988,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -1000,7 +1001,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
@@ -1043,7 +1044,7 @@ public class MobileAppApiServices {
 		Map<String, Object> result = FastMap.newInstance();
 
 		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", RetailerApiServices.class.getName());        	
+			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
 			//::TODO:: error handling
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
 		}
@@ -1062,12 +1063,12 @@ public class MobileAppApiServices {
 				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
 			}
 		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
 		}
 
 		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, RetailerApiServices.class.getName());
+			Debug.logWarning("userLogin authentication service failed for " +username, module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
 		}
 
@@ -1075,7 +1076,7 @@ public class MobileAppApiServices {
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
-			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), RetailerApiServices.class.getName());
+			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
 			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
 		}
 		
