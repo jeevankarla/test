@@ -3848,11 +3848,11 @@ under the License.
     <request-map uri="createArVoucherPaymentTreasurer">
         <security https="true" auth="true"/>
         <event type="service" invoke="createVoucherPayment"/>
-        <response name="success" type="request-redirect-noparam" value="ArInvoices">
+        <response name="success" type="request-redirect-noparam" value="paymentOverview">
          <redirect-parameter  name="invoiceId" />
           <redirect-parameter  name="parentTypeId"/> 
          </response>
-        <response name="error" type="request-redirect-noparam" value="ArInvoices">
+        <response name="error" type="request-redirect-noparam" value="paymentOverview">
         </response>
     </request-map>
     <!--================= AR Invoices ==================== -->

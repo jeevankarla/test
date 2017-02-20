@@ -101,6 +101,7 @@
 	    var partyId;
 	    var fromPartyId;
 	    var voucherTypeId;
+		var purposeTypeId;
 		
 		message = "";
 		message += "<form action='makeMassInvoicePayments' method='post' onsubmit='return disableSubmitButton();'>";
@@ -117,6 +118,7 @@
 				fromPartyId = $($(cell).find("#fromPartyId")).val();
 				partyIdName = $($(cell).find("#partyIdName")).val();
 				voucherTypeId = $($(cell).find("#voucherTypeId")).val();
+				purposeTypeId = $($(cell).find("#purposeTypeId")).val();
 				
 				if(voucherTypeId != undefined && voucherTypeId != "" && voucherPaymentMethodTypeMap != undefined){
 					payMethodList=voucherPaymentMethodTypeMap[voucherTypeId];
@@ -162,6 +164,7 @@
 						   "<tr class='h3'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='paymentRefNum' name='paymentRefNum'/></tr>" +
 					 	   "<tr class='h3'><td align='left' class='h3' width='60%'>Chq.in favour:</td><td align='left' width='60%'><input class='h4' type='text' id='inFavourOf' name='inFavourOf' /></td></tr>";
 			}-->
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'></td><td align='left' width='60%'><input class='h4' type='hidden' name='paymentPurposeType' value='"+purposeTypeId+"'/></td></tr>";	
 			message += "<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
 			message +=	"</table></form></body></html>";
 			message += "</tr>";	
