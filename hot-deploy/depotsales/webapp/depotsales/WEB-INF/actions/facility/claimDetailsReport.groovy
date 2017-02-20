@@ -146,8 +146,8 @@ DecimalFormat df = new DecimalFormat("0.00");
 DistrictWiseMap=[:];
 totalsMap=[:];
 totMap = [:];
-totalQty=0
-totalvalue=0
+BigDecimal totalQty= BigDecimal.ZERO;
+BigDecimal totalvalue= BigDecimal.ZERO;
 totalsubsidyAmt=0
 BigDecimal totalserviceCharg= BigDecimal.ZERO;
 BigDecimal totalclaimTotal= BigDecimal.ZERO;
@@ -231,9 +231,9 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
 			 invoiceSubsidyDetails2 = EntityUtil.filterByCondition(invoiceSubsidyDetails1, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
 			 invoiceSubsidyDetail2= EntityUtil.getFirst(invoiceSubsidyDetails2);
-			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetail2)){
-				 value=-(invoiceSubsidyDetail2.get("itemValue")*10)
-			 }
+			 /*if(UtilValidate.isNotEmpty(invoiceSubsidyDetail2)){
+				 value=-(invoiceSubsidyDetail2.get("amount")*10)
+			 }*/
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 			 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
@@ -251,20 +251,27 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 invoiceSubsidyDetails = EntityUtil.filterByCondition(invoiceSubsidyDetails1, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
 			 invoiceSubsidyDetails= EntityUtil.getFirst(invoiceSubsidyDetails);
 			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetails) && (invoiceSubsidyDetails.amount)){
-				 subsidyAmt= (invoiceSubsidyDetails.itemValue)*(-1);
+				 subsidyAmt= (invoiceSubsidyDetails.amount)*(-1);
+				 amount= (invoiceSubsidyDetails.amount)*(-1);
+				 conditionList.clear();
+				 conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoiceId));
+				 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId",EntityOperator.EQUALS,invoiceSubsidyDetails.invoiceItemSeqId));
+				 orderadjsmentBillings = delegator.findList("OrderAdjustmentBilling",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
+				 orderadjsmentBilling= EntityUtil.getFirst(orderadjsmentBillings);
+				 if(orderadjsmentBilling){
+					 quantity=orderadjsmentBilling.quantity
+					 value=subsidyAmt*(10);
+				 }
 			 }
-			 quantity=subsidyAmt/invoiceSubsidyDetail4.get("amount");
-			 quantity=quantity*10;
 			 temMap.put("subsidyAmt", subsidyAmt.setScale(0, rounding));
-			 quantity= (quantity).setScale(2, rounding);
-			 temMap.put("quantity", quantity);
+			 temMap.put("quantity", (quantity).setScale(2, rounding));
 			 temMap.put("value", value.setScale(2, rounding));
 			 serviceCharg= (value*0.005);
 			 temMap.put("serviceCharg", (serviceCharg).setScale(0, rounding));
 			 BigDecimal claimTotal = subsidyAmt +serviceCharg;
 			 temMap.put("claimTotal", claimTotal.setScale(0, rounding));
 			 if(UtilValidate.isNotEmpty(subsidyAmt) && (subsidyAmt >0)){
-				 totalQty=totalQty+quantity;
+				 totalQty=totalQty.add(quantity);
 				 totalvalue=totalvalue+value;
 				 totalsubsidyAmt=totalsubsidyAmt+subsidyAmt
 				 totalserviceCharg=totalserviceCharg+serviceCharg
@@ -306,8 +313,11 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 		 }
 	}
 }
+totalQty=(totalQty).setScale(2, rounding);
 totalsMap.put("quantity", totalQty);
+totalvalue=(totalvalue).setScale(2, rounding);
 totalsMap.put("value", totalvalue);
+totalsubsidyAmt=(totalsubsidyAmt).setScale(2, rounding);
 totalsMap.put("subsidyAmt", totalsubsidyAmt);
 totalserviceCharg= (totalserviceCharg).setScale(2, rounding);
 totalsMap.put("serviceCharg", totalserviceCharg);
