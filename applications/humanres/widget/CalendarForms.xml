@@ -130,26 +130,37 @@ under the License.
             <drop-down allow-empty="false">
 				<list-options list-name="RosHoList" key-name="orgPartyId"
 					description="${groupName}" />
+				<option key="COMPANY" description="NHDC RL"></option>
 			</drop-down>
         </field>
         <field name="holidayDate" id-name="holidayDate" event="onclick" action="javascript:picker()"><text  size="12"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="HolidayResults" list-name="holidayDetailsList" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-         <actions>
-            <!-- <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="HolidayCalendar"/>
-                <field-map field-name="entityName" value="CourseDepartment"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service> -->
-        </actions>
-        <field name="holiDayDate" title = "Holiday Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(holiDayDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
+    <form name="HolidayResults" list-name="holidayDetailsList" type="list" default-table-style="basic-table hover-bar" separate-columns="true" target="updateHoliday">
+        <field name="customTimePeriodId"><hidden/></field>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="prevHoliDayDate"><hidden/></field>
+        <field name="holiDayDate" id-name="holiDayDate" title = "Holiday Date" event="onclick" action="javascript:datePicker2(holiDayDate)"><text size="12"></text><!-- <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(holiDayDate, &quot;dd-MM-yyyy&quot;);}"/>  --></field>
         <field name="weekDay"><display></display></field>
-        <field name="description"><display></display></field>
+        <field name="description"><text size="50" ></text></field>
         <field name="ro" title = "RO"><display></display></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    	<field name="deleteLink" title="Delete" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="DeleteHoliday">
+                 <parameter param-name="customTimePeriodId" from-field="customTimePeriodId"/>
+                 <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
+                 <parameter param-name="holiDayDate" from-field="prevHoliDayDate"/>
+           </hyperlink>
+       </field>
+        <sort-order type="explicit">   
+        	<sort-field name="holiDayDate"/>
+        	<sort-field name="weekDay"/>
+        	<sort-field name="description"/>
+        	<sort-field name="ro"/>
+        	<sort-field name="submitButton"/>
+        	<sort-field name="deleteLink"/>
+        </sort-order>
+          
     </form>
     <form name="NewHoliday" type="single" target="CreateHoliday"
         odd-row-style="header-row" default-table-style="basic-table">

@@ -21,7 +21,7 @@ under the License.
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
-	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
+	<fo:simple-page-master master-name="main" page-height="12in" page-width="13in"
             margin-top="0.4in" margin-bottom=".7in" margin-left="0.1in" margin-right="0.04in">
         <fo:region-body margin-top="1in"/>
         <fo:region-before extent="1.in"/>
@@ -60,22 +60,22 @@ under the License.
 	                   <fo:table width="100%" align="center" table-layout="fixed"  font-size="10pt">
 					       <fo:table-column column-width="50pt"/>
 					       <fo:table-column column-width="50pt"/>
-					       <fo:table-column column-width="100pt"/>
+					       <fo:table-column column-width="180pt"/>
 					       <fo:table-column column-width="50pt"/>
 					       <fo:table-column column-width="150pt"/>
 					       <fo:table-column column-width="80pt"/>
 					       <fo:table-column column-width="120pt"/>
-					       <fo:table-column column-width="100pt"/>
+					       <fo:table-column column-width="200pt"/>
 					          <fo:table-body>
 					             <fo:table-row>
 					                <fo:table-cell>
 									     <fo:block text-align="center" font-weight="bold" border-style="solid">Sl.No <fo:block linefeed-treatment="preserve">&#xA;</fo:block> </fo:block>
 								     </fo:table-cell>
 					                 <fo:table-cell>
-					                     <fo:block text-align="left" border-style="solid" font-weight="bold">Emp Code <fo:block linefeed-treatment="preserve">&#xA;</fo:block> </fo:block>
+					                     <fo:block text-align="center" border-style="solid" font-weight="bold">Emp Code <fo:block linefeed-treatment="preserve">&#xA;</fo:block> </fo:block>
 					                 </fo:table-cell> 
 					                 <fo:table-cell>
-					                     <fo:block text-align="left" border-style="solid" font-weight="bold">Emp Name <fo:block linefeed-treatment="preserve">&#xA;</fo:block> </fo:block>
+					                     <fo:block text-align="center" border-style="solid" font-weight="bold">Emp Name <fo:block linefeed-treatment="preserve">&#xA;</fo:block> </fo:block>
 					                  </fo:table-cell> 
 					                 <fo:table-cell>
 					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Gender (M/F) </fo:block>
@@ -87,10 +87,10 @@ under the License.
 					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Date  of Joining </fo:block>
 					                 </fo:table-cell>
 					                  <fo:table-cell>
-					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Place of Joining <fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:block>
+					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Location <fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:block>
 					                 </fo:table-cell>
 					                  <fo:table-cell>
-					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Place of Posting <fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:block>
+					                    <fo:block text-align="center" border-style="solid" font-weight="bold">Regional Office <fo:block linefeed-treatment="preserve">&#xA;</fo:block></fo:block>
 					                 </fo:table-cell>
 					             </fo:table-row>
 					        </fo:table-body>
@@ -101,12 +101,12 @@ under the License.
 	                   <fo:table width="100%" align="center" table-layout="fixed"  font-size="10pt">
 					        <fo:table-column column-width="50pt"/>
 					       <fo:table-column column-width="50pt"/>
-					       <fo:table-column column-width="100pt"/>
+					       <fo:table-column column-width="180pt"/>
 					       <fo:table-column column-width="50pt"/>
 					       <fo:table-column column-width="150pt"/>
 					       <fo:table-column column-width="80pt"/>
 					       <fo:table-column column-width="120pt"/>
-					       <fo:table-column column-width="100pt"/>
+					       <fo:table-column column-width="200pt"/>
 					        
  			
 					          <fo:table-body>
@@ -121,7 +121,7 @@ under the License.
 					                     <fo:block text-align="left"  keep-together="always" font-size="10pt">${EmplJoiningDetails.getValue().get("Emplcode")?if_exists}</fo:block>
 					                 </fo:table-cell> 
 					                 <fo:table-cell border-style="solid">
-					                     <fo:block text-align="left" keep-together="always" font-size="10pt">${EmplJoiningDetails.getValue().get("firstName")?if_exists}</fo:block>
+					                     <fo:block text-align="left" keep-together="always" font-size="10pt">${EmplJoiningDetails.getValue().get("firstName")?if_exists} ${EmplJoiningDetails.getValue().get("middleName")?if_exists} ${EmplJoiningDetails.getValue().get("lastName")?if_exists}</fo:block>
 					                 </fo:table-cell> 
 					                 <fo:table-cell border-style="solid">
 					                     <fo:block text-align="center"  keep-together="always" font-size="10pt">${EmplJoiningDetails.getValue().get("gender")?if_exists}</fo:block>
@@ -130,14 +130,15 @@ under the License.
 					                     <fo:block text-align="left"  keep-together="always" font-size="10pt">${EmplJoiningDetails.getValue().get("designation")?if_exists}</fo:block>
 					                 </fo:table-cell>
 					                 <fo:table-cell border-style="solid">
-					                     <fo:block text-align="center"  keep-together="always" font-size="10pt"><#if EmplJoiningDetails.getValue().get("JoiningDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(EmplJoiningDetails.getValue().get("JoiningDate")?if_exists, "dd-MM-yyyy")}<#else>&#160;</#if></fo:block>
+					                     <fo:block text-align="center"  keep-together="always" font-size="10pt"><#if EmplJoiningDetails.getValue().get("AppointmentDate")?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(EmplJoiningDetails.getValue().get("AppointmentDate")?if_exists, "dd-MM-yyyy")}<#else>&#160;</#if></fo:block>
 					                 </fo:table-cell>
-					                 <fo:table-cell border-style="solid">
-					                     <fo:block text-align="center"  keep-together="always" font-size="10pt"><#if EmplJoiningDetails.getValue().get("JoiningDate")?has_content>${EmplJoiningDetails.getValue().get("PlaceOfJoining")?if_exists}<#else>&#160;</#if></fo:block>
-					                 </fo:table-cell>
-					                 <fo:table-cell border-style="solid">
+					                  <fo:table-cell border-style="solid">
 					                     <fo:block text-align="left"  keep-together="always" font-size="10pt">${EmplJoiningDetails.getValue().get("EmplPosting")?if_exists}</fo:block>
 					                 </fo:table-cell>
+					                 <fo:table-cell border-style="solid">
+					                     <fo:block text-align="left"  keep-together="always" font-size="10pt"><#if EmplJoiningDetails.getValue().get("RO")?has_content>${EmplJoiningDetails.getValue().get("RO")?if_exists}<#else>&#160;</#if></fo:block>
+					                 </fo:table-cell>
+					                
 					                
  					             </fo:table-row>
  					            </#list>

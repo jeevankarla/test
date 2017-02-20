@@ -2222,7 +2222,6 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
   	}
   	
 	public static Map<String, Object> populateIndentSummaryDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
-    	
 		Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();   
         Map<String, Object> result = new HashMap<String, Object>();
@@ -2261,7 +2260,6 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
             Roles = delegator.find("OrderRole", cond1, null, null, null, null);
             List<GenericValue> orderRoles = Roles.getCompleteList();
     		Roles.close();
-    		
             if (eli != null) {
                 // reset each order
                 GenericValue orderHeader = null;
@@ -2328,8 +2326,17 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillAmt"))){
 	                        saleBillAmt=(BigDecimal)saleBillresultCtx.get("saleBillAmt");
 	                    } 
-	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("saleBillTenPrcAmt"))){
-	                    	saleBillTenPrcAmt=(BigDecimal)saleBillresultCtx.get("saleBillTenPrcAmt");
+	                    if(UtilValidate.isNotEmpty(saleBillresultCtx.get("invoiceIds"))){
+	                    	conditionList.clear();
+	                    	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, saleBillresultCtx.get("invoiceIds")));
+	                    	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+							EntityListIterator invoiceItemItr = delegator.find("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null,UtilMisc.toSet("amount"), null, null);
+							GenericValue invoiceItem = null;
+							 while ((invoiceItem = invoiceItemItr.next()) != null) {
+								 saleBillTenPrcAmt=saleBillTenPrcAmt.add(invoiceItem.getBigDecimal("amount"));
+							 }
+							 invoiceItemItr.close();
+	                    	//saleBillTenPrcAmt=(String)saleBillresultCtx.get("invoiceId");
 	                    } 
 	                    Map purBillresultCtx = dispatcher.runSync("getPurchaseBillDetails", UtilMisc.toMap("userLogin", userLogin, "orderId", indentId));
                         if (ServiceUtil.isError(purBillresultCtx)) {
@@ -2369,7 +2376,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	                    indentSummaryDetails.set("purAmout", purAmout);
 	                    indentSummaryDetails.set("saleQuantity", saleBillQty);
 	                    indentSummaryDetails.set("saleAmount", saleBillAmt);
-	                    indentSummaryDetails.set("saleTenPrcAmount", saleBillTenPrcAmt);
+	                    indentSummaryDetails.set("saleTenPrcAmount", saleBillTenPrcAmt.negate());
 						delegator.createOrStore(indentSummaryDetails);
                     
                     } catch (GenericServiceException e) {
@@ -2385,6 +2392,74 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         }
         result = ServiceUtil.returnSuccess("Successfully Populated Data In IndentSummaryDetails : ");
         return result;	
+	}
+	public static Map<String,Object> getIndentAndUpdateIndenSummaryDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        Map<String, Object> result = new HashMap<String, Object>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");
+        String shipmentId = (String) context.get("shipmentId");
+        String invoiceId = (String) context.get("invoiceId");
+        String puposeType = (String) context.get("puposeType");
+        GenericValue orderAssoc =null;
+        
+        boolean enableIndentSummaryDetails=true;
+        try {
+        	GenericValue tenantConfig = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyName", "Enable-Indent-Summary-Detail-Updation","propertyTypeEnumId","DASHBOARD-ANALYTICS"), false);
+            if(UtilValidate.isNotEmpty(tenantConfig) && "N".equals(tenantConfig.get("propertyValue"))){
+            	enableIndentSummaryDetails=false;
+            	return result;
+            }
+        	 if("CancelSaleOrder".equals(puposeType) && enableIndentSummaryDetails){
+        		 GenericValue indentSummaryDetails = delegator.findOne("IndentSummaryDetails", UtilMisc.toMap("orderId", orderId), false);
+        		 if(UtilValidate.isNotEmpty(indentSummaryDetails)){
+        			 indentSummaryDetails.remove();
+        		 }
+        	 }
+        	 
+        	 GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+            // Getting indent Id from Purchase Order Id 
+            if(UtilValidate.isNotEmpty(orderHeader) && "PURCHASE_ORDER".equals(orderHeader.get("orderTypeId"))){
+            	orderId=(String)orderHeader.get("externalId");
+            }
+            // Getting Indent Id from Shipment Id 
+            if(UtilValidate.isNotEmpty(shipmentId)){
+            	GenericValue shipmentDeatil = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), false);
+            	if(UtilValidate.isNotEmpty(shipmentDeatil)){
+            		List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipmentDeatil.get("primaryOrderId")), null, null, null, false);
+                	orderAssoc=EntityUtil.getFirst(orderAssocList);
+                	orderId=(String)orderAssoc.get("toOrderId");
+            	}
+            }
+            // Getting Indent Id from Purchase Invoice 
+            if(UtilValidate.isNotEmpty(invoiceId)){
+            	GenericValue invoiceDeatil = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+            	if(UtilValidate.isNotEmpty(invoiceDeatil)){
+            		GenericValue shipmentDeatil = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", invoiceDeatil.get("shipmentId")), false);
+            		if(UtilValidate.isNotEmpty(shipmentDeatil)){
+                		List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, shipmentDeatil.get("primaryOrderId")), null, null, null, false);
+                    	orderAssoc=EntityUtil.getFirst(orderAssocList);
+                    	orderId=(String)orderAssoc.get("toOrderId");
+                	}
+            	}
+            }
+            // enable Tenant Configuration to papulate indent summary Details for analytics Screen Data 
+            if(enableIndentSummaryDetails){
+            	try{
+         			Map serviceResult  = dispatcher.runSync("runPopulateIndentSummaryDetails", UtilMisc.toMap("orderId", orderId));
+         			if (ServiceUtil.isError(serviceResult)) {
+         				result = ServiceUtil.returnSuccess("Error While Updating Indent Summary Details ");
+                    }
+          		}catch(GenericServiceException e){
+        			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+        		}
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+	   return result;
 	}
 	public static Map<String,Object> getOrderSummary(DispatchContext dctx, Map<String, ? extends Object> context) {
 		Delegator delegator = dctx.getDelegator();
@@ -2525,7 +2600,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
         BigDecimal saleBillTenPrcAmt =BigDecimal.ZERO;
         BigDecimal saleBillQty =BigDecimal.ZERO;
         BigDecimal price =BigDecimal.ZERO;
-
+        List invoiceIds = FastList.newInstance();
         List condList = FastList.newInstance();
         condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
         condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -2537,14 +2612,15 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 			                // reset each order
 	                GenericValue item = null;
 	                while ((item = orderItemBillingItr.next()) != null) {
-	             if("TEN_PERCENT_SUBSIDY".equals(item.getString("invoiceItemTypeId"))){
-	            	 saleBillTenPrcAmt=item.getBigDecimal("amount");
-	             }else{
-	                	saleBillQty = saleBillQty.add(item.getBigDecimal("quantity"));
-	                	price = item.getBigDecimal("amount");
-	                	BigDecimal amount = (item.getBigDecimal("quantity")).multiply(item.getBigDecimal("amount"));
-	                	saleBillAmt = saleBillAmt.add(amount);
-	             }
+			             if("TEN_PERCENT_SUBSIDY".equals(item.getString("invoiceItemTypeId"))){
+			            	 saleBillTenPrcAmt=item.getBigDecimal("amount");
+			             }else{
+			                	saleBillQty = saleBillQty.add(item.getBigDecimal("quantity"));
+			                	price = item.getBigDecimal("amount");
+			                	BigDecimal amount = (item.getBigDecimal("quantity")).multiply(item.getBigDecimal("amount"));
+			                	saleBillAmt = saleBillAmt.add(amount);
+			             }
+			             invoiceIds.add(item.getString("invoiceId"));
 	                }
 	                orderItemBillingItr.close();
 			     }
@@ -2552,7 +2628,7 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
 	            Debug.logError(e, module);
 	            return ServiceUtil.returnError(e.getMessage());
 	        }
-		
+        result.put("invoiceIds",invoiceIds);
         result.put("saleBillQty",saleBillQty.setScale(2, BigDecimal.ROUND_HALF_UP));
         result.put("saleBillTenPrcAmt",saleBillTenPrcAmt.setScale(2, BigDecimal.ROUND_HALF_UP));
         result.put("saleBillAmt",saleBillAmt.setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -2632,28 +2708,35 @@ public static Map<String, Object> periodPopulateShipmentTotals(DispatchContext d
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp thruDate = (Timestamp) context.get("thruDate");
+        String inShipmentId = (String) context.get("shipmentId");
 
         Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
         EntityCondition cond = null;
         List condList = FastList.newInstance();
-        if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+        if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate) && UtilValidate.isEmpty(inShipmentId)){
         	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
         	condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
         }
-		//condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_PURCHASE"));
-		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
-		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
-        cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+        if(UtilValidate.isEmpty(inShipmentId)){ 
+        	//condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_PURCHASE"));
+    		condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+    		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+    		cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+        }
         EntityListIterator orderItr = null;
         try {
-        	    orderItr = delegator.find("OrderHeader", cond, null,  UtilMisc.toSet("orderId"), null, null);
-                // reset each order
-            	List orderIdList=EntityUtil.getFieldListFromEntityListIterator(orderItr, "orderId", true);
-            	List conditionlist = FastList.newInstance();
-				conditionlist.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.IN, orderIdList));
-				conditionlist.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+        	    List conditionlist = FastList.newInstance();
+        	    if(UtilValidate.isEmpty(inShipmentId)){
+        	    	orderItr = delegator.find("OrderHeader", cond, null,  UtilMisc.toSet("orderId"), null, null);
+                    // reset each order
+                	List orderIdList=EntityUtil.getFieldListFromEntityListIterator(orderItr, "orderId", true);
+    				conditionlist.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.IN, orderIdList));
+    				conditionlist.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+        	    }
+        	    if(UtilValidate.isNotEmpty(inShipmentId)){ 
+        	    	conditionlist.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS,inShipmentId));
+                }
 				EntityCondition condition =EntityCondition.makeCondition(conditionlist,EntityOperator.AND);
-				
 				try{
 					EntityListIterator shipmentItr = delegator.find("Shipment", condition, null,  UtilMisc.toSet("shipmentId","primaryOrderId","createdDate"), null, null);
 					if (shipmentItr != null) {
@@ -3526,3 +3609,24 @@ public static Map<String, Object> creatingAcctTransForAllFinAccnts(DispatchConte
 }
   	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

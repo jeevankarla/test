@@ -274,7 +274,7 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>
-					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("LICRDReportPdf.pdf")?exists) && (reportDetailsMap.get("LICRDReportPdf.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("LICRDReportPdf.pdf"))?exists))> 
+					<#--<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("LICRDReportPdf.pdf")?exists) && (reportDetailsMap.get("LICRDReportPdf.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("LICRDReportPdf.pdf"))?exists))> 
 						<tr class="alternate-row"> 
 							<form id="LICRDReport" name="LICRDReport" mothed="post" action="<@ofbizUrl>LICRDReportPdf.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
@@ -326,7 +326,7 @@ function setOrgPartyId() {
 								</table>
 							</form>
 						</tr>
-					</#if>
+					</#if>-->
 					<#-- <#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("CadreRankingReport.pdf")?exists) && (reportDetailsMap.get("CadreRankingReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("CadreRankingReport.pdf"))?exists))> 
 						<tr class="alternate-row"> 
 							<form id="CadreRankingReport" name="CadreRankingReport" mothed="post" action="<@ofbizUrl>CadreRankingReport.pdf</@ofbizUrl>" target="_blank">
@@ -640,7 +640,7 @@ function setOrgPartyId() {
 							</table>
 						</tr>
 					</#if>
-					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("ConsolidatedEditedLateHoursReport.pdf")?exists) && (reportDetailsMap.get("ConsolidatedEditedLateHoursReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("ConsolidatedEditedLateHoursReport.pdf"))?exists))> 
+				<#--	<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("ConsolidatedEditedLateHoursReport.pdf")?exists) && (reportDetailsMap.get("ConsolidatedEditedLateHoursReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("ConsolidatedEditedLateHoursReport.pdf"))?exists))> 
 						<tr class="alternate-row">
 							<table class="basic-table" cellspacing="3">
 								<form id="ConsolidatedEditedLateHoursReport" name="ConsolidatedEditedLateHoursReport" mothed="post" action="<@ofbizUrl>ConsolidatedEditedLateHoursReport.pdf</@ofbizUrl>" target="_blank">
@@ -660,7 +660,7 @@ function setOrgPartyId() {
 								</form>
 							</table>
 						</tr>
-					</#if>
+					</#if> -->
 					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("EmployeesLOPdays.pdf")?exists) && (reportDetailsMap.get("EmployeesLOPdays.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("EmployeesLOPdays.pdf"))?exists))> 
 						<tr class="alternate-row">
 							<form id="EmployeesLOPdays" name="EmployeeMisPunchData" mothed="post" action="<@ofbizUrl>EmployeesLOPdays.pdf</@ofbizUrl>" >
@@ -873,7 +873,6 @@ function setOrgPartyId() {
 										<td width="23%"><span class='h3'>Bank Request Letter</span></td>
 										<td width="30%"><span class='h3'>Bank</span>
 											<select name="finAccountId" class='h4'>
-												<option value='All'>All</option>
 												<#list companyAccList as bank>    
 													<option value='${bank.finAccountId?if_exists}'>${bank.finAccountName?if_exists}</option>
 												</#list> 
@@ -900,7 +899,7 @@ function setOrgPartyId() {
 							</form>
 						</tr>
 					</#if>
-					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("MonthlyBankStatement.pdf")?exists) && (reportDetailsMap.get("MonthlyBankStatement.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("MonthlyBankStatement.pdf"))?exists))> 
+				<#--	<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("MonthlyBankStatement.pdf")?exists) && (reportDetailsMap.get("MonthlyBankStatement.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("MonthlyBankStatement.pdf"))?exists))> 
 						<tr class="alternate-row">
 							<form id="MonthlyBankStatement" name="MonthlyBankStatement" mothed="post" action="<@ofbizUrl>MonthlyBankStatement.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
@@ -932,7 +931,7 @@ function setOrgPartyId() {
 								</table>
 							</form>
 						</tr>
-					</#if>	
+					</#if>	-->
 					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("EcsBankDetailsCsv.csv")?exists) && (reportDetailsMap.get("EcsBankDetailsCsv.csv") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("EcsBankDetailsCsv.csv"))?exists))> 
 						<tr class="alternate-row">
 							<form id="EcsBankDetailsStatement" name="EcsBankDetailsStatement" mothed="post" action="<@ofbizUrl>EcsBankDetailsCsv.csv</@ofbizUrl>" target="_blank">
@@ -1416,7 +1415,7 @@ function setOrgPartyId() {
 							</form>
 					 	</tr>
 					</#if>
-					<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("IncrementDueReport.pdf")?exists) && (reportDetailsMap.get("IncrementDueReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("IncrementDueReport.pdf"))?exists))> 
+				<#--	<#if (((reportDetailsMap?has_content) && (reportDetailsMap.get("IncrementDueReport.pdf")?exists) && (reportDetailsMap.get("IncrementDueReport.pdf") == "Y")) || (!(reportDetailsMap?has_content))  || (!(reportDetailsMap.get("IncrementDueReport.pdf"))?exists))> 
 						<tr class="alternate-row">
 							<form id="IncrementDueReport" name="IncrementDueReport" mothed="post" action="<@ofbizUrl>IncrementDueReport.pdf</@ofbizUrl>" target="_blank">
 								<table class="basic-table" cellspacing="5">
@@ -1440,7 +1439,7 @@ function setOrgPartyId() {
 								</table>
 							</form>
 					 	</tr>
-					</#if>
+					</#if> -->
 			   	</table>
 			</div>
 		</div>

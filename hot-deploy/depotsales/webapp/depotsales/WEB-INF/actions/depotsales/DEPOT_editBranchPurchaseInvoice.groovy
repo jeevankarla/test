@@ -36,7 +36,6 @@ if(invoiceId){
 	context.invoiceId= invoiceId;
 	billToPartyId= parameters.partyId;
 	
-	context.billToPartyId = billToPartyId;
 	
 	partyName= parameters.partyName;
 	
@@ -45,6 +44,8 @@ if(invoiceId){
 	shipmentId = invoiceList.get("shipmentId");
 	
 	branchPartyId = invoiceList.get("partyIdFrom");
+	context.billToPartyId = invoiceList.get("costCenterId");
+	
 	context.branchPartyId = branchPartyId;
 	
 	////Debug.log("invoDate================"+invoDate);

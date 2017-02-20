@@ -33,7 +33,7 @@
 		conditionList = [];
 		conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS,"BANK_ACCOUNT"));
 		conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
-		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 		financialAccntList = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("finAccountId"), null, false);
 		finalFinAccntList.addAll(financialAccntList);
 		
@@ -57,6 +57,7 @@
 					 }
 				//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
 				conditionList.add( EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds));
+				conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 				List<String> orderBy = UtilMisc.toList("finAccountName");				
 			financialAccnt = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, orderBy, null, false);
 			finalList=[];

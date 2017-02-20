@@ -104,9 +104,10 @@ if(!(parameters.organizationPartyId).equalsIgnoreCase("Company")){
 	if(UtilValidate.isNotEmpty(partyRelationShipIds)){
 		partyIds = EntityUtil.getFieldListFromEntityList(partyRelationShipIds,"partyIdTo",true);
 	}
-	partyIds.add(parameters.organizationPartyId);
+  partyIds.add(parameters.organizationPartyId);
 
 }
+
 GrandLiablitesTotal=[:];
 GrandassetsTotal=[:];
 liablitiesChildWiseMap=[:];

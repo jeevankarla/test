@@ -373,6 +373,29 @@
             </widgets>
         </section>
      </screen> 
+     
+      <screen name="BaanPortalCommonDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                            <include-menu name="FindIndentPortalTabBar" location="component://depotsales/widget/DepotSalesMenus.xml"/>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+     </screen> 
+     
        <screen name="DashBoardCommonDecorator">
         <section>
             <actions>
@@ -523,6 +546,32 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="BaanTransactionsCommonDecorator">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="DEPOTSALES" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                            	<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="BaanTransactionsTabBar"/>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.DepotSalesViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="ProcessBranchOrders">
 		<section>
 			<actions>

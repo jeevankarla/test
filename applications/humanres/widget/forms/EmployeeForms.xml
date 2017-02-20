@@ -1503,7 +1503,8 @@
 		<field name="fromDate" id-name="fromDate" title="${uiLabelMap.fromDate}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
 		<field name="thruDate" id-name="thruDate" title="${uiLabelMap.toDate}" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
         <field name="PerfRatingType" title="Grading" required-field="true">
-            <drop-down allow-empty="true">
+            <drop-down >
+            	<option key="-----"/>
                 <entity-options entity-name="PerfRatingType" key-field-name="perfRatingTypeId" description="${description}" filter-by-date="false">
                     <entity-constraint name="parentTypeId" operator="equals" value="EMP_RATING"/>
                     <entity-order-by field-name="description"/>
@@ -1511,7 +1512,8 @@
             </drop-down>
         </field> 
         <field name="Promotion" title="Promotion" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
-			<drop-down allow-empty="true">
+			<drop-down >
+				<option key="--------"/>
 				<entity-options entity-name="EmplPositionType" key-field-name="emplPositionTypeId" description="${description}">
 				</entity-options>
 			</drop-down>

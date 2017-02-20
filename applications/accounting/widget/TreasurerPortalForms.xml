@@ -35,10 +35,13 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field> -->
+       <field name="finAccountCode" title ="Bank Code"><display/></field>
+        <field name="finAccountBranch" title ="Branch"><display/></field>
         <field name="finAccountId"><hidden></hidden></field>
          <field name="gbCode"><ignored></ignored></field>
           <field name="bCode"><ignored></ignored></field>
            <field name="bPlace"><ignored></ignored></field>
+            <field name="finAccPrefix"><ignored></ignored></field>
             <field name="categoryTypeEnum"><ignored></ignored></field>
              <field name="organizationPartyId"><ignored></ignored></field>
               <field name="ownerPartyId"><ignored></ignored></field>
@@ -54,7 +57,7 @@ under the License.
                             <field name="thruDate"><ignored></ignored></field>
       
        <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field> -->
-        <field name="finAccountName">
+        <field name="finAccountName" title="Bank Name">
             <hyperlink description="${finAccountName}" target="EditFinAccountAlt">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
@@ -182,42 +185,42 @@ under the License.
         <form name="FindDepositReceivedAccount" type="single" target="FindDepositReceivedAccount" header-row-style="header-row" default-table-style="basic-table">        
         <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="finAccountId" position="1"><text-find/></field>
-          <field name="AccDate" position="2"><date-time type="date"/></field>
-        <field name="finAccountName" position="1"><text-find/></field>
+        <field name="finAccountId" position="1" title="Deposit Id"><text-find/></field>
+          <field name="AccDate" position="2" title="Deposit Date"><date-time type="date"/></field>
+        <field name="finAccountName" position="1" title="Name"><text-find/></field>
         <field name="amount" position="2"><text/></field>
-        <field name="finAccountTypeId" position="1">
+        <field name="finAccountTypeId" position="1" title="Deposit Type Id">
         	<drop-down allow-empty="true">
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
         	</drop-down>
         </field>
-        <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>        
+        <field name="ownerPartyId" position="2" title="Received From"><lookup target-form-name="LookupPartyName"/></field>        
         <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>
         <form name="FindDepositPaidAccount" type="single" target="FindDepositPaidAccount" header-row-style="header-row" default-table-style="basic-table">        
         <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="finAccountId" position="1"><text-find/></field>
-          <field name="AccDate" position="2"><date-time type="date"/></field>
-        <field name="finAccountName" position="1"><text-find/></field>
+        <field name="finAccountId" position="1" title="Deposit Id"><text-find/></field>
+          <field name="AccDate" position="2" title="Deposit Date"><date-time type="date"/></field>
+        <field name="finAccountName" position="1" title="Name"><text-find/></field>
         <field name="amount" position="2"><text/></field>
-        <field name="finAccountTypeId" position="1">
+        <field name="finAccountTypeId" position="1" title="Deposit Type Id">
         	<drop-down allow-empty="true">
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
         	</drop-down>
         </field>
-        <field name="ownerPartyId" position="2"><lookup target-form-name="LookupPartyName"/></field>        
+        <field name="ownerPartyId" position="2" title="Paid To"><lookup target-form-name="LookupPartyName"/></field>        
         <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>
      <form name="FindEmployeeAdvance" type="single" target="FindEmployeeAdv" header-row-style="header-row" default-table-style="basic-table">        
         <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
-        <field name="finAccountId" position="1"><text-find/></field>
-          <field name="AccDate" position="2"><date-time type="date"/></field>
-        <field name="finAccountName" position="1"><text-find/></field>
+        <field name="finAccountId" position="1" title="Employee Id"><text-find/></field>
+        <field name="AccDate" position="2" title="Date" event="onclick" action="javascript:datepick2();" id-name ="AccDate"><text  size="12"/></field> 
+        <field name="finAccountName" position="1" title="Name"><text-find/></field>
         <field name="amount" position="2"><text/></field>
-        <field name="finAccountTypeId" position="1">
+        <field name="finAccountTypeId" position="1" title="Advance Type Id">
         	<drop-down allow-empty="true">
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
         	</drop-down>
@@ -276,12 +279,12 @@ under the License.
              	<parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field>
-        <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
+       <!--  <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
             <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
-        </field>
+        </field> -->
     </form>
      <form name="ListDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -308,12 +311,12 @@ under the License.
              	<parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field>
-        <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
+      <!--   <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
             <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
-        </field>
+        </field> -->
     </form>
      <form name="ListAdvDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -372,6 +375,13 @@ under the License.
              <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field> 
+        <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
+            <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reportTypeFlag" value="depositCheque"/>
+            </hyperlink>
+        </field> 
+       
     </form>
     
     <!-- <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="FindDepositAccount" paginate="true"
@@ -476,13 +486,16 @@ under the License.
     	<field name="hideSearch"><hidden value="Y" /></field>
 		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     	<field name="finAccountId" title="From Financial Account" >
-            <drop-down allow-empty="true">
+            <!-- <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
-                     <entity-constraint name="ownerPartyId" from-field="parameters.ownerPartyId"/>
+                     <entity-constraint name="ownerPartyId" from-field="ownerPartyId"/>
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
+            </drop-down> -->
+            <drop-down allow-empty="false">
+            	<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="transactionDate"><date-time type="timestamp"/></field>
@@ -1164,13 +1177,20 @@ under the License.
         	<hidden value="DEPOSIT_PAID"/>
         </field>
         <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId==null"><ignored/></field>
-      	<field name="finAccountTypeId" id-name="finTypeId" use-when="finAccountId ==null" title="Deposit Account Type" >
+      	<field name="finAccountTypeId" id-name="finTypeId" use-when="finAccountId ==null" title="Advance Account Type" >
             <drop-down no-current-selected-key="DEPOSIT_ACCOUNT">
                 <entity-options description="${description}" entity-name="FinAccountType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
+         <field name="ro/bo" title="Party RO/BO"><text/>
+         	<drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
+                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY,HEAD_OFFICE"/>
+                </entity-options>
+            </drop-down>
+         </field>
         <field name="finAccountParentId"><hidden value="EMPLOYEE_ADV"/></field>
         <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
@@ -1215,7 +1235,7 @@ under the License.
         <field name="finAccountId" use-when="finAccount==null&amp;&amp;finAccountId!=null" tooltip="${uiLabelMap.CommonCannotBeFound}: [${finAccountId}]"><display also-hidden="false"/></field>
 		<field name="finAccountBranch"><text size="20"/></field>
 
-        <field name="finAccountCode"><text size="20"/></field>
+        <field name="finAccountCode"><text size="20" /></field>
         <field name="finAccountCode" use-when="!hasFinEditPermission"><display/></field>
        <!--  <field name="categoryTypeEnum">
 			<drop-down>
@@ -2076,7 +2096,7 @@ under the License.
 			</drop-down>
 		</field>
         <field name="invoiceId"><text-find ignore-case="true"/></field>
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+        <!-- <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field> -->
         <field name="description"><text-find ignore-case="true"/></field>
         <field name="invoiceTypeId"><display/></field>
         <field name="subTabButtonValue"><hidden/></field>
@@ -2109,15 +2129,27 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field> -->
-		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;PURCHASE_INVOICE&quot;)"
+			position="3">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_READY">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+						<entity-constraint name="statusId" operator="NOT-IN" 
+						value="INVOICE_SENT,INVOICE_IN_PROCESS"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;ADMIN_OUT&quot;)"
 			position="2">
 			<drop-down allow-empty="true">
 				<entity-options description="${description}"
 					entity-name="StatusItem">
 					<entity-constraint name="statusTypeId" operator="equals"
 						value="INVOICE_STATUS" />
-					<entity-constraint name="statusId" operator="not-equals"
-						value="INVOICE_SENT" />
+						<entity-constraint name="statusId" operator="not-equals" 
+						value="INVOICE_SENT"/>
 				</entity-options>
 			</drop-down>
 		</field>
@@ -2136,7 +2168,7 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field> -->
-		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+		<!-- <field name="statusId" title="${uiLabelMap.CommonStatus}"
 			position="2">
 			<drop-down allow-empty="true">
 				<entity-options description="${description}"
@@ -2145,6 +2177,30 @@ under the License.
 						value="INVOICE_STATUS" />
 					<entity-constraint name="statusId" operator="not-equals"
 						value="INVOICE_RECEIVED" />
+				</entity-options>
+			</drop-down>
+		</field> -->
+		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;SALES_INVOICE&quot;)"
+			position="3">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_READY">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+						<entity-constraint name="statusId" operator="NOT-IN" 
+						value="INVOICE_RECEIVED,INVOICE_IN_PROCESS"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;MIS_INCOME_IN&quot;)"
+			position="2">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+						<entity-constraint name="statusId" operator="not-equals" 
+						value="INVOICE_RECEIVED"/>
 				</entity-options>
 			</drop-down>
 		</field>
@@ -2391,7 +2447,7 @@ under the License.
         <field name="transactionDate" title="Tally Reference Date"><date-find type="date" default-option-from="sameDay"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListTreasurerPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
+    <form name="ListTreasurerPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findTreasurerPayments" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
             
@@ -2811,7 +2867,7 @@ under the License.
         </field> -->
     </form>
     
-    <form name="ListGrantDevelopmentalAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
+    <form name="ListGrantDevelopmentalAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="developmentGrantAccountsList" paginate-target="${targetRequest}" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
          <row-actions>
          <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/GrantBalances.groovy"/>
@@ -2884,7 +2940,7 @@ under the License.
         </field> -->
     </form>
     
-     <form name="ListGrantImplementationAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
+     <form name="ListGrantImplementationAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="implementationGrantAccountsList" paginate-target="${targetRequest}" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
          <row-actions>
          <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/GrantBalances.groovy"/>

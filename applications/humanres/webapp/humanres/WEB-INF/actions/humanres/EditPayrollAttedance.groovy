@@ -110,7 +110,7 @@ if(UtilValidate.isNotEmpty(employementIds)){
 		tempFinalMap.put("timePeriodId",timePeriodId);
 		tempFinalMap.put("Dates",dates);
 		tempFinalMap.put("deptId", parameters.partyId);
-		tempFinalMap["noOfPayableDays"]=totalDays;
+		tempFinalMap["noOfPayableDays"]=BigDecimal.ZERO;;
 		if(!"leaveEncash".equals(screenFlag)){
 			tempFinalMap["noOfAttendedDays"]="";
 			tempFinalMap["noOfCalenderDays"]=totalDays;

@@ -182,10 +182,21 @@ noConditionFind = parameters.noConditionFind;
 			}else{
 				tempMap.putAt("weaver", null);
 			}
+		}	
+		invoiceids=delegator.findList("Invoice",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipment.shipmentId)  , null, null, null, false );
+		invoiceidslist=EntityUtil.getFirst(invoiceids);
+		if(UtilValidate.isNotEmpty(invoiceidslist)){
+			invoicesqnce=invoiceidslist.invoiceId;
 		}
-		
-		
-		
+		invoicesqnce = "";
+		billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoicesqnce)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+		if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+			invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
+			invoiceSequence = invoiceSeqDetails.invoiceSequence;			
+			tempMap.putAt("raiseInvoice", invoiceSequence);
+		}else{
+			tempMap.putAt("raiseInvoice", null);
+		}
 		
 	}
 		finalList.add(tempMap);
@@ -226,8 +237,23 @@ noConditionFind = parameters.noConditionFind;
 				   else{
 					   tempMap.put("partyName","");
 				   }
+				   invoicesqnce = "";
+				   invoiceids=delegator.findList("Invoice",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , list.shipmentId)  , null, null, null, false );
+				   invoiceidslist=EntityUtil.getFirst(invoiceids);
+				   if(UtilValidate.isNotEmpty(invoiceidslist)){
+					   invoicesqnce=invoiceidslist.invoiceId;
+				   }
+				   billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoicesqnce)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+				   if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+					   invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
+					   invoiceSequence = invoiceSeqDetails.invoiceSequence;
+					   tempMap.putAt("raiseInvoice", invoiceSequence);
+				   }else{
+					   tempMap.putAt("raiseInvoice", null);
+				   }
 				newFinalList.add(tempMap);
 			}
+			
 		}
 		context.listIt=newFinalList;
 	}else{

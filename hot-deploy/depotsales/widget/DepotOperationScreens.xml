@@ -806,10 +806,8 @@
 					<field-map field-name="viewIndex" from-field="viewIndex" />
 					<field-map field-name="viewSize" from-field="viewSize" />
 				</service>
-				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTranspurchaseDepartments.groovy" />
-				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTransSupplyTillDate.groovy" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTranspurchaseDepartments.groovy" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/DepotTransSupplyTillDate.groovy" />
 			</actions>
 			<widgets>
 				<decorator-screen name="DepotSalesCommonDecorator"
@@ -843,8 +841,8 @@
 											<include-form name="listMaterialShipmentReceiptDepotTrans"
 												location="component://depotsales/widget/DepotSalesForms.xml" />
 										</screenlet>
-										<include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
-					                    <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="IndentAnalyticsSubTabBar" />
+										<!-- <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="AnalyticsTabBar" />
+					                    <include-menu location="component://depotsales/widget/DepotSalesMenus.xml" name="IndentAnalyticsSubTabBar" /> -->
 										<platform-specific>
 											<html>
 												<html-template
@@ -940,7 +938,7 @@
 	<screen name="ShipmentHistoryAuth">
 		<section>
 			<actions>
-				<set field="titleProperty" value="SUPPLY HISTORY" />
+				<set field="titleProperty" value="Supply History" />
 			     <set field="tabButtonItem" value="FindSupplierDispatchs" />
 			     <set field="tabButtonItem2" value="FindSupplierDispatchs" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
@@ -1044,6 +1042,15 @@
 													location="component://depotsales/webapp/depotsales/depotsales/findDelayShipments.ftl" />
 											</html>
 											</platform-specific>
+											<link text="Save" 
+														style="buttontext" target="DelayShipmentReport.csv">
+														<parameter param-name="searchType" from-field="parameters.searchType" />
+														<parameter param-name="regionId" from-field="parameters.regionId" />
+														<parameter param-name="stateId" from-field="parameters.stateId" />
+														<parameter param-name="branchId2" from-field="parameters.branchId2" />
+														<parameter param-name="period" from-field="parameters.period" />
+														<parameter param-name="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+													</link>
 											<!-- <link text="${uiLabelMap.AccountingExportAsCsv}"  
 														style="buttontext" target="ShipmentsDispatchReport.csv">
 														<parameter param-name="fromDate" from-field="parameters.fromDate" />
@@ -1075,7 +1082,7 @@
 	<screen name="findDelayShipmentsAuth">
 		<section>
 			<actions>
-				<set field="titleProperty" value="DELAYED SHIPMENTS FROM SUPPLIER"/>
+				<set field="titleProperty" value="Delayed Shipments From Supplier"/>
 			     <set field="tabButtonItem3" value="IndentSupplyAnalytics"/>		            
 			     <set field="tabButtonItem2" value="findDelayShipments"/>
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
@@ -1104,6 +1111,15 @@
 													location="component://depotsales/webapp/depotsales/depotsales/findDelayShipments.ftl" />
 											</html>
 											</platform-specific>
+											<link text="Save"  
+														style="buttontext" target="DelayShipmentReport.csv">
+														<parameter param-name="searchType" from-field="parameters.searchType" />
+														<parameter param-name="regionId" from-field="parameters.regionId" />
+														<parameter param-name="stateId" from-field="parameters.stateId" />
+														<parameter param-name="branchId2" from-field="parameters.branchId2" />
+														<parameter param-name="period" from-field="parameters.period" />
+														<parameter param-name="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+													</link>
 											<!-- <link text="${uiLabelMap.AccountingExportAsCsv}"  
 														style="buttontext" target="ShipmentsDispatchReport.csv">
 														<parameter param-name="fromDate" from-field="parameters.fromDate" />

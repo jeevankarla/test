@@ -40,6 +40,7 @@ under the License.
                 <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
 				<fo:block  keep-together="always" text-align="center"  font-weight="bold"   font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists} </fo:block>
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOAddress?if_exists}</fo:block>
+				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOEmail?if_exists}</fo:block>
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                 <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
 				<fo:block text-align="center" font-size="12pt" font-weight="bold" >AGENCY WISE INVOICE OUTSTANDING REPORT</fo:block>
@@ -62,38 +63,38 @@ under the License.
 								
 					            <fo:table-cell border-style="solid">
 					                <#if reportType=="CREDITORS">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SUPPLIER/CREDITOR</fo:block>
+										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Supplier/Creditor</fo:block>
 									<#else>
-										 <fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">CUSTOMER/DEBITOR</fo:block>
+										 <fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Customer/Debitor</fo:block>
 									</#if>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INVOICE VALUE</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BETWEEN</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">1-30 DAYS</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Between</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">1-30 Days</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INVOICE VALUE</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BETWEEN</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">31-60 DAYS</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Between</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">31-60 Days</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INVOICE VALUE</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BETWEEN</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">61-90 DAYS</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Between</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">61-90 Days</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INVOICE VALUE</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BETWEEN</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">91-180 DAYS</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Between</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">91-180 Days</fo:block>
 					            </fo:table-cell>
 					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INVOICE VALUE</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">ABOVE 180 DAYS</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Above 180 Days</fo:block>
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL INVOICE</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VALUE</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Total Invoice</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Value</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>  
 								<#list invocieList as invoice>

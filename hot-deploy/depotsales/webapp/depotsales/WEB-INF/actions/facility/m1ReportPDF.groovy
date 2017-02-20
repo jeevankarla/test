@@ -54,6 +54,7 @@ if(branchId){
 	DateMap.put("branchName", branchName);
 }
 //Debug.log("branchName=================="+branchName);
+branchIdForAdd = "";
 	branchList = [];
 	
 	condListb = [];
@@ -65,6 +66,22 @@ if(branchId){
 	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
 	
 	branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+	
+	if(!branchList){
+		condListb2 = [];
+		//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
+		condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+		condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+		condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+		cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+		
+		PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+		branchDetails = EntityUtil.getFirst(PartyRelationship1);
+		branchIdForAdd=branchDetails.partyIdFrom;
+	}
+	else{
+		branchIdForAdd=branchId;
+	}
 	
 	//if(!branchList)
 	branchList.add(branchId);
@@ -149,6 +166,18 @@ totalValue=0;
 totalRate=0;
 prodCatMap=[:];
 totalsMap=[:];
+
+headerData3=[:];
+headerData3.put("prodcatName", "");
+headerData3.put("productName", "");
+headerData3.put("partyName", "__M1 Report__");
+headerData3.put("orderQty", "");
+/*headerData2.put("BdlWt", "____");*/
+headerData3.put("rate", "");
+headerData3.put("orderValue", " ");
+finalCSVList.add(headerData3);
+
+
 headerData2=[:];
 headerData2.put("prodcatName", "");
 headerData2.put("productName", "");
@@ -160,13 +189,13 @@ headerData2.put("orderValue", " ");
 finalCSVList.add(headerData2);
 
 headerData=[:];
-headerData.put("prodcatName", "PRODUCT CATEGORY");
-headerData.put("productName", "PRODUCT COUNT");
-headerData.put("partyName", "PARTY NAME");
-headerData.put("orderQty", "ORDERQTY");
+headerData.put("prodcatName", "Product Category");
+headerData.put("productName", "Product Count");
+headerData.put("partyName", "Party Name");
+headerData.put("orderQty", "Order Qty(kgs)");
 /*headerData.put("BdlWt", "BdlWt");*/
-headerData.put("rate", "RATE");
-headerData.put("orderValue", "ORDERVALUE");
+headerData.put("rate", "Rate");
+headerData.put("orderValue", "Order Value");
 finalCSVList.add(headerData);
 
 for(productCategoryId in productCategoryIds){
@@ -299,7 +328,32 @@ for(productCategoryId in productCategoryIds){
 totalsMap.put("orderQty", totalQty);
 totalsMap.put("orderValue", totalValue);
 totalsMap.put("rate", totalRate);
-
+branchContextForAdd=[:];
+branchContextForAdd.put("branchId",branchIdForAdd);
+BOAddress="";
+BOEmail="";
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContextForAdd);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in BO Header ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+	}
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
 context.totalsMap=totalsMap;
 context.prodCatMap=prodCatMap;
 context.finalCSVList=finalCSVList;

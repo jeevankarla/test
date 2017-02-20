@@ -44,7 +44,7 @@
 		partyId = invoiceList.get("partyId");
 		shipmentId = invoiceList.get("shipmentId");
 		
-		branchPartyId = invoiceList.get("partyIdFrom");
+		branchPartyId = invoiceList.get("costCenterId");
 		context.branchPartyId = branchPartyId;
 		
 		//////Debug.log("invoDate================"+invoDate);

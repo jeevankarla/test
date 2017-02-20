@@ -2164,7 +2164,7 @@
 			<link target="FindInterUnitBankAccount">
 			</link>
 		 </menu-item>
-		  <menu-item name="FindEmpLoanFinAccount" title="Scheme Accounts">
+		  <!-- <menu-item name="FindEmpLoanFinAccount" title="Scheme Accounts">
           <condition>
 				<or>
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
@@ -2172,7 +2172,7 @@
             </condition>
 			<link target="FindEmpLoanFinAccount">
 			</link>
-		 </menu-item>
+		 </menu-item> -->
 		<!--  <menu-item name="FindDepositAccount" title="Deposit Accounts">
           <condition>
 				<or>

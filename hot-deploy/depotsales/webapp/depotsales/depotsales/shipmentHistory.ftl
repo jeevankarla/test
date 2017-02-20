@@ -174,14 +174,14 @@ under the License.
 <#else>
 	<#assign action="ShipmentHistory">
 </#if>
-<h2>SUPPLIES TO USER AGENCY OPERATED DEPOTS<h2>
+<h3>SUPPLIES TO USER AGENCY OPERATED DEPOTS</h3>
 <div class="screenlet">
   <div class="screenlet-body">
     <div id="findPartyParameters"  >
       <form method="post" name="ShipmentHistory" id="ShipmentHistory" action="<@ofbizUrl>${action}</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
          <tr>
-        	 <td>Search By</td> 
+        	 <td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search By</b></td> 
         	 <td>
       		 	 <select name="searchType" id="searchType" onchange="javascript:showSearchFilter(this);">
       		 	 	<#if period?has_content>
@@ -195,7 +195,7 @@ under the License.
         </tr>
            <tr>    
   			  <div>
-  				  <td id="BranchFilterlabel">Branch</td>
+  				  <td id="BranchFilterlabel"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Branch</b></td>
 	              <td id="BranchFilter">
 					  <select name="branchId2" id="branchId" onchange="javascript:getbrancheCustomers(this,'By_Branch');">
 		              <#if branchIdName?has_content>
@@ -212,7 +212,7 @@ under the License.
 		  		   </td>
   		       </div>
   		       <div >
-  				  <td id="RegionFilterLabel">Regional Office</td>
+  				  <td id="RegionFilterLabel"><b>&nbsp;&nbsp;&nbsp;Regional Office</b></td>
 	              <td id="RegionFilter">
 					  <select name="regionId" id="regionId" onchange="javascript:getbrancheCustomers(this,'By_Ro');">
 		              <#if regionIdName?has_content>
@@ -229,7 +229,7 @@ under the License.
 		  		   </td>
   		       </div>
   		       <div>
-  				  <td id="StateFilterLabel">State</td>
+  				  <td id="StateFilterLabel"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;State</b></td>
 	              <td id="StateFilter">
 					  <select name="stateId" id="stateId" onchange="javascript:getbrancheCustomers(this,'By_State');">
 		              <#if stateIdName?has_content>
@@ -248,8 +248,8 @@ under the License.
 		  </tr> 
 		  				  
 			<tr>
-				   <td>Agency/Depot</td> 
-				   <td><input  type="text" size="25pt" placeholder="Select Agency" id="cutomerId"   name="customer" value="${customerId?if_exists}" onkeypress="javascript:checkFields();" onblur="javascript:displayName(this,'customer');" />
+				   <td><b>&nbsp;&nbsp;&nbsp;Agency/Depot</b></td> 
+				   <td><input  type="text" size="15pt" placeholder="Select Agency" id="cutomerId"   name="customer" value="${customerId?if_exists}" onkeypress="javascript:checkFields();" onblur="javascript:displayName(this,'customer');" />
 					   <div id="customerName"><#if customerName?has_content>${customerName?if_exists} </#if></div>
 				   </td>
 				   
@@ -308,10 +308,10 @@ under the License.
 			  </select> 
       		 </td>
 		  </tr>
-		  <tr><td>&nbsp; </td><td>&nbsp; </td><td> &nbsp;</td></tr>
+		 
       <tr>
           	    
-				<td width="10%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Search" class="buttontext" onClick="javascript:callSpinner();"/> 
+				<td width="10%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Search" class="buttontext" onClick="javascript:callSpinner();"/> 
 				<input  type="hidden" size="14pt" id="isFormSubmitted"   name="isFormSubmitted" value="Y"/>
 				</td>
 		  </tr>

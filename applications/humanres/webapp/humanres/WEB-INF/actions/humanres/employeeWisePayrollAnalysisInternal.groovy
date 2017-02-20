@@ -5,6 +5,7 @@ import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.*;
 import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.base.util.UtilMisc;
 
 
 // NOTE: This groovy assumes EmployeePayRollReport.groovy has been run before this
@@ -51,14 +52,41 @@ if(screenFlag.equals("EmployeeWisePayrollAnalysisInternal")){
 		}
 	}
 }
+
+if(PayrollAnalysisFlag.equals("RegionalOfficeTotalsPdf")){
+sortBy = UtilMisc.toList("sequenceNum");
+	if(UtilValidate.isNotEmpty(context.reportFlag) && (context.reportFlag).equals("summary")){
+	sortBy = UtilMisc.toList("description");
+	}
+	benefitTypeList = delegator.findList("BenefitType", null, null, sortBy, null, false);
+	benefitDescMap=[:];
+	if(UtilValidate.isNotEmpty(benefitTypeList)){
+	benefitTypeList.each{ benefit->
+		benefitName =  benefit.get("shortName");
+		benefitType = benefit.get("benefitTypeId");
+		benefitDescMap.put(benefitType,benefitName);
+		}
+	}
+benefitTypeIds = EntityUtil.getFieldListFromEntityList(benefitTypeList, "benefitTypeId", true);
+deductionTypeList = delegator.findList("DeductionType", null, null, sortBy, null, false);
+	if(UtilValidate.isNotEmpty(deductionTypeList)){
+	deductionTypeList.each{ deduction->
+		dedName =  deduction.get("shortName");
+		dedType = deduction.get("deductionTypeId");
+		dedDescMap.put(dedType,dedName);
+		}
+	}
+dedTypeIds = EntityUtil.getFieldListFromEntityList(deductionTypeList, "deductionTypeId", true);
+}
+
+if(PayrollAnalysisFlag.equals("")){
 benefitDescMap=context.benefitDescMap;
 benefitTypeIds=context.benefitTypeIds;
 dedTypeIds=context.dedTypeIds;
 dedDescMap=context.dedDescMap;
-
+}
 payheadTypeIds = [];
 payheadTypeNames = [];
-
 benefitTypeIds.each{ benefitTypeId->
 	if (payRollSummaryMap.containsKey(benefitTypeId)) {
 		payheadTypeIds.add(benefitTypeId);
@@ -84,6 +112,7 @@ employments.each { employment ->
 	dept = delegator.findByPrimaryKey("PartyGroup", [partyId : employment.partyIdFrom]);
 	employeeDeptMap[employment.partyIdTo] = dept.groupName;
 }
+
 //Debug.logError("payRollEmployeeMap="+payRollEmployeeMap,"");
 JSONArray employeesPayrollTableJSON = new JSONArray();
 
@@ -121,6 +150,7 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 			}
 		}
 	}
+	
 	regionPaySheetMap = [:];
 	sumMap = [:];
 	finalRegionPaySheetMap = [:];
@@ -131,6 +161,7 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 	if("Y".equals(parameters.isEmployerCpfReport)){
 		for (Map.Entry entry : finalMap.entrySet()) {//this block arranges pay sheet in order of party/RO
 			region = entry.getKey();
+			//if(region){
 			regionPaySheetList = entry.getValue();
 			basicTotal = 0;
 			DAtotal = 0;
@@ -210,11 +241,13 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 			tempMap2["empFpf"] = empFpfTotal;
 			tempMap2["total"] = totalsTotal;
 			EmployerCpfReportList.add(tempMap2);
+			//}
 		} 
 	}
 	else{
 		for (Map.Entry entry : finalMap.entrySet()) {//this block consolidates pay sheet details Regional office wise.
 			region = entry.getKey();
+			//if(region){
 			regionPaySheetList = entry.getValue();
 			tempMap = [:];
 			totalEmpPerRegion = 0;
@@ -295,26 +328,31 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 			tempMap.put("totalEmpPerRegion", totalEmpPerRegion);
 			
 			regionPaySheetMap.put(region, tempMap);
+			//}
 		}
 		
 		
 		for(Map.Entry regionPaySheetEntry : regionPaySheetMap.entrySet()){
 			regionPayMap = regionPaySheetEntry.getValue();
+			//if(regionPayMap){
 			regionPayMap.each { regionPayEntry ->
 				amount = 0;
-				if(sumMap.containsKey(regionPayEntry.getKey())){
+					if(sumMap.containsKey(regionPayEntry.getKey())){
 					amount = sumMap[regionPayEntry.getKey()];
 					amount += regionPayEntry.getValue();
-				}
-				else{
+					}
+					else{
 					amount = regionPayEntry.getValue();
-				}
+					}
 				sumMap.put(regionPayEntry.getKey(), amount);
-			}
+				}
+			//}
 		}
 		
 		for(Map.Entry regionPaySheetEntry : regionPaySheetMap.entrySet()){
+			
 			regionKey = regionPaySheetEntry.getKey();
+			//if(regionKey){
 			regionPayMap = regionPaySheetEntry.getValue();
 			Set zeroValueSet = [];
 			regionPayMap.each { regionPayEntry ->
@@ -331,12 +369,16 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 				empCpf += regionPayMap["PAYROL_BEN_DA"];
 			}
 			empCpf*=0.12;
+			if(regionPayMap["PAYROL_DD_CF_FUND"]){
+				empCpf = regionPayMap["PAYROL_DD_CF_FUND"];
+			}
 			regionPayMap.put("empCpf",empCpf);
 			grossTotal = regionPayMap["totalBenifit"]+empCpf;
 			regionPayMap.put("grossTotal",grossTotal);
 			regionPayMap.keySet().removeAll(zeroValueSet);
 			finalRegionPaySheetMap.put(regionKey, regionPayMap);
 			columnKeys = regionPayMap.keySet();
+			//}
 		}
 		columnKeys.each { columnKey ->
 			if(benefitDescMap.containsKey(columnKey)){
@@ -347,7 +389,7 @@ if("Y".equals(parameters.isRegionalOfficeTotals)){
 			}
 		}
 	}
-	
+		
 	//context.put("regionPaySheetMap",regionPaySheetMap);
 	context.put("finalRegionPaySheetMap",finalRegionPaySheetMap);
 	context.put("columnMap",columnMap);

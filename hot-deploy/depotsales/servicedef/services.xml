@@ -33,6 +33,13 @@
         <attribute name="postalCode" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="createOrUpdateFcilityAttribute" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrUpdateFcilityAttribute">
+        <description>Approve Depot Orders</description>
+        <attribute name="facilityId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="attrName" type="String" mode="IN" optional="false"/>
+        <attribute name="attrValue" type="String" mode="IN" optional="false"/>
+    </service>
     
      <service name="CreditapproveDepotSalesOrder" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreditapproveDepotOrder">
@@ -131,7 +138,26 @@
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="schemesMap" type="Map" mode="OUT" optional="true"/>
     </service>
-    
+    <service name="setInvoiceStatus" engine="simple"  transaction-timeout="7200"
+        location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="setInvoiceStatus">
+        <description>Set the Invoice  Status</description>
+        <required-permissions join-type="OR">
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="ARINVOICE_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="PAYMENT_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="APINVOICE_EDIT"/>
+        	<permission-service service-name="acctgInvoicePermissionCheck" main-action="INVOICE_APPROVE"/>
+        </required-permissions>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountTransTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="purposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="cancelComments" type="String" mode="IN" optional="true"/>
+        <attribute name="statusDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paidDate" type="Timestamp" mode="IN" optional="true"/> <!-- only relevant for changes to PAID -->
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
+    </service>
      <service name="editPartyLooms" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="editPartyLooms" >
         <description>Create a new Depot Sales ReturnHeader</description>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
@@ -694,6 +720,13 @@
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="orderIdList" type="List" mode="IN" optional="true"/>
     </service>
+    <service name="getIndentAndUpdateIndenSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getIndentAndUpdateIndenSummaryDetails">
+        <description>get Indent And Update IndenSummaryDetails Entity</description>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/> 
+        <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+        <attribute name="puposeType" type="String" mode="IN" optional="true"/>
+    </service>
      <service name="runPeriodPopulateIndentSummaryDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulationIndentSummaryDetails" transaction-timeout="6000000">
          <description>populate Order Summary </description>
          <attribute mode="IN" name="fromDate" optional="false" type="String"/>
@@ -712,11 +745,19 @@
         <attribute name="poAmount" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="shippedAmount" mode="OUT" type="BigDecimal" optional="false"></attribute>
     </service>
+    <service name="getSupplierProductPrice" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getSupplierProductPrice">
+        <description>Returns Supplier Product active Price</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+    </service>
      <service name="getOrderSaleBillQty" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderSaleBillQty">
         <description>Populate Order Details </description>
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="saleBillQty" mode="OUT" type="BigDecimal" optional="false"></attribute>
         <attribute name="saleBillAmt" mode="OUT" type="BigDecimal" optional="false"></attribute>
+        <attribute name="saleBillTenPrcAmt" mode="OUT" type="BigDecimal" optional="false"></attribute>
+        <attribute name="invoiceIds" mode="OUT" type="List" optional="false"></attribute>
     </service>
     <service name="getPurchaseBillDetails" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getPurchaseBillDetails">
         <description>Populate Purchase Invoice Details </description>
@@ -763,8 +804,9 @@
     </service>
     <service name="periodPopulateShipmentTotals" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="periodPopulateShipmentTotals" transaction-timeout="6000000">
          <description>populate Shipment Grand Total </description>
-         <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
-         <attribute mode="IN" name="thruDate" optional="false" type="Timestamp"/>
+         <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
+         <attribute mode="IN" name="thruDate" optional="true" type="Timestamp"/>
+         <attribute mode="IN" name="shipmentId" optional="true" type="String"/>
     </service>
     <service name="populateFinYearIndentSummaryDetailsData" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="finYearPopulationIndentSummaryDetails" transaction-timeout="10800000">

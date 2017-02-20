@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml> 
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".2in" margin-top=".1in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".1in" margin-right=".1in" margin-top=".1in">
                 <fo:region-body margin-top="0.1in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1.5in"/>
@@ -41,7 +41,7 @@ under the License.
                 <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
                 <#-- <fo:block text-align="left"    font-size="10pt" >STATEMENT SHOWING THE AGENCYWISE DETAILS OF COTTON/SILK/JUTE YARN SUPPLIED BY NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED UNDER THE SCHEME FOR SUPPLY OF YARN AT :<fo:inline font-weight="bold" > ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:inline></fo:block> -->
 				<fo:block text-align="center" font-size="10pt" font-weight="bold" >PENDING SHIPMENTS REPORT </fo:block>
-				<fo:block text-align="center" font-size="10pt" font-weight="bold" >FOR THE PERIOD ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:block>
+				<fo:block text-align="center" font-size="10pt" font-weight="bold" >FOR THE PERIOD ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd/MM/yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd/MM/yyyy")?if_exists} </fo:block>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		       
         		<fo:block>
@@ -51,14 +51,14 @@ under the License.
              		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="6.5%"/>
              		    <fo:table-column column-width="6.5%"/>
-             		    <fo:table-column column-width="9%"/>
+             		    <fo:table-column column-width="10%"/>
              		    <fo:table-column column-width="12%"/>
              		    <fo:table-column column-width="8.5%"/>
-             		    <fo:table-column column-width="12%"/>
+             		    <fo:table-column column-width="14%"/>
              		    <fo:table-column column-width="8%"/>
              		    <fo:table-column column-width="6.5%"/>
              		    <fo:table-column column-width="5%"/>
-             		    <fo:table-column column-width="5%"/>
+             		    <fo:table-column column-width="4%"/>
              		              		    
 			            
 			            <fo:table-body>
@@ -66,54 +66,54 @@ under the License.
 			                <fo:table-row>
 								
 			                    <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INDENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">NO</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Indent</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">No</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">INDENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DATE</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Indent</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Date</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INDENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QTY</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Indent</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Qty</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">UNIT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PRICE</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Unit</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Price</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">INDENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VALUE</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Indent</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Value</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PO NO</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PO No</fo:block>
 					            	
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PO</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DATE</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Date</fo:block>
 					            </fo:table-cell>
 								 <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SUPPLIER</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Supplier</fo:block>
 					            	
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SHIP</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DATE</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Ship</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">ment</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Date</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SHIP</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MENT</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QTY</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Ship</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">ment</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Qty</fo:block>
 					            </fo:table-cell>
  								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DUR B/W SO</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">AND PO</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Dur B/W SO</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">And PO</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DUR B/W PO</fo:block>
-					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">AND SHIP</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Dur B/W PO</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">And Ship</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>
 						  <#assign totalIdnQty1 = 0>  
@@ -129,13 +129,13 @@ under the License.
 					            	<fo:block  text-align="left" font-size="9pt"  white-space-collapse="false">${eachList.IndentDate?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indQty?if_exists?string("##0.00")}</fo:block>
+					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indQty?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indUnitPrice?if_exists?string("##0.00")}</fo:block>
+					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indUnitPrice?if_exists}</fo:block>
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indentValue?if_exists?string("##0.00")}</fo:block>
+					            	<fo:block   text-align="right" font-size="9pt"  white-space-collapse="false">${eachList.indentValue?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="9pt"  white-space-collapse="false">${eachList.PoNo?if_exists}</fo:block>

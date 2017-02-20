@@ -4456,7 +4456,7 @@
    <screen name="delayedIndentPOAnalyticsListing">
           <section>
               <actions>
-                  <set field="titleProperty" value="DELAYS IN PROCESSING PURCHASE ORDERS BY MORE THAN 2 WORKING DAYS"/>
+                  <set field="titleProperty" value="Delays in Processing Purchase Orders By More than 2 Working days"/>
                   <set field="tabButtonItem" value="analytics"/>
                   <set field="tabButtonItem2" value="delayedIndentPOAnalyticsListing"/>
                    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/findProducerFacility.groovy"/>   
@@ -4481,6 +4481,16 @@
 									location="component://depotsales/webapp/depotsales/depotsales/delayedShipmentPO.ftl" />
 							</html>
 						</platform-specific>
+						
+  	  							 <link text="Save" 
+														style="buttontext" target="ListingPOAnalytics.csv">
+														<parameter param-name="searchType" from-field="parameters.searchType" />
+														<parameter param-name="regionId" from-field="parameters.regionId" />
+														<parameter param-name="stateId" from-field="parameters.stateId" />
+														<parameter param-name="branchId2" from-field="parameters.branchId2" />
+														<parameter param-name="period" from-field="parameters.period" />
+														<parameter param-name="isFormSubmitted" from-field="parameters.isFormSubmitted" />
+													</link>
                       	</screenlet>
                       	
                       	<decorator-section name="search-results">
@@ -8110,7 +8120,7 @@
                 <set field="layoutSettings.javaScripts[]" value="/materialmgmt/images/VendorValidations.js" global="true" />
                 <entity-one entity-name="PartyAndGroup" value-field="partyGroup"/>
                 <script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/forCountriesAndCities.groovy" />
 					
 					
 					
@@ -9609,6 +9619,60 @@
 				</section>
 			</widgets>
 		</section>
+	</screen>	
+	
+	<screen name="DelayShipmentReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/findDelayShipments.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+					<include-form name="DelayShipmentReportCSVHeader"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					<include-form name="DelayShipmentReportCSV"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	<screen name="ListingPOAnalyticsReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+				 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/listingThePoAnalytics.groovy"/>	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+					<include-form name="DelaListingPOAnalyticsReportCSVHeader"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					<include-form name="POAnalyticsReportCSV"
+									location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
 	</screen>
 	
 	
@@ -9845,6 +9909,9 @@
                  <condition>
 					<if-compare field="parameters.screenflag" operator="equals" value="indentSupplyAnalytics"  />
 				 </condition>
+				 <actions>
+    		    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/IndentSupplyAnalyticsCSV.groovy" />
+    		</actions> 
 				 <widgets>
                           <include-form name="indentSupplyAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
                  </widgets>
@@ -9872,6 +9939,32 @@
             </widgets>
         </section>
     </screen>
+    
+    
+    
+    
+        <!-- <screen name="indentSupplyAnalyticsCsv">
+        <section>      
+    		<actions>
+    			<set field="defaultEffectiveDateTime" value="${bsh:org.ofbiz.base.util.UtilDateTime.getDayStart(org.ofbiz.base.util.UtilDateTime.nowTimestamp())}"/>
+			    <set field="defaultEffectiveDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+			    <set field="defaultEffectiveThruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;MMMM dd, yyyy&quot;);}" />
+    			<set field="parameters.screenflag" from-field="parameters.screenFlag"/>
+    		    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/analytics/IndentSupplyAnalyticsCSV.groovy" />
+    		</actions>          
+            <widgets>
+             <section>
+                  <condition>
+					<if-compare field="parameters.screenflag" operator="equals" value="indentSupplyAnalytics"  />
+				 </condition>
+				 <widgets>
+                          <include-form name="indentSupplyAnalyticsCSV" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                 </widgets>
+			 </section>	
+			 </widgets> 
+        </section>
+    </screen>
+  -->
     
      <screen name="DepotSalesOrderNew">
 		<section>
@@ -10226,6 +10319,36 @@
 					</platform-specific>    							    								
     			</widgets>
     		</section>
+	</screen>
+	
+	<screen name="TrackPayments">
+	  <section>
+	    <actions>
+          <set field="titleProperty" value="Payments Tracking"/>	            
+          <set field="tabButtonItem" value="TrackPayments"/>
+        
+	    </actions>
+	    <widgets>
+          <decorator-screen name="DepotSalesCommonDecorator" location="${parameters.mainDecoratorLocation}">
+             <decorator-section name="body">             
+                <section>
+                  <widgets>
+                     <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                       <decorator-section name="search-options">
+                          <include-form name="FindPayments" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                       </decorator-section>
+                       <decorator-section name="search-results">
+                          <screenlet title="Payments List"> 
+                             <include-form name="ListPayments" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                          </screenlet>
+                       </decorator-section>
+                     </decorator-screen>
+                  </widgets>
+                </section>
+             </decorator-section>
+          </decorator-screen>
+        </widgets>
+      </section>
 	</screen>
 	
 	

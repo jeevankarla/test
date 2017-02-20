@@ -245,8 +245,19 @@ if("SALES_INVOICE"==parentTypeId){
 		}
 	}
 }else if("PURCHASE_INVOICE"==parentTypeId){
-		bankPaymentMethodList = delegator.findList("PaymentMethod", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN,bankPaymentMethodIdsList), null, null, null, false);
-		cashPaymentMethodList = delegator.findList("PaymentMethod", EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN,cashPaymentMethodIdsList), null, null, null, false);
+		cList = [];
+		cList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN,bankPaymentMethodIdsList));
+		cList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+		cond = EntityCondition.makeCondition(cList, EntityOperator.AND);
+		
+		bankPaymentMethodList = delegator.findList("PaymentMethod", cond, null, null, null, false);
+		
+		cList.clear();
+		cList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN,cashPaymentMethodIdsList));
+		cList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+		cond = EntityCondition.makeCondition(cList, EntityOperator.AND);
+		
+		cashPaymentMethodList = delegator.findList("PaymentMethod", cond, null, null, null, false);
 		cashPaymentMethodList.each{ methodTypeEach->
 			JSONObject newPMethodObj = new JSONObject();
 			newPMethodObj.put("value",methodTypeEach.paymentMethodId);
@@ -257,6 +268,7 @@ if("SALES_INVOICE"==parentTypeId){
 		// for payment method id in ap payments
 		condList.clear();
 //		condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+		condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 		condList.add(EntityCondition.makeCondition("paymentMethodId", EntityOperator.NOT_EQUAL, "PAYMENTMETHOD2"));
 		cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 		bankPaymentMethodList = delegator.findList("PaymentMethod", cond, null, ["description"], null, false);

@@ -37,11 +37,11 @@ partythruDate=parameters.partythruDate;
 
 partyId = parameters.partyId;
 
-DateMap.put("partyfromDate", partyfromDate);
-DateMap.put("partythruDate", partythruDate);
+//DateMap.put("partyfromDate", partyfromDate);
+//DateMap.put("partythruDate", partythruDate);
 
-DateList.add(DateMap);
-context.DateList=DateList;
+//DateList.add(DateMap);
+//context.DateList=DateList;
 branchId = parameters.branchId;
 branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 branchName = branch.get("groupName");
@@ -53,6 +53,7 @@ condListb = [];
 
 condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
 condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 
 PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
@@ -61,8 +62,33 @@ branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo",
 
 if(!branchList)
 	branchList.add(branchId);
+	
+	////Debug.log("branchId=================="+branchId);
+	
+	
+	//========================checking is it kannur Ro=====================
+	
+	isKunnur = "";
+	if(branchList.size() == 1){
+	condListb =[];
+	condListb.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	condListb1 = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+	PartyRelationship1 = EntityUtil.getFirst(delegator.findList("PartyRelationship", condListb1,UtilMisc.toSet("partyIdFrom"), null, null, false));
+	
+	isKunnur = PartyRelationship1.partyIdFrom;
+	
+	}else{
+	
+	isKunnur = branchId;
+	}
+	
+	//Debug.log("isKunnur=================="+isKunnur);
+	
 
-////Debug.log("branchList=================="+branchList);
+	 
+//Debug.log("branchList=================="+branchList);
 
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
 
@@ -90,6 +116,13 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 daystart = UtilDateTime.getDayStart(fromDate);
 dayend = UtilDateTime.getDayEnd(thruDate);
 
+partyfromDateForCsv=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+partythruDateForCsv=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+DateMap.put("partyfromDate", partyfromDateForCsv);
+DateMap.put("partythruDate", partythruDateForCsv);
+DateList.add(DateMap);
+context.DateList=DateList;
+
 ////Debug.log("daystart==================="+daystart);
 
 ////Debug.log("dayend==================="+dayend);
@@ -97,7 +130,9 @@ dayend = UtilDateTime.getDayEnd(thruDate);
 purposeType = parameters.purposeType;
 
 condList = [];
-//condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "29375"));
+
+if(parameters.invoceId)
+condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, parameters.invoceId));
 
 if(UtilValidate.isNotEmpty(daystart)){
 	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
@@ -105,7 +140,8 @@ if(UtilValidate.isNotEmpty(daystart)){
 }
 
 condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
-condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+if(branchList)
+condList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
 if(partyId)
 	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 
@@ -116,11 +152,11 @@ if(purposeType)
 
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
-fieldsToSelect = ["invoiceId", "invoiceDate", "shipmentId", "partyIdFrom", "referenceNumber"] as Set;
+fieldsToSelect = ["invoiceId", "invoiceDate", "shipmentId", "costCenterId", "referenceNumber"] as Set;
 
 invoice = delegator.findList("Invoice", cond, fieldsToSelect, null, null, false);
 
-////Debug.log("invoice========================="+invoice);
+//Debug.log("condList========================="+condList.size());
 
 
 if(UtilValidate.isEmpty(invoice)){
@@ -204,7 +240,7 @@ if(invoice){
 			invoiceItemList = EntityUtil.filterByCondition(InvoiceItem, EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
 
 
-			PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.partyIdFrom] , false);
+			PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.costCenterId] , false);
 
 
 			////Debug.log("eachInvoice.invoiceId============"+eachInvoice.invoiceId);
@@ -623,6 +659,7 @@ if(invoice){
 
 					////Debug.log("eachAdjustment.itemValue================"+eachAdjustment.itemValue);
 
+					//if(eachAdjustment.invoiceItemTypeId != "INVOICE_ITM_ADJ")
 					allAdjWitOutTEN = allAdjWitOutTEN+eachAdjustment.itemValue;
 				}
 			}
@@ -661,8 +698,6 @@ if(invoice){
 				//  invoAmt = invoAmt+(eachItem.amount*eachItem.quantity);
 
 				// tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
-
-				tempMap.put("invoiceAmount", eachItem.itemValue);
 
 				// invoiceNetAmt = invoiceNetAmt+Double.valueOf((eachItem.amount*eachItem.quantity));
 
@@ -803,12 +838,26 @@ if(invoice){
 				invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
 
 				double taxAmt = 0;
+				double taxAmtkannur = 0;
+				
 				if(invoiceVatCstList){
 					for (eachAdj in invoiceVatCstList) {
-						taxAmt = taxAmt+eachAdj.itemValue;
+						
+						if(isKunnur == "INT6" && (eachAdj.invoiceItemTypeId =="CST_SALE" || eachAdj.invoiceItemTypeId =="CST_SURCHARGE")){
+						  taxAmtkannur = taxAmtkannur+eachAdj.itemValue;
+						}else{
+						 taxAmt = taxAmt+eachAdj.itemValue;
+						}
 					}
 				}
 
+				
+				
+				if(isKunnur == "INT6")
+				tempMap.put("invoiceAmount", eachItem.itemValue+taxAmtkannur);
+			    else
+				tempMap.put("invoiceAmount", eachItem.itemValue);
+				
 				////Debug.log("taxAmt======================"+taxAmt);
 				////Debug.log("allAdjWitOutTEN======================"+allAdjWitOutTEN);
 
@@ -820,7 +869,9 @@ if(invoice){
 				else
 					tempMap.put("allAdjWitOutTEN", "");
 
-
+			    if(isKunnur == "INT6")
+				invoiceNetAmt = invoiceNetAmt+taxAmt+taxAmtkannur;
+				else
 				invoiceNetAmt = invoiceNetAmt+taxAmt;
 
 				//=====================================================================
@@ -921,7 +972,7 @@ if(invoice){
 					tempMap.put("orderNo", actualOrderId);
 
 				if(orderDate)
-					tempMap.put("indentDate",UtilDateTime.toDateString(orderDate,"dd-MM-yyyy"));
+					tempMap.put("indentDate",UtilDateTime.toDateString(orderDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("indentDate","");
 
@@ -953,24 +1004,32 @@ if(invoice){
 				////Debug.log("itemOrderId============="+itemOrderId);
 				////Debug.log("orderItemSeqId============="+orderItemSeqId);
 
-
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId));
 				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 				cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				OrderItemAssoc = delegator.findList("OrderItemAssoc", cond, null, null, null, false);
-
-
+             
 				poOrderId = "";
 				poOrderItemSeqId = "";
 				if(OrderItemAssoc){
-					poOrderId  = OrderItemAssoc[0].toOrderId;
-					poOrderItemSeqId  = OrderItemAssoc[0].toOrderItemSeqId;
+					
+					for (eachAssoc in OrderItemAssoc) {
+						
+						OrderHeaderAss = delegator.findOne("OrderHeader",[orderId : eachAssoc.toOrderId] , false);
+						
+						if(OrderHeaderAss.statusId != "ORDER_CANCELLED"){
+						 poOrderId  = OrderItemAssoc[0].toOrderId;
+						 poOrderItemSeqId  = OrderItemAssoc[0].toOrderItemSeqId;
+						 break;
+						}
+						
+					}
+					
 				}
 
 				////Debug.log("poOrderId============="+poOrderId);
 				////Debug.log("poOrderItemSeqId============="+poOrderItemSeqId);
-
 				////Debug.log("eachInvoice.shipmentId============="+eachInvoice.shipmentId);
 
 
@@ -1051,15 +1110,81 @@ if(invoice){
 						tempMap.put("millInvoiceDate","");
 
 
-					//tempMap.put("poInvoiceAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
-
-					tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
-
-					//tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
-
-					tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].itemValue);
-
+					 double purInvoiceNetAmt = 0;
+					 
+					 purInvoiceNetAmt = purInvoiceNetAmt+POInvoiceItemList[0].itemValue;
+					//================purcahse Tax=========================
+					
+					conditionList.clear();
+					conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, poInvoiceId));
+					conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,poInvoiceItemSeqId));
+					conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
+					cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+					invoiceVatCstListPO = delegator.findList("InvoiceItem", cond, null, null, null, false);
+	
+					double purTax = 0;
+					double purTaxAmtkannur = 0;
+					
+					if(invoiceVatCstListPO){
+						for (eachAdj in invoiceVatCstListPO) {
+							
+							if(isKunnur == "INT6" && (eachAdj.invoiceItemTypeId =="CST_PUR" || eachAdj.invoiceItemTypeId =="CST_SURCHARGE")){
+							  purTaxAmtkannur = purTaxAmtkannur+eachAdj.itemValue;
+							}else{
+							 purTax = purTax+eachAdj.itemValue;
+							}
+						}
+					}
+					
+					
+					tempMap.put("purTax", purTax);
+					
+					purInvoiceNetAmt = purInvoiceNetAmt+purTax;
+					
+					purInvoiceNetAmt = purInvoiceNetAmt+purTaxAmtkannur;
+					
+				//=====================Purchase adjustments=====================
+					
+				
+						double allAdjPur = 0;
+						
+						condList.clear();
+						condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
+						condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_RAWPROD_ITEM", "TEN_PERCENT_SUBSIDY", "VAT_PUR", "CST_PUR", "CST_SALE", "VAT_SALE", "CESS_SALE", "CESS_PUR", "VAT_SURCHARGE", "CST_SURCHARGE", "TEN_PER_CHARGES", "TEN_PER_DISCOUNT", "ENTRY_TAX"]));
+						
+						invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+						
+						InvoiceRemainItemAdjustmentPO = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
+						
+						if(InvoiceRemainItemAdjustmentPO){
+							for (eachAdjustment in InvoiceRemainItemAdjustmentPO) {
+								////Debug.log("eachAdjustment.itemValue================"+eachAdjustment.itemValue);
+							   //if(eachAdjustment.invoiceItemTypeId != "INVOICE_ITM_ADJ")
+								allAdjPur = allAdjPur+eachAdjustment.itemValue;
+							}
+						}
+						
+						if(dontRepeat.size() == 1)
+						tempMap.put("allAdjPur", allAdjPur);
+						else
+						tempMap.put("allAdjPur", "");
+						
+						if(dontRepeat.size() == 1)
+						purInvoiceNetAmt = purInvoiceNetAmt+allAdjPur;
+						
+						if(isKunnur == "INT6")
+						tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue+purTaxAmtkannur);
+						else
+						tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
+						
+						
+						tempMap.put("purInvoiceNetAmt", purInvoiceNetAmt);
+					
+					
+					
 				}
+				
+				
 
 				if(TallyPoNumber)
 					tempMap.put("TallyPoNumber", TallyPoNumber);
@@ -1089,7 +1214,7 @@ if(invoice){
 				}
 
 				if(PorderDate)
-					tempMap.put("poorderDate", UtilDateTime.toDateString(PorderDate,"dd-MM-yyyy"));
+					tempMap.put("poorderDate", UtilDateTime.toDateString(PorderDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("poorderDate", "");
 
@@ -1109,7 +1234,7 @@ if(invoice){
 					deliveryChallanDate = shipmentList.get("deliveryChallanDate");
 
 					if(deliveryChallanDate)
-						tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd-MM-yyyy") );
+						tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd/MM/yyyy") );
 					else
 						tempMap.put("lrDate", "");
 
@@ -1148,7 +1273,7 @@ if(invoice){
 					supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 
 					if(supplierInvoiceDate)
-						tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd-MM-yyyy"));
+						tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd/MM/yyyy"));
 					else
 						tempMap.put("supplierInvoiceDate", "");
 
@@ -1249,7 +1374,7 @@ if(invoice){
 			invoiceItemList = EntityUtil.filterByCondition(InvoiceItem, EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
 
 
-			PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.partyIdFrom] , false);
+			PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.costCenterId] , false);
 
 
 			////Debug.log("eachInvoice.invoiceId============"+eachInvoice.invoiceId);
@@ -1726,7 +1851,6 @@ if(invoice){
 
 				// tempMap.put("invoiceAmount", (eachItem.amount*eachItem.quantity));
 
-				tempMap.put("invoiceAmount", eachItem.itemValue);
 
 				// invoiceNetAmt = invoiceNetAmt+Double.valueOf((eachItem.amount*eachItem.quantity));
 
@@ -1870,11 +1994,26 @@ if(invoice){
 				invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
 
 				double taxAmt = 0;
+				double taxAmtkannur = 0;
+				
 				if(invoiceVatCstList){
 					for (eachAdj in invoiceVatCstList) {
-						taxAmt = taxAmt+eachAdj.itemValue;
+						
+						if(isKunnur == "INT6" && (eachAdj.invoiceItemTypeId =="CST_SALE" || eachAdj.invoiceItemTypeId =="CST_SURCHARGE")){
+						   taxAmtkannur = taxAmtkannur+eachAdj.itemValue;
+						}else{
+						   taxAmt = taxAmt+eachAdj.itemValue;
+						 
+						}
+						
+						
 					}
 				}
+				
+				if(isKunnur == "INT6")
+				tempMap.put("invoiceAmount", eachItem.itemValue+taxAmtkannur);
+			   else
+				tempMap.put("invoiceAmount", eachItem.itemValue);
 
 				////Debug.log("taxAmt======================"+taxAmt);
 				////Debug.log("allAdjWitOutTEN======================"+allAdjWitOutTEN);
@@ -1888,8 +2027,11 @@ if(invoice){
 					tempMap.put("allAdjWitOutTEN", "");
 
 
+				if(isKunnur == "INT6")
+				invoiceNetAmt = invoiceNetAmt+taxAmt+taxAmtkannur;
+                else
 				invoiceNetAmt = invoiceNetAmt+taxAmt;
-
+				
 				//=====================================================================
 
 				/*if(quantity > quotaQuantity)
@@ -1988,7 +2130,7 @@ if(invoice){
 					tempMap.put("orderNo", actualOrderId);
 
 				if(orderDate)
-					tempMap.put("indentDate",UtilDateTime.toDateString(orderDate,"dd-MM-yyyy"));
+					tempMap.put("indentDate",UtilDateTime.toDateString(orderDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("indentDate","");
 
@@ -2072,6 +2214,7 @@ if(invoice){
 
 				if(poInvoices){
 					poInvoiceId = poInvoices[0].invoiceId;
+					poInvoiceItemSeqId = "00001";
 				}
 
 
@@ -2119,7 +2262,7 @@ if(invoice){
 
 
 					if(poinvoiceDate)
-						tempMap.put("millInvoiceDate", UtilDateTime.toDateString(poinvoiceDate,"dd-MM-yyyy"));
+						tempMap.put("millInvoiceDate", UtilDateTime.toDateString(poinvoiceDate,"dd/MM/yyyy"));
 					else
 						tempMap.put("millInvoiceDate","");
 
@@ -2131,6 +2274,79 @@ if(invoice){
 					//tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
 
 					tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].itemValue);
+					
+					
+					double purInvoiceNetAmt = 0;
+					
+					purInvoiceNetAmt = purInvoiceNetAmt+POInvoiceItemList[0].itemValue;
+				   //================purcahse Tax=========================
+				   
+				   conditionList.clear();
+				   conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, poInvoiceId));
+				   conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,poInvoiceItemSeqId));
+				   conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
+				   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				   invoiceVatCstListPO = delegator.findList("InvoiceItem", cond, null, null, null, false);
+   
+				   double purTax = 0;
+				   double purTaxAmtkannur = 0;
+				   
+				   if(invoiceVatCstListPO){
+					   for (eachAdj in invoiceVatCstListPO) {
+						   
+						   if(isKunnur == "INT6" && (eachAdj.invoiceItemTypeId =="CST_PUR" || eachAdj.invoiceItemTypeId =="CST_SURCHARGE")){
+							 purTaxAmtkannur = purTaxAmtkannur+eachAdj.itemValue;
+						   }else{
+							purTax = purTax+eachAdj.itemValue;
+						   }
+					   }
+				   }
+				   
+				   
+				   tempMap.put("purTax", purTax);
+				   
+				   purInvoiceNetAmt = purInvoiceNetAmt+purTax;
+				   
+				   purInvoiceNetAmt = purInvoiceNetAmt+purTaxAmtkannur;
+				   
+			   //=====================Purchase adjustments=====================
+				   
+			   
+					   double allAdjPur = 0;
+					   
+					   condList.clear();
+					   condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
+					   condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_RAWPROD_ITEM", "TEN_PERCENT_SUBSIDY", "VAT_PUR", "CST_PUR", "CST_SALE", "VAT_SALE", "CESS_SALE", "CESS_PUR", "VAT_SURCHARGE", "CST_SURCHARGE", "TEN_PER_CHARGES", "TEN_PER_DISCOUNT", "ENTRY_TAX"]));
+					   
+					   invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+					   
+					   InvoiceRemainItemAdjustmentPO = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
+					   
+					   if(InvoiceRemainItemAdjustmentPO){
+						   for (eachAdjustment in InvoiceRemainItemAdjustmentPO) {
+							   ////Debug.log("eachAdjustment.itemValue================"+eachAdjustment.itemValue);
+							  //if(eachAdjustment.invoiceItemTypeId != "INVOICE_ITM_ADJ")
+							   allAdjPur = allAdjPur+eachAdjustment.itemValue;
+						   }
+					   }
+					   
+					   if(dontRepeat.size() == 1)
+					   tempMap.put("allAdjPur", allAdjPur);
+					   else
+					   tempMap.put("allAdjPur", "");
+					   
+					   if(dontRepeat.size() == 1)
+					   purInvoiceNetAmt = purInvoiceNetAmt+allAdjPur;
+					   
+					   if(isKunnur == "INT6")
+					   tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue+purTaxAmtkannur);
+					   else
+					   tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
+					   
+					   
+					   tempMap.put("purInvoiceNetAmt", purInvoiceNetAmt);
+					
+					
 
 				}
 
@@ -2157,7 +2373,7 @@ if(invoice){
 				}
 
 				if(PorderDate)
-					tempMap.put("poorderDate", UtilDateTime.toDateString(PorderDate,"dd-MM-yyyy"));
+					tempMap.put("poorderDate", UtilDateTime.toDateString(PorderDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("poorderDate", "");
 
@@ -2175,7 +2391,7 @@ if(invoice){
 					deliveryChallanDate = shipmentList.get("deliveryChallanDate");
 
 					if(deliveryChallanDate)
-						tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd-MM-yyyy") );
+						tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd/MM/yyyy") );
 					else
 						tempMap.put("lrDate", "");
 
@@ -2216,7 +2432,7 @@ if(invoice){
 					supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 
 					if(supplierInvoiceDate)
-						tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd-MM-yyyy"));
+						tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd/MM/yyyy"));
 					else
 						tempMap.put("supplierInvoiceDate", "");
 
@@ -2292,7 +2508,7 @@ if(invoice){
 				tempMap.put("tallyRefNo", tallyRefNo);
 
 				if(eachInvoice.invoiceDate)
-					tempMap.put("tallyRefDate", UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd-MM-yyyy"));
+					tempMap.put("tallyRefDate", UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd/MM/yyyy"));
 				else
 					tempMap.put("tallyRefDate", "");
 

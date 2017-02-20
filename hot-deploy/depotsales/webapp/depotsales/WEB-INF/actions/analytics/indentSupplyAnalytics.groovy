@@ -118,7 +118,10 @@ if(UtilValidate.isNotEmpty(thruDate)){
 			 totalSaleAmount =0;
 			 if(eachItem.getAt("saleAmount")){
 				 totalSaleAmount = new BigDecimal(eachItem.getAt("saleAmount")).setScale(2, 0);
-			 }
+				 if(eachItem.saleTenPrcAmount){
+				 totalSaleAmount=totalSaleAmount.minus(new BigDecimal(eachItem.getAt("saleTenPrcAmount")).setScale(2, 0))
+				 }
+				 }
 			 totalPurAmount=0;
 			 if(eachItem.getAt("purAmout")){
 				 totalPurAmount = new BigDecimal(eachItem.getAt("purAmout")).setScale(2, 0);

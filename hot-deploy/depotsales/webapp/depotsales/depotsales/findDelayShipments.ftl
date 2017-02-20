@@ -90,7 +90,7 @@ under the License.
       <form method="post" name="findDelayShipments" id="findDelayShipments" action="<@ofbizUrl>${action}</@ofbizUrl> " class="basic-form">
         <table class="basic-table" >
         <tr>
-        	 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search By</td> 
+        	 <td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search By</b></td> 
         	 <td>
       		 	 <select name="searchType" id="searchType" onchange="javascript:showSearchFilter(this);">
       		 	     <#if period?has_content>
@@ -104,7 +104,7 @@ under the License.
         </tr>
           <tr>    
   			  <div>
-  				  <td id="BranchFilterlabel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Branch</td>
+  				  <td id="BranchFilterlabel"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Branch</b></td>
 	              <td id="BranchFilter">
 					  <select name="branchId2" id="branchId">
 		              <#if branchIdName?has_content>
@@ -121,7 +121,7 @@ under the License.
 		  		   </td>
   		       </div>
   		       <div >
-  				  <td id="RegionFilterLabel">&nbsp;&nbsp;&nbsp;Regional Office</td>
+  				  <td id="RegionFilterLabel"><b>&nbsp;&nbsp;&nbsp;Regional Office</b></td>
 	              <td id="RegionFilter">
 					  <select name="regionId" id="regionId">
 		              <#if regionIdName?has_content>
@@ -138,7 +138,7 @@ under the License.
 		  		   </td>
   		       </div>
   		       <div>
-  				  <td id="StateFilterLabel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;State</td>
+  				  <td id="StateFilterLabel"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;State</b></td>
 	              <td id="StateFilter">
 					  <select name="stateId" id="stateId">
 		              <#if stateIdName?has_content>

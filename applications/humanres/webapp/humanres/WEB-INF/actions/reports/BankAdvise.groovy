@@ -109,7 +109,10 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 		  	conList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 			conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)));
 		}
-		conList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+		//BankRequestFlag comes from BankRequestLetterPdf screen 
+		if(!BankRequestFlag){
+			conList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
+		}
 		EntityCondition cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
 		finAccountRoleList=delegator.findList("FinAccountRole",cond, null,null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){

@@ -240,7 +240,10 @@
 		<field name="bankName" title="Bank Name"><display/></field>
 		<field name="emplId" title="Employee Id"><display/></field>
 		<field name="name" title="Employee Name"><display/></field>
+		<field name="placeOfPosting" title="place Of Posting"><display/></field>
 		<field name="acNo" title="Account Number"><display/></field>
+		<field name="branchName" title="Branch Name"><display/></field>
+		<field name="ifscCode" title="IFSC Code"><display/></field>
 		<field name="netAmt" title="Net Amount"><display/></field>
 	</form>	
 	<form name="LoanDisbursedBankReportCsv" type="list" list-name="finalList" 
@@ -1857,6 +1860,43 @@
         <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field> 
         <field name="thruDate" tooltip="${uiLabelMap.CommonRequired}" title="${uiLabelMap.toDate}"><date-time type="date"/></field>  
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+    </form>
+    <form name="findSupplyTimePeriod" type="single" title="" target="findCreateSupplyTimePeriod"
+            header-row-style="header-row" default-table-style="basic-table">
+       <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+       <field name="periodTypeId">
+       		<drop-down allow-empty="true">
+				<list-options list-name="PeriodTypeList" key-name="periodId"
+				description="${description}" />
+			</drop-down>
+		</field>
+        <field name="fromDate"><date-time type="date"/></field> 
+        <field name="thruDate"><date-time type="date"/></field>  
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+    </form>
+    <form name="SupplyTimePeriodResults" list-name="timePeriodList" type="list"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <field name="periodTypeId" title = "Period Type Id"><display ></display></field>
+        <field name="periodName" title = "Period Name"><display></display></field>
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
+        <field name="thruDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd-MM-yyyy&quot;);}"/> </field>
+    </form>
+    <form name="CreateNewSupplyTimePeriod" type="single" title="" target="createSupplymentaryTimePeriod"
+            header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        	<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/periodTypeIds.groovy"/>
+        </actions>
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="periodTypeId" event="onchange" action="javascript:supplyDateFormatType();">
+        	<drop-down allow-empty="true">
+		    	<list-options list-name="PeriodTypeList" key-name="periodId"
+				description="${description}" />
+			</drop-down>
+		</field>
+        <field name="fromDate" id-name="fromDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
+        <field name="thruDate" id-name="thruDate" tooltip="${uiLabelMap.CommonRequired}" event="onclick" action="javascript:picker()"><text  size="12"/></field>
+        <field name="periodName" title="Period Name"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="FindPayHead" type="single" header-row-style="header-row" default-table-style="basic-table" target = "PayHeadRules">
     	<field name="payrollBenDedRuleId" title="payrollBenDedRuleId"><text size="10"/></field>

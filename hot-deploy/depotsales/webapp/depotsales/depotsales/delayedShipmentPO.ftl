@@ -203,7 +203,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
         
 		  <table width="60%" border="0" cellspacing="0" cellpadding="0" class="form-style-8">
 				 <tr>
-        	 <td>Search By</td> 
+        	 <td><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search By</b></td> 
         	 <td>
       		 	 <select name="searchType" id="searchType" onchange="javascript:showSearchFilter(this);">
       		 	 	<#if period?has_content>
@@ -217,7 +217,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
         	</tr>
 			<tr>    
   			  <div>
-  				  <td id="BranchFilterlabel">Branch</td>
+  				  <td id="BranchFilterlabel"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Branch</b></td>
 	              <td id="BranchFilter">
 					  <select name="branchId2" id="branchId">
 		              <#if branchIdName?has_content>
@@ -234,7 +234,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 		  		   </td>
   		       </div>
   		      <div >
-  				  <td id="RegionFilterLabel">Regional Office</td>
+  				  <td id="RegionFilterLabel"><b>&nbsp;&nbsp;Regional Office</b></td>
 	              <td id="RegionFilter">
 					  <select name="regionId" id="regionId">
 		              <#if regionIdName?has_content>
@@ -251,7 +251,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 		  		   </td>
   		       </div>
   		       <div>
-  				  <td id="StateFilterLabel">State</td>
+  				  <td id="StateFilterLabel"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;State</b></td>
 	              <td id="StateFilter">
 					  <select name="stateId" id="stateId">
 		              <#if stateIdName?has_content>
@@ -291,7 +291,7 @@ var effectiveDate1 = $("#effectiveDate1").val();
 				
 				
 				<tr>
-				  <td align='left' valign='middle' nowrap="nowrap">Period :</td>
+				  <td align='left' valign='middle' nowrap="nowrap"><b>Period Selection</b></td>
 				  <td valign='middle'><font color="green">          
 				  <input type="hidden" name="isFormSubmitted" id="isFormSubmitted" value="Y"  />     
 				<select name="period" id="periodName">

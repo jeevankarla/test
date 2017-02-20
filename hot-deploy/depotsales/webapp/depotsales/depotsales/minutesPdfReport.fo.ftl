@@ -91,6 +91,7 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Items</fo:block>
 					            </fo:table-cell >
+					            
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Remarks</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Items</fo:block>
@@ -174,8 +175,12 @@ under the License.
 			            <fo:table-column column-width="15%"/>
 			            <fo:table-column column-width="10%"/>
 			             <#--<fo:table-column column-width="10%"/>-->
+			              <#if scheme == "MGPS_10Pecent">
 			            <fo:table-column column-width="10%"/>
+			            </#if>
+			            <#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 			            <fo:table-column column-width="10%"/>
+			            </#if>
 	                    <fo:table-column column-width="11%"/>
 			            <fo:table-column column-width="15%"/>
 			            <fo:table-column column-width="11%"/>
@@ -195,14 +200,18 @@ under the License.
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Quantity</fo:block>
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(KGS)</fo:block>
 					            </fo:table-cell>
+					            <#if scheme == "MGPS_10Pecent">
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">10 %</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Qty(Kgs)</fo:block>
 					            </fo:table-cell >
+					            </#if>
+					            <#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">MGPS</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Qty(Kgs)</fo:block>
 					            </fo:table-cell >
+					            </#if>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Purchase Rate/Unit</fo:block>
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(Rs.)</fo:block>
@@ -246,14 +255,18 @@ under the License.
 					            <#assign totquantityKgs=totquantityKgs+orderList.get("quantity")>
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists}</fo:block>
 					            </fo:table-cell>
+					            <#if scheme == "MGPS_10Pecent">
 					            <fo:table-cell border-style="solid">
 					            <#assign tenPreTOT=tenPreTOT+orderList.get("tenPerQty")>
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("tenPerQty")?if_exists} </fo:block>
 					            </fo:table-cell>
+					            </#if>
+					            <#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 					            <fo:table-cell border-style="solid">
 					               <#assign mgpsQtyTOT=mgpsQtyTOT+orderList.get("mgpsQty")>
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("mgpsQty")?if_exists} </fo:block>
 					            </fo:table-cell>
+					            </#if>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("PurunitPrice")?has_content>${orderList.get("PurunitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false"><#if orderList.get("Uom") == "/Bale">${orderList.get("baleQuantity")*40}(Bundles)<#elseif orderList.get("Uom") == "/Half-Bale">${orderList.get("baleQuantity")*20}(Bundles)<#elseif orderList.get("Uom") == "/Bundle">${orderList.get("baleQuantity")}(Bundles)</#if></fo:block> 
@@ -283,12 +296,16 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totquantityKgs} </fo:block>
 					            </fo:table-cell>
+					            <#if scheme == "MGPS_10Pecent">
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${tenPreTOT?string("#0.000")} </fo:block>
 					            </fo:table-cell>
+					            </#if>
+					            <#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${mgpsQtyTOT}</fo:block>
 					            </fo:table-cell>
+					            </#if>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>

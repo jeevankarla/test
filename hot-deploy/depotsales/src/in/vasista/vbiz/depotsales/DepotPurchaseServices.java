@@ -801,12 +801,17 @@ public class DepotPurchaseServices{
     			Debug.logError(e, "Failed to Populate Invoice ", module);
     		}*/
 	    	 
-		
-		
-		
+	    	try{
+	  			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("invoiceId", invoiceId));
+	  			if (ServiceUtil.isError(serviceResult)) {
+	  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+	  				return "error";
+	             }
+	   		}catch(GenericServiceException e){
+	 			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+	 		}
 	 		String invoiceSeq = org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, invoiceId);
 	 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId+" and Sequence : "+invoiceSeq);	  	 
-	 		
 	 		return "success";
 	 	}
 	
@@ -1992,8 +1997,16 @@ public class DepotPurchaseServices{
    	 
 	   //======================================================================================
     	 */
-		   
-		   
+	   
+	   try{
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("invoiceId", invoiceId));
+ 			if (ServiceUtil.isError(serviceResult)) {
+ 				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+ 				return "error";
+            }
+  		}catch(GenericServiceException e){
+			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+		} 
 		   
 
     	String invoiceSeq = org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, invoiceId);
@@ -2077,6 +2090,24 @@ public class DepotPurchaseServices{
 		}catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
+		
+		String branchId = "";
+		   
+		 try {
+				List conditions = FastList.newInstance();
+				conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+				conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "COST_CENTER_ID"));
+		    	List <GenericValue> invoiceRoles = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+		    	if(UtilValidate.isNotEmpty(invoiceRoles)){
+		    		
+		    		GenericValue invoiceRoles1 = EntityUtil.getFirst(invoiceRoles);
+		    		
+		    		branchId = invoiceRoles1.getString("partyId");
+		    		
+		    	}
+		 }catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
 		
 		// Remove existing invoice items
 		List conditionList = FastList.newInstance();
@@ -2506,6 +2537,7 @@ public class DepotPurchaseServices{
 						if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
 							if((new BigDecimal(taxAmt)).compareTo(BigDecimal.ZERO)>0){
 								createInvoiceItemContext.put("amount",new BigDecimal(taxAmt));
+								createInvoiceItemContext.put("costCenterId",branchId.trim());
 								try{
 					            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
 					            	
@@ -2594,6 +2626,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("amount", (BigDecimal) adjMap.get("amount"));
 						adjItemCtx.put("quantity", BigDecimal.ONE);
 						adjItemCtx.put("invoiceId", invoiceId);
+						adjItemCtx.put("costCenterId",branchId.trim());
 						adjItemCtx.put("parentInvoiceId", invoiceId);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
 						if(UtilValidate.isNotEmpty(adjMap.get("sourcePercentage"))){
@@ -2698,7 +2731,7 @@ public class DepotPurchaseServices{
 						//Debug.log("orderAdjustmentTypeId====================="+adjMap.get("orderAdjustmentTypeId"));
 
 						adjItemCtx.put("invoiceItemTypeId", adjMap.get("orderAdjustmentTypeId"));
-						
+						adjItemCtx.put("costCenterId",branchId.trim());
 						//Debug.log("amount====================="+adjMap.get("amount"));
 						
 						adjItemCtx.put("amount", (BigDecimal) adjMap.get("amount"));
@@ -2989,7 +3022,7 @@ public class DepotPurchaseServices{
         		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
         		
         		eachInvoiceItem.set("itemValue",roundedAmount);
-        		
+        		eachInvoiceItem.set("costCenterId",branchId);
         		try{
         		eachInvoiceItem.store();
         		}catch(GenericEntityException e){
@@ -3008,7 +3041,15 @@ public class DepotPurchaseServices{
     		}
         	
     	 }
-		
+    	 try{
+  			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("invoiceId", invoiceId));
+  			if (ServiceUtil.isError(serviceResult)) {
+  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+  				return "error";
+             }
+   		}catch(GenericServiceException e){
+ 			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+ 		}
 		
 
 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
@@ -3088,6 +3129,25 @@ public class DepotPurchaseServices{
 		}catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
+		
+		
+		String branchId = "";
+		
+		 try {
+				List conditions = FastList.newInstance();
+				conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+				conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "COST_CENTER_ID"));
+		    	List <GenericValue> invoiceRoles = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+		    	if(UtilValidate.isNotEmpty(invoiceRoles)){
+		    		
+		    		GenericValue invoiceRoles1 = EntityUtil.getFirst(invoiceRoles);
+		    		
+		    		branchId = invoiceRoles1.getString("partyId");
+		    		
+		    	}
+		 }catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
 		
 		// Remove existing invoice items
 		List conditionList = FastList.newInstance();
@@ -3491,6 +3551,8 @@ public class DepotPurchaseServices{
 							
 							if((new BigDecimal(taxAmt)).compareTo(BigDecimal.ZERO)>0){
 							createInvoiceItemContext.put("amount",new BigDecimal(taxAmt));
+							createInvoiceItemContext.put("costCenterId",branchId);
+							
 							try{
 				            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
 				            	
@@ -3580,6 +3642,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("invoiceId", invoiceId);
 						adjItemCtx.put("parentInvoiceId", invoiceId);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
+						adjItemCtx.put("costCenterId",branchId);
 						if(UtilValidate.isNotEmpty(adjMap.get("sourcePercentage"))){
 							adjItemCtx.put("sourcePercentage", adjMap.get("sourcePercentage"));
 						}
@@ -3691,6 +3754,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("parentInvoiceId", invoiceId);
 						adjItemCtx.put("userLogin", userLogin);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
+						adjItemCtx.put("costCenterId",branchId);
 						
 						//Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
 
@@ -3894,7 +3958,7 @@ public class DepotPurchaseServices{
         		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
         		
         		eachInvoiceItem.set("itemValue",roundedAmount);
-        		
+        		eachInvoiceItem.set("costCenterId", branchId);
         		try{
         		eachInvoiceItem.store();
         		}catch(GenericEntityException e){
@@ -3994,6 +4058,24 @@ public class DepotPurchaseServices{
 		}catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
+		
+		String branchId = "";
+		
+		 try {
+			List conditions = FastList.newInstance();
+			conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "COST_CENTER_ID"));
+			List <GenericValue> invoiceRoles = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(invoiceRoles)){
+				
+				GenericValue invoiceRoles1 = EntityUtil.getFirst(invoiceRoles);
+				
+				branchId = invoiceRoles1.getString("partyId");
+		    		
+		    	}
+		 }catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
 		
 		// Remove existing invoice items
 		List conditionList = FastList.newInstance();
@@ -4438,6 +4520,8 @@ public class DepotPurchaseServices{
 							if((new BigDecimal(taxAmt)).compareTo(BigDecimal.ZERO)>0){
 							
 							 createInvoiceItemContext.put("amount", new BigDecimal(taxAmt));
+							 createInvoiceItemContext.put("costCenterId", branchId);
+							 
 							 try{
 					            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
 					            	
@@ -4525,6 +4609,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("invoiceId", invoiceId);
 						adjItemCtx.put("parentInvoiceId", invoiceId);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
+						adjItemCtx.put("costCenterId", branchId);
 						if(UtilValidate.isNotEmpty(adjMap.get("sourcePercentage"))){
 							adjItemCtx.put("sourcePercentage", adjMap.get("sourcePercentage"));
 						}
@@ -4636,7 +4721,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("parentInvoiceId", invoiceId);
 						adjItemCtx.put("userLogin", userLogin);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
-						
+						adjItemCtx.put("costCenterId", branchId);
 						////Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
 
 						
@@ -4806,9 +4891,6 @@ public class DepotPurchaseServices{
 		}*/
 		//==============update in Purchase=====================
 		
-		
-		
-		
   //============================================Rounding Off===============================
 	    
 	    List<GenericValue> InvoiceItem = null;
@@ -4839,6 +4921,7 @@ public class DepotPurchaseServices{
         		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
         		
         		eachInvoiceItem.set("itemValue",roundedAmount);
+        		eachInvoiceItem.set("costCenterId", branchId);
         		
         		try{
         		eachInvoiceItem.store();
@@ -4859,7 +4942,15 @@ public class DepotPurchaseServices{
         	
     	 }
 		
-		
+    	 try{
+  			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("invoiceId", invoiceId));
+  			if (ServiceUtil.isError(serviceResult)) {
+  				request.setAttribute("_ERROR_MESSAGE_", "Error While Updateing Indent Summary Details");
+  				return "error";
+             }
+   		}catch(GenericServiceException e){
+ 			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+ 		}
 
 		request.setAttribute("_EVENT_MESSAGE_", "Invoice created with Id : "+invoiceId);	  	 
 	
@@ -4938,6 +5029,24 @@ public class DepotPurchaseServices{
 		}catch (GenericEntityException e) {
 			Debug.logError(e, module);
 		}
+		
+		String branchId = "";
+		
+		 try {
+				List conditions = FastList.newInstance();
+				conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+				conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "COST_CENTER_ID"));
+		    	List <GenericValue> invoiceRoles = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+		    	if(UtilValidate.isNotEmpty(invoiceRoles)){
+		    		
+		    		GenericValue invoiceRoles1 = EntityUtil.getFirst(invoiceRoles);
+		    		
+		    		branchId = invoiceRoles1.getString("partyId");
+		    		
+		    	}
+		 }catch (GenericEntityException e) {
+				Debug.logError(e, module);
+			}
 		
 		// Remove existing invoice items
 		List conditionList = FastList.newInstance();
@@ -5386,6 +5495,8 @@ public class DepotPurchaseServices{
 								if((new BigDecimal(taxAmt)).compareTo(BigDecimal.ZERO)>0){
 								
 								 createInvoiceItemContext.put("amount", new BigDecimal(taxAmt));
+								 createInvoiceItemContext.put("costCenterId", branchId);
+								 
 								 try{
 						            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
 						            	
@@ -5482,6 +5593,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("invoiceId", invoiceId);
 						adjItemCtx.put("parentInvoiceId", invoiceId);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
+						adjItemCtx.put("costCenterId", branchId);
 						if(UtilValidate.isNotEmpty(adjMap.get("sourcePercentage"))){
 							adjItemCtx.put("sourcePercentage", adjMap.get("sourcePercentage"));
 						}
@@ -5593,7 +5705,7 @@ public class DepotPurchaseServices{
 						adjItemCtx.put("parentInvoiceId", invoiceId);
 						adjItemCtx.put("userLogin", userLogin);
 						adjItemCtx.put("parentInvoiceItemSeqId", invoiceItemSeqId);
-						
+						adjItemCtx.put("costCenterId", branchId);
 						Debug.log("sourcePercentage====================="+adjMap.get("sourcePercentage"));
 
 						
@@ -5796,6 +5908,7 @@ public class DepotPurchaseServices{
         		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
         		
         		eachInvoiceItem.set("itemValue",roundedAmount);
+        		eachInvoiceItem.set("costCenterId",branchId);
         		
         		try{
         		eachInvoiceItem.store();
@@ -5848,7 +5961,7 @@ public class DepotPurchaseServices{
 		        		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
 		        		
 		        		eachInvoiceItem.set("itemValue",roundedAmount);
-		        		
+		        		eachInvoiceItem.set("costCenterId", branchId);
 		        		try{
 		        		eachInvoiceItem.store();
 		        		}catch(GenericEntityException e){
@@ -6431,6 +6544,27 @@ public class DepotPurchaseServices{
 				//invoiceDiscountsList
 				
 				
+				//===========get RO for branch================
+	            
+	            String roFroBranch = "";
+	            conditionList.clear();
+	  			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyIdFrom));
+	  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	  	        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+				EntityCondition conditionRel = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
+				try{
+					List<GenericValue> orgsListS = delegator.findList("PartyRelationship", conditionRel, null, UtilMisc.toList("partyIdFrom"), null, false);
+					GenericValue orgsList = EntityUtil.getFirst(orgsListS);
+					roFroBranch = orgsList.getString("partyIdFrom");
+					
+	   	    	}catch (GenericEntityException e) {
+	   				// TODO: handle exception
+	   	    		Debug.logError(e, module);
+	   			}
+
+				Debug.log("roFroBranch===================="+roFroBranch);
+				
+				
 				Map input = FastMap.newInstance();
 				input.put("userLogin", userLogin);
 		        input.put("invoiceTypeId", "PURCHASE_INVOICE");        
@@ -6441,7 +6575,8 @@ public class DepotPurchaseServices{
 		        input.put("currencyUomId", currencyUomId);
 		        input.put("invoiceDate", invoiceDate);
 		        input.put("dueDate", invoiceDate); 	        
-		        input.put("partyId",partyIdFrom );
+		        input.put("partyId",roFroBranch );
+		        input.put("costCenterId",partyIdFrom);
 		        input.put("shipmentId",shipmentId );
 		        input.put("purposeTypeId", purposeTypeId);
 		        if(UtilValidate.isNotEmpty(isDisableAcctg)){
@@ -6556,6 +6691,7 @@ public class DepotPurchaseServices{
 					}*/
 					invoiceItemCtx.put("invoiceId", invoiceId);
 					invoiceItemCtx.put("invoiceItemTypeId", "INV_RAWPROD_ITEM");
+					invoiceItemCtx.put("costCenterId", partyIdFrom);
 					invoiceItemCtx.put("userLogin", userLogin);
 					result = dispatcher.runSync("createInvoiceItem", invoiceItemCtx);
 					
@@ -6606,6 +6742,7 @@ public class DepotPurchaseServices{
 							taxItemCtx.put("invoiceId", invoiceId);
 							taxItemCtx.put("parentInvoiceId", invoiceId);
 							taxItemCtx.put("parentInvoiceItemSeqId", invItemSeqId);
+							taxItemCtx.put("costCenterId", partyIdFrom);
 							taxItemCtx.put("sourcePercentage", (BigDecimal) taxMap.get("sourcePercentage"));
 							taxItemCtx.put("userLogin", userLogin);
 							result = dispatcher.runSync("createInvoiceItem", taxItemCtx);
@@ -6631,6 +6768,7 @@ public class DepotPurchaseServices{
 							adjItemCtx.put("invoiceId", invoiceId);
 							adjItemCtx.put("parentInvoiceId", invoiceId);
 							adjItemCtx.put("parentInvoiceItemSeqId", invItemSeqId);
+							adjItemCtx.put("costCenterId", partyIdFrom);
 							if(UtilValidate.isNotEmpty(adjMap.get("sourcePercentage"))){
 								adjItemCtx.put("sourcePercentage", adjMap.get("sourcePercentage"));
 							}
@@ -6661,6 +6799,7 @@ public class DepotPurchaseServices{
 							adjItemCtx.put("invoiceId", invoiceId);
 							adjItemCtx.put("parentInvoiceId", invoiceId);
 							adjItemCtx.put("parentInvoiceItemSeqId", invItemSeqId);
+							adjItemCtx.put("costCenterId", partyIdFrom);
 							if(UtilValidate.isNotEmpty(adjMap.get("sourcePercentage"))){
 								adjItemCtx.put("sourcePercentage", adjMap.get("sourcePercentage"));
 							}
@@ -6820,7 +6959,14 @@ public class DepotPurchaseServices{
 						List<GenericValue> orderRoles = delegator.findList("OrderRole", condExpr1, null, null, null, false);
 			   
 			      for (GenericValue orderRole : orderRoles) {
-			            createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
+			    	  
+			    	  String roleTypeId = orderRole.getString("roleTypeId");
+		            	
+		            	if(roleTypeId.equals("BILL_TO_CUSTOMER"))
+		                  createInvoiceRoleContext.put("partyId", roFroBranch);
+		            	else
+		            	  createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
+			    	  
 			            createInvoiceRoleContext.put("roleTypeId", orderRole.getString("roleTypeId"));
 			            Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createInvoiceRoleContext);
 			            if (ServiceUtil.isError(createInvoiceRoleResult)) {
@@ -6828,6 +6974,19 @@ public class DepotPurchaseServices{
 							return ServiceUtil.returnError("Error creating Invoice Role for orderId : "+orderId);
 			            }
 			      }
+			      
+			      try{
+		              	 GenericValue billFromVendorRole = delegator.makeValue("InvoiceRole");
+		              	 billFromVendorRole.set("invoiceId", invoiceId);
+		              	 billFromVendorRole.set("partyId", partyIdFrom);
+		              	 billFromVendorRole.set("roleTypeId", "COST_CENTER_ID");
+		              	 billFromVendorRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
+		                   delegator.createOrStore(billFromVendorRole);
+		               } catch (GenericEntityException e) {
+		             	  Debug.logError(e, "Failed to Populate Invoice ", module);
+		               }	
+			      
+			      
 			      //approve invoice
 			      /*Map<String, Object> invoiceCtx = UtilMisc.<String, Object>toMap("invoiceId", invoiceId);
 		            invoiceCtx.put("userLogin", userLogin);
@@ -7282,8 +7441,9 @@ public class DepotPurchaseServices{
 		String refNo = (String) request.getParameter("refNo");
 		String quotationNo = (String) request.getParameter("quotationNo");
 		String orderDateStr = (String) request.getParameter("orderDate");
+		String dyesChemicals = (String) request.getParameter("dyesChemicals");
 		
-		Debug.log("orderDateStr=================="+orderDateStr);
+		//Debug.log("orderDateStr=================="+orderDateStr);
 		
 		String effectiveDateStr = (String) request.getParameter("orderDate");
 		String partyIdTo = (String) request.getParameter("shipToPartyId");
@@ -7766,6 +7926,7 @@ public class DepotPurchaseServices{
 				processOrderContext.put("productStoreId", productStoreId);
 				processOrderContext.put("PONumber", orderId);
 				processOrderContext.put("refNo", refNo);
+				processOrderContext.put("dyesChemicals", dyesChemicals);
 				processOrderContext.put("quotationNo", quotationNo);
 				processOrderContext.put("orderName", orderName);
 				processOrderContext.put("districtGeoId", districtGeoId);
@@ -7946,7 +8107,14 @@ public class DepotPurchaseServices{
 						 } 
 					     
 					}
-			    
+					try{
+			 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", result.get("orderId")));
+			 			if (ServiceUtil.isError(serviceResult)) {
+			 				Debug.logError("Error While Updateing Indent Summary Details", module);
+			            }
+			  		}catch(GenericServiceException e){
+						Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+					}
 					
 					
 			request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	
@@ -7988,6 +8156,7 @@ public class DepotPurchaseServices{
 		String fileNo = (String)context.get("fileNo");
 		String quotationNo = (String)context.get("quotationNo");
 		String refNo = (String)context.get("refNo");
+		String dyesChemicals = (String)context.get("dyesChemicals");
 		String orderId = (String)context.get("orderId");	
 	  	String currencyUomId = "INR";
 		Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();
@@ -8523,7 +8692,11 @@ public class DepotPurchaseServices{
 				//update PurposeType
 				try{
 					GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-					orderHeaderPurpose.set("purposeTypeId", "BRANCH_PURCHASE");
+					if(UtilValidate.isNotEmpty(dyesChemicals) && dyesChemicals.equals("dyesChemicals"))
+					orderHeaderPurpose.set("purposeTypeId", "DC_PURCHASE");
+					else
+				    orderHeaderPurpose.set("purposeTypeId", "BRANCH_PURCHASE");
+					
 					orderHeaderPurpose.store();
 				}catch (Exception e) {
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);

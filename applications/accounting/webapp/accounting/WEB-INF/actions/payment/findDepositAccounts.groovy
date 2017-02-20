@@ -20,7 +20,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.*;
-
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -41,17 +41,20 @@ if ("Y".equals(parameters.noConditionFind)) {
    finAccountTypeId="";
    finAccountTypeId=parameters.finAccountTypeId;
    AccDate=parameters.AccDate;
+   Timestamp Accdate = null;
    if(UtilValidate.isNotEmpty(AccDate)){
-   Timestamp fromDateTs = null;
    if(AccDate){
-		   SimpleDateFormat sdfo = new SimpleDateFormat("yyyy-MM-dd");
+		   SimpleDateFormat sdfo = new SimpleDateFormat("dd-mm-yy");
 	   try {
-		   fromDateTs = new java.sql.Timestamp(sdfo.parse(AccDate).getTime());	} catch (ParseException e) {
+		   Accdate = UtilDateTime.toTimestamp(sdfo.parse(parameters.AccDate));
+		   	} catch (ParseException e) {
+			   Debug.logError(e, "Cannot parse date string: " + AccDate, "");
 	   }
    }
-   AccDateStart = UtilDateTime.getDayStart(fromDateTs);
-   AccDateEnd = UtilDateTime.getDayEnd(fromDateTs);
+   AccDateStart = UtilDateTime.getDayStart(Accdate);
+   AccDateEnd = UtilDateTime.getDayEnd(Accdate);
    }
+   context.Accdate = UtilDateTime.toDateString(Accdate, "dd-mm-yy");
    if (parameters.finAccountId) {
 	   exprListForParameters.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, parameters.finAccountId));
 	   }

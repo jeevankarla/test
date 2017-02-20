@@ -62,20 +62,20 @@ $(function() {
               	<td class="label">${uiLabelMap.EmployeeId} :</td>
                 <td class= "h2">
                 	<#if security.hasEntityPermission("HUMANRES", "_ADMIN", session)>
-                      		<@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="EmplLeaveBalanceStatus" name="partyId" id="partyId" fieldFormName="LookupEmployeeName"/>
+                      		<@htmlTemplate.lookupField value="${parameters.partyId?if_exists}" formName="EmplLeaveBalanceStatus" name="partyId" id="partyId" fieldFormName="LookupEmployeeName" />
                     		<span class="tooltip"></span>
                     		<span class="dtooltip"> <label id="dateDisp" style="color:green; font-size:11pt; font-stlye:bold">  </label></span>
                   	<#else>
                   		<#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userLogin.partyId, false)?if_exists/>
-                		<input type="hidden" name="partyId" id="partyId" value="${userLogin.partyId?if_exists}" readonly onchange="updatedAsOnDate();"/>
-                		${partyName}[${userLogin.partyId?if_exists}]
+                		<input type="hidden" name="partyId" id="partyId" value="${userLogin.partyId?if_exists}" readonly onchange="updatedAsOnDate();" required/>
+                		${partyName}[${userLogin.partyId?if_exists}]<em>*</em>
                 	</#if>
                 </td>
               </tr>
               <tr>
               	<td class="label">Custom Time Period Id :</td>
               	<td>
-	               <select name="customTimePeriodId" class='h4' >
+	               <select name="customTimePeriodId" class='h4' required ><em>*</em>
 			           <option value=''></option>
 						<#list customTimePeriodList as customTimePeriod>
 					    	<option value='${customTimePeriod.customTimePeriodId}'>${customTimePeriod.fromDate}-${customTimePeriod.thruDate}</option>
@@ -86,7 +86,7 @@ $(function() {
 			      <tr>
                 <td class="label">Leave Type :</td>
                 <td>
-		               <select name="leaveTypeId" class='h4'>
+		               <select name="leaveTypeId" class='h4' required><em>*</em>
 		                   <option value=''></option>
 		  				   <option  value="EL">EL</option>
 		  					<option  value="CL">CL</option>

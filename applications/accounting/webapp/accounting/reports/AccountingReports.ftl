@@ -830,7 +830,6 @@ function reportTypeChangeFunc() {
 				</td>
 				<td width="30%"><input type="submit" value="PDF" onClick="javascript:appendParams('GlLedgerReport', '<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>');" class="buttontext"/>
 				<input type="submit" value="CSV" onClick="javascript:appendParams('GlLedgerReport', '<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.csv</@ofbizUrl>');" class="buttontext"/></td>         			
-          		<input type="submit" value="PDF" class="buttontext"/></td>
           	</tr>
       		</form>
       	</tr>

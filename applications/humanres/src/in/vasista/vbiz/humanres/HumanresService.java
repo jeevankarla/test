@@ -1953,6 +1953,72 @@ public class HumanresService {
 	        return result;
 	        
 	    }
+	    
+	    public static Map<String, Object> updateHoliday(DispatchContext ctx, Map<String, ? extends Object> context) {
+	    	Map result = ServiceUtil.returnSuccess();
+	    	Delegator delegator = ctx.getDelegator();
+	    	Locale locale = (Locale) context.get("locale");
+	    	LocalDispatcher dispatcher = ctx.getDispatcher();
+	        GenericValue userLogin = (GenericValue) context.get("userLogin");
+	        Map inMap = FastMap.newInstance();
+	        String stateName = (String)context.get("state");
+	        String customTimePeriodId = (String)context.get("customTimePeriodId");
+	        String organizationPartyId = (String)context.get("organizationPartyId");
+	        String holiDayDateStr = (String)context.get("holiDayDate");
+	        Timestamp prevholiDayDate = (Timestamp)context.get("prevHoliDayDate");
+	        Timestamp holiDayDate = null;
+	        String description = (String)context.get("description");
+	        String groupName = null;
+	       List RosHoListNames = FastList.newInstance();
+	        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			try {
+				holiDayDate = UtilDateTime.toTimestamp(formatter.parse(holiDayDateStr));
+			} catch (ParseException e) {
+			}
+			try{
+				RosHoListNames = delegator.findList("PartyRoleAndPartyDetail", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,organizationPartyId) , null, null, null, false );
+				if(UtilValidate.isNotEmpty(RosHoListNames)){
+					GenericValue RosHoListName = EntityUtil.getFirst(RosHoListNames);
+					groupName = RosHoListName.getString("groupName");
+				}
+				GenericValue holDetails = delegator.findOne("HolidayCalendar", UtilMisc.toMap("customTimePeriodId", customTimePeriodId, "organizationPartyId",organizationPartyId, "holiDayDate", prevholiDayDate), false);
+				if(UtilValidate.isNotEmpty(holDetails)){
+					inMap.put("userLogin", userLogin);
+					inMap.put("customTimePeriodId",customTimePeriodId);
+					inMap.put("organizationPartyId",organizationPartyId);
+					inMap.put("holiDayDate",prevholiDayDate);
+					try {
+						Map resultValue = dispatcher.runSync("DeleteHoliday", inMap);
+						if(ServiceUtil.isError(result)){
+							Debug.logError(ServiceUtil.getErrorMessage(resultValue), module);
+							return result;
+						}
+					} catch (GenericServiceException s) {
+						Debug.logError("Error while deleting Holiday"+s.getMessage(), module);
+					} 
+					
+					GenericValue newEntity = delegator.makeValue("HolidayCalendar");
+					newEntity.set("customTimePeriodId", customTimePeriodId);
+					newEntity.set("organizationPartyId", organizationPartyId);
+					newEntity.set("holiDayDate", UtilDateTime.toTimestamp(holiDayDate));
+					newEntity.set("description", description);
+					 if(UtilValidate.isNotEmpty(groupName)){
+				        	newEntity.set("RO", groupName);
+				        }
+					 delegator.create(newEntity); 
+					result = ServiceUtil.returnSuccess("Holiday has been successfully updated");
+				}else{
+					result = ServiceUtil.returnError("Can Not Update Holiday");
+				}
+			}catch (Exception e) {
+				Debug.logError(e, module);
+				return ServiceUtil.returnError("Error while updating  holiday" + e);
+			}
+	        
+	        return result;
+	        
+	    }
+	    
 	    public static Map<String, Object> createPartyResumeAndContent(DispatchContext dctx, Map context) {
 	    	Map<String, Object> result = ServiceUtil.returnSuccess();
 	    	String resumeId = (String) context.get("resumeId");

@@ -107,8 +107,12 @@ if(UtilValidate.isNotEmpty(parameters.screenFlag)){
 	}
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
 	List nonBankAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+    List developmentGrantAccountsList = EntityUtil.filterByCondition(nonBankAccountsList, EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,"DEVEL_GRANTS"));
+	List implementationGrantAccountsList = EntityUtil.filterByCondition(nonBankAccountsList, EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,"IMPL_GRANTS"));
 	
 	context.nonBankAccountsList=nonBankAccountsList;
+	context.developmentGrantAccountsList=developmentGrantAccountsList;
+	context.implementationGrantAccountsList=implementationGrantAccountsList;
 }
 if(UtilValidate.isNotEmpty(parameters.findPaymentMethodType)){
 	conditionList = [];

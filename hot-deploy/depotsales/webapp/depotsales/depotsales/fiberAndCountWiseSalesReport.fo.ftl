@@ -43,7 +43,7 @@ under the License.
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                 <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
 				<fo:block text-align="center" font-size="12pt" font-weight="bold" >FIBER WISE / COUNT WISE SALES</fo:block>
-				<fo:block text-align="center" font-size="12pt" font-weight="bold" >FOR THE PERIOD ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd-MMM-yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd-MMM-yyyy")?if_exists} </fo:block>
+				<fo:block text-align="center" font-size="12pt" font-weight="bold" >FOR THE PERIOD ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd/MM/yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd/MM/yyyy")?if_exists} </fo:block>
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		       
         		<fo:block>

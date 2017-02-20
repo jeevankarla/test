@@ -473,6 +473,7 @@
 	       	  				  var tableElement="";
 	       	  				  
 	       	  				   $.each(SchemeList, function(key, item){
+	       	  				       if(item['schemeId'] == "General")
 		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
 		       	  				 });
 		       	  			$('#schemeCategory').empty().append(tableElement);	 
@@ -1591,7 +1592,7 @@
 					</#if>
 					<div id="myGrid1" style="width:100%;height:210px;"></div>
 						  
-						<#assign formAction='processBranchSalesOrder'>			
+						<#assign formAction='processOrdersBranchSalesDyes'>			
 						
 						
 						<#if booth?exists || party?exists || partyId?exists >

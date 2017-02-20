@@ -621,8 +621,8 @@
 		       	  				   	$("#issueDate").html("<h4>"+issueDate+"</h4>");		       	  				   	
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
 		       	  				   	$("#partyType").html("<h4>"+partyType+" "+facilityType+"</h4>");
-		       	  				    $("#totLooms").html("<h4>"+totLooms+"</h4>");
-		       	  				    $('#loomTypes tr:last').after(tableElement);	
+		       	  				   // $("#totLooms").html("<h4>"+totLooms+"</h4>");
+		       	  				   //$('#loomTypes tr:last').after(tableElement);	
 		       	  				    
 		       	  				    var transprotersList;
 						 
@@ -900,6 +900,7 @@ function fillPartyQuota(partyId){
 	       	  				  var tableElement="";
 	       	  				  
 	       	  				   $.each(SchemeList, function(key, item){
+	       	  				        if(item['schemeId'] == "General")
 		       	  				    tableElement +="<option value='"+item['schemeId']+"'>"+item['schemeValue']+"</option>";
 		       	  				 });
 		       	  			$('#schemeCategory').empty().append(tableElement);	 
@@ -1626,6 +1627,9 @@ function fillPartyQuota(partyId){
 								       				<td ><font color="green"><b>DOA: </font></td><td><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
 								       			</#if>
 							       				<td><font color="green"><b>Total Looms: </font></td><td><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
+							       			
+							       			      
+							       			
 							       			</tr>
 							       			
 							       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
@@ -1664,6 +1668,7 @@ function fillPartyQuota(partyId){
 				     	<hr class="style18"></hr>
 				     	<table width="100%" id="loomTypes" class="loomTypes" border="10%" cellspacing="1" cellpadding="2">
 		       				<tr align="left">
+		       				<td><a class="buttontext" href="<@ofbizUrl>addOtherAddressView?partyId="DC0012"&amp;</@ofbizUrl>" target="_blank"/>Add Facility</td> 
 		       				</tr>
 		       			</table>
 		       			<hr class="style18"></hr>
@@ -1750,7 +1755,7 @@ function fillPartyQuota(partyId){
 			    <div class="screenlet-body">
 					<div id="myGrid1" style="width:100%;height:210px;"></div>
 						  
-						<#assign formAction='processBranchSalesOrder'>			
+						<#assign formAction='processOrdersBranchSalesDyes'>			
 						
 						
 						<#if booth?exists || party?exists || partyId?exists >
@@ -1768,7 +1773,7 @@ function fillPartyQuota(partyId){
 					    	<div align="center">
 					    		<input type="submit" style="padding:.3em" id="changeSave" value="${uiLabelMap.CommonSubmit}" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"  />
 					    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>processOrdersBranchSales</@ofbizUrl>');"/>   	
+					    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>processOrdersBranchSalesDyes</@ofbizUrl>');"/>   	
 					    	</div>     
 						</#if>
 						

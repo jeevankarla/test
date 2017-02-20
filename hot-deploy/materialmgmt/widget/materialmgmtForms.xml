@@ -891,4 +891,20 @@
         <field name="vatAmount" title="Vat Amount"><display/></field>
     </form>
     
+    <form name="listAttributeDC" type="list" list-name="OrderAttributeList" default-table-style="basic-table hover-bar" odd-row-style="alternate-row" header-row-style="header-row">
+    <actions>
+    </actions>
+    <field name="orderId"><hidden/></field>
+    <field name="attrName" title="Attribute Name"><display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}" /></field>
+    <field name="attrValue" title="Value / Date"><display/></field>
+    <field name="deleteAttr" title="Delete" widget-style="buttontext">
+    	<hyperlink target="deleteOrderAttribute" description="Delete">
+                <parameter param-name="attrName"/>
+                <parameter param-name="orderId"/>
+            </hyperlink>
+    </field>
+    </form> 
+    
+    
+    
 </forms>

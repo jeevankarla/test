@@ -33,14 +33,19 @@ if(UtilValidate.isNotEmpty(context.flag) && context.flag == "Y"){
 	finalFinAccntList = [];
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS,"BANK_ACCOUNT"));
-	conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
-	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, "Company"));
+	//conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+	if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+	}
 	financialAccntList = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("finAccountId"), null, false);
 	finalFinAccntList.addAll(financialAccntList);
 	
 	condList = [];
 	condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS,"INTERUNIT_ACCOUNT"));
-	condList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+	//condList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+	if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+	}
 	interFinancialAccntList = delegator.findList("FinAccount",EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("finAccountId"), null, false);
 	finalFinAccntList.addAll(interFinancialAccntList);
 	
@@ -56,6 +61,9 @@ if(UtilValidate.isNotEmpty(context.flag) && context.flag == "Y"){
 				EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "CASH")));
 			}
 			conditionList.add( EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds));
+			if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+				conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+			}
 			List<String> orderBy = UtilMisc.toList("finAccountName");
 		financialAccnt = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, orderBy, null, false);
 		finalList=[];

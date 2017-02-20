@@ -41,11 +41,11 @@ DateList.add(DateMap);
 context.DateList=DateList;
  
 branchName = "";
-if(branchId){
+/*if(branchId){
 	branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 	branchName = branch.get("groupName");
 	DateMap.put("branchName", branchName);
-}
+}*/
 branchList = [];
 condListb = [];
 if(branchId){
@@ -73,18 +73,23 @@ if(branchId){
 productIds = [];
 productCategoryIds = [];
 condListCat = [];
-if(!partyId){
-	if(productCategory != "OTHER"){
-		condListCat.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS, productCategory));
-		condListC = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
-		ProductCategory = delegator.findList("ProductCategory", condListC,UtilMisc.toSet("productCategoryId"), null, null, false);
-		productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
+//if(!partyId){
+	if(productCategory == "ALL"){
+		productCategoris = delegator.findList("ProductCategory", EntityCondition.makeCondition("productCategoryTypeId" ,EntityOperator.EQUALS,"NATURAL_FIBERS"), null, null, null ,false);		
+		productCategoryIds=EntityUtil.getFieldListFromEntityList(productCategoris, "productCategoryId", true);
+		
+		productPrimaryCategories = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.IN,productCategoryIds), null, null, null ,false);
+		productCategoryIds=EntityUtil.getFieldListFromEntityList(productPrimaryCategories, "productCategoryId", true);
 	}else if(productCategory == "OTHER"){
-		condListCat.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.NOT_IN, ["SILK","JUTE_YARN"]));
-		condListC = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
-		ProductCategory = delegator.findList("ProductCategory", condListC,UtilMisc.toSet("productCategoryId"), null, null, false);
-		productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
-	}
+		productCategoris = delegator.findList("ProductCategory", EntityCondition.makeCondition([EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "NATURAL_FIBERS"), EntityCondition.makeCondition("productCategoryId", EntityOperator.NOT_IN, UtilMisc.toList("COTTON","SILK"))], EntityOperator.AND), UtilMisc.toSet("productCategoryId"), null, null ,false);
+		productCategoryIds=EntityUtil.getFieldListFromEntityList(productCategoris, "productCategoryId", true);
+		
+		productPrimaryCategories = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.IN,productCategoryIds), null, null, null ,false);
+		productCategoryIds=EntityUtil.getFieldListFromEntityList(productPrimaryCategories, "productCategoryId", true);
+	}else{
+		productCategoris = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.EQUALS,productCategory), UtilMisc.toSet("productCategoryId","primaryParentCategoryId"), null, null ,false);
+		productCategoryIds=EntityUtil.getFieldListFromEntityList(productCategoris, "productCategoryId", true);
+		}
 	branchContext=[:];
 	branchContext.put("branchId",branchId);
 	BOAddress="";
@@ -114,7 +119,7 @@ if(!partyId){
 	condList1 = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
 	ProductCategoryMember = delegator.findList("ProductCategoryMember", condList1,UtilMisc.toSet("productId"), null, null, false);
 	productIds = EntityUtil.getFieldListFromEntityList(ProductCategoryMember, "productId", true);
-}
+//}
    
 daystart = null;
 dayend = null;
@@ -217,6 +222,7 @@ for(int i=0;i < Invoice.size();i++){
 	invoiceDetailMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd/MM/yyyy"));
 	invoiceDetailMap.put("partyId",eachInvoice.partyId);
 	custPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachInvoice.partyId, false);
+	branchName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachInvoice.partyIdFrom, false);
 	invoiceDetailMap.put("partyName",custPartyName);
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,eachInvoice.partyId));
@@ -345,11 +351,19 @@ for(int i=0;i < Invoice.size();i++){
 	condListb = [];
 	condListb.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
 	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 	condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
-	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdFrom"), null, null, false);
-	if(UtilValidate.isNotEmpty(PartyRelationship)){
+	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdFrom","partyIdTo"), null, null, false);
+	
+	if(UtilValidate.isNotEmpty(PartyRelationship)){		
 		roId = EntityUtil.getFirst(PartyRelationship).get("partyIdFrom");
-		roDetails = delegator.findOne("PartyGroup",[partyId : roId] , false);
+		
+		if(roId != "Company")
+		roId = EntityUtil.getFirst(PartyRelationship).get("partyIdFrom");
+		else
+		roId = EntityUtil.getFirst(PartyRelationship).get("partyIdTo");
+		
+		roDetails = delegator.findOne("PartyGroup",[partyId : roId] , false);		
 		roName = roDetails.groupName;
 	}
 	

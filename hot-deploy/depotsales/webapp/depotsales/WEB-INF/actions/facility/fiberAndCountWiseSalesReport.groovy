@@ -34,12 +34,12 @@ branchIds=[];
 branchId = parameters.branchId;
 DateMap = [:];
 branchName = "";
-
 if(branchId){
 branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 branchName = branch.get("groupName");
 DateMap.put("branchName", branchName);
 }
+branchIdForAdd="";
 branchList = [];
 condListb = [];
 if(branchId){
@@ -50,12 +50,24 @@ condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
 
 branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-
+if(!branchList){
+	condListb2 = [];
+	//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
+	condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+	condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+	
+	PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+	branchDetails = EntityUtil.getFirst(PartyRelationship1);
+	branchIdForAdd=branchDetails.partyIdFrom;
+}
+else{
+	branchIdForAdd=branchId;
+}
 if(!branchList)
 branchList.add(branchId);
 }
-//Debug.log("branchName=================="+branchName);
-//Debug.log("branchList=================="+branchList);
 
 branchBasedWeaversList = [];
 condListb1 = [];
@@ -70,7 +82,6 @@ branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, 
 if(!branchBasedWeaversList)
 branchBasedWeaversList.add(branchId);
 }
-//Debug.log("branchBasedWeaversList=================="+branchBasedWeaversList);
 
 productCategory=parameters.categoryId;
 context.partyfromDate=partyfromDate;
@@ -96,8 +107,7 @@ if(UtilValidate.isNotEmpty(partythruDate)){
 context.daystart=daystart
 context.dayend=dayend
 branchContext=[:];
-branchContext.put("branchId","INT15");
-
+branchContext.put("branchId",branchIdForAdd);
 BOAddress="";
 BOEmail="";
 try{
@@ -122,7 +132,6 @@ try{
 }
 context.BOAddress=BOAddress;
 context.BOEmail=BOEmail;
-
 conditionList = [];
 productIds = [];
 purchaseOrderIds =[];
@@ -160,7 +169,6 @@ conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOpera
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
 invoiceItems = delegator.findList("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productId","quantity","itemValue","amount","partyId"), null, null, false);
-//Debug.log("invoiceItems=================="+invoiceItems);
 finalCSVList=[];
 totalQty=0 
 totalValue=0;
@@ -171,20 +179,20 @@ headerData2=[:];
 headerData2.put("prodcatName", "______");
 headerData2.put("productName", "______");
 headerData2.put("partyName", "______");
-headerData2.put("orderQty", "___Fiberand___");
+headerData2.put("orderQty", "___Fiber and___");
 /*headerData2.put("BdlWt", "___Fiberand___");*/
 headerData2.put("rate", "_ Countwise");
-headerData2.put("orderValue", "____ SalesReport_______");
+headerData2.put("orderValue", "____ Sales Report_______");
 finalCSVList.add(headerData2);
 
 headerData=[:];
-headerData.put("prodcatName", "Product category");
-headerData.put("productName", "product count");
-headerData.put("partyName", "partyName");
-headerData.put("orderQty", "orderQty");
+headerData.put("prodcatName", "Product Category");
+headerData.put("productName", "Product Count");
+headerData.put("partyName", "Party Name");
+headerData.put("orderQty", "Order Qty(kgs)");
 /*headerData.put("BdlWt", "BdlWt");*/
-headerData.put("rate", "rate");
-headerData.put("orderValue", "orderValue");
+headerData.put("rate", "Rate");
+headerData.put("orderValue", "Order Value");
 finalCSVList.add(headerData);
 for(productCategoryId in productCategoryIds){
 	tempCSVMap1=[:];
@@ -194,12 +202,12 @@ for(productCategoryId in productCategoryIds){
 	if(UtilValidate.isNotEmpty(productCategoryDetails)){
 		prodCatName=productCategoryDetails.description
 	}
-	tempCSVMap1.put("partyName", "");
+	/*tempCSVMap1.put("partyName", "");
 	tempCSVMap1.put("orderQty", "");
-	/*tempCSVMap1.put("BdlWt", "");*/
+	//tempCSVMap1.put("BdlWt", "");
 	tempCSVMap1.put("rate", "");
 	tempCSVMap1.put("orderValue", "");
-	finalCSVList.add(tempCSVMap1);
+	finalCSVList.add(tempCSVMap1);*/
 	singleCatProducts = EntityUtil.filterByCondition(produtCategorieMember, EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategoryId));
 	singleProductIds=EntityUtil.getFieldListFromEntityList(singleCatProducts, "productId", true);
 	
@@ -217,12 +225,12 @@ for(productCategoryId in productCategoryIds){
 		
 		if(UtilValidate.isNotEmpty(singleCatProductsOrdersDetail)){
 			productDetails = delegator.findOne("Product",[productId : singleCatProductsOrdersDetail.productId] , false);
-			tempCSVMap2.put("partyName", "");
+			/*tempCSVMap2.put("partyName", "");
 			tempCSVMap2.put("orderQty", "");
-			/*tempCSVMap2.put("BdlWt", "");*/
+			//tempCSVMap2.put("BdlWt", "");
 			tempCSVMap2.put("rate", "");
 			tempCSVMap2.put("orderValue", "");
-			finalCSVList.add(tempCSVMap2);
+			finalCSVList.add(tempCSVMap2);*/
 			
 		}
 		

@@ -261,6 +261,7 @@
             	<field-map field-name="payGradeId" from-field="payGradeId"/>
             </entity-one>
             <set field="amount" from-field="Amounts.amount"/>
+            <set field="thruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd-MM-yyyy&quot;);}"/>
         </row-actions>
         <!-- <auto-fields-service service-name="updatePayHistory"/> -->
         <field name="roleTypeIdFrom"><hidden/></field>
@@ -275,7 +276,7 @@
         <field name="payGradeId"  title="${uiLabelMap.HumanResPayGradeID}"><display/></field>        
         <field name="salaryStepSeqId"  title="${uiLabelMap.HumanResSalaryStepSeqId}"><display/></field>
         <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"></display> </field>
-        <field name="thruDate" use-when="hasEmplEditPermission" title="${uiLabelMap.toDate}"><date-time  type="date"/></field>              
+        <field name="thruDate" use-when="hasEmplEditPermission" title="${uiLabelMap.toDate}" id-name="thruDate" event="onclick" action="javascript:datePicker2(thruDate)"><text></text></field>              
         <field name="submitButton" use-when="hasEmplEditPermission" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteLink" use-when="hasEmplEditPermission" title=" " widget-style="buttontext">
             <hyperlink target="deletePayHistory" description="${uiLabelMap.CommonDelete}">
@@ -314,6 +315,9 @@
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>             
         </actions>
+        <row-actions>
+        	<set field="thruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd-MM-yyyy&quot;);}"/>
+        </row-actions>
         <!-- <auto-fields-service service-name="updatePartyBenefit"/> -->
         <field name="roleTypeIdFrom"><hidden/></field>
         <field name="roleTypeIdTo"><hidden/></field>
@@ -323,7 +327,7 @@
         <field name="availableTime"><hidden/></field>                 
         <field name="benefitTypeId"><display-entity entity-name="BenefitType" description="${description}"/></field>
         <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"/></field>
-        <field name="thruDate" title="${uiLabelMap.toDate}"><date-time type="date"/></field>    
+        <field name="thruDate" title="${uiLabelMap.toDate}" id-name="thruDate" event="onclick" action="javascript:datePicker2(this)"><text size="12"></text></field>    
         <field name="cost"><display/></field>            
         <field name="periodTypeId"><display description="${periodType.description}"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field> 
@@ -386,15 +390,19 @@
         <field name="partyIdTo"><hidden/></field>
         <field name="actualEmployerPaidPercent"><hidden/></field>  
         <field name="availableTime"><hidden/></field>   
-        <field name="tenantId"><hidden/></field>             
+        <field name="tenantId"><hidden/></field>      
+        <field name="fromDate"><hidden/></field>  
+        <field name="thruDate"><hidden/></field>
+        <field name="createdByUserLogin"><hidden/></field>       
+        <field name="lastModifiedByUserLogin"><hidden/></field>
         <field name="benefitTypeId" tooltip="${uiLabelMap.CommonRequired}" event="onchange" action="javascript:getPartyBenefitCost(${partyIdTo}, this.value);">
             <drop-down allow-empty="false">
                 <list-options list-name="benefitTypes" key-name="benefitTypeId" 
                     description="${description}"/>
             </drop-down>
         </field>
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
-        <field name="thruDate" title="${uiLabelMap.toDate}"><date-time type="date"/></field>
+        <field name="fromDateStr" title="${uiLabelMap.CommonFromDate}" id-name="fromDate" tooltip="${uiLabelMap.CommonRequired}" required-field="true" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
+        <field name="thruDateStr" title="${uiLabelMap.toDate}" id-name="thruDate" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field> 
         <field name="periodTypeId"><display description="${periodType.description}"/></field>
         <field name="cost"><text size="20" maxlength="30"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
@@ -411,6 +419,9 @@
                 <field-map field-name="periodTypeId" value="FISCAL_MONTH"/>
             </entity-one>             
         </actions>
+         <row-actions>
+        	<set field="thruDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd-MM-yyyy&quot;);}"/>
+        </row-actions>
         <!-- <auto-fields-service default-field-type="hidden" service-name="updatePayrollPreference"/> -->       
         <field name="roleTypeIdFrom"><hidden/></field>
         <field name="roleTypeIdTo"><hidden/></field>
@@ -420,8 +431,8 @@
         <field name="availableTime"><hidden/></field>                 
         <field name="paymentMethodTypeId"><hidden/></field>
         <field name="deductionTypeId" ><display-entity entity-name="DeductionType" description="${description}"/></field>
-        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate ,&quot;dd-MM-yyyy&quot;);}"/></field>
-        <field name="thruDate" title="${uiLabelMap.toDate}"><date-time type="date"/></field>    
+        <field name="fromDate"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd-MM-yyyy&quot;);}"/></field>
+        <field name="thruDate" title="${uiLabelMap.toDate}" id-name="thruDate" event="onclick" action="javascript:datePicker2(this)"><text size="12"></text></field>  
         <field name="cost" title="Flat Amount"><display/></field>            
         <field name="periodTypeId"><display description="${periodType.description}"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field> 
@@ -486,13 +497,17 @@
         <field name="roleTypeId"><hidden/></field>
         <field name="partyIdTo"><hidden value="${partyIdTo}"/></field>
         <field name="roleTypeIdTo"><hidden value="${roleTypeId}"/></field>        
-        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
-        <field name="thruDate" title="${uiLabelMap.toDate}"><date-time type="date"/></field>
+        <field name="fromDate" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/><hidden/></field>
+        <field name="thruDate" title="${uiLabelMap.toDate}"><date-time type="date"/> <hidden/> </field>
+         <field name="fromDateStr" title="${uiLabelMap.CommonFromDate}" id-name="fromDate" tooltip="${uiLabelMap.CommonRequired}" required-field="true" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field>
+        <field name="thruDateStr" title="${uiLabelMap.toDate}" id-name="thruDate" event="onclick" action="javascript:datePicker1()"><text size="12"></text></field> 
         <field name="tenantId"><hidden/></field>
         <field name="percentage"><hidden/></field>          
         <field name="routingNumber"><hidden/></field>  
         <field name="accountNumber"><hidden/></field>    
-        <field name="bankName"><hidden/></field>                      
+        <field name="bankName"><hidden/></field>    
+        <field name="createdByUserLogin"><hidden/></field>       
+        <field name="lastModifiedByUserLogin"><hidden/></field>                  
         <field name="deductionTypeId"  id-name="Deductionevent" event="onchange" action="javascript:getPartyDeductionAmount(${partyIdTo}, this.value);">
             <drop-down allow-empty="false" >
                 <list-options list-name="deductionTypes" key-name="deductionTypeId" 
@@ -916,7 +931,7 @@
     	<field name="leaveTypeId" title="Leave Type"><display/></field>
     	<field name="customTimePeriodId" title="TimePeriod"><display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${customTimePeriodId}(${fromDate}-${thruDate}) ">
             </display-entity></field>
-    	<field name="openingBalance" title="Balance"><display/></field>
+    	<field name="leaveBalances" title="Balance"><display/></field>
     	<field name="allotedDays" title="Alloted Days"><display/><hidden/></field>
     	<field name="availedDays" title="Availed Days"><display/><hidden/></field>
     	<field name="adjustedDays" title="Adjusted Days"><display/><hidden/></field>
@@ -924,6 +939,9 @@
     </form>
     
     <form name="creditLeavesELHPLCL" type="single" target="populateELCLAndHPLBalanceCredit" >
+    	<actions>
+    		<script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/getCreditLeavesPeriod.groovy"/>
+    	</actions>
     	<field name="partyId" parameter-name="partyIdFrom" title="Organisation" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PartyRoleAndPartyDetail" description="${groupName}">
@@ -932,20 +950,18 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="customTimePeriodId" required-field="true"><text></text>
-        <drop-down no-current-selected-key="${timecustom}">
-                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
-                    <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
-                    <entity-order-by field-name="-fromDate"/>
-                    <entity-order-by field-name="periodNum"/>
-                </entity-options>
-            </drop-down>
+        <field name="customTimePeriodId" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text></text>
+        <drop-down>
+            <list-options list-name="creditLeavesPeriodList" key-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}"/>
+        </drop-down>
         </field>
-        <field name="leaveTypeId" required-field="true"><text></text>
-            
-         <drop-down allow-empty="true">
-                <entity-options description="${description}" key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"/>
-            </drop-down>
+        <field name="leaveTypeId" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text></text>
+	         <drop-down allow-empty="true">
+	         	<option key="EL" description="EL"/>
+	        	<option key="CL" description="CL"/>
+	        	<option key="RH" description="RH"/>
+	        	<option key="ML" description="ML"/>
+	         </drop-down>
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -953,7 +969,7 @@
     	<field name="partyId" title="Employee Id" required-field="true">
 			<lookup target-form-name="LookupEmployeeName"/>
 		</field>	
-        <field name="customTimePeriodId" required-field="true">
+        <field name="customTimePeriodId" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down no-current-selected-key="${timecustom}">
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(fromDate, &quot;dd MMMMM, yyyy&quot;);} - ${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(thruDate, &quot;dd MMMMM, yyyy&quot;);}" filter-by-date="false">
                     <entity-constraint name="periodTypeId" operator="equals" value="HR_MONTH"/>
@@ -962,14 +978,14 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="leaveTypeId" required-field="true">
+        <field name="leaveTypeId" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
         	<drop-down allow-empty="true">
         		<option key="EL" description="EL"/>
         		<option key="CL" description="CL"/>
         		<option key="RH" description="RH"/>
         		<option key="ML" description="ML"/>
-        		<option key="TL" description="TL"/>
-        		<option key="CO" description="CO"/>
+        		<!-- <option key="TL" description="TL"/>
+        		<option key="CO" description="CO"/> -->
         	</drop-down>
         </field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>

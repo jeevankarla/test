@@ -119,13 +119,13 @@
             <link target="employeesAnalytics"/>
         </menu-item> 
         <menu-item name="newReports" title="Reports">
-             <condition >
-             	<or>
-             	<if-has-permission permission="HR"  action="_LEAVE_REPORTS_VIEW"></if-has-permission>
-            	<if-has-permission permission="HR"  action="_REPORTS_VIEW"/>
-            	</or>
-            </condition>
-        		<link target="LeaveReports"/>
+        	<condition>
+        		<or>
+        		<if-has-permission permission="HR" action="_PAYROLL_REPORTS_VIEW"/>
+        		<if-has-permission permission="HR"  action="_REPORTS_VIEW"/>
+        		</or>
+        	</condition>
+        		<link target="PayrollReports"></link>
         </menu-item>
         <menu-item name="AnnualIT" title="Annual IT">
         	<condition>
@@ -1090,7 +1090,7 @@
         </condition> 
 			<link target="CreditLeaves"></link>        
         </menu-item> -->
-        <menu-item name="FindEmplLeaveBalance" title="Credit Leaves/Balance Update">
+        <menu-item name="FindEmplLeaveBalance" title="Leaves Balance Update">
         <condition>
              <or>
              	<if-has-permission permission="CREDIT_LEAVES_TAB"  action="_VIEW"/>
@@ -1099,7 +1099,7 @@
         </condition> 
 			<link target="FindEmplLeaveBalance"></link>        
         </menu-item> 
-        <menu-item name="creditLeavesELHPLCL" title="Credit Leaves EL/CL">
+        <menu-item name="creditLeavesELHPLCL" title="Credit Leaves">
         <condition>
              <and>
                 <if-has-permission permission="CREDIT_ELHPLCL_TAB"  action="_VIEW"/>

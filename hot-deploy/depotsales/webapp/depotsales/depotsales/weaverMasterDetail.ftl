@@ -162,6 +162,7 @@ var passbookNumber = $("#passbookNumber").val();
            
 		var dataJson = {"branchId":branchId,"partyId":partyId,"passbookNumber":passbookNumber,"passGreater":passGreater,"partyClassification":partyClassification,"isDepot":isDepot,"district":district,"satate":satate,"effectiveDate":effectiveDate,"uniqueOrderId":uniqueOrderId,"low":low,"high":high};
 	
+	    $('div#blink').hide();
 	 $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width="70">');
    //  alert(JSON.stringify(dataJson));
     jQuery.ajax({

@@ -147,10 +147,13 @@
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
 	        	<drop-down allow-empty="true">
 	        		<option key="ORDER_CREATED" description="Created"/>
-	        		<option key="ORDER_PENDING" description="Pending"/>
+	        		<option key="APPROVE_LEVEL1" description="Level1Approved"/>
+	        	    <option key="APPROVE_LEVEL2" description="Level2Approved"/>
+	        	    <option key="APPROVE_LEVEL3" description="Level3Approved"/>
 	        		<option key="ORDER_APPROVED" description="Approved"/>
+	        		<!-- <option key="ORDER_PENDING" description="Pending"/> -->
 	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
-	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
+	        		<!-- <option key="ORDER_SUSPENDED" description="Suspended"/> -->
 	        		<option key="ORDER_COMPLETED" description="Completed"/>
 	        	</drop-down>
         </field>
@@ -335,6 +338,7 @@
         <field name="tallyRefNO" title="Tally Ref No"><text/></field>
         <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}"><text-find/></field>
         <field name="shipmentId" title="${uiLabelMap.ShipmentId}"><text-find/></field>
+        <field name="partyIdTo" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="SupplierLookupPartyName"/></field> 
 <!--         <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><text-find/></field> -->
         <field name="statusId" title="${uiLabelMap.CommonStatus}"  >
@@ -847,6 +851,55 @@
         <field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
+    
+    <form name="FindPurchaseOrderDC" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+       <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+         <field name="ChannalType"><hidden value="MATERIAL_PUR_CHANNEL"/></field>
+          <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
+           <field name="salesChannelEnumId"><hidden value="MATERIAL_PUR_CHANNEL"/></field>
+            <field name="findPoFlag"><hidden value="Y"/></field>
+             <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field>
+		<field name="partyId" title="${uiLabelMap.Branch}">
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
+              </drop-down>
+        </field>
+       	<field name="partyIdFrom" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyId"/></field>
+        <field name="salesChannelEnumId" ><hidden value="${ChannalType}"/></field> 
+        <field name="orderTypeId" ><hidden value="PURCHASE_ORDER"/></field> 
+        <!-- <field name="orderTypeId">
+           <drop-down no-current-selected-key="PURCHASE_ORDER">
+              <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                 <entity-constraint name="parentTypeId" operator="like" value="%PURCHASE%"/>
+              </entity-options>
+           </drop-down>
+        </field> -->
+        <field title="Delivery Date" name="estimatedDeliveryDate"><date-find/></field>
+        <field name="orderId"><text-find/></field>
+        <field title="Entry Date" name="entryDate"><date-find/></field>
+        <field title="PO Date" name="orderDate"><date-find/></field>
+        <field name="orderNo" title="sequenceId"><text-find default-option="contains"/></field>
+<!--        <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
+        <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
+        <field name="statusId">
+	        	<drop-down allow-empty="true">
+	        		<option key="ORDER_CREATED" description="Created"/>
+	        		<option key="ORDER_APPROVED" description="Approved"/>
+	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
+	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
+	        	</drop-down>
+        </field>
+<!--         <field name="roleTypeId"><hidden value="SUPPLIER_AGENT"/></field> -->
+         <field name="purposeTypeId"><hidden value="DC_PURCHASE"/></field> 
+         <field name="findPoFlag"><hidden value="Y"/></field>  
+    	<field name="supplierId" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="SupplierLookupPartyName"/></field>
+        <field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    
      <form name="listPurchaseOrders" type="list" list-name="listIt" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -874,7 +927,10 @@
       		<set field="customerId" value="${orderRoleList[0].partyId}"/>
       		<set field="supplierId" value="${orderRoleSuppList[0].partyId}"/>
       		<entity-condition entity-name="Shipment" list="ShipmentList" >
-      			<condition-expr field-name="primaryOrderId" operator="equals" value="${orderId}"/>
+      		<condition-list>
+				<condition-expr field-name="primaryOrderId" operator="equals" value="${orderId}"/>
+				<condition-expr field-name="statusId" operator="not-equals" value="SHIPMENT_CANCELLED" />
+			</condition-list>
       		</entity-condition>
       		<set field="shipmentDone" value="${groovy: return (ShipmentList.size() > 0)? 'Y' : 'N';}"/>
       		
@@ -962,6 +1018,127 @@
             </hyperlink>
          </field> -->
     </form>
+    
+     
+     <form name="listPurchaseOrdersDC" type="list" list-name="listIt" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+           
+        </actions>
+      	<row-actions>
+      		<entity-condition entity-name="OrderItem" list="orderItemList" >
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      		</entity-condition>
+      		<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POSearchFilter.groovy"/>
+      		<set field="newSize" value="${orderItemsSize}" />
+      		<set field="size" value="${groovy: return(orderItemList.size())}"/>
+      		<entity-condition entity-name="OrderRole" list="orderRoleList" >
+      			<condition-list>
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      			<condition-expr field-name="roleTypeId" operator="equals" value="SHIP_TO_CUSTOMER" />
+      			</condition-list>
+      		</entity-condition>
+      		<entity-condition entity-name="OrderRole" list="orderRoleSuppList" >
+      			<condition-list>
+      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+      			<condition-expr field-name="roleTypeId" operator="equals" value="BILL_FROM_VENDOR" />
+      			</condition-list>
+      		</entity-condition>
+      		<set field="customerId" value="${orderRoleList[0].partyId}"/>
+      		<set field="supplierId" value="${orderRoleSuppList[0].partyId}"/>
+      		<entity-condition entity-name="Shipment" list="ShipmentList" >
+      		<condition-list>
+				<condition-expr field-name="primaryOrderId" operator="equals" value="${orderId}"/>
+				<condition-expr field-name="statusId" operator="not-equals" value="SHIPMENT_CANCELLED" />
+			</condition-list>
+      		</entity-condition>
+      		<set field="shipmentDone" value="${groovy: return (ShipmentList.size() > 0)? 'Y' : 'N';}"/>
+      		
+      		<!-- <entity-condition entity-name="SupplierProduct" list="SupplierProductList" >
+      			<condition-expr field-name="productId" operator="equals" value="${orderItemList[0].productId}"/>
+      		</entity-condition>
+      		<set field="partyId" value="${orderRoles[0].partyId}" />
+      		<entity-condition entity-name="ShipmentReceipt" list="ShipmentReceiptList" >
+      			<condition-list combine="and" >
+	      			<condition-expr field-name="orderId" operator="equals" value="${orderId}" />
+	      			<condition-expr field-name="statusId" operator="not-equals" value="SR_REJECTED" />
+      			</condition-list>
+      		</entity-condition>
+      		<set field="flag" value="${groovy: return (ShipmentReceiptList.size() > 0)? 'Y' : 'N';}"/>
+      		<entity-condition entity-name="Shipment" list="ShipmentList" >
+      			<condition-list combine="and" >
+	      			<condition-expr field-name="primaryOrderId" operator="equals" value="${orderId}" />
+      			</condition-list>
+      		</entity-condition>
+      		<set field="vehicleId" value="${ShipmentList[0].vehicleId}"/> -->
+      	</row-actions>   
+      	<field name="orderId" widget-style="buttontext">
+      	<hyperlink target="POoverviewDC" description="${groovy: if(orderNo !=null) return orderNo; else return orderId;}" target-window="_blank">
+      			<parameter param-name="orderId"/>
+      		</hyperlink>
+       </field>
+      	<field name="customerId" title="Customer"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, customerId, false);} - [${customerId}]"></display></field>
+		<field name="supplierId" title="Supplier"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, supplierId, false);} - [${supplierId}]"></display></field>
+        <field name="partyId" title="Branch"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
+        <field name="entryDate" title="Entry Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(entryDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        
+        <field name="PODate" title="PO Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(orderDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        
+        <field name="createdBy" title="Created By"><display/></field>
+        <!-- <field name="salesChannelEnumId"><display/></field> -->
+        <field name="partyId" title="Branch"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);} - [${partyId}]"/></field>
+         <!-- <field use-when="&quot;${orderTypeId}&quot; == &quot;LETTER_OF_INTENT&quot;" name="poReport" widget-style="buttontext">
+            <hyperlink target="LetterOfIndentReport.pdf" description="Report" target-window="_blank">
+                <parameter param-name="orderId"/>
+            </hyperlink>
+        </field> -->
+        <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot; &amp;&amp; &quot;${orderTypeId}&quot; != &quot;ARC_ORDER&quot;" name="poReport" widget-style="buttontext">
+            <hyperlink description="Report" target="javascript:showAgencyAddress('${orderId}');" target-window="_blank" target-type="plain">
+            </hyperlink>
+        </field>
+        
+        <field use-when="&quot;${orderTypeId}&quot; != &quot;LETTER_OF_INTENT&quot; &amp;&amp; &quot;${orderTypeId}&quot; != &quot;ARC_ORDER&quot;" name="Hindi Po Report" widget-style="buttontext">
+	            <hyperlink target="hindiPoPrintReport.pdf" description="Hindi PO" target-window="_blank">
+	                <parameter param-name="orderId"/>
+	            </hyperlink>
+        </field>
+        
+        <!--  <field use-when="&quot;${orderTypeId}&quot; == &quot;ARC_ORDER&quot;" name="arcReport" widget-style="buttontext">
+            <hyperlink target="arcOrder.pdf" description="Report" target-window="_blank">
+                <parameter param-name="orderId"/>
+            </hyperlink>
+        </field>
+         -->
+        
+       <!-- <field name="editOrder" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_EDIT_PO&quot;, session)))}" >
+            <hyperlink target="editMaterialPO" description="Edit Order">
+                 <parameter param-name="orderId"/>
+            </hyperlink>
+        </field> -->  
+      	<field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_APPROVE_PO&quot;, session)))}" >
+          <display description="Order Created" />
+        </field> 
+        
+        <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
+        <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
+        <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
+        <!-- <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field> -->
+        <field name="cancelOrder" widget-style="buttontext" use-when="(shipmentDone.equals(&quot;N&quot;) &amp;&amp; !statusId.equals(&quot;ORDER_CANCELLED&quot;))" >
+            <hyperlink target="CancelOrderDC" description="Cancel Order" confirmation-message="Are you sure to Cancel Order..?">
+                 <parameter param-name="orderId"/>
+                <parameter param-name="statusId" value="ORDER_CANCELLED" />
+                <parameter param-name="setItemStatus" value="Y" />
+                <parameter param-name="roleTypeId"/>
+            </hyperlink>
+        </field> 
+        <!-- <field use-when="(flag == &quot;N&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" > -->
+       <!--  <field use-when="(&quot;${newSize}&quot;!=&quot;${size}&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_SUSPENDED&quot;)) &amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" >	 <hyperlink target="raiseGRN" description="Raise GRN">
+        	 	<parameter param-name="orderId"/>
+        	 	<parameter param-name="vehicleId"/>
+            </hyperlink>
+         </field> -->
+    </form>
+    
      <form name="FindInvoices" type="single" target="DepotPurchaseInvoice" title="Find and list invoices"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -995,7 +1172,7 @@
         <field name="invoiceSequence"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="Facility Id"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
-        <field name="tallyreferenceNumber"><text-find ignore-case="true"/></field>  
+        <field name="referenceNumber"><text-find ignore-case="true"/></field>  
         <field name="supplierInvoiceId"><text-find ignore-case="true"/></field>  
         <field name="invoiceTypeId"><display/></field>
         <field name="subTabButtonValue"><hidden/></field>
@@ -1047,6 +1224,33 @@
 		<field name="billingAccountId"><hidden/></field>
 	</form>
 	
+	<form name="FindApInvoicesDC" type="single" target="DepotPurchaseInvoiceDC" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
+ 		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
+ 		<!-- <field name="invoiceTypeId" position="2">
+ 			<drop-down allow-empty="true">
+ 				<entity-options entity-name="InvoiceType" description="${description}">
+ 					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+ 				</entity-options>
+ 			</drop-down>
+ 		</field> -->
+ 		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+ 			position="2">
+ 			<drop-down allow-empty="true" no-current-selected-key="INVOICE_IN_PROCESS">
+ 				<entity-options description="${description}"
+ 					entity-name="StatusItem">
+ 					<entity-constraint name="statusTypeId" operator="equals"
+ 						value="INVOICE_STATUS" />
+ 					<entity-constraint name="statusId" operator="not-equals"
+ 						value="INVOICE_SENT" />
+ 				</entity-options>
+ 			</drop-down>
+ 		</field>
+ 		<field name="dueDate"><date-find type="timestamp"/></field>
+ 			<field name="billingAccountId">
+ 			<hidden />
+ 		</field>
+ 		<field name="billingAccountId"><hidden/></field>
+ 	</form>
 	
 	  <form name="FindSalesApInvoices" type="single" target="DepotSalesInvoice" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
 		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
@@ -1077,6 +1281,36 @@
 		<field name="billingAccountId"><hidden/></field>
 	</form>
 	
+	  <form name="FindSalesApInvoicesDC" type="single" target="DepotSalesInvoiceDC" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
+		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
+		<field name="purposeTypeId"><hidden value="YARN_SALE"/></field>
+		<!-- <field name="invoiceTypeId" position="2">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="InvoiceType" description="${description}">
+					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+				</entity-options>
+			</drop-down>
+		</field> -->
+		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+			position="2">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_IN_PROCESS">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+					<entity-constraint name="statusId" operator="not-equals"
+						value="INVOICE_SENT" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="dueDate"><date-find type="timestamp"/></field>
+			<field name="billingAccountId">
+			<hidden />
+		</field>
+		<field name="billingAccountId"><hidden/></field>
+	</form>
+	
+	  
 	  <form name="FindSalesApInvoicesForDepot" type="single" target="DepotSalesInvoiceView" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
 		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
 		<field name="purposeTypeId"><hidden value="DEPOT_YARN_SALE"/></field>
@@ -1106,6 +1340,36 @@
 		<field name="billingAccountId"><hidden/></field>
 	</form>
 	
+	  
+	  
+	  <form name="FindSalesApInvoicesForDepotDC" type="single" target="DepotSalesInvoiceViewDC" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
+		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
+		<field name="purposeTypeId"><hidden value="DEPOT_YARN_SALE"/></field>
+		<!-- <field name="invoiceTypeId" position="2">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="InvoiceType" description="${description}">
+					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+				</entity-options>
+			</drop-down>
+		</field> -->
+		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+			position="2">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_IN_PROCESS">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+					<entity-constraint name="statusId" operator="not-equals"
+						value="INVOICE_SENT" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="dueDate"><date-find type="timestamp"/></field>
+			<field name="billingAccountId">
+			<hidden />
+		</field>
+		<field name="billingAccountId"><hidden/></field>
+	</form>
 	 <!--  <form name="FindPhysicalInventoryDepot" type="single" target="FindFacilityPhysicalInventoryDepot" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="facilityId"><hidden/></field>
@@ -1805,6 +2069,49 @@
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
+    <form name="FindOrderPaymentSeachDC" title="" type="single" target="OrderPaymentDC" header-row-style="header-row" default-table-style="basic-table">
+          <field name="salesChannelEnumId" ><hidden value="BRANCH_CHANNEL"/></field>  
+        <!-- <field name="orderTypeId">
+           <drop-down no-current-selected-key="SALES_ORDER">
+              <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                 <entity-constraint name="parentTypeId" operator="like" value="%SALES%"/>
+              </entity-options>
+           </drop-down>
+        </field> -->
+        <field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+        </field>
+        <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
+        <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field name="tallyRefNO" title="Tally Ref No"><text/></field>
+        <field name="orderNo" title="sequenceId" position="2"><text-find/></field>
+        <field title="Indent From Date" name="estimatedDeliveryDate"><date-time/></field>
+        <field title="Indent Thru Date" name="estimatedDeliveryThruDate" position="2"><date-time/></field>
+        
+        <!-- <field name="sequenceId"><text-find/></field> -->
+      <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
+        <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
+        <field name="indentDateSort">
+	        	<drop-down allow-empty="false">
+	        		<option key="-orderDate" description="Descending"/>
+	        		<option key="orderDate" description="Ascending"/>
+	        	</drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+	        	<drop-down allow-empty="true">
+	        		<option key="ORDER_CREATED" description="Created"/>
+	        		<option key="ORDER_APPROVED" description="Approved"/>
+	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
+	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
+	        	</drop-down>
+        </field>
+        <field name="findPoFlag"><hidden value="Y"/></field>  
+		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
     <form name="FindIndentOrderPaymentSeach" title="" type="single" target="IndentPortalOrderPayment" header-row-style="header-row" default-table-style="basic-table">
         <field name="salesChannelEnumId" ><hidden value="BRANCH_CHANNEL"/></field>  
         <!-- <field name="orderTypeId">
@@ -2015,6 +2322,7 @@
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field> 
+         <field name="raiseInvoice" title="Raise Invoice" use-when="(&quot;${invSize}&quot; != &quot;0&quot;)&amp;&amp;(!invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}"><display></display></field>
     </form>   
     
     <form name="FindPhysicalInventoryDepotForSale" title="" type="single" target="DepotSalesInventorySales" header-row-style="header-row" default-table-style="basic-table">
@@ -2118,18 +2426,23 @@
         <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
         <field name="primaryOrderId" title="PO no"><text-find/></field>
         <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+        </field>
         <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
         <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>
         <field name="facilityId" title="Facility"><lookup target-form-name="ProductionLookupFacility"></lookup></field>
         <!-- <field name="facilityId" > <hidden value="BRANCH1"/></field> -->
         <!-- <field name="vehicleId" title="Vehicle No"><text-find/></field> -->
-        <field name="statusId"><hidden value="GENERATED"/></field>
+        <field name="statusId"><hidden value="GOODS_RECEIVED"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPhysicalInventoryDepotTransfer" type="list" list-name="physicalInventory" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
-       
+       	
         <field name="shipmentId" title="Shipment Id"><display/></field>
         <field name="shipmentTypeId" title="shipment Type"><display-entity entity-name="ShipmentType" key-field-name="shipmentTypeId" description="${description}"></display-entity></field>
         <field name="fromPartyId" title="From Party"><hidden/></field>
@@ -2564,7 +2877,7 @@
         <field name="passNo" title="Passbook No"><display/></field>
         <field name="partyClassification" title="Party Classification"><display/></field>
         <field name="isDepot" title="Depot Status"><display/></field>
-        <field name="fullAddress" title="fullAddress"><display/></field>
+        <field name="fullAddress" title="Full Address"><display/></field>
         <field name="district" title="District"><display/></field>
         <field name="loomDetail" title="Loom Detail"><display/></field>
         <field name="state" title="State"><display/></field>
@@ -2700,33 +3013,33 @@
         <!-- <field name="sNo" title="Sr.NO"><display/></field> -->
         <field name="partyId" title="Party Code"><display/></field>
         <field name="partyName" title="Name"><display/></field>
-        <field name="passbookno" title="passbookno"><display/></field>
+        <field name="passbookno" title="Passbook No"><display/></field>
         <field name="state" title="State"><display/></field>
-        <field name="district" title="district"><display/></field>
+        <field name="district" title="District"><display/></field>
         
         <field name="AvailableCOTTON_UPTO40" title="Available Quota"><display/></field>
-        <field name="QualizedCOTTON_UPTO40" title="Qualized Quota"><display/></field>
+        <field name="QualizedCOTTON_UPTO40" title="Utilized Quota"><display/></field>
         <field name="BalanceCOTTON_UPTO40" title="Balance Quota"><display/></field>
         
         <field name="AvailableCOTTON_40ABOVE" title="Available Quota"><display/></field>
-        <field name="QualizedCOTTON_40ABOVE" title="Qualized Quota"><display/></field>
+        <field name="QualizedCOTTON_40ABOVE" title="Utilized Quota"><display/></field>
         <field name="BalanceCOTTON_40ABOVE" title="Balance Quota"><display/></field>
         
         <field name="AvailableSILK_YARN" title="Available Quota"><display/></field>
-        <field name="QualizedSILK_YARN" title="Qualized Quota"><display/></field>
+        <field name="QualizedSILK_YARN" title="Utilized Quota"><display/></field>
         <field name="BalanceSILK_YARN" title="Balance Quota"><display/></field>
         
         <field name="AvailableWOOLYARN_10STO39NM" title="Available Quota"><display/></field>
-        <field name="QualizedWOOLYARN_10STO39NM" title="Qualized Quota"><display/></field>
+        <field name="QualizedWOOLYARN_10STO39NM" title="Utilized Quota"><display/></field>
         <field name="BalanceWOOLYARN_10STO39NM" title="Balance Quota"><display/></field>
         
         <field name="AvailableWOOLYARN_40SNMABOVE" title="Available Quota"><display/></field>
-        <field name="QualizedWOOLYARN_40SNMABOVE" title="Qualized Quota"><display/></field>
+        <field name="QualizedWOOLYARN_40SNMABOVE" title="Utilized Quota"><display/></field>
         <field name="BalanceWOOLYARN_40SNMABOVE" title="Balance Quota"><display/></field>
         
         
         <field name="AvailableWOOLYARN_BELOW10NM" title="Available Quota"><display/></field>
-        <field name="QualizedWOOLYARN_BELOW10NM" title="Qualized Quota"><display/></field>
+        <field name="QualizedWOOLYARN_BELOW10NM" title="Utilized Quota"><display/></field>
         <field name="BalanceWOOLYARN_BELOW10NM" title="Balance Quota"><display/></field>
 	   
 	   
@@ -3184,33 +3497,33 @@
     	 <field name="productName" title="____"><display/></field>
     	 <field name="partyName" title="____"><display/></field>
     	 <field name="orderQty" title="__National Handloom____"><display/></field>
-         <field name="rate" title="_Development Corporation LTD___ ___"><display/></field>
+         <field name="rate" title="_Development Corporation Ltd___ ___"><display/></field>
          <field name="orderValue" title="__"><display/></field>
     </form>
     <form name="purchaseRegisterCSV" type="list" list-name="orderList" view-size="99999">
-        <field name="orderDate" title="INDENT DATE"><display/></field>
+        <field name="orderDate" title="Indent Date"><display/></field>
        <!--  <field name="orderId" title="SEQUENCE ID" ><display /></field> -->
-        <field name="orderNo" title="SEQUENCE ID"><display/></field> -->
-        <field name="Qty" title="QTY"><display/></field>
-        <field name="unit" title="UNIT PRICE"><display/></field>
+        <field name="orderNo" title="Sequence Id"><display/></field> -->
+        <field name="Qty" title="Qty"><display/></field>
+        <field name="unit" title="Unit Price"><display/></field>
            <field name="amount" title="Amount"><display/></field>
-        <field name="weaverName" title="WEAVER NAME"><display/></field>
+        <field name="weaverName" title="Weaver Name"><display/></field>
         
-        <field name="poSquenceNo" title=" PO SEQUENCE ID" ><display /></field>
+        <field name="poSquenceNo" title=" PO Sequence Id" ><display /></field>
         <!-- <field name="poNo" title="PO NO"><display/></field> --> 
           
-        <field name="poDate" title="PO DATE"><display/></field> 
-        <field name="poQty" title="PO QUANTITY"><display/></field>
-        <field name="supplierName" title="SUPPLIER NAME"><display/></field>
-        <field name="salInv" title="SALE INVOICE"><display/></field>
-        <field name="salDate" title="SALE DATE"><display/></field>
-          <field name="salquantity" title="SALE QUANTITY"><display/></field>
-        <field name="salVal" title="SALE VALUE"><display/></field>
-        <field name="transporter" title="TRANSPORTER"><display/></field>
-        <field name="milInv" title="MIL INVOICE"><display/></field>
-        <field name="value" title="VALUE"><display/></field>
-        <field name="paymentReceipt" title="PAYMENT RECEIPT"><display/></field>
-        <field name="amount" title="AMOUNT"><display/></field>
+        <field name="poDate" title="PO Date"><display/></field> 
+        <field name="poQty" title="PO Quantity"><display/></field>
+        <field name="supplierName" title="Supplier Name"><display/></field>
+        <field name="salInv" title="Sale Invoice"><display/></field>
+        <field name="salDate" title="Sale Date"><display/></field>
+          <field name="salquantity" title="Sale Quantity"><display/></field>
+        <field name="salVal" title="Sale Value"><display/></field>
+        <field name="transporter" title="Transporter"><display/></field>
+        <field name="milInv" title="Mil Invoice"><display/></field>
+        <field name="value" title="Value"><display/></field>
+        <field name="paymentReceipt" title="Payment Receipt"><display/></field>
+        <field name="amount" title="Amount"><display/></field>
         <!-- <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
         <field name="storeName" title="Store Name"><display/></field>
         <field name="poSquenceNo" title="PO Squence No"><display/></field>
@@ -3227,59 +3540,62 @@
    
     
     <form name="salePurchaseReport" type="list" list-name="salesAndPurchaseList" view-size="99999">
-			<field name="invoiceId" title="invoiceId"><display/></field>
-			<field name="invoiceDate" title="invoiceDate"><display/></field>
-			<field name="invoiceAmount" title="invoiceAmount"><display/></field>
-			<field name="altaxAmt" title="at/OtherTax"><display/></field>
-			<field name="schemeQty" title="schemeQty"><display/></field>
-			<field name="subsidyAmt" title="subsidyAmt"><display/></field>
+			<field name="invoiceId" title="Invoice Id"><display/></field>
+			<field name="invoiceDate" title="Invoice Date"><display/></field>
+			<field name="invoiceAmount" title="Invoice Amount"><display/></field>
+			<field name="altaxAmt" title="At/OtherTax"><display/></field>
+			<field name="schemeQty" title="Scheme Qty"><display/></field>
+			<field name="subsidyAmt" title="Subsidy Amt"><display/></field>
 			<field name="allAdjWitOutTEN" title="Adjustment Amount"><display/></field>
 			<field name="invoiceNetAmt" title="Net Amount"><display/></field>
-			<field name="userAgency" title="userAgency"><display/></field>
-			<field name="partyClassification" title="partyClassification"><display/></field>
-			<field name="cluster" title="cluster"><display/></field>
+			<field name="userAgency" title="User Agency"><display/></field>
+			<field name="partyClassification" title="Party Classification"><display/></field>
+			<field name="cluster" title="Cluster"><display/></field>
 			<field name="District" title="District"><display/></field>
-			<field name="branch" title="branch"><display/></field>
-			<field name="sate" title="sate"><display/></field>
+			<field name="branch" title="Branch"><display/></field>
+			<field name="sate" title="State"><display/></field>
 			<field name="AgencyType" title="PAN No"><display/></field>
 			<field name="Depo" title="Depo"><display/></field>
-			 <field name="scheme" title="scheme"><display/></field>
-			<field name="orderNo" title="orderNo"><display/></field>
-			<field name="indentDate" title="indentDate"><display/></field>
-			<field name="custIndDate" title="custIndDate"><display/></field>
-			<field name="advance" title="advance"><display/></field>
-			<field name="paidAmt" title="advance"><display/></field>
-			<field name="appliedAmt" title="advance"><display/></field>
-			<field name="balance" title="advance"><display/></field>
-			<field name="cheque/dd" title="cheque/dd"><display/></field>
-			<field name="tallyBillAmt" title="tallyBillAmt"><display/></field>
-			<field name="supplierName" title="supplierName"><display/></field>
-			<field name="millState" title="millState"><display/></field>
-			<field name="source" title="source"><display/></field>
+			 <field name="scheme" title="Scheme"><display/></field>
+			<field name="orderNo" title="Order No"><display/></field>
+			<field name="indentDate" title="Indent Date"><display/></field>
+			<field name="custIndDate" title="CustInd Date"><display/></field>
+			<field name="advance" title="Advance"><display/></field>
+			<field name="paidAmt" title="Advance"><display/></field>
+			<field name="appliedAmt" title="Advance"><display/></field>
+			<field name="balance" title="Advance"><display/></field>
+			<field name="cheque/dd" title="Cheque/dd"><display/></field>
+			<field name="tallyBillAmt" title="TallyBillAmt"><display/></field>
+			<field name="supplierName" title="Supplier Name"><display/></field>
+			<field name="millState" title="Mill State"><display/></field>
+			<field name="source" title="Source"><display/></field>
 			<field name="TallyPoNumber" title="Tally Po Number"><display/></field>
-			<field name="poOrderId" title="poOrderId"><display/></field>
-			<field name="poorderDate" title="poorderDate"><display/></field>
-			<field name="destAddr" title="destAddr"><display/></field>
-			<field name="ProductCategoryId" title="ProductCategoryId"><display/></field>
-			<field name="itemDescription" title="itemDescription"><display/></field>
-			<field name="ledgerName" title="ledgerName"><display/></field>
-			<field name="purchaseQuantity" title="purchaseQuantity"><display/></field>
-			<field name="salesQuantity" title="salesQuantity"><display/></field>
-			<field name="rate" title="rate"><display/></field>
+			<field name="poOrderId" title="PO Order Id"><display/></field>
+			<field name="poorderDate" title="PO Order Date"><display/></field>
+			<field name="destAddr" title="Dest Addr"><display/></field>
+			<field name="ProductCategoryId" title="Product Category Id"><display/></field>
+			<field name="itemDescription" title="Item Description"><display/></field>
+			<field name="ledgerName" title="Ledger Name"><display/></field>
+			<field name="purchaseQuantity" title="Purchase Quantity"><display/></field>
+			<field name="salesQuantity" title="Sales Quantity"><display/></field>
+			<field name="rate" title="Rate"><display/></field>
 			<field name="tallyRefNo" title="Tally Bill No"><display/></field>
 			<field name="tallyRefDate" title="Tally Reference Date"><display/></field>
-			<field name="supplierInvoiceId" title="supplier Invoice"><display/></field>
-			<field name="supplierInvoiceDate" title="supplier Invoice Date"><display/></field>
+			<field name="supplierInvoiceId" title="Supplier Invoice"><display/></field>
+			<field name="supplierInvoiceDate" title="Supplier Invoice Date"><display/></field>
 			<field name="millInvoiceId" title="Purchase Invoice No"><display/></field>
 			<field name="millInvoiceDate" title="Purchase Invoice Date"><display/></field>
 			<field name="poInvoiceAmt" title="Purchase Invoice Amount"><display/></field>
+			<field name="purTax" title="Purchase Tax"><display/></field>
+			<field name="allAdjPur" title="Purchase Adjustments"><display/></field>
+			<field name="purInvoiceNetAmt" title="Purchase Invoice Net Amount"><display/></field>
 			<field name="transporter" title="Transporter Name"><display/></field>
 			<field name="lrNumber" title="Lr Number"><display/></field>
 			<field name="lrDate" title="Lr Date"><display/></field>
 			<field name="freight" title="Freight Amount"><display/></field>
-			<field name="shipmentId" title="ShipmentId"><display/></field>
-			<field name="actualSaleInvoiceId" title="Internal Sales InvoiceId"><display/></field>
-			<field name="actualPurInvoiceId" title="Internal purchase InvoiceId"><display/></field>
+			<field name="shipmentId" title="Shipment Id"><display/></field>
+			<field name="actualSaleInvoiceId" title="Internal Sales Invoice Id"><display/></field>
+			<field name="actualPurInvoiceId" title="Internal Purchase Invoice Id"><display/></field>
 
 
 
@@ -3351,31 +3667,31 @@
     </form>
     
     <form name="agencyWiseInvoiceOutstandingReportCSV" type="list" list-name="invocieList" view-size="99999">
-    	 <field name="partyName" title="DEBITOR/CREDITOR"><display/></field>
-    	 <field name="fstMntInvTotals" title="INVOICE VALUE BETWEEN 1-30 DAYS"><display/></field>
-         <field name="secMntInvTotals" title="INVOICE VALUE BETWEEN 31-60 DAYS"><display/></field>
-         <field name="thrdMntInvTotals" title="INVOICE VALUE BETWEEN 61-90 DAYS"><display/></field>
-         <field name="frthMntInvTotals" title="INVOICE VALUE BETWEEN 91-180 DAYS"><display/></field>
-         <field name="above180Days" title="INVOICE VALUE ABOVE 180 DAYS"><display/></field>
-         <field name="allMonthsTotal" title="TOTAL INVOICE VALUE"><display/></field>
+    	 <field name="partyName" title="Debitor/Creditor"><display/></field>
+    	 <field name="fstMntInvTotals" title="Invoice Value Between 1-30 Days"><display/></field>
+         <field name="secMntInvTotals" title="Invoice Value Between 31-60 Days"><display/></field>
+         <field name="thrdMntInvTotals" title="Invoice Value Between 61-90 Days"><display/></field>
+         <field name="frthMntInvTotals" title="Invoice Value Between 91-180 Days"><display/></field>
+         <field name="above180Days" title="Invoice Value Above 180 Days"><display/></field>
+         <field name="allMonthsTotal" title="Total Invoice Value"><display/></field>
     </form>
     <form name="m1ReportCSV" type="list" list-name="finalCSVList" view-size="99999">
     	 <field name="prodcatName" title="___"><display/></field>
-    	 <field name="productName" title="____"><display/></field>
-    	 <field name="partyName" title="_"><display/></field>
-    	 <field name="orderQty" title="_"><display/></field>
-         <field name="BdlWt" title="__National Handloom__"><display/></field>
-         <field name="rate" title="_Development"><display/></field>
-         <field name="orderValue" title="_ Corporation LTD__"><display/></field>
+    	 <field name="productName" title="__National Handloom__"><display/></field>
+    	 <field name="partyName" title="__Development__"><display/></field>
+    	 <field name="orderQty" title="__Corporation Ltd__"><display/></field>
+         <!-- <field name="BdlWt" title="__National Handloom__"><display/></field> -->
+         <field name="rate" title="_"><display/></field>
+         <field name="orderValue" title="_ "><display/></field>
     </form>
     <form name="fiberAndCountWiseSalesReportCSV" type="list" list-name="finalCSVList" view-size="99999">
     	 <field name="prodcatName" title="___"><display/></field>
-    	 <field name="productName" title="____"><display/></field>
-    	 <field name="partyName" title="_"><display/></field>
-    	 <field name="orderQty" title="_"><display/></field>
-         <field name="BdlWt" title="__National Handloom__"><display/></field>
-         <field name="rate" title="_Development"><display/></field>
-         <field name="orderValue" title="_ Corporation LTD__"><display/></field>
+    	 <field name="productName" title="__National Handloom__"><display/></field>
+    	 <field name="partyName" title="__Development__"><display/></field>
+    	 <field name="orderQty" title="__Corporation Ltd__"><display/></field>
+         <!-- <field name="BdlWt" title="__National Handloom__"><display/></field> -->
+         <field name="rate" title="_"><display/></field>
+         <field name="orderValue" title="_"><display/></field>
     </form>
 
     <form name="IndentCsvReportList" type="list" list-name="orderInformationDetails" view-size="99999">
@@ -3494,19 +3810,20 @@
      
       <form name="stateWiseBranchWiseSaleReportCSV" type="list" list-name="finalList" view-size="99999">
          <!--  <field name="billno" title="Sale Invo.No"><display/></field> -->
-          <field name="billno" title="SALE INVO NO"><display/></field>
-         <field name="invoiceDate" title="INVOICE DATE"><display/></field>
-         <field name="invoiceQTY" title="QUANTITY(KG)"><display/></field>
-         <field name="invoicprice" title=""><display/></field>
-         <field name="invoiceAmount" title="AMOUNT"><display/></field>
-         <field name="supplierName" title="NAME OF SUPPLIER"><display/></field>
-         <field name="destAddr" title="DESTINATION"><display/></field>
-         <field name="transporter" title="TRANSPORTER"><display/></field>
-         <field name="lrNumber" title="LR NUMBER"><display/></field>
-         <field name="lrDate" title="LR DATE"><display/></field>
+          <field name="billno" title="Sale Invoice No"><display/></field>
+         <field name="invoiceDate" title="Invoice Date"><display/></field>
+         <field name="productName" title="Product Name"><display/></field> 
+         <field name="invoiceQTY" title="Quantity(kg)"><display/></field>
+         <field name="invoicprice" title="Invoice Price"><display/></field>
+         <field name="invoiceAmount" title="Amount"><display/></field>
+         <field name="supplierName" title="Name Of Supplier"><display/></field>
+         <field name="destAddr" title="Destination"><display/></field>
+         <field name="transporter" title="Transporter"><display/></field>
+         <field name="lrNumber" title="Lr Number"><display/></field>
+         <field name="lrDate" title="Lr Date"><display/></field>
      </form>
      <form name="stateWiseBranchWiseSaleHeader" type="list" view-size="99999999">
-       <field name="stateWiseBranchWiseSaleHeader" title="_____________________________state Wise Branch Wise Sales___________________________________"><display/></field>
+       <field name="stateWiseBranchWiseSaleHeader" title="_____________________________State Wise Branch Wise Sales___________________________________"><display/></field>
      </form>  
       
      
@@ -3544,6 +3861,54 @@
          <field name="quantityAccepted" title="QUANTITY"><display/></field>
          <field name="unitPrice" title="UNIT PRICE"><display/></field>
      </form> 
+      <form name="DelayShipmentReportCSVHeader" type="list" view-size="99999">
+         <field name="orderId" title="_"><display/></field>
+         <field name="orderDate" title="_"><display/></field>
+         <field name="ordQty" title="_"><display/></field>
+         <field name="supplierName" title="LISTING OF DELIVERIES DELAYED BY MORE THAN 7 DAYS BY SUPPLIERS"><display/></field> 
+         <field name="shipDate" title="_"><display/></field>
+         <field name="noOfShipments" title="_"><display/></field>
+         <field name="shipedQty" title="_"><display/></field>
+         <field name="diffDays" title="_"><display/></field>
+     </form> 
+     
+      <form name="DelayShipmentReportCSV" type="list" list-name="dataList" view-size="99999">
+         <field name="orderId" title="ORDER ID"><display/></field>
+         <field name="orderDate" title="ORDER DATE"><display/></field>
+         <field name="ordQty" title=" ORDER QTY(Kgs) "><display/></field>
+         <field name="supplierName" title="SUPPLIER NAME"><display/></field> 
+         <field name="shipDate" title="DELIVERY DATE"><display/></field>
+         <field name="noOfShipments" title=" NO OF SHIPMENTS"><display/></field>
+         <field name="shipedQty" title="DELIVERED QTY(Kgs)"><display/></field>
+         <field name="diffDays" title="DELIVERY DELAYED"><display/></field>
+     </form>
+      
+      
+      
+      <form name="POAnalyticsReportCSV" type="list" list-name="POList" view-size="99999">
+        <!-- odd-row-style="alternate-row" header-row-style="header-row"  target="sendReceiptQtyForQC" default-table-style="basic-table hover-bar"> -->
+      	<field name="orderNo" title="Indent No."><display/></field>
+      	<field name="branchIdName" title="Branch"><display/></field>
+      	<field name="saleOrderDate" title="Indent Date"><display/></field>
+      	<field name="purchaseOrderDate" title="PO Date"><display/></field>
+        <field name="orderQuantity" title="Indent Quantity(Kgs)"><display/></field>
+        <field name="diffDays" title="No.of Days" ><display/></field>
+    </form>
+      
+      
+     
+       <form name="DelaListingPOAnalyticsReportCSVHeader" type="list" view-size="99999">
+         <field name="orderNo" title="_"><display/></field>
+         <field name="branchIdName" title="_"><display/></field>
+         <field name="dateStr" title="LISTING OF DELIVERIES DELAYED"><display/></field>
+         <field name="shptDateStr" title="BY MORE THAN 7 DAYS BY SUPPLIERS"><display/></field> 
+         <field name="orderQuantity" title="_"><display/></field>
+         <field name="differDays" title="_"><display/></field>
+          
+     </form> 
+      
+     
+      
        <form name="StateWiseSchemeWiseSalesConsolidatedHeaderCSV" type="list" list-name="finalCSVList2" view-size="99999">
          <field name="h1" title="____STATE" ><display/></field>
          <field name="h2" title="____TOTAL"><display/></field>
@@ -3585,7 +3950,7 @@
          <field name="depotCharges" title="DEPOT CHARGES AT 2.5%"><display/></field>
      </form> 
        <form name="IndentCSV" type="list" list-name="orderList" view-size="99999">
-       <field name="orderNo" title="MONTHLY INFORMATION ON YARN SUPPLY FROM NHDC FOR  BASUDEVPUR SILPA BIPANAN TSS LTD "><display/></field>
+       <field name="orderNo" title="_"><display/></field>
         <field name="orderDate" title="_"><display/></field>
         <field name="orderId" title="_" ><display /></field>
         <field name="productNameCSV" title="_"><display/></field>
@@ -3597,14 +3962,14 @@
          <field name="poDate" title="_"><display/></field>
         <field name="supplierName" title="_"><display/></field>
         <field name="poQty" title="_"><display/></field>
-        <field name="salInv" title="_"><display/></field>
+        <!-- <field name="salInv" title="_"><display/></field>
         <field name="salDate" title="_"><display/></field>
         <field name="salVal" title="_"><display/></field>
         <field name="transporter" title="_"><display/></field>
         <field name="milInv" title="_"><display/></field>
         <field name="value" title="_"><display/></field>
         <field name="paymentReceipt" title="_"><display/></field>
-        <field name="amount" title="_"><display/></field>
+        <field name="amount" title="_"><display/></field> -->
         <!-- <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
         <field name="storeName" title="Store Name"><display/></field>
         <field name="poSquenceNo" title="PO Squence No"><display/></field>
@@ -3695,11 +4060,13 @@
      </form> 
        <form name="indentSupplyAnalyticsCSV" type="list" list-name="dataList" view-size="99999">
 <!--         <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
-                 <field name="partyId" title="RO"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field>   
+                 <field name="partyId" title="RO"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}"/></field>   
                  <field name="branch" title="Branch"><display/></field>   
-       <field name="totalRevenue" title=" Total Quantity"><display/></field>
-       <field name="totalSaleQty" title="Total Sale Bill Qty"><display/></field>
-       <field name="inProcess" title="Pending Qty"><display/></field>
+       <field name="totalRevenue" title=" Total Quantity (Kg's in Lakhs)"><display/></field>
+       <field name="saleQty" title="Total Sale Bill Qty (Kg's in Lakhs)"><display/></field>
+       <field name="inProcess" title="Pending Qty(Kg's in Lakhs)"><display/></field>
+       <field name="saleAmt" title="Sale Amount after 10% Discount(Rs in Lakhs)"><display/></field>
+       <field name="purAmout" title="Total Purchase Amount (Rs in Lakhs)"><display/></field>
      </form> 
        <form name="indentPurchaseAnalyticsCSV" type="list" list-name="dataList" view-size="99999">
 <!--         <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
@@ -3711,13 +4078,21 @@
        <field name="completed" title="Shipped Qty"><display/></field>
      </form> 
           <form name="indentAnalyticsCSV" type="list" list-name="dataList" view-size="99999">
-<!--         <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
-                 <field name="partyId" title="RO"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field>   
-                 <field name="branch" title="Branch"><display/></field>   
-       <field name="totalRevenue" title=" Total Revenue"><display/></field>
+<!--        <field name="partyId" title="Customer"><display description= "${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/></field> -->
+                 <field name="ro" title="Regional Office"><display /></field>
+                 <!-- <field name="partyId" title="partyId"><display/></field>  -->
+                 <field name="branch" title="Branch"><display /></field>  
        <field name="totalIndents" title="Total Indents"><display/></field>
-       <field name="inProcess" title="Pending "><display/></field>
-       <field name="completed" title="completed"><display/></field>
+       <field name="indentQtyInKgs" title="Indent Qty(Kgs)"><display/></field>
+       <field name="indentQty" title="Indent Qty(Kgs in Lakhs)"><display/></field>
+       <field name="totalRevenueInRs" title="Indent Amt(Rs)"><display/></field>
+        <field name="totalRevenue" title="Indent Amt(Rs in Lakhs)"><display/></field>
+       <field name="totPurchases" title="PO Issued"><display/></field>
+       <field name="totalPoQtyInKgs" title="Po Qty(Kgs)"><display/></field>
+        <field name="totalPoQty" title="Po Qty(Kgs in Lakhs)"><display/></field>
+       <field name="totalPoAmtInRs" title="Po Amt(Rs)"><display/></field>
+       <field name="totalPoAmt" title="Po Amt(Rs in Lakhs)"><display/></field>
+       <field name="pendingPOs" title="Pending POs"><display/></field>
      </form> 
     
      <form name="FindStockDetails" title="" type="single" target="StockDetails" header-row-style="header-row" default-table-style="basic-table">
@@ -3839,7 +4214,7 @@
     </form>
     
     <form name="mobileHitsCSV" type="list" list-name="apiHits" view-size="99999">
-        <field name="userLoginId" title="passbook/userName"><display/></field>
+        <field name="userLoginId" title="Passbook/User Name"><display/></field>
         <field name="partyId"><display/></field>
         <field name="partyName" title="Customer Name"><display/></field>
     </form>
@@ -3847,15 +4222,453 @@
          <field name="IndentNo" title="__"><display/></field>
          <field name="IndentDate" title="__"><display/></field>
          <field name="indQty" title="__"><display/></field>
-         <field name="indUnitPrice" title="__"><display/></field>
-         <field name="indentValue" title="__"><display/></field>
-         <field name="PoNo" title="__"><display/></field>
-         <field name="PoDate" title="__pending_"><display/></field>
-         <field name="supplier" title="__Shipments__"><display/></field>
-         <field name="shipmentDate" title="__Report"><display/></field>
+         <field name="indUnitPrice" title="__Pending__"><display/></field>
+         <field name="indentValue" title="__Shipments__"><display/></field>
+         <field name="PoNo" title="__Report__"><display/></field>
+         <field name="PoDate" title="__"><display/></field>
+         <field name="supplier" title="__"><display/></field>
+         <field name="shipmentDate" title="__"><display/></field>
          <field name="shipQty" title="__"><display/></field>
          <field name="DurBWSoAndPo" title="__"><display/></field>
          <field name="DurBwSoAndShip" title="__"><display/></field>
      </form>
+     <form name="billWiseSalesReportCSV" type="list" list-name="finalList" view-size="99999">
+         <field name="invoiceDate" title="__"><display/></field>
+         <field name="billno" title="__"><display/></field>
+         <field name="partyName" title="__NATIONAL HANDLOOM__"><display/></field>
+         <field name="partyType" title="__DEVELOPMENT __"><display/></field>
+         <field name="district" title="__CORPORATION LTD__"><display/></field>
+         <field name="branch" title="__"><display/></field>
+         <field name="state" title="__"><display/></field>
+         <field name="ro" title="__"><display/></field>
+         <field name="qty" title="__"><display/></field>
+         <field name="amount" title="__"><display/></field>
+         <field name="VatOrOtherAmt" title="__"><display/></field>
+         <field name="subsidyQty" title="__"><display/></field>
+         <field name="subsidyAmount" title="__"><display/></field>
+         <field name="scheme" title="__"><display/></field>
+     </form>
+     
+     <form name="FindPayments" type="single" target="TrackPayments" >
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="transactionId" title="Transaction Id"><text-find/></field>
+		    <field name="transactionDate" title="Transaction Date"><date-find/></field>
+		    <field name="partyId" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentChannel" title="Payment Channel">
+            <drop-down allow-empty="true">
+              <option key="atom" description="ATOM"/>
+               <option key="airtel" description="AIRTEL"/>               
+            </drop-down>
+        </field> 
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+    </form>
+    <form name="ListPayments" type="list" list-name="listIt" target="TrackPayments" odd-row-style="alternate-row" header-row-style="header-row"
+      	default-table-style="basic-table hover-bar" separate-columns="true">
+        <actions>
+          <service service-name="performFind" result-map="result" result-map-list="listIt">
+             <field-map field-name="inputFields" from-field="parameters"/>
+             <field-map field-name="entityName" value="PaymentGatewayTrans"/>
+             <field-map field-name="orderBy" value="transactionDate"/>
+             <field-map field-name="viewIndex" from-field="viewIndex"/>
+             <field-map field-name="viewSize" from-field="viewSize"/>
+          </service>
+        </actions> 
+    	<field name="transactionId" title="Transaction Id"><display></display></field>
+		<field name="transactionDate" title="Transaction Date"><display></display></field>
+		<field name="transactionStatus" title="Status"><display></display></field>
+		<field name="partyId" title="partyId"><display></display></field>
+		<field name="orderId" title="Order Id"><display></display></field>
+		<field name="amount" title="Amount(Rs)"><display></display></field>
+		<field name="paymentChannel" title="Payment Channel"><display></display></field>
+		<field name="paymentMode" title="Payment Mode"><display></display></field>
+		
+		<field name="pgTransId" title="PG Trans Id"><display></display></field>
+		<field name="pgTransDate" title="PG Trans Date"><display></display></field>
+		<field name="pgTransStatus" title="PG Trans Status"><display></display></field>
+		<field name="pgTransMessage" title="PG Trans Message"><display></display></field>
+		<field name="paymentId" title="ERP Payment Id"><display></display></field>		
+		
+		<field name="inquiry" title="Inquiry" use-when="true" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="Inquiry" target="TransactionInquiry" target-window="_blank">
+                <parameter param-name="transactionId"/>
+                <parameter param-name="amount"/>
+                <parameter param-name="transactionDate"/>
+           </hyperlink>
+        </field>
+        <field name="refund" title="Refund" use-when="true" widget-style="buttontext">
+           <hyperlink also-hidden="false" description="Refund" target="TransactionRefund" target-window="_blank">
+                <parameter param-name="transactionId"/>
+                <parameter param-name="amount"/>
+                <parameter param-name="transactionDate"/>
+           </hyperlink>
+        </field>         
+        
+		<!-- <field name="lastUpdatedStamp" title="last Updated"><display></display></field> -->
+    </form>
+    
+    
+    <form name="FindTankerSalesOrderDC" title="" type="single" target="FindIndentsDC" header-row-style="header-row" default-table-style="basic-table">
+        <field name="salesChannelEnumId" ><hidden value="BRANCH_CHANNEL"/></field>  
+        <!-- <field name="orderTypeId">
+           <drop-down no-current-selected-key="SALES_ORDER">
+              <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                 <entity-constraint name="parentTypeId" operator="like" value="%SALES%"/>
+              </entity-options>
+           </drop-down>
+        </field> -->
+        <field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+        </field>
+        <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
+        <field name="scheme" title="Scheme" position="3">
+	        	<drop-down allow-empty="true">
+	        		<option key="MGPS_10Pecent" description="MGPS+10 % Scheme"/>
+	        		<option key="MGPS" description="MGPS Scheme"/>
+	        		<option key="General" description="General Scheme"/>
+	        	</drop-down>
+        </field> 
+        <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field name="tallyRefNO" title="Tally Ref No"><text/></field>
+        <field name="orderNo" title="sequenceId" position="2"><text-find/></field>
+        <field title="Indent From Date" name="estimatedDeliveryDate"><date-time/></field>
+        <field title="Indent Thru Date" name="estimatedDeliveryThruDate" position="2"><date-time/></field>
+        <field title="Indent Entry From Date" name="indentEntryFromDate"><date-time/></field>
+        <field title="Indent Entry Thru Date" name="indentEntryThruDate" position="2"><date-time/></field>
+          
+        <!-- <field name="sequenceId"><text-find/></field> -->
+      <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
+        <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
+        <field name="indentDateSort">
+	        	<drop-down allow-empty="false">
+	        		<option key="-orderDate" description="Descending"/>
+	        		<option key="orderDate" description="Ascending"/>
+	        	</drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+	        	<drop-down allow-empty="true">
+	        		<option key="ORDER_CREATED" description="Created"/>
+	        		<option key="APPROVE_LEVEL1" description="Level1Approved"/>
+	        	    <option key="APPROVE_LEVEL2" description="Level2Approved"/>
+	        	    <option key="APPROVE_LEVEL3" description="Level3Approved"/>
+	        		<option key="ORDER_APPROVED" description="Approved"/>
+	        		<option key="ORDER_PENDING" description="Pending"/>
+	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
+	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
+	        		<option key="ORDER_COMPLETED" description="Completed"/>
+	        	</drop-down>
+        </field>
+         <field name="salesChannel" title="Sales Channel" position="3">
+	        	<drop-down allow-empty="true">
+	        		<option key="WALKIN_SALES_CHANNEL" description="Walk-In Sales Channel"/>
+	        		<option key="MOBILE_SALES_CHANNEL" description="e-Dhaga Channel"/>
+	        		<option key="WEB_SALES_CHANNEL" description="Web Channel"/>
+	        		<option key="POS_SALES_CHANNEL" description="POS Channel"/>
+	        		<option key="PHONE_SALES_CHANNEL" description="Phone Channel"/>
+	        		<option key="FAX_SALES_CHANNEL" description="Fax Channel"/>
+	        		<option key="EMAIL_SALES_CHANNEL" description="E-Mail Channel"/>
+	        	</drop-down>
+        </field>
+        
+        <field name="findPoFlag"><hidden value="Y"/></field>  
+		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+   
+   
+   
+   <form name="FindMaterialShipmentDC" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+    <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+       <field name="partyId" title="${uiLabelMap.Branch}">
+              <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="branchList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
+        <field name="estimatedShipDate" title="${uiLabelMap.ShipmentDate}"><date-find default-option-from="sameDay"  /></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
+        <field name="tallyRefNO" title="Tally Ref No"><text/></field>
+        <field name="primaryOrderId" title="${uiLabelMap.PurchaseOrderNo}"><text-find/></field>
+        <field name="shipmentId" title="${uiLabelMap.ShipmentId}"><text-find/></field>
+        <field name="partyIdTo" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="SupplierLookupPartyName"/></field> 
+<!--         <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><text-find/></field> -->
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"  >
+        	<drop-down allow-empty="true" > 
+        		<option key="DISPATCHED" description="Dispatched" > </option>
+        		<option key="DOCUMENTS_RECEIVED" description="Documents Received" ></option>
+        		<option key="DOCUMENTS_ENDORSED" description="Documents Endorsed" > </option>
+        		<option key="GOODS_RECEIVED" description="Goods Received"  ></option>
+        	</drop-down>
+        </field>
+        <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
+         <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>  
+    
+   
+   
+   
+   <form name="listMaterialShipmentsDC" type="list" list-name="listIt" paginate-target="${targetRequest}"
+            odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+            <actions>
+            </actions>
+            <row-actions>
+            	<entity-condition entity-name="Invoice" list="invoices">
+            		<condition-list combine="and">
+            			<condition-expr field-name="shipmentId" from-field="shipmentId"/>
+            			<condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
+            		</condition-list>
+            	</entity-condition>
+            	<set field="invSize" value="${groovy: invoices.size();}"/>
+            	<set field="invoiceId" value="${invoices[0].invoiceId}"/>
+            	<entity-condition entity-name="Invoice" list="invoicesstatusList">
+            		<condition-list combine="and">
+            			<condition-expr field-name="shipmentId" from-field="shipmentId"/>
+            			<condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
+            			<condition-expr field-name="invoiceTypeId" operator="equals" value="PURCHASE_INVOICE"/>
+            		</condition-list>
+            	</entity-condition>
+            	<set field="purchaseInvoiceId" value="${invoicesstatusList[0].invoiceId}"/>
+            	<set field="purchaseInvoiceStatusId" value="${invoicesstatusList[0].statusId}"/>
+            	<entity-condition entity-name="Invoice" list="salesInvoiceStatusList">
+            		<condition-list combine="and">
+            			<condition-expr field-name="shipmentId" from-field="shipmentId"/>
+            			<condition-expr field-name="statusId" operator="not-equals" value="INVOICE_CANCELLED"/>
+            			<condition-expr field-name="invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
+            		</condition-list>
+            	</entity-condition>
+            	<set field="salesInvoiceId" value="${salesInvoiceStatusList[0].invoiceId}"/>
+            	<set field="salesInvoiceStatusId" value="${salesInvoiceStatusList[0].statusId}"/>
+            	<set field="purchaseInvoiceSize" value="${groovy: invoicesstatusList.size();}"/>
+            	<set field="salesInvoiceSize" value="${groovy: salesInvoiceStatusList.size();}"/>
+            	<entity-condition entity-name="ShipmentReceipt" list="shipmentReceiptList">
+            		<condition-list combine="and">
+            			<condition-expr field-name="shipmentId" from-field="shipmentId" />
+            			<condition-expr field-name="statusId" operator="equals" value="SR_RECEIVED"/>
+            		</condition-list>
+            	</entity-condition>
+            	<set field="shipmentReceiptSize" value="${groovy: shipmentReceiptList.size();}"/>
+            	<entity-condition entity-name="ShipmentReceipt" list="invoiceReceiptList">
+            		<condition-list combine="and">
+            			<condition-expr field-name="shipmentId" from-field="shipmentId" />
+            			<condition-expr field-name="statusId" operator="equals" value="SR_ACCEPTED"/>
+            		</condition-list>
+            	</entity-condition>
+            	<set field="invoiceReceiptSize" value="${groovy: invoiceReceiptList.size();}"/>
+            </row-actions>
+          	<field name="shipmentId" widget-style="buttontext h3" title="Shipment">
+          		<hyperlink target="MaterialShipmentOverview" description="${shipmentId}" target-window="_blank" >
+                    <parameter param-name="shipmentId"/>
+                </hyperlink>
+          	</field>
+           <!--  <field name="estimatedShipDate" title="GRN Ship Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd MMMMM, yyyy&quot;);}"/></field> -->
+            <field name="salesOrder" title="Indent" widget-style="buttontext">
+            	<hyperlink target="POoverviewDC" description="${salesOrder}" target-window="_blank">
+          			<parameter param-name="orderId" value="${orderId}"/>
+          		</hyperlink>
+            </field>
+            <field name="poOrder" title="PO" widget-style="buttontext">
+            	<hyperlink target="POoverviewDC" description="${poOrder}" target-window="_blank">
+          			<parameter param-name="orderId" value="${primaryOrderId}"/>
+          		</hyperlink>
+            </field>
+            <field name="partyIdFrom" title="Supplier">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                    <sub-hyperlink description="[${partyIdFrom}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                        <parameter param-name="partyId" from-field="partyIdFrom"/>
+                    </sub-hyperlink>
+                </display-entity>
+            </field>
+             <field name="weaver">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                    <sub-hyperlink description="[${weaver}]" target="/partymgr/control/viewprofile" target-type="inter-app">
+                        <parameter param-name="partyId" from-field="weaver"/>
+                    </sub-hyperlink>
+                </display-entity>
+            </field>
+            <field name="tripNum" title="Tally Po.No."><display/></field>
+            <!-- <field name="vehicleId" title="Vehicle No"><display/></field> -->
+            <field name="billToPartyId"><hidden/></field>
+            <field name="partyIdTo" ><hidden/></field>
+            <field name="partyName" ><hidden/></field>
+            <!-- <field name="statusId" title="Status" use-when="(!statusId.equals(&quot;DISPATCHED&quot;)) &amp;&amp; (!statusId.equals(&quot;DOCUMENTS_RECEIVED&quot;)) &amp;&amp; (!statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;))" >
+            	<display-entity entity-name="StatusItem" description="${description}"/>
+            </field> -->
+           <!--  <field name="linkGrnWithPO" widget-style="buttontext" title="Link GRN With PO" use-when="&quot;${primaryOrderId}&quot;==&quot;&quot; &amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}" >
+                <hyperlink target-type="plain" target="javascript:showLinkGrnWithPOForm('${shipmentId}','${partyId}');" description="Link GRN With PO">
+                </hyperlink>
+            </field>  -->
+            <field name="statusUpdate" title="GRN" widget-style="buttontext" use-when="statusId.equals(&quot;DISPATCHED&quot;)" >
+	            <hyperlink target="updateShipmentDC" description="Docs Received">
+	                 <parameter param-name="shipmentId"/>
+	                 <parameter param-name="statusId" value="DOCUMENTS_RECEIVED"/>
+	                 <parameter param-name="roleTypeId" value="BILL_TO_CUSTOMER"/>
+	            </hyperlink>
+	        </field>
+	        <field name="statusUpdate" title="GRN" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_RECEIVED&quot;)" >
+	            <hyperlink target="updateShipmentDC" description="Docs Endorsed">
+	                 <parameter param-name="shipmentId"/>
+	                 <parameter param-name="statusId" value="DOCUMENTS_ENDORSED"/>
+	                 <parameter param-name="roleTypeId" value="BILL_TO_CUSTOMER"/>
+	            </hyperlink>
+	        </field>
+	        <field name="statusUpdate" title="GRN" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
+	            <display description="Docs Endorsed"></display>
+	        </field>
+	        <field name="statusUpdate" title="GRN" use-when="statusId.equals(&quot;GOODS_RECEIVED&quot;)" >
+	            <display description="Accepted"></display>
+	        </field>
+            <!-- <field name="report" widget-style="buttontext"  use-when="(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
+                <hyperlink target="MRRreportDepotSales.pdf" description="Report" target-window="_blank">
+                 	<parameter param-name="shipmentId" value="${shipmentId}"/>
+                 	<parameter param-name="orderId" value="${primaryOrderId}"/>
+                   	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
+                </hyperlink>
+            </field> -->
+            <!-- <field name="SendtoQC" use-when="!shipmentReceiptSize.equals(&quot;0&quot;)"  title="Accept Shipment" widget-style="buttontext">
+                 <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
+            </field> --> 
+            <field name="editGRN" widget-style="buttontext" title="Edit GRN" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
+            <hyperlink target="editGRN" description="Edit GRN">
+                <parameter param-name="shipmentId"/>
+                <parameter param-name="orderId" value="${primaryOrderId}"/>
+                <parameter param-name="orderNo" from-field="salesOrder"/>
+            </hyperlink>
+           	</field> 
+            <field name="report" widget-style="buttontext"  use-when="(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))">
+            <hyperlink target="MRRreportDepotSales.pdf" description="Report" target-window="_blank">
+             	<parameter param-name="shipmentId" value="${shipmentId}"/>
+             	<parameter param-name="orderId" value="${primaryOrderId}"/>
+               	<parameter param-name="datetimeReceived" value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd-MMM-yyyy&quot;);}"/>
+            </hyperlink>
+          	</field>
+            <field name="raiseInvoice" widget-style="buttontext" title="Pur Invoice" use-when="(&quot;${purchaseInvoiceSize}&quot; == &quot;0&quot;) &amp;&amp;(statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)) ">
+                <hyperlink target="MaterialInvoiceInitDC" description="Pur Invoice">
+                    <parameter param-name="shipmentId"/>
+                    <parameter param-name="billToPartyId"/>
+                </hyperlink>
+            </field>
+            <field name="raiseInvoice" widget-style="buttontext" title="Pur Invoice" use-when="(!purchaseInvoiceSize.equals(&quot;0&quot;))">
+                <!-- <hyperlink target="APInvoiceOverview" description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, purchaseInvoiceId);}]" target-window="_blank">
+          			<parameter param-name="invoiceId" value="${invoiceId}"/>
+          		</hyperlink> -->
+          		 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, purchaseInvoiceId);}]"></display>   
+            </field>
+            <field name="purInvoiceAmout" title ="Pur Inv. Amt" use-when="(!purchaseInvoiceSize.equals(&quot;0&quot;))"> 
+               <display description="${groovy:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,purchaseInvoiceId);}"></display>         
+            </field>
+         <!--    <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
+                <hyperlink target="processSalesInvoice" description="Sales Invoice">
+                    <parameter param-name="shipmentId"/>
+                    <parameter param-name="orderId" value="${orderId}"/>
+                    <parameter param-name="partyId" from-field="partyId"/>
+                    <parameter param-name="billToPartyId" from-field="partyId"/>
+                    <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
+                    
+                </hyperlink>
+            </field>-->
+            
+           <!--    <field name="raiseSalesInvoice"  title="Sales Invoice" widget-style="buttontext" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
+                 <hyperlink  target-type="plain" description="Sales Invoice"  target="javascript:raiseSalesInvoiceFromBranch('${shipmentId}','${partyIdTo}','${partyName}','${orderId}','${billToPartyId}','${purchaseInvoiceId}');"></hyperlink>
+            </field> 
+            
+              <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
+                <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>
+            </field>  -->
+            
+            
+            <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!&quot;${purchaseInvoiceSize}&quot;.equals(&quot;0&quot;))&amp;&amp;(salesInvoiceSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_INVOICE&quot;, session)))}">
+               <!--  <hyperlink target="processSalesInvoice" description="Sales Invoice">
+                    <parameter param-name="shipmentId"/>
+                    <parameter param-name="orderId" value="${orderId}"/>
+                    <parameter param-name="partyId" from-field="partyId"/>
+                    <parameter param-name="billToPartyId" from-field="partyId"/>
+                    <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
+                    
+                </hyperlink> -->
+                 <hyperlink target="MaterialSalesInvoiceInitDC" description="Sales Invoice">
+                    <parameter param-name="shipmentId"/>
+                    <parameter param-name="partyIdTo"/>
+                    <parameter param-name="orderId" value="${orderId}"/>
+                </hyperlink>
+            </field>
+             <field name="saleInvoiceAmout" title ="Sale Inv. Amt" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))"> 
+               <display description="${groovy:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,salesInvoiceId);}"></display>         
+            </field>
+             <field name="raiseSalesInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(!salesInvoiceSize.equals(&quot;0&quot;))">
+                <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>
+                 <!--  <hyperlink target="APInvoiceOverview" description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]" target-window="_blank">
+          			<parameter param-name="invoiceId" value="${invoiceId}"/>
+          		</hyperlink>   -->
+          		 <display description="[${groovy:org.ofbiz.accounting.invoice.InvoiceServices.getInvoiceSequence(delegator, salesInvoiceId);}]"></display>   
+            
+            </field>
+            
+            
+            <!-- <field name="statusUpdate" title="Status Update" widget-style="buttontext" use-when="statusId.equals(&quot;DOCUMENTS_ENDORSED&quot;)" >
+	            <hyperlink  target-type="plain" description="Accept Shipment"  target="javascript:QCApprovalBranchSalesQTip('${shipmentId}','${partyIdTo}','${partyName}');"></hyperlink>
+	        </field> -->
+            <!-- <field name="invStatus" title="Approval" widget-style="buttontext" use-when="(!salesInvoiceSize.equals(&quot;0&quot;)) &amp;&amp; (!salesInvoiceSize.equals(&quot;0&quot;))" >
+	            <hyperlink  target-type="plain" description="Approve Invoice"  target="javascript:QCApprovalBranchSalesAndInvApproveQTip('${shipmentId}','${partyIdTo}','${partyName}', '${salesInvoiceId}', '${purchaseInvoiceId}');"></hyperlink>
+	            
+	            <hyperlink target="approveInvoices" description="Approve Invoice">
+                    <parameter param-name="salesInvoiceId" from-field="${salesInvoiceId}"/>
+                    <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
+                </hyperlink>
+	        </field> -->
+	         <field name="purchaseInvoiceStatusId" title="Pur Invoice Approval" widget-style="buttontext" use-when="(purchaseInvoiceId !=null) &amp;&amp;(purchaseInvoiceStatusId.equals(&quot;INVOICE_IN_PROCESS&quot;))" >
+	             <hyperlink  target-type="plain" description="Approve Invoice"  target="javascript:QCApprovalBranchSalesAndInvApproveQTip('${shipmentId}','${partyIdTo}','${partyName}','${purchaseInvoiceId}');"></hyperlink>
+	        </field>
+	        <field name="purchaseInvoiceStatusId" title="Pur Invoice Approval" use-when="(purchaseInvoiceStatusId !=null)&amp;&amp;purchaseInvoiceStatusId.equals(&quot;INVOICE_READY&quot;)" >
+	            <display description="Approved"></display>
+	        </field>
+            <field name="salesInvoiceStatusId" title="Sales Invoice Approval" widget-style="buttontext" use-when="(salesInvoiceId !=null) &amp;&amp;(salesInvoiceStatusId.equals(&quot;INVOICE_IN_PROCESS&quot;))" >
+	             <hyperlink target="approveSalesInvoice" description="Approve Invoice">
+                    <parameter param-name="salesInvoiceId" from-field="${salesInvoiceId}"/>
+                </hyperlink>
+	        </field>
+	        <field name="salesInvoiceStatusId" title="Sales Invoice Approval" use-when="(salesInvoiceStatusId !=null)&amp;&amp;salesInvoiceStatusId.equals(&quot;INVOICE_READY&quot;)" >
+	            <display description="Approved"></display>
+	        </field>
+            <field name="cancelGRN" widget-style="buttontext" title="Cancel Ship" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
+                <hyperlink target="CancelGrnShipment" description="Cancel">
+                    <parameter param-name="shipmentId"/>
+                </hyperlink>
+            </field> 
+    </form>  
+   
+   <form name="orderAmendmentsDC" type="list" list-name="orderAmendmentsList" separate-columns="true"
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+      <actions>
+      	<entity-condition entity-name="OrderItemChange" list="orderAmendmentsList">
+      		<condition-expr field-name="orderId" operator="equals" from-field="parameters.orderId"/>
+      	</entity-condition>
+      </actions>  
+      <row-actions>
+      	<entity-one value-field="OrderItem" entity-name="OrderItem">
+      		<field-map field-name="orderId" from-field="orderId"/>
+      		<field-map field-name="orderItemSeqId" from-field="orderItemSeqId"/>
+      	</entity-one>
+      	<set field="productId"  from-field="OrderItem.productId"/>
+      </row-actions>
+      <field name="orderId"><hidden/></field>
+      <field name="orderItemSeqId" title="Item No"><hidden/></field>
+      <field name="productId" title="Product">
+      		<display-entity entity-name="Product" description="${description}"/>
+      	</field>
+      <field name="quantity"><display></display></field>
+      <field name="unitPrice"><display></display></field>
+      <field name="effectiveDatetime" title="Effective Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(effectiveDatetime, &quot;dd-MMM-yyyy&quot;);}"></display></field>
+      <field name="changeDatetime" title="Changed Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(changeDatetime, &quot;dd-MMM-yyyy&quot;);}"></display></field>
+      <field name="changeUserLogin" title="Changed By"><display></display></field>
+      <field name="changeComments" title="Comments"><display></display></field>
+     </form>   
+     
+  
+   
     
 </forms>

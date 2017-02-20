@@ -129,7 +129,7 @@ if(UtilValidate.isNotEmpty(personTrainingList)){
 		finalTempMap.put("nameOfInstitute", nameOfInstitute);
 		finalTempMap.put("traingCost", traingCost);
 		
-		if(prevTopicCoverd.equals(topicsCoverd)){
+		if(prevTopicCoverd.equals(topicsCoverd) && (prevTrainingLocation.equals(trainingLocation)) && (prevfromDate.equals(fromDate)) && (prevthruDate.equals(thruDate)) && (prevduration.equals(duration)) && (prevtrgCategory.equals(trgCategory)) && (prevfacultyType.equals(facultyType)) && (prevnameOfInstitute.equals(nameOfInstitute)) && (prevtraingCost.equals(traingCost))){
 			if(UtilValidate.isNotEmpty(tempMap)){
 					trainingList.addAll(tempMap);
 				}

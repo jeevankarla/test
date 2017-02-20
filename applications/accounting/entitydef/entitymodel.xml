@@ -3377,6 +3377,7 @@
 		<field name="internalCode" type="id"></field>
 		<field name="externalGlCode" type="id"></field>
 		<field name="description" type="description" not-null="false"></field>
+		<field name="shortName" type="description" not-null="false"></field>
 		<prim-key field="deductionTypeId" />
 		<relation type="one" fk-name="DEDCTN_FORMULA"
 			rel-entity-name="AcctgFormula">
@@ -5756,5 +5757,25 @@
 			<key-map field-name="schemeTimePeriodId" />
 		</view-link>
 	</view-entity>	
+	
+	<entity entity-name="PaymentGatewayTrans" package-name="org.ofbiz.accounting.payment"
+		title="Payment Gateway Trans">
+		<field name="transactionId" type="id-ne"></field>
+		<field name="transactionDate" type="date-time"></field>
+		<field name="amount" type="currency-amount"></field>
+		<field name="transactionStatus" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="orderId" type="id-ne"></field>		
+		<field name="paymentChannel" type="id-ne"></field>
+		<field name="paymentMode" type="id-ne"></field>
+		<field name="pgTransId" type="id-ne"></field>
+		<field name="pgTransDate" type="date-time"></field>
+		<field name="pgTransStatus" type="id-ne"></field>
+		<field name="pgTransMessage" type="description"></field>
+		<field name="paymentId" type="id-ne"></field>
+		<field name="mobileNumber" type="id-ne"></field>
+		<field name="email" type="email"></field>
+		<prim-key field="transactionId" />						
+	</entity>
 	
 </entitymodel>

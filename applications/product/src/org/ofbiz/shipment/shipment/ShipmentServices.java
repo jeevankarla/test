@@ -1355,6 +1355,11 @@ public class ShipmentServices {
 			shipment.set("statusId","SHIPMENT_CANCELLED");
 			shipment.store();
 			
+			
+			
+			
+			
+			
 			String actualOrderId = "";
 			
 			 try{
@@ -1365,6 +1370,10 @@ public class ShipmentServices {
 			    actualOrderId = (EntityUtil.getFirst(orderAssocList)).getString("toOrderId");
 			    
 			      GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", actualOrderId), false);
+			      
+			      GenericValue	primaryOrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", primaryOrderId), false);
+			      
+			      primaryOrderHeader.set("statusId","ORDER_CREATED");
 			      OrderHeader.set("statusId","ORDER_APPROVED");
 			      OrderHeader.store();
 			
@@ -1389,6 +1398,16 @@ public class ShipmentServices {
   	  	}catch (GenericServiceException e) {
   	  		Debug.logError("An error occurred while calling services for cancel GRN Shipment "+e.toString(), module);
   	  	}
+        
+        try{
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("shipmentId", shipmentId));
+ 			if (ServiceUtil.isError(serviceResult)) {
+ 				return ServiceUtil.returnError("Error While Updateing Indent Summary Details");
+            }
+  		}catch(GenericServiceException e){
+			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+		}
+        
        return cancelGrnShipmentResult;
     }
 }

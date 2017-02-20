@@ -48,11 +48,11 @@ import net.sf.json.JSONArray;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.service.GenericDispatcher;
 
-HttpServletRequest httpRequest = (HttpServletRequest) request;
+/*HttpServletRequest httpRequest = (HttpServletRequest) request;
 HttpServletResponse httpResponse = (HttpServletResponse) response;
 dctx = dispatcher.getDispatchContext();
 delegator = DelegatorFactory.getDelegator("default#NHDC");
-List formatRList = [];
+*/List formatRList = [];
 List formatBList = [];
 List<GenericValue> partyClassificationList = null;
 	partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId","partyClassificationGroupId"), null, null,false);
@@ -286,14 +286,16 @@ if("Y".equals(isFormSubmitted)){
 						for(eachRecord in orderHeaderAndRole2){
 							ordQty=ordQty+eachRecord.quantity;
 						}
-						newObj.put("diffDays",(int)diffDays)
-						newObj.put("supplierName",supplierName)
-						newObj.put("shipedQty","-")
-						newObj.put("ordQty",ordQty)
-						totordQty=totordQty+ordQty;
-						totDelayDays=totDelayDays+(int)diffDays;
-						dataList.add(newObj);
-						orderIds.add(eachList.orderId)
+						if(diffDays >= 7){
+							newObj.put("diffDays",(int)diffDays)
+							newObj.put("supplierName",supplierName)
+							newObj.put("shipedQty","-")
+							newObj.put("ordQty",ordQty)
+							totordQty=totordQty+ordQty;
+							totDelayDays=totDelayDays+(int)diffDays;
+							dataList.add(newObj);
+							orderIds.add(eachList.orderId)
+						}
 					  }
 				  }
 			  }

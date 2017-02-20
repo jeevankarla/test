@@ -44,7 +44,20 @@ OrderItemRemarks = delegator.findList("OrderItemAttribute", EntityCondition.make
 condList=[];
 condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 expr = EntityCondition.makeCondition(condList, EntityOperator.AND);
-partyOrders = delegator.findList("OrderRole", expr, null, null, null, false);
+partyOrders = delegator.findList("OrderRole", expr, null,null,null, false);
+
+supplierdetails = EntityUtil.filterByCondition(partyOrders, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
+
+supplierPartyId="";
+if(supplierdetails){	
+	supplierPartyId=supplierdetails[0].get("partyId");
+}
+supplierpartyName="";
+if(supplierPartyId){
+	supplierpartyName = PartyHelper.getPartyName(delegator, supplierPartyId, false);
+}
+context.supplierpartyName=supplierpartyName;
+
 
 orderType="direct";
 onbehalfof = EntityUtil.filterByCondition(partyOrders, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
@@ -133,6 +146,7 @@ for (eachItem in orderItems) {
 	orderDetail.put("orderType",orderType);
 	orderDetail.put("passNo",passNo);
 	orderDetail.put("partyName",partyName);
+	orderDetail.put("supplierpartyName",supplierpartyName);
 	orderDetail.put("prductName",desc);
 	orderDetail.put("quantity", eachItem.quantity);
 	orderDetail.put("unitPrice", eachItem.unitPrice.setScale(2,0));
