@@ -753,18 +753,6 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="division" title="Regional Office" id-name="division">
-        	<drop-down allow-empty="true">
-        		<option key="Company" description="NHDC"/>
-               <entity-options entity-name="PartyRelationshipAndDetail" key-field-name="partyId" description="${groupName}" filter-by-date="false">
-                    <entity-constraint name="partyIdFrom" operator="equals" value="${organizationPartyId}"/>
-                    <entity-constraint name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
-                    <entity-constraint name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
-                    <entity-constraint name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
-                    <entity-order-by field-name="groupName"/>
-                </entity-options>
-            </drop-down>
-       	</field>
         <field name="skipDecorator"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -785,8 +773,8 @@ under the License.
         <field name="skipDecorator"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-     <form name="ListTrialBalance" type="list" list-name="finalList"
-        odd-row-style="alternate-row" default-table-style="basic-table" default-title-style="basic-table" separate-columns="true" header-row-style="header-row">
+     <form name="ListTrialBalance" type="list" list-name="glAccountAndHistories"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" default-title-style="">
         <actions>
            <script
 				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
@@ -800,38 +788,19 @@ under the License.
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field> -->
-         <row-actions>
-            <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
-            <set field="totalOpening"  default-value="${(openingD - openingC)}" type="BigDecimal"/>
-            <set field="flag" value="${groovy: return (totalOpening == 0)? 'Y' : 'N';}"/>
-            <set field="endingBalFlag" value="${groovy: return (totalEndingBalance == 0)? 'Y' : 'N';}"/>
-        </row-actions>
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
-        <!--  <field name="openingD" widget-style="tabletextright"><display/><hidden/></field>
-        <field name="openingC" widget-style="tabletextright"><display/><hidden/></field>  -->
-        <field name="totalOpening" use-when="&quot;${flag}&quot;==&quot;Y&quot;" title="Opening Balance" ><display description="0.00"></display></field>
-        <field name="totalOpening" use-when="&quot;${flag}&quot;==&quot;N&quot;" title="Opening Balance" ><display description="${groovy: import org.ofbiz.base.util.UtilProperties; if(totalOpening	!= null )if( totalOpening > 0) totalOpening=totalOpening +'Dr';  else totalOpening = (-1)*totalOpening+'Cr';  return totalOpening;}" ></display></field>
-        
-        <field name="totalPostedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits} " type="accounting-number"/></field>
-        <field name="totalPostedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright" ><display description="${totalPostedCredits}" type="accounting-number"/></field>
-        <!-- <field name="totalEndingBalance" title="${uiLabelMap.AccountingEndingBalance}"  widget-style="tabletextright"><display description="${totalEndingBalance}" type="currency" currency="${currencyUomId}"/></field> -->
-        <field name="totalEndingBalance" use-when="&quot;${endingBalFlag}&quot;==&quot;Y&quot;" title="${uiLabelMap.AccountingEndingBalance}" widget-style="tabletextright"><display description="0.00"></display></field>
-        <field name="totalEndingBalance" use-when="&quot;${endingBalFlag}&quot;==&quot;N&quot;" title="${uiLabelMap.AccountingEndingBalance}" widget-style="tabletextright"><display  description="${groovy: import org.ofbiz.base.util.UtilProperties; if(totalEndingBalance	!= null )if( totalEndingBalance > 0) totalEndingBalance=totalEndingBalance +'Dr'; else  totalEndingBalance = (-1)*totalEndingBalance+'Cr';  return totalEndingBalance;}"/></field>
-        
-        
+         <field name="openingD" widget-style="tabletextright"><display/></field>
+        <field name="openingC" widget-style="tabletextright"><display/></field>
+        <field name="totalPostedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits} " type="currency" currency="${currencyUomId}"/></field>
+        <field name="totalPostedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display description="${totalPostedCredits}" type="currency" currency="${currencyUomId}"/></field>
+        <field name="totalEndingBalance" title="${uiLabelMap.AccountingEndingBalance}"  widget-style="tabletextright"><display description="${totalEndingBalance}" type="currency" currency="${currencyUomId}"/></field>
     </form>
-    <form name="TrialBalanceReport" type="list" list-name="finalList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" default-title-style="basic-table" separate-columns="true" header-row-style="header-row">
+    <form name="TrialBalanceReport" type="list" list-name="glAccountAndHistories"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
            <script
 				location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy" /> 
         </actions>
-        <row-actions>
-            <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
-            <set field="totalOpening"  default-value="${(openingD - openingC)}" type="BigDecimal"/>
-            <set field="flag" value="${groovy: return (totalOpening == 0)? 'Y' : 'N';}"/>
-            <set field="endingBalFlag" value="${groovy: return (totalEndingBalance == 0)? 'Y' : 'N';}"/>
-        </row-actions>
         <!-- <row-actions>
             <set field="totalEndingBalance" from-field="totalEndingBalance" default-value="${totalPostedDebits - totalPostedCredits + (openingD + openingC)}" type="BigDecimal"/>
         </row-actions> -->
@@ -842,14 +811,11 @@ under the License.
             </hyperlink>
         </field> -->
         <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
-        <field name="totalOpening" use-when="&quot;${flag}&quot;==&quot;Y&quot;" title="Opening Balance" ><display description="0.00"></display></field>
-        <field name="totalOpening" use-when="&quot;${flag}&quot;==&quot;N&quot;" title="Opening Balance" ><display description="${groovy: import org.ofbiz.base.util.UtilProperties; if(totalOpening	!= null )if( totalOpening > 0) totalOpening=totalOpening +'Dr';  else totalOpening = (-1)*totalOpening+'Cr';  return totalOpening;}" ></display></field>
-        
-        <field name="totalPostedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits} " type="accounting-number"/></field>
-        <field name="totalPostedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright" ><display description="${totalPostedCredits}" type="accounting-number"/></field>
-        <!-- <field name="totalEndingBalance" title="${uiLabelMap.AccountingEndingBalance}"  widget-style="tabletextright"><display description="${totalEndingBalance}" type="currency" currency="${currencyUomId}"/></field> -->
-        <field name="totalEndingBalance" use-when="&quot;${endingBalFlag}&quot;==&quot;Y&quot;" title="${uiLabelMap.AccountingEndingBalance}" widget-style="tabletextright"><display description="0.00"></display></field>
-        <field name="totalEndingBalance" use-when="&quot;${endingBalFlag}&quot;==&quot;N&quot;" title="${uiLabelMap.AccountingEndingBalance}" widget-style="tabletextright"><display  description="${groovy: import org.ofbiz.base.util.UtilProperties; if(totalEndingBalance	!= null )if( totalEndingBalance > 0) totalEndingBalance=totalEndingBalance +'Dr'; else  totalEndingBalance = (-1)*totalEndingBalance+'Cr';  return totalEndingBalance;}"/></field>
+         <field name="openingD" widget-style="tabletextright"><display/></field>
+        <field name="openingC" widget-style="tabletextright"><display/></field>
+        <field name="totalPostedDebits" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display description="${totalPostedDebits}"/></field>
+        <field name="totalPostedCredits" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display description="${totalPostedCredits}"/></field>
+        <field name="totalEndingBalance" title="${uiLabelMap.AccountingEndingBalance}"  widget-style="tabletextright"><display description="${totalEndingBalance}"/></field>
     </form>
 	<form name="TrialBalanceGrandTotalReport" type="list" list-name="glAccountAndHistoriesTotals"
        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">

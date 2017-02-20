@@ -1170,11 +1170,4 @@ under the License.
     	  	 
     	<field-to-result field="unAppliedAmountTotal" result-name="unAppliedAmountTotal"/>      
    </simple-method>
-   <simple-method method-name="createPaymentRole" short-description="Create a Payment Role">
-        <make-value value-field="newEntity" entity-name="PaymentRole"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <if-empty field="newEntity.datetimePerformed"><now-timestamp field="newEntity.datetimePerformed"/></if-empty>
-        <create-value value-field="newEntity"/>
-    </simple-method>
 </simple-methods>

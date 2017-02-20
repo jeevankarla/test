@@ -4434,14 +4434,6 @@
                <entity-condition list="partyClsfList" entity-name="PartyClassificationGroup">
                	<condition-expr field-name="partyClassificationTypeId" operator="equals" value="ACCTG_TRANS_GP"/>
                </entity-condition>
-               <entity-condition list="internalOrgList" entity-name="PartyRelationshipAndDetail">
-              		<condition-expr field-name="partyIdFrom" operator="equals" value="${organizationPartyId}"/>
-               		<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
-               		<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
-               		<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
-               	 	<order-by field-name="groupName"/>		
-               </entity-condition>
-               
                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetInternalOrganisations.groovy"/>
               <script location="component:///accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
               </actions>
