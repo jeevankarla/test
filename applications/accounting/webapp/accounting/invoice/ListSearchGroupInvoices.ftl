@@ -312,8 +312,8 @@ function datepick()
     			<td><span class="label">Fin Account</span>
     				<select name="finAccountId" id="finAccountId" style="width:50%">
     				<option value=""></option>
-    				<#if finAccountList?has_content>
-    				<#list finAccountList as eachFinAccount>
+    				<#if finAccounts1?has_content>
+    				<#list finAccounts1 as eachFinAccount>
     					<option value="${eachFinAccount.finAccountId}">${eachFinAccount.finAccountName}[${eachFinAccount.finAccountId}]</option>	
     				</#list>
     				</#if>

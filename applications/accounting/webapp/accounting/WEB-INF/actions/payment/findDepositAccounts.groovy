@@ -108,3 +108,15 @@ if ("Y".equals(parameters.noConditionFind)) {
 	   context.depositAccounts=depositAccounts;
 	   parameters.AccDate=null;
   }
+
+condList = [];
+condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, ["BANK_ACCOUNT","CASH","TAX_CREDIT"]));
+condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+if(UtilValidate.isNotEmpty(parameters.ownerPartyId) && parameters.ownerPartyId!=null){
+	condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+}
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+
+finAccounts = delegator.findList("FinAccount", cond, null, null, null, false);
+
+context.companyBanksList = finAccounts;
