@@ -519,6 +519,12 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 		
 		Debug.log("resultCtx =================="+resultCtx);
 		
+		usedQuantity = resultCtx.usedQuantity;
+		
+		Debug.log("usedQuantity =================="+usedQuantity);
+		
+		if(usedQuantity != eachItem.quantity){
+		
 		amount = eachItem.quantity*eachItem.unitPrice;
 		if(!amount){
 			amount = 0;
@@ -645,7 +651,7 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 		newObj.put("baleQty",baleQty);
 		newObj.put("cProductId",eachItem.productId);
 		newObj.put("cProductName", prodDetail.description);
-		newObj.put("quantity",eachItem.quantity);
+		newObj.put("quantity",eachItem.quantity-usedQuantity);
 		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("itemAdjustments",itemAdjustmentJSON);
 		newObj.put("OTH_CHARGES_AMT",totalItemAdjAmt);
@@ -732,6 +738,7 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 	//orderEditParamMap.putAt("orderTerms", orderTerms);
 }
 
+}
 
 context.orderEditParam = orderEditParamMap;
 
