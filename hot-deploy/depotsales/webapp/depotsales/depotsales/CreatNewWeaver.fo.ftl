@@ -502,10 +502,10 @@ function datepick()	{
 								      <td class="label"><b><FONT COLOR="red">*</font>${uiLabelMap.PartyState} :</b></td>
 								      <td>
 								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
-							   			 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,"IND")>
+							   			<#-- <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,"IND")> -->
 								         <option></option>
 								         <#list stateAssocs as stateAssoc>
-							   					 <option value='${stateAssoc.geoId}'>${stateAssoc.geoName?default(stateAssoc.geoId)}</option>
+							   					 <option value='${stateAssoc.value}'>${stateAssoc.label}</option>
 										</#list>
 								          <#--<option></option>-->
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
@@ -517,8 +517,8 @@ function datepick()	{
 								      <td>
 								        <select name="productStoreId" id="productStoreId">
 								         <option></option>
-								         <#list productStoreDetails as eachstore>
-							   					 <option value='${eachstore.payToPartyId}'>${eachstore.productStoreId}</option>
+								         <#list formatList as eachstore>
+							   					 <option value='${eachstore.payToPartyId}'>${eachstore.productStoreName?if_exists}</option>
 										</#list>
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
 								        </select>

@@ -56,8 +56,35 @@ if(parameters.productStoreId){
 }else{
 	productStoreIds = EntityUtil.getFieldListFromEntityList(productStoreDetails, "productStoreId", true);
 }
-Debug.log("productStoreIds=============================="+productStoreIds);
+//Debug.log("productStoreIds=============================="+productStoreIds);
 context.productStoreDetails=productStoreDetails;
+
+partyId = userLogin.get("partyId");
+
+resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
+
+Map formatMap = [:];
+List formatList = [];
+List productStoreList = resultCtx.get("productStoreList");
+context.productStoreList = productStoreList;
+
+for (eachList in productStoreList) {
+	formatMap = [:];
+	formatMap.put("productStoreName",eachList.get("storeName"));
+	formatMap.put("payToPartyId",eachList.get("payToPartyId"));
+	formatList.addAll(formatMap);
+}
+roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+roPartyList = roList.get("partyList");
+
+for(eachRO in roPartyList){
+	formatMap = [:];
+	formatMap.put("productStoreName",eachRO.get("groupName"));
+	formatMap.put("payToPartyId",eachRO.get("partyId"));
+	formatList.addAll(formatMap);
+}
+context.formatList = formatList;
+
 
 
 BankBranchList = delegator.findList("BankBranch", null, null, null, null, false);
@@ -150,6 +177,25 @@ for(indianState in indianStateList)
 	}
 	stateDistJSONMAP.put(indianState.geoId , stateDistJSON);
 }
+
+
+conditionDeopoList = [];
+conditionDeopoList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+conditionDeopoList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+conditionDepo=EntityCondition.makeCondition(conditionDeopoList,EntityOperator.AND);
+statesList = delegator.findList("Geo",conditionDepo,null,null,null,false);
+
+
+JSONArray stateListJSON = new JSONArray();
+statesList.each{ eachState ->
+		JSONObject newObj = new JSONObject();
+		newObj.put("value",eachState.geoId);
+		newObj.put("label",eachState.geoName);
+		stateListJSON.add(newObj);
+}
+context.stateAssocs = stateListJSON;
+
+
 
 
 context.stateDistJSONMAP=stateDistJSONMAP;

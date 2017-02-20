@@ -797,6 +797,12 @@
          <attribute mode="IN" name="paymentTypeId" optional="true" type="String"/>
     </service>
     
+      <service name="getRemainingOrderItems" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getRemainingOrderItems" transaction-timeout="6000000">
+         <description>Creating Accounting Trans For All Payments</description>
+         <attribute mode="IN" name="orderId" optional="true" type="String"/>
+         <attribute mode="IN" name="orderItemSeqId" optional="true" type="String"/>
+    </service>
+    
      <service name="roundingOfAdjustmentSubtraction" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="roundingOfAdjustmentSubtraction" transaction-timeout="6000000">
         <description>roundingOfAdjustmentProblem</description>
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>

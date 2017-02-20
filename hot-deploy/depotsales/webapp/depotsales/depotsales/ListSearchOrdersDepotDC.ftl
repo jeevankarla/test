@@ -314,7 +314,7 @@ function drawRow(rowData) {
     statusMap["APPROVE_LEVEL2"] = "APPROVE_LEVEL3";
     statusMap["APPROVE_LEVEL3"] = "ORDER_APPROVED";
    
-     
+   /*  
      if((rowData.statusId != "ORDER_PENDING") && (rowData.statusId != "ORDER_CANCELLED")){
 	     if(rowData.POorder != "NA"){
 	     
@@ -335,7 +335,10 @@ function drawRow(rowData) {
       
       }
       
+      */
       
+      var DraftPoButton = '<a class="buttontext" href="<@ofbizUrl>CreateBranchTransPODC?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">DraftPO</a>'; 
+	       row.append($("<td>" +  DraftPoButton  +"</td>"));  
       
        //For Indent View
     
