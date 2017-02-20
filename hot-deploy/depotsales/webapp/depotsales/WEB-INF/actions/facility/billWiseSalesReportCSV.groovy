@@ -268,7 +268,7 @@ for(int i=0;i < Invoice.size();i++){
 	invoiceDetailMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd/MM/yyyy"));
 	invoiceDetailMap.put("partyId",eachInvoice.partyId);
 	custPartyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachInvoice.partyId, false);
-	branchName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachInvoice.partyIdFrom, false);
+	branchName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, eachInvoice.costCenterId, false);
 	invoiceDetailMap.put("partyName",custPartyName);
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,eachInvoice.partyId));
