@@ -631,18 +631,18 @@ function roundingInvoiceItems(invoiceId){
  			  <td>${(invoice.cancelComments)?if_exists}</td>-->
  			              <#assign partyName="">
  			   <#if invoice?has_content && invoice.partyIdFrom?has_content>
-              <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)/>
+              <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.costCenterId, false)/>
             </#if>
             
               <input type = "hidden" name = "partyId" id = "partyId" value = "${invoice.partyId}">
-              <input type = "hidden" name = "fromPartyId" id = "fromPartyId" value = "${invoice.partyIdFrom}">
+              <input type = "hidden" name = "fromPartyId" id = "fromPartyId" value = "${invoice.costCenterId}">
               <input type = "hidden" name = "amt" id = "amt" value = "${invoicePaymentInfo.outstandingAmount}">
               <input type = "hidden" name = "invId" id = "invId" value = "${invoice.invoiceId}">
               <input type = "hidden" name = "partyIdName" id = "partyIdName" value = "${partyName}">
               <input type = "hidden" name = "voucherTypeId" id = "voucherTypeId" value = "${invoice.prefPaymentMethodTypeId?if_exists}">
               
-              <#assign vendorName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)/>
-              <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${partyName}[${(invoice.partyIdFrom)?if_exists}]</a></td>
+              <#assign vendorName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.costCenterId, false)/>
+              <td><a href="/partymgr/control/viewprofile?partyId=${invoice.costCenterId}">${partyName}[${(invoice.costCenterId)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)} [${(invoice.partyId)?if_exists}]</a></td>
              <#assign purchaseInvoice = delegator.findByAnd("Invoice", {"shipmentId" : invoice.shipmentId, "invoiceTypeId" : "PURCHASE_INVOICE" })?if_exists />
 
