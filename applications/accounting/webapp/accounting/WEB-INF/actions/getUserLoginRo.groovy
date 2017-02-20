@@ -14,6 +14,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import java.sql.*;
 
+parameters.ownerPartyId = "";
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, userLogin.get("partyId")));
 conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPLOYEE"));
@@ -39,3 +40,5 @@ else{
 		}
 	}
 }
+
+Debug.log("parameters.ownerPartyId========userlogin======="+parameters.ownerPartyId);

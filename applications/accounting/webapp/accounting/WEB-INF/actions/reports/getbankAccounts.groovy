@@ -29,6 +29,9 @@ import org.ofbiz.base.util.*;
 
 organizationPartyId = "Company";
 
+
+Debug.log("parameters.ownerPartyId=====bank acs========"+parameters.ownerPartyId);
+
 if(UtilValidate.isNotEmpty(context.flag) && context.flag == "Y"){
 	finalFinAccntList = [];
 	conditionList = [];

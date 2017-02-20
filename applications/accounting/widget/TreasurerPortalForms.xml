@@ -495,7 +495,7 @@ under the License.
                 </entity-options>
             </drop-down> -->
             <drop-down allow-empty="false">
-            	<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
+            	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="transactionDate"><date-time type="timestamp"/></field>

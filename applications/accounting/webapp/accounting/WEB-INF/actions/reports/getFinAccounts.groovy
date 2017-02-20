@@ -23,3 +23,4 @@ finAccounts.each{ eachvalue ->
 	}
 }
 context.finAccountList = finAccountList;
+context.finAccountIdList = finAccountList;
