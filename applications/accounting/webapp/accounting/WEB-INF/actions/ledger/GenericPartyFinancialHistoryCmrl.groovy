@@ -272,7 +272,7 @@
 			}
 	    if ("PURCHASE_INVOICE".equals(invoice.parentTypeId)) {
 			
-			innerMap["partyId"]=invoice.partyIdFrom;
+			innerMap["partyId"]=invoice.costCenterId;
 			innerMap["vchrType"]="PURCHASE";
 			innerMap["vchrCode"]="Purchase";
 			if(UtilValidate.isEmpty(invoice.invoiceMessage)){
@@ -287,8 +287,8 @@
 			//preparing Party Wise Map here
 			dayInvoiceList = [];
 			dateWiseInvoiceMap = [:];
-			if(partyDayWiseDetailMap.containsKey(invoice.partyIdFrom)){
-				dateWiseInvoiceMap = partyDayWiseDetailMap.get(invoice.partyIdFrom);
+			if(partyDayWiseDetailMap.containsKey(invoice.costCenterId)){
+				dateWiseInvoiceMap = partyDayWiseDetailMap.get(invoice.costCenterId);
 				
 				if(dateWiseInvoiceMap.containsKey(curntDay)){
 					dayInvoiceList = dateWiseInvoiceMap[curntDay];
@@ -300,12 +300,12 @@
 			dateWiseInvoiceMap.put(curntDay, tempDateWiseInvoiceList);
 			tempDateWiseInvMap = [:];
 			tempDateWiseInvMap.putAll(dateWiseInvoiceMap);
-			partyDayWiseDetailMap.put(invoice.partyIdFrom, tempDateWiseInvMap);
+			partyDayWiseDetailMap.put(invoice.costCenterId, tempDateWiseInvMap);
 	    }
 	    else if ("SALES_INVOICE".equals(invoice.parentTypeId)) {
 			innerMap["vchrType"]="SALES";
 			innerMap["vchrCode"]="Sales";
-			innerMap["partyId"]=invoice.partyId;
+			innerMap["partyId"]=invoice.costCenterId;
 			innerMap["crOrDbId"]="D";
 			innerMap["debitValue"]=invTotalVal;
 			if(UtilValidate.isEmpty(invoice.invoiceMessage)){
@@ -318,8 +318,8 @@
 			//preparing Party Wise Map here
 			dayInvoiceList = [];
 			dateWiseInvoiceMap = [:];
-			if(partyDayWiseDetailMap.containsKey(invoice.partyId)){
-				dateWiseInvoiceMap = partyDayWiseDetailMap.get(invoice.partyId);
+			if(partyDayWiseDetailMap.containsKey(invoice.costCenterId)){
+				dateWiseInvoiceMap = partyDayWiseDetailMap.get(invoice.costCenterId);
 				
 				if(dateWiseInvoiceMap.containsKey(curntDay)){
 					dayInvoiceList = dateWiseInvoiceMap[curntDay];
@@ -331,7 +331,7 @@
 			dateWiseInvoiceMap.put(curntDay, tempDateWiseInvoiceList);
 			tempDateWiseInvMap = [:];
 			tempDateWiseInvMap.putAll(dateWiseInvoiceMap);
-			partyDayWiseDetailMap.put(invoice.partyId, tempDateWiseInvMap);
+			partyDayWiseDetailMap.put(invoice.costCenterId, tempDateWiseInvMap);
 	    }
 	    else {
 	        Debug.logError("InvoiceType: " + invoice.invoiceTypeId + " without a valid parentTypeId: " + invoice.parentTypeId + " !!!! Should be either PURCHASE_INVOICE or SALES_INVOICE", "");
