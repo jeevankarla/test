@@ -1417,6 +1417,7 @@
                 <set field="tabButtonItem" value="IncomingAdvances"/>
                 <set field="tabButtonItem4" value="IncomingAdvancesReceived"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
@@ -1426,6 +1427,7 @@
                 <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
                 <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
                 <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
+                <set field="parameters.partyIdTo" from-field="parameters.ownerPartyId"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -2271,6 +2273,7 @@
                 <set field="tabButtonItem" value="OutgoingAdvances"/>
                 <set field="tabButtonItem4" value="OutgoingAdvancesPaid"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="1000"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
@@ -2280,6 +2283,7 @@
                 <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
                 <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
                 <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
+                <set field="parameters.partyIdFrom" from-field="parameters.ownerPartyId"/>
                 <service service-name="performFind" result-map="result">
 	                <field-map field-name="inputFields" from-field="parameters"/>
 	                <field-map field-name="entityName" value="PaymentAndType"/>
@@ -2945,6 +2949,8 @@
             <actions>
                 <set field="titleProperty" value="AccountingFindApInvoices"/>
                 <set field="filterByDate" value="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                <set field="parameters.partyIdTo" from-field="parameters.ownerPartyId"/>
                 <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>
@@ -2955,7 +2961,7 @@
                 <set field="tabButtonItem5" value="${parameters.subTabButtonValue}"/>
                 <set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}"/>
                 <set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                
            		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
             </actions>
             <widgets>
@@ -3516,6 +3522,8 @@
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingFindArInvoices"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                <set field="parameters.partyIdFrom" from-field="parameters.ownerPartyId"/>
                 <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>
