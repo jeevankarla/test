@@ -906,8 +906,8 @@
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                <script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getbankAccounts.groovy" />
             	<script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
-            	<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getbankAccounts.groovy" />
             	<entity-condition list="receiptAccounts" entity-name="FinAccountType">
             		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
             	</entity-condition>
@@ -5382,6 +5382,7 @@
             <actions>
              <!-- <set field="isTreasurerPortalAP" value="Y"/>
              <set field="isTreasurerPortalAR" value="N" /> -->
+             <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/> 
              <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/> 
                 <set field="titleProperty" value="Find Group Invoices"/>
                   <set field="tabButtonItem" value="apGroupPayment" />	
@@ -5415,7 +5416,7 @@
 				<set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
 				<entity-condition list="finAccountList" entity-name="FinAccount">
 					<having-condition-list combine="and">
-						<!-- <condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+						<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
 						<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
 						<condition-expr field-name="finAccountTypeId" operator="in"  from-field="finAccountTypeIds"/>
 						<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
