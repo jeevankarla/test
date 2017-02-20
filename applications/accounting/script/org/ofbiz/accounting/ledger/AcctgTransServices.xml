@@ -34,6 +34,8 @@ under the License.
         <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
 
         <create-value value-field="newEntity"/>
+         <set field="organizationPartyId" value="${parameters.organizationPartyId}"/>
+        <field-to-result field="organizationPartyId" result-name="organizationPartyId"/>
     </simple-method>
     <simple-method method-name="updateAcctgTrans" short-description="Update an AcctgTrans">
         <entity-one entity-name="AcctgTrans" value-field="lookedUpValue"/>
@@ -68,10 +70,73 @@ under the License.
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <entity-one entity-name="AcctgTrans" value-field="acctgTrans"/>
+        <entity-one value-field="acctgTransRole" entity-name="AcctgTransRole">
+        	<field-map field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
+        	<field-map field-name="partyId" value="Company"/>
+        	<field-map field-name="roleTypeId" value="ACCOUNTING"/>        	
+        </entity-one>     
+         <entity-condition list="acctransDetails" entity-name="AcctgTransRole">
+        	<condition-expr field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
+        	<condition-expr field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+        </entity-condition>	
+        <if-not-empty field="acctgTrans.finAccountTransId">
+        	<entity-one value-field="finAccntTrns" entity-name="FinAccountTrans">
+        		<field-map field-name="finAccountTransId" value="${acctgTrans.finAccountTransId}"/>
+        	</entity-one>
+        	<if-not-empty field="finAccntTrns.segmentId">
+        		<log message="=================${finAccntTrns.segmentId}" level="always"/>
+        		<set field="newEntity.purposeTypeId" value="${finAccntTrns.segmentId}"/>
+        	</if-not-empty>
+        </if-not-empty>
+        <log message="acctransDetails==========${acctransDetails[1].partyId}" level="always"/> 
+        <if-empty field="newEntity.costCenterId">
+        	<if-not-empty field="acctransDetails[1].partyId">
+        		<set field="newEntity.costCenterId" value="${acctransDetails[1].partyId}"/>
+        	</if-not-empty>
+        </if-empty> 
+        <if-not-empty field="acctgTransRole">
+        	<set field="parameters.organizationPartyId" value="Company"/>
+        	<set field="newEntity.organizationPartyId" value="Company"/>
+        </if-not-empty>
+        <if-not-empty field="acctgTrans.invoiceId">
+        	<entity-one value-field="invDetails" entity-name="Invoice">
+        		<field-map field-name="invoiceId" value="${acctgTrans.invoiceId}"/>
+        	</entity-one>
+        	<if-not-empty field="invDetails">
+        		<!-- <set field="newEntity.costCenterId" value="${invDetails.costCenterId}"/> -->
+        		<set field="newEntity.purposeTypeId" value="${invDetails.purposeTypeId}"/>
+        	</if-not-empty>
+        </if-not-empty>
+        <if-not-empty field="acctgTrans.paymentId">
+        	<entity-one value-field="paymentDetails" entity-name="Payment">
+        		<field-map field-name="paymentId" value="${acctgTrans.paymentId}"/>
+        	</entity-one>
+        	<if-not-empty field="paymentDetails">
+        		<!-- <set field="newEntity.costCenterId" value="${paymentDetails.costCenterId}"/> -->
+        		<set field="newEntity.purposeTypeId" value="${paymentDetails.paymentPurposeType}"/>
+        	</if-not-empty>
+        </if-not-empty>
         <if-compare field="acctgTrans.isPosted" operator="equals" value="Y">
             <add-error><fail-property resource="AccountingUiLabels" property="AccountingTransactionHasBeenAlreadyPosted"/></add-error>
             <check-errors/>
         </if-compare>
+        <!-- if any amount is negative, then get the absolute (positive) value of that amount, and flip the Debit/Credit flag  -->
+         <if-not-empty field="newEntity.origAmount">
+            <if-compare field="newEntity.origAmount" operator="less" value="0" type="BigDecimal">
+               <calculate field="newEntity.origAmount">
+                   <calcop field="newEntity.origAmount" operator="negative"/>
+               </calculate>
+               <set field="newEntity.amount" from-field="newEntity.origAmount"/>
+               <if-compare field="newEntity.debitCreditFlag" operator="equals" value="D">
+                   <set value="C" field="newEntity.debitCreditFlag"/>
+               <else>
+                   <if-compare field="newEntity.debitCreditFlag" operator="equals" value="C">
+                       <set value="D" field="newEntity.debitCreditFlag"/>
+                   </if-compare>
+               </else>
+               </if-compare>
+           </if-compare>
+         </if-not-empty>           
         <make-next-seq-id value-field="newEntity" seq-field-name="acctgTransEntrySeqId" numeric-padding="5"/>
         <field-to-result field="newEntity.acctgTransEntrySeqId" result-name="acctgTransEntrySeqId"/>
 
@@ -212,8 +277,12 @@ under the License.
         <if-compare field="acctgTrans.isPosted" operator="equals" value="Y">
             <add-error><fail-message message="AcctgTrans [${parameters.acctgTransId}] has already been posted. Not posting again"/></add-error>
         </if-compare>
-        <check-errors/>
-
+        <check-errors/>        
+        <set field="transactionDateEnd" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(acctgTrans.transactionDate)}" type="Timestamp"/>
+        <if-compare-field operator="equals" field="transactionDateEnd" to-field="acctgTrans.transactionDate" type="Timestamp">
+        	<!-- Set the transaction date 2 seconds before the end of the period, so that it is included in the old period -->
+        	<set-calendar field="acctgTrans.transactionDate" from-field="acctgTrans.transactionDate" seconds="-2"/>
+        </if-compare-field>        
         <!-- check trial balance -->
         <set from-field="parameters.acctgTransId" field="trialBalanceCallMap.acctgTransId"/>
         <call-service service-name="calculateAcctgTransTrialBalance" in-map-name="trialBalanceCallMap">
@@ -401,6 +470,8 @@ under the License.
                 <iterate entry="customTimePeriod" list="customTimePeriodList">
                     <entity-one entity-name="GlAccountHistory" value-field="glAccountHistory">
                         <field-map field-name="glAccountId" from-field="acctgTransEntry.glAccountId"/>
+                        <field-map field-name="costCenterId" from-field="acctgTransEntry.costCenterId"/>
+                        <field-map field-name="segmentId" from-field="acctgTransEntry.purposeTypeId"/>
                         <field-map field-name="organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
                         <field-map field-name="customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
                     </entity-one>
@@ -409,6 +480,8 @@ under the License.
                         <make-value value-field="glAccountHistory" entity-name="GlAccountHistory"/>
                         <set from-field="acctgTransEntry.glAccountId" field="glAccountHistory.glAccountId"/>
                         <set from-field="acctgTransEntry.organizationPartyId" field="glAccountHistory.organizationPartyId"/>
+                        <set from-field="acctgTransEntry.costCenterId" field="glAccountHistory.costCenterId"/>
+                        <set from-field="acctgTransEntry.purposeTypeId" field="glAccountHistory.segmentId"/>
                         <set from-field="customTimePeriod.customTimePeriodId" field="glAccountHistory.customTimePeriodId"/>
                         <set field="glAccountHistory.postedDebits" value="0.0" type="BigDecimal"/>
                         <set field="glAccountHistory.postedCredits" value="0.0" type="BigDecimal"/>
@@ -437,8 +510,62 @@ under the License.
                         </if-compare>
                     </else>
                     </if-compare>
-                    <store-value value-field="glAccountHistory"/>
-                </iterate>
+                    <store-value value-field="glAccountHistory"/>                  
+                    <!-- population of GlAccountHistoryPartyWise -->
+                     <entity-condition list="acctransDetails" entity-name="AcctgTransRole">
+			        	<condition-expr field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
+			        	<condition-expr field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+			        </entity-condition>				        
+                    <if-not-empty field="acctgTransEntry.partyId">                    
+	                     <entity-one entity-name="GlAccountHistoryPartyWise" value-field="glAccountHistoryPartyWise">
+	                        <field-map field-name="glAccountId" from-field="acctgTransEntry.glAccountId"/>
+	                        <field-map field-name="partyId" from-field="acctgTransEntry.partyId"/>
+	                        <field-map field-name="costCenterId" from-field="acctgTransEntry.costCenterId"/>
+	                        <field-map field-name="segmentId" from-field="acctgTransEntry.purposeTypeId"/>
+	                        <field-map field-name="acctgTransTypeId" from-field="acctgTrans.acctgTransTypeId"/>
+	                        <field-map field-name="organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
+	                        <field-map field-name="customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
+	                    </entity-one>
+	                    <!-- if no glAccountHistoryPartyWise create a new empty one -->
+	                    <if-empty field="glAccountHistoryPartyWise">
+	                        <make-value value-field="glAccountHistoryPartyWise" entity-name="GlAccountHistoryPartyWise"/>
+	                        <set from-field="acctgTransEntry.glAccountId" field="glAccountHistoryPartyWise.glAccountId"/>
+	                        <set from-field="acctgTransEntry.organizationPartyId" field="glAccountHistoryPartyWise.organizationPartyId"/>
+	                        <set from-field="acctgTransEntry.partyId" field="glAccountHistoryPartyWise.partyId"/>
+	                        <set from-field="acctgTransEntry.purposeTypeId" field="glAccountHistoryPartyWise.segmentId"/>
+	                        <set from-field="acctgTransEntry.costCenterId" field="glAccountHistoryPartyWise.costCenterId"/>
+	                        <set from-field="acctgTrans.acctgTransTypeId" field="glAccountHistoryPartyWise.acctgTransTypeId"/>
+	                        <set from-field="customTimePeriod.customTimePeriodId" field="glAccountHistoryPartyWise.customTimePeriodId"/>
+	                        <set field="glAccountHistoryPartyWise.postedDebits" value="0.0" type="BigDecimal"/>
+	                        <set field="glAccountHistoryPartyWise.postedCredits" value="0.0" type="BigDecimal"/>
+	                        <create-value value-field="glAccountHistoryPartyWise"/>
+	                    </if-empty>
+	
+	                    <!-- update GlAccountHistoryPartyWise's debit and credit totals -->
+	                    <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
+	                        <calculate field="glAccountHistoryPartyWise.postedDebits" type="BigDecimal">
+	                            <calcop operator="add">
+	                                <calcop operator="get" field="acctgTransEntry.amount"/>
+	                                <calcop operator="get" field="glAccountHistoryPartyWise.postedDebits"/>
+	                            </calcop>
+	                        </calculate>
+	                    <else>
+	                        <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="C">
+	                            <calculate field="glAccountHistoryPartyWise.postedCredits" type="BigDecimal">
+	                                <calcop operator="add">
+	                                    <calcop operator="get" field="acctgTransEntry.amount"/>
+	                                    <calcop operator="get" field="glAccountHistoryPartyWise.postedCredits"/>
+	                                </calcop>
+	                            </calculate>
+	                            <else>
+	                                <add-error><fail-message message="Bad debitCreditFlag [${acctgTransEntry.debitCreditFlag}] (was not D or C) in Accounting Transaction Entry with acctgTransId=[${acctgTransEntry.acctgTransId}] and acctgTransEntrySeqId=[${acctgTransEntry.acctgTransEntrySeqId}]"/></add-error>
+	                            </else>
+	                        </if-compare>
+	                    </else>
+	                    </if-compare>
+	                    <store-value value-field="glAccountHistoryPartyWise"/>
+                </if-not-empty> 
+               </iterate>
             </iterate>
 
             <!-- check-errors just in case we had some bad debitCreditFlags -->
@@ -448,8 +575,255 @@ under the License.
             <set from-field="acctgTrans.acctgTransId" field="updateAcctgTransParams.acctgTransId"/>
             <now-timestamp field="updateAcctgTransParams.postedDate"/>
             <set value="Y" field="updateAcctgTransParams.isPosted"/>
-
+            <set from-field="acctgTrans.transactionDate" field="updateAcctgTransParams.transactionDate"/>
+            
             <call-service service-name="updateAcctgTrans" in-map-name="updateAcctgTransParams" include-user-login="true"/>
+        </else>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="populateInternalOrgPartyWise" short-description="Populate Internal Organization records">    
+        <!-- make sure the AcctgTrans has not already been posted -->
+        <entity-one entity-name="AcctgTrans" value-field="acctgTrans" auto-field-map="true"/>
+       <!--  <if-compare field="acctgTrans.isPosted" operator="equals" value="Y">
+            <add-error><fail-message message="AcctgTrans [${parameters.acctgTransId}] has already been posted. Not posting again"/></add-error>
+        </if-compare>
+        <check-errors/> -->
+        
+        <set field="transactionDateEnd" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(acctgTrans.transactionDate)}" type="Timestamp"/>
+        <if-compare-field operator="equals" field="transactionDateEnd" to-field="acctgTrans.transactionDate" type="Timestamp">
+        	<!-- Set the transaction date 2 seconds before the end of the period, so that it is included in the old period -->
+        	<set-calendar field="acctgTrans.transactionDate" from-field="acctgTrans.transactionDate" seconds="-2"/>
+        </if-compare-field>
+        
+        <!-- check trial balance -->
+        <set from-field="parameters.acctgTransId" field="trialBalanceCallMap.acctgTransId"/>
+        
+        
+
+        <entity-condition entity-name="AcctgTransEntry" list="acctgTransEntryList">
+            <condition-expr field-name="acctgTransId" from-field="parameters.acctgTransId"/>
+            <order-by field-name="acctgTransEntrySeqId"/>
+        </entity-condition>
+
+      
+
+        <!-- setup periodTypeIdList to use for CustomTimePeriod support -->
+        <set value="FISCAL_YEAR" field="onlyIncludePeriodTypeIdList[]"/>
+        <set value="FISCAL_QUARTER" field="onlyIncludePeriodTypeIdList[]"/>
+        <set value="FISCAL_MONTH" field="onlyIncludePeriodTypeIdList[]"/>
+        <set value="FISCAL_WEEK" field="onlyIncludePeriodTypeIdList[]"/>
+        <set value="FISCAL_BIWEEK" field="onlyIncludePeriodTypeIdList[]"/>
+
+        <!-- get current period(s) and check if closed -->
+        <!-- also check if the glAccountId, amount, currencyUomId fields are all set -->
+        <iterate entry="acctgTransEntry" list="acctgTransEntryList">
+            <!-- we want to do this for each organizationPartyId, so only do this if we haven't already found the list for the current org -->
+            <if-empty field="customTimePeriodListByOrganizationPartyIdMap[acctgTransEntry.organizationPartyId]">
+                <clear-field field="findCustomTimePeriodCallMap"/>
+                <clear-field field="customTimePeriodList"/>
+
+                <set from-field="acctgTrans.transactionDate" field="findCustomTimePeriodCallMap.findDate"/>
+                <set from-field="acctgTransEntry.organizationPartyId" field="findCustomTimePeriodCallMap.organizationPartyId"/>
+                <set from-field="onlyIncludePeriodTypeIdList" field="findCustomTimePeriodCallMap.onlyIncludePeriodTypeIdList"/>
+                <!-- should we excludeNoOrganizationPeriods? for now, YES, which means to find a CustomTimePeriod one must be setup at least for the top level Organization Party -->
+                <set value="Y" field="findCustomTimePeriodCallMap.excludeNoOrganizationPeriods"/>
+                <call-service service-name="findCustomTimePeriods" in-map-name="findCustomTimePeriodCallMap">
+                    <result-to-field result-name="customTimePeriodList"/>
+                </call-service>
+
+                <if-empty field="customTimePeriodList">
+                    <add-error><fail-message message="Could not find a CustomTimePeriod (fiscal period) for the Transaction Date [${acctgTrans.transactionDate}] (is for Organization Party with ID [${acctgTransEntry.organizationPartyId}])"/></add-error>
+                </if-empty>
+                <!-- now do the actual isClose check -->
+                <iterate entry="customTimePeriod" list="customTimePeriodList">
+                    <if-compare field="customTimePeriod.isClosed" operator="equals" value="Y">
+                        <add-error><fail-message message="CustomTimePeriod (fiscal period) [${customTimePeriod.customTimePeriodId}] is CLOSED, cannot post to it (is for the Transaction Date [${acctgTrans.transactionDate}] and Organization Party with ID [${acctgTransEntry.organizationPartyId}])"/></add-error>
+                    </if-compare>
+                </iterate>
+
+                <!-- save this customTimePeriodList for the current entry for later use -->
+                <set from-field="customTimePeriodList" field="customTimePeriodListByOrganizationPartyIdMap[acctgTransEntry.organizationPartyId]"/>
+            </if-empty>
+            <if-empty field="acctgTransEntry.glAccountId">
+                <add-error><fail-message message="Gl account id is not set for [${acctgTransEntry.acctgTransEntrySeqId}; ${acctgTransEntry.partyId}; ${acctgTransEntry.productId}] or mapping not found for account type ${acctgTransEntry.glAccountTypeId}"/></add-error>
+            </if-empty>
+            <if-empty field="acctgTransEntry.amount">
+                <add-error><fail-message message="Amount not set for [${acctgTransEntry.acctgTransEntrySeqId}] or failed to convert the original amount ${acctgTransEntry.origAmount} with currency ${acctgTransEntry.origCurrencyUomId}"/></add-error>
+            </if-empty>
+            <!--
+            <if-empty field="acctgTransEntry.currencyUomId">
+                <add-error><fail-message message="Currency is not set for [${acctgTransEntry.acctgTransEntrySeqId}]"/></add-error>
+            </if-empty>
+            -->
+        </iterate>
+
+        <!-- DONE with initial tests/checks, see if we are good to go or not... -->
+
+        <if-compare field="parameters.verifyOnly" operator="equals" value="Y">
+            <if-not-empty field="error_list">
+                <field-to-result field="error_list" result-name="successMessageList"/>
+            </if-not-empty>
+            <return/>
+        <else>        
+            <!-- if there are errors and we have an error journal assign to the journal and return -->
+            <if-not-empty field="error_list">
+            	<log level="always" message="postAcctgTrans==========actgTransId=${parameters.acctgTransId}: error_list=${error_list}"/>            
+                <iterate list="acctgTransEntryList" entry="acctgTransEntry">
+                    <set field="partyAccountingPreferencesCallMap.organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
+                     <call-service service-name="getPartyAccountingPreferences" in-map-name="partyAccountingPreferencesCallMap">
+                         <result-to-field result-name="partyAccountingPreference" field="partyAcctgPreference"/>
+                     </call-service>
+                    <if-empty field="partyAcctgPreference.errorGlJournalId">
+                        <!-- if no error journal is set, then return the error messages -->
+                        <check-errors/>
+                    <else>
+                        <!-- assign the transaction to the error journal -->
+                        <set field="acctgTrans.glJournalId" from-field="partyAcctgPreference.errorGlJournalId"/>
+                        <store-value value-field="acctgTrans"/>
+                        <set field="warningMessage[]" value="The accounting transaction [${acctgTrans.acctgTransId}] has been posted to the Error Journal [${partyAcctgPreference.errorGlJournalId}]."/>
+                        <field-to-result field="warningMessage" result-name="successMessageList"/>
+                        <return/>
+                    </else>
+                    </if-empty>
+                </iterate>
+            </if-not-empty>
+            <!-- TODO: for each entry: lookup GlAccount, update posted balance -->
+            <iterate entry="acctgTransEntry" list="acctgTransEntryList">
+                <!-- Get all data to operate on: GlAccount, GlAccountOrganization, GlAccountHistory -->
+                <clear-field field="glAccount"/>
+                <clear-field field="glAccountOrganization"/>
+                <clear-field field="glAccountHistoryList"/>
+
+                <entity-one entity-name="GlAccount" value-field="glAccount">
+                    <field-map field-name="glAccountId" from-field="acctgTransEntry.glAccountId"/>
+                </entity-one>
+                <entity-one entity-name="GlAccountOrganization" value-field="glAccountOrganization">
+                    <field-map field-name="glAccountId" from-field="acctgTransEntry.glAccountId"/>
+                    <field-map field-name="organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
+                </entity-one>
+
+                <!-- update the GlAccount's posted balance.  This depends on whether the GlAccount is a debit or credit account and the
+                    debitCreditFlag of the acctgTransEntry.  Debits add to debit accounts and subtract from credit accounts.  Credits add to
+                    credit accounts and subtract from debit accounts -->
+                <!-- we do this by first calculating a postingAmount (positive or negative) then adding to the postingBalance -->
+                <clear-field field="postingAmount"/>
+                <!-- use the parent of the GlAccountClass, which should either be DEBIT or CREDIT -->
+                <get-related-one relation-name="GlAccountClass" value-field="glAccount" to-value-field="glAccountClass"/>
+                <get-related-one relation-name="ParentGlAccountClass" value-field="glAccountClass" to-value-field="parentGlAccountClass"/>
+                <!-- test if the account is a DEBIT account -->
+                <set field="isDebit" value="${bsh:org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(glAccount)}"/>
+                <if-compare field="isDebit" operator="equals" value="true">
+                        <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
+                            <set from-field="acctgTransEntry.amount" field="postingAmount"/>
+                            <else>
+                                <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="C">
+                                    <calculate field="postingAmount" type="BigDecimal">
+                                        <calcop field="acctgTransEntry.amount" operator="negative"/>
+                                    </calculate>
+                                </if-compare>
+                            </else>
+                        </if-compare>
+                    <else>
+                        <!-- otherwise, test if the account is credit -->
+                        <set field="isCredit" value="${bsh:org.ofbiz.accounting.util.UtilAccounting.isCreditAccount(glAccount)}"/>
+                        <if-compare field="isCredit" operator="equals" value="true">
+                            <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="C">
+                                <set from-field="acctgTransEntry.amount" field="postingAmount"/>
+                                <else>
+                                    <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
+                                        <calculate field="postingAmount" type="BigDecimal">
+                                            <calcop field="acctgTransEntry.amount" operator="negative"/>
+                                        </calculate>
+                                    </if-compare>
+                                </else>
+                            </if-compare>
+                            <else>
+                                <log level="warning" message="GL account ${glAccount.glAccountId} is of class ${glAccount.glAccountClassId} which is neither debit nor credit - cannot update posted balance"/>
+                            </else>
+                        </if-compare>
+                    </else>
+                </if-compare>
+                <!-- <log level="verbose" message="GL account: [${acctgTransEntry.glAccountId}] initial balance: [${glAccountOrganization.postedBalance}] ${acctgTransEntry.debitCreditFlag} [${acctgTransEntry.amount}]"/>
+                calculate the new posted balance for this gl account
+                <calculate field="postedBalance" type="BigDecimal">
+                    <calcop operator="get" field="glAccountOrganization.postedBalance"/>
+                    <calcop operator="get" field="postingAmount"/>
+                </calculate>
+                <log level="verbose" message="GL account: [${acctgTransEntry.glAccountId}] final balance: [${postedBalance}]"/>
+
+                update the gl account's posted balance for this organization
+                <set from-field="glAccount.glAccountId" field="updateGlAccountParams.glAccountId"/>
+                <set from-field="postedBalance" field="updateGlAccountParams.postedBalance" type="BigDecimal"/>
+                <set from-field="acctgTransEntry.organizationPartyId" field="updateGlAccountParams.organizationPartyId"/>
+                <call-service service-name="updateGlAccountOrganization" in-map-name="updateGlAccountParams"/> -->
+
+                <!-- assemble the glAccountHistoryList, we will update all of these -->
+                <set from-field="customTimePeriodListByOrganizationPartyIdMap[acctgTransEntry.organizationPartyId]" field="customTimePeriodList"/>
+                <iterate entry="customTimePeriod" list="customTimePeriodList">               
+                <!-- Let's populate internalOrganization entries -->                
+		       <!--  <entity-condition list="acctrans" entity-name="AcctgTransRole">
+		        	<condition-expr field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
+		        	<condition-expr field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+		        </entity-condition>		        
+                <if-not-empty field="acctrans[1]">
+	                     <entity-one entity-name="GlAccountHistoryPartyWise" value-field="glAccountHistoryPartyWise">
+	                        <field-map field-name="glAccountId" from-field="acctgTransEntry.glAccountId"/>
+	                        <field-map field-name="partyId" from-field="acctrans[1].partyId"/>
+	                        <field-map field-name="acctgTransTypeId" from-field="acctgTrans.acctgTransTypeId"/>
+	                        <field-map field-name="organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
+	                        <field-map field-name="customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
+	                    </entity-one>
+	                    if no glAccountHistoryPartyWise create a new empty one
+	                    <if-empty field="glAccountHistoryPartyWise">
+	                        <make-value value-field="glAccountHistoryPartyWise" entity-name="GlAccountHistoryPartyWise"/>
+	                        <set from-field="acctgTransEntry.glAccountId" field="glAccountHistoryPartyWise.glAccountId"/>
+	                        <set from-field="acctgTransEntry.organizationPartyId" field="glAccountHistoryPartyWise.organizationPartyId"/>
+	                        <set from-field="acctrans[1].partyId" field="glAccountHistoryPartyWise.partyId"/>
+	                        <set from-field="acctgTrans.acctgTransTypeId" field="glAccountHistoryPartyWise.acctgTransTypeId"/>
+	                        <set from-field="customTimePeriod.customTimePeriodId" field="glAccountHistoryPartyWise.customTimePeriodId"/>
+	                        <set field="glAccountHistoryPartyWise.postedDebits" value="0.0" type="BigDecimal"/>
+	                        <set field="glAccountHistoryPartyWise.postedCredits" value="0.0" type="BigDecimal"/>
+	                        <create-value value-field="glAccountHistoryPartyWise"/>
+	                    </if-empty>
+	
+	                    update GlAccountHistoryPartyWise's debit and credit totals
+	                    <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="D">
+	                        <calculate field="glAccountHistoryPartyWise.postedDebits" type="BigDecimal">
+	                            <calcop operator="add">
+	                                <calcop operator="get" field="acctgTransEntry.amount"/>
+	                                <calcop operator="get" field="glAccountHistoryPartyWise.postedDebits"/>
+	                            </calcop>
+	                        </calculate>
+	                    <else>
+	                        <if-compare field="acctgTransEntry.debitCreditFlag" operator="equals" value="C">
+	                            <calculate field="glAccountHistoryPartyWise.postedCredits" type="BigDecimal">
+	                                <calcop operator="add">
+	                                    <calcop operator="get" field="acctgTransEntry.amount"/>
+	                                    <calcop operator="get" field="glAccountHistoryPartyWise.postedCredits"/>
+	                                </calcop>
+	                            </calculate>
+	                            <else>
+	                                <add-error><fail-message message="Bad debitCreditFlag [${acctgTransEntry.debitCreditFlag}] (was not D or C) in Accounting Transaction Entry with acctgTransId=[${acctgTransEntry.acctgTransId}] and acctgTransEntrySeqId=[${acctgTransEntry.acctgTransEntrySeqId}]"/></add-error>
+	                            </else>
+	                        </if-compare>
+	                    </else>
+	                    </if-compare>
+	                    <store-value value-field="glAccountHistoryPartyWise"/>
+                </if-not-empty>    -->
+                </iterate>
+            </iterate>
+
+            <!-- check-errors just in case we had some bad debitCreditFlags -->
+            <check-errors/>
+
+            <!-- for AcctgTrans: set isPosted to Y, postedDate to now -->
+           <!--  <set from-field="acctgTrans.acctgTransId" field="updateAcctgTransParams.acctgTransId"/>
+            <now-timestamp field="updateAcctgTransParams.postedDate"/>
+            <set value="Y" field="updateAcctgTransParams.isPosted"/>
+            <set from-field="acctgTrans.transactionDate" field="updateAcctgTransParams.transactionDate"/>
+            
+            <call-service service-name="updateAcctgTrans" in-map-name="updateAcctgTransParams" include-user-login="true"/> -->
         </else>
         </if-compare>
     </simple-method>

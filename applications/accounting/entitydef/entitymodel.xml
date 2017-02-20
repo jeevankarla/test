@@ -420,6 +420,7 @@
 		<field name="categoryTypeEnum" type="id"></field>
 		<field name="finAccountPin" type="long-varchar" encrypt="true"></field>
 		<field name="currencyUomId" type="id-ne" />
+		<field name="costCenterId" type="id"></field>
 		<field name="organizationPartyId" type="id">
 			<description>The internal organization Party that owns (or rather, is liable for) the account.</description>
 		</field>
@@ -594,6 +595,8 @@
 		<field name="contraRefNum" type="short-varchar"></field>
 		<field name="performedByPartyId" type="id"></field>
 		<field name="reasonEnumId" type="id"></field>
+		<field name="costCenterId" type="id"></field>
+		<field name="segmentId" type="id"></field>
 		<field name="realisationDate" type="date-time"></field>
 		<field name="comments" type="comment"></field>
 		<field name="statusId" type="id"></field>
@@ -612,6 +615,10 @@
 		<relation type="one" fk-name="FIN_ACT_TX_PARTY"
 			rel-entity-name="Party">
 			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one" fk-name="FIN_ACT_TX_SEG"
+			rel-entity-name="Enumeration">
+			<key-map field-name="segmentId" rel-field-name="enumId"/>
 		</relation>
 		<relation type="one" fk-name="FIN_ACT_TX_PMT"
 			rel-entity-name="Payment">
@@ -2168,6 +2175,8 @@
 		<field name="partyId" type="id"></field>
 		<field name="roleTypeId" type="id"></field>
 		<field name="invoiceId" type="id"></field>
+		<field name="toInvoiceId" type="id"></field>
+		<field name="paymentApplicationId" type="id"></field>		
 		<field name="paymentId" type="id"></field>
 		<field name="finAccountTransId" type="id"></field>
 		<field name="shipmentId" type="id"></field>
@@ -2221,6 +2230,14 @@
 			rel-entity-name="Invoice">
 			<key-map field-name="invoiceId" />
 		</relation>
+		<relation type="one" fk-name="ACCTTX_TOINVOICE"
+			rel-entity-name="Invoice">
+			<key-map field-name="toInvoiceId" rel-field-name="invoiceId"/>
+		</relation>
+		<relation type="one" fk-name="ACCTTX_PAYAPPIN"
+			rel-entity-name="PaymentApplication">
+			<key-map field-name="paymentApplicationId"/>
+		</relation>		
 		<relation type="one" fk-name="ACCTTX_PAYMENT"
 			rel-entity-name="Payment">
 			<key-map field-name="paymentId" />
@@ -2279,6 +2296,8 @@
 		<field name="origAmount" type="currency-amount"></field>
 		<field name="origCurrencyUomId" type="id"></field>
 		<field name="debitCreditFlag" type="indicator"></field>
+		<field name="costCenterId" type="id"></field>
+		<field name="purposeTypeId" type="id"></field>	
 		<field name="dueDate" type="date"></field>
 		<field name="groupId" type="id"></field>
 		<field name="taxId" type="id"></field>
@@ -2358,6 +2377,7 @@
 		<alias entity-alias="ATR" name="glJournalId" />
 		<alias entity-alias="ATT" name="transTypeDescription" field="description" />
 		<alias entity-alias="ATR" name="invoiceId" />
+		<alias entity-alias="ATR" name="toInvoiceId" />		
 		<alias entity-alias="ATR" name="paymentId" />
 		<alias entity-alias="ATR" name="shipmentId" />
 		<alias entity-alias="ATR" name="receiptId" />
@@ -2366,6 +2386,7 @@
 		<alias entity-alias="ATR" name="fixedAssetId" />
 		<alias entity-alias="ATR" name="physicalInventoryId" />
 		<alias entity-alias="ATR" name="finAccountTransId" />
+		<alias entity-alias="ATE" name="costCenterId" />
 		<alias entity-alias="ATE" name="acctgTransId" />
 		<alias entity-alias="ATE" name="acctgTransEntrySeqId" />
 		<alias entity-alias="ATE" name="glAccountId" />
@@ -2636,9 +2657,13 @@
 		<field name="postedDebits" type="currency-amount"></field>
 		<field name="postedCredits" type="currency-amount"></field>
 		<field name="endingBalance" type="currency-amount"></field>
+		<field name="costCenterId" type="id-ne"></field>
+		<field name="segmentId" type="id-ne"></field>
 		<prim-key field="glAccountId" />
 		<prim-key field="organizationPartyId" />
 		<prim-key field="customTimePeriodId" />
+		<prim-key field="costCenterId" />
+		<prim-key field="segmentId" />
 		<relation type="one" fk-name="GLACCT_HST_GLA"
 			rel-entity-name="GlAccount">
 			<key-map field-name="glAccountId" />
@@ -2647,7 +2672,62 @@
 			rel-entity-name="Party">
 			<key-map field-name="organizationPartyId" rel-field-name="partyId" />
 		</relation>
+		<relation type="one" fk-name="GLACCT_HST_COST"
+			rel-entity-name="Party">
+			<key-map field-name="costCenterId" rel-field-name="partyId" />
+		</relation>		
+		<relation type="one" fk-name="GLACCT_HST_SEG"
+			rel-entity-name="Enumeration">
+			<key-map field-name="segmentId" rel-field-name="enumId"/>
+		</relation>
 		<relation type="one" fk-name="GLACCT_HST_CTP"
+			rel-entity-name="CustomTimePeriod">
+			<key-map field-name="customTimePeriodId" />
+		</relation>
+	</entity>
+	<entity entity-name="GlAccountHistoryPartyWise" package-name="org.ofbiz.accounting.ledger"
+		title="GL Account Party Wise History Entity">
+		<field name="glAccountId" type="id-ne"></field>
+		<field name="organizationPartyId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="customTimePeriodId" type="id-ne"></field>
+		<field name="acctgTransTypeId" type="id-ne"></field>
+		<field name="costCenterId" type="id"></field>
+		<field name="postedDebits" type="currency-amount"></field>
+		<field name="postedCredits" type="currency-amount"></field>
+		<field name="endingBalance" type="currency-amount"></field>
+		<field name="segmentId" type="id-ne"></field>
+		<prim-key field="glAccountId" />
+		<prim-key field="organizationPartyId" />
+		<prim-key field="partyId" />
+		<prim-key field="customTimePeriodId" />
+		<prim-key field="acctgTransTypeId" />
+		<prim-key field="costCenterId" />
+		<prim-key field="segmentId" />
+		<relation type="one" fk-name="GLACCT_HSTP_GLA"
+			rel-entity-name="GlAccount">
+			<key-map field-name="glAccountId" />
+		</relation>
+		<relation type="one" fk-name="GLACCT_HSTP_PARTY"
+			rel-entity-name="Party">
+			<key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+		</relation>
+		<relation type="one" fk-name="GLACCT_HSTC_PARTY"
+			rel-entity-name="Party">
+			<key-map field-name="costCenterId" rel-field-name="partyId"/>
+		</relation>
+		<relation type="one" fk-name="GLACCT_HSTP_TXTYPE" rel-entity-name="AcctgTransType">
+			<key-map field-name="acctgTransTypeId" />
+		</relation>
+		<relation type="one" fk-name="GLACCT_HSTP_PPARTY"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" rel-field-name="partyId" />
+		</relation>		
+		<relation type="one" fk-name="GLACCT_HSTP_SEG"
+			rel-entity-name="Enumeration">
+			<key-map field-name="segmentId" rel-field-name="enumId"/>
+		</relation>
+		<relation type="one" fk-name="GLACCT_HSTP_CTP"
 			rel-entity-name="CustomTimePeriod">
 			<key-map field-name="customTimePeriodId" />
 		</relation>
@@ -2702,6 +2782,32 @@
 			<key-map field-name="glAccountId" />
 			<key-map field-name="organizationPartyId" />
 			<key-map field-name="customTimePeriodId" />
+		</relation>
+	</view-entity>
+	<view-entity entity-name="GlAccountAndPartyHistoryTotals"
+		package-name="org.ofbiz.accounting.ledger" title="View of GL Account and its Party wise History totals">
+		<member-entity entity-alias="GLA" entity-name="GlAccount" />
+		<member-entity entity-alias="GLAPH" entity-name="GlAccountHistoryPartyWise" />
+		<alias-all entity-alias="GLA" group-by="true" />
+		<alias-all entity-alias="GLAPH" group-by="true" />
+		<alias entity-alias="GLAPH" name="totalPostedDebits" field="postedDebits"
+			function="sum" />
+		<alias entity-alias="GLAPH" name="totalPostedCredits" field="postedCredits"
+			function="sum" />
+		<alias entity-alias="GLAPH" name="totalEndingBalance" field="endingBalance"
+			function="sum" />
+		<view-link entity-alias="GLA" rel-entity-alias="GLAPH">
+			<key-map field-name="glAccountId" />
+		</view-link>
+		<relation type="one" fk-name="GLAAHT_GLACT" rel-entity-name="GlAccount">
+			<key-map field-name="glAccountId" />
+		</relation>
+		<relation type="one" fk-name="GLAAHT_GLAPH" rel-entity-name="GlAccountHistoryPartyWise">
+			<key-map field-name="glAccountId" />
+			<key-map field-name="partyId" />
+			<key-map field-name="organizationPartyId" />
+			<key-map field-name="customTimePeriodId" />
+			<key-map field-name="acctgTransTypeId" />
 		</relation>
 	</view-entity>
 	<entity entity-name="GlAccountOrganization" package-name="org.ofbiz.accounting.ledger"
@@ -3483,6 +3589,87 @@
 			<index-field name="isFullyApplied"/>
 		</index>	
 	</entity>
+	<entity entity-name="PaymentRole" package-name="org.ofbiz.accounting.payment"
+		title="Payment Role Entity">
+		<field name="paymentId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="roleTypeId" type="id-ne"></field>
+		<field name="datetimePerformed" type="date-time"></field>
+		<field name="percentage" type="fixed-point"></field>
+		<prim-key field="paymentId" />
+		<prim-key field="partyId" />
+		<prim-key field="roleTypeId" />
+		<relation type="one" fk-name="PMT_RLE_INVCE"
+			rel-entity-name="Payment">
+			<key-map field-name="paymentId" />
+		</relation>
+		<relation type="one" fk-name="PMT_RLE_PARTY"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="RoleType">
+			<key-map field-name="roleTypeId" />
+		</relation>
+		<relation type="one" fk-name="PMT_RLE_PTRL"
+			rel-entity-name="PartyRole">
+			<key-map field-name="partyId" />
+			<key-map field-name="roleTypeId" />
+		</relation>
+	</entity>
+	<entity entity-name="AcctgTransRole" package-name="org.ofbiz.accounting.ledger"
+		title="AcctgTrans Role Entity">
+		<field name="acctgTransId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="roleTypeId" type="id-ne"></field>
+		<field name="datetimePerformed" type="date-time"></field>
+		<field name="percentage" type="fixed-point"></field>
+		<prim-key field="acctgTransId" />
+		<prim-key field="partyId" />
+		<prim-key field="roleTypeId" />
+		<relation type="one" fk-name="ACTG_RLE_INVCE"
+			rel-entity-name="AcctgTrans">
+			<key-map field-name="acctgTransId" />
+		</relation>
+		<relation type="one" fk-name="ACTG_RLE_PARTY"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="RoleType">
+			<key-map field-name="roleTypeId" />
+		</relation>
+		<relation type="one" fk-name="ACTG_RLE_PTRL"
+			rel-entity-name="PartyRole">
+			<key-map field-name="partyId" />
+			<key-map field-name="roleTypeId" />
+		</relation>
+	</entity>
+	<entity entity-name="FinAccountTransRole" package-name="org.ofbiz.accounting.finaccount"
+		title="FinAccount Trans Role Entity">
+		<field name="finAccountTransId" type="id-ne"></field>
+		<field name="partyId" type="id-ne"></field>
+		<field name="roleTypeId" type="id-ne"></field>
+		<field name="datetimePerformed" type="date-time"></field>
+		<field name="percentage" type="fixed-point"></field>
+		<prim-key field="finAccountTransId" />
+		<prim-key field="partyId" />
+		<prim-key field="roleTypeId" />
+		<relation type="one" fk-name="FINTRNS_RLE_INVCE"
+			rel-entity-name="FinAccountTrans">
+			<key-map field-name="finAccountTransId" />
+		</relation>
+		<relation type="one" fk-name="FINTRNS_RLE_PARTY"
+			rel-entity-name="Party">
+			<key-map field-name="partyId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="RoleType">
+			<key-map field-name="roleTypeId" />
+		</relation>
+		<relation type="one" fk-name="FINTRNS_RLE_PTRL"
+			rel-entity-name="PartyRole">
+			<key-map field-name="partyId" />
+			<key-map field-name="roleTypeId" />
+		</relation>
+	</entity>
 	<view-entity entity-name="PaymentAndTypePartyNameView"
 		package-name="org.ofbiz.accounting.payment"
 		title="Payment PaymentType PaymentMethodType StatusItem and Party Name View Entity">
@@ -3591,6 +3778,34 @@
 			<key-map field-name="taxAuthGeoId" rel-field-name="geoId" />
 		</relation>
 	</view-entity>
+	<view-entity entity-name="InvoiceAndPaymentApplication"
+		package-name="org.ofbiz.accounting.payment" never-cache="true"
+		title="Invoice and Application View Entity">
+		<member-entity entity-alias="INV" entity-name="Invoice" />
+		<member-entity entity-alias="PA" entity-name="PaymentApplication" />
+		<alias-all entity-alias="PA">
+			<exclude field="invoiceId" /><!-- already existing in 
+				invoice -->
+		</alias-all>
+		<alias-all entity-alias="INV" />
+		<view-link entity-alias="PA" rel-entity-alias="INV">
+			<key-map field-name="invoiceId" />
+		</view-link>
+		<relation type="one-nofk" rel-entity-name="Payment">
+			<key-map field-name="paymentId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="PaymentApplication">
+			<key-map field-name="paymentApplicationId" />
+		</relation>
+		<relation type="one-nofk" rel-entity-name="StatusItem">
+			<key-map field-name="statusId" />
+		</relation>
+		
+		<relation type="one-nofk" rel-entity-name="PaymentMethodType">
+			<key-map field-name="paymentMethodTypeId" />
+		</relation>
+		
+	</view-entity>
 	<view-entity entity-name="PaymentAndApplicationLftJoin"
 		package-name="org.ofbiz.accounting.payment" never-cache="true"
 		title="Payment and Application View Entity">
@@ -3631,6 +3846,7 @@
 		<field name="paymentApplicationId" type="id-ne"></field>
 		<field name="paymentId" type="id"></field>
 		<field name="invoiceId" type="id"></field>
+		<field name="applicationDate" type="date-time"></field>
 		<field name="invoiceItemSeqId" type="id"></field>
 		<field name="billingAccountId" type="id"></field>
 		<field name="overrideGlAccountId" type="id">
@@ -3640,6 +3856,7 @@
 				based on or comes from another payment, like a payment that is a return of 
 				a mistaken or over-payment -->
 		</field>
+		<field name="toInvoiceId" type="id"></field>
 		<field name="taxAuthGeoId" type="id" />
 		<field name="amountApplied" type="currency-amount"></field>
 		<prim-key field="paymentApplicationId" />
@@ -5539,42 +5756,7 @@
 		<view-link entity-alias="PB" rel-entity-alias="STP">
 			<key-map field-name="schemeTimePeriodId" />
 		</view-link>
-	</view-entity>
-	<entity entity-name="GlAccountHistoryPartyWise" package-name="org.ofbiz.accounting.ledger"
-		title="GL Account Party Wise History Entity">
-		<field name="glAccountId" type="id-ne"></field>
-		<field name="organizationPartyId" type="id-ne"></field>
-		<field name="partyId" type="id-ne"></field>
-		<field name="customTimePeriodId" type="id-ne"></field>
-		<field name="acctgTransTypeId" type="id-ne"></field>
-		<field name="postedDebits" type="currency-amount"></field>
-		<field name="postedCredits" type="currency-amount"></field>
-		<field name="endingBalance" type="currency-amount"></field>
-		<prim-key field="glAccountId" />
-		<prim-key field="organizationPartyId" />
-		<prim-key field="partyId" />
-		<prim-key field="customTimePeriodId" />
-		<prim-key field="acctgTransTypeId" />
-		<relation type="one" fk-name="GLACCT_HSTP_GLA"
-			rel-entity-name="GlAccount">
-			<key-map field-name="glAccountId" />
-		</relation>
-		<relation type="one" fk-name="GLACCT_HSTP_PARTY"
-			rel-entity-name="Party">
-			<key-map field-name="organizationPartyId" rel-field-name="partyId"/>
-		</relation>
-		<relation type="one" fk-name="GLACCT_HSTP_TXTYPE" rel-entity-name="AcctgTransType">
-			<key-map field-name="acctgTransTypeId" />
-		</relation>
-		<relation type="one" fk-name="GLACCT_HSTP_PPARTY"
-			rel-entity-name="Party">
-			<key-map field-name="partyId" rel-field-name="partyId" />
-		</relation>
-		<relation type="one" fk-name="GLACCT_HSTP_CTP"
-			rel-entity-name="CustomTimePeriod">
-			<key-map field-name="customTimePeriodId" />
-		</relation>
-	</entity>
+	</view-entity>	
 	
 	<entity entity-name="PaymentGatewayTrans" package-name="org.ofbiz.accounting.payment"
 		title="Payment Gateway Trans">

@@ -212,13 +212,15 @@ under the License.
 												 	<#assign prevYrGlIdVal=0>
 												 	<#if glAccountIdWise.get(presentYear)?has_content >
 												 		<#assign presentYrGlIdVal=glAccountIdWise.get(presentYear)>
+												 		<#if presentYearVal==0><#assign presentYrGlIdVal=0></#if>
 												 	</#if>
 												 	<#if glAccountIdWise.get(prevsYear)?has_content >
 												 	<#assign prevYrGlIdVal=glAccountIdWise.get(prevsYear)>
+												 	<#if prevsYearVal==0><#assign prevYrGlIdVal=0></#if>
 												 	</#if>
 												 	<fo:table-row >
 											             <fo:table-cell border="solid" >
-															 <fo:block text-align="left"  >${glAccountIdWise.get("glAccountId")} - ${glAccountIdWise.get("description")} </fo:block>
+															 <fo:block text-align="left"  >${glAccountIdWise.get("glAccountId")} - <#if glAccountIdWise.get("description")?has_content>${glAccountIdWise.get("description")} </#if></fo:block>
 														 </fo:table-cell>
 														 <fo:table-cell border="solid">
 															 <fo:block text-align="right" keep-together="always" >${presentYrGlIdVal?if_exists?string("#0.00")}</fo:block>
@@ -323,18 +325,20 @@ under the License.
 													 	<#assign GlAccountIdsWise = GlAccountIdsWiseMap.get(category.getKey())>
 													 	<#assign glAccountIdWisDetails =GlAccountIdsWise.entrySet() >
 													 	<#list glAccountIdWisDetails as glAccountDetails>
-													 	<#assign glAccountIdWise=glAccountDetails.getValue()>
+													 	<#assign preGlAccountIdWise=glAccountDetails.getValue()>
 													 	<#assign presentYrGlIdVal=0>
 													 	<#assign prevYrGlIdVal=0>
-													 	<#if glAccountIdWise.get(presentYear)?has_content >
-													 		<#assign presentYrGlIdVal=glAccountIdWise.get(presentYear)>
+													 	<#if preGlAccountIdWise.get(presentYear)?has_content >
+													 		<#assign presentYrGlIdVal=preGlAccountIdWise.get(presentYear)>
+													 		<#if presentYearVal==0><#assign presentYrGlIdVal=0></#if>
 													 	</#if>
-													 	<#if glAccountIdWise.get(prevsYear)?has_content >
-													 	<#assign prevYrGlIdVal=glAccountIdWise.get(prevsYear)>
+													 	<#if preGlAccountIdWise.get(prevsYear)?has_content >
+													 	<#assign prevYrGlIdVal=preGlAccountIdWise.get(prevsYear)>
+													 	<#if prevsYearVal==0><#assign prevYrGlIdVal=0></#if>
 													 	</#if>
 													 	<fo:table-row >
 												             <fo:table-cell border="solid" >
-																 <fo:block text-align="left"  >${glAccountIdWise.get("glAccountId")} - ${glAccountIdWise.get("description")} </fo:block>
+																 <fo:block text-align="left"  >${preGlAccountIdWise.get("glAccountId")} - <#if preGlAccountIdWise.get("description")?has_content>${preGlAccountIdWise.get("description")} </#if> </fo:block>
 															 </fo:table-cell>
 															 <fo:table-cell border="solid">
 																 <fo:block text-align="right" keep-together="always" >${presentYrGlIdVal?if_exists?string("#0.00")}</fo:block>
