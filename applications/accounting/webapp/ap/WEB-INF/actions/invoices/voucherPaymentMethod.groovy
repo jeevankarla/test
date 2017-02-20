@@ -72,6 +72,20 @@ for(eachRO in roPartyList){
 }
 context.branchList = formatList;
 
+
+finCondList = [];
+finCondList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+finCondList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, ["BANK_ACCOUNT","CASH"]));
+if(UtilValidate.isNotEmpty(parameters.ownerPartyId) && parameters.ownerPartyId!=null){
+	finCondList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+}
+cond = EntityCondition.makeCondition(finCondList, EntityOperator.AND);
+
+finAccounts = delegator.findList("FinAccount", cond, null, null, null, false);
+
+context.finAccounts1=finAccounts;
+
+
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
 if(UtilValidate.isEmpty(parameters.noConditionFind)){
 return "";
@@ -93,7 +107,6 @@ else {
 	parameters.purposeTypeId = parameters.purposeTypeIdField;
 }
 //Debug.log("====parameters.purposeTypeIdField===="+parameters.purposeTypeIdField+"=====purposeTypeId="+parameters.purposeTypeId);
-
 
 condtList = [];
 condtList.add(EntityCondition.makeCondition("parentTypeId" ,EntityOperator.EQUALS, "MONEY"));
@@ -247,14 +260,19 @@ if("SALES_INVOICE"==parentTypeId){
 }else if("PURCHASE_INVOICE"==parentTypeId){
 		cList = [];
 		cList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN,bankPaymentMethodIdsList));
-		cList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+		if(UtilValidate.isNotEmpty(parameters.ownerPartyId) && parameters.ownerPartyId!=null){
+			cList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+		}
+		
 		cond = EntityCondition.makeCondition(cList, EntityOperator.AND);
 		
 		bankPaymentMethodList = delegator.findList("PaymentMethod", cond, null, null, null, false);
 		
 		cList.clear();
 		cList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN,cashPaymentMethodIdsList));
-		cList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+		if(UtilValidate.isNotEmpty(parameters.ownerPartyId) && parameters.ownerPartyId!=null){
+			cList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+		}
 		cond = EntityCondition.makeCondition(cList, EntityOperator.AND);
 		
 		cashPaymentMethodList = delegator.findList("PaymentMethod", cond, null, null, null, false);
@@ -268,7 +286,10 @@ if("SALES_INVOICE"==parentTypeId){
 		// for payment method id in ap payments
 		condList.clear();
 //		condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
-		condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+		if(UtilValidate.isNotEmpty(parameters.ownerPartyId) && parameters.ownerPartyId!=null){
+			condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+		}
+		
 		condList.add(EntityCondition.makeCondition("paymentMethodId", EntityOperator.NOT_EQUAL, "PAYMENTMETHOD2"));
 		cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 		bankPaymentMethodList = delegator.findList("PaymentMethod", cond, null, ["description"], null, false);
@@ -316,3 +337,4 @@ arScreenTitle = uiLabelMap.AccountingCreateNewBankSalesInvoice;
 }
 prefPaymentMethodTypeId=arVoucherType;
 context.arScreenTitle=arScreenTitle;
+

@@ -195,6 +195,7 @@
                 		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_RECEIPT"/>
                 	</condition-list>
                 </entity-condition>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 <entity-condition list="companyBanksList" entity-name="FinAccount">
             		<condition-list combine="and">
             			<!-- <condition-list combine="or">
@@ -261,6 +262,7 @@
                 		<condition-expr field-name="parentTypeId" operator="equals" value="DEPOSIT_PAID"/>
                 	</condition-list>
                 </entity-condition>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                  <entity-condition list="companyBanksList" entity-name="FinAccount">
             		<condition-list combine="and">
             			<!-- <condition-list combine="or">
@@ -328,6 +330,7 @@
                 		<condition-expr field-name="parentTypeId" operator="equals" value="EMPLOYEE_ADV"/>
                 	</condition-list>
                 </entity-condition>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 <entity-condition list="companyBanksList" entity-name="FinAccount">
             		<condition-list combine="and">
             			<!-- <condition-list combine="or">
