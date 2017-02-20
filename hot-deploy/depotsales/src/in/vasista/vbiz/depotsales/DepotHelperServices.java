@@ -3642,6 +3642,69 @@ public static Map<String,Object> getSupplierProductPrice(DispatchContext dctx, M
 
 
 
+public static Map<String,Object> getRemainingOrderItems(DispatchContext dctx, Map<String, ? extends Object> context) {
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();   
+    Map<String, Object> result = new HashMap<String, Object>();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+    Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+    String orderId = (String) context.get("orderId");
+    String orderItemSeqId = (String) context.get("orderItemSeqId");
+    String productId = (String) context.get("productId");
+    
+    BigDecimal supplierProdPrice =BigDecimal.ZERO;
+    BigDecimal usedQuantity = BigDecimal.ZERO;
+    try {
+    	List condList = FastList.newInstance();
+    	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+    	condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+    	condList.add(EntityCondition.makeCondition("orderItemAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+        List<GenericValue> orderItemAssocList = delegator.findList("OrderItemAssoc", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("toOrderId","toOrderItemSeqId"), null, null, false);
+        if(UtilValidate.isNotEmpty(orderItemAssocList)){
+        	
+        	
+        	for (GenericValue orderItemAssocValue : orderItemAssocList) {
+        	
+        	
+        	String poOrderId = orderItemAssocValue.getString("toOrderId");
+        	
+        	String toOrderItemSeqId = orderItemAssocValue.getString("toOrderItemSeqId");
+        	
+        	GenericValue poOrderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", poOrderId), false);
+        	
+        	String statusId = poOrderHeader.getString("statusId");
+        	
+        	if(!statusId.equals("ORDER_CANCELLED")){
+				condList.clear();
+				condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
+				condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, toOrderItemSeqId));
+				List<GenericValue> orderItemList = delegator.findList("orderItem", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("quantity"), null, null, false);
+
+				
+				 GenericValue orderItemListValue = EntityUtil.getFirst(orderItemList);
+				 usedQuantity = usedQuantity.add(orderItemListValue.getBigDecimal("quantity"));
+				 
+				 
+        	}
+        	
+        	}
+        	
+        	
+        }
+        
+    } catch (GenericEntityException e) {
+        Debug.logError(e, module);
+        result = ServiceUtil.returnError("Unable to fetch Data from Supplier Product Entity.....  ");
+        return result;
+    }
+   result.put("usedQuantity",usedQuantity);
+   return result;
+}
+
+
+
+
+
 
   	
 }

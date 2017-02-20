@@ -71,7 +71,7 @@ context.orderDateToCompPO=orderDateToCompPO;
 //Debug.log("orderDateToCompPO =================" +orderDateToCompPO);
 orderAdjustments = [];
 additionalChgs = [];
-if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
+if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 	
 	orderInfoDetail = [:];
 	orderInfoDetail.putAt("orderId", orderHeader.orderId);
@@ -510,8 +510,15 @@ if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
 	}
 	//Debug.log("additionalChgs =================="+additionalChgs);
 	
+	
 	JSONArray orderItemsJSON = new JSONArray();
 	orderItems.each{ eachItem ->
+		
+		
+		resultCtx = dispatcher.runSync("getRemainingOrderItems",UtilMisc.toMap("userLogin",userLogin, "orderId", eachItem.orderId,"orderItemSeqId",eachItem.orderItemSeqId));
+		
+		Debug.log("resultCtx =================="+resultCtx);
+		
 		amount = eachItem.quantity*eachItem.unitPrice;
 		if(!amount){
 			amount = 0;
