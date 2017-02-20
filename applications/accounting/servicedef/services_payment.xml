@@ -110,7 +110,6 @@ under the License.
         <description>Create a payment application</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
-         <attribute name="toInvoiceId" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="overrideGlAccountId" type="String" mode="IN" optional="true"/>
@@ -434,5 +433,19 @@ under the License.
         <attribute name="paymentId" type="String" mode="INOUT" optional="false"/>
         <attribute name="invoiceId" type="String" mode="INOUT" optional="true"/>
     </service>
-
+    
+    <service name="createPaymentApplicationForInvoiceEmp" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createPaymentApplicationForInvoiceEmp" transaction-timeout="2000">
+        <description> Auto PaymentApplication In LIFO for Created Payment </description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoicePartyIdFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="invoicePartyIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="headerCostCenterId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    
 </services>

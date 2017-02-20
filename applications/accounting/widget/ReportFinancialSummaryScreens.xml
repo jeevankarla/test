@@ -5113,9 +5113,7 @@
 	            		<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
 	            		<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
 	            	</condition-list>
-              </entity-condition>
-	            
-
+	            </entity-condition>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
 			</actions>
 			<widgets>

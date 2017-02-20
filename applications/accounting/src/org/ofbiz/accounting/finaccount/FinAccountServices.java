@@ -321,20 +321,6 @@ public class FinAccountServices {
             	 finAccountTransTypeId = "WITHDRAWAL";
              }
              
-             GenericValue finAcct = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
-             GenericValue finAccntTo = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountIdTo), false);
-             if(UtilValidate.isNotEmpty(finAcct.get("costCenterId"))){
-            	 if(UtilValidate.isEmpty(finAccntTo.get("costCenterId"))){
-            		 finAccntTo.put("costCenterId",(String)finAcct.get("costCenterId"));
-            		 finAccntTo.store();
-                 }
-             }
-             if(UtilValidate.isNotEmpty(finAccntTo.get("costCenterId"))){
-            	 if(UtilValidate.isEmpty(finAcct.get("costCenterId"))){
-            		 finAcct.put("costCenterId",(String)finAccntTo.get("costCenterId"));
-            		 finAcct.store();
-                 }
-             }
              Map<String, Object> transCtxMap = FastMap.newInstance();
              transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
              transCtxMap.put("entryType", entryType);
