@@ -2930,6 +2930,7 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     String fromDateStr = (String) context.get("fromDate");
     String thruDateStr = (String) context.get("thruDate"); 
     String roId = (String) context.get("partyId");
+    String branchId = (String) context.get("branchId");
     String invoiceTypeIdUi = (String) context.get("invoiceTypeId");
     Timestamp fromDate=null;
     Timestamp thruDate = null;
@@ -2947,13 +2948,31 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     	}
   }
   /*try {
-       EntityListIterator partyRelationshipItr = delegator.find("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, roId), null, UtilMisc.toSet("partyIdTo"), null, null);
+       EntityListIterator partyRelationshipItr = delegator.find("PartyRelationship", EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId), null, UtilMisc.toSet("partyIdTo"), null, null);
        branchIds=EntityUtil.getFieldListFromEntityListIterator(partyRelationshipItr, "partyIdTo", true);
   }catch (GenericEntityException e) {
         Debug.logError(e, module);
         return ServiceUtil.returnError(e.getMessage());
     }*/
-    branchIds.add(roId);
+    if(UtilValidate.isNotEmpty(roId)){
+	    Map resultCtx=null;
+	    try{
+			resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",roId));
+			if (ServiceUtil.isError(resultCtx)) {
+		 			Debug.logError(resultCtx.toString(), module);
+		 			return ServiceUtil.returnError(null, null, null, resultCtx);
+		 		}
+	    }catch(Exception e){
+			Debug.logError(e, "Error while getting branch's for Ro: " + roId, module);
+	        return ServiceUtil.returnError(e.getMessage());
+	    }
+	    if(UtilValidate.isNotEmpty(resultCtx) && UtilValidate.isNotEmpty(resultCtx.get("partyList"))){
+			List<GenericValue> partyList=(List<GenericValue>) resultCtx.get("partyList");
+			 branchIds= EntityUtil.getFieldListFromEntityList(partyList,"partyIdTo", true);
+	    }
+    }else{
+    	branchIds.add(branchId);
+    }
     Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
     EntityCondition cond = null;
     List condList = FastList.newInstance();
@@ -2973,7 +2992,7 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
 //    Debug.log("cond=============================="+cond);
     EntityListIterator invoiceItr = null;
     try {
-       invoiceItr = delegator.find("Invoice", cond, null,  UtilMisc.toSet("invoiceId","invoiceTypeId","partyIdFrom","partyId"), null, null);
+       invoiceItr = delegator.find("Invoice", cond, null,  UtilMisc.toSet("invoiceId","invoiceTypeId","partyIdFrom","partyId","costCenterId"), null, null);
        if (invoiceItr != null) {
                 GenericValue invoice = null;
                 while ((invoice = invoiceItr.next()) != null) {
@@ -2987,9 +3006,20 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
                          GenericValue partyRel = EntityUtil.getFirst(partyRelationship);
                          roPartyId = partyRel.getString("partyIdFrom");
                          invoice.set("partyIdFrom",roPartyId);
-                         invoice.store();
                          GenericValue invoiceRole = delegator.findOne("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId,"partyId",partyIdFrom,"roleTypeId","BILL_FROM_VENDOR"), false);
                          String partyId = invoiceRole.getString("partyId");
+                         invoice.set("costCenterId",partyId);
+                         invoice.store();
+                         EntityListIterator invoiceItemItr = null;
+                         invoiceItemItr = delegator.find("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null,  UtilMisc.toSet("invoiceId","invoiceItemSeqId","costCenterId"), null, null);
+                         if (invoiceItemItr != null) {
+                                  GenericValue invoiceItem = null;
+                                  while ((invoiceItem = invoiceItemItr.next()) != null) {
+	                                  invoiceItem.set("costCenterId",partyId);
+	                                  invoiceItem.store();
+                                  }
+                         }
+                         invoiceItemItr.close();
                          Timestamp datetimePerformed = invoiceRole.getTimestamp("datetimePerformed");
 
                     invoiceRole.remove();   
@@ -3028,9 +3058,20 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
                          GenericValue partyRel = EntityUtil.getFirst(partyRelationship);
                          roPartyId = partyRel.getString("partyIdFrom");
                          invoice.set("partyId",roPartyId);
-                         invoice.store();
                          GenericValue invoiceRole = delegator.findOne("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId,"partyId",partyIdTo,"roleTypeId","BILL_TO_CUSTOMER"), false);
                          String partyId = invoiceRole.getString("partyId");
+                         invoice.set("costCenterId",partyId);
+                         invoice.store();
+                         EntityListIterator invoiceItemItr = null;
+                         invoiceItemItr = delegator.find("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null,  UtilMisc.toSet("invoiceId","invoiceItemSeqId","costCenterId"), null, null);
+                         if (invoiceItemItr != null) {
+                                  GenericValue invoiceItem = null;
+                                  while ((invoiceItem = invoiceItemItr.next()) != null) {
+	                                  invoiceItem.set("costCenterId",partyId);
+	                                  invoiceItem.store();
+                                  }
+                         }
+                         invoiceItemItr.close();
                          Timestamp datetimePerformed = invoiceRole.getTimestamp("datetimePerformed");
                          invoiceRole.remove();
                          try{
