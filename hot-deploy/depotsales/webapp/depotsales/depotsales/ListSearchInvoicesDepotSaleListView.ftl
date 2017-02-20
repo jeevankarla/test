@@ -453,7 +453,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
       <#--<input id="submitButton" type="button"  onclick="javascript:jQuery('#listInvoices').submit();" value="${uiLabelMap.CommonRun}" disabled="disabled" />-->
 
       <input type="hidden" name="organizationPartyId" value="${defaultOrganizationPartyId}"/>
-      <input type="hidden" name="partyIdFrom" value="${parameters.partyIdFrom?if_exists}"/>
+      <input type="hidden" name="partyIdFrom" value="${parameters.costCenterId?if_exists}"/>
       <input type="hidden" name="statusId" id="statusId" value="${parameters.statusId?if_exists}"/>
       <input type="hidden" name="fromInvoiceDate" value="${parameters.fromInvoiceDate?if_exists}"/>
       <input type="hidden" name="thruInvoiceDate" value="${parameters.thruInvoiceDate?if_exists}"/>
@@ -514,19 +514,19 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
             <#-->  <td>${(invoice.description)?if_exists}</td>
  			  <td>${(invoice.cancelComments)?if_exists}</td>-->
  			              <#assign partyName="">
- 			   <#if invoice?has_content && invoice.partyIdFrom?has_content>
-              <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)/>
+ 			   <#if invoice?has_content && invoice.costCenterId?has_content>
+              <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.costCenterId, false)/>
             </#if>
             
               <input type = "hidden" name = "partyId" id = "partyId" value = "${invoice.partyId}">
-              <input type = "hidden" name = "fromPartyId" id = "fromPartyId" value = "${invoice.partyIdFrom}">
+              <input type = "hidden" name = "fromPartyId" id = "fromPartyId" value = "${invoice.costCenterId}">
               <input type = "hidden" name = "amt" id = "amt" value = "${invoicePaymentInfo.outstandingAmount}">
               <input type = "hidden" name = "invId" id = "invId" value = "${invoice.invoiceId}">
               <input type = "hidden" name = "partyIdName" id = "partyIdName" value = "${partyName}">
               <input type = "hidden" name = "voucherTypeId" id = "voucherTypeId" value = "${invoice.prefPaymentMethodTypeId?if_exists}">
               
               <#assign vendorName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)/>
-              <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${partyName}[${(invoice.partyIdFrom)?if_exists}]</a></td>
+              <td><a href="/partymgr/control/viewprofile?partyId=${invoice.costCenterId}">${partyName}[${(invoice.costCenterId)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)} [${(invoice.partyId)?if_exists}]</a></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>

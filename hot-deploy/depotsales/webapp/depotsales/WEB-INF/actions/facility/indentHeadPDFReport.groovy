@@ -141,7 +141,7 @@ if(UtilValidate.isNotEmpty(daystart)){
 
 condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 if(branchList)
-condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+condList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
 if(partyId)
 	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 
@@ -152,7 +152,7 @@ if(purposeType)
 
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
-fieldsToSelect = ["invoiceId", "invoiceDate", "shipmentId", "partyIdFrom", "referenceNumber"] as Set;
+fieldsToSelect = ["invoiceId", "invoiceDate", "shipmentId", "costCenterId", "referenceNumber"] as Set;
 
 invoice = delegator.findList("Invoice", cond, fieldsToSelect, null, null, false);
 
@@ -240,7 +240,7 @@ if(invoice){
 			invoiceItemList = EntityUtil.filterByCondition(InvoiceItem, EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
 
 
-			PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.partyIdFrom] , false);
+			PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.costCenterId] , false);
 
 
 			////Debug.log("eachInvoice.invoiceId============"+eachInvoice.invoiceId);
@@ -1374,7 +1374,7 @@ if(invoice){
 			invoiceItemList = EntityUtil.filterByCondition(InvoiceItem, EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
 
 
-			PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.partyIdFrom] , false);
+			PartyGroup = delegator.findOne("PartyGroup",[partyId : eachInvoice.costCenterId] , false);
 
 
 			////Debug.log("eachInvoice.invoiceId============"+eachInvoice.invoiceId);

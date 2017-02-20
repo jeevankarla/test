@@ -479,7 +479,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)?if_exists/>
             
             
-              <input type = "hidden" name = "partyId" id = "partyId" value = "${invoice.partyId}">
+              <input type = "hidden" name = "partyId" id = "partyId" value = "${invoice.costCenterId}">
               <input type = "hidden" name = "fromPartyId" id = "fromPartyId" value = "${invoice.partyIdFrom}">
               <input type = "hidden" name = "amt" id = "amt" value = "${invoicePaymentInfo.outstandingAmount}">
               <input type = "hidden" name = "invId" id = "invId" value = "${invoice.invoiceId}">
@@ -488,7 +488,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               
               
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${partyName}[${(invoice.partyIdFrom)?if_exists}]</a></td>
-              <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)?if_exists} [${(invoice.partyId)?if_exists}]</a></td>
+              <td><a href="/partymgr/control/viewprofile?partyId=${invoice.costCenterId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.costCenterId, false)?if_exists} [${(invoice.costCenterId)?if_exists}]</a></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoice.invoiceGrandTotal-invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>       

@@ -244,6 +244,23 @@ public class InvoiceServices {
                 dueDate = UtilDateTime.getDayEnd(invoiceDate, orderTermNetDays);
             }
 
+            //===========get RO for branch================
+            
+            String roFroBranch = "";
+            List conditionList = FastList.newInstance();
+  			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, billFromVendorPartyId));
+  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+  	        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
+			try{
+				List<GenericValue> orgsListS = delegator.findList("PartyRelationship", condition, null, UtilMisc.toList("partyIdFrom"), null, false);
+				GenericValue orgsList = EntityUtil.getFirst(orgsListS);
+				roFroBranch = orgsList.getString("partyIdFrom");
+				
+   	    	}catch (GenericEntityException e) {
+   				// TODO: handle exception
+   	    		Debug.logError(e, module);
+   			}
 
             
             // create the invoice record
@@ -251,7 +268,8 @@ public class InvoiceServices {
                 Map<String, Object> createInvoiceContext = FastMap.newInstance();
                 createInvoiceContext.put("partyId", billToCustomerPartyId);
                 createInvoiceContext.put("shipmentId", shipmentId);
-                createInvoiceContext.put("partyIdFrom", billFromVendorPartyId);
+                createInvoiceContext.put("partyIdFrom", roFroBranch);
+                createInvoiceContext.put("costCenterId", billFromVendorPartyId);
                 createInvoiceContext.put("billingAccountId", billingAccountId);
                 createInvoiceContext.put("invoiceDate", invoiceDate);
                 createInvoiceContext.put("dueDate", dueDate);
@@ -282,14 +300,32 @@ public class InvoiceServices {
             createInvoiceRoleContext.put("invoiceId", invoiceId);
             createInvoiceRoleContext.put("userLogin", userLogin);
             for (GenericValue orderRole : orderRoles) {
-                createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));
+            	
+            	String roleTypeId = orderRole.getString("roleTypeId");
+            	
+            	if(roleTypeId.equals("BILL_FROM_VENDOR"))
+                  createInvoiceRoleContext.put("partyId", roFroBranch);
+            	else
+            	  createInvoiceRoleContext.put("partyId", orderRole.getString("partyId"));	
+            		
                 createInvoiceRoleContext.put("roleTypeId", orderRole.getString("roleTypeId"));
                 Map<String, Object> createInvoiceRoleResult = dispatcher.runSync("createInvoiceRole", createInvoiceRoleContext);
                 if (ServiceUtil.isError(createInvoiceRoleResult)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceFromOrder",locale), null, null, createInvoiceRoleResult);
                 }
             }
-
+            
+            try{
+              	 GenericValue billFromVendorRole = delegator.makeValue("InvoiceRole");
+              	 billFromVendorRole.set("invoiceId", invoiceId);
+              	 billFromVendorRole.set("partyId", billFromVendorPartyId);
+              	 billFromVendorRole.set("roleTypeId", "COST_CENTER_ID");
+              	 billFromVendorRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
+                   delegator.createOrStore(billFromVendorRole);
+               } catch (GenericEntityException e) {
+             	  Debug.logError(e, "Failed to Populate Invoice ", module);
+               }	
+           
             // order terms to invoice terms.
             // TODO: it might be nice to filter OrderTerms to only copy over financial terms.
             List<GenericValue> orderTerms = orh.getOrderTerms();
@@ -459,6 +495,7 @@ public class InvoiceServices {
                 createInvoiceItemContext.put("productId", orderItem.get("productId"));
                 createInvoiceItemContext.put("productFeatureId", orderItem.get("productFeatureId"));
                 createInvoiceItemContext.put("overrideGlAccountId", orderItem.get("overrideGlAccountId"));
+                createInvoiceItemContext.put("costCenterId", billFromVendorPartyId);
                 //createInvoiceItemContext.put("uomId", "");
                 createInvoiceItemContext.put("userLogin", userLogin);
                 String itemIssuanceId = null;
@@ -716,11 +753,12 @@ public class InvoiceServices {
                         createInvoiceItemAdjContext.put("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceType, "INVOICE_ITM_ADJ"));
                         createInvoiceItemAdjContext.put("quantity", BigDecimal.ONE);
                         createInvoiceItemAdjContext.put("amount", amount);
-                        createInvoiceItemAdjContext.put("productId", orderItem.get("productId"));
+                       // createInvoiceItemAdjContext.put("productId", orderItem.get("productId"));
                         createInvoiceItemAdjContext.put("productFeatureId", orderItem.get("productFeatureId"));
                         createInvoiceItemAdjContext.put("overrideGlAccountId", adj.get("overrideGlAccountId"));
                         createInvoiceItemAdjContext.put("parentInvoiceId", invoiceId);
                         createInvoiceItemAdjContext.put("sourcePercentage", sourcePercentage);
+                        createInvoiceItemAdjContext.put("costCenterId", billFromVendorPartyId);
                         
                         createInvoiceItemAdjContext.put("parentInvoiceItemSeqId", parentInvoiceItemSeqId);
                         if(UtilValidate.isNotEmpty(adj.get("isAssessableValue")) && (adj.get("isAssessableValue").equals("Y")) ){
@@ -5367,7 +5405,7 @@ public class InvoiceServices {
        	 //Debug.log("enableTaxInvSeq============="+enableTaxInvSeq);
        		Timestamp invDate=null;
        		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId)){
-       			List<GenericValue> invoiceItems = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceTypeId", "dueDate", "invoiceDate","partyIdFrom","partyId","shipmentId"), null, null, false);
+       			List<GenericValue> invoiceItems = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
        			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceTypeId", true);
        			if(UtilValidate.isNotEmpty((EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate"))){
        			    invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate");
@@ -5393,7 +5431,9 @@ public class InvoiceServices {
        			String roSequnce ="";
        			//if(UtilValidate.isNotEmpty(shipmentId)){
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
-	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyId");
+	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("costCenterId");
+	       				
+	       				Debug.log("partyId===================="+partyId);
 	       				
 	       			/*//=======================New Sequence from Role========================
 		       			 try {
@@ -5430,7 +5470,8 @@ public class InvoiceServices {
 	       			//Debug.log("prefix============="+prefix);
 	       			
 	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
-	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
+	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("costCenterId");
+	       				Debug.log("partyId===================="+partyId);
 	       				/*
 	       				//=======================New Sequence from Role========================
 	       				
