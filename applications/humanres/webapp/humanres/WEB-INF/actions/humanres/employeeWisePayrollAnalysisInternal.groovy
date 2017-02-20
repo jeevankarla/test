@@ -417,6 +417,7 @@ else{
 			netAmount = 0.0;
 			partyId = employeePayroll.getKey();
 			if(employementIds.contains(partyId)){
+				activEmployementIds.remove(partyId);
 				partyName = PartyHelper.getPartyName(delegator, partyId, false);
 				JSONArray employeePayrollJSON = new JSONArray();
 				employeePayrollJSON.add(partyId);
