@@ -6,6 +6,9 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.*;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.base.util.UtilMisc;
+import in.vasista.vbiz.humanres.HumanresService;
+
+dctx = dispatcher.getDispatchContext();
 
 
 // NOTE: This groovy assumes EmployeePayRollReport.groovy has been run before this
@@ -34,6 +37,16 @@ if(screenFlag.equals("EmployeeWisePayrollAnalysisInternal")){
 	thruDate = CustomTimePeriod.thruDate;
 	fromDateStart = UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate));
 	thruDateEnd = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate));
+	activEmployementIds = [];
+	emplInputMap = [:]
+	emplInputMap.put("orgPartyId", "Company");
+	emplInputMap.put("userLogin", userLogin);
+	emplInputMap.put("fromDate", fromDateStart);
+	emplInputMap.put("thruDate", thruDateEnd);
+	Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+	List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
+	employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+	activEmployementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 	
 	if(UtilValidate.isNotEmpty(CustomTimePeriod)){
 		fromDate = fromDate;
@@ -52,7 +65,6 @@ if(screenFlag.equals("EmployeeWisePayrollAnalysisInternal")){
 		}
 	}
 }
-
 if(PayrollAnalysisFlag.equals("RegionalOfficeTotalsPdf")){
 sortBy = UtilMisc.toList("sequenceNum");
 	if(UtilValidate.isNotEmpty(context.reportFlag) && (context.reportFlag).equals("summary")){
@@ -405,6 +417,7 @@ else{
 			netAmount = 0.0;
 			partyId = employeePayroll.getKey();
 			if(employementIds.contains(partyId)){
+				activEmployementIds.remove(partyId);
 				partyName = PartyHelper.getPartyName(delegator, partyId, false);
 				JSONArray employeePayrollJSON = new JSONArray();
 				employeePayrollJSON.add(partyId);
@@ -461,6 +474,38 @@ else{
 		  }
 		}
 	}
+	
+	if(UtilValidate.isNotEmpty(activEmployementIds)){
+		for(int i=0;i<activEmployementIds.size();i++){
+			empId = activEmployementIds.getAt(i);
+			partyName = PartyHelper.getPartyName(delegator, empId, false);
+			JSONArray employeePayrollJSON = new JSONArray();
+			employeePayrollJSON.add(empId);
+			employeePayrollJSON.add(partyName);
+			employeePayrollJSON.add(employeeDeptMap.get(empId));
+			totBenifit = 0;
+			benefitTypeIds.each{ benefitTypeId->
+				amount = 0;
+				netAmount = netAmount + amount;
+				totBenifit=totBenifit+amount;
+				employeePayrollJSON.add(amount);
+			}
+			employeePayrollJSON.add(totBenifit);
+			totDeduction = 0;
+			dedTypeIds.each{ dedTypeId->
+				amount = 0;
+				netAmount = netAmount + amount;
+				totDeduction=totDeduction+amount;
+				employeePayrollJSON.add(amount);
+			}
+			employeePayrollJSON.add(totDeduction);
+			employeePayrollJSON.add(netAmount);
+			employeesPayrollTableJSON.add(employeePayrollJSON);
+			
+		}
+	}
+	
+	
 }
 
 
