@@ -1885,7 +1885,8 @@
                 <set field="tabButtonItem"  value="${parameters.tabButtonItem}" default-value="${context.tabButtonItem}"/> -->
                 <set field="tabButtonItem" value="ContraEntry"/>
                 <set field="tabButtonItem4" value="BankContraEntry"/>
-                
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getFinAccounts.groovy"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
                 <set field="entryType" from-field="parameters.entryType"/>
