@@ -521,7 +521,6 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 	
 	 	var count = Object.keys(addressFaciMap).length;
 	 
-	 
 	    var supplierId = addressFaciMap.supplierId;
 	 	var city = addressFaciMap.city;
 	 	var address1 = addressFaciMap.address1;
@@ -529,15 +528,16 @@ function removeFacilityAddress(facilityId,NcontactMechId,TcontactMechId){
 		var countryName = addressFaciMap.countryName;
 	 	var postalCode = addressFaciMap.postalCode;
 	 	var tinNumber = addressFaciMap.tinNumber;
-	 	
+	 	var state = "";
 	 	var stateName = addressFaciMap.stateName;
+	 	if(addressFaciMap.state)
+	 	state = addressFaciMap.state;
+	 	
 	    var facilityName = addressFaciMap.facilityName;
 	    var facicontactMechType = addressFaciMap.facicontactMechType;
 	 	
-	 	
-	 	
 	 
-if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && facilityName.length !=0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && supplierId.length != 0 && tinNumber.length != 0){
+if(count != 0 && supplierId.length !=0 && state.length !=0 && facicontactMechType.length !=0 && facilityName.length !=0 && city.length !=0 && address1.length !=0 && postalCode.length != 0 && supplierId.length != 0 && tinNumber.length != 0){
 		
 		    $('div#orderSpinn').html('<img src="/images/supplier_loading.gif" height="50" width="50">');
 		   jQuery.ajax({
@@ -757,10 +757,11 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 								        <select name="stateProvinceGeoId" id="editcontactmechform_stateId">
 										
 							   			<#--> <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)>-->
+							   			 <option></option>
 								         <#list stateListJSON as stateAssoc>
 							   					 <option value='${stateAssoc.value}'>${stateAssoc.label}</option>
 										</#list>
-								          <option></option>
+								         
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
 								        </select>
 								      </td>
@@ -859,10 +860,11 @@ if(count != 0 && supplierId.length !=0 && facicontactMechType.length !=0 && faci
 								        <select name="stateProvinceGeoId" id="TFeditcontactmechform_stateId">
 										
 							   		<#-->	 <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryGeoId)> -->
+							   		     <option></option>
 								         <#list stateListJSON as stateAssoc>
 							   					 <option value='${stateAssoc.value}'>${stateAssoc.label}</option>
 										</#list>
-								          <option></option>
+								          
 								      		<#--${screens.render("component://common/widget/CommonScreens.xml#states")}-->
 								        </select>
 								      </td>
