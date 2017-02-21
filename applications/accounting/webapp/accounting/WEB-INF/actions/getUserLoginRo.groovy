@@ -40,5 +40,3 @@ else{
 		}
 	}
 }
-
-Debug.log("parameters.ownerPartyId========userlogin======="+parameters.ownerPartyId);
