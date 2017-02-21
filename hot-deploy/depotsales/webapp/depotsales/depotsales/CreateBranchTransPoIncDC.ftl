@@ -226,6 +226,13 @@
 		}
 	}
 	
+	 function deleteProductRow(rowIndex){
+    	var romoveData = mainGrid.getData(); 
+		romoveData.splice(rowIndex, 1);
+		mainGrid.setData(romoveData);
+		mainGrid.render();
+    }
+	
 	function processPOEntryInternal(formName, action) {
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
 			return false;		
@@ -699,7 +706,14 @@
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
+ 			
 		];
+		
+		columns.push({id:"button", name:"Remove", field:"button", width:80, minWidth:80, cssClass:"cell-title", focusable :false,
+			formatter: function (row, cell, id, def, datactx) { 
+					return '<a href="#" class="button" onclick="deleteProductRow('+row+');" value="Delete">Remove</a>'; 
+			} 
+		});
             
 		var options = {
 			editable: true,		

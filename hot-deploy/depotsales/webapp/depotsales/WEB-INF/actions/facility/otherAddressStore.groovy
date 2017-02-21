@@ -73,6 +73,7 @@ inputCtx.put("userLogin",userLogin);
 inputCtx.put("facilityName", facilityName);
 inputCtx.put("facilityTypeId", facicontactMechType);
 inputCtx.put("ownerPartyId", supplierId);
+inputCtx.put("openDate", UtilDateTime.nowTimestamp());
 try{
  resultCtx = dispatcher.runSync("createFacility", inputCtx);
  
@@ -114,7 +115,7 @@ else{
  resultEditedFacilityPostalAddress = dispatcher.runSync("updateFacilityPostalAddressDetails", FacilityPostalAddress);
  
  
- Debug.log("parameters.facilityId==========="+parameters.facilityId);
+ //Debug.log("parameters.facilityId==========="+parameters.facilityId);
  
  if(parameters.facilityId){
 	 facilityUpdate = [:];

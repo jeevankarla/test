@@ -3719,7 +3719,7 @@ public static Map<String,Object> getRemainingOrderItems(DispatchContext dctx, Ma
 				condList.clear();
 				condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
 				condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, toOrderItemSeqId));
-				List<GenericValue> orderItemList = delegator.findList("orderItem", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("quantity"), null, null, false);
+				List<GenericValue> orderItemList = delegator.findList("OrderItem", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("quantity"), null, null, false);
 
 				
 				 GenericValue orderItemListValue = EntityUtil.getFirst(orderItemList);
