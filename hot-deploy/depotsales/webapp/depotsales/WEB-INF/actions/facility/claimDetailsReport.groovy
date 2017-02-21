@@ -134,8 +134,20 @@ if(UtilValidate.isNotEmpty(geoId)){
 	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
 }
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-invoices = delegator.find("Invoice",condition,null,UtilMisc.toSet("invoiceId"),null,null);
-invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoices, "invoiceId", true);
+invoices = delegator.findList("Invoice",condition,UtilMisc.toSet("invoiceId"),null,null,false);
+invoiceIds=EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
+
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,invoiceIds));
+conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+tenPerInvoicedsList = delegator.findList("InvoiceItem",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
+tenPerinvoiceIds=EntityUtil.getFieldListFromEntityList(tenPerInvoicedsList, "invoiceId", true);
+
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerinvoiceIds));
+invoices = EntityUtil.filterByCondition(invoices, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
+invoiceIds=EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
+
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,invoiceIds));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.IN,["TEN_PERCENT_SUBSIDY","INV_FPROD_ITEM"]));
@@ -215,7 +227,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 }
 			 BigDecimal value= BigDecimal.ZERO;
 			 conditionList.clear();
-			 conditionList.add(EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"ADDITIONAL_CHARGES"));
+			 conditionList.add(EntityCondition.makeCondition("parentTypeId",EntityOperator.IN,UtilMisc.toList("ADDITIONAL_CHARGES","DISCOUNTS")));
 			 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			 invoiceItemSubsidyDetails = delegator.findList("InvoiceItemType",condition, null, null, null, false );
 			 invoiceItemTypeIdList= EntityUtil.getFieldListFromEntityList(invoiceItemSubsidyDetails,"invoiceItemTypeId", true);
@@ -244,24 +256,26 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 //temMap.put("quantity", df.format(quantity.setScale(0, 0)));
 			 //value=eachInvoiceItem.get("itemValue");
 			 
+			 invoiceItemTypeIdList.remove("ENTRY_TAX");
+			 invoiceItemTypeIdList.remove("TEN_PERCENT_SUBSIDY");
 			 BigDecimal serviceCharg= BigDecimal.ZERO;
 			 conditionList.clear();
-			 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
-			 conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
+			 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.IN,invoiceItemTypeIdList));
+			 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,invoiceItemSeqId),EntityOperator.OR,EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS,invoiceItemSeqId)));
 			 invoiceSubsidyDetails = EntityUtil.filterByCondition(invoiceSubsidyDetails1, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
-			 invoiceSubsidyDetails= EntityUtil.getFirst(invoiceSubsidyDetails);
-			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetails) && (invoiceSubsidyDetails.amount)){
-				 subsidyAmt= (invoiceSubsidyDetails.amount)*(-1);
-				 amount= (invoiceSubsidyDetails.amount)*(-1);
+			 if(UtilValidate.isNotEmpty(invoiceSubsidyDetails)){
+				 for(invoiceSubsidyDetail in invoiceSubsidyDetails){
+					 value=value.add((invoiceSubsidyDetail.itemValue));
+				 }
 				 conditionList.clear();
 				 conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoiceId));
-				 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId",EntityOperator.EQUALS,invoiceSubsidyDetails.invoiceItemSeqId));
+				 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId",EntityOperator.EQUALS,invoiceSubsidyDetail2.invoiceItemSeqId));
 				 orderadjsmentBillings = delegator.findList("OrderAdjustmentBilling",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
 				 orderadjsmentBilling= EntityUtil.getFirst(orderadjsmentBillings);
 				 if(orderadjsmentBilling){
 					 quantity=orderadjsmentBilling.quantity
-					 value=subsidyAmt*(10);
 				 }
+				 subsidyAmt=value.multiply(0.1);
 			 }
 			 temMap.put("subsidyAmt", subsidyAmt.setScale(0, rounding));
 			 temMap.put("quantity", (quantity).setScale(2, rounding));
@@ -315,13 +329,13 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 }
 totalQty=(totalQty).setScale(2, rounding);
 totalsMap.put("quantity", totalQty);
-totalvalue=(totalvalue).setScale(2, rounding);
+totalvalue=(totalvalue).setScale(0, rounding);
 totalsMap.put("value", totalvalue);
-totalsubsidyAmt=(totalsubsidyAmt).setScale(2, rounding);
+totalsubsidyAmt=(totalsubsidyAmt).setScale(0, rounding);
 totalsMap.put("subsidyAmt", totalsubsidyAmt);
-totalserviceCharg= (totalserviceCharg).setScale(2, rounding);
+totalserviceCharg= (totalserviceCharg).setScale(0, rounding);
 totalsMap.put("serviceCharg", totalserviceCharg);
-totalclaimTotal= (totalclaimTotal).setScale(2, rounding);
+totalclaimTotal= (totalclaimTotal).setScale(0, rounding);
 totalsMap.put("claimTotal", totalclaimTotal);
 context.totalsMap=totalsMap; 
 context.totalsubsidyAmt=totalsubsidyAmt;
