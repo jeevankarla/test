@@ -312,8 +312,7 @@ for(int i=0;i < Invoice.size();i++){
 	scheme = "MGP Scheme";
 	if(UtilValidate.isNotEmpty(subsidyItems)){
 		subsidyItems.each{ eachSubsidy->
-			subsidyAmount = subsidyAmount+eachSubsidy.amount;
-			
+			subsidyAmount = subsidyAmount+eachSubsidy.amount;	
 		}
 		subsidyQty = qty;
 		scheme = "MGP 10% Scheme";

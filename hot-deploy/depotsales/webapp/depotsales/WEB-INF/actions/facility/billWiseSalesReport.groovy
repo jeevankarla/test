@@ -369,8 +369,6 @@ for(int i=0;i < Invoice.size();i++){
 	
 	invoiceDetailMap.put("ro",roName);
 	
-
-	
 	finalList.add(invoiceDetailMap);
 }	
 context.totQty=totQty;
