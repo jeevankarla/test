@@ -218,11 +218,12 @@ OrderHeader = delegator.findList("OrderHeader",EntityCondition.makeCondition("or
 
 salesAndPurchaseList = [];
 
+purchaseWiseDetails = [];
 if(invoice){
 
 	for (eachInvoice in invoice) {
 
-
+		
 		invoiceList = delegator.findOne("Invoice",[invoiceId : eachInvoice.invoiceId] , false);
 
 		purposeTypeId = invoiceList.purposeTypeId;
@@ -2269,7 +2270,6 @@ if(invoice){
 
 					//tempMap.put("poInvoiceAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
 
-					tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
 
 					//tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
 
@@ -2303,7 +2303,11 @@ if(invoice){
 				   }
 				   
 				   
+				   
+				   if(!purchaseWiseDetails.contains(poOrderId))
 				   tempMap.put("purTax", purTax);
+				   else
+				   tempMap.put("purTax", "");
 				   
 				   purInvoiceNetAmt = purInvoiceNetAmt+purTax;
 				   
@@ -2330,7 +2334,7 @@ if(invoice){
 						   }
 					   }
 					   
-					   if(dontRepeat.size() == 1)
+					   if(dontRepeat.size() == 1 && !purchaseWiseDetails.contains(poOrderId))
 					   tempMap.put("allAdjPur", allAdjPur);
 					   else
 					   tempMap.put("allAdjPur", "");
@@ -2343,10 +2347,17 @@ if(invoice){
 					   else
 					   tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
 					   
-					   
+					   if(!purchaseWiseDetails.contains(poOrderId))
 					   tempMap.put("purInvoiceNetAmt", purInvoiceNetAmt);
+					   else
+					   tempMap.put("purInvoiceNetAmt", "");
+					   
+					   if(!purchaseWiseDetails.contains(poOrderId))
+					   tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
+					   else
+					   tempMap.put("poInvoiceAmt", "");
 					
-					
+					   purchaseWiseDetails.add(primaryOrderId);
 
 				}
 
