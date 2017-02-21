@@ -1484,6 +1484,12 @@
         <response name="success" type="view" value="EditProcProducer"/>
         <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
+    <request-map uri="updatePartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyIdentification"/>
+        <response name="success"  type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
+    </request-map>
     <request-map uri="updateWeaverRelationship">
         <security https="true" auth="true"/>
         <event type="service" invoke="updatePartyRelationship"/>
@@ -1558,6 +1564,12 @@
     <request-map uri="EditProcProducer">
             <security https="true" auth="true"/>
             <response name="success" type="view" value="EditProcProducer"/>
+    </request-map>
+    <request-map uri="deletePartyIdentification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deletePartyIdentification"/>
+        <response name="success"  type="view" value="EditProcProducer"/>
+        <response name="error" type="view" value="EditProcProducer"/>
     </request-map>
     
      <request-map uri="orderPayment">
