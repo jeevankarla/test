@@ -95,16 +95,18 @@ try{
 
 inputNCtx = [:];
 inputNCtx.put("userLogin",userLogin);
-inputNCtx.put("contactMechId", NcontactMechId);
+//inputNCtx.put("contactMechId", NcontactMechId);
 inputNCtx.put("facilityId", facilityId);
+inputNCtx.put("closedDate", UtilDateTime.nowTimestamp());
+
 //inputNCtx.put("contactMechTypeId", "POSTAL_ADDRESS");
 //inputNCtx.put("extension", "REMOVED");
 
 
 try{
- resultNCtx = dispatcher.runSync("updateFacilityContactMechDetail", inputNCtx);
+ resultNCtx = dispatcher.runSync("updateFacility", inputNCtx);
  
- Debug.log("resultNCtx==================="+resultNCtx);
+ //Debug.log("resultNCtx==================="+resultNCtx);
  
  
 }catch(Exception e){}

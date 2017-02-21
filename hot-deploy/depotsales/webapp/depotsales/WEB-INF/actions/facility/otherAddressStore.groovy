@@ -73,7 +73,7 @@ inputCtx.put("userLogin",userLogin);
 inputCtx.put("facilityName", facilityName);
 inputCtx.put("facilityTypeId", facicontactMechType);
 inputCtx.put("ownerPartyId", supplierId);
-inputCtx.put("openDate", UtilDateTime.nowTimestamp());
+inputCtx.put("openedDate", UtilDateTime.nowTimestamp());
 try{
  resultCtx = dispatcher.runSync("createFacility", inputCtx);
  

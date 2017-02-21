@@ -1,10 +1,4 @@
 
-
-
-
-
-
-
 import org.ofbiz.base.util.UtilDateTime;
 
 import java.sql.Timestamp;
@@ -38,16 +32,19 @@ supplierId = parameters.supplierId;
 
 
 
-
-
-
+daystart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 
 
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , supplierId));
-conditionList.add(EntityCondition.makeCondition("closedReason", EntityOperator.EQUALS , null));
+conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.GREATER_THAN_EQUAL_TO ,daystart));
+conditionList.add(EntityCondition.makeCondition("closedDate", EntityOperator.EQUALS ,null));
+
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 FacilityList = delegator.findList("Facility", condition, null, null, null, false);
+
+
+//Debug.log("FacilityList=============="+FacilityList);
 
 /*conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
