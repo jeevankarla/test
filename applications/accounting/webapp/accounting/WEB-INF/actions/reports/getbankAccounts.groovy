@@ -46,7 +46,7 @@ if(UtilValidate.isNotEmpty(context.flag) && context.flag == "Y"){
 	condList = [];
 	condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS,"INTERUNIT_ACCOUNT"));
 	//condList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
-	if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+	if(UtilValidate.isNotEmpty(parameters.ownerPartyId) &&  parameters.ownerPartyId!=null){
 		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 	}
 	interFinancialAccntList = delegator.findList("FinAccount",EntityCondition.makeCondition(condList, EntityOperator.AND), null, UtilMisc.toList("finAccountId"), null, false);
@@ -63,8 +63,8 @@ if(UtilValidate.isNotEmpty(context.flag) && context.flag == "Y"){
 			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"),EntityOperator.OR,
 				EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "CASH")));
 			}
-			conditionList.add( EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds));
-			if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+			//conditionList.add( EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds));
+			if(UtilValidate.isNotEmpty(parameters.ownerPartyId) &&  parameters.ownerPartyId!=null){
 				conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 			}
 			List<String> orderBy = UtilMisc.toList("finAccountName");
