@@ -743,11 +743,8 @@ under the License.
             </drop-down>
         </field>
          <field name="contraFinAccountId"  title="To Financial Account"  >
-            <drop-down>
-                <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
-                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
-                    <entity-order-by field-name="finAccountName"/>
-                </entity-options>
+            <drop-down allow-empty="true">
+            	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="contraRefNum" title="Instrument Number"><text></text></field>         
