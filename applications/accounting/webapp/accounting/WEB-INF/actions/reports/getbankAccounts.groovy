@@ -37,7 +37,7 @@ if(UtilValidate.isNotEmpty(context.flag) && context.flag == "Y"){
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS,"BANK_ACCOUNT"));
 	//conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
-	if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+	if(UtilValidate.isNotEmpty(parameters.ownerPartyId) &&  parameters.ownerPartyId!=null){
 		conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 	}
 	financialAccntList = delegator.findList("FinAccount",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("finAccountId"), null, false);
