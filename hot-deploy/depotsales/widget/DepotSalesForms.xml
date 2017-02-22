@@ -1149,12 +1149,7 @@
 			<option key="BANK" description="Bank Voucher" ></option>
 			</drop-down>
 		</field> -->
-		<field name="partyIdFrom" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;SALES_INVOICE&quot;)">
-              <drop-down allow-empty="true">
-                  <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
-              </drop-down>
-        </field>
-        <field name="partyId" title="${uiLabelMap.Branch}" use-when="(&quot;${invoiceTypeId}&quot;==&quot;PURCHASE_INVOICE&quot;)">
+		<field name="costCenterId" title="${uiLabelMap.Branch}" >
               <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>

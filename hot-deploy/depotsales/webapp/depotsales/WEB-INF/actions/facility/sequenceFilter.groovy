@@ -50,21 +50,21 @@ if(UtilValidate.isNotEmpty(parameters.schemeCategory)){
 	}
 }
 if(parameters.invoiceTypeId == "SALES_INVOICE"){
-	if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
+	if(UtilValidate.isNotEmpty(parameters.costCenterId)){
 		parameters.tempPartyIdFrom = parameters.partyIdFrom
 		condList = [];
-		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS,parameters.partyIdFrom));
+		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS,parameters.costCenterId));
 		condList.add(EntityCondition.makeCondition("partyClassificationGroupId" ,EntityOperator.EQUALS,"REGIONAL_OFFICE"));
 		PartyClassification = delegator.findList("PartyClassification",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
 		if(UtilValidate.isNotEmpty(PartyClassification)){
 			condList.clear();
-			condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS,parameters.partyIdFrom));
+			condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS,parameters.costCenterId));
 			condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" ,EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
 			PartyRelationship = delegator.findList("PartyRelationship",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
 			if(UtilValidate.isNotEmpty(PartyRelationship)){
 				partyIdList = EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-				parameters.partyIdFrom = partyIdList;
-				parameters.partyIdFrom_op = "in";
+				parameters.costCenterId = partyIdList;
+				parameters.costCenterId_op = "in";
 			}
 			
 		}
@@ -83,22 +83,22 @@ if(parameters.invoiceTypeId == "SALES_INVOICE"){
 
 
 if(parameters.invoiceTypeId == "PURCHASE_INVOICE"){
-	if(UtilValidate.isNotEmpty(parameters.partyId)){
+	if(UtilValidate.isNotEmpty(parameters.costCenterId)){
 		partyIdFrom = parameters.partyId;
 		parameters.tempPartyId = partyIdFrom;
 		condList = [];
-		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS,partyIdFrom));
+		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.EQUALS,parameters.costCenterId));
 		condList.add(EntityCondition.makeCondition("partyClassificationGroupId" ,EntityOperator.EQUALS,"REGIONAL_OFFICE"));
 		PartyClassification = delegator.findList("PartyClassification",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
 		if(UtilValidate.isNotEmpty(PartyClassification)){
 			condList.clear();
-			condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS,partyIdFrom));
+			condList.add(EntityCondition.makeCondition("partyIdFrom" ,EntityOperator.EQUALS,parameters.costCenterId));
 			condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" ,EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
 			PartyRelationship = delegator.findList("PartyRelationship",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
 			if(UtilValidate.isNotEmpty(PartyRelationship)){
 				partyIdList = EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-				parameters.partyId = partyIdList;
-				parameters.partyId_op = "in";
+				parameters.costCenterId = partyIdList;
+				parameters.costCenterId_op = "in";
 				
 			}
 			

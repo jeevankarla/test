@@ -3092,7 +3092,7 @@
 					<field-map field-name="orderBy" value="createdStamp DESC" />
 				</service>
 				<!-- <set field="parameters.invoiceId" value="" /> -->				
-				<set field="parameters.costCenterId" value="${parameters.tempPartyIdFrom}" />				
+				<set field="parameters.costCenterId" value="${parameters.costCenterId}" />				
 				<set field="invoices" from-field="result.listIt" />
 				<set field="tabButtonItem" value="salesInvoice" />
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
@@ -3227,7 +3227,7 @@
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
 				<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" />
 				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
-				<set field="parameters.costCenterId" value="${parameters.tempPartyIdFrom}" />
+				<set field="parameters.costCenterId" value="${parameters.costCenterId}" />	
 				<script
 					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy" />
 			</actions>
@@ -3353,7 +3353,7 @@
 					
 					<field-map field-name="orderBy" value="createdStamp DESC" />
 				</service> -->
-				<set field="parameters.costCenterId" value="${parameters.tempPartyId}" />
+				<set field="parameters.costCenterId" value="${parameters.costCenterId}" />	
 				<set field="invoices" from-field="result.listIt" />
 				<set field="tabButtonItem" value="purchaseinvoice" />
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
@@ -8836,7 +8836,7 @@
 				<set field="tabButtonItem5" value="${parameters.subTabButtonValue}" />
 				<set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}" />
 				<set field="invoiceTypeId" value="${parameters.invoiceTypeId}" />
-				<set field="parameters.costCenterId" value="${parameters.tempPartyId}" />
+				<set field="parameters.costCenterId" value="${parameters.costCenterId}" />	
 				<set field="parameters.partyIdFrom" value="${parameters.tempPartyIdFrom}" />
 				<script
 					location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy" />
