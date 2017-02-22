@@ -268,6 +268,8 @@ under the License.
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getFinAccounts.groovy"/>
             </actions>
             <widgets>
               <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml">

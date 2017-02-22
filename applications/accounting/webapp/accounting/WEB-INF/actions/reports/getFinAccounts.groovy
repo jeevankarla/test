@@ -24,3 +24,14 @@ finAccounts.each{ eachvalue ->
 }
 context.finAccountList = finAccountList;
 context.finAccountIdList = finAccountList;
+
+
+condList.clear();
+condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "CASH"));
+if(UtilValidate.isNotEmpty(parameters.ownerPartyId) && parameters.ownerPartyId!=null){
+	condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+}
+cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+
+cashAccountList = delegator.findList("FinAccount", cond, null, null, null, false);
+context.cashAccountList =cashAccountList; 
