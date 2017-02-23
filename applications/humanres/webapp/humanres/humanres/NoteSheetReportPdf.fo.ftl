@@ -315,7 +315,12 @@ under the License.
                  <fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Kindly approve the above.</fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
-         		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Executive Director(Finance)                              Managing Director</fo:block>
+         		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
+         		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">EXECUTIVE DIRECTOR(FINANCE)               MANAGER/DY.M/AM//SR.OFFICER(F &amp; A)</fo:block>
+         		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
+         		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
+         		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
+         		<fo:block keep-together="always" text-align="center" white-space-collapse="false" font-weight="bold">MANAGING DIRECTOR</fo:block>
 			</fo:block>
 			
 			</fo:flow>
