@@ -312,9 +312,10 @@ under the License.
                  <#else>  
                  	<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">    NET SALARY  :  <#if totalEarnings?has_content><#assign net = netAmt?if_exists /><@ofbizCurrency amount=net?string("#0") /></#if></fo:block>			
                  </#if>
+                 <fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Kindly approve the above.</fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
-         		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Director                              Manager/Deputy Manager Finance</fo:block>
+         		<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">Executive Director(Finance)                              Managing Director</fo:block>
 			</fo:block>
 			
 			</fo:flow>
