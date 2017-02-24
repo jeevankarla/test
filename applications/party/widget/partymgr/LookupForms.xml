@@ -33,9 +33,13 @@ under the License.
         <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find/></field>
         <field name="lastName"  title="${uiLabelMap.PartyLastName}"><text-find/></field>
         <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find/></field>
-        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroup}"><drop-down allow-empty="true">
-        <entity-options description="${description}" entity-name="PartyClassificationGroup"></entity-options>
-        </drop-down></field>
+        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroup}">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${description}" entity-name="PartyClassificationGroup">
+        			<entity-constraint name="partyClassificationTypeId" operator="equals" value="CUST_CLASSIFICATION"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
         <field name="invoiceTypeId"><hidden/></field>
         <field name="roleTypeId" use-when="!defaultRoleTypeList">
         	<drop-down allow-empty="false">
