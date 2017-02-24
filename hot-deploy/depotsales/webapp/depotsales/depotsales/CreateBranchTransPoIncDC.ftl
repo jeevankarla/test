@@ -97,6 +97,55 @@
 		showItemAdjustmentsAndTaxes(data[row], row);
 	}
 	
+	function populateProductPrice(){
+	
+	for (var rowCount=0; rowCount < data.length; ++rowCount)
+		{ 
+		
+		alert("vamsi");
+		
+		var supplierId = $("#supplierId").val();
+		
+		var facilityId = $("#facilityId").val();
+		
+		var productId = data[rowCount]["cProductId"];
+		
+		alert("productId==========="+productId);
+		
+	
+	    var addressFaciMap = {"supplierId":supplierId,"facilityId":facilityId,"productId":productId};
+	  
+	       jQuery.ajax({
+                url: 'getProductPrice',
+                type: 'POST',
+                data: addressFaciMap,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						var lastPrice = result["lastPrice"];
+					    
+					    alert(lastPrice);
+					    
+					     if(orderFaciData.lenght != 0){
+					     
+					     }
+					    
+               		}
+               	}							
+		}); 
+		
+		
+		
+		data[rowCount]["quantity"] = 10;
+		
+		
+	      
+	      }
+	
+	}
+	
 	function calculatePOValue(){
 		
 	var basicAmount = 0;

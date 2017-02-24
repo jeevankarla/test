@@ -131,9 +131,9 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 		roleCondition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"SUPPLIER")],EntityOperator.AND);
 		orderRole=EntityUtil.filterByCondition(orderRoles,roleCondition);
 		supplierRole = EntityUtil.getFirst(orderRole);
-		partyName = PartyHelper.getPartyName(delegator, supplierRole.partyId, false);
-		orderInfoDetail.putAt("supplierId", supplierRole.partyId);
-		orderInfoDetail.putAt("supplierName", partyName);
+		//partyName = PartyHelper.getPartyName(delegator, supplierRole.partyId, false);
+		//orderInfoDetail.putAt("supplierId", supplierRole.partyId);
+		//orderInfoDetail.putAt("supplierName", partyName);
 		
 		vendorCond=EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,"BILL_FROM_VENDOR")],EntityOperator.AND);
 		vendOrderRole=EntityUtil.filterByCondition(orderRoles,vendorCond);
