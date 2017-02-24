@@ -186,6 +186,7 @@ if("Y".equals(isFormSubmitted)){
 		conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
 		conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
 	}
+	conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "BRANCH_PURCHASE"));
 	condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	orderHeaderAndRoles = delegator.findList("OrderHeaderAndRoles", condition,UtilMisc.toSet("orderId"), null, null, false);
 	branchPoIds=EntityUtil.getFieldListFromEntityList(orderHeaderAndRoles, "orderId", true);
