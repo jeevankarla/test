@@ -217,6 +217,9 @@ function populateData(){
                 onStepChanging: function (event, currentIndex, newIndex)
                 {	
                 	if(currentIndex == 0 && newIndex == 1){
+                	
+                	     populateProductPrice();
+                	
                 	    var productStoreId = $("#productStoreId").val();  
 	            	    if( (productStoreId).length < 1 ) {
 					    	$('#productStoreId').css('background', 'yellow'); 
@@ -357,9 +360,51 @@ function populateData(){
 			
 			//$(this.target).find('input').autocomplete();
 			
-			$("#supplierId").autocomplete({ source: supplierJSON }).keydown(function(e){
+			//$("#supplierId").autocomplete({ source: supplierJSON }).keydown(function(e){
 				
-			});	
+			//});	
+			
+			
+			$("#supplierId").autocomplete({					
+						source:  supplierJSON,
+						select: function(event, ui) {
+					     var selectedValue = ui.item.value;
+					     //alert(selectedValue);
+		    var dataJson = {"supplierId": selectedValue};
+					      
+			   jQuery.ajax({
+                url: 'getSupplierFacilities',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error While getting Details");
+					}else{
+					 var  facilityAddressJSON = result["facilityAddressJSON"];
+						
+                       if(facilityAddressJSON.length != 0)
+                       {
+		            	 $("#facilityId").autocomplete({					
+							source:  facilityAddressJSON,
+							select: function(event, ui) {
+						     var selectedValue = ui.item.value;
+						     var selectedName = ui.item.label;
+						     $("#facilityName").html("<h4>"+selectedName+"</h4>");	
+							  }
+					     });
+		            	 
+					   }
+               		}
+               	}					        
+					        
+		});
+								      
+					}
+					});
+					   
+			
+			
 			$( "input[name*='paymentTermTypeId']" ).autocomplete({ source: paymentTermsJSON });
 			$( "input[name*='deliveryTermTypeId']" ).autocomplete({ source: deliveryTermsJSON });
 			$('#ui-datepicker-div').css('clip', 'auto');
@@ -625,7 +670,7 @@ function populateData(){
 					    		
 					    	<#else>
 					    		<input type="text" name="supplierId" id="supplierId" size="18" maxlength="60"  onblur= 'javascript:dispSuppName(this);'/>
-					    		<span class="tooltip" id="supplierName"></span>
+					    		<span  id="supplierName"></span>
 					    	</#if>
 					    	
 					    	<#if orderId?exists && orderInfo.get("supplierGeoId")?exists>
@@ -634,6 +679,13 @@ function populateData(){
 					      	<#if orderId?exists && orderInfo.get("branchGeoId")?exists>
 					    		<input type="hidden" name="branchGeoId" id="branchGeoId" size="18" maxlength="60" value="${orderInfo.get("branchGeoId")}" readonly/>
 					    	</#if>
+					    </td>
+					</tr>
+					<tr>
+					    <td class="label">Facility : </td>
+					    <td>
+					     <input type="text" name="facilityId" id="facilityId" size="18" maxlength="60" />
+					      <span id="facilityName"></span>
 					    </td>
 					</tr>
 					<tr>

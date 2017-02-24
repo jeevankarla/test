@@ -413,6 +413,7 @@
 				       	
 			  			return false;  
 			  		}
+			  		/*
 					else if(indententryinit.suplierPartyId.value.length < 1){
 			  			alert("Supplier is Mandatory");
 			  			$('#suplierPartyId').css('background', 'red'); 
@@ -424,7 +425,7 @@
 				       	
 			  			return false;  
 			  		}
-	    			
+	    			 */
 	    			if(indententryinit.taxTypeApplicable.value.length < 1){
 			  			$('#taxTypeApplicable').val("VAT_SALE");
 			  		}
@@ -1387,7 +1388,7 @@ function fillPartyQuota(partyId){
 						        	</#if>
 				               	</tr>	               
 				               	-->      	
-				               	<tr>
+				             <#--  	<tr>
 					       			<td>&nbsp;</td>
 					       			<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
 						          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -1395,7 +1396,7 @@ function fillPartyQuota(partyId){
 								  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${suplierPartyId?if_exists}"/>  
 							          		<td valign='middle'>
 							            		<div><font color="green">
-							               			${suplierPartyId}  [${suplierPartyName}]  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+							               			${suplierPartyId}  [${suplierPartyName}]  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>           
 							            		</div>
 							          		</td>       
 							          	</#if>
@@ -1404,13 +1405,13 @@ function fillPartyQuota(partyId){
 								  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${parameters.suplierPartyId?if_exists}"/>  
 							          		<td valign='middle'>
 							            		<div><font color="green">
-							               			${parameters.suplierPartyId} [${suppPartyName?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
+							               			${parameters.suplierPartyId} [${suppPartyName?if_exists}] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>            
 							            		</div>
 							          		</td>       
 							          	<#else>
 							          		<td valign='middle'>
 							          			<input type="text" name="suplierPartyId" id="suplierPartyId"  />
-							          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
+							          			<span class="tooltip">Input Supplier and Press Enter</span>
 							          			<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
 							          		</td>
 							          		
@@ -1425,7 +1426,16 @@ function fillPartyQuota(partyId){
 									</#if>
 									
 									
+				               	</tr>-->
+				               	<tr>
+				               	<td>&nbsp;</td>
+					       			<td align='left' valign='middle' nowrap="nowrap"></td>
+				               	<td valign='left'>
+									<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
+									</td>
 				               	</tr>
+				               	
+				               	
 				               	<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>
 								<tr>
 								</tr>

@@ -82,7 +82,7 @@ under the License.
           </tr>
            <tr>
                <td class="label">${uiLabelMap.RoleType}</td>
-	            <td>
+	           <#-- <td>
 	             <#assign roleType = delegator.findByAnd("RoleType", {"roleTypeId" : "SUPPLIER"})/>
 	              <select name="roleTypeId" id="roleTypeId">
 	                <#if roleType?has_content>
@@ -90,6 +90,12 @@ under the License.
 		                	<option  value="${type.roleTypeId}">${type.description}</option>
 		                </#list>
 	                </#if>
+	             </select>
+	           </td>-->
+	            <td>
+	              <select name="roleTypeId" id="roleTypeId">
+		            <option  value="SUPPLIER">SUPPLIER</option>
+		            <option  value="DYS_CMLS_SUPPLIER">DC SUPPLIER</option>
 	             </select>
 	           </td>
           </tr>

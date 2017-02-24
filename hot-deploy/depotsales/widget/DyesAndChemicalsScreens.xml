@@ -2754,6 +2754,7 @@
 				<set field="changeFlag" value="PurchaseOrder" />
 				<set field="parameters.POId" from-field="orderId" />
 				<set field="parameters.changeFlag" value="PurchaseOrder" />
+				<set field="parameters.screenFlag" value="DyesIndent" />
 				 <script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
 				<script

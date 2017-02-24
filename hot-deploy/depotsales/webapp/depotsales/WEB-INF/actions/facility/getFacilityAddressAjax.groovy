@@ -37,7 +37,7 @@ daystart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 
 conditionList =[];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS , supplierId));
-conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.GREATER_THAN_EQUAL_TO ,daystart));
+conditionList.add(EntityCondition.makeCondition("openedDate", EntityOperator.LESS_THAN_EQUAL_TO ,daystart));
 conditionList.add(EntityCondition.makeCondition("closedDate", EntityOperator.EQUALS ,null));
 
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
