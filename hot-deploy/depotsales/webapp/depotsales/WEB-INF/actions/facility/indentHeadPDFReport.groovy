@@ -1846,6 +1846,8 @@ if(invoice){
 					tempMap.put("invoiceId", eachItem.invoiceId);
 				}
 
+				tempMap.put("actualSaleInvoiceId", eachItem.invoiceId);
+				
 				tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoice.invoiceDate,"dd-MM-yyyy"));
 
 				//  invoAmt = invoAmt+(eachItem.amount*eachItem.quantity);
@@ -2192,6 +2194,7 @@ if(invoice){
 				cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				poInvoices = delegator.findList("Invoice", cond, null, null, null, false);
 
+				tempMap.put("shipmentId",shipmentIdDe);
 
 				/*conditionList.clear();
 				 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poOrderId));
@@ -2222,6 +2225,7 @@ if(invoice){
 				////Debug.log("poInvoiceId============="+poInvoiceId);
 				////Debug.log("poInvoiceItemSeqId============="+poInvoiceItemSeqId);
 
+				tempMap.put("actualPurInvoiceId", poInvoiceId);
 
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
