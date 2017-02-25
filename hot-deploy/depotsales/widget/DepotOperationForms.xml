@@ -500,9 +500,16 @@
          <field name="raiseInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(salesButton.equals(&quot;N&quot;))">
           		 <display description="${salesNo}"></display>   
           </field>
-            <field name="forIssuance" title="Inssuance" widget-style="buttontext" use-when="(orderShipmentId.equals(&quot;N&quot;))&amp;&amp;(orderStatusId.equals(&quot;ORDER_APPROVED&quot;))">
+          <!--   <field name="forIssuance" title="Inssuance" widget-style="buttontext" use-when="(orderShipmentId.equals(&quot;N&quot;))&amp;&amp;(orderStatusId.equals(&quot;ORDER_APPROVED&quot;))">
            <hyperlink target-type="plain" description="Issue Indent" target="javascript:issueIndentItems('${orderId}','${partyId}');"></hyperlink>
-        </field>
+        </field> -->
+        
+         <field name="forIssuance" title="Status" widget-style="buttontext" use-when="(orderShipmentId.equals(&quot;N&quot;))&amp;&amp;(orderStatusId.equals(&quot;ORDER_APPROVED&quot;))" >
+            <hyperlink target="processIndentItemIssuance" description="Issue Indent" target-window="_blank"> 
+                <parameter param-name="orderId"/>
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field> 
           
           <field name="cancelOrder" title="Cancel" widget-style="buttontext" use-when="((salesButton.equals(&quot;Y&quot;)))">
            <hyperlink target-type="plain" description="Cancel Order" target="javascript:cancelDepotSaleOrderCaution('${orderId}','${partyId}','${inventoryItemId}','${facilityId}');"></hyperlink>

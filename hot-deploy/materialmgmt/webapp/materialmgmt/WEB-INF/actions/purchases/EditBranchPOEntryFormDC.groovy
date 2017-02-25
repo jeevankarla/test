@@ -523,7 +523,7 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 		
 		Debug.log("usedQuantity =================="+usedQuantity);
 		
-		if(usedQuantity != eachItem.quantity){
+		if(usedQuantity == 0){
 		
 		amount = eachItem.quantity*eachItem.unitPrice;
 		if(!amount){

@@ -1064,7 +1064,7 @@
     <request-map uri="createPOByOrderDC">
         <security https="true" auth="true"/>
         <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
-        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="CreatePOByOrder" global-transaction="true"/>
+        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="CreatePOByOrderDC" global-transaction="true"/>
          <response name="success"  type="request-redirect-noparam" value="FindIndentsDC"></response>
         <response name="error" type="view" value="FindIndentsDC"/>
     </request-map>

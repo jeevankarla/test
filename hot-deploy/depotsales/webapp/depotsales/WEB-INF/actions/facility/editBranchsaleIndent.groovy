@@ -142,7 +142,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	effectiveDate = parameters.effectiveDate;
 	changeFlag=parameters.changeFlag;
 	
-	////Debug.log("changeFlag====1454121545============"+changeFlag);
+	//Debug.log("changeFlag====1454121545============"+changeFlag);
 	
 	
 	subscriptionProdList = [];
@@ -155,7 +155,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	
 	tallyRefNumber = orderHeader.get("tallyRefNo");
 	
-	////Debug.log("tallyReferenceNo====1454121545============"+tallyReferenceNo);
+	//Debug.log("tallyReferenceNo====1454121545============"+tallyReferenceNo);
 	
 	context.tallyRefNumber=tallyRefNumber;
 	
@@ -193,7 +193,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		}
 	}
 	
-	////Debug.log("tallyReferenceNo====3232==========="+tallyReferenceNo);
+	//Debug.log("tallyReferenceNo====3232==========="+tallyReferenceNo);
 	context.suplierPartyId=suplierPartyId;
 	context.suplierPartyName=suppPartyName;
 	parameters.suplierPartyId=suplierPartyId;
@@ -245,6 +245,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	}
 	
 	
+	//Debug.log("orderTaxType====3232==========="+orderTaxType);
+	
 	JSONArray orderItemsJSON = new JSONArray();
 	JSONObject usedQuotaForExistingProd = new JSONObject();
 	
@@ -274,12 +276,20 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		
 		orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId), null, UtilMisc.toList("-orderItemSeqId"), null, false);
 		
+		//Debug.log("orderItems====3232==========="+orderItems);
+		
+		
 		
 		productIds = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
+		
+		//Debug.log("productIds====3232==========="+productIds);
+		
+		
 		productCategorySelect = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition("productId", EntityOperator.IN, productIds), null, null, null, false);
 		productCategorySelectIds = EntityUtil.getFieldListFromEntityList(productCategorySelect, "productCategoryId", true);
 		
 		
+		//Debug.log("productCategorySelectIds====3232==========="+productCategorySelectIds);
 		List condsList = [];
 		condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productIds[0]));
 		condsList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "YARN_SALE"));
@@ -289,9 +299,13 @@ import org.ofbiz.party.contact.ContactMechWorker;
 */	 
 		 prodCategoryMembers = delegator.findList("ProductCategoryAndMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("primaryParentCategoryId"), null, null, true);
 		  
+		 //Debug.log("prodCategoryMembers====3232==========="+prodCategoryMembers);
+		 
 		  
 		  prodCategoryMember = EntityUtil.getFirst(prodCategoryMembers);
 		  productCategoryId = (String)prodCategoryMember.get("primaryParentCategoryId");
+		  
+		  //Debug.log("productCategoryId====3232==========="+productCategoryId);
 		  
 		
 		JSONArray productCategoryJSON = new JSONArray();
@@ -300,6 +314,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		productCategorySelectIds.each{eachCatId ->
 			productCategoryJSON.add(eachCatId);
 		}
+		
+		//Debug.log("productCategoryJSON====3232==========="+productCategoryJSON);
 		
 		
 		if(category.contains("SILK")){
@@ -321,6 +337,9 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	
 		orderAdjustmentsList = delegator.findList("OrderAdjustment", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, updateOrderId), null, null, null, false);
 		
+		//Debug.log("orderAdjustmentsList====3232==========="+orderAdjustmentsList);
+		
+		
 		//Quotas handling
 		
 		productCategoryQuotasMap = [:];
@@ -341,6 +360,9 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		
 		orderAdjList = delegator.findList("OrderItemAttribute", EntityCondition.makeCondition(cList,EntityOperator.AND), null, null, null, true);
 		orderItemDtl = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(cList,EntityOperator.AND), null, null, null, true);
+		
+		//Debug.log("orderItemDtl====3232==========="+orderItemDtl);
+		
 		  
 		JSONObject OrderItemUIJSON = new JSONObject();
 		
@@ -569,7 +591,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 						
 				newObj.put("orderAdjustmentsList", orderAdjustmentsList);
 				
-			////Debug.log("orderAdjustmentsList===================="+orderAdjustmentsList);
+			//Debug.log("orderAdjustmentsList===================="+orderAdjustmentsList);
 			
 			
 			*/
@@ -640,7 +662,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	
 			taxList = EntityUtil.filterByCondition(orderAdjustmentsList, expr);
 			
-			////Debug.log("taxList============="+taxList);
+			//Debug.log("taxList============="+taxList);
 			
 			
 			for(i=0; i<taxList.size(); i++){
@@ -693,7 +715,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			newObj.put("taxValueMap", taxValueMap);
 			
 			
-			//////Debug.log("resultCtx=============="+resultCtx);
+			////Debug.log("resultCtx=============="+resultCtx);
 			
 			
 			List orderAdjustmentsList = [];
@@ -749,7 +771,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		
 	}
 	
-	////Debug.log("tallyReferenceNo=================="+tallyReferenceNo);
+	//Debug.log("tallyReferenceNo=================="+tallyReferenceNo);
 	context.dataJSON = orderItemsJSON;
 	context.usedQuotaForExistingProd = usedQuotaForExistingProd;
 	context.partyUsedQuotaJSON = partyUsedQuotaJSON;
