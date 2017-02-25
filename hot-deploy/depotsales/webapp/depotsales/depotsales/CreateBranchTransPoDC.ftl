@@ -218,7 +218,7 @@ function populateData(){
                 {	
                 	if(currentIndex == 0 && newIndex == 1){
                 	
-                	     populateProductPrice();
+                	              	        
                 	
                 	    var productStoreId = $("#productStoreId").val();  
 	            	    if( (productStoreId).length < 1 ) {

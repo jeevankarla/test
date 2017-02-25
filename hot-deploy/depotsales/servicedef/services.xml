@@ -750,6 +750,7 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="supplierProdPrice" type="BigDecimal" mode="OUT" optional="false"/>
     </service>
      <service name="getOrderSaleBillQty" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderSaleBillQty">
         <description>Populate Order Details </description>

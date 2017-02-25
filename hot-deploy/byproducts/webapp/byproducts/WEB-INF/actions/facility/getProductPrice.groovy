@@ -55,7 +55,7 @@ if(supplierId && productId && facilityId){
 	try{
 	 resultCtx = dispatcher.runSync("getSupplierProductPrice", inputCtx);
 	 
-	 lastPrice = resultCtx.lastPrice;
+	 lastPrice = resultCtx.supplierProdPrice;
 	 
 	 
 	}catch(Exception e){}
