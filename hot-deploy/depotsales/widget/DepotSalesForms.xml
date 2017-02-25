@@ -341,6 +341,12 @@
         <field name="partyIdTo" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.ProductSupplier}"><lookup target-form-name="SupplierLookupPartyName"/></field> 
 <!--         <field name="vehicleId" title="${uiLabelMap.VechicleNo}"><text-find/></field> -->
+        <field name="RaiseInvoices" title="Raise Invoices">
+          	<drop-down allow-empty="true" >
+          		<option key="PURCHASE_INVOICE" description="Purchase Invoice"></option>
+        		<option key="SALES_INVOICE" description="Sale Invoice"></option>
+          	</drop-down>
+          </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"  >
         	<drop-down allow-empty="true" > 
         		<option key="DISPATCHED" description="Dispatched" > </option>
