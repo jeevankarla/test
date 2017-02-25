@@ -97,54 +97,7 @@
 		showItemAdjustmentsAndTaxes(data[row], row);
 	}
 	
-	function populateProductPrice(){
 	
-	for (var rowCount=0; rowCount < data.length; ++rowCount)
-		{ 
-		
-		alert("vamsi");
-		
-		var supplierId = $("#supplierId").val();
-		
-		var facilityId = $("#facilityId").val();
-		
-		var productId = data[rowCount]["cProductId"];
-		
-		alert("productId==========="+productId);
-		
-	
-	    var addressFaciMap = {"supplierId":supplierId,"facilityId":facilityId,"productId":productId};
-	  
-	       jQuery.ajax({
-                url: 'getProductPrice',
-                type: 'POST',
-                data: addressFaciMap,
-                dataType: 'json',
-               success: function(result){
-					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
-					    alert("Error in order Items");
-					}else{
-						var lastPrice = result["lastPrice"];
-					    
-					    alert(lastPrice);
-					    
-					     if(orderFaciData.lenght != 0){
-					     
-					     }
-					    
-               		}
-               	}							
-		}); 
-		
-		
-		
-		data[rowCount]["quantity"] = 10;
-		
-		
-	      
-	      }
-	
-	}
 	
 	function calculatePOValue(){
 		
@@ -281,6 +234,41 @@
 		mainGrid.setData(romoveData);
 		mainGrid.render();
     }
+    
+    
+    function populateProductPrice(rowCount){
+	 
+	 var data = mainGrid.getData(); 
+		
+		var supplierId = $("#supplierId").val();
+		var facilityId = $("#facilityId").val();
+		var productId = data[rowCount]["cProductId"];
+		
+		var lastPrice = 0;
+	    if(supplierId.length !=0 && facilityId.length !=0 && productId.length !=0){
+	    var addressFaciMap = {"supplierId":supplierId,"facilityId":facilityId,"productId":productId};
+	  
+	       jQuery.ajax({
+                url: 'getProductPrice',
+                type: 'POST',
+                data: addressFaciMap,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+					
+						lastPrice = result["lastPrice"];
+						 data[rowCount]["unitPrice"] = lastPrice;
+	                     mainGrid.setData(data);
+	                     mainGrid.render();
+						 
+               		}
+               	}							
+		}); 
+		
+		}
+	}
 	
 	function processPOEntryInternal(formName, action) {
 		if (Slick.GlobalEditorLock.isActive() && !Slick.GlobalEditorLock.commitCurrentEdit()) {
@@ -726,7 +714,7 @@
 			return {valid: false, msg: "packets should not be in decimals " + value};
 		}*/
       return {valid: true, msg: null};
-    }
+    }    
 	var mainGrid;		
 	function setupGrid1() {
         if(mainGrid){
@@ -755,14 +743,21 @@
 					return '<a href="#" class="button" onclick="editClickHandlerEvent('+row+')" value="Edit">Edit</a>'; 
  				}
  			},
- 			
 		];
+		
+		columns.push({id:"button", name:"Remove", field:"button", width:80, minWidth:80, cssClass:"cell-title", focusable :false,
+			formatter: function (row, cell, id, def, datactx) { 
+					return '<a href="#" class="button" onclick="populateProductPrice('+row+');" value="Price">Price</a>'; 
+			} 
+		});
 		
 		columns.push({id:"button", name:"Remove", field:"button", width:80, minWidth:80, cssClass:"cell-title", focusable :false,
 			formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="deleteProductRow('+row+');" value="Delete">Remove</a>'; 
 			} 
 		});
+		
+		
             
 		var options = {
 			editable: true,		
@@ -1276,8 +1271,7 @@
 	   	  	
 	    }			
 	}
-    
-    
-    
+	
+ 
     
 </script>			

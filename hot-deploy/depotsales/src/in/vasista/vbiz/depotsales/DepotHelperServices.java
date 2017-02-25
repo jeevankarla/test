@@ -3664,12 +3664,13 @@ public static Map<String,Object> getSupplierProductPrice(DispatchContext dctx, M
     	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
     	condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
         List<GenericValue> supplierProductList = delegator.findList("SupplierProduct", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("lastPrice"), null, null, false);
-        if(UtilValidate.isEmpty(supplierProductList)){
-        	result = ServiceUtil.returnError("Supplier Product price Mapping not found.....  ");
-        	return result;
+        if(UtilValidate.isNotEmpty(supplierProductList)){
+        	//result = ServiceUtil.returnError("Supplier Product price Mapping not found.....  ");
+        	//return result;
+        	 GenericValue supplierProduct = EntityUtil.getFirst(supplierProductList);
+             supplierProdPrice=supplierProduct.getBigDecimal("lastPrice");
         }
-        GenericValue supplierProduct = EntityUtil.getFirst(supplierProductList);
-        supplierProdPrice=supplierProduct.getBigDecimal("lastPrice");
+       
         
     } catch (GenericEntityException e) {
         Debug.logError(e, module);
