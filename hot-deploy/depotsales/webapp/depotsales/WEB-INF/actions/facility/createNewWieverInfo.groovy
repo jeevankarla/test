@@ -74,7 +74,7 @@ for (eachList in productStoreList) {
 	formatMap.put("payToPartyId",eachList.get("payToPartyId"));
 	formatList.addAll(formatMap);
 }
-roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
+/*roList = dispatcher.runSync("getRegionalOffices",UtilMisc.toMap("userLogin",userLogin));
 roPartyList = roList.get("partyList");
 
 for(eachRO in roPartyList){
@@ -82,7 +82,7 @@ for(eachRO in roPartyList){
 	formatMap.put("productStoreName",eachRO.get("groupName"));
 	formatMap.put("payToPartyId",eachRO.get("partyId"));
 	formatList.addAll(formatMap);
-}
+}*/
 context.formatList = formatList;
 
 
