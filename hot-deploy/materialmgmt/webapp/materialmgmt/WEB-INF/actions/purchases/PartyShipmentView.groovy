@@ -11,6 +11,8 @@ import in.vasista.vbiz.humanres.PayrollService;
 import in.vasista.vbiz.humanres.HumanresService;
 import org.ofbiz.party.party.PartyHelper;
 
+RaiseInvoices=parameters.RaiseInvoices;
+context.RaiseInvoices=RaiseInvoices;
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 
 
@@ -63,6 +65,36 @@ List conditionList=[];
 			shipmentList = EntityUtil.filterByCondition(shipmentList, EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, primaryOrderId));
 		}
 	}
+	
+	if(parameters.RaiseInvoices == "PURCHASE_INVOICE"){
+		
+		shipmentIds=EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", true);
+		condList = [];
+		condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+		condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+		condition1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		
+		InvoicetypeIdList = delegator.findList("Invoice", condition1,UtilMisc.toSet("shipmentId"), null, null, false);
+		filteredshipmentIds = EntityUtil.getFieldListFromEntityList(InvoicetypeIdList, "shipmentId", true);
+		
+		shipmentIds.removeAll(filteredshipmentIds);
+		shipmentList = EntityUtil.filterByCondition(shipmentList, EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+	}
+	if(parameters.RaiseInvoices == "SALES_INVOICE"){
+		
+		shipmentIds=EntityUtil.getFieldListFromEntityList(shipmentList, "shipmentId", true);
+		condList = [];
+		condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+		condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+		condition1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		
+		InvoicetypeIdList = delegator.findList("Invoice", condition1,UtilMisc.toSet("shipmentId"), null, null, false);
+		filteredshipmentIds = EntityUtil.getFieldListFromEntityList(InvoicetypeIdList, "shipmentId", true);
+		
+		shipmentIds.removeAll(filteredshipmentIds);
+		shipmentList = EntityUtil.filterByCondition(shipmentList, EntityCondition.makeCondition("shipmentId", EntityOperator.IN, shipmentIds));
+	}
+	
 	partyName = "";
 	shipmentList.each{shipment->
 		tempMap=[:];
