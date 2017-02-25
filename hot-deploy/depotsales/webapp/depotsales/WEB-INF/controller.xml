@@ -2812,8 +2812,14 @@
         </response>
         <response name="error" type="view" value="DepotSalesInvoice"/>
     </request-map>
-    
-    
+    <request-map uri="cancelDepotSalesInvoice">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setInvoiceStatus"/>
+        <response name="success" type="request-redirect" value="DepotSalesInvoiceView">
+            <redirect-parameter name="invoiceTypeId" value="SALES_INVOICE"/>
+        </response>
+        <response name="error" type="view" value="DepotSalesInvoiceView"/>
+    </request-map>
     <request-map uri="cancelSalesInvoiceDC">
         <security https="true" auth="true"/>
         <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>

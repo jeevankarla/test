@@ -252,7 +252,9 @@ if("Y".equals(isFormSubmitted)){
 						  if(diffDays >= 7){
 							  JSONObject newObj = new JSONObject();
 							  orderHeaderSequence = EntityUtil.filterByCondition(orderHeaderSequenceList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,eachList.orderId));
-							  orderseq=EntityUtil.getFirst(orderHeaderSequence).get("orderNo")
+							  if(orderHeaderSequence!=null){
+								   orderseq=EntityUtil.getFirst(orderHeaderSequence).get("orderNo")
+							  }
 							  newObj.put("orderId",orderseq)
 							  dateStr=UtilDateTime.toDateString(eachList.orderDate,"dd/MM/yyyy");
 							  //statusDatetime=UtilDateTime.addDaysToTimestamp(statusDatetime,diffDays);
@@ -274,8 +276,10 @@ if("Y".equals(isFormSubmitted)){
 					  }else if(UtilValidate.isNotEmpty(statusDatetime)){
 					     JSONObject newObj = new JSONObject();
 					     orderHeaderSequence = EntityUtil.filterByCondition(orderHeaderSequenceList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,eachList.orderId));
-					     orderseq=EntityUtil.getFirst(orderHeaderSequence).get("orderNo")
-						newObj.put("orderId",orderseq)
+						 if(orderHeaderSequence!=null && orderHeaderSequence.size()>0){
+							 orderseq=EntityUtil.getFirst(orderHeaderSequence).get("orderNo")
+						 }
+						 newObj.put("orderId",orderseq)
 						dateStr=UtilDateTime.toDateString(statusDatetime,"dd/MM/yyyy");
 						newObj.put("orderDate",dateStr)
 						newObj.put("shipDate","-")
