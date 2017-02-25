@@ -56,6 +56,11 @@ java.sql.Date previousDate = new java.sql.Date(prevoiusYearMonth.getTime());
 
 conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS,previousDate));
 conditionList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS, "FISCAL_YEAR"));
+if(!(parameters.organizationPartyId).equalsIgnoreCase("Company")){
+	conditionList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS,parameters.organizationPartyId));
+}else{
+	conditionList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS, "Company"));
+}
 previousCustomTimePeriod = delegator.findList("CustomTimePeriod",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
 previousCustomTimePeriod = EntityUtil.getFirst(previousCustomTimePeriod);
 customTimePeriodId= previousCustomTimePeriod.customTimePeriodId;
@@ -81,7 +86,7 @@ if(!(parameters.organizationPartyId).equalsIgnoreCase("Company")){
 	if(UtilValidate.isNotEmpty(partyRelationShipIds)){
 		partyIds = EntityUtil.getFieldListFromEntityList(partyRelationShipIds,"partyIdTo",true);
 	}
-
+	partyIds.add(parameters.organizationPartyId);
 }
 GrandProfitTotal=[:];
 GrandLossTotal=[:];
@@ -147,11 +152,11 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 			condList = [];
 			condList.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,glAccountId));
 			condList.add(EntityCondition.makeCondition("customTimePeriodId" , EntityOperator.EQUALS,eachCustmTime));
-			condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.IN, partyIds));
-			tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description","organizationPartyId"), null, null, false);
+			condList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, partyIds));
+			tempGlAccountAndHistories = delegator.findList("GlAccountAndPartyHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description","organizationPartyId"), null, null, false);
 			if(UtilValidate.isNotEmpty(tempGlAccountAndHistories)){
 				if(UtilValidate.isNotEmpty(parameters.organizationPartyId) && "Company".equalsIgnoreCase(parameters.organizationPartyId)){
-					tempGlAccountAndHistories = EntityUtil.getFirst(EntityUtil.filterByCondition(tempGlAccountAndHistories,EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS,organizationPartyId)));
+					tempGlAccountAndHistories = EntityUtil.getFirst(EntityUtil.filterByCondition(tempGlAccountAndHistories,EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,organizationPartyId)));
 				}else{
 					tempGlAccountAndHistories = EntityUtil.getFirst(tempGlAccountAndHistories);
 				}

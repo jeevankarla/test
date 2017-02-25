@@ -2027,6 +2027,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFinAccountAlt"/>
     </request-map>
+    <request-map uri="InterUnitFindFinAccountAlt">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="InterUnitFindFinAccountAlt"/>
+    </request-map>
     <request-map uri="FinAccountAlt.csv">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="FinAccountAltCSV"/>    	
@@ -4431,6 +4435,7 @@ under the License.
     
     <!-- new Finacount Views -->
     <view-map name="treasurerPortal" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
+     <view-map name="InterUnitFindFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#InterUnitFindFinAccountAlt"/>
     <view-map name="RecStatement" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#RecStatement" content-type="application/pdf" encoding="none"/>
      <view-map name="FindFinAccountAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountAlt"/>
     <view-map name="FindFinAccountTransAlt" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindFinAccountTransAlt"/>

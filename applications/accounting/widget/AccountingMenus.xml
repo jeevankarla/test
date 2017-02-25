@@ -2138,6 +2138,16 @@
 			<parameter param-name="screenFlag" value="BANKACCOUNT"/>
 			</link>
 		 </menu-item>
+		  <menu-item name="InterUnitFindFinAccountAlt" title="Inter RO Accounts">
+          <condition>
+				<or> 
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="InterUnitFindFinAccountAlt">
+			<parameter param-name="screenFlag" value="INTERUNITBANKACCOUNT"/>
+			</link>
+		 </menu-item>
 		 <menu-item name="Grants" title="Grants">
 			<link target="FindGrantDevelopmentalBankAccountTab" >
 			
@@ -4335,5 +4345,18 @@
 			<link target="BankAccountDetail"/>
 		</menu-item>
 	</menu>
+	 <menu name="InterUnitBankAccountSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="InterUnitFindFinAccountAlt" title="Inter RO Accounts">
+			<condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="InterUnitFindFinAccountAlt">
+			<parameter param-name="screenFlag" value="BANKACCOUNT"/>
+			</link>
+		</menu-item>
+	</menu>
+	
 	
 </menus>

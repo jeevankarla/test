@@ -396,6 +396,9 @@ function reportTypeChangeFunc() {
 	          		   		</#list>
 					 	</select>
 				  	  </td>
+				  	  <td width="30%">
+				  	  <input type="hidden" name="glAccountCategoryTypeId" value="PL" /> 
+				  	  <#--><select name="roPartyId" id="roPartyId" > 
 				  	  <td width="30%">RO Selection
 				  	  <input type="hidden" name="glAccountCategoryTypeId" value="PL" /> 
 				  	  <select name="roPartyId" id="roPartyId" > 
@@ -428,6 +431,9 @@ function reportTypeChangeFunc() {
 	          		   		</#list>
 					 	</select>
 				  	  </td>
+				  	  <td width="30%">
+				  	  <input type="hidden" name="glAccountCategoryTypeId" value="BS" /> 
+				  	  <#--><select name="roPartyId" id="roPartyId" > 
 				  	  <td width="30%">RO Selection
 				  	  <input type="hidden" name="glAccountCategoryTypeId" value="BS" /> 
 				  	  <select name="roPartyId" id="roPartyId" > 

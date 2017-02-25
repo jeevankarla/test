@@ -161,6 +161,7 @@ under the License.
             <exclude field-name="performedByPartyId"/>
         </auto-attributes>
         <attribute name="glAccountId" type="String" mode="IN" optional="true"/>
+   		<attribute name="segmentId" type="String" mode="IN" optional="true"/>
     </service>
      <service name="createFinAccountTransIdForInv" engine="simple" default-entity-name="FinAccountTrans"
             location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAccountTransIdForInvoice">
@@ -183,6 +184,7 @@ under the License.
             <exclude field-name="performedByPartyId"/>
         </auto-attributes>
         <attribute name="glAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="segmentId" type="String" mode="IN" optional="true"/>
         <attribute name="entryType" type="String" mode="IN" optional="true"/>
         <attribute name="contraFinAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="inFavourOf" type="String" mode="IN" optional="true"/>
@@ -742,5 +744,12 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
+    </service>
+     <service name="createFinAcctTransRole" engine="simple" default-entity-name="FinAccountTransRole"
+        location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createFinAcctTransRole">
+        <description>Create FinAccount Trans Role Record</description>        
+       <attribute name="finAccountTransId" type="String" mode="IN" optional="false"/>
+       <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+       <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
 </services>

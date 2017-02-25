@@ -237,12 +237,13 @@ under the License.
     <service name="interfaceAcctgTrans" default-entity-name="AcctgTrans" engine="interface" location="" invoke="">
         <auto-attributes include="nonpk" mode="IN" optional="true">
             <exclude field-name="isPosted"/>
-            <exclude field-name="postedDate"/>
+<!--             <exclude field-name="postedDate"/> -->
             <exclude field-name="createdByUserLogin"/>
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
         <override name="acctgTransTypeId" optional="false"/>
         <override name="transactionDate" optional="false"/>
+        <override name="postedDate" optional="true"/>
         <override name="glFiscalTypeId" optional="false"/>
     </service>
     <service name="createAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
@@ -255,7 +256,8 @@ under the License.
         </required-permissions>
         <implements service="interfaceAcctgTrans"/>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
-        <attribute name="isPosted" mode="IN" type="String" optional="true"/>       
+        <attribute name="isPosted" mode="IN" type="String" optional="true"/>
+         <attribute name="organizationPartyId" mode="INOUT" type="String" optional="true"/> 
     </service>
     <service name="updateAcctgTrans" default-entity-name="AcctgTrans" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="updateAcctgTrans" auth="true">
@@ -364,6 +366,13 @@ under the License.
         	<permission-service service-name="acctgTransactionPermissionCheck" main-action="EDIT"/>
         </required-permissions>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="verifyOnly" type="String" mode="IN" optional="true"/>
+    </service>
+     <service name="populateInternalOrgPartyWise" default-entity-name="GlAccountHistoryPartyWise" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/ledger/AcctgTransServices.xml" invoke="populateInternalOrgPartyWise" auth="true"
+            transaction-timeout="600">
+        <description> </description>       
+         <attribute name="acctgTransId" mode="IN" type="String" optional="false"/>
         <attribute name="verifyOnly" type="String" mode="IN" optional="true"/>
     </service>
 	<service name="postBulkAcctg" default-entity-name="AcctgTrans" engine="simple"
@@ -577,6 +586,15 @@ under the License.
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
         <attribute name="acctgTransId" type="String" mode="OUT" optional="true"/>
     </service>
+     
+     <service name="populateEndingBalGlAccountHistoryPartyWise" engine="simple" auth="true"
+        location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="populateEndingBalGlAccountHistoryPartyWise">
+        <description>Create an accounting transaction for a sales invoice</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+    </service>
+   
+   
 
     <!--An automatic GL posting service for outgoing payments-->
     <service name="createAcctgTransAndEntriesForOutgoingPayment" engine="simple" auth="true"
@@ -639,6 +657,21 @@ under the License.
     </service>
     <service name="findLastClosedDate" engine="java"
         location="org.ofbiz.accounting.period.PeriodServices" invoke="findLastClosedDate" auth="true">
+        <description>Find the last date before findDate whose TimePeriod is marked isClosed="Y" for organizationPartyId and periodTypeId combination.
+            If none are found, ie, no closed CustomTimePeriod exists, then return the earliest date available for any
+            CustomTimePeriod of the organizationPartyId and periodTypeId.
+            If no findDate is given, then use the current moment (nowTimestamp).
+            If onlyFiscalPeriods flag is passed, then periodTypeId is ignored and the latest closed FISCAL period is returned
+        </description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="findDate" type="java.sql.Date" mode="IN" optional="true"/>
+        <attribute name="periodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="onlyFiscalPeriods" mode="IN" type="Boolean" optional="true"/>               
+        <attribute name="lastClosedDate" type="Timestamp" mode="OUT" optional="true"/>
+        <attribute name="lastClosedTimePeriod" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
+    </service>
+    <service name="findLastClosedDateForPartyLedger" engine="java"
+        location="org.ofbiz.accounting.period.PeriodServices" invoke="findLastClosedDateForPartyLedger" auth="true">
         <description>Find the last date before findDate whose TimePeriod is marked isClosed="Y" for organizationPartyId and periodTypeId combination.
             If none are found, ie, no closed CustomTimePeriod exists, then return the earliest date available for any
             CustomTimePeriod of the organizationPartyId and periodTypeId.
@@ -872,4 +905,15 @@ under the License.
         <attribute name="glAccountId" mode="IN" type="String" optional="false"/>
         <attribute name="openingBal" mode="OUT" type="BigDecimal" optional="false"/>
     </service>  
+     <service name="getGlAccountOpeningBalanceForCostCenter" engine="java" auth="true" 
+        location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="getGlAccountOpeningBalance">
+        <description>Get Custom time period</description>
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/>
+        <attribute name="glAccountId" mode="IN" type="String" optional="false"/>
+        <attribute name="costCenterId" mode="IN" type="String" optional="true"/>
+        <attribute name="segmentId" mode="IN" type="String" optional="true"/>
+        <attribute name="openingBal" mode="OUT" type="BigDecimal" optional="false"/>
+    </service>
+      
 </services>

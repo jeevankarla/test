@@ -27,6 +27,24 @@ fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
 reportTypeFlag = parameters.reportTypeFlag;
 
+roId = parameters.division;
+segmentId = parameters.segment;
+branchList = [];
+condList = [];
+condList.clear();
+if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+	condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,roId));
+	condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+		branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+		branchList.add(roId);
+	}
+	
+}
+
 SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 Timestamp fromDateTs = null;
 if(fromDateStr){
@@ -147,6 +165,14 @@ if(UtilValidate.isEmpty(parameters.roleTypeId) && UtilValidate.isEmpty(parameter
 	partyIds=EntityUtil.getFieldListFromEntityListIterator(acctgTransEntryForPartyIds, "partyId", true);
 }
 
+	
+	if(UtilValidate.isNotEmpty(roId) && UtilValidate.isNotEmpty(roId)&& !roId.equals("Company"))
+		conditionList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));
+	if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+		conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
+	if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE"))
+		conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+		
 	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 if(UtilValidate.isEmpty(partyIds)){

@@ -321,6 +321,20 @@ public class FinAccountServices {
             	 finAccountTransTypeId = "WITHDRAWAL";
              }
              
+             GenericValue finAcct = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+             GenericValue finAccntTo = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountIdTo), false);
+             if(UtilValidate.isNotEmpty(finAcct.get("costCenterId"))){
+            	 if(UtilValidate.isEmpty(finAccntTo.get("costCenterId"))){
+            		 finAccntTo.put("costCenterId",(String)finAcct.get("costCenterId"));
+            		 finAccntTo.store();
+                 }
+             }
+             if(UtilValidate.isNotEmpty(finAccntTo.get("costCenterId"))){
+            	 if(UtilValidate.isEmpty(finAcct.get("costCenterId"))){
+            		 finAcct.put("costCenterId",(String)finAccntTo.get("costCenterId"));
+            		 finAcct.store();
+                 }
+             }
              Map<String, Object> transCtxMap = FastMap.newInstance();
              transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
              transCtxMap.put("entryType", entryType);
@@ -1138,45 +1152,11 @@ public class FinAccountServices {
 		Map<String, Object> result = FastMap.newInstance();
 		List<GenericValue> facilityPartyList = null;
 		Delegator delegator = dctx.getDelegator();
-		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		List finAccountList = FastList.newInstance();
 		String paymentId = (String) context.get("paymentId");
 		String finAccountId = null;
 		String paymentMethodId = null;
 		boolean flag;
-		String ownerPartyId=null;
-		List conditionList = FastList.newInstance();
-		List<GenericValue> employment = null;
-		try{
-			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, userLogin.get("partyId")));
-			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPLOYEE"));
-			conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
-			employment = delegator.findList("Employment", EntityCondition.makeCondition(conditionList,EntityOperator.AND),null, null, null, false);
-			if(UtilValidate.isNotEmpty(employment)){
-				GenericValue empDetail = EntityUtil.getFirst(employment);
-				if(empDetail.getString("partyIdFrom") != "Company" || empDetail.getString("partyIdFrom") != "HO"){
-					ownerPartyId = empDetail.getString("partyIdFrom");
-				}
-			}
-			else{
-				conditionList.clear();
-				conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, userLogin.get("partyId")));
-				conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
-				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "BRANCH_EMPLOYEE"));
-				conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
-				employment = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList,EntityOperator.AND),null, null, null, false);	
-				if(UtilValidate.isNotEmpty(employment)){
-					GenericValue empDetail = EntityUtil.getFirst(employment);
-					if(empDetail.getString("partyIdFrom") != "Company" || empDetail.getString("partyIdFrom") != "HO"){
-						ownerPartyId = empDetail.getString("partyIdFrom");
-					}
-				}
-			}
-		}catch (GenericEntityException e) {
-			Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-		}
-		
 		if(UtilValidate.isNotEmpty(paymentId)){
 			try{
 				GenericValue paymentDetails = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
@@ -1184,9 +1164,7 @@ public class FinAccountServices {
 					paymentMethodId = (String) paymentDetails.get("paymentMethodId");
 					if(UtilValidate.isEmpty(paymentMethodId)){
 						List condList = FastList.newInstance();
-						if(UtilValidate.isNotEmpty(ownerPartyId)){
-							condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,ownerPartyId));
-						}
+						//condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
 						condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
 						condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
 				    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
@@ -1202,9 +1180,7 @@ public class FinAccountServices {
 							finAccountId = (String) paymentMethodDetails.get("finAccountId");
 							if(UtilValidate.isEmpty(finAccountId)){
 								List condList = FastList.newInstance();
-								if(UtilValidate.isNotEmpty(ownerPartyId)){
-									condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,ownerPartyId));
-								}
+								//condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
 								condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
 								condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
 						    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 

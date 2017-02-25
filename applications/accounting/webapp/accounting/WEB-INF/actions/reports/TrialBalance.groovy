@@ -45,10 +45,39 @@ context.partyNameList = partyNameList;
 
 asOnDate = parameters.asOnDate;
   dctx = dispatcher.getDispatchContext();
+  condList = [];
+  roId = parameters.division;
+  context.roId = roId;
+  segmentId = parameters.segment;
+  branchList = [];
+  condList.clear();
+  if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+	  condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,roId));
+	  condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	  condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	  condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	  List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	  if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+		  branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+		  branchList.add(roId);
+	  }
+	  
+  }
+  condList.clear();
+  
  glAccountAndHistories =[];
- condList = [];
- condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.IN, partyIds));
+ 
+ 
+ condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.EQUALS, "Company"));
  condList.add(EntityCondition.makeCondition("customTimePeriodId" , EntityOperator.EQUALS,parameters.customTimePeriodId));
+ if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company"))
+ 	condList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));
+ if(!segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+ 	condList.add(EntityCondition.makeCondition("segmentId" , EntityOperator.EQUALS, segmentId));
+ if(segmentId.equals("YARN_SALE"))
+ 	condList.add(EntityCondition.makeCondition("segmentId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+ 
+ 
   List tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
 //Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalance(dctx, UtilMisc.toMap("organizationPartyId", parameters.organizationPartyId,"customTimePeriodId",parameters.customTimePeriodId));
 lastClosedGlBalanceList =[];
@@ -56,11 +85,43 @@ lastClosedGlBalanceList =[];
 
 Set<String> partySet = new HashSet<String>(partyIds);
 
-for (String eachParty : partySet) {
-	Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalance(dctx, UtilMisc.toMap("organizationPartyId", eachParty,"customTimePeriodId",parameters.customTimePeriodId));
+Map lastClosedGlBalances;
+if(roId.equals("Company") && segmentId.equals("All")){
+	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", null, "segmentId", null));
 	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
+}
+else if(roId.equals("Company") && !segmentId.equals("All")){
+	if(segmentId.equals("YARN_SALE")){ 
+			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", "YARN_SALE"));
+			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
+			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", "DEPOT_YARN_SALE"));
+			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
+		}else{
+			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", segmentId));
+			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
+		}
+}
+else if(!roId.equals("Company") && segmentId.equals("All")){
+	for (String eachParty : branchList) {
+		lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", null));
+		lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
+	}
+}
+else{
+	for (String eachParty : branchList) {
+		if(segmentId.equals("YARN_SALE")){ 
+			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", "YARN_SALE"));
+			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
+			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", "DEPOT_YARN_SALE"));
+			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
+		}else{
+			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", segmentId));
+	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
+		}
 
 }
+}
+
 
 tempGlAccountAndHistories.each { tempGlAccountAndHistory ->
 	 
@@ -74,6 +135,7 @@ tempGlAccountAndHistories.each { tempGlAccountAndHistory ->
 	 isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
 	 
 	 if(UtilValidate.isNotEmpty(lastClosedGlBalance)){
+		 if(UtilValidate.isNotEmpty(lastClosedGlBalance.getBigDecimal("totalEndingBalance"))){
 		 if (isDebitAccount) {
 			 if( (lastClosedGlBalance.getBigDecimal("totalEndingBalance")) < 0){
 				 tempGlAccountAndHistoryMap.putAt("openingC", (lastClosedGlBalance.getBigDecimal("totalEndingBalance")).negate());
@@ -93,6 +155,7 @@ tempGlAccountAndHistories.each { tempGlAccountAndHistory ->
 		
 		lastClosedGlBalanceList.remove(lastClosedGlBalance);
 	}
+	}
 	tempGlAccountAndHistoryMap.putAt("totalEndingBalance", ((tempGlAccountAndHistoryMap.get("totalPostedDebits")+tempGlAccountAndHistoryMap.get("openingD"))-(tempGlAccountAndHistoryMap.get("totalPostedCredits")+tempGlAccountAndHistoryMap.get("openingC"))));
 	glAccountAndHistories.add(tempGlAccountAndHistoryMap);
 }
@@ -107,6 +170,7 @@ if(UtilValidate.isNotEmpty(lastClosedGlBalanceList)){
 		 lastClosedGlBalance = EntityUtil.getFirst(EntityUtil.filterByAnd(lastClosedGlBalanceList, UtilMisc.toMap("glAccountId",tempGlAccountAndHistory.get("glAccountId"))))
 		 tempGlAccountAndHistoryMap.putAt("openingC",0);
 		 tempGlAccountAndHistoryMap.putAt("openingD",0);
+		 if(UtilValidate.isNotEmpty(tempGlAccountAndHistory.getBigDecimal("totalEndingBalance"))){
 		 if (isDebitAccount) {
 			 if( (tempGlAccountAndHistory.getBigDecimal("totalEndingBalance")) < 0){
 				 tempGlAccountAndHistoryMap.putAt("openingC", (tempGlAccountAndHistory.getBigDecimal("totalEndingBalance")).negate());
@@ -122,6 +186,7 @@ if(UtilValidate.isNotEmpty(lastClosedGlBalanceList)){
 			 else{
 				 tempGlAccountAndHistoryMap.putAt("openingC", tempGlAccountAndHistory.getBigDecimal("totalEndingBalance"));
 			 }
+		 }
 		 }
 		 tempGlAccountAndHistoryMap.putAt("totalPostedDebits",0 );
 		 tempGlAccountAndHistoryMap.putAt("totalPostedCredits",0 );
@@ -186,6 +251,14 @@ for(k=0;k<glAccountAndHistories.size();k++){
 }
 
 finalList = [];
+ grandTotMap = [:];
+  totOpeningBal = 0;
+  totOpeningD = 0;
+  totOpeningC = 0;
+  totDebtAmt = 0;
+  totCredAmt = 0;
+  totEndingBal = 0;
+  if(UtilValidate.isNotEmpty(prevGlList)){
 for(t=0;t<prevGlList.size();t++){
   glAccountId = prevGlList[t];
   eachGllist = prevTmp.get(glAccountId);
@@ -199,11 +272,26 @@ for(t=0;t<prevGlList.size();t++){
   tMap.put("totalEndingBalance",eachGllist.get("totalEndingBalance"));
   tMap.put("openingC",eachGllist.get("openingC"));
   tMap.put("openingD",eachGllist.get("openingD"));
+  	  	totOpeningBal = totOpeningBal + (eachGllist.get("openingD") - eachGllist.get("openingC"));
+  	  	totOpeningD = totOpeningD + eachGllist.get("openingD");
+  	  	totOpeningC = totOpeningC + eachGllist.get("openingC");
+  	  	totDebtAmt = totDebtAmt + eachGllist.get("totalPostedDebits");
+  	  	totCredAmt = totCredAmt + eachGllist.get("totalPostedCredits");
+  	  	totEndingBal = totEndingBal + eachGllist.get("totalEndingBalance");
   
   tempMap = [:];
   tempMap.putAll(tMap);
   finalList.add(tempMap);
 }
+  	grandTotMap.put("accountName","TOTAL");		
+  	grandTotMap.put("totalOpening",totOpeningBal);
+  	grandTotMap.put("openingD",totOpeningD);
+  	grandTotMap.put("openingC",totOpeningC);
+  	grandTotMap.put("totalPostedDebits",totDebtAmt);
+  	grandTotMap.put("totalPostedCredits",totCredAmt);
+  	grandTotMap.put("totalEndingBalance",totEndingBal);
+  	finalList.add(grandTotMap);
+  }
 
 context.finalList = finalList;
 

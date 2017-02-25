@@ -110,6 +110,7 @@ under the License.
         <description>Create a payment application</description>
         <attribute name="paymentId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+                 <attribute name="toInvoiceId" type="String" mode="IN" optional="true"/>
         <attribute name="invoiceItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="overrideGlAccountId" type="String" mode="IN" optional="true"/>

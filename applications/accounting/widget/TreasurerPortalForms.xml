@@ -38,6 +38,7 @@ under the License.
        <field name="finAccountCode" title ="Bank Code"><display/></field>
         <field name="finAccountBranch" title ="Branch"><display/></field>
         <field name="finAccountId"><hidden></hidden></field>
+        <field name="finAccPrefix"><hidden></hidden></field>
          <field name="gbCode"><ignored></ignored></field>
           <field name="bCode"><ignored></ignored></field>
            <field name="bPlace"><ignored></ignored></field>
@@ -62,6 +63,78 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
+        <field name="finAccountCode" title="Bank Code"></field>
+        <field name="finAccountBranch" title="Branch"></field>
+        
+      <!--   <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field> -->
+       <!--  <field name="organizationPartyId">
+            <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
+                <parameter param-name="partyId" from-field="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="ownerPartyId">
+            <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
+                <parameter param-name="partyId" from-field="ownerPartyId"/>
+            </hyperlink>
+        </field> -->
+       <!--  <field name="deleteLink" title="${uiLabelMap.CommonEmptyHeader}" widget-style="buttontext" use-when="hasFinEditPermission">
+            <hyperlink target="deleteFinAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field> -->
+		<field name="statement" title="Reconciliation Statement" widget-style="buttontext">
+            <hyperlink target="recStatemetn.pdf" description="Statement" target-window="_BLANK"  also-hidden="false">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="glReconciliationId" value="_NA_" />
+				<parameter param-name="subTabItem" value="FinAccountTransForReconsile" />
+            </hyperlink>
+        </field> 
+    </form>
+          <form name="ListInterUnitFinAccountsAlt" type="list" separate-columns="true" default-entity-name="FinAccount" list-name="listIt" paginate-target="InterUnitFindFinAccountAlt" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+             <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="FinAccount"/>
+                <field-map field-name="orderBy" value="finAccountId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="FinAccount" default-field-type="display"/>
+       <!--  <field name="finAccountId">
+            <hyperlink  description="${finAccountId}" target="EditFinAccountAlt">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field> -->
+        <field name="finAccountId"><hidden></hidden></field>
+        <field name="finAccountCode"><hidden></hidden></field>
+        <field name="ifscCode"><hidden></hidden></field>
+        <field name="finAccPrefix"><hidden></hidden></field>
+        <field name="gbCode"><ignored></ignored></field>
+        <field name="bCode"><ignored></ignored></field>
+        <field name="bPlace"><ignored></ignored></field>
+        <field name="categoryTypeEnum"><ignored></ignored></field>
+        <field name="organizationPartyId"><ignored></ignored></field>
+        <field name="ownerPartyId"><ignored></ignored></field>
+        <field name="isRefundable"><ignored></ignored></field>
+        <field name="finAccountId"><ignored></ignored></field>
+        <field name="replenishPaymentId"><ignored></ignored></field>
+        <field name="replenishLevel"><ignored></ignored></field>
+        <field name="finAccountTypeId"><ignored></ignored></field>
+        <field name="statusId"><ignored></ignored></field> 
+        <field name="finAccountPin"><ignored></ignored></field>
+        <field name="micrNumber"><ignored></ignored></field>
+        <field name="fromDate"><ignored></ignored></field>
+        <field name="thruDate"><ignored></ignored></field>
+    
+       <!--  <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}"><display-entity entity-name="FinAccountType"/></field> -->
+        <field name="finAccountName" title = "RO Name">  
+          <hyperlink description="${finAccountName}" target="EditFinAccountAlt">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+        <field name="finAccountBranch" title="Branch"></field>
       <!--   <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field> -->
        <!--  <field name="organizationPartyId">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
@@ -311,14 +384,14 @@ under the License.
              	<parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field>
-      <!--   <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
+        <!--   <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
             <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
         </field> -->
     </form>
-     <form name="ListAdvDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositPaidAccount" paginate="true"
+     <form name="ListAdvDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindEmployeeAdv" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="finAccountId" title="AccountId"><display/>
          <hyperlink target="EditFinAccount" description="${finAccountId}" target-window="_blank">
@@ -490,7 +563,7 @@ under the License.
                 <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
                    <entity-constraint name="organizationPartyId" value="Company"/> 
                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
-                     <entity-constraint name="ownerPartyId" from-field="ownerPartyId"/>
+        <entity-constraint name="ownerPartyId" from-field="parameters.ownerPartyId"/>
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down> -->
@@ -714,10 +787,16 @@ under the License.
         <!-- <auto-fields-service service-name="createFinAccountTrans"/> -->
        <!--  <field name="finAccountId"><hidden/></field>     -->
         <field name="finAccountId" title="From Financial Account" >
-            <drop-down allow-empty="true">
-            	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
+            <drop-down>
+                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
+<!--                     <entity-constraint name="organizationPartyId" value="Company"/>  -->
+<!--                     <entity-constraint name="ownerPartyId" value="Company"/> -->
+                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                  <!--    <entity-constraint name="finAccountTypeId" value="CASH"/> -->
+                    <entity-order-by field-name="finAccountName"/>
+                </entity-options>
             </drop-down>
-        </field>        
+        </field>       
         <field name="finAccountTransId"><hidden/></field>
         <field name="entryType"   ><hidden value="Contra"/></field>       
         <field name="finAccountTransTypeId" use-when="finAccountTransTypeId==null" action="javascript:setPaymentType();" event="onChange"> 
@@ -742,9 +821,18 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+         <field name="segmentId"  title="Segment Id">
+            <drop-down>
+                <option key="YARN_SALE" description="Yarn Sale"/>
+                <option key="DIES_AND_CHEM_SALE" description="Dies And Chemicals"/>                
+            </drop-down>
+        </field>
          <field name="contraFinAccountId"  title="To Financial Account"  >
-            <drop-down allow-empty="true">
-            	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
+            <drop-down>
+                <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
+                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                    <entity-order-by field-name="finAccountName"/>
+                </entity-options>
             </drop-down>
         </field>
         <field name="contraRefNum" title="Instrument Number"><text></text></field>         
@@ -2283,6 +2371,14 @@ under the License.
         </field>
         <field position="1" name="referenceNumber" title="Refrence No." encode-output="false" required-field="true"><text size="50"/></field> 
         <field position="2" name="referenceDate" title="Refrence Date"><date-time/></field>                            
+        <field name="purposeType" title="Purpose Type"  required-field="true">
+           <drop-down>
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
+                    <entity-constraint name="enumTypeId" operator="equals" value="PAYMENT_PURPOSE"/>
+                    <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+                </entity-options>
+            </drop-down>
+        </field>                          
         <field position="1" name="description" title="Narration" encode-output="false" required-field="true"><text size="100"/></field>        
         <!-- <field position="1" name="invoiceMessage" encode-output="false"><text size="100"/></field> -->        
         <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">
@@ -2357,6 +2453,14 @@ under the License.
         <field use-when="invoiceTypeId!=null&amp;&amp;invoiceTypeId.equals(&quot;OBINVOICE_IN&quot;)"  position="2" name="referenceNumber" title="TallyRefNo."><text size="30"/></field>
         <field position="1" name="partyIdTo" entry-name="partyId" parameter-name="partyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
         <field position="2" name="dueDate" required-field="true"><date-time/></field>
+        <field name="purposeType" title="Purpose Type" required-field="true">
+            <drop-down>
+                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
+                    <entity-constraint name="enumTypeId" operator="equals" value="PAYMENT_PURPOSE"/>
+                    <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+                </entity-options>
+            </drop-down>
+        </field>                          
         <field position="2" name="invoiceDate" required-field="true"><date-time/></field>
         <!-- <field use-when="invoice!=null" position="2" name="partyIdTo" entry-name="partyId" parameter-name="partyId" ><lookup target-form-name="LookupPartyName"/></field>
          -->

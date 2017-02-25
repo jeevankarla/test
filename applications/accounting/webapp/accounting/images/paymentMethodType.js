@@ -41,7 +41,9 @@ function paymentFieldsOnchange(){
 	
 }
 	
-
+jQuery(document).ready(function() {		
+	paymentFieldsOnchange();
+});	
 
 
 

@@ -190,6 +190,9 @@ under the License.
         <sequenced-id sequence-name="FinAccountTrans" field="newEntity.finAccountTransId"/>
 
         <now-timestamp field="nowTimestamp"/>
+        <if-not-empty field="finAccount.costCenterId">
+         	<set from-field="finAccount.costCenterId" field="newEntity.costCenterId"/>
+         </if-not-empty>
         <if-empty field="newEntity.transactionDate">
             <set from-field="nowTimestamp" field="newEntity.transactionDate"/>
         </if-empty>
@@ -281,7 +284,8 @@ under the License.
 			<set field="createFinAccountTransMap.finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
 			<if-not-empty field="parameters.amount">			
 				<set field="createFinAccountTransMap.amount" from-field="parameters.amount"/>			
-			</if-not-empty>		
+			</if-not-empty>	
+			<set field="createFinAccountTransMap.segmentId" from-field="parameters.segmentId"/>	
 			<set field="createFinAccountTransMap.finAccountId" from-field="parameters.finAccountId"/>
 			<set field="createFinAccountTransMap.partyId" from-field="parameters.partyId"/>	
 			<if-empty field="parameters.partyId">
@@ -331,10 +335,26 @@ under the License.
 					<set field="createContraFinAccountTransMap.finAccountTransTypeId" value="DEPOSIT"/>
 				</else>
 			</if-compare>
+			<set field="createContraFinAccountTransMap.segmentId" from-field="parameters.segmentId"/>
 			<set field="createContraFinAccountTransMap.finAccountId" from-field="parameters.contraFinAccountId"/>
 			<entity-one value-field="finContraAccount" entity-name="FinAccount">
 			<field-map field-name="finAccountId" from-field="parameters.contraFinAccountId" />
 			</entity-one>	
+			<!-- <log message="normal costcenter================${finAccount}" level="always"/>
+			<log message="contraCostCenter================${finContraAccount.costCenterId}" level="always"/>
+			<if-not-empty field="finContraAccount.costCenterId">
+				<if-empty field="finAccount.costCenterId">
+					<set field="finAccount.costCenterId" value="${finContraAccount.costCenterId}"/>
+					<store-value value-field="finAccount"/>
+				</if-empty>
+			</if-not-empty>
+			<if-not-empty field="finAccount.costCenterId">
+				<if-empty field="finContraAccount.costCenterId">
+					<set field="finContraAccount.costCenterId" value="${finAccount.costCenterId}"/>
+					<store-value value-field="finContraAccount"/>
+				</if-empty>
+			</if-not-empty> -->
+			
 			<set field="createContraFinAccountTransMap.partyId" from-field="finContraAccount.ownerPartyId"/>
 			<call-service service-name="createFinAccountTrans" in-map-name="createContraFinAccountTransMap">
 				<result-to-result result-name="finAccountTransId"/>
@@ -1632,5 +1652,12 @@ under the License.
 			    <call-service service-name="setFinAccountTransStatus" in-map-name="createFinAccounttransStatusMap"/> 
         </then>
       </if>  
+    </simple-method>
+    <simple-method method-name="createFinAcctTransRole" short-description="Create a FinAcctTrans Role">
+        <make-value value-field="newEntity" entity-name="FinAccountTransRole"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <if-empty field="newEntity.datetimePerformed"><now-timestamp field="newEntity.datetimePerformed"/></if-empty>
+        <create-value value-field="newEntity"/>
     </simple-method>
 </simple-methods>

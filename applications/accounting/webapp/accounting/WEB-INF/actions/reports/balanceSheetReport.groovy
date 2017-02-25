@@ -15,8 +15,9 @@ import org.ofbiz.accounting.util.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import org.ofbiz.accounting.util.*;
 
-import javax.swing.plaf.basic.BasicInternalFrameUI.GlassPaneDispatcher;
+dctx = dispatcher.getDispatchContext();
 customTimePeriodIds = [];
 parentCategoryIds = [];
 glAccountCategoryIds =[];
@@ -26,7 +27,21 @@ presentYear=customTimePeriodId;
 context.presentYear=presentYear;
 glAccountCategoryTypeId = parameters.glAccountCategoryTypeId;
 customTimePeriodIds.add(customTimePeriodId);
-
+assetGlAccountClsIds=[];
+liabilityGlAccountClsIds=[];
+assetCategoryList=[];
+liabilityCategoryList=[];
+assetGlAccountCls = delegator.findList("GlAccountClass",EntityCondition.makeCondition("parentClassId",EntityOperator.EQUALS,"ASSET"),null,null,null,false);
+assetGlAccountClsIds = EntityUtil.getFieldListFromEntityList(assetGlAccountCls,"glAccountClassId",true);
+assetGlAccountCls = delegator.findList("GlAccountClass",EntityCondition.makeCondition("parentClassId",EntityOperator.IN,assetGlAccountClsIds),null,null,null,false);
+assetGlAccountClsIds.addAll(EntityUtil.getFieldListFromEntityList(assetGlAccountCls,"glAccountClassId",true));
+liabilityGlAccountCls = delegator.findList("GlAccountClass",EntityCondition.makeCondition("parentClassId",EntityOperator.IN,UtilMisc.toList("LIABILITY","EQUITY")),null,null,null,false);
+liabilityGlAccountClsIds = EntityUtil.getFieldListFromEntityList(liabilityGlAccountCls,"glAccountClassId",true);
+liabilityGlAccountCls = delegator.findList("GlAccountClass",EntityCondition.makeCondition("parentClassId",EntityOperator.IN,liabilityGlAccountClsIds),null,null,null,false);
+liabilityGlAccountClsIds.addAll(EntityUtil.getFieldListFromEntityList(liabilityGlAccountCls,"glAccountClassId",true));
+//Debug.log("liabilityGlAccountClsIds############"+liabilityGlAccountClsIds);
+//Debug.log("assetGlAccountClsIds############"+assetGlAccountClsIds);
+prevTimePeriodMap=[:];
 fromDate = "";
 thruDate = "";
 customTimePeriods = delegator.findOne("CustomTimePeriod", [customTimePeriodId : customTimePeriodId], false);
@@ -54,14 +69,38 @@ java.sql.Date previousDate = new java.sql.Date(prevoiusYearMonth.getTime());
 
 conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS,previousDate));
 conditionList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS, "FISCAL_YEAR"));
+if(!(parameters.organizationPartyId).equalsIgnoreCase("Company")){
+conditionList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS,parameters.organizationPartyId));
+}else{
+conditionList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS, "Company"));
+}
 previousCustomTimePeriod = delegator.findList("CustomTimePeriod",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
 previousCustomTimePeriod = EntityUtil.getFirst(previousCustomTimePeriod);
+prevTimePeriodMap.put(customTimePeriodId, previousCustomTimePeriod.customTimePeriodId);
 customTimePeriodId= previousCustomTimePeriod.customTimePeriodId;
 context.prevFromDate=previousCustomTimePeriod.fromDate;
 context.prevThruDate=previousCustomTimePeriod.thruDate;
 prevsYear=customTimePeriodId;
 context.prevsYear=customTimePeriodId;
 customTimePeriodIds.add(customTimePeriodId);
+//getting prevPrevTimeperiod
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO,previousCustomTimePeriod.fromDate));
+conditionList.add(EntityCondition.makeCondition("periodTypeId",EntityOperator.EQUALS, "FISCAL_YEAR"));
+if(!(parameters.organizationPartyId).equalsIgnoreCase("Company")){
+conditionList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS,parameters.organizationPartyId));
+}else{
+conditionList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS, "Company"));
+}
+prevPreviousCustomTimePeriod = delegator.findList("CustomTimePeriod",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
+if(UtilValidate.isNotEmpty(prevPreviousCustomTimePeriod)){
+	prevPreviousCustomTimePeriod = EntityUtil.getFirst(prevPreviousCustomTimePeriod);
+	prevTimePeriodMap.put(customTimePeriodId, prevPreviousCustomTimePeriod.customTimePeriodId);
+}else{
+	prevTimePeriodMap.put(customTimePeriodId, "");
+}
+
+
 partyIds=[];
 if(UtilValidate.isNotEmpty(parameters.roPartyId)){
 	parameters.organizationPartyId=parameters.roPartyId;
@@ -79,6 +118,8 @@ if(!(parameters.organizationPartyId).equalsIgnoreCase("Company")){
 	if(UtilValidate.isNotEmpty(partyRelationShipIds)){
 		partyIds = EntityUtil.getFieldListFromEntityList(partyRelationShipIds,"partyIdTo",true);
 	}
+  partyIds.add(parameters.organizationPartyId);
+
 }
 
 GrandLiablitesTotal=[:];
@@ -86,6 +127,7 @@ GrandassetsTotal=[:];
 liablitiesChildWiseMap=[:];
 assetsChildWiseMap=[:];
 GlAccountIdsWiseMap=[:];
+
 for(a=0; a<customTimePeriodIds.size(); a++){
 	eachCustmTime = customTimePeriodIds.get(a);
 	 liablitiesGrandTotal=0;
@@ -142,23 +184,93 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 			//GenericValue glAccntCatMbr = (GenericValue)glAccountCategoryMember.get(k)
 			glAccountId = glAccountCategoryMember.get(k).get("glAccountId");
 			organizationPartyId = glAccountCategoryMember.get(k).get("organizationPartyId");
+			//Debug.log("glAccountId####################"+glAccountId);
+			//lastClosedGlBalances = UtilAccounting.getLastClosedGlBalance(dctx, UtilMisc.toMap("glAccountId",glAccountId,"organizationPartyId", organizationPartyId,"customTimePeriodId",eachCustmTime,"periodTypeId","FISCAL_YEAR"));
+			
+			//Map result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:eachPeriodFromDateTime,userLogin:userLogin]);
+			totalEndingBalance=0;
+			//totalEndingBalance=result.get("openingBal")
+			/*if(UtilValidate.isNotEmpty(lastClosedGlBalances)){
+			lastClosedGlBalance = lastClosedGlBalances.get(0);
+			if(UtilValidate.isNotEmpty(lastClosedGlBalance)){
+				totalEndingBalance=lastClosedGlBalance.get("totalEndingBalance");
+			}
+			}*/
+			
 			condList = [];
 			condList.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,glAccountId));
 			condList.add(EntityCondition.makeCondition("customTimePeriodId" , EntityOperator.EQUALS,eachCustmTime));
 			condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.IN, partyIds));
-			tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description","organizationPartyId"), null, null, false);
+			//Debug.log("##############################"+condList);
+			tempGlAccountAndHistories=null;
+			prevTempGlAccountAndHistories=null;
+			tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description","organizationPartyId","glAccountClassId"), null, null, false);
+			
+			condList.clear();
+			if(UtilValidate.isNotEmpty(prevTimePeriodMap.get(eachCustmTime))){
+				condList.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,glAccountId));
+				condList.add(EntityCondition.makeCondition("customTimePeriodId" , EntityOperator.EQUALS,prevTimePeriodMap.get(eachCustmTime)));
+				//condList.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.EQUALS, tempGlAccountAndHistories.organizationPartyId));
+				//Debug.log("##############################"+condList);
+				prevTempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description","glAccountClassId","organizationPartyId"), null, null, false);
+			}else{
+				prevTempGlAccountAndHistories=[];
+			}
+			
+			if(UtilValidate.isEmpty(tempGlAccountAndHistories) && UtilValidate.isNotEmpty(prevTempGlAccountAndHistories)){
+				tempGlAccountAndHistories.addAll(prevTempGlAccountAndHistories);
+				prevTempGlAccountAndHistories=[];
+			}
 			if(UtilValidate.isNotEmpty(tempGlAccountAndHistories)){
 				if(UtilValidate.isNotEmpty(parameters.organizationPartyId) && "Company".equalsIgnoreCase(parameters.organizationPartyId)){
 					tempGlAccountAndHistories = EntityUtil.getFirst(EntityUtil.filterByCondition(tempGlAccountAndHistories,EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS,organizationPartyId)));
 				}else{
 					tempGlAccountAndHistories = EntityUtil.getFirst(tempGlAccountAndHistories);
 				}
+				
 				if(UtilValidate.isNotEmpty(tempGlAccountAndHistories)){
+					//Debug.log("assetCategoryList########"+tempGlAccountAndHistories.glAccountClassId);
+					if(assetGlAccountClsIds.contains(tempGlAccountAndHistories.glAccountClassId)){
+						if(!assetCategoryList.contains(glAccntCategoryId)){
+							assetCategoryList.add(glAccntCategoryId);
+							//Debug.log("assetCategoryList########"+assetCategoryList);
+						}
+					}else{
+						if(!liabilityCategoryList.contains(glAccntCategoryId)){
+							liabilityCategoryList.add(glAccntCategoryId);
+							//Debug.log("liabilityCategoryList########"+liabilityCategoryList);
+						}
+					}
+					
+					
 					totalPostedDebits= tempGlAccountAndHistories.totalPostedDebits;
+					totalPostedCredits = tempGlAccountAndHistories.totalPostedCredits;
+					if(UtilValidate.isNotEmpty(prevTempGlAccountAndHistories)){
+						prevTempGlAccountAndHistories = EntityUtil.filterByCondition(prevTempGlAccountAndHistories,EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, tempGlAccountAndHistories.organizationPartyId));
+						prevTempGlAccountAndHistories = EntityUtil.getFirst(prevTempGlAccountAndHistories);
+						if(UtilValidate.isNotEmpty(prevTempGlAccountAndHistories)){
+							/*if(UtilValidate.isNotEmpty(prevTempGlAccountAndHistories.totalEndingBalance)){
+							totalEndingBalance = prevTempGlAccountAndHistories.totalEndingBalance;
+							}*/
+							if(UtilValidate.isNotEmpty(prevTempGlAccountAndHistories.totalPostedDebits)){
+								totalPostedDebits = totalPostedDebits+prevTempGlAccountAndHistories.totalPostedDebits;
+							}
+							if(UtilValidate.isNotEmpty(prevTempGlAccountAndHistories.totalPostedCredits)){
+								totalPostedCredits = totalPostedCredits+prevTempGlAccountAndHistories.totalPostedCredits;
+							}
+						}
+						
+					}
+					
+					if(totalEndingBalance>0){
+						totalPostedDebits =totalPostedDebits+totalEndingBalance;
+					}else{
+						totalPostedCredits=totalPostedCredits+totalEndingBalance;
+					}
 					if(UtilValidate.isNotEmpty(totalPostedDebits)){
 						childCatDebitTotal=childCatDebitTotal+totalPostedDebits;
 					}
-					totalPostedCredits = tempGlAccountAndHistories.totalPostedCredits;
+					
 					if(UtilValidate.isNotEmpty(totalPostedCredits)){
 						childCatCreditTotal=childCatCreditTotal+totalPostedCredits;
 					}
@@ -171,35 +283,44 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 						tempGlMap=GlAccountIdsWiseMap.get(glAccntCategoryId);
 						if( tempGlMap && tempGlMap.get(glAccountId)){
 							tempExGlMap = tempGlMap.get(glAccountId);
-							tempExGlMap.put(eachCustmTime,tempExGlMap.get(eachCustmTime)+glTempVal);
-							glAccountIdsMap.put(glAccountId,tempExGlMap);
+							temVal=0;
+							if(UtilValidate.isNotEmpty(tempExGlMap.get(eachCustmTime))){
+								temVal = tempExGlMap.get(eachCustmTime);
+							}
+							tempExGlMap.put(eachCustmTime,temVal+glTempVal);
+							tempGlMap.put(glAccountId,tempExGlMap);
 						}else{
 							tempMap=[:];
 							tempMap.put("glAccountId",glAccountId);
 							tempMap.put("description",tempGlAccountAndHistories.description);
 							tempMap.put(eachCustmTime,glTempVal);
-							glAccountIdsMap.put(glAccountId,tempMap);
+							tempGlMap.put(glAccountId,tempMap);
 						}
-						GlAccountIdsWiseMap.put(glAccntCategoryId,glAccountIdsMap);
+						GlAccountIdsWiseMap.put(glAccntCategoryId,tempGlMap);
 					}else{
+						tempglAccountIdsMap=[:];
 						tempMap=[:];
 						tempMap.put("glAccountId",glAccountId);
 						tempMap.put("description",tempGlAccountAndHistories.description);
 						tempMap.put(eachCustmTime,glTempVal);
-						glAccountIdsMap.put(glAccountId,tempMap);
-						GlAccountIdsWiseMap.put(glAccntCategoryId,glAccountIdsMap);
+						tempglAccountIdsMap.put(glAccountId,tempMap);
+						GlAccountIdsWiseMap.put(glAccntCategoryId,tempglAccountIdsMap);
 					}
 				}
 			}
 			
 		}
+		//Debug.log("GlAccountIdsWiseMap#####################"+GlAccountIdsWiseMap);
 		childCatName=glAccountChildCategory.get("description");
 		scheduleNo = "";
 		if(UtilValidate.isNotEmpty(glAccountChildCategory.get("categoryNarration"))){
 			scheduleNo = glAccountChildCategory.get("categoryNarration");
 		}
 		childCurrentYearBal= childCatDebitTotal-childCatCreditTotal;
-		if(childCurrentYearBal>0){
+		if(childCurrentYearBal<0){
+			childCurrentYearBal=childCurrentYearBal.multiply(-1);
+		}
+		if(assetCategoryList.contains(glAccntCategoryId)){	
 			assetsGrandTotal=assetsGrandTotal+childCurrentYearBal;
 			if(assetsChildWiseMap && assetsChildWiseMap.get(glAccntCategoryId)){
 				existMap=assetsChildWiseMap.get(glAccntCategoryId);
@@ -218,8 +339,8 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 				tempMap.put(eachCustmTime,childCurrentYearBal);
 				assetsChildWiseMap.put(glAccntCategoryId, tempMap);
 			}
-		}else if(childCurrentYearBal<0){
-			childCurrentYearBal=childCurrentYearBal.multiply(-1);
+		}else if(liabilityCategoryList.contains(glAccntCategoryId)){
+			//childCurrentYearBal=childCurrentYearBal.multiply(-1);
 			liablitiesGrandTotal=liablitiesGrandTotal+childCurrentYearBal;
 			if(liablitiesChildWiseMap && liablitiesChildWiseMap.get(glAccntCategoryId)){
 				existMap=liablitiesChildWiseMap.get(glAccntCategoryId);
@@ -250,6 +371,8 @@ context.liablitiesChildWiseMap=liablitiesChildWiseMap;
 context.GrandLiablitesTotal=GrandLiablitesTotal;
 context.GrandassetsTotal=GrandassetsTotal;
 context.GlAccountIdsWiseMap=GlAccountIdsWiseMap;
+context.liabilityCategoryList=liabilityCategoryList;
+context.assetCategoryList=assetCategoryList;
 
 
 

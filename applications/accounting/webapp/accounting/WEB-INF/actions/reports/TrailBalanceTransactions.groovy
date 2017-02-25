@@ -40,14 +40,72 @@ if(UtilValidate.isEmpty(glAccountId)){
 glAccountIdList.add(glAccountId);
 }
 reportTypeFlag=parameters.reportTypeFlag;
+condList = [];
+roId = parameters.division;
+ context.roId = roId;
+ segmentId = parameters.segment;
+ branchList = [];
+ condList.clear();
+ if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+	 condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,roId));
+	 condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	 condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	 condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	 List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	 if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+		 branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+		 branchList.add(roId);
+	 }
+ }
+ 
 //Debug.log("ACCOUNT CODE=======From==NEw==GROOVY=============="+glAccountId);
  GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
  //Debug.log("tempDetails===================="+tempDetails);
  fromDate=customTimePeriod.fromDate;
  thruDate=customTimePeriod.thruDate;
-result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)),userLogin:userLogin]);
-context.put("openingBal",result.get("openingBal"));
+ openingBalance = 0;
+ if(roId.equals("Company") && segmentId.equals("All")){
+	 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId:null, segmentId:null,userLogin:userLogin]);
+	 openingBalance = result.get("openingBal");
+ }
+ else if(roId.equals("Company") && !segmentId.equals("All")){
+	 if(segmentId.equals("YARN_SALE")){
+		 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId: null, segmentId: "YARN_SALE", userLogin:userLogin]);
+		 openingBalance = openingBalance+result.get("openingBal");
+		 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId:null, segmentId: "DEPOT_YARN_SALE", userLogin:userLogin]);
+		 openingBalance = openingBalance+result.get("openingBal");
+	 }
+	 else{
+		 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId: null, segmentId:segmentId, userLogin:userLogin]);
+		 openingBalance = openingBalance+result.get("openingBal");
+	 }
+ }
+ else if(!roId.equals("Company") && segmentId.equals("All")){
+	 for (String eachParty : branchList) {
+		 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId:eachParty, segmentId:null, userLogin:userLogin]);
+		 openingBalance = openingBalance+result.get("openingBal");
+	 }
+ }
+ else{
+	 for (String eachParty : branchList) {
+		 if(segmentId.equals("YARN_SALE")){
+			 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId: eachParty, segmentId: "YARN_SALE", userLogin:userLogin]);
+			 openingBalance = openingBalance+result.get("openingBal");
+			 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId:eachParty, segmentId: "DEPOT_YARN_SALE", userLogin:userLogin]);
+			 openingBalance = openingBalance+result.get("openingBal");
+		 }
+		 else{
+			 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId: eachParty, segmentId: segmentId, userLogin:userLogin]);
+			 openingBalance = openingBalance+result.get("openingBal");
+		 }
+	 }
+ }
+ 
  findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
+
+
+ division = parameters.division;
+ acctgTransIds = [];
   conditionList = [];
  glAccountIdList.each{glAccountId->
  conditionList.clear();
@@ -55,6 +113,17 @@ context.put("openingBal",result.get("openingBal"));
  if(reportTypeFlag.equals("condensed")){
   conditionList.add(EntityCondition.makeCondition("isPosted" , EntityOperator.EQUALS,"Y"));
  }
+
+/* if(UtilValidate.isNotEmpty(acctgTransIds)){
+	 conditionList.add(EntityCondition.makeCondition("acctgTransId" , EntityOperator.IN, acctgTransIds));
+ }*/
+ if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company"))
+ conditionList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));
+ if(!segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+ conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
+if(segmentId.equals("YARN_SALE"))
+ conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+ 
  conditionList.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,glAccountId));
  conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate))));
  conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate))));
