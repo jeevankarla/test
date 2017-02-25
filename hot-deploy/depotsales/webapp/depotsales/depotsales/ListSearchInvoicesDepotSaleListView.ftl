@@ -407,7 +407,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 	function showCancelInvoiceQtip(invoiceId){
 		var invoiceId = invoiceId;
      	var message = "";
-            message += "<html><head></head><body><form id='invoicestatuschange' method='post' action='cancelSalesInvoice' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+            message += "<html><head></head><body><form id='invoicestatuschange' method='post' action='cancelDepotSalesInvoice' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
       		message += "<tr class='h2'><td align='left' class='h5' width='60%'>Invoice Id:</td><td align='left'  width='90%'>"+invoiceId+"</td></tr>";
   			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'>"	
   			message += "<input type='hidden' id='invId' name='invoiceId' value='"+invoiceId+"' >"
