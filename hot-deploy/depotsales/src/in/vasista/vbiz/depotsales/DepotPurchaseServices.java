@@ -7420,11 +7420,718 @@ public class DepotPurchaseServices{
 	}
 
 	
+	public static String CreatePOByOrderDC(HttpServletRequest request, HttpServletResponse response) {
+	
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		DispatchContext dctx =  dispatcher.getDispatchContext();
+		Locale locale = UtilHttp.getLocale(request);
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		HttpSession session = request.getSession();
+	    GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+
+		//old PO flow starts from here
+		String partyId = (String) request.getParameter("supplierId");
+		String billFromVendorPartyId = (String) request.getParameter("billToPartyId");
+		String productStoreId = (String) request.getParameter("productStoreId");
+		String orderId = (String) request.getParameter("orderId");
+		String refNo = (String) request.getParameter("refNo");
+		String quotationNo = (String) request.getParameter("quotationNo");
+		String orderDateStr = (String) request.getParameter("orderDate");
+		String dyesChemicals = (String) request.getParameter("dyesChemicals");
+		
+		//Debug.log("orderDateStr=================="+orderDateStr);
+		
+		String effectiveDateStr = (String) request.getParameter("orderDate");
+		String partyIdTo = (String) request.getParameter("shipToPartyId");
+		String partyGeoId = (String) request.getParameter("supplierGeoId");
+		
+		String purchaseTitleTransferEnumId = (String) request.getParameter("purchaseTitleTransferEnumId");
+		String purchaseTaxType = (String) request.getParameter("purchaseTaxType");
+		
+		// contact Details
+		String city = (String) request.getParameter("city");
+		String address1 = (String) request.getParameter("address1");
+		String address2 = (String) request.getParameter("address2");
+		String country = (String) request.getParameter("country");
+		String postalCode = (String) request.getParameter("postalCode");
+		String stateProvinceGeoId = (String) request.getParameter("stateProvinceGeoId");
+		String districtGeoId = (String) request.getParameter("districtGeoId");
+		String contactMechId = null;
+
+		Map<String, Object> resultContatMap = FastMap.newInstance();
+		Map<String, Object> input = FastMap.newInstance();
+		Map<String, Object> outMap = FastMap.newInstance();
+
+		String orderTypeId="";
+		String orderName ="";
+		Timestamp effectiveDate = UtilDateTime.nowTimestamp();
+		Timestamp estimatedDeliveryDate = UtilDateTime.nowTimestamp();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		
+		SimpleDateFormat sdfPo = new SimpleDateFormat("dd MMMMM, yyyy");   
+		
+		List<Map> itemDetail = FastList.newInstance();
+		List<Map> otherChargesList = FastList.newInstance();
+		Timestamp orderDate = UtilDateTime.nowTimestamp();
+		BigDecimal grandTotal =BigDecimal.ZERO;
+		Map resultMap = FastMap.newInstance();
+		try {
+			if(UtilValidate.isNotEmpty(orderId)){
+				GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+				if (UtilValidate.isNotEmpty(orderHeader)) { 
+					String statusId = orderHeader.getString("statusId");
+					//orderTypeId=orderHeader.getString("orderTypeId");
+					orderName=orderHeader.getString("orderName");
+					estimatedDeliveryDate=orderHeader.getTimestamp("estimatedDeliveryDate");
+					grandTotal=orderHeader.getBigDecimal("grandTotal");
+					if(statusId.equals("ORDER_CANCELLED")){
+						Debug.logError("Cannot create PurchaseOrder for cancelled orderId : "+orderId, module);
+						request.setAttribute("_ERROR_MESSAGE_", "Cannot create PurchaseOrder for cancelled orderId : "+orderId);	
+				  		return "error";
+					}
+				}
+				String productId = null;
+				String orderItemSeqId = null;
+				String batchNo = null;
+				String daysToStore = null;
+				String quantityStr = null;
+				String basicPriceStr = null;
+				String vatPriceStr = null;
+				String cessPriceStr = null;
+				String bedPriceStr = null;
+				String cstPriceStr = null;
+				String unitPriceStr = null;
+				String remarksStr = null;
+				String serTaxPriceStr = null;
+				BigDecimal quantity = BigDecimal.ZERO;
+				BigDecimal basicPrice = BigDecimal.ZERO;
+				BigDecimal cstPrice = BigDecimal.ZERO;
+				BigDecimal unitPrice = BigDecimal.ZERO;
+				BigDecimal vatPrice = BigDecimal.ZERO;
+				BigDecimal bedPrice = BigDecimal.ZERO;
+				BigDecimal cessPrice = BigDecimal.ZERO;
+				BigDecimal serviceTaxPrice = BigDecimal.ZERO;
+				//percentage fields
+				String bedPercentStr = null;
+				String cessPercentStr = null;
+				String vatPercentStr = null;
+				String cstPercentStr = null;
+				String tcsPercentStr = null;
+				String serviceTaxPercentStr = null;
+				
+				String purTaxListStr = null;
+				
+				BigDecimal bedPercent=BigDecimal.ZERO;
+				BigDecimal cessPercent=BigDecimal.ZERO;
+				BigDecimal vatPercent=BigDecimal.ZERO;
+				BigDecimal cstPercent=BigDecimal.ZERO;
+				BigDecimal tcsPercent=BigDecimal.ZERO;
+				BigDecimal serviceTaxPercent=BigDecimal.ZERO;
+				
+				String orderAdjustmentsListStr = null;
+
+				Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+				int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+				if (rowCount < 1) {
+					Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+					return "error";
+				}
+				List productIds = FastList.newInstance();
+				List indentProductList = FastList.newInstance();
+				for (int i = 0; i < rowCount; i++) {
+					
+					List purTaxRateList = FastList.newInstance();
+					List orderAdjustmentList = FastList.newInstance();
+					
+					Map<String  ,Object> productQtyMap = FastMap.newInstance();	  		  
+					String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+					
+					
+					String termTypeInput= (String) paramMap.get("otherTermId" + thisSuffix);
+					if (UtilValidate.isNotEmpty(termTypeInput)) {
+						String otherTermId = "";
+						String applicableTo = "ALL";
+						String termValueStr = "";
+						String termDaysStr = "";
+						String description = "";
+						String uomId = "INR";
+						String assessableValue = "";
+						BigDecimal termValue = BigDecimal.ZERO;
+						BigDecimal termDays = BigDecimal.ZERO;
+						
+						if (paramMap.containsKey("otherTermId" + thisSuffix)) {
+							otherTermId = (String) paramMap.get("otherTermId" + thisSuffix);
+						}
+						
+						if (paramMap.containsKey("applicableTo" + thisSuffix)) {
+							applicableTo = (String) paramMap.get("applicableTo" + thisSuffix);
+						}
+						if (paramMap.containsKey("adjustmentValue" + thisSuffix)) {
+							termValueStr = (String) paramMap.get("adjustmentValue" + thisSuffix);
+						}
+						
+						if (paramMap.containsKey("termDays" + thisSuffix)) {
+							termDaysStr = (String) paramMap.get("termDays" + thisSuffix);
+						}
+						if (paramMap.containsKey("description" + thisSuffix)) {
+							description = (String) paramMap.get("description" + thisSuffix);
+						}
+						if (paramMap.containsKey("uomId" + thisSuffix)) {
+							uomId = (String) paramMap.get("uomId" + thisSuffix);
+						}
+						if (paramMap.containsKey("assessableValue" + thisSuffix)) {
+							assessableValue = (String) paramMap.get("assessableValue" + thisSuffix);
+						}
+						if(UtilValidate.isNotEmpty(termValueStr)){
+							try {
+								termValue = new BigDecimal(termValueStr);
+							} catch (Exception e) {
+								Debug.logError(e, "Problems parsing term value string: " + termValueStr, module);
+								request.setAttribute("_ERROR_MESSAGE_", "Problems parsing term value string: " + termValueStr);
+								return "error";
+							}
+						}
+						if(UtilValidate.isNotEmpty(termDaysStr)){
+							try {
+								termDays = new BigDecimal(termDaysStr);
+							} catch (Exception e) {
+								Debug.logError(e, "Problems parsing term days string: " + termDaysStr, module);
+								request.setAttribute("_ERROR_MESSAGE_", "Problems parsing term days string: " + termDaysStr);
+								return "error";
+							}
+						}
+						
+						if(UtilValidate.isNotEmpty(otherTermId) && termValue.compareTo(BigDecimal.ZERO)>0){
+							Map otherChargesDetail = FastMap.newInstance();
+							Debug.log("otherTermId =============="+otherTermId + " == " + termValue);
+							otherChargesDetail.put("otherTermId", otherTermId);
+							otherChargesDetail.put("adjustmentValue", termValue);
+							otherChargesDetail.put("applicableTo", applicableTo);
+							otherChargesDetail.put("termDays", termDays);
+							otherChargesDetail.put("uomId", uomId);
+							otherChargesDetail.put("assessableValue", assessableValue);
+							otherChargesDetail.put("description", description);
+							otherChargesList.add(otherChargesDetail);
+						}
+					}
+					
+					String productInput= (String) paramMap.get("productId" + thisSuffix);
+					//invoke if only not empty
+					if (UtilValidate.isNotEmpty(productInput)) {
+
+						if (paramMap.containsKey("productId" + thisSuffix)) {
+							productId = (String) paramMap.get("productId" + thisSuffix);
+							productIds.add(productId);
+						} else {
+							request.setAttribute("_ERROR_MESSAGE_",
+									"Missing product id");
+							return "error";
+						}
+						
+						if (paramMap.containsKey("orderItemSeqId" + thisSuffix)) {
+							orderItemSeqId = (String) paramMap.get("orderItemSeqId" + thisSuffix);
+						} 
+						
+						if (paramMap.containsKey("quantity" + thisSuffix)) {
+							quantityStr = (String) paramMap
+									.get("quantity" + thisSuffix);
+						} else {
+							request.setAttribute("_ERROR_MESSAGE_",
+									"Missing product quantity");
+							return "error";
+						}
+						if (quantityStr.equals("")) {
+							request.setAttribute("_ERROR_MESSAGE_",
+									"Empty product quantity");
+							return "error";
+						}
+						
+						if (paramMap.containsKey("unitPrice" + thisSuffix)) {
+							unitPriceStr = (String) paramMap.get("unitPrice"
+									+ thisSuffix);
+						}
+						
+						
+						if (paramMap.containsKey("remarks" + thisSuffix)) {
+							remarksStr = (String) paramMap.get("remarks"
+									+ thisSuffix);
+						}
+
+						if (paramMap.containsKey("basicPrice" + thisSuffix)) {
+							basicPriceStr = (String) paramMap.get("basicPrice"
+									+ thisSuffix);
+						}
+						if (paramMap.containsKey("vatPrice" + thisSuffix)) {
+							vatPriceStr = (String) paramMap
+									.get("vatPrice" + thisSuffix);
+						}
+						if (paramMap.containsKey("bedPrice" + thisSuffix)) {
+							bedPriceStr = (String) paramMap
+									.get("bedPrice" + thisSuffix);
+						}
+						if (paramMap.containsKey("cstPrice" + thisSuffix)) {
+							cstPriceStr = (String) paramMap
+									.get("cstPrice" + thisSuffix);
+						}
+						
+
+						if (paramMap.containsKey("bedPercent" + thisSuffix)) {
+							bedPercentStr = (String) paramMap.get("bedPercent"
+									+ thisSuffix);
+						}
+						if (paramMap.containsKey("cessPercent" + thisSuffix)) {
+							bedPercentStr = (String) paramMap.get("cessPercent"
+									+ thisSuffix);
+						}
+						if (paramMap.containsKey("vatPercent" + thisSuffix)) {
+							vatPercentStr = (String) paramMap.get("vatPercent"
+									+ thisSuffix);
+						}
+						if (paramMap.containsKey("cstPercent" + thisSuffix)) {
+							cstPercentStr = (String) paramMap.get("cstPercent"
+									+ thisSuffix);
+						}
+						
+                       // Purchase tax list
+						
+						if (paramMap.containsKey("purTaxList" + thisSuffix)) {
+							purTaxListStr = (String) paramMap.get("purTaxList"
+									+ thisSuffix);
+							
+							String[] taxList = purTaxListStr.split(",");
+							for (int j = 0; j < taxList.length; j++) {
+								String taxType = taxList[j];
+								Map taxRateMap = FastMap.newInstance();
+								String purTaxType = taxType.replace("_SALE", "_PUR");
+								taxRateMap.put("orderAdjustmentTypeId",purTaxType);
+								taxRateMap.put("sourcePercentage",BigDecimal.ZERO);
+								taxRateMap.put("amount",BigDecimal.ZERO);
+								taxRateMap.put("taxAuthGeoId", partyGeoId);
+								
+								if (paramMap.containsKey(taxType + "_PUR" + thisSuffix)) {
+									String taxPercentage = (String) paramMap.get(taxType + "_PUR" + thisSuffix);
+									if(UtilValidate.isNotEmpty(taxPercentage) && !(taxPercentage.equals("NaN"))){
+										taxRateMap.put("sourcePercentage",new BigDecimal(taxPercentage));
+									}
+									
+								}
+								if (paramMap.containsKey(taxType+ "_PUR_AMT" + thisSuffix)) {
+									String taxAmt = (String) paramMap.get(taxType+ "_PUR_AMT" + thisSuffix);
+									if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+										taxRateMap.put("amount",new BigDecimal(taxAmt));
+									}
+								}
+								
+								Map tempTaxMap = FastMap.newInstance();
+								tempTaxMap.putAll(taxRateMap);
+								
+								purTaxRateList.add(tempTaxMap);
+							}
+						}
+						
+						if (paramMap.containsKey("orderAdjustmentsList" + thisSuffix)) {
+							orderAdjustmentsListStr = (String) paramMap.get("orderAdjustmentsList"+ thisSuffix);
+							
+							String[] orderAdjustmentsList = orderAdjustmentsListStr.split(",");
+							for (int j = 0; j < orderAdjustmentsList.length; j++) {
+								String orderAdjustmentType = orderAdjustmentsList[j];
+								Map adjTypeMap = FastMap.newInstance();
+								adjTypeMap.put("orderAdjustmentTypeId",orderAdjustmentType);
+								adjTypeMap.put("sourcePercentage",BigDecimal.ZERO);
+								adjTypeMap.put("amount",BigDecimal.ZERO);
+								//adjTypeMap.put("taxAuthGeoId", partyGeoId);
+								
+								if (paramMap.containsKey(orderAdjustmentType + thisSuffix)) {
+									String adjPercentage = (String) paramMap.get(orderAdjustmentType + thisSuffix);
+									if(UtilValidate.isNotEmpty(adjPercentage) && !(adjPercentage.equals("NaN"))){
+										adjTypeMap.put("sourcePercentage",new BigDecimal(adjPercentage));
+									}
+									
+								}
+								if (paramMap.containsKey(orderAdjustmentType+ "_AMT" + thisSuffix)) {
+									String taxAmt = (String) paramMap.get(orderAdjustmentType+ "_AMT" + thisSuffix);
+									if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+										adjTypeMap.put("amount",new BigDecimal(taxAmt));
+									}
+								}
+								if (paramMap.containsKey(orderAdjustmentType+ "_INC_BASIC" + thisSuffix)) {
+									String isAssessableValue = (String) paramMap.get(orderAdjustmentType+ "_INC_BASIC" + thisSuffix);
+									if(UtilValidate.isNotEmpty(isAssessableValue) && !(isAssessableValue.equals("NaN"))){
+										if(isAssessableValue.equals("TRUE")){
+											adjTypeMap.put("isAssessableValue", "Y");
+											//assessableAdjustmentAmount = assessableAdjustmentAmount.add((BigDecimal) adjTypeMap.get("amount"));
+										}
+									}
+								}
+								Map tempAdjMap = FastMap.newInstance();
+								tempAdjMap.putAll(adjTypeMap);
+								
+								orderAdjustmentList.add(tempAdjMap);
+							}
+						}
+						//Debug.log("assessableAdjustmentAmount ================="+assessableAdjustmentAmount);
+						
+						try {
+							quantity = new BigDecimal(quantityStr);
+							if (UtilValidate.isNotEmpty(unitPriceStr)) {
+								unitPrice = new BigDecimal(unitPriceStr);
+							}
+							if (UtilValidate.isNotEmpty(basicPriceStr)) {
+								basicPrice = new BigDecimal(basicPriceStr);
+							}
+							if (UtilValidate.isNotEmpty(cstPriceStr)) {
+								cstPrice = new BigDecimal(cstPriceStr);
+							}
+							
+							if (UtilValidate.isNotEmpty(bedPriceStr)) {
+								bedPrice = new BigDecimal(bedPriceStr);
+							}
+							if (UtilValidate.isNotEmpty(cessPriceStr)) {
+								cessPrice = new BigDecimal(cessPriceStr);
+							}
+							if (UtilValidate.isNotEmpty(vatPriceStr)) {
+								vatPrice = new BigDecimal(vatPriceStr);
+							}
+							
+
+							if (UtilValidate.isNotEmpty(bedPercentStr)) {
+								bedPercent = new BigDecimal(bedPercentStr);
+							}
+							if (UtilValidate.isNotEmpty(cessPercentStr)) {
+								cessPercent = new BigDecimal(cessPercentStr);
+							}
+							if (UtilValidate.isNotEmpty(vatPercentStr)) {
+								vatPercent = new BigDecimal(vatPercentStr);
+							}
+							if (UtilValidate.isNotEmpty(cstPercentStr)) {
+								cstPercent = new BigDecimal(cstPercentStr);
+							}
+							
+							
+						} catch (Exception e) {
+							Debug.logError(e, "Problems parsing quantity string: "
+									+ quantityStr, module);
+							request.setAttribute("_ERROR_MESSAGE_",
+									"Problems parsing quantity string: " + quantityStr);
+							return "error";
+						}
+
+						productQtyMap.put("productId", productId);
+						productQtyMap.put("quantity", quantity);
+						productQtyMap.put("unitPrice", unitPrice);
+						productQtyMap.put("remarks", remarksStr);
+						productQtyMap.put("unitListPrice", unitPrice);
+						productQtyMap.put("basicPrice", basicPrice);
+						productQtyMap.put("bedPrice", bedPrice);
+						productQtyMap.put("cessPrice", bedPrice);
+						productQtyMap.put("cstPrice", cstPrice);
+						productQtyMap.put("vatPrice", vatPrice);
+						productQtyMap.put("bedPercent", bedPercent);
+						productQtyMap.put("cessPercent", bedPercent);
+						productQtyMap.put("vatPercent", vatPercent);
+						productQtyMap.put("cstPercent", cstPercent);
+						productQtyMap.put("orderItemSeqId", orderItemSeqId);
+						productQtyMap.put("purTaxRateList", purTaxRateList);
+						productQtyMap.put("orderAdjustmentList", orderAdjustmentList);
+						
+						itemDetail.add(productQtyMap);
+
+					}//end of productQty check
+				}//end row count for loop
+				//Debug.log("indentProductList============================"+indentProductList);
+				
+				List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+
+				Map orderItemSeq = FastMap.newInstance();
+				/*for(GenericValue orderItemsValues : orderItems){
+					String productId = orderItemsValues.getString("productId");
+					BigDecimal quantity=orderItemsValues.getBigDecimal("quantity");
+					BigDecimal unitListPrice=BigDecimal.ZERO;
+					BigDecimal unitPrice=BigDecimal.ZERO;
+					if(UtilValidate.isNotEmpty(orderItemsValues.getBigDecimal("unitListPrice"))){
+						unitListPrice=orderItemsValues.getBigDecimal("unitListPrice");
+					}
+					if(UtilValidate.isNotEmpty(orderItemsValues.getBigDecimal("unitPrice"))){
+						unitPrice=orderItemsValues.getBigDecimal("unitPrice");
+					}
+					Map tempMap=FastMap.newInstance();
+					tempMap.put("productId",productId);
+					tempMap.put("quantity",quantity);
+					tempMap.put("unitPrice",unitPrice);
+					tempMap.put("unitListPrice",unitListPrice);
+					itemDetail.add(tempMap);
+					String orderItemSeqId = orderItemsValues.getString("orderItemSeqId");
+					orderItemSeq.put(productId, orderItemSeqId);
+				}*/
+			
+				if (UtilValidate.isNotEmpty(orderDateStr)) { 
+					try {
+						orderDate = new java.sql.Timestamp(sdfPo.parse(orderDateStr).getTime());
+					} catch (ParseException e) {
+						Debug.logError(e, "Cannot parse date string: " + orderDateStr, module);
+					} catch (NullPointerException e) {
+						Debug.logError(e, "Cannot parse date string: " + orderDateStr, module);
+					}
+				}
+			
+				if (UtilValidate.isNotEmpty(effectiveDateStr)) { 
+					try {
+						effectiveDate = new java.sql.Timestamp(sdfPo.parse(effectiveDateStr).getTime());
+					} catch (ParseException e) {
+						Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+					} catch (NullPointerException e) {
+						Debug.logError(e, "Cannot parse date string: " + effectiveDateStr, module);
+					}
+				}else{
+					effectiveDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+				}
+				
+				Map processOrderContext = FastMap.newInstance();
+
+				//String productStoreId = (String) (in.vasista.vbiz.purchase.PurchaseStoreServices.getPurchaseFactoryStore(delegator)).get("factoryStoreId");//to get Factory storeId
+				//String productStoreId ="STORE";
+				List termsList = FastList.newInstance();
+				List otherTermDetail = FastList.newInstance();
+				List adjustmentDetail = FastList.newInstance();
+
+				processOrderContext.put("userLogin", userLogin);
+				processOrderContext.put("productQtyList", itemDetail);
+				processOrderContext.put("orderTypeId", orderTypeId);
+				processOrderContext.put("orderId", orderId);
+				processOrderContext.put("termsList", termsList);
+				processOrderContext.put("partyId", partyId);
+				processOrderContext.put("grandTotal", grandTotal);
+				processOrderContext.put("otherTerms", otherTermDetail);
+				processOrderContext.put("otherChargesList", otherChargesList);
+				processOrderContext.put("adjustmentDetail", adjustmentDetail);
+				processOrderContext.put("billFromPartyId", partyId);
+				processOrderContext.put("issueToDeptId", "");
+				processOrderContext.put("shipToPartyId", partyIdTo);
+				processOrderContext.put("billFromVendorPartyId", billFromVendorPartyId);
+				processOrderContext.put("supplyDate", effectiveDate);
+				processOrderContext.put("salesChannel", "WEB_SALES_CHANNEL");
+				processOrderContext.put("enableAdvancePaymentApp", Boolean.TRUE);
+				processOrderContext.put("productStoreId", productStoreId);
+				processOrderContext.put("PONumber", orderId);
+				processOrderContext.put("refNo", refNo);
+				processOrderContext.put("dyesChemicals", dyesChemicals);
+				processOrderContext.put("quotationNo", quotationNo);
+				processOrderContext.put("orderName", orderName);
+				processOrderContext.put("districtGeoId", districtGeoId);
+				//processOrderContext.put("refNo", refNo);
+				processOrderContext.put("orderDate", orderDate);
+				//processOrderContext.put("fromDate", (String)UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+				//processOrderContext.put("thruDate", (String)UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp()));
+				processOrderContext.put("estimatedDeliveryDate", estimatedDeliveryDate);
+				processOrderContext.put("incTax", "Y");
+				
+				processOrderContext.put("purchaseTitleTransferEnumId", purchaseTitleTransferEnumId);
+				processOrderContext.put("purchaseTaxType", purchaseTaxType);
+				result = CreateMaterialPO(dctx, processOrderContext);
+				if(ServiceUtil.isError(result)){
+					Debug.logError("Unable to generate order: " + ServiceUtil.getErrorMessage(result), module);
+					request.setAttribute("_ERROR_MESSAGE_", "Unable to generate order  For party :" + partyId+"....! "+ServiceUtil.getErrorMessage(result));
+					return "error";
+				}
+			  
+			}
+		}catch(GenericEntityException e){
+			Debug.logError("Cannot create PurchaseOrder for cancelled orderId : "+orderId, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Cannot create PurchaseOrder for cancelled orderId : "+orderId);	
+			return "error";
+		}
+		
+		/*//creating supplier product here
+				try{
+					Map suppProdResult = FastMap.newInstance();
+					if(UtilValidate.isNotEmpty(result.get("orderId"))){
+						Map suppProdMap = FastMap.newInstance();
+						suppProdMap.put("userLogin", userLogin);
+						suppProdMap.put("orderId", result.get("orderId"));
+						suppProdResult = dispatcher.runSync("createSupplierProductFromOrder",suppProdMap);
+						if(ServiceUtil.isError(suppProdResult)){
+							Debug.logError("Unable do create supplier product: " + ServiceUtil.getErrorMessage(suppProdResult), module);
+							request.setAttribute("_ERROR_MESSAGE_", "Unable do create supplier product...! "+ServiceUtil.getErrorMessage(suppProdResult));
+							return "error";
+						}
+					}
+				}catch (Exception e1) {
+					Debug.logError(e1, "Error in supplier product",module);
+					request.setAttribute("_ERROR_MESSAGE_", "Unable do create supplier product...! ");
+					return "error";
+				}*/
+				
+				if(UtilValidate.isNotEmpty(orderId)){
+					Map<String, Object> orderAssocMap = FastMap.newInstance();
+					orderAssocMap.put("orderId", result.get("orderId"));
+					orderAssocMap.put("toOrderId", orderId);
+					orderAssocMap.put("userLogin", userLogin);
+					result = createOrderAssoc(dctx,orderAssocMap);
+					if(ServiceUtil.isError(result)){
+						Debug.logError("Unable do Order Assoc: " + ServiceUtil.getErrorMessage(result), module);
+						request.setAttribute("_ERROR_MESSAGE_", "Unable do Order Assoc...! "+ServiceUtil.getErrorMessage(result));
+						return "error";
+					}
+				}
+				
+				if(UtilValidate.isNotEmpty(orderId)){
+					Map<String, Object> orderAssocMap = FastMap.newInstance();
+					orderAssocMap.put("orderId", result.get("orderId"));
+					orderAssocMap.put("toOrderId", orderId);
+					orderAssocMap.put("userLogin", userLogin);
+					result = createOrderAssoc(dctx,orderAssocMap);
+					if(ServiceUtil.isError(result)){
+						Debug.logError("Unable do Order Assoc: " + ServiceUtil.getErrorMessage(result), module);
+						request.setAttribute("_ERROR_MESSAGE_", "Unable do Order Assoc...! "+ServiceUtil.getErrorMessage(result));
+						return "error";
+					}
+				}
+				
+				
+				if(UtilValidate.isNotEmpty(orderId)){
+				    Map<String, Object> orderStatusMap = UtilMisc.<String, Object>toMap("orderId", orderId, "userLogin", userLogin);
+				    Map<String, Object> statusResult = null;
+			        try{
+				         statusResult = dispatcher.runSync("populateSaleItemPrice", orderStatusMap);
+				    }catch (Exception e) {
+					     Debug.logError("Problems adjusting order header status for order #" + orderId, module);
+	                }
+			    }
+
+				try{
+					if (UtilValidate.isNotEmpty(address1)){
+						input = UtilMisc.toMap("userLogin", userLogin, "partyId",partyIdTo, "address1",address1, "address2", address2, "city", city, "stateProvinceGeoId", stateProvinceGeoId, "postalCode", postalCode, "contactMechPurposeTypeId","SHIPPING_LOCATION");
+						resultContatMap =  dispatcher.runSync("createPartyPostalAddress", input);
+						
+						if (ServiceUtil.isError(resultContatMap)) {
+							Debug.logError(ServiceUtil.getErrorMessage(resultContatMap), module);
+			            }
+						contactMechId = (String) resultContatMap.get("contactMechId");
+
+						Object tempInput = "SHIPPING_LOCATION";
+						input = UtilMisc.toMap("userLogin", userLogin, "contactMechId", contactMechId, "partyId",partyIdTo, "contactMechPurposeTypeId", tempInput);
+						resultContatMap =  dispatcher.runSync("createPartyContactMechPurpose", input);
+						if (ServiceUtil.isError(resultContatMap)) {
+						    Debug.logError(ServiceUtil.getErrorMessage(resultContatMap), module);
+			            }
+						partyIdTo = (String) resultContatMap.get("partyId"); 
+						
+					 }else{
+						 
+						 try {
+			                    GenericValue orderParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyIdTo));
+			                    Collection<GenericValue> shippingContactMechList = ContactHelper.getContactMech(orderParty, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
+			                    if (UtilValidate.isNotEmpty(shippingContactMechList)) {
+			                        GenericValue shippingContactMech = (shippingContactMechList.iterator()).next();
+			                        contactMechId= shippingContactMech.getString("contactMechId");
+			                    }
+			                } catch (GenericEntityException e) {
+			                    Debug.logError(e, "Error setting shippingContactMechId in setDefaultCheckoutOptions() method.", module);
+			                }
+						 
+					 }
+					
+					
+					}catch (GenericServiceException e) {
+						Debug.logError(e, module);
+
+					} 
+					if(UtilValidate.isNotEmpty(contactMechId)){
+						try{
+			        GenericValue OrderContactMech = delegator.makeValue("OrderContactMech", FastMap.newInstance());
+			        OrderContactMech.set("orderId", result.get("orderId"));
+			        OrderContactMech.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
+			        OrderContactMech.set("contactMechId", contactMechId);
+	            	delegator.createOrStore(OrderContactMech);
+						}catch (Exception ex) {
+							request.setAttribute("_ERROR_MESSAGE_", "Error while storing shipping Details for Order: "+result.get("orderId"));	  	 
+				        }
+					}
+				
+					String multiaddress = (String) request.getParameter("multiaddress");
+
+					
+					if(UtilValidate.isNotEmpty(multiaddress)){
+					
+					JSONArray multiAddressArray=null;
+					     try{		
+					         multiAddressArray =new JSONArray(multiaddress);
+						  
+
+					         int shipGroupSeqId = 1;
+						  for (int i = 0; i < multiAddressArray.length(); i++) {
+							  
+						    	String multiAddressArrayStr = String.valueOf( multiAddressArray.get(i));
+					
+					               JSONObject multiAddressMap = new JSONObject();
+					               multiAddressMap = (JSONObject) JSONSerializer.toJSON(multiAddressArrayStr);
+					
+					               String Mcity = (String) multiAddressMap.get("city");
+					               String quantityStr = (String) multiAddressMap.get("quantity");
+					               String estiDateStr = (String) multiAddressMap.get("estiDate");
+					               
+					               
+					               Timestamp estimatedShipDate = null;
+					               if (UtilValidate.isNotEmpty(estiDateStr)) { //2011-12-25 18:09:45
+					       			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");             
+					       			try {
+					       				estimatedShipDate = new java.sql.Timestamp(sdf1.parse(estiDateStr).getTime());
+					       			} catch (ParseException e) {
+					       				Debug.logError(e, "Cannot parse date string: " + estiDateStr, module);
+					       			} catch (NullPointerException e) {
+					       				Debug.logError(e, "Cannot parse date string: " + estiDateStr, module);
+					       			}
+					       		}
+					       		else{
+					       			estimatedShipDate = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
+					       		}
+					              
+					               if(UtilValidate.isNotEmpty(Mcity)){
+										try{
+									        GenericValue OrderItemShipGroup = delegator.makeValue("OrderItemShipGroup");
+									        OrderItemShipGroup.set("orderId", result.get("orderId"));
+									        String shipGroupSeq = String.format("%05d", shipGroupSeqId);
+									        OrderItemShipGroup.set("shipGroupSeqId", shipGroupSeq);
+									        OrderItemShipGroup.set("city", Mcity);
+									        if(UtilValidate.isNotEmpty(quantityStr))
+									        OrderItemShipGroup.set("quantity", new BigDecimal(quantityStr));
+									        OrderItemShipGroup.set("estimatedShipDate", estimatedShipDate);
+							           	    delegator.createOrStore(OrderItemShipGroup);
+							           	    
+							           	     shipGroupSeqId++;
+										}catch (Exception ex) {
+											request.setAttribute("_ERROR_MESSAGE_", "Error while storing OrderItemShipGroup Details for Order: "+orderId);	  	 
+								        }
+									}
+						    }
+						
+						 }catch(Exception e){
+							 Debug.logError("JSON Array Parsing Error : "+e, module);
+						 } 
+					     
+					}
+					try{
+			 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", result.get("orderId")));
+			 			if (ServiceUtil.isError(serviceResult)) {
+			 				Debug.logError("Error While Updateing Indent Summary Details", module);
+			            }
+			  		}catch(GenericServiceException e){
+						Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+					}
+					
+					
+			request.setAttribute("_EVENT_MESSAGE_", "Entry successful for party: "+partyId+" and  PO :"+result.get("orderId"));	
+			request.setAttribute("orderId", orderId); 
+			return "success";
+	
+	}
+	
 	
 	
 	
 	public static String CreatePOByOrder(HttpServletRequest request, HttpServletResponse response) {
-	
+		
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 		DispatchContext dctx =  dispatcher.getDispatchContext();
@@ -8122,6 +8829,11 @@ public class DepotPurchaseServices{
 			return "success";
 	
 	}
+	
+
+	
+	
+	
 	
 	   
 	public static Map<String, Object> CreateMaterialPO(DispatchContext ctx,Map<String, ? extends Object> context) {
@@ -12327,7 +13039,65 @@ public class DepotPurchaseServices{
           return result;
    	}
      
-	    
+    
+	 public static Map<String, Object> populateSaleItemPrice(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		String POorderId = (String) context.get("POorderId");
+		Locale locale = (Locale) context.get("locale");
+		
+		 try{
+		List condLIst = FastList.newInstance();
+		condLIst.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, POorderId));
+		EntityCondition condExpr1 = EntityCondition.makeCondition(condLIst, EntityOperator.AND);
+		List<GenericValue> orderItem = delegator.findList("orderItem", condExpr1, null, null, null, false);
+		
+		
+		for (GenericValue eachItem : orderItem) {
+			
+			
+			String toOrderId = eachItem.getString("toOrderId");
+			String toOrderItemSeqId = eachItem.getString("toOrderItemSeqId");
+			
+			List condList = FastList.newInstance();
+	    	condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, toOrderId));
+	    	condList.add(EntityCondition.makeCondition("toOrderItemSeqId", EntityOperator.EQUALS, toOrderItemSeqId));
+	    	condList.add(EntityCondition.makeCondition("orderItemAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+	        List<GenericValue> orderItemAssocList = delegator.findList("OrderItemAssoc", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("orderId","orderItemSeqId"), null, null, false);
+
+			
+	        GenericValue orderItemAssoc = EntityUtil.getFirst(orderItemAssocList);
+	        
+	        String orderId = orderItemAssoc.getString("orderId");
+	        String orderItemSeqId = orderItemAssoc.getString("orderItemSeqId");
+			
+			
+			GenericValue orderItemSale = delegator.findOne("OrderItem", UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId), false);
+			
+			if(UtilValidate.isNotEmpty(orderItemSale)){
+				orderItemSale.set("unitPrice",eachItem.getBigDecimal("unitPrice"));
+				orderItemSale.set("unitListPrice",eachItem.getBigDecimal("unitListPrice"));
+				
+				orderItemSale.store();
+				
+			}
+			
+		} 
+		
+		 }catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive Shipment ", module);
+			}
+		
+		
+		 
+		
+ 	  //result.put("shipmentIds",ShipementIds);
+      
+      return result;
+	}
   	 
   		
 	    

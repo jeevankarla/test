@@ -57,6 +57,12 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
     
+     <service name="populateSaleItemPrice" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="populateSaleItemPrice">
+        <description>populate Sale Item Price</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
+    
      <service name="invalidShipments" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="invalidShipments">
         <description>Approve Depot Orders</description>

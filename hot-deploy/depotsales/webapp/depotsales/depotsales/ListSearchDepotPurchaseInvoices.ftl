@@ -17,6 +17,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<link rel="stylesheet" type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/css/jquery.dataTables.css</@ofbizContentUrl>">
+	<link rel="stylesheet" type="text/css" href="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/css/dataTables.tableTools.css</@ofbizContentUrl>">
+
+	<style type="text/css" class="init">
+
+	</style>
+<style type="text/css">
+.dataTables_filter input {
+  border-style: groove;    
+}
+</style>	
+	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/jquery.js</@ofbizContentUrl>"></script>
+	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/jquery.dataTables.js</@ofbizContentUrl>"></script>
+	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/extensions/TableTools/js/dataTables.tableTools.js</@ofbizContentUrl>"></script>
+	<script type="text/javascript" language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/datatables/1.10.0/media/js/dataTables.plugins.js</@ofbizContentUrl>"></script>
+
+
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.css</@ofbizContentUrl>" type="text/css" media="screen" charset="utf-8" />
 
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/qtip/jquery.qtip.js</@ofbizContentUrl>"></script>
@@ -104,6 +121,19 @@ function datepick()
 		
 	}
 //<![CDATA[	
+
+$(document).ready(function() {
+    $('#coreTable').DataTable( {
+     
+      "paging":   true,
+        "ordering": true,
+         "scrollY":  "500px",
+        "scrollCollapse": true,
+         "lengthMenu": [[10, 25, 50,100, -1], [10, 25, 50,100, "All"]]
+    
+    } );
+    
+} );
 
 function getInvoiceRunning(){
 		
@@ -400,6 +430,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
     <span class="label" id="showInvoiceRunningTotal"></span>
     <span class="label">Quantity : </span> 
     <span class="label" id="showInvoiceRunningTotalQuantity"></span>
+    ${uiLabelMap.CommonSelectAll}<input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/>
   </div>
   <form name="listInvoices" id="listInvoices"  method="post" action="">
     <div align="right">
@@ -430,7 +461,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
       <input type="hidden" name="bulkEmail" id="bulkEmail" value="<@ofbizUrl>bulkEmail</@ofbizUrl>"/>
 	  <#-- <input id="paymentButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" /> -->
 	 </div>
-    <table class="basic-table hover-bar" cellspacing="0">
+    <table id="coreTable" cellspacing="0">
       <thead>
         <tr class="header-row-2">
           <td>${uiLabelMap.FormFieldTitle_invoiceId}</td>
