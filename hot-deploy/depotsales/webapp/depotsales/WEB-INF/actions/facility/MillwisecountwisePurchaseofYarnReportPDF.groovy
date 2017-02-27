@@ -192,36 +192,35 @@ totalValue=0;
 prodCatMap=[:];
 totalsMap=[:];
 totalsMap=[:];
-if(BOAddress){
-headerData1=[:];
-headerData1.put("prodcatName", "");
-headerData1.put("productName", "");
-headerData1.put("partyName", "");
-headerData1.put("orderQty", BOAddress);
-/*headerData2.put("BdlWt", "____");*/
-headerData1.put("rate", "");
-headerData1.put("orderValue", " ");
-finalCSVList.add(headerData1);
-}
-headerData2=[:];
-headerData2.put("prodcatName", "");
-headerData2.put("productName", "");
-headerData2.put("partyName", "");
-headerData2.put("orderQty", "");
-/*headerData2.put("BdlWt", "____");*/
-headerData2.put("rate", "");
-headerData2.put("orderValue", " ");
-finalCSVList.add(headerData2);
+stylesMap=[:];
+stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+stylesMap.put("mainHeader2", "Mill wise count wise Purchase of Yarn Report");
+stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+stylesMap.put("mainHeadercellHeight",400);
+stylesMap.put("mainHeaderFontSize",12);
+stylesMap.put("mainHeadingCell",1);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",false);
+stylesMap.put("columnHeaderFontName","TimesNewRoman");
+stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
 
-headerData=[:];
-headerData.put("prodcatName", "Product Category");
-headerData.put("productName", "Product Count");
-headerData.put("partyName", "Party Name");
-headerData.put("orderQty", "Order Qty");
-/*headerData.put("BdlWt", "BdlWt");*/
-headerData.put("rate", "Rate");
-headerData.put("orderValue", "Order Value");
-finalCSVList.add(headerData);
+headingMap=[:];
+headingMap.put("prodcatName", "Product Category");
+headingMap.put("productName", "Product Count");
+headingMap.put("partyName", "Party Name");
+headingMap.put("orderQty", "Order Qty");
+/*headingMap.put("BdlWt", "BdlWt");*/
+headingMap.put("rate", "Rate");
+headingMap.put("orderValue", "Order Value");
+
+finalCSVList.add(stylesMap);
+finalCSVList.add(headingMap);
+
+
 for(productCategoryId in productCategoryIds){
 	//tempCSVMap1=[:];
 	prodCatList=[];
@@ -345,8 +344,6 @@ totalsMap.put("orderValue", totalValue);
 context.totalsMap=totalsMap;
 context.prodCatMap=prodCatMap;
 context.finalCSVList=finalCSVList;
-
-
 
 
 

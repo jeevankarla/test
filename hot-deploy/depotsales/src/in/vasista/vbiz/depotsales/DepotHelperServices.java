@@ -2411,13 +2411,13 @@ public static Map<String, Object> getMaterialStores(DispatchContext ctx,Map<Stri
             	enableIndentSummaryDetails=false;
             	return result;
             }
-            if(invoiceId!=null){ 
-            	 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false); 
-            	 if("DEPOT_YARN_SALE".equals(invoice.get("purposeTypeId"))){ 
-            		 return result; 
-            	 } 
+            if(invoiceId!=null){
+              	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+              	if("DEPOT_YARN_SALE".equals(invoice.get("purposeTypeId"))){
+              		return result;
+              	}
             }
-            if("CancelSaleOrder".equals(puposeType) && enableIndentSummaryDetails){
+        	 if("CancelSaleOrder".equals(puposeType) && enableIndentSummaryDetails){
         		 GenericValue indentSummaryDetails = delegator.findOne("IndentSummaryDetails", UtilMisc.toMap("orderId", orderId), false);
         		 if(UtilValidate.isNotEmpty(indentSummaryDetails)){
         			 indentSummaryDetails.remove();

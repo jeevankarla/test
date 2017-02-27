@@ -222,42 +222,37 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 			
 			//Debug.log("OrderIdList=================="+OrderIdList);
 			//if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
-			headerData=[:];
-			headerData.put("orderNo", " ");
-			headerData.put("orderDate", " ");
-			headerData.put("partyName", "INDENT VS DISPATCH REPORT");
-			headerData.put("productName", " ");
-			headerData.put("supplierName", " ");
-			headerData.put("initialQty", " ");
-			headerData.put("indentValue", " ");
-			headerData.put("finalQty", " ");
-			headerData.put("dispatchValue", " ");
-			headerData.put("diffQty", " ");
-			finalCSVList.add(headerData);
-			headerData1=[:];
-			headerData1.put("orderNo", " ");
-			headerData1.put("orderDate", " ");
-			headerData1.put("partyName", " ");
-			headerData1.put("productName", " ");
-			headerData1.put("supplierName", " ");
-			headerData1.put("initialQty", " ");
-			headerData1.put("indentValue", " ");
-			headerData1.put("finalQty", " ");
-			headerData1.put("dispatchValue", " ");
-			headerData1.put("diffQty", " ");
-			finalCSVList.add(headerData1);
-			headerData2=[:];
-			headerData2.put("orderNo", "Order Id");
-			headerData2.put("orderDate", "Order Date");
-			headerData2.put("partyName", "Party Name");
-			headerData2.put("productName", "Product Name");
-			headerData2.put("supplierName", "Supplier Name");
-			headerData2.put("initialQty", "Indented Quantity");
-			headerData2.put("indentValue", "Indent Value");
-			headerData2.put("finalQty", "Dispatched Quantity");
-			headerData2.put("dispatchValue", "Dispatch Value");
-			headerData2.put("diffQty", "Difference Quantity");
-			finalCSVList.add(headerData2);
+			
+			stylesMap=[:];
+			stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+			stylesMap.put("mainHeader2", "INDENT VS DISPATCH REPORT");
+			stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+			stylesMap.put("mainHeadercellHeight",400);
+			stylesMap.put("mainHeaderFontSize",12);
+			stylesMap.put("mainHeadingCell",1);
+			stylesMap.put("mainHeaderBold",true);
+			stylesMap.put("columnHeaderBgColor",false);
+			stylesMap.put("columnHeaderFontName","TimesNewRoman");
+			stylesMap.put("columnHeaderFontSize",13);
+			stylesMap.put("autoSizeCell",true);
+			stylesMap.put("columnHeaderCellHeight",300);
+			request.setAttribute("stylesMap", stylesMap);
+			request.setAttribute("enableStyles", true);
+			
+			headingMap=[:];
+			headerData.put("orderNo", "Order Id");
+			headerData.put("orderDate", "Order Date");
+			headerData.put("partyName", "Party Name");
+			headerData.put("productName", "Product Name");
+			headerData.put("supplierName", "Supplier Name");
+			headerData.put("initialQty", "Indented Quantity");
+			headerData.put("indentValue", "Indent Value");
+			headerData.put("finalQty", "Dispatched Quantity");
+			headerData.put("dispatchValue", "Dispatch Value");
+			headerData.put("diffQty", "Difference Quantity");
+			
+			finalCSVList.add(stylesMap);
+			finalCSVList.add(headingMap);
 			
 			//}
 			

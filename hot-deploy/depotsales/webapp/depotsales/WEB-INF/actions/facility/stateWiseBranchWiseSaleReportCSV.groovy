@@ -256,6 +256,40 @@ dupliInvoices = []as Set;
 totInvQTY = 0;
 totInvAMT = 0;
 tempTotMap=[:];
+
+stylesMap=[:];
+stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+stylesMap.put("mainHeader2", "State Wise Branch Wise Sales Report");
+stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+stylesMap.put("mainHeadercellHeight",400);
+stylesMap.put("mainHeaderFontSize",12);
+stylesMap.put("mainHeadingCell",2);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",false);
+stylesMap.put("columnHeaderFontName","TimesNewRoman");
+stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+
+headingMap=[:];
+headingMap.put("billno","Sale Invoice No")
+headingMap.put("invoiceDate","Invoice Date")
+headingMap.put("productName","Product Name")
+headingMap.put("invoiceQTY","Quantity(kg)")
+headingMap.put("invoicprice","Invoice Price")
+headingMap.put("invoiceAmount","Amount")
+headingMap.put("supplierName","Name Of Supplier")
+headingMap.put("destAddr","Destination")
+headingMap.put("transporter","Transporter")
+headingMap.put("lrNumber","Lr Number")
+headingMap.put("lrDate","Lr Date")
+
+finalList.add(stylesMap);
+finalList.add(headingMap);
+
+
 for (eachInvoiceList in Invoice) {
 	
 	
@@ -514,4 +548,4 @@ tempTotMap.put("invoiceQTY", totInvQTY);
 tempTotMap.put("invoiceAmount", totInvAMT);
 finalList.add(tempTotMap);
 context.finalList = finalList;
-
+Debug.log("finalList================"+ finalList);

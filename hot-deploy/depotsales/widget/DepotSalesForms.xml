@@ -3486,60 +3486,50 @@
 
 	</form>
        <form name="SupplierwiseCountwisePurchaseReportCSV" type="list" list-name="finalCSVList" view-size="99999">
-    	 <field name="prodcatName" title="___"><display/></field>
-    	 <field name="productName" title="____"><display/></field>
-    	 <field name="partyName" title="____"><display/></field>
-    	 <field name="orderQty" title="___"><display/></field>         
-         <field name="rate" title="_National Handloom__"><display/></field>
-         <field name="orderValue" title="_Development Corporation LTD___ ___"><display/></field>
+    	 <field name="prodcatName" title="_"><display/></field>
+    	 <field name="productName" title="_"><display/></field>
+    	 <field name="partyName" title="_"><display/></field>
+    	 <field name="orderQty" title="_"><display/></field>         
+         <field name="rate" title="_"><display/></field>
+         <field name="orderValue" title="_"><display/></field>
     </form>
     <form name="MillwisecountwisePurchaseofYarnReportCSV" type="list" list-name="finalCSVList" view-size="99999">
-    	<field name="prodcatName" title="___"><display/></field>
-    	 <field name="productName" title="____"><display/></field>
-    	 <field name="partyName" title="____"><display/></field>
-    	 <field name="orderQty" title="__National Handloom____"><display/></field>
-         <field name="rate" title="_Development Corporation Ltd___ ___"><display/></field>
-         <field name="orderValue" title="__"><display/></field>
+    	<field name="prodcatName" title="_"><display/></field>
+    	 <field name="productName" title="_"><display/></field>
+    	 <field name="partyName" title="_"><display/></field>
+    	 <field name="orderQty" title="_"><display/></field>
+         <field name="rate" title="_"><display/></field>
+         <field name="orderValue" title="_"><display/></field>
     </form>
     <form name="purchaseRegisterCSV" type="list" list-name="orderList" view-size="99999">
-        <field name="orderDate" title="Indent Date"><display/></field>
+        <field name="orderDate" title="_"><display/></field>
        <!--  <field name="orderId" title="SEQUENCE ID" ><display /></field> -->
-        <field name="orderNo" title="Sequence Id"><display/></field> -->
-        <field name="Qty" title="Qty"><display/></field>
-        <field name="unit" title="Unit Price"><display/></field>
-           <field name="amount" title="Amount"><display/></field>
-        <field name="weaverName" title="Weaver Name"><display/></field>
-        
-        <field name="poSquenceNo" title=" PO Sequence Id" ><display /></field>
-        <!-- <field name="poNo" title="PO NO"><display/></field> --> 
-          
-        <field name="poDate" title="PO Date"><display/></field> 
-        <field name="poQty" title="PO Quantity"><display/></field>
-        <field name="supplierName" title="Supplier Name"><display/></field>
-        <field name="salInv" title="Sale Invoice"><display/></field>
-        <field name="salDate" title="Sale Date"><display/></field>
-          <field name="salquantity" title="Sale Quantity"><display/></field>
-        <field name="salVal" title="Sale Value"><display/></field>
-        <field name="transporter" title="Transporter"><display/></field>
-        <field name="milInv" title="Mil Invoice"><display/></field>
-        <field name="value" title="Value"><display/></field>
-        <field name="paymentReceipt" title="Payment Receipt"><display/></field>
-        <field name="amount" title="Amount"><display/></field>
-        <!-- <field name="isgeneratedPO" title="isgeneratedPO"><display/></field>
-        <field name="storeName" title="Store Name"><display/></field>
-        <field name="poSquenceNo" title="PO Squence No"><display/></field>
-        <field name="statusId" title="Status Id"><display/></field>
-        <field name="orderTotal" title="Order Total"><display/></field> -->
+        <field name="orderNo" title="_"><display/></field> 
+        <field name="Qty" title="_"><display/></field>
+        <field name="unit" title="_"><display/></field>
+           <field name="amount" title="_"><display/></field>
+        <field name="weaverName" title="_"><display/></field>
+        <field name="poSquenceNo" title="_" ><display /></field>
+        <!-- <field name="poNo" title="_"><display/></field> --> 
+        <field name="poDate" title="_"><display/></field> 
+        <field name="poQty" title="_"><display/></field>
+        <field name="supplierName" title="_"><display/></field>
+        <field name="salInv" title="_"><display/></field>
+        <field name="salDate" title="_"><display/></field>
+          <field name="salquantity" title="_"><display/></field>
+        <field name="salVal" title="_"><display/></field>
+        <field name="transporter" title="_"><display/></field>
+        <field name="milInv" title="_"><display/></field>
+        <field name="value" title="_"><display/></field>
+        <field name="paymentReceipt" title="_"><display/></field>
+        <field name="amount" title="_"><display/></field>
+        <!-- <field name="isgeneratedPO" title="_"><display/></field>
+        <field name="storeName" title="_"><display/></field>
+        <field name="poSquenceNo" title="_"><display/></field>
+        <field name="statusId" title="_"><display/></field>
+        <field name="orderTotal" title="_"><display/></field> -->
     </form>
    
-   
-   
-    <form name="purchaseRegisterCSVheader" type="list"  view-size="99999999999999999">
-        <field name="purchaseRegisterCSVheader" title="-------------------------------------------------------------------------------------------------PURCHASE REGISTER---------------------------------------------------------------------------------"><display/></field>
-     
-    </form>
-   
-    
     <form name="salePurchaseReport" type="list" list-name="salesAndPurchaseList" view-size="99999">
 			<field name="invoiceId" title="Invoice Id"><display/></field>
 			<field name="invoiceDate" title="Invoice Date"><display/></field>
@@ -3677,13 +3667,13 @@
          <field name="allMonthsTotal" title="Total Invoice Value"><display/></field>
     </form>
     <form name="m1ReportCSV" type="list" list-name="finalCSVList" view-size="99999">
-    	 <field name="prodcatName" title="___"><display/></field>
-    	 <field name="productName" title="__National Handloom__"><display/></field>
-    	 <field name="partyName" title="__Development__"><display/></field>
-    	 <field name="orderQty" title="__Corporation Ltd__"><display/></field>
+    	 <field name="prodcatName" title="_"><display/></field>
+    	 <field name="productName" title="_"><display/></field>
+    	 <field name="partyName" title="_"><display/></field>
+    	 <field name="orderQty" title="_"><display/></field>
          <!-- <field name="BdlWt" title="__National Handloom__"><display/></field> -->
          <field name="rate" title="_"><display/></field>
-         <field name="orderValue" title="_ "><display/></field>
+         <field name="orderValue" title="_"><display/></field>
     </form>
     <form name="fiberAndCountWiseSalesReportCSV" type="list" list-name="finalCSVList" view-size="99999">
     	 <field name="prodcatName" title="___"><display/></field>
@@ -3725,17 +3715,17 @@
          <field name="payableAmt" title="PayableAmt"><display/></field>
     </form>
     <form name="claimDetailsList" type="list" list-name="finalList" view-size="99999">
-        <field name="sNo" title="SI. No."><display/></field>
-        <field name="districtName" title="Name Of State"><display/></field>
-        <field name="userAgency" title="Name Of User Agency"><display/></field>
-        <field name="invoiceDate" title="Date Of Supply"><display/></field>
-        <field name="productName" title="Count Of yarn"><display/></field>
-        <field name="categoryname" title="Varity Of yarn"><display/></field>
-        <field name="quantity" title="Yarn Supplied during the quarter(in Kgs)"><display/></field>
-        <field name="value" title="Value Of Yarn Before yarn subsidy(in Rs)"><display/></field>
-        <field name="subsidyAmt" title="Yarn Subsidy @10% on yarn value Before Subsidy(in Rs)"><display/></field>
-        <field name="serviceCharg" title="Service Charges @0.5% Of yarn value Before Subsidy(in Rs)"><display/></field>
-        <field name="claimTotal" title="Total Claim For Yarn Subsidy And Claim Charges(in Rs)"><display/></field>
+        <field name="sNo" title="_"><display/></field>
+        <field name="districtName" title="_"><display/></field>
+        <field name="userAgency" title="_"><display/></field>
+        <field name="invoiceDate" title="_"><display/></field>
+        <field name="productName" title="_"><display/></field>
+        <field name="categoryname" title="_"><display/></field>
+        <field name="quantity" title="_"><display/></field>
+        <field name="value" title="_"><display/></field>
+        <field name="subsidyAmt" title="_"><display/></field>
+        <field name="serviceCharg" title="_"><display/></field>
+        <field name="claimTotal" title="_"><display/></field>
     </form>
     <form name="headerList" type="list" list-name="headinglist" view-size="99999">
         <field name="headerName" title="."><display description="${headerName}"/></field>
@@ -3796,51 +3786,47 @@
     </form>
     
          <form name="reimburcentTransporterReportCSV" type="list" list-name="finalList" view-size="99999">
-         <field name="billno" title="Sale Invo.No"><display/></field>
-         <field name="invoiceDate" title="Invoice Date"><display/></field>
-         <field name="invoiceQTY" title="Quantity"><display/></field>
-         <field name="invoiceAmount" title="Amount"><display/></field>
-         <field name="supplierName" title="Name Of Supplier"><display/></field>
-         <field name="destAddr" title="Destination"><display/></field>
-         <field name="transporter" title="Transporter"><display/></field>
-         <field name="claim" title="Claim Amount"><display/></field>
-         <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field>
-         <field name="lrNumber" title="Lr Number"><display/></field>
-         <field name="lrDate" title="LR Date"><display/></field>
+         <field name="billno" title="_"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="invoiceQTY" title="_"><display/></field>
+         <field name="invoiceAmount" title="_"><display/></field>
+         <field name="supplierName" title="_"><display/></field>
+         <field name="destAddr" title="_"><display/></field>
+         <field name="transporter" title="_"><display/></field>
+         <field name="claim" title="_"><display/></field>
+         <field name="eligibleAMT" title="_"><display/></field>
+         <field name="lrNumber" title="_"><display/></field>
+         <field name="lrDate" title="_"><display/></field>
      </form> 
      
       <form name="stateWiseBranchWiseSaleReportCSV" type="list" list-name="finalList" view-size="99999">
          <!--  <field name="billno" title="Sale Invo.No"><display/></field> -->
-          <field name="billno" title="Sale Invoice No"><display/></field>
-         <field name="invoiceDate" title="Invoice Date"><display/></field>
-         <field name="productName" title="Product Name"><display/></field> 
-         <field name="invoiceQTY" title="Quantity(kg)"><display/></field>
-         <field name="invoicprice" title="Invoice Price"><display/></field>
-         <field name="invoiceAmount" title="Amount"><display/></field>
-         <field name="supplierName" title="Name Of Supplier"><display/></field>
-         <field name="destAddr" title="Destination"><display/></field>
-         <field name="transporter" title="Transporter"><display/></field>
-         <field name="lrNumber" title="Lr Number"><display/></field>
-         <field name="lrDate" title="Lr Date"><display/></field>
+          <field name="billno" title="_"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="productName" title="_"><display/></field> 
+         <field name="invoiceQTY" title="_"><display/></field>
+         <field name="invoicprice" title="_"><display/></field>
+         <field name="invoiceAmount" title="_"><display/></field>
+         <field name="supplierName" title="_"><display/></field>
+         <field name="destAddr" title="_"><display/></field>
+         <field name="transporter" title="_"><display/></field>
+         <field name="lrNumber" title="_"><display/></field>
+         <field name="lrDate" title="_"><display/></field>
      </form>
-     <form name="stateWiseBranchWiseSaleHeader" type="list" view-size="99999999">
-       <field name="stateWiseBranchWiseSaleHeader" title="_____________________________State Wise Branch Wise Sales___________________________________"><display/></field>
-     </form>  
-      
      
      <form name="depotReimburcentReportCSV" type="list" list-name="finalList" view-size="99999">
-         <field name="billno" title="SALE INVO NO"><display/></field>
-         <field name="invoiceDate" title="INVOICE DATE"><display/></field>
-         <field name="invoiceQTY" title="QUANTITY"><display/></field>
-         <field name="invoiceAmount" title="AMOUNT"><display/></field>
-         <field name="supplierName" title="Name Of Supplier"><display/></field>
-         <field name="partyName" title="PARTY NAME"><display/></field>
-         <field name="destAddr" title="DESTINATION"><display/></field>
-         <field name="transporter" title="TRANSPORTER"><display/></field>
-         <field name="depotCharges" title="DEPOT CHARGES"><display/></field>
+         <field name="billno" title="_"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="invoiceQTY" title="_"><display/></field>
+         <field name="invoiceAmount" title="_"><display/></field>
+         <field name="supplierName" title="_"><display/></field>
+         <field name="partyName" title="_"><display/></field>
+         <field name="destAddr" title="_"><display/></field>
+         <field name="transporter" title="_"><display/></field>
+         <field name="depotCharges" title="_"><display/></field>
          <!-- <field name="eligibleAMT" title="Eligible Claim Amount"><display/></field> -->
-         <field name="lrNumber" title="LR NUMBER"><display/></field>
-         <field name="lrDate" title="LR DATE"><display/></field>
+         <field name="lrNumber" title="_"><display/></field>
+         <field name="lrDate" title="_"><display/></field>
      </form> 
      <form name="ShipmentsDispatchReportCSVHeader" type="list" view-size="99999">
          <field name="shipmentId" title="_"><display/></field>
@@ -3907,39 +3893,21 @@
          <field name="differDays" title="_"><display/></field>
           
      </form> 
-      
      
-      
-       <form name="StateWiseSchemeWiseSalesConsolidatedHeaderCSV" type="list" list-name="finalCSVList2" view-size="99999">
-         <field name="h1" title="____STATE" ><display/></field>
-         <field name="h2" title="____TOTAL"><display/></field>
-         <field name="h3" title="____"><display/></field>
-         <field name="h4" title="____GENERAL "><display/></field>
-         <field name="h5" title="SCHEME"><display/></field>
-         <field name="h6" title="____MGP 10% "><display/></field>
-         <field name="h7" title="Scheme(Depot)"><display/></field>
-         <field name="h8" title="____MGP 10% "><display/></field>
-         <field name="h9" title="Scheme(Non Depot)"><display/></field>
-         <field name="h10" title="____MGP Scheme"><display/></field>
-         <field name="h11" title="(Depot)"><display/></field>
-         <field name="h12" title="____MGP Scheme"><display/></field>
-         <field name="h13" title="(Non Depot)"><display/></field>
-     </form> 
       <form name="StateWiseSchemeWiseSalesConsolidatedCSV" type="list" list-name="finalCSVList" view-size="99999">
-         <field name="partyName" title="__"><display/></field>
-         <field name="totInvoiceAMT" title="VALUE"><display/></field>
-         <field name="totInvoiceQTY" title="QTY"><display/></field>
-         <field name="generalInvoiceAMT" title="VALUE"><display/></field>
-         <field name="generalInvoiceQTY" title="QTY"><display/></field>
-         <field name="mgpsTenPerDepotInvoiceAMT" title="VALUE"><display/></field>
-         <field name="mgpsTenPerDepotInvoiceQTY" title="QTY"><display/></field>
-         <field name="mgpsTenPerInvoiceAMT" title="VALUE"><display/></field>
-         <field name="mgpsTenPerInvoiceQTY" title="QTY"><display/></field>
-         <field name="mgpsDepotInvoiceAMT" title="VALUE"><display/></field>
-         <field name="mgpsDepotInvoiceQTY" title="QTY"><display/></field>
-         <field name="mgpsInvoiceAMT" title="VALUE"><display/></field>
-         <field name="mgpsInvoiceQTY" title="QTY"><display/></field>
-         
+         <field name="partyName" title="_"><display/></field>
+         <field name="totInvoiceAMT" title="_"><display/></field>
+         <field name="totInvoiceQTY" title="_"><display/></field>
+         <field name="generalInvoiceAMT" title="_"><display/></field>
+         <field name="generalInvoiceQTY" title="_"><display/></field>
+         <field name="mgpsTenPerDepotInvoiceAMT" title="_"><display/></field>
+         <field name="mgpsTenPerDepotInvoiceQTY" title="_"><display/></field>
+         <field name="mgpsTenPerInvoiceAMT" title="_"><display/></field>
+         <field name="mgpsTenPerInvoiceQTY" title="_"><display/></field>
+         <field name="mgpsDepotInvoiceAMT" title="_"><display/></field>
+         <field name="mgpsDepotInvoiceQTY" title="_"><display/></field>
+         <field name="mgpsInvoiceAMT" title="_"><display/></field>
+         <field name="mgpsInvoiceQTY" title="_"><display/></field>
      </form> 
      <form name="depotReimburcentSummaryReportCSV" type="list" list-name="finalCSVList" view-size="99999">
          <field name="partyId" title="STATE"><display/></field>
@@ -3980,7 +3948,7 @@
     <form name="IndentVsDispatchCSV" type="list" list-name="finalCSVList" view-size="99999"> 
        <field name="orderNo" title="_"><display/></field>
        <field name="orderDate" title="_" ><display /></field>
-       <field name="partyName" title=" NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD."><display/></field>
+       <field name="partyName" title="_"><display/></field>
        <field name="productName" title="_"><display/></field>
        <field name="supplierName" title="_"><display/></field>        
         <field name="initialQty" title="_"><display/></field>
@@ -4223,9 +4191,9 @@
          <field name="IndentNo" title="__"><display/></field>
          <field name="IndentDate" title="__"><display/></field>
          <field name="indQty" title="__"><display/></field>
-         <field name="indUnitPrice" title="__Pending__"><display/></field>
-         <field name="indentValue" title="__Shipments__"><display/></field>
-         <field name="PoNo" title="__Report__"><display/></field>
+         <field name="indUnitPrice" title="_"><display/></field>
+         <field name="indentValue" title="_"><display/></field>
+         <field name="PoNo" title="_"><display/></field>
          <field name="PoDate" title="__"><display/></field>
          <field name="supplier" title="__"><display/></field>
          <field name="shipmentDate" title="__"><display/></field>
@@ -4234,20 +4202,20 @@
          <field name="DurBwSoAndShip" title="__"><display/></field>
      </form>
      <form name="billWiseSalesReportCSV" type="list" list-name="finalList" view-size="99999">
-         <field name="invoiceDate" title="__"><display/></field>
-         <field name="billno" title="__"><display/></field>
-         <field name="partyName" title="__NATIONAL HANDLOOM__"><display/></field>
-         <field name="partyType" title="__DEVELOPMENT __"><display/></field>
-         <field name="district" title="__CORPORATION LTD__"><display/></field>
-         <field name="branch" title="__"><display/></field>
-         <field name="state" title="__"><display/></field>
-         <field name="ro" title="__"><display/></field>
-         <field name="qty" title="__"><display/></field>
-         <field name="amount" title="__"><display/></field>
-         <field name="VatOrOtherAmt" title="__"><display/></field>
-         <field name="subsidyQty" title="__"><display/></field>
-         <field name="subsidyAmount" title="__"><display/></field>
-         <field name="scheme" title="__"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="billno" title="_"><display/></field>
+         <field name="partyName" title="_"><display/></field>
+         <field name="partyType" title="_"><display/></field>
+         <field name="district" title="_"><display/></field>
+         <field name="branch" title="_"><display/></field>
+         <field name="state" title="_"><display/></field>
+         <field name="ro" title="_"><display/></field>
+         <field name="qty" title="_"><display/></field>
+         <field name="amount" title="_"><display/></field>
+         <field name="VatOrOtherAmt" title="_"><display/></field>
+         <field name="subsidyQty" title="_"><display/></field>
+         <field name="subsidyAmount" title="_"><display/></field>
+         <field name="scheme" title="_"><display/></field>
      </form>
      
      <form name="FindPayments" type="single" target="TrackPayments" >
