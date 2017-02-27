@@ -2482,6 +2482,8 @@
 		<alias entity-alias="ACT" name="acctgTransTypeId" group-by="false" />
 		<alias entity-alias="ATE" name="partyId" group-by="true" />
 		<alias entity-alias="ATE" name="debitCreditFlag" group-by="true" />
+		<alias entity-alias="ATE" name="costCenterId" group-by="true" />
+		<alias entity-alias="ATE" name="purposeTypeId" group-by="true" />
 		<alias entity-alias="ATE" name="amount" function="sum" />
 		<alias entity-alias="ATE" name="organizationPartyId" group-by="false" />
 		<alias entity-alias="ACT" name="isPosted" group-by="false" />

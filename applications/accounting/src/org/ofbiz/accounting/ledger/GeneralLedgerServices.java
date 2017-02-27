@@ -1868,6 +1868,9 @@ public class GeneralLedgerServices {
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
 //        String acctgTransTypeId = (String) context.get("acctgTransTypeId");
         String fromGlAccountId =(String) context.get("glAccountId");
+        String costCenterId =(String) context.get("costCenterId");
+        String segmentId =(String) context.get("segmentId");
+        List<String> roBranchList = (List) context.get("roBranchList");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(transactionDate, -1));
         List partyIds = FastList.newInstance();
@@ -1920,6 +1923,22 @@ public class GeneralLedgerServices {
         	if(UtilValidate.isNotEmpty(glAccountTypeIds)){
         		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
         	} 
+        	
+        	if(UtilValidate.isNotEmpty(costCenterId)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,costCenterId));
+    		}
+        	if(UtilValidate.isNotEmpty(roBranchList)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+    		}
+        	if(UtilValidate.isNotEmpty(segmentId)){
+    			if(segmentId.equals("YARN_SALE")){
+    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+    			}
+    			else{
+    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.EQUALS,segmentId));
+    			}
+    		}
+        	
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	acctgTransEntryList = delegator.find("AcctgTransEntryPartyWiseSums",con , null, null, null,null);
         	//Debug.log("acctgTransEntryList==========="+acctgTransEntryList.getCompleteList());
@@ -2033,6 +2052,9 @@ public class GeneralLedgerServices {
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp thruDate = (Timestamp) context.get("thruDate");
         String fromGlAccountId =(String) context.get("glAccountId");
+        String costCenterId =(String) context.get("costCenterId");
+        String segmentId =(String) context.get("segmentId");
+        List<String> roBranchList = (List) context.get("roBranchList");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         List partyIds = FastList.newInstance();
         Map<String, Object> openingBalMap = FastMap.newInstance();
@@ -2075,6 +2097,20 @@ public class GeneralLedgerServices {
         	if(UtilValidate.isNotEmpty(glAccountTypeIds)){
         		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
         	} 
+        	if(UtilValidate.isNotEmpty(costCenterId)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,costCenterId));
+    		}
+        	if(UtilValidate.isNotEmpty(roBranchList)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+    		}
+        	if(UtilValidate.isNotEmpty(segmentId)){
+    			if(segmentId.equals("YARN_SALE")){
+    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+    			}
+    			else{
+    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.EQUALS,segmentId));
+    			}
+    		}
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	acctgTransEntryList = delegator.find("AcctgTransEntryPartyWiseSums",con , null, null, null,null);
         	if(UtilValidate.isNotEmpty(acctgTransEntryList)){

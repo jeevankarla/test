@@ -706,6 +706,9 @@ function setOrgPartyId() {
 							<option value='DetailedAbs'>Detailed Abstract</option>
 					   </select>
                      </td> 
+                     <td width=""><input type="hidden" name="segment" class="commonSegmentId">
+                     	<input type="hidden" name="division" class="commonPartyId"> 
+                     </td>
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
 					   <td width="5%">   </td>
 					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerCreditors', '<@ofbizUrl>PartyLedgerCreditorsReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>

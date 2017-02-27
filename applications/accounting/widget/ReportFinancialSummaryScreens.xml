@@ -313,12 +313,16 @@
 								<parameter param-name="organizationPartyId"
 									from-field="organizationPartyId" />
 								<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
+								<parameter param-name="division" from-field="parameters.division" />
+								<parameter param-name="segment" from-field="parameters.segment" />
 							</link>
 							<link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext"
 								target="TrialBalanceSearchResultsPdf.pdf">
 								<parameter param-name="organizationPartyId"
 									from-field="organizationPartyId" />
 								<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
+								<parameter param-name="division" from-field="parameters.division" />
+								<parameter param-name="segment" from-field="parameters.segment" />
 							</link>
 							<include-form name="ListTrialBalance"
 								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
