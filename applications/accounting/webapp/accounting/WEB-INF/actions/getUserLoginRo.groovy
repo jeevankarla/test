@@ -40,3 +40,38 @@ else{
 		}
 	}
 }
+
+orgPartyIdList = [];
+conditionList.clear();
+if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+}
+conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, ["REGIONAL_OFFICE","BRANCH_OFFICE","COMPANY"]));
+orgPartyIdList = delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList,EntityOperator.AND),null, null, null, false);
+context.orgPartyIdList=orgPartyIdList;
+
+costCenterPartyIdList = [];
+conditionList.clear();
+if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+	resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",parameters.ownerPartyId));
+	partyList = resultCtx.get("partyList");
+	partyList.each{ eachBranch ->
+		tempMap=[:];
+		tempMap.put("partyId", eachBranch.partyIdTo);
+		costCenterPartyIdList.add(tempMap);
+	}
+}
+else{
+	conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, ["REGIONAL_OFFICE","BRANCH_OFFICE","COMPANY","HEAD_OFFICE"]));
+	costCenterPartyIdList = delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList,EntityOperator.AND),null, null, null, false);
+}
+context.costCenterPartyIdList=costCenterPartyIdList;
+
+partyList = [];
+partyList.addAll(orgPartyIdList);
+partyList.addAll(costCenterPartyIdList);
+context.partyList=partyList;
+
+
+
+
