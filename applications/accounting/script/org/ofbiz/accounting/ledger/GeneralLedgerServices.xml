@@ -937,6 +937,10 @@ under the License.
             <set field="glAccountHistory.endingBalance" from-field="endingBalance"/>
             <store-value value-field="glAccountHistory"/>
         </iterate>
+		 <!-- Here we are populating ending balances in GlAccountHistoryPartyWise entity for this period -->
+         <set field="updateEndingBalGlAccntHistoryPartyWiseInMap.organizationPartyId" from-field="customTimePeriod.organizationPartyId"/>
+         <set field="updateEndingBalGlAccntHistoryPartyWiseInMap.customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
+         <call-service service-name="populateEndingBalGlAccountHistoryPartyWise" in-map-name="updateEndingBalGlAccntHistoryPartyWiseInMap"/>
 
         <!-- For all the accounts of class asset/contra-asset/liability/equity the endingBalance of the last time period's history is added to the one of the history of the period being closed -->
         <if-not-empty field="lastClosedTimePeriod">
@@ -959,12 +963,16 @@ under the License.
                     <field-map field-name="organizationPartyId" from-field="customTimePeriod.organizationPartyId"/>
                     <field-map field-name="customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
                     <field-map field-name="glAccountId" from-field="lastPeriodGlAccountHistory.glAccountId"/>
+                    <field-map field-name="costCenterId" from-field="lastPeriodGlAccountHistory.costCenterId"/>
+                    <field-map field-name="segmentId" from-field="lastPeriodGlAccountHistory.segmentId"/>
                 </entity-one>
                 <if-empty field="thisPeriodGlAccountHistory">
                     <make-value entity-name="GlAccountHistory" value-field="thisPeriodGlAccountHistory"/>
                     <set field="thisPeriodGlAccountHistory.customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
                     <set field="thisPeriodGlAccountHistory.organizationPartyId" from-field="customTimePeriod.organizationPartyId"/>
                     <set field="thisPeriodGlAccountHistory.glAccountId" from-field="lastPeriodGlAccountHistory.glAccountId"/>
+                    <set field="thisPeriodGlAccountHistory.costCenterId" from-field="lastPeriodGlAccountHistory.costCenterId"/>
+                    <set field="thisPeriodGlAccountHistory.segmentId" from-field="lastPeriodGlAccountHistory.segmentId"/>
                     <set field="thisPeriodGlAccountHistory.postedDebits" value="0.0" type="BigDecimal"/>
                     <set field="thisPeriodGlAccountHistory.postedCredits" value="0.0" type="BigDecimal"/>
                     <set field="thisPeriodGlAccountHistory.endingBalance" from-field="lastPeriodGlAccountHistory.endingBalance"/>
@@ -2994,5 +3002,20 @@ under the License.
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <if-empty field="newEntity.datetimePerformed"><now-timestamp field="newEntity.datetimePerformed"/></if-empty>
         <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="populateEndingBalGlAccountHistoryPartyWise" short-description="Populate ending balances for GlAccountHistoryPartyWise">
+         <!-- The history records in the current time period are updated with the endingBalance field -->
+         <entity-one entity-name="CustomTimePeriod" value-field="customTimePeriod"/>
+        <entity-and entity-name="GlAccountHistoryPartyWise" list="glAccountHistoriesPartyWise">
+            <field-map field-name="organizationPartyId" from-field="customTimePeriod.organizationPartyId"/>
+            <field-map field-name="customTimePeriodId" from-field="customTimePeriod.customTimePeriodId"/>
+        </entity-and>
+        <iterate list="glAccountHistoriesPartyWise" entry="glAccountHistoryParty">
+            <call-class-method class-name="org.ofbiz.accounting.util.UtilAccounting" method-name="getNetBalance" ret-field="endingBalance">
+                <field field="glAccountHistoryParty" type="GenericValue"/>
+            </call-class-method>
+            <set field="glAccountHistoryParty.endingBalance" from-field="endingBalance"/>
+            <store-value value-field="glAccountHistoryParty"/>
+        </iterate>
     </simple-method>
 </simple-methods>

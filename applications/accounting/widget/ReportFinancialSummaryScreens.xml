@@ -5118,6 +5118,17 @@
 	            		<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
 	            	</condition-list>
 	            </entity-condition>
+	            <entity-condition list="segmentIdList" entity-name="Enumeration">
+	            	<condition-list combine="and">
+	            		<condition-expr field-name="enumId" operator="not-equals" value="BYPROD_PAYMENT"/>
+	            		<condition-expr field-name="enumId" operator="not-equals" value="NON_ROUTE_MKTG"/>
+	            		<condition-expr field-name="enumId" operator="not-equals" value="ROUTE_MKTG"/>
+	            		<condition-expr field-name="enumId" operator="not-equals" value="DEPOT_YARN_SALE"/>
+	            		<condition-expr field-name="enumId" operator="not-equals" value="DEPOT_DIES_CHEM_SALE"/>
+	            		<condition-expr field-name="enumTypeId" operator="equals" value="PAYMENT_PURPOSE"/>
+	            	</condition-list>
+	            </entity-condition>
+	            
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
 			</actions>
 			<widgets>

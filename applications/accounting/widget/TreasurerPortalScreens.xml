@@ -907,6 +907,15 @@
             			<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
             		</condition-list>
             	</entity-condition>
+            	<entity-condition list="internalOrgList" entity-name="PartyRelationshipAndDetail">
+            		<condition-list combine="and">
+             			<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+              			<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+              			<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="BRANCH_CUSTOMER"/>
+              		</condition-list>
+              		<order-by field-name="groupName"/>
+         		</entity-condition>
             </actions>
             <widgets>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -973,6 +982,15 @@
             			<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
             		</condition-list>
             	</entity-condition>
+            	<entity-condition list="internalOrgList" entity-name="PartyRelationshipAndDetail">
+            		<condition-list combine="and">
+             			<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+              			<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+              			<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="BRANCH_CUSTOMER"/>
+              		</condition-list>
+              		<order-by field-name="groupName"/>
+         		</entity-condition>
             </actions>
             <widgets>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -1039,6 +1057,15 @@
             			 <condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/> 
             		</condition-list>
             	</entity-condition>
+            	<entity-condition list="internalOrgList" entity-name="PartyRelationshipAndDetail">
+            		<condition-list combine="and">
+             			<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+              			<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+              			<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="BRANCH_CUSTOMER"/>
+              		</condition-list>
+              		<order-by field-name="groupName"/>
+         		</entity-condition>
             </actions>
             <widgets>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">

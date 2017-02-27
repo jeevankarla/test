@@ -432,8 +432,14 @@ under the License.
         <!-- <auto-fields-service service-name="createFinAccountTrans"/> -->
        <!--  <field name="finAccountId"><hidden/></field>     -->
         <field name="finAccountId" title="From Financial Account" >
-            <drop-down allow-empty="false">
-            	<list-options key-name="finAccountId" list-name="cashAccountList" description="${finAccountName}"/>
+            <drop-down>
+                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
+<!--                    <entity-constraint name="organizationPartyId" value="Company"/>  -->
+<!--                     <entity-constraint name="ownerPartyId" value="Company"/> -->
+                     <entity-constraint name="finAccountTypeId" value="CASH"/>
+                    
+                    <entity-order-by field-name="finAccountName"/>
+                </entity-options>
             </drop-down>
         </field>        
         <field name="finAccountTransId"><hidden/></field>
@@ -461,8 +467,13 @@ under the License.
             </drop-down>
         </field> -->
          <field name="contraFinAccountId"  title="To Financial Account"  >
-			<drop-down allow-empty="false">
-            	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
+<drop-down>
+                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
+<!--                    <entity-constraint name="organizationPartyId" value="Company"/>  -->
+<!--                     <entity-constraint name="ownerPartyId" value="Company"/> -->
+                     <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                    <entity-order-by field-name="finAccountName"/>
+                </entity-options>
             </drop-down>
         </field>        
         <field name="comments"><text/></field>

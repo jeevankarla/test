@@ -360,6 +360,50 @@ function setOrgPartyId() {
   }	
  
 </script>
+<div>
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>Organization Selection</h3>
+    </div>
+    <div class="screenlet-body">                                            
+      <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >      	          	     	   
+      	<tr class="alternate-row">  
+      		<td width="20%"></td> 
+      		<td width="20%"></td> 
+ 			<td width="10%">Regional Office 
+ 			 	  	<select name='division' id ="division" onchange="javascript:setOrgPartyId();">	
+ 			 	  			<option value=""></option>	
+ 			  	  			<option value="Company">NHDC</option>
+ 						<#list internalOrgList as internalOrg>	
+ 							<option value='${internalOrg.partyId}'>${internalOrg.groupName?if_exists}</option>
+           		   		</#list>
+ 				 	</select>
+ 			  	  </td>
+ 			<td  width="20">Segment
+ 			  	  	<select name='segment' id ="segment" onchange="javascript:setOrgPartyId();">	
+ 			  	  			<option value=""></option>	
+ 			  	  			<option value="All">All</option>
+ 						<#list segmentList as segment>	
+ 							<option value='${segment.enumId}'>${segment.description?if_exists}</option>
+           		   		</#list>
+ 				 	</select>
+ 			  	  </td>
+          	</tr>      	   	      	                 
+	  </table>
+    </div>
+  </div>
+</div> 
+<script type="text/javascript">
+function setOrgPartyId() {
+	$(".commonPartyId").each(function() {
+		$(this).val($("#division").val());
+    });
+    $(".commonSegmentId").each(function() {
+			$(this).val($("#segment").val());
+	    });
+  }	
+ 
+</script>
 <div class="screenlet">
     <div class="screenlet-title-bar">
       <h2><center>Accounting Reports</center></h2>

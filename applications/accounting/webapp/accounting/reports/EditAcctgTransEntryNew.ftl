@@ -84,6 +84,9 @@ under the License.
 	var acctgTransId=jQuery('input[name=acctgTransId]').val();
 	var transactionDate=jQuery('input[name=transactionDate]').val();
 	var partyId=jQuery('input[name=partyId]').val();
+	var costCenterId = $('#costCenterId').val()  
+	var purposeTypeId = $('#purposeTypeId :selected').val();
+	
 	var hasAcctgAtxEditPermission="true"
 		$.ajax({
 			 type: "POST",
@@ -111,7 +114,7 @@ under the License.
 		});
 		return false;
 	}
-	function updateAcctTransEntry(index,acctgTransId, organizationPartyId,acctgTransEntrySeqId,glAccountId,partyId) {
+	function updateAcctTransEntry(index,acctgTransId, organizationPartyId,acctgTransEntrySeqId,glAccountId,partyId,costCenterId,purposeTypeId) {
 	
 	var amountId="origAmount_"+index;
 	var amount=$('input[id='+amountId+']').val();
@@ -121,6 +124,8 @@ under the License.
 			 type: "POST",
              url: 'updateAcctgTransEntrySer',
              data: {acctgTransId : acctgTransId,
+             		costCenterId : costCenterId,
+             		purposeTypeId : purposeTypeId,
              		acctgTransEntrySeqId : acctgTransEntrySeqId,
              		organizationPartyId : organizationPartyId,
              		partyId : partyId,
@@ -163,6 +168,8 @@ under the License.
 		var description=jQuery('input[name=description1]').val();
 		var origCurrencyUomId=jQuery('input[name=origCurrencyUomId]').val();
 		var partyId=$("#3_lookupId_partyId").val();
+		var costCenterId = $('#costCenterId').val()  
+		var purposeTypeId = $('#purposeTypeId :selected').val();
 		
 		
 		var data= {partyId : partyId,
@@ -177,7 +184,9 @@ under the License.
              		amount : amount,
                     glAccountId: glAccountId,
                     debitCreditFlag:debitCreditFlag,
-                    voucherRef:voucherRef};
+                    voucherRef:voucherRef,
+                    costCenterId:costCenterId,
+                    purposeTypeId:purposeTypeId};
 		addGlaccount(data);
 		return false;
 	}
@@ -188,6 +197,8 @@ under the License.
 	var transactionDate=jQuery('input[name=transactionDate]').val();
 	var organizationPartyId=jQuery('input[name=organizationPartyId]').val();
 	var partyId=jQuery('input[name=partyId]').val();
+	var costCenterId = $('#costCenterId').val();
+    var purposeTypeId = $('#purposeTypeId :selected').val();
 	
 	
 	var hasAcctgAtxEditPermission="true"
@@ -252,6 +263,8 @@ under the License.
 				          <td>glAccountId</td>	
 				          <td>partyId</td>
 				         <#-- <td>productId</td>-->
+						  <td>CostCenterId</td>
+							<td>Segment Id</td>
 				          <td>Debit/Credit</td>
 				          <td>Amount</td>
 				          <td>Voucher Ref</td>
@@ -277,8 +290,15 @@ under the License.
 				              ${paymentPartyName}[${acctgTransEntry.partyId?if_exists}]
 				              </#if></td>
 				              <#--><td></td>-->
+									 <td>	
+									 	<#if acctgTransEntry.costCenterId?has_content>${acctgTransEntry.costCenterId?if_exists}</#if>						
+									</td>															
+									<td>
+										<#if acctgTransEntry.purposeTypeId?has_content>${acctgTransEntry.purposeTypeId?if_exists}</#if>
+									</td>
+
 				              <td> <#if acctgTransEntry.debitCreditFlag?has_content>${acctgTransEntry.debitCreditFlag?if_exists}</#if></td>
-				             <td><#if acctgTransEntry.amount?has_content> <input id="origAmount_${i}" name="origAmount_${i}" type="text" value="${acctgTransEntry.amount?if_exists}" size="12"/></#if></td>
+				             <td><#if acctgTransEntry.amount?has_content>${acctgTransEntry.amount?if_exists}</#if></td>
 				              <td><#if acctgTransEntry.voucherRef?has_content>${acctgTransEntry.voucherRef?if_exists}
 				              </#if></td>
 				               <td><#if acctgTransEntry.description?has_content>${acctgTransEntry.description?if_exists}
@@ -289,7 +309,8 @@ under the License.
 					          <input id="glFiscalTypeId" name="glFiscalTypeId" type="hidden" value="ACTUAL" size="12"/>
 					          <input id="acctgTransTypeId" name="acctgTransTypeId" type="hidden" value="JOURNAL" size="12"/>
 				               </td>
-				             <td><a name="update" href="" onClick="return updateAcctTransEntry('${i}','${acctgTransEntry.acctgTransId?if_exists}', '${acctgTransEntry.organizationPartyId?if_exists}', '${acctgTransEntry.acctgTransEntrySeqId?if_exists}','${acctgTransEntry.glAccountId?if_exists}','${acctgTransEntry.partyId?if_exists}');">Update</a></td>
+ 
+				             <td><a name="update" href="" onClick="return updateAcctTransEntry('${i}','${acctgTransEntry.acctgTransId?if_exists}', '${acctgTransEntry.organizationPartyId?if_exists}', '${acctgTransEntry.acctgTransEntrySeqId?if_exists}','${acctgTransEntry.glAccountId?if_exists}','${acctgTransEntry.partyId?if_exists}','${acctgTransEntry.costCenterId?if_exists}','${acctgTransEntry.purposeTypeId?if_exists}');">Update</a></td>
 				           <td><a name="remove" href="" onClick="return removeAcctTransEntry('${acctgTransEntry.acctgTransId?if_exists}', '${acctgTransEntry.organizationPartyId?if_exists}', '${acctgTransEntry.acctgTransEntrySeqId?if_exists}');">Remove</a></td>
 				            </tr>
 				            <#-- toggle the row color -->
@@ -305,6 +326,24 @@ under the License.
 					      	<@htmlTemplate.lookupField  formName="ListAcctgTransEntriesNew" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
 			            </#if></td>
 			             <#--> <td><@htmlTemplate.lookupField value="${productId?if_exists}" formName="ListAcctgTransEntriesNew" name="productId" id="productId" fieldFormName="LookupProduct"/></td>-->
+			               <td>
+								<select name="costCenterId" id="costCenterId">									
+									<#list partyClsGrpList as partyClsGrp>
+						         	<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyClsGrp.partyId?if_exists, false)>
+						            <option value='${partyClsGrp.partyId}'>
+						        	    ${partyName?if_exists}
+						            </option>
+						         	</#list>							
+								</select>
+							</td>
+							
+			               <td>							
+							  <select name="purposeTypeId" id="purposeTypeId">
+						          <option value='COMMON'>COMMON</option>
+						          <option value='DIES_AND_CHEM_SALE'>DYES AND CHEMICALS SEGMENT</option>
+						          <option value='YARN_SALE'>YARN SEGMENT</option>
+							  </select> 							     
+				          </td>
 			               <td>
 							  <select name="debitCreditFlag" id="debitCreditFlag">
 						          <option value='C'>Credit</option>

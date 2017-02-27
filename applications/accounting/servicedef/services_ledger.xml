@@ -906,16 +906,19 @@ under the License.
         <attribute name="openingBal" mode="OUT" type="BigDecimal" optional="false"/>
     </service>  
      <service name="getGlAccountOpeningBalanceForCostCenter" engine="java" auth="true" 
-        location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="getGlAccountOpeningBalanceForCostCenter">
+        location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="getGlAccountOpeningBalance">
         <description>Get Custom time period</description>
         <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="glAccountId" mode="IN" type="String" optional="false"/>
         <attribute name="costCenterId" mode="IN" type="String" optional="true"/>
         <attribute name="segmentId" mode="IN" type="String" optional="true"/>
-        <attribute name="postedDebits" mode="OUT" type="BigDecimal" optional="false"/>
-        <attribute name="postedCredits" mode="OUT" type="BigDecimal" optional="false"/>
         <attribute name="openingBal" mode="OUT" type="BigDecimal" optional="false"/>
     </service>
-      
+     <service name="populateEndingBalGlAccountHistoryPartyWise" engine="simple" auth="true"
+        location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="populateEndingBalGlAccountHistoryPartyWise">
+        <description>Create an accounting transaction for a sales invoice</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

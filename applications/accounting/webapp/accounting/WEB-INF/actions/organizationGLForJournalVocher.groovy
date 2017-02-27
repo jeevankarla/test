@@ -43,6 +43,10 @@ conditionList.add(EntityCondition.makeCondition("accountCode", EntityOperator.NO
 condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 glAccounts = delegator.findList("GlAccountOrganizationAndClass", condExpr, null, null, null, false);
 context.glAccounts = glAccounts;
+
+partyClsGrpList =  delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE","COMPANY")),null,null,null,false);
+context.partyClsGrpList=partyClsGrpList;
+
 JSONObject glAccountDescriptionJSON = new JSONObject();
 JSONArray glAccountJSON = new JSONArray();
 glAccounts.each{eachItem ->

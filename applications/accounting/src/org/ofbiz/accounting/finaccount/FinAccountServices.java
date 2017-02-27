@@ -280,6 +280,8 @@ public class FinAccountServices {
         String parentTypeId = (String) context.get("acctParentTypeId");
         String finAccountTypeId=(String) context.get("finAccountTypeId");
         String finAccountParentId = (String)context.get("finAccountParentId");
+        String costCenterId = (String)context.get("costCenterId");
+        String segmentId = (String)context.get("segmentId");
         String finAccountId="";
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp fromDate = null;
@@ -346,6 +348,8 @@ public class FinAccountServices {
            	 transCtxMap.put("finAccountTransTypeId", finAccountTransTypeId);
              transCtxMap.put("contraRefNum", contraRefNum);
              transCtxMap.put("userLogin", userLogin);
+             transCtxMap.put("costCenterId", costCenterId);
+             transCtxMap.put("segmentId", segmentId);
              createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
 
              if (ServiceUtil.isError(createResult)) {
