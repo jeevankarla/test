@@ -426,14 +426,16 @@ orderHeader.each{ eachHeader ->
 	
 	resultCtx = dispatcher.runSync("saleToPoDetails",UtilMisc.toMap("userLogin",userLogin, "orderId", orderId));
 	
-	Debug.log("resultCtx =================="+resultCtx);
+	//Debug.log("resultCtx =================="+resultCtx);
 	
+	purcahseOrderId = resultCtx.purcahseOrderId;
+	//Debug.log("purcahseOrderId =================="+purcahseOrderId);
 	saleQuantity = resultCtx.saleQuantity;
 	
 	purchaseQuantity = resultCtx.purchaseQuantity;
 	
-	Debug.log("saleQuantity =================="+saleQuantity);
-	Debug.log("purchaseQuantity =================="+purchaseQuantity);
+	//Debug.log("saleQuantity =================="+saleQuantity);
+	//Debug.log("purchaseQuantity =================="+purchaseQuantity);
 	
 	
 	
@@ -452,6 +454,8 @@ orderHeader.each{ eachHeader ->
 	
 	partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	JSONObject tempData = new JSONObject();
+	tempData.put("purcahseOrderId", purcahseOrderId);
+	//Debug.log("purcahseOrderId=======@@@====="+tempData["purcahseOrderId"]);
 	tempData.put("partyId", partyId);
 	tempData.put("billFromVendorPartyId", billFromVendorPartyId);
 	tempData.put("partyName", partyName);
