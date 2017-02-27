@@ -100,7 +100,7 @@ roId = parameters.division;
 		 }
 	 }
  }
- 
+ context.openingBal = openingBalance;
  findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
 
 

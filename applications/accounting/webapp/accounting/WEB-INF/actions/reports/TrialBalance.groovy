@@ -91,35 +91,16 @@ if(roId.equals("Company") && segmentId.equals("All")){
 	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
 }
 else if(roId.equals("Company") && !segmentId.equals("All")){
-	if(segmentId.equals("YARN_SALE")){ 
-			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", "YARN_SALE"));
-			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
-			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", "DEPOT_YARN_SALE"));
-			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
-		}else{
-			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", segmentId));
-			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
-		}
+	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", null, "segmentId", segmentId));
+	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
 }
 else if(!roId.equals("Company") && segmentId.equals("All")){
-	for (String eachParty : branchList) {
-		lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", null));
-		lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
-	}
+	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "roBranchList", branchList, "segmentId", null));
+	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
 }
 else{
-	for (String eachParty : branchList) {
-		if(segmentId.equals("YARN_SALE")){ 
-			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", "YARN_SALE"));
-			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
-			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", "DEPOT_YARN_SALE"));
-			lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
-		}else{
-			lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", eachParty, "segmentId", segmentId));
+	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "roBranchList", branchList, "segmentId", segmentId));
 	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
-		}
-
-}
 }
 
 
