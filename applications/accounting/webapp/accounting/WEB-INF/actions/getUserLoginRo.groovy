@@ -72,7 +72,6 @@ partyList.addAll(orgPartyIdList);
 partyList.addAll(costCenterPartyIdList);
 context.partyList=partyList;
 
-Debug.log("partyList============"+partyList);
 
 
 

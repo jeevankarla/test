@@ -3009,7 +3009,7 @@
                 <set field="tabButtonItem5" value="${parameters.subTabButtonValue}"/>
                 <set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}"/>
                 <set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
-                
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
            		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
             </actions>
             <widgets>
