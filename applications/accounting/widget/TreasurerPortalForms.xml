@@ -1274,9 +1274,11 @@ under the License.
         </field>
          <!-- <field name="ro/bo" title="Party RO/BO"><text/>
          	<drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-				<list-options key-name="partyId" list-name="partyList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
-			</drop-down>
-         </field>
+                <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
+                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY,HEAD_OFFICE"/>
+                </entity-options>
+            </drop-down>
+         </field> -->
          <field name="segmentId" title="Payment PurposeType">
         	<drop-down allow-empty="true">
         	<option key="COMMON" description="COMMON"/>
