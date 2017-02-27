@@ -422,6 +422,21 @@ orderHeader.each{ eachHeader ->
 
 	orderId = eachHeader.orderId;
 	
+	
+	
+	resultCtx = dispatcher.runSync("saleToPoDetails",UtilMisc.toMap("userLogin",userLogin, "orderId", orderId));
+	
+	Debug.log("resultCtx =================="+resultCtx);
+	
+	saleQuantity = resultCtx.saleQuantity;
+	
+	purchaseQuantity = resultCtx.purchaseQuantity;
+	
+	Debug.log("saleQuantity =================="+saleQuantity);
+	Debug.log("purchaseQuantity =================="+purchaseQuantity);
+	
+	
+	
 	orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	partyId = "";
 	if(orderParty){
@@ -434,11 +449,17 @@ orderHeader.each{ eachHeader ->
 		billFromVendorPartyId = billFromOrderParty.get(0).get("partyId");
 	}
 	
+	
 	partyName = PartyHelper.getPartyName(delegator, partyId, false);
 	JSONObject tempData = new JSONObject();
 	tempData.put("partyId", partyId);
 	tempData.put("billFromVendorPartyId", billFromVendorPartyId);
 	tempData.put("partyName", partyName);
+	
+	if(saleQuantity != purchaseQuantity)
+	tempData.put("showDraftPO", "Y");
+	else
+	tempData.put("showDraftPO", "N");
 	
 	if(eachHeader.tallyRefNo)
 	 tempData.put("tallyRefNo", eachHeader.tallyRefNo);
