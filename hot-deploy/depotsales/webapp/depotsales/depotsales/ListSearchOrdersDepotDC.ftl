@@ -347,8 +347,14 @@ function drawRow(rowData) {
 	   
 	      row.append($("<td></td>"));  
 	   
-	   }    
-	       
+	   }  
+	   
+	     //For PO Ids
+	     
+	//if(rowData.purcahseOrderId != "NA" )
+    	row.append($("<td>" + rowData.purcahseOrderId + "</td>"));
+    //else
+        //row.append($("<td></td>"));
       
        //For Indent View
     
@@ -650,6 +656,7 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
          <#-- <td>Edit</td> -->
           <td>Minutes</td>
           <td>DraftPO</td>
+          <td>POIds</td>
           <td>P&S Approvals</td>
           <td>PO Report</td>
           <td>Approve</td>
