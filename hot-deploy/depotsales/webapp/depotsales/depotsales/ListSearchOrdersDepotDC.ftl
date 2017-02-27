@@ -281,16 +281,17 @@ function drawRow(rowData) {
     row.append($("<td>" + partyNameCode + "</td>"));
     
     //supplier Name
-    
+    /*
     var suppNameCode = rowData.supplierPartyName+"["+rowData.supplierPartyId+"]";
     row.append($("<td>" + suppNameCode + "</td>"));
+    */
 
      //indent Date  
     var indDateSplit = (rowData.orderDate).split("-");
     var indentDate = indDateSplit[2] + "/" + indDateSplit[1] + "/" + indDateSplit[0];
     row.append($("<td>" + indentDate + "</td>"));
     
-    
+    /*
    if( (rowData.POorder == "NA") && (rowData.statusId != "ORDER_CANCELLED")){
     var editOrder = '<a class="buttontext" href="<@ofbizUrl>editBranchIndent?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Edit</a>';
    row.append($("<td>" +  editOrder  +"</td>"));  
@@ -299,6 +300,7 @@ function drawRow(rowData) {
     row.append($("<td></td>"));
    }  
     
+    */
    
    if(rowData.statusId != "ORDER_CANCELLED"){
       var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Minutes</a>';
@@ -337,8 +339,16 @@ function drawRow(rowData) {
       
       */
       
+      
+      if(rowData.showDraftPO == "Y"){
       var DraftPoButton = '<a class="buttontext" href="<@ofbizUrl>CreateBranchTransPODC?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'</@ofbizUrl>" target="_blank">DraftPO</a>'; 
 	       row.append($("<td>" +  DraftPoButton  +"</td>"));  
+	   }else{
+	   
+	      row.append($("<td></td>"));  
+	   
+	   }    
+	       
       
        //For Indent View
     
@@ -362,12 +372,12 @@ function drawRow(rowData) {
     
     
      
-    // var dataJson = {"orderId":orderId,"statusId":statusMap[statusId],"partyId":partyId};
+     var dataJson = {"orderId":orderId,"statusId":statusMap[statusId],"partyId":partyId};
     
-   // if(buutonName == "Commercial")
+   if(buutonName == "Commercial")
     var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreloadDC?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
-   // else
-   // var approveButton ='<input type=button name="approveOrder" id=approveOrder value='+buutonName+'Head onclick="'+orderCustomMethod+'">';
+    else
+    var approveButton ='<input type=button name="approveOrder" id=approveOrder value='+buutonName+'Head onclick="'+orderCustomMethod+'">';
     row.append($("<td>" +  approveButton  +"</td>"));
    }
    else if(rowData.statusId == "ORDER_PENDING"){
@@ -635,9 +645,9 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
           <td>Branch Name</td>
           <td>Tally PO.NO</td>
           <td>Weaver Name</td>
-          <td>Supplier Name</td>
+         <#-- <td>Supplier Name</td> -->
           <td>Indent Date</td>
-          <td>Edit</td>
+         <#-- <td>Edit</td> -->
           <td>Minutes</td>
           <td>DraftPO</td>
           <td>P&S Approvals</td>

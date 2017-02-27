@@ -3700,10 +3700,13 @@ public static Map<String,Object> getRemainingOrderItems(DispatchContext dctx, Ma
     String orderItemSeqId = (String) context.get("orderItemSeqId");
     String productId = (String) context.get("productId");
     
+    String totalFlag = (String) context.get("totalFlag");
+    List condList = FastList.newInstance();
+    
     BigDecimal supplierProdPrice =BigDecimal.ZERO;
     BigDecimal usedQuantity = BigDecimal.ZERO;
     try {
-    	List condList = FastList.newInstance();
+    	
     	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
     	condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
     	condList.add(EntityCondition.makeCondition("orderItemAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
@@ -3745,12 +3748,89 @@ public static Map<String,Object> getRemainingOrderItems(DispatchContext dctx, Ma
         result = ServiceUtil.returnError("Unable to fetch Data from Supplier Product Entity.....  ");
         return result;
     }
+    
+    
    result.put("usedQuantity",usedQuantity);
    return result;
 }
 
 
+public static Map<String,Object> saleToPoDetails(DispatchContext dctx, Map<String, ? extends Object> context) {
+	
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();   
+    Map<String, Object> result = new HashMap<String, Object>();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+    Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+    String orderId = (String) context.get("orderId");
+    
+    List condList = FastList.newInstance();
+    
+    List<GenericValue> orderItemListSale = FastList.newInstance();;
+    
+    List<GenericValue> orderItemList = FastList.newInstance();;
+    
+    List poOrderIds = FastList.newInstance();
+    
+    BigDecimal saleQuantity = BigDecimal.ZERO;
+    BigDecimal poQuantity = BigDecimal.ZERO;
+	try{
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		 orderItemListSale = delegator.findList("OrderItem", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("quantity"), null, null, false);
+	
+		
+		for (GenericValue eachValue : orderItemListSale) {
+			saleQuantity = saleQuantity.add(eachValue.getBigDecimal("quantity"));
+		}
+		
+		condList.clear();
+		condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
+		condList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+	    List<GenericValue> orderItemAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("orderId"), null, null, false);
+	
+	    if(UtilValidate.isNotEmpty(orderItemAssocList)){
+		
+	     poOrderIds = EntityUtil.getFieldListFromEntityList(orderItemAssocList, "orderId", true);
+	     
+	    condList.clear();
+		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, poOrderIds));
+		condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
+	    List<GenericValue> OrderHederList = delegator.findList("OrderHeader", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("orderId"), null, null, false);
+	
+	    poOrderIds = EntityUtil.getFieldListFromEntityList(OrderHederList, "orderId", true);
+	    
+	    condList.clear();
+		condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, poOrderIds));
+		 orderItemList = delegator.findList("OrderItem", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("quantity"), null, null, false);
+	
+		
+		for (GenericValue eachValue : orderItemList) {
+			
+			poQuantity = poQuantity.add(eachValue.getBigDecimal("quantity"));
+			
+			
+		}
+		
+	    
+	    
+	    }
+		
+	} catch (GenericEntityException e) {
+	    Debug.logError(e, module);
+	}
 
+    
+	
+    result.put("saleOrderId",orderId);
+    result.put("purcahseOrderId",poOrderIds);
+    result.put("saleOrderItems",orderItemListSale);
+    result.put("purchaseOrderItems",orderItemList);
+    result.put("saleQuantity",saleQuantity);
+    result.put("purchaseQuantity",poQuantity);
+    return result;
+	
+}
 
 
 
