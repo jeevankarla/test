@@ -54,15 +54,16 @@ import org.ofbiz.party.party.PartyHelper;
 
 reportTypeFlag = parameters.reportTypeFlag;
 interUnitFlag = parameters.interUnitFlag;
+finAccountTransList = [];
 if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
-	finAccountTransList = [];
+	//finAccountTransList = [];
 	finAccountId = parameters.finAccountId;
 	if(UtilValidate.isNotEmpty(finAccountId)){
 		finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId), null, null, null, false);
 		context.put("finAccountTransList",finAccountTransList);
 	}
 }else{
-	finAccountTransList = [];
+	//finAccountTransList = [];
 	finAccountId = parameters.finAccountId;
 	amountStr = parameters.amount;
 	contraRefNum = parameters.contraRefNum;
@@ -130,6 +131,11 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 	}
 }
 
+finAccountsTranList = [];
+if(parameters.noConditionFind == "N"){
+	finAccountsTranList = finAccountTransList;
+}
+context.finAccountsTranList = finAccountsTranList;
 
 
 

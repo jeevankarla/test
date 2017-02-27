@@ -1548,6 +1548,7 @@
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/findPaymentMethodType.groovy"/>
                	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -2404,6 +2405,7 @@
                 <set field="defaultOrganizationPartyId" value="INT5"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -3007,7 +3009,7 @@
                 <set field="tabButtonItem5" value="${parameters.subTabButtonValue}"/>
                 <set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}"/>
                 <set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
-                      <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                
            		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
             </actions>
             <widgets>
@@ -3126,6 +3128,7 @@
 				<set field="invoiceId" value="${invoice.invoiceId}" />
 				<set field="showCreateButton" value="${parameters.showCreateButton}" />
 				<set field="showUpdateButton" value="${parameters.showUpdateButton}" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -3705,6 +3708,7 @@
 				<set field="invoiceId" value="${invoice.invoiceId}" />
 				<set field="showCreateButton" value="${parameters.showCreateButton}" />
 				<set field="showUpdateButton" value="${parameters.showUpdateButton}" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
             

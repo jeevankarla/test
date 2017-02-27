@@ -3979,6 +3979,7 @@
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
 				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<set field="parameters.screenfinIdFlag" value="Y"/>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 			</actions>
 			<widgets>
 				<section>

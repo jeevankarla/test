@@ -670,7 +670,7 @@ under the License.
         </field>
        	<field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>       
     </form>
-    <form name="ListContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 
+    <form name="ListContraEntries" type="list" list-name="finAccountsTranList" odd-row-style="alternate-row" 
       default-entity-name="FinAccountTrans" default-table-style="basic-table hover-bar" >
     	 <actions>
 			<script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ListContraEntries.groovy"/>	
@@ -787,16 +787,10 @@ under the License.
         <!-- <auto-fields-service service-name="createFinAccountTrans"/> -->
        <!--  <field name="finAccountId"><hidden/></field>     -->
         <field name="finAccountId" title="From Financial Account" >
-            <drop-down>
-                <entity-options entity-name="FinAccount" description="${finAccountName}" key-field-name="finAccountId">
-<!--                     <entity-constraint name="organizationPartyId" value="Company"/>  -->
-<!--                     <entity-constraint name="ownerPartyId" value="Company"/> -->
-                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
-                  <!--    <entity-constraint name="finAccountTypeId" value="CASH"/> -->
-                    <entity-order-by field-name="finAccountName"/>
-                </entity-options>
+            <drop-down allow-empty="true">
+            	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
             </drop-down>
-        </field>       
+        </field>
         <field name="finAccountTransId"><hidden/></field>
         <field name="entryType"   ><hidden value="Contra"/></field>       
         <field name="finAccountTransTypeId" use-when="finAccountTransTypeId==null" action="javascript:setPaymentType();" event="onChange"> 
@@ -828,11 +822,8 @@ under the License.
             </drop-down>
         </field>
          <field name="contraFinAccountId"  title="To Financial Account"  >
-            <drop-down>
-                <entity-options entity-name="FinAccount" description="${finAccountId} - ${finAccountName}" key-field-name="finAccountId">
-                      <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
-                    <entity-order-by field-name="finAccountName"/>
-                </entity-options>
+            <drop-down allow-empty="true">
+            	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field name="contraRefNum" title="Instrument Number"><text></text></field>         
@@ -1259,10 +1250,8 @@ under the License.
         </field>
          <field name="ro/bo" title="Party RO/BO"><text/>
          	<drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-                <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
-                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY,HEAD_OFFICE"/>
-                </entity-options>
-            </drop-down>
+				<list-options key-name="partyId" list-name="partyList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
          </field>
         <field name="finAccountParentId"><hidden value="EMPLOYEE_ADV"/></field>
         <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
@@ -1411,13 +1400,16 @@ under the License.
            <!-- <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field> -->
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-                <!-- <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+        	<!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                 	<entity-order-by field-name="groupName"/>
-                </entity-options> -->
+                </entity-options>
                 <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
                 	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY"/>
                 </entity-options>
+            </drop-down>  -->       	
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+            	<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
             </drop-down>
         </field>
         <field name="partyIdFrom" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
@@ -1658,15 +1650,18 @@ under the License.
         <!-- <field name="paymentPurposeType"><hidden value="NHDC_RECEIPT"></hidden></field> -->
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
          <field position="1" name="organizationPartyId" id-name="organizationPartyId"  parameter-name="partyIdFrom" event="onchange"  action="javascript:paymentMethodType();">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+         	<!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <option key="${parameters.partyIdFrom}" description="${partyGroupName}"/>
-                <!-- <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                     <entity-order-by field-name="groupName"/>
-                </entity-options> -->
+                </entity-options>
                 <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
                 	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY"/>
                 </entity-options>	
-            </drop-down>
+            </drop-down> -->
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
         </field>
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
@@ -2349,25 +2344,31 @@ under the License.
         </field> -->
 <!--         <field name="partyId"><hidden value="Company"/></field> -->
         <field position="1" name="organizationPartyId" parameter-name="partyId">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-                <!-- <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+            <!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                     <entity-constraint name="partyId" operator="equals" value="Company"/>
                     <entity-order-by field-name="groupName"/>
-                </entity-options> -->
+                </entity-options>
                 <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
                 	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY,HEAD_OFFICE"/>
                 </entity-options>
-            </drop-down>
+            </drop-down> -->
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
         </field>
         <field position="2" name="costCenterId" parameter-name="costCenterId" required-field="true">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-                <!-- <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+            <!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                     <entity-order-by field-name="groupName"/>
-                </entity-options> -->
+                </entity-options>
                 <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
                 	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY"/>
                 </entity-options>
-            </drop-down>
+            </drop-down> -->
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="costCenterPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
         </field>
         <field position="1" name="referenceNumber" title="Refrence No." encode-output="false" required-field="true"><text size="50"/></field> 
         <field position="2" name="referenceDate" title="Refrence Date"><date-time/></field>                            
@@ -2427,11 +2428,14 @@ under the License.
         </field>  -->    
 <!--         <field name="partyIdFrom"><hidden value="Company"/></field>          -->
         <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+            <!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
                 	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY,HEAD_OFFICE"/>
                 </entity-options>
-            </drop-down>
+            </drop-down> -->
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
         </field>
         <!-- <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
@@ -2441,14 +2445,17 @@ under the License.
             </drop-down>
         </field> -->
         <field position="2" name="costCenterId" parameter-name="costCenterId" required-field="true">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-                <!-- <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+            <!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                     <entity-order-by field-name="groupName"/>
-                </entity-options> -->
+                </entity-options>
                 <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
                 	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY"/>
                 </entity-options>
-            </drop-down>
+            </drop-down> -->
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="costCenterPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
         </field>
         <field use-when="invoiceTypeId!=null&amp;&amp;invoiceTypeId.equals(&quot;OBINVOICE_IN&quot;)"  position="2" name="referenceNumber" title="TallyRefNo."><text size="30"/></field>
         <field position="1" name="partyIdTo" entry-name="partyId" parameter-name="partyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
