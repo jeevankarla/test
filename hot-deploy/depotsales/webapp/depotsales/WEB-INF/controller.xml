@@ -148,11 +148,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentPDF"/>
       </request-map>
-    <request-map uri="IndentCSV.csv">
+    <request-map uri="IndentCSV.xls">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentCSV"/>
       </request-map>  
-     <request-map uri="purchaseRegister.csv">
+     <request-map uri="purchaseRegister.xls">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="purchaseRegisterCSV"/>
       </request-map>
@@ -905,7 +905,7 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="agencyWiseInvoiceOutstandingReportPDF"/>
     </request-map>
-    <request-map uri="agencyWiseInvoiceOutstandingReport.csv">
+    <request-map uri="agencyWiseInvoiceOutstandingReport.xls">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="agencyWiseInvoiceOutstandingReportCSV"/>
     </request-map>
@@ -914,7 +914,7 @@
     	<response name="success" type="view" value="m1ReportPDF"/>
     </request-map>
     
-    <request-map uri="m1Report.csv">
+    <request-map uri="m1Report.xls">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="m1ReportCSV"/>
     </request-map>
@@ -923,7 +923,7 @@
     	<response name="success" type="view" value="MillwisecountwisePurchaseofYarnReportPDF"/>
     </request-map>
     
-    <request-map uri="MillwisecountwisePurchaseofYarnReport.csv">
+    <request-map uri="MillwisecountwisePurchaseofYarnReport.xls">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="MillwisecountwisePurchaseofYarnReportCSV"/>
     </request-map>
@@ -932,7 +932,7 @@
     	<response name="success" type="view" value="SupplierwiseCountwisePurchaseReportPDF"/>
     </request-map>
     
-    <request-map uri="SupplierwiseCountwisePurchaseReport.csv">
+    <request-map uri="SupplierwiseCountwisePurchaseReport.xls">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="SupplierwiseCountwisePurchaseReportCSV"/>
     </request-map>
@@ -941,7 +941,7 @@
     	<response name="success" type="view" value="fiberAndCountWiseSalesReportPDF"/>
     </request-map>
     
-    <request-map uri="fiberAndCountWiseSalesReport.csv">
+    <request-map uri="fiberAndCountWiseSalesReport.xls">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="fiberAndCountWiseSalesReportCSV"/>
     </request-map>
@@ -985,7 +985,7 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="pendingShipmentsReportPDF"/>
     </request-map>
-     <request-map uri="pendingShipmentsReport.csv">
+     <request-map uri="pendingShipmentsReport.xls">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="pendingShipmentsReportCSV"/>
     </request-map>
@@ -994,7 +994,7 @@
         <response name="success" type="view" value="CashierPaymentCheckListDepot"/>        
     </request-map>
     
-     <request-map uri="partyAbsractDetails.csv">
+     <request-map uri="partyAbsractDetails.xls">
         <security https="true" auth="true"/>                        
         <response name="success" type="view" value="partyAbsractDetailsCSV"/>        
     </request-map>
@@ -1145,7 +1145,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentVsDispatchPDF"/>
     </request-map>
-    <request-map uri="IndentVsDispatchCSV.csv">
+    <request-map uri="IndentVsDispatchCSV.xls">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentVsDispatchCSV"/>
     </request-map>    
@@ -1278,7 +1278,7 @@
            <response name="success" type="view" value="subsidyDetailsCSV"/>        
         </request-map>
         
-        <request-map uri="stateWiseBranchWiseSaleReport.csv">
+        <request-map uri="stateWiseBranchWiseSaleReport.xls">
            <security https="true" auth="true"/>                        
            <response name="success" type="view" value="stateWiseBranchWiseSaleReportCSV"/>        
         </request-map>
@@ -2670,7 +2670,7 @@
      	<security https="true" auth="true"/>
     	<response name="success" type="view" value="SupplierMastersCSV"/>
     </request-map>
-    <request-map uri="indentHeadReport.csv">
+    <request-map uri="indentHeadReport.xls">
      	<security https="true" auth="true"/>
     	<response name="success" type="view" value="indentHeadReportCSV"/>
     </request-map>
@@ -2728,18 +2728,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="indentOverViewReport"/>
     </request-map>
-     <request-map uri="reimburcentTransporterReport.csv">
+     <request-map uri="reimburcentTransporterReport.xls">
         <security auth="true" https="true"/>
          <response name="success" type="view" value="reimburcentTransporterReportCSV"/>
 	     <response name="error" type="view" value="reimburcentTransporterReportCSV"/>
     </request-map> 
-     <request-map uri="depotReimburcentSummaryReport.csv">
+     <request-map uri="depotReimburcentSummaryReport.xls">
         <security auth="true" https="true"/>
          <response name="success" type="view" value="depotReimburcentSummaryReportCSV"/>
 	     <response name="error" type="view" value="depotReimburcentSummaryReportCSV"/>
     </request-map>
     
-    <request-map uri="depotReimburcentReport.csv">
+    <request-map uri="depotReimburcentReport.xls">
         <security auth="true" https="true"/>
          <response name="success" type="view" value="depotReimburcentReportCSV"/>
 	     <response name="error" type="view" value="depotReimburcentReportCSV"/>
@@ -2775,7 +2775,7 @@
          <security auth="true" https="true"/>
          <response name="success" type="view" value="StateWiseSchemeWiseSalesConsolidatedPDF"/>
     </request-map> 
-      <request-map uri="StateWiseSchemeWiseSalesConsolidated.csv">
+      <request-map uri="StateWiseSchemeWiseSalesConsolidated.xls">
          <security auth="true" https="true"/>
          <response name="success" type="view" value="StateWiseSchemeWiseSalesConsolidatedCSV"/>
     </request-map> 
@@ -2837,7 +2837,7 @@
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="claimReportDetailsPDF"/>
     </request-map>
-    <request-map uri="claimReportDetails.csv">
+    <request-map uri="claimReportDetails.xls">
          <security https="true" auth="true"/>                        
          <response name="success" type="view" value="claimReportDetailsCSV"/>        
     </request-map>
@@ -2884,7 +2884,7 @@
         <response name="success" type="view" value="billWiseSalesReport"/>
         <response name="error" type="view" value="billWiseSalesReport"/>
     </request-map>
-    <request-map uri="billWiseSalesReport.csv">
+    <request-map uri="billWiseSalesReport.xls">
         <security auth="true" https="true"/>    
         <response name="success" type="view" value="billWiseSalesReportCSV"/>
         <response name="error" type="view" value="billWiseSalesReportCSV"/>

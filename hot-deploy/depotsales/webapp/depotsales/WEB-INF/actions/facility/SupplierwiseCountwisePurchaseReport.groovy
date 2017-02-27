@@ -200,25 +200,32 @@ totalRate=0;
 prodCatMap=[:];
 totalsMap=[:];
 productId=EntityUtil.getFieldListFromEntityList(orderHeaderItemAndRoles, "productId", true);
-headerData2=[:];
-headerData2.put("prodcatName", "______");
-headerData2.put("productName", "______");
-headerData2.put("partyName", "______");
-headerData2.put("orderQty", "______Supplierwise___");
-/*headerData2.put("BdlWt", "____");*/
-headerData2.put("rate", "_ Countwise");
-headerData2.put("orderValue", "____ Purchase Report_______");
-finalCSVList.add(headerData2);
 
-headerData=[:];
-headerData.put("prodcatName", "Product Category");
-headerData.put("productName", "Product Count");
-headerData.put("partyName", "Party Name");
-headerData.put("orderQty", "Order Qty(Kgs)");
-/*headerData.put("BdlWt", "BdlWt");*/
-headerData.put("rate", "Rate");
-headerData.put("orderValue", "Order Value");
-finalCSVList.add(headerData);
+stylesMap=[:];    
+stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+stylesMap.put("mainHeader2", "Supplier Wise Count Wise Purchase Report");
+stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+stylesMap.put("mainHeadercellHeight",400);
+stylesMap.put("mainHeaderFontSize",12);
+stylesMap.put("mainHeadingCell",1);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",true);
+stylesMap.put("columnHeaderFontName","TimesNewRoman");
+stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+
+headingMap=[:];
+headingMap.put("prodcatName", "Product Category");
+headingMap.put("productName", "Product Count");
+headingMap.put("partyName", "Party Name");
+headingMap.put("rate", "Rate");
+headingMap.put("orderValue","Order Value");
+
+finalCSVList.add(stylesMap);
+finalCSVList.add(headingMap);
 
 for(productCategoryId in productCategoryIds){
 	tempCSVMap1=[:];
@@ -333,6 +340,7 @@ for(productCategoryId in productCategoryIds){
 	}
 
 }
+Debug.log("finalCSVList======================"+ finalCSVList);
 totalsMap.put("prodcatName", "TOTAL");
 totalsMap.put("orderQty", totalQty);
 totalsMap.put("orderValue", totalValue);

@@ -218,6 +218,88 @@ OrderHeader = delegator.findList("OrderHeader",EntityCondition.makeCondition("or
 
 salesAndPurchaseList = [];
 
+
+decoratorMap=[:];
+decoratorMap.put("main_Header1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+decoratorMap.put("main_Header2", "Sales and Purchase Report for"+ branchName);
+decoratorMap.put("main_Header3", "From "+partyfromDateForCsv+" to "+partythruDateForCsv);
+decoratorMap.put("main_Header_cellWidth",400);
+decoratorMap.put("main_Header_fontName","italic");
+decoratorMap.put("main_Header_fontSize",12);
+decoratorMap.put("main_Heading_Cell",4);
+decoratorMap.put("main_Header_bold",true);
+decoratorMap.put("table_Header_bgColor",false);
+decoratorMap.put("table_Header_fontName","TimesNewRoman");
+decoratorMap.put("table_Header_fontSize",13);
+decoratorMap.put("autoSizeCell",true);
+decoratorMap.put("table_Header_cellWidth",300);
+
+request.setAttribute("decoratorMap", decoratorMap);
+request.setAttribute("enableStyles", true);
+
+
+headingMap=[:];
+headingMap.put("invoiceId", "SI. No. ");
+headingMap.put("invoiceDate", "Name Of State");
+headingMap.put("invoiceAmount", "Name Of User Agency");
+headingMap.put("altaxAmt", "Date Of Supply");
+headingMap.put("schemeQty","Count Of yarn");
+headingMap.put("subsidyAmt","Varity Of yarn");
+headingMap.put("allAdjWitOutTEN","Yarn Supplied during the quarter(in Kgs)");
+headingMap.put("invoiceNetAmt","Value Of Yarn Before yarn subsidy(in Rs)");
+headingMap.put("userAgency","Yarn Subsidy @10% on yarn value Before Subsidy(in Rs)");
+headingMap.put("partyClassification","Service Charges @0.5% Of yarn value Before Subsidy(in Rs)");
+headingMap.put("cluster","Total Claim For Yarn Subsidy And Claim Charges(in Rs)");
+headingMap.put("District","Count Of yarn");
+headingMap.put("branch","Count Of yarn");
+headingMap.put("sate","Count Of yarn");
+headingMap.put("AgencyType","Count Of yarn");
+headingMap.put("Depo","Count Of yarn");
+headingMap.put("scheme","Count Of yarn");
+headingMap.put("orderNo","Count Of yarn");
+headingMap.put("custIndDate","Count Of yarn");
+headingMap.put("advance","Count Of yarn");
+headingMap.put("paidAmt","Count Of yarn");
+headingMap.put("appliedAmt","Count Of yarn");
+headingMap.put("balance","Count Of yarn");
+headingMap.put("cheque/dd","Count Of yarn");
+headingMap.put("tallyBillAmt","Count Of yarn");
+headingMap.put("supplierName","Count Of yarn");
+headingMap.put("millState","Count Of yarn");
+headingMap.put("source","Count Of yarn");
+headingMap.put("TallyPoNumber","Count Of yarn");
+headingMap.put("poOrderId","Count Of yarn");
+headingMap.put("poorderDate","Count Of yarn");
+headingMap.put("destAddr","Count Of yarn");
+headingMap.put("ProductCategoryId","Count Of yarn");
+headingMap.put("itemDescription","Count Of yarn");
+headingMap.put("ledgerName","Count Of yarn");
+headingMap.put("purchaseQuantity","Count Of yarn");
+headingMap.put("salesQuantity","Count Of yarn");
+headingMap.put("rate","Count Of yarn");
+headingMap.put("tallyRefNo","Count Of yarn");
+headingMap.put("tallyRefDate","Count Of yarn");
+headingMap.put("supplierInvoiceId","Count Of yarn");
+headingMap.put("supplierInvoiceDate","Count Of yarn");
+headingMap.put("millInvoiceId","Count Of yarn");
+headingMap.put("millInvoiceDate","Count Of yarn");
+headingMap.put("poInvoiceAmt","Count Of yarn");
+headingMap.put("purTax","Count Of yarn");
+headingMap.put("allAdjPur","Count Of yarn");
+headingMap.put("purInvoiceNetAmt","Count Of yarn");
+headingMap.put("transporter","Count Of yarn");
+headingMap.put("lrNumber","Count Of yarn");
+headingMap.put("lrDate","Count Of yarn");
+headingMap.put("freight","Count Of yarn");
+headingMap.put("shipmentId","Count Of yarn");
+headingMap.put("actualSaleInvoiceId","Count Of yarn");
+headingMap.put("actualPurInvoiceId","Count Of yarn");
+
+salesAndPurchaseList.add(decoratorMap);
+salesAndPurchaseList.add(headingMap);
+
+
+
 purchaseWiseDetails = [];
 if(invoice){
 
@@ -2225,7 +2307,6 @@ if(invoice){
 				////Debug.log("poInvoiceId============="+poInvoiceId);
 				////Debug.log("poInvoiceItemSeqId============="+poInvoiceItemSeqId);
 
-				tempMap.put("actualPurInvoiceId", poInvoiceId);
 
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));

@@ -307,6 +307,42 @@ totAmt=0
 totdepotChargs=0
 totalsMap=[:];
 finalList = [];
+
+
+stylesMap=[:];
+stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+stylesMap.put("mainHeader2", "Depot ReimbursmentReport");
+stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+stylesMap.put("mainHeadercellHeight",400);
+stylesMap.put("mainHeaderFontSize",12);
+stylesMap.put("mainHeadingCell",4);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",false);
+stylesMap.put("columnHeaderFontName","TimesNewRoman");
+stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+
+headingMap=[:];
+headingMap.put("billno" ,"SALE INVO NO")
+headingMap.put("invoiceDate" ,"INVOICE DATE")
+headingMap.put("invoiceQTY" ,"QUANTITY")
+headingMap.put("invoiceAmount" ,"AMOUNT")
+headingMap.put("supplierName" ,"Name Of Supplier")
+headingMap.put("partyName" ,"PARTY NAME")
+headingMap.put("destAddr" ,"DESTINATION")
+headingMap.put("transporter" ,"TRANSPORTER")
+headingMap.put("depotCharges" ,"DEPOT CHARGES")
+headingMap.put("lrNumber" ,"LR NUMBER")
+headingMap.put("lrDate" ,"LR DATE")
+
+finalList.add(stylesMap);
+finalList.add(headingMap);
+
+
 for (eachInvoiceList in Invoice) {
 	
 	

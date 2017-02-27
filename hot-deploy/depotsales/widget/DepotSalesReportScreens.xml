@@ -126,9 +126,6 @@
 			<widgets>
 				<section>
 					<widgets>
-					<!-- <include-form name="IndentCSVHeading" location="component://depotsales/widget/DepotSalesForms.xml" /> -->
-					<!-- <include-form name="IndentCSVDetails" location="component://depotsales/widget/DepotSalesForms.xml" /> -->
-						<include-form name="purchaseRegisterCSVheader" location="component://depotsales/widget/DepotSalesForms.xml" />
 						<include-form name="purchaseRegisterCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
 					</widgets>
 				</section>
@@ -828,8 +825,8 @@
 			<widgets>
 				<section>
 					<widgets>
-					<include-form name="invoiceVoucherReportHeading" location="component://depotsales/widget/DepotSalesForms.xml" />
-					<include-form name="invoiceVoucherReportDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
+					<!-- <include-form name="invoiceVoucherReportHeading" location="component://depotsales/widget/DepotSalesForms.xml" />
+					<include-form name="invoiceVoucherReportDetails" location="component://depotsales/widget/DepotSalesForms.xml" /> -->
 						<include-form name="salePurchaseReport" location="component://depotsales/widget/DepotSalesForms.xml" />
 					</widgets>
 				</section>
@@ -944,12 +941,6 @@
 			<widgets>
 				<section>
 					<widgets>
-					
-					<!-- <include-form name="partyAbstractReportName" location="component://depotsales/widget/DepotSalesForms.xml" /> 
-					<include-form name="partyAbstractReportDetails" location="component://depotsales/widget/DepotSalesForms.xml" /> 
-					  <include-form name="partyAbstractDetailHeading" location="component://depotsales/widget/DepotSalesForms.xml" />  -->
-                      <include-form name="stateWiseBranchWiseSaleHeader" location="component://depotsales/widget/DepotSalesForms.xml" /> 
-					 
 						<include-form name="stateWiseBranchWiseSaleReportCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
 					</widgets>
 				</section>

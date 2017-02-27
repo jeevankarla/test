@@ -125,47 +125,52 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
   PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);*/
   
   finalList = [];
- 
-  /*headList = [];
+   
   
-  tempMap = [:];
-  tempMap.put("partyId", " ");
-  tempMap.put("partyName", " ");
-  tempMap.put("city", " ");
-  tempMap.put("state"," ");
-  tempMap.put("dist"," ");
+  stylesMap=[:];
+  stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+  stylesMap.put("mainHeader2", "Fiber And Count Wise Sales Report");
+  stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+  stylesMap.put("mainHeadercellHeight",400);
+  stylesMap.put("mainHeaderFontSize",12);
+  stylesMap.put("mainHeadingCell",1);
+  stylesMap.put("mainHeaderBold",true);
+  stylesMap.put("columnHeaderBgColor",false);
+  stylesMap.put("columnHeaderFontName","TimesNewRoman");
+  stylesMap.put("columnHeaderFontSize",13);
+  stylesMap.put("autoSizeCell",true);
+  stylesMap.put("columnHeaderCellHeight",300);
+  request.setAttribute("stylesMap", stylesMap);
+  request.setAttribute("enableStyles", true);
   
-  tempMap.put("AvailableCOTTON_UPTO40","");
-  tempMap.put("QualizedCOTTON_UPTO40","Cotton Yarn 40s And Above");
-  tempMap.put("AvailableCOTTON_UPTO40","");
+  headingMap = [:];
+  headingMap.put("partyId" ,"Party Code")
+  headingMap.put("partyName" ,"Name")
+  headingMap.put("passbookno" ,"Passbook No")
+  headingMap.put("state" ,"State")
+  headingMap.put("district" ,"District")
+  headingMap.put("AvailableCOTTON_UPTO40" ,"Available Quota")
+  headingMap.put("QualizedCOTTON_UPTO40" ,"Utilized Quota")
+  headingMap.put("BalanceCOTTON_UPTO40" ,"Balance Quota")
+  headingMap.put("AvailableCOTTON_40ABOVE" ,"Available Quota")
+  headingMap.put("QualizedCOTTON_40ABOVE" ,"Utilized Quota")
+  headingMap.put("BalanceCOTTON_40ABOVE" ,"Balance Quota")
+  headingMap.put("AvailableSILK_YARN" ,"Available Quota")
+  headingMap.put("QualizedSILK_YARN" ,"Utilized Quota")
+  headingMap.put("BalanceSILK_YARN" ,"Balance Quota")
+  headingMap.put("AvailableWOOLYARN_10STO39NM" ,"Available Quota")
+  headingMap.put("QualizedWOOLYARN_10STO39NM" ,"Utilized Quota")
+  headingMap.put("BalanceWOOLYARN_10STO39NM" ,"Balance Quota")
+  headingMap.put("AvailableWOOLYARN_40SNMABOVE" ,"Available Quota")
+  headingMap.put("QualizedWOOLYARN_40SNMABOVE" ,"Utilized Quota")
+  headingMap.put("BalanceWOOLYARN_40SNMABOVE" ,"Balance Quota")
+  headingMap.put("AvailableWOOLYARN_BELOW10NM" ,"Available Quota")
+  headingMap.put("QualizedWOOLYARN_BELOW10NM" ,"Utilized Quota")
+  headingMap.put("BalanceWOOLYARN_BELOW10NM" ,"Balance Quota")
   
-  
-  tempMap.put("AvailableCOTTON_40ABOVE","");
-  tempMap.put("QualizedCOTTON_40ABOVE","Cotton Yarn Upto 40s");
-  tempMap.put("BalanceCOTTON_40ABOVE","");
-  
-  tempMap.put("AvailableSILK_YARN","");
-  tempMap.put("QualizedSILK_YARN","Silk Yarn");
-  tempMap.put("BalanceSILK_YARN","");
-  
-  
-  
-  tempMap.put("AvailableWOOLYARN_10STO39NM","");
-  tempMap.put("QualizedWOOLYARN_10STO39NM","Wool Yarn 10NM To 39.99NM");
-  tempMap.put("BalanceWOOLYARN_10STO39NM","");
-  
-  tempMap.put("AvailableWOOLYARN_40SNMABOVE","");
-  tempMap.put("QualizedWOOLYARN_40SNMABOVE","Wool Yarn 40NM And Above");
-  tempMap.put("BalanceWOOLYARN_40SNMABOVE","");
-  
-  
-  tempMap.put("AvailableWOOLYARN_BELOW10NM","");
-  tempMap.put("QualizedWOOLYARN_BELOW10NM","Wool Yarn Below 10NM");
-  tempMap.put("BalanceWOOLYARN_BELOW10NM","");
-  
-  finalList.add(tempMap);
-  
-  context.headList = headList;*/
+  finalList.add(stylesMap);
+  finalList.add(headingMap);
+
   for (eachWeaver in weaversList) {
  
 	  int i = 0;

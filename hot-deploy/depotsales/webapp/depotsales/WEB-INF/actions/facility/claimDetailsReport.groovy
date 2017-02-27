@@ -128,7 +128,7 @@ conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LES
 conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"SALES_INVOICE"));
 conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
 if(UtilValidate.isNotEmpty(branchId)){
-	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,partyIdToList));
+	conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN,partyIdToList));
 }
 if(UtilValidate.isNotEmpty(geoId)){
 	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
@@ -163,6 +163,45 @@ BigDecimal totalvalue= BigDecimal.ZERO;
 totalsubsidyAmt=0
 BigDecimal totalserviceCharg= BigDecimal.ZERO;
 BigDecimal totalclaimTotal= BigDecimal.ZERO;
+
+
+// call seperate method for applyStyles in java class 
+
+stylesMap=[:];   //stylesMap
+stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");  //mainHeader
+stylesMap.put("mainHeader2", "Statement for Claiming Reimbursement against Yarn ");
+stylesMap.put("mainHeader3", "Subsidy allowed to the Handloom Weavers towards the Supply");
+stylesMap.put("mainHeader4", "of Indian Silk and Cotton Hank Yarn from "+ claimFromDate +" to "+claimThruDate);
+stylesMap.put("mainHeadercellHeight",200);  //mainHeadercellHeight
+stylesMap.put("mainHeaderfontName","Arial");  //URW Chancery L
+stylesMap.put("mainHeaderFontSize",12);
+stylesMap.put("mainHeadingCell",4);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",false);  //column_header
+stylesMap.put("columnHeaderFontName","TimesNewRoman");
+stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);//columnHeaderCellHeight
+
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+
+headingMap=[:];
+headingMap.put("sNo", "SI. No.");
+headingMap.put("districtName", "Name Of State");
+headingMap.put("userAgency", "Name Of User Agency");
+headingMap.put("invoiceDate", "Date Of Supply");
+headingMap.put("productName","Count Of yarn");
+headingMap.put("categoryname","Varity Of yarn");
+headingMap.put("quantity","Yarn Supplied during the quarter(in Kgs)");
+headingMap.put("value","Value Of Yarn Before yarn subsidy(in Rs)");
+headingMap.put("subsidyAmt","Yarn Subsidy @10% on yarn value Before Subsidy(in Rs)");
+headingMap.put("serviceCharg","Service Charges @0.5% Of yarn value Before Subsidy(in Rs)");
+headingMap.put("claimTotal","Total Claim For Yarn Subsidy And Claim Charges(in Rs)");
+
+finalList.add(stylesMap);
+finalList.add(headingMap);
+
 if(UtilValidate.isNotEmpty(InvoiceItem)){
 	sNo=1;
 	summarySNo=0;
@@ -184,7 +223,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 invoiceDate = UtilDateTime.toDateString(invoice.invoiceDate,"dd/MM/yyyy");
 			 temMap.put("invoiceDate", invoiceDate);
 			 partyId = invoice.partyId;
-			 partyIdFrom = invoice.costCenterId;
+			 partyIdFrom = invoice.partyIdFrom;
 			 userAgency = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
 			 temMap.put("userAgency", userAgency);
 			 districtName = "";
