@@ -33,18 +33,7 @@ under the License.
 
 </style>
 
-<style>
-.pagination {
-    display: inline-block;
-}
 
-.pagination a {
-    color: blue;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-}
-</style>
 
 
 <input type="hidden" name="paramOrderId" id="paramOrderId" value="${paramOrderId}">
@@ -634,7 +623,6 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
   
     <div  id = "secondDiv" align="center" style=" border-radius: 10px; width:1400;  height:22px;  font-size: larger; background-color: lightblue;">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Total Indents : <label  align="center" id="totIndents"style="color: blue" ></label>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; Displayed Indents : <label  align="center" id="displayedIndent"style="color: blue" ></label> </div>
   
-  <div class="pagination">
   <form name="listOrders" id="listOrders"   method="post" >
    
     
@@ -665,7 +653,6 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
     </table>
    
   </form>
-   </div>
         <div align='center' name ='displayMsg' id='orderSpinn'/></div>
          <div id="blink"  align='center'  style=" border-radius: 15px;  color:blue; height:20px;   font-size: larger; background-color: lightblue;"><span class="blink_me">No More Orders..</span></div>
          <a href="#" class="scrollup">Top</a>
