@@ -454,16 +454,18 @@ orderHeader.each{ eachHeader ->
 		orderNo = orderSeqDetails.orderNo;
 	}
 
-	exprCondList=[];
+	resultCtx = dispatcher.runSync("getAssociateOrder",UtilMisc.toMap("userLogin",userLogin, "orderId", eachHeader.orderId));
+	
+	/*exprCondList=[];
 	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
 	exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 	EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 	OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
-	
+	*/
 	POorder="NA";
 	isgeneratedPO="N";
-	if(OrderAss){
-		POorder=OrderAss.get("orderId");
+	if(resultCtx.orderId){
+		POorder=resultCtx.orderId;
 		isgeneratedPO = "Y";
 	}
 	poSquenceNo="NA";

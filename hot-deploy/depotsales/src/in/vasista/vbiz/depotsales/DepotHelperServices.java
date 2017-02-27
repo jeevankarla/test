@@ -3834,6 +3834,70 @@ public static Map<String,Object> saleToPoDetails(DispatchContext dctx, Map<Strin
 
 
 
+public static Map<String,Object> getAssociateOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
+	
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();   
+    Map<String, Object> result = new HashMap<String, Object>();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+    Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+    String orderId = (String) context.get("orderId");
+    List condList = FastList.newInstance();
+    
+    String associateOrder = "";
+	try{
+		
+		GenericValue OrderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+		String orderType = OrderHeader.getString("orderTypeId");
+		if(orderType.equals("SALES_ORDER")){
+			condList.clear();
+			condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
+			condList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+		    List<GenericValue> orderItemAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("orderId"), null, null, false);
+			
+		    if(UtilValidate.isNotEmpty(orderItemAssocList)){
+		    for (GenericValue eachValue : orderItemAssocList) {
+				
+				GenericValue OrderHeader1 = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", eachValue.getString("orderId")), false);
+				
+				if(!(OrderHeader1.getString("statusId").equals("ORDER_CANCELLED"))){
+					associateOrder = eachValue.getString("orderId");
+				}
+			}
+		    }
+		}else if(orderType.equals("PURCHASE_ORDER")){
+			
+			condList.clear();
+			condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			condList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
+		    List<GenericValue> orderItemAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("toOrderId"), null, null, false);
+            
+		    if(UtilValidate.isNotEmpty(orderItemAssocList)){
+			for (GenericValue eachValue : orderItemAssocList) {
+				
+				GenericValue OrderHeader2 = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", eachValue.getString("orderId")), false);
+				
+				if(!(OrderHeader2.getString("statusId").equals("ORDER_CANCELLED"))){
+					associateOrder = eachValue.getString("toOrderId");
+				}
+			}
+			
+		    }
+		}
+		    
+		
+	} catch (GenericEntityException e) {
+	    Debug.logError(e, module);
+	}
+
+	
+    result.put("orderId",associateOrder);
+    return result;
+	
+}
+
+
+
   	
 }
 

@@ -71,7 +71,7 @@
 	//Debug.log("orderDateToCompPO =================" +orderDateToCompPO);
 	orderAdjustments = [];
 	additionalChgs = [];
-	if(orderHeader && orderHeader.statusId == "ORDER_CREATED"){
+	if(orderHeader && (orderHeader.statusId == "DRAFTPO_PROPOSAL" || orderHeader.statusId == "ORDER_CREATED")){
 		
 		orderInfoDetail = [:];
 		orderInfoDetail.putAt("orderId", orderHeader.orderId);
