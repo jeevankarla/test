@@ -5346,6 +5346,19 @@ public class MaterialPurchaseServices {
 		}
 		
 		
+		
+		 try{
+			 
+		    Map resultCtx = FastMap.newInstance();
+			resultCtx = dispatcher.runSync("getAssociateOrder", UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
+			if(UtilValidate.isNotEmpty(resultCtx.get("orderId")))
+			  SaleOrderId = (String) resultCtx.get("orderId");
+		 
+		} catch (Exception e) {
+	        Debug.logWarning(e.getMessage(), module);
+	    }
+			 
+		
 		if (UtilValidate.isNotEmpty(SaleOrderId)) {
 			try{
 			
