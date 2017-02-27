@@ -114,6 +114,38 @@ totthrdMntInvTotals =0;
 totfrthMntInvTotals =0;
 totabove180Days=0;
 totallMonthsTotal=0
+
+
+stylesMap=[:];
+stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+stylesMap.put("mainHeader2", "Agency Wise Invoice Outstanding Report");
+stylesMap.put("mainHeader3", "As On  "+ dateStr);
+stylesMap.put("mainHeadercellHeight",400);
+stylesMap.put("mainHeaderFontSize",12);
+stylesMap.put("mainHeadingCell",1);
+stylesMap.put("mainHeaderBold",true);
+
+stylesMap.put("columnHeaderFontName","TimesNewRoman");
+stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+stylesMap.put("columnHeaderBgColor",false);
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+
+headingMap=[:];
+headingMap.put("partyName", "Debitor/Creditor");
+headingMap.put("fstMntInvTotals", "Invoice Value Between 1-30 Days");
+headingMap.put("secMntInvTotals", "Invoice Value Between 31-60 Days");
+headingMap.put("thrdMntInvTotals", "Invoice Value Between 61-90 Days");
+headingMap.put("frthMntInvTotals", "Invoice Value Between 91-180 Days");
+headingMap.put("above180Days","Invoice Value Above 180 Days");
+headingMap.put("allMonthsTotal","Total Invoice Value");
+
+invocieList.add(stylesMap);
+invocieList.add(headingMap);
+
+
 for(partyId in partyIds){
 	tempMap=[:];
 	fstMntInvTotals =0;
