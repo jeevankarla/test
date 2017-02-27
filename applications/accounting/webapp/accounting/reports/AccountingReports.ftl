@@ -313,6 +313,52 @@ function reportTypeChangeFunc() {
 	   AccountName = glAccountName[value];
 	   $("#AccountName").html("<h6>"+AccountName+"</h6>");
 	}
+	
+	
+</script>
+<div>
+  <div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>Organization Selection</h3>
+    </div>
+    <div class="screenlet-body">                                            
+      <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >      	          	     	   
+      	<tr class="alternate-row">  
+      		<td width="20%"></td> 
+      		<td width="20%"></td> 
+ 			<td width="10%">Regional Office 
+ 			 	  	<select name='division' id ="division" onchange="javascript:setOrgPartyId();">	
+ 			 	  			<option value=""></option>	
+ 			  	  			<option value="Company">NHDC</option>
+ 						<#list internalOrgList as internalOrg>	
+ 							<option value='${internalOrg.partyId}'>${internalOrg.groupName?if_exists}</option>
+           		   		</#list>
+ 				 	</select>
+ 			  	  </td>
+ 			<td  width="20">Segment
+ 			  	  	<select name='segment' id ="segment" onchange="javascript:setOrgPartyId();">	
+ 			  	  			<option value=""></option>	
+ 			  	  			<option value="All">All</option>
+ 						<#list segmentList as segment>	
+ 							<option value='${segment.enumId}'>${segment.description?if_exists}</option>
+           		   		</#list>
+ 				 	</select>
+ 			  	  </td>
+          	</tr>      	   	      	                 
+	  </table>
+    </div>
+  </div>
+</div> 
+<script type="text/javascript">
+function setOrgPartyId() {
+	$(".commonPartyId").each(function() {
+		$(this).val($("#division").val());
+    });
+    $(".commonSegmentId").each(function() {
+			$(this).val($("#segment").val());
+	    });
+  }	
+ 
 </script>
 <div class="screenlet">
     <div class="screenlet-title-bar">
@@ -369,7 +415,10 @@ function reportTypeChangeFunc() {
 			             <td width="30%" nowrap>Party Financial History With Dr/Cr</td>
 			             <td width="15%">&nbsp;From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
 			      		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
-			             <td width="20%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			             <td width="10%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			              <td width=""><input type="hidden" name="segment" class="commonSegmentId">
+                     	<input type="hidden" name="division" class="commonPartyId"> 
+                    	 </td>
 			            <#--> <input type="text" name="partyId" id="partyId" size="10" maxlength="22"> --></td>
 			             <td width="15%"><input type="checkbox" name="financialTransactions" value="Y">With Financial Transactions<br></td>
 						 <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyFinancialHistoryWithDrCr', '<@ofbizUrl>PartyFinancialHistoryWithDrCr.pdf</@ofbizUrl>');" class="buttontext"/>
@@ -565,7 +614,7 @@ function reportTypeChangeFunc() {
 					<td width="30%">Party Ledger Report</td>
 					<td width="10%">From<input  type="text" size="18pt" id="PartyWiseLedgerFromDate" readonly  name="fromDate"/></td>
 				    <td width="10%">To<input  type="text" size="18pt" id="PartyWiseLedgerThruDate" readonly  name="thruDate"/></td>
-  					<td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  					<td width="7%">Party Group :<select name="roleTypeId" id="roleTypeId">
   					    <option value=''></option>
   						<#list roleTypeAttrList as list>
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
@@ -578,6 +627,9 @@ function reportTypeChangeFunc() {
 						   <option value='DetailedAbs'>Detailed Abstract</option>
 					   </select>
                      </td> 
+                     <td width=""><input type="hidden" name="segment" class="commonSegmentId">
+                     	<input type="hidden" name="division" class="commonPartyId"> 
+                     </td>
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyWiseLedger" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
 					   <td width="5%">   </td>
 					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyWiseLedger', '<@ofbizUrl>PartyWiseLedgerReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
@@ -614,7 +666,7 @@ function reportTypeChangeFunc() {
 					<td width="30%">Party Ledger Debtors Report</td>
 					<td width="10%">From<input  type="text" size="18pt" id="PartyLedgerFromDate" readonly  name="fromDate"/></td>
 				    <td width="10%">To<input  type="text" size="18pt" id="PartyLedgerThruDate" readonly  name="thruDate"/></td>
-  					<td width="10%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  					<td width="9%">Party Group :<select name="roleTypeId" id="roleTypeId">
   					    <option value=''></option>
   						<#list roleTypeAttrList as list>
                          <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
@@ -627,6 +679,9 @@ function reportTypeChangeFunc() {
 							<option value='DetailedAbs'>Detailed Abstract</option>
 					   </select>
                      </td> 
+                      <td width="1"><input type="hidden" name="segment" class="commonSegmentId">
+                     	<input type="hidden" name="division" class="commonPartyId"> 
+                     </td>
 					  <td width="20%">Party Code :<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyLedgerGroup" name="partyId" id="partyId" fieldFormName="LookupPartyName"/> </td>
 					   <td width="5%">   </td>
 					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerGroup', '<@ofbizUrl>PartyLedgerGroupReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
@@ -799,7 +854,10 @@ function reportTypeChangeFunc() {
 			  	  </td>
 			  	  <td width="25%"> &#160;</td>
 			  	  <td width="25%"> &#160;</td>
-			  	  <td width="75%"><input type="hidden" name="organizationPartyId" value="Company"/></td>&#160;</td> 
+			  	   <td width=""><input type="hidden" name="segment" class="commonSegmentId">
+                     	<input type="hidden" name="division" class="commonPartyId"> 
+                     </td>
+			  	  <td width="50%"><input type="hidden" name="organizationPartyId" value="Company"/></td>&#160;</td>
 			</tr>
 			<tr class="alternate-row">
 			  	 <td width="25%"> &#160;</td>
