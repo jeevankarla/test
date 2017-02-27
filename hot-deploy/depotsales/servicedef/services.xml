@@ -821,6 +821,11 @@
          <attribute mode="OUT" name="saleQuantity" optional="false" type="BigDecimal"/>
          <attribute mode="OUT" name="purchaseQuantity" optional="false" type="BigDecimal"/>
     </service>
+    <service name="getAssociateOrder" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getAssociateOrder" transaction-timeout="6000000">
+         <description>Creating Accounting Trans For All Payments</description>
+         <attribute mode="IN" name="orderId" optional="false" type="String"/>
+         <attribute mode="OUT" name="orderId" optional="false" type="String"/>
+    </service>
      <service name="roundingOfAdjustmentSubtraction" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="roundingOfAdjustmentSubtraction" transaction-timeout="6000000">
         <description>roundingOfAdjustmentProblem</description>
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
