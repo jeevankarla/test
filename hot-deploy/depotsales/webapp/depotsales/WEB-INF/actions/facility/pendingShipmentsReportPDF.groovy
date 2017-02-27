@@ -220,6 +220,23 @@ orderIdsCheck=[];
 
 if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
  headerData=[:];
+ 
+ stylesMap=[:];
+ stylesMap.put("mainHeader1", "PENDING SHIPMEMTS REPORTS");
+ stylesMap.put("mainHeader2", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD");
+ stylesMap.put("mainHeader3", "NHDC Ltd. 4th Floor Chenetha Bhawan Naampally Hyderabad 500001");
+ stylesMap.put("mainHeadercellHeight",400);
+ stylesMap.put("mainHeadingCell",5);
+ stylesMap.put("mainHeaderFontSize",12);
+ stylesMap.put("mainHeaderBold",true);
+ stylesMap.put("columnHeaderBgColor",true);
+ stylesMap.put("columnHeaderFontName","TimesNewRoman");
+ stylesMap.put("columnHeaderFontSize",13);
+ stylesMap.put("autoSizeCell",true);
+ stylesMap.put("columnHeaderCellHeight",300);
+ request.setAttribute("stylesMap", stylesMap);
+ request.setAttribute("enableStyles", true);
+ 
  headerData.put("IndentNo", "Indent No");
  headerData.put("IndentDate", "Indent Date");
  headerData.put("indQty", "Indent Qty");
@@ -232,6 +249,7 @@ if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("require
  headerData.put("shipQty", "Shipment Qty");
  headerData.put("DurBWSoAndPo", "DurBWSoAndPo");
  headerData.put("DurBwSoAndShip", "DurBwSoAndShip");
+ finalList.add(stylesMap);
  finalList.add(headerData);
  }
 for(saleOrder in salesOrderDetailsList){
