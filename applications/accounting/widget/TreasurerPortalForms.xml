@@ -1145,6 +1145,18 @@ under the License.
         </field>
         <field name="finAccountName" title="Account Name"><text size="20"/></field>
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
+        <field name="segmentId" title="Payment PurposeType">
+        	<drop-down allow-empty="true">
+        	<option key="COMMON" description="COMMON"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="YARN_SALE" description="YARN SEGMENT"/>
+           </drop-down>
+        </field>
+        <field name="costCenterId" title="RO">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="partyId" list-name="internalOrgList" description="${groupName}"/>
+         	</drop-down>
+        </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
         <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
@@ -1197,6 +1209,18 @@ under the License.
         </field>
         <field name="finAccountName" title="Account Name"><text size="20"/></field>
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
+        <field name="segmentId" title="Payment PurposeType">
+        	<drop-down allow-empty="true">
+        	<option key="COMMON" description="COMMON"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="YARN_SALE" description="YARN SEGMENT"/>
+           </drop-down>
+        </field>
+        <field name="costCenterId" title="RO">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="partyId" list-name="internalOrgList" description="${groupName}"/>
+         	</drop-down>
+        </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
         <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
@@ -1248,11 +1272,23 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-         <field name="ro/bo" title="Party RO/BO"><text/>
+         <!-- <field name="ro/bo" title="Party RO/BO"><text/>
          	<drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
 				<list-options key-name="partyId" list-name="partyList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
 			</drop-down>
          </field>
+         <field name="segmentId" title="Payment PurposeType">
+        	<drop-down allow-empty="true">
+        	<option key="COMMON" description="COMMON"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="YARN_SALE" description="YARN SEGMENT"/>
+           </drop-down>
+         </field>
+        <field name="costCenterId" title="RO">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="partyId" list-name="internalOrgList" description="${groupName}"/>
+         	</drop-down>
+        </field>
         <field name="finAccountParentId"><hidden value="EMPLOYEE_ADV"/></field>
         <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
