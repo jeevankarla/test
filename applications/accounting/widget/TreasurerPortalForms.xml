@@ -1477,8 +1477,7 @@ under the License.
         <field name="transactionDate" position="1" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
         <field name="paymentPurposeType" position="2" title="Payment PurposeType"><text/>
         	<drop-down allow-empty="true">
-               <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
-                   <entity-constraint name="enumTypeId" operator="equals" value="SEGMENTS"/>
+               <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">                   
                    <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
                </entity-options>
            </drop-down>
@@ -1721,7 +1720,6 @@ under the License.
         <field name="paymentPurposeType" position="2" title="Payment PurposeType"><text/>
 	           	<drop-down allow-empty="true">
 	                  <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
-	                      <entity-constraint name="enumTypeId" operator="equals" value="SEGMENTS"/>
 	                      <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
 	                  </entity-options>
 	              </drop-down>

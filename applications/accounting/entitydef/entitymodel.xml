@@ -2447,6 +2447,8 @@
 		<member-entity entity-alias="ACT" entity-name="AcctgTrans" />
 		<member-entity entity-alias="GLA" entity-name="GlAccount" />
 		<alias entity-alias="ATE" name="glAccountId" group-by="true" />
+		<alias entity-alias="ATE" name="costCenterId" group-by="true" />
+		<alias entity-alias="ATE" name="purposeTypeId" group-by="true" />
 		<alias entity-alias="GLA" name="glAccountTypeId" group-by="true" />
 		<alias entity-alias="GLA" name="glAccountClassId" group-by="true" />
 		<alias entity-alias="GLA" name="accountName" group-by="true" />
