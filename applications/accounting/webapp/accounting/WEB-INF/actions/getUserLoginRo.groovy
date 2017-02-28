@@ -46,7 +46,7 @@ conditionList.clear();
 if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 }
-conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, ["REGIONAL_OFFICE","BRANCH_OFFICE","COMPANY"]));
+conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, ["REGIONAL_OFFICE","BRANCH_OFFICE"]));
 orgPartyIdList = delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList,EntityOperator.AND),null, null, null, false);
 context.orgPartyIdList=orgPartyIdList;
 
@@ -72,6 +72,18 @@ partyList.addAll(orgPartyIdList);
 partyList.addAll(costCenterPartyIdList);
 context.partyList=partyList;
 
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "Company"));
+conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS, "BRANCH_CUSTOMER"));
+if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+}
+intOrgList = delegator.findList("PartyRelationshipAndDetail", EntityCondition.makeCondition(conditionList,EntityOperator.AND),null, null, null, false);
+
+
+context.intOrgList=intOrgList;
 
 
 

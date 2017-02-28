@@ -82,6 +82,7 @@ if(UtilValidate.isNotEmpty(context.flag) && context.flag == "Y"){
 }
 
 
+parameters.ownerPartyId = "";
 
 
 
