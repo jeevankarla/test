@@ -87,19 +87,19 @@ Set<String> partySet = new HashSet<String>(partyIds);
 
 Map lastClosedGlBalances;
 if(roId.equals("Company") && segmentId.equals("All")){
-	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", null, "segmentId", null));
+	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", null, "segmentId", null, "isTrailBalance", "Y"));
 	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
 }
 else if(roId.equals("Company") && !segmentId.equals("All")){
-	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", null, "segmentId", segmentId));
+	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", null, "segmentId", segmentId, "isTrailBalance", "Y"));
 	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
 }
 else if(!roId.equals("Company") && segmentId.equals("All")){
-	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "roBranchList", branchList, "segmentId", null));
+	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "roBranchList", branchList, "segmentId", null, "isTrailBalance", "Y"));
 	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
 }
 else{
-	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "roBranchList", branchList, "segmentId", segmentId));
+	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "roBranchList", branchList, "segmentId", segmentId, "isTrailBalance", "Y"));
 	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
 }
 
