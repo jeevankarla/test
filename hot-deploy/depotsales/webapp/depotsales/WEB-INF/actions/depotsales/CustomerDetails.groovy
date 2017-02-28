@@ -50,6 +50,7 @@ if(UtilValidate.isEmpty(partyId)){
 		condListb = [];
 		condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
 		condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+		condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.NOT_EQUAL, "BRANCH_EMPLOYEE"));
 		condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 		PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
 		branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
