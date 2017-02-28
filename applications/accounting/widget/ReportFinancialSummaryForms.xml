@@ -769,14 +769,13 @@ under the License.
                 </entity-options>
             </drop-down>
        	</field>
-       	<field name="segment" title="Segment" id-name="Segment">
-       		<drop-down>
-        		<option key="All" description="All"/>
-        		<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}" >
-                    <entity-constraint name="enumTypeId" operator="equals" value="SEGMENTS"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-        	</drop-down>
+       	<field name="segment" title="Segment" id-name="Segment">       		
+        	<drop-down allow-empty="true">
+       			<option key="All" description="All"/>
+                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
+                     <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+                 </entity-options>
+	        </drop-down>
        	</field>
         <field name="skipDecorator"><hidden/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
