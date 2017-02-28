@@ -663,7 +663,7 @@ under the License.
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down> -->
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+            <drop-down allow-empty="false">
 				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
 			</drop-down>
         </field>

@@ -1154,7 +1154,7 @@ under the License.
         </field>
         <field name="costCenterId" title="RO">
         	<drop-down allow-empty="true">
-        		<list-options key-name="partyId" list-name="internalOrgList" description="${groupName}"/>
+        		<list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
          	</drop-down>
         </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
@@ -1218,7 +1218,7 @@ under the License.
         </field>
         <field name="costCenterId" title="RO">
         	<drop-down allow-empty="true">
-        		<list-options key-name="partyId" list-name="internalOrgList" description="${groupName}"/>
+        		<list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
          	</drop-down>
         </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
@@ -1288,7 +1288,7 @@ under the License.
          </field>
         <field name="costCenterId" title="RO">
         	<drop-down allow-empty="true">
-        		<list-options key-name="partyId" list-name="internalOrgList" description="${groupName}"/>
+        		<list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
          	</drop-down>
         </field>
         <field name="finAccountParentId"><hidden value="EMPLOYEE_ADV"/></field>

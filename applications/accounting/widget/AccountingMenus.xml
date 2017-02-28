@@ -2076,7 +2076,7 @@
             	</or>            
             </condition>
 			<link target="FinancialAccountingTransCASH">
-			<parameter param-name="organizationPartyId" value="Company"/>
+			<!-- <parameter param-name="organizationPartyId" value="Company"/> -->
 			</link>
 		 </menu-item>
 		 <!--  <menu-item name="CashierReports" title="CashReports">
