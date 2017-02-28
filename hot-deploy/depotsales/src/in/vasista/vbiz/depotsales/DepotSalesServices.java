@@ -287,13 +287,23 @@ public class DepotSalesServices{
 					delegator.createOrStore(orderAttribute);
 			 }
            boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-           List condList= FastList.newInstance();;
+           /*List condList= FastList.newInstance();;
            condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
 		   EntityCondition condExpress = EntityCondition.makeCondition(condList, EntityOperator.AND);
 		   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
-		   String POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");
+		   String POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");*/
 //           boolean POapproved = OrderChangeHelper.approveOrder(dispatcher, userLogin, POOrderId);
 		   
+           String POOrderId = "";
+		   try{
+			    Map resultCtx = FastMap.newInstance();
+				resultCtx = dispatcher.runSync("getAssociateOrder", UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
+				if(UtilValidate.isNotEmpty(resultCtx.get("orderId")))
+					POOrderId = (String) resultCtx.get("orderId");
+			 
+			} catch (Exception e) {
+		        Debug.logWarning(e.getMessage(), module);
+		    }
 		   
 		   String indentApprovalMessage = UtilProperties.getMessage("ProductUiLabels", "IndentApprovalMessage", locale);
  			indentApprovalMessage = indentApprovalMessage.replaceAll("orderId", orderId);

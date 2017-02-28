@@ -3875,7 +3875,7 @@ public static Map<String,Object> getAssociateOrder(DispatchContext dctx, Map<Str
 		    if(UtilValidate.isNotEmpty(orderItemAssocList)){
 			for (GenericValue eachValue : orderItemAssocList) {
 				
-				GenericValue OrderHeader2 = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", eachValue.getString("orderId")), false);
+				GenericValue OrderHeader2 = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", eachValue.getString("toOrderId")), false);
 				
 				if(!(OrderHeader2.getString("statusId").equals("ORDER_CANCELLED"))){
 					associateOrder = eachValue.getString("toOrderId");
