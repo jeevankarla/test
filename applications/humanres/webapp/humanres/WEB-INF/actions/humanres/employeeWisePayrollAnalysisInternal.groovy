@@ -43,17 +43,16 @@ if(screenFlag.equals("EmployeeWisePayrollAnalysisInternal")){
 	emplInputMap.put("userLogin", userLogin);
 	emplInputMap.put("fromDate", fromDateStart);
 	emplInputMap.put("thruDate", thruDateEnd);
-	Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
-	List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
-	employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
-	activEmployementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 	
 	if(UtilValidate.isNotEmpty(CustomTimePeriod)){
 		fromDate = fromDate;
 		thruDate = thruDate;
 	}
 	if(regionalOfficeId.equals("Company")){
-		
+		Map EmploymentsMap = HumanresService.getActiveEmployements(dctx,emplInputMap);
+		List<GenericValue> employementList = (List<GenericValue>)EmploymentsMap.get("employementList");
+		employementList = EntityUtil.orderBy(employementList, UtilMisc.toList("partyIdTo"));
+		activEmployementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
 	}else{	
 		conditionList = [];
 		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, regionalOfficeId));
@@ -62,6 +61,7 @@ if(screenFlag.equals("EmployeeWisePayrollAnalysisInternal")){
 		employementList = delegator.findList("Employment", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
 		if(UtilValidate.isNotEmpty(employementList)){
 			employementIds = EntityUtil.getFieldListFromEntityList(employementList, "partyIdTo", true);
+			activEmployementIds = employementIds;
 		}
 	}
 }
