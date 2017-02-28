@@ -906,13 +906,16 @@ under the License.
         <attribute name="openingBal" mode="OUT" type="BigDecimal" optional="false"/>
     </service>  
      <service name="getGlAccountOpeningBalanceForCostCenter" engine="java" auth="true" 
-        location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="getGlAccountOpeningBalance">
+        location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="getGlAccountOpeningBalanceForCostCenter">
         <description>Get Custom time period</description>
         <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/>
         <attribute name="glAccountId" mode="IN" type="String" optional="false"/>
         <attribute name="costCenterId" mode="IN" type="String" optional="true"/>
         <attribute name="segmentId" mode="IN" type="String" optional="true"/>
+        <attribute name="roBranchList" mode="IN" type="List" optional="true"/>
+        <attribute name="postedDebits" mode="OUT" type="BigDecimal" optional="true"/>
+        <attribute name="postedCredits" mode="OUT" type="BigDecimal" optional="true"/>		   
         <attribute name="openingBal" mode="OUT" type="BigDecimal" optional="false"/>
     </service>
      <service name="populateEndingBalGlAccountHistoryPartyWise" engine="simple" auth="true"

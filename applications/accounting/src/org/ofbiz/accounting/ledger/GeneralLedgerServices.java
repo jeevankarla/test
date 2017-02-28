@@ -813,10 +813,11 @@ public class GeneralLedgerServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp thruDate = (Timestamp) context.get("thruDate");
-        //String glAccountId = (String) context.get("glAccountId");
+        String glAccountId = (String) context.get("glAccountId");
         String costCenterId = (String) context.get("costCenterId");
         String segmentId = (String) context.get("segmentId");
         List glAccountIds = (List) context.get("glAccountIds");
+        List<String> roBranchList = (List) context.get("roBranchList");
         String organizationPartyId = "Company";
         GenericValue lastClosedTimePeriod=null;
         Timestamp lastClosedDate = null;
@@ -887,6 +888,7 @@ public class GeneralLedgerServices {
     			 extTransTypeIdsList1=UtilMisc.toList("SALES","SALES_INVOICE","PURCHASE_INVOICE","INVOICE_APPL");
     			 extTransTypeIdsList2=UtilMisc.toList("RECEIPT","PAYMENT_ACCTG_TRANS","PAYMENT_APPL","OUTGOING_PAYMENT","INCOMING_PAYMENT");
     			 extTransTypeIdsList2.add("OB_TB");
+    			 extTransTypeIdsList2.add("CAPITALIZATION");
     			 assetAndLiabilityIdsList=UtilMisc.toList("CURRENT_ASSET","LONGTERM_ASSET","CURRENT_LIABILITY","LONGTERM_LIABILITY","CASH_EQUIVALENT");
     			 BigDecimal finalOpeningBalance = BigDecimal.ZERO;
      			BigDecimal postedFinalDebits = BigDecimal.ZERO;
@@ -943,8 +945,15 @@ public class GeneralLedgerServices {
 	    	    	     if(UtilValidate.isNotEmpty(costCenterId)){
 	    	    	    	 andExprs1.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, costCenterId));
 	    	    	     }
+	    	    	     if(UtilValidate.isNotEmpty(roBranchList)){
+	    	    	    	 andExprs1.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+	    	    	     }
 	    	    	     if(UtilValidate.isNotEmpty(segmentId)){
-	    	    	    	 andExprs1.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, segmentId));
+	    	    	    	 if(segmentId.equals("YARN_SALE")){
+	    	    	    		 andExprs1.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+	    	    	    	 }else{
+	    	    	    		 andExprs1.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, segmentId));
+	    	    	    	 }
 	    	    	     }
 	    	    	     if(UtilValidate.isNotEmpty(organizationPartyId)){
 	    	    	    	 //get internal orgs and do in query here
@@ -1017,9 +1026,14 @@ public class GeneralLedgerServices {
  					Debug.logError(e, module);
  					return ServiceUtil.returnError(e.getMessage());
  				}    			
-    			
+    					Map lastClosedGlBalances = FastMap.newInstance();
 		    			if(UtilValidate.isNotEmpty(lastClosedTimePeriod)){
-		    				Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(ctx, UtilMisc.toMap("organizationPartyId", organizationPartyId,"customTimePeriodId",finYearId,"costCenterId",costCenterId,"seqmentId",segmentId));
+		    				if(UtilValidate.isNotEmpty(costCenterId)){
+		    					lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(ctx, UtilMisc.toMap("organizationPartyId", organizationPartyId,"customTimePeriodId",finYearId,"costCenterId",costCenterId,"segmentId",segmentId,"glAccountId",glAccountId));
+		    				}
+		    				else{
+		    					lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(ctx, UtilMisc.toMap("organizationPartyId", organizationPartyId,"customTimePeriodId",finYearId, "roBranchList", roBranchList,"segmentId",segmentId,"glAccountId",glAccountId));
+		    				}
 		    				List lastClosedGlBalanceList = (List)lastClosedGlBalances.get("openingGlHistory");
 		    				if(UtilValidate.isNotEmpty(lastClosedGlBalanceList)){
 		    					for(int l=0;l<lastClosedGlBalanceList.size();l++){
@@ -1029,7 +1043,7 @@ public class GeneralLedgerServices {
 		    						String clsAcctgTransTypeId=(String)lastClosedPartyGlBal.get("acctgTransTypeId");
 		    						GenericValue glAccount = delegator.findOne("GlAccount",UtilMisc.toMap("glAccountId", glAcId), false);
 		    						
-		    						BigDecimal openBal = (BigDecimal)lastClosedPartyGlBal.get("endingBalance");
+		    						BigDecimal openBal = (BigDecimal)lastClosedPartyGlBal.get("totalEndingBalance");
 		    						if(UtilValidate.isEmpty(glAccount.get("isControlAcctg"))||(UtilValidate.isNotEmpty(glAccount.get("isControlAcctg"))&&(!"Y".equals(glAccount.get("isControlAcctg"))))){
 		    							if(UtilValidate.isNotEmpty(openBal)){
 			    							boolean isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
