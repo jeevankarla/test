@@ -160,6 +160,34 @@ conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, 
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
 orderHeaderItemAndRoles = delegator.findList("OrderHeaderItemAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productId","quantity","unitPrice","itemDescription","partyId","orderId"), null, null, false);
 //Debug.log("orderHeaderItemAndRoles=================="+orderHeaderItemAndRoles);
+
+branchContextForAdd=[:];
+branchContextForAdd.put("branchId",branchIdForAdd);
+BOAddress="";
+BOEmail="";
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContextForAdd);
+	if(ServiceUtil.isError(resultCtx)){
+		Debug.logError("Problem in BO Header ", module);
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+	}
+}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+}
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
+
 finalCSVList=[];
 totalQty=0
 totalValue=0;
@@ -167,27 +195,29 @@ totalRate=0;
 prodCatMap=[:];
 totalsMap=[:];
 
-headerData3=[:];
-headerData3.put("prodcatName", "");
-headerData3.put("productName", "");
-headerData3.put("partyName", "__M1 Report__");
-headerData3.put("orderQty", "");
-/*headerData2.put("BdlWt", "____");*/
-headerData3.put("rate", "");
-headerData3.put("orderValue", " ");
-finalCSVList.add(headerData3);
-
-
-headerData2=[:];
-headerData2.put("prodcatName", "");
-headerData2.put("productName", "");
-headerData2.put("partyName", "");
-headerData2.put("orderQty", "");
-/*headerData2.put("BdlWt", "____");*/
-headerData2.put("rate", "");
-headerData2.put("orderValue", " ");
-finalCSVList.add(headerData2);
-
+stylesMap=[:];
+if(branchId){
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
+	stylesMap.put("mainHeader2", BOAddress);
+	stylesMap.put("mainHeader3", "M1 Report");
+}
+else{
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
+	stylesMap.put("mainHeader2", "M1 Report");
+}
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
+stylesMap.put("mainHeadingCell",1);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",false);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+finalCSVList.add(stylesMap);
 headerData=[:];
 headerData.put("prodcatName", "Product Category");
 headerData.put("productName", "Product Count");
@@ -325,35 +355,11 @@ for(productCategoryId in productCategoryIds){
 	}
 
 }
+totalsMap.put("prodcatName", "TOTAL");
 totalsMap.put("orderQty", totalQty);
 totalsMap.put("orderValue", totalValue);
 totalsMap.put("rate", totalRate);
-branchContextForAdd=[:];
-branchContextForAdd.put("branchId",branchIdForAdd);
-BOAddress="";
-BOEmail="";
-try{
-	resultCtx = dispatcher.runSync("getBoHeader", branchContextForAdd);
-	if(ServiceUtil.isError(resultCtx)){
-		Debug.logError("Problem in BO Header ", module);
-		return ServiceUtil.returnError("Problem in fetching financial year ");
-	}
-	if(resultCtx.get("boHeaderMap")){
-		boHeaderMap=resultCtx.get("boHeaderMap");
-		
-		if(boHeaderMap.get("header0")){
-			BOAddress=boHeaderMap.get("header0");
-		}
-		if(boHeaderMap.get("header1")){
-			BOEmail=boHeaderMap.get("header1");
-		}
-	}
-}catch(GenericServiceException e){
-	Debug.logError(e, module);
-	return ServiceUtil.returnError(e.getMessage());
-}
-context.BOAddress=BOAddress;
-context.BOEmail=BOEmail;
+finalCSVList.add(totalsMap);
 context.totalsMap=totalsMap;
 context.prodCatMap=prodCatMap;
 context.finalCSVList=finalCSVList;

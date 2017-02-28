@@ -173,12 +173,12 @@ if(UtilValidate.isNotEmpty(branchList)){
 		branchBasedOrderIds = EntityUtil.getFieldListFromEntityList(orderRoles, "orderId", true);
 	}
 //Debug.log("branchBasedOrderIds=================="+branchBasedOrderIds);
-
+BOAddress="";
+BOEmail="";
 if(branchIdForAdd){
 	branchContext=[:];
 	branchContext.put("branchId",branchIdForAdd);
-	BOAddress="";
-	BOEmail="";
+	
 	try{
 		resultCtx = dispatcher.runSync("getBoHeader", branchContext);
 		if(ServiceUtil.isError(resultCtx)){
@@ -224,22 +224,31 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 			//if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
 			
 			stylesMap=[:];
-			stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
-			stylesMap.put("mainHeader2", "INDENT VS DISPATCH REPORT");
-			stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
-			stylesMap.put("mainHeadercellHeight",400);
-			stylesMap.put("mainHeaderFontSize",12);
-			stylesMap.put("mainHeadingCell",1);
+			if(branchId){
+				stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+				stylesMap.put("mainHeader2", BOAddress);
+				stylesMap.put("mainHeader3", "INDENT VS DISPATCH REPORT");
+				stylesMap.put("mainHeader4", "from "+ partyfromDate +" to "+partythruDate);
+			}
+			else{
+				stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+				stylesMap.put("mainHeader2", "INDENT VS DISPATCH REPORT");
+				stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+			}
+			stylesMap.put("mainHeaderFontName","Arial");
+			stylesMap.put("mainHeadercellHeight",300);
+			stylesMap.put("mainHeaderFontSize",10);
+			stylesMap.put("mainHeadingCell",2);
 			stylesMap.put("mainHeaderBold",true);
 			stylesMap.put("columnHeaderBgColor",false);
-			stylesMap.put("columnHeaderFontName","TimesNewRoman");
-			stylesMap.put("columnHeaderFontSize",13);
+			stylesMap.put("columnHeaderFontName","Arial");
+			stylesMap.put("columnHeaderFontSize",10);
 			stylesMap.put("autoSizeCell",true);
 			stylesMap.put("columnHeaderCellHeight",300);
 			request.setAttribute("stylesMap", stylesMap);
 			request.setAttribute("enableStyles", true);
 			
-			headingMap=[:];
+			headerData=[:];
 			headerData.put("orderNo", "Order Id");
 			headerData.put("orderDate", "Order Date");
 			headerData.put("partyName", "Party Name");
@@ -252,7 +261,7 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 			headerData.put("diffQty", "Difference Quantity");
 			
 			finalCSVList.add(stylesMap);
-			finalCSVList.add(headingMap);
+			finalCSVList.add(headerData);
 			
 			//}
 			

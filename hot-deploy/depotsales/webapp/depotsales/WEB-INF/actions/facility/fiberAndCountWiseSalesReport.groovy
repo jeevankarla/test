@@ -177,16 +177,25 @@ totalsMap=[:];
 productId=EntityUtil.getFieldListFromEntityList(invoiceItems, "productId", true);
 
 stylesMap=[:];
-stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
-stylesMap.put("mainHeader2", "Fiber And Count Wise Sales Report");
-stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
-stylesMap.put("mainHeadercellHeight",400);
-stylesMap.put("mainHeaderFontSize",12);
+if(branchId){
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", BOAddress);
+	stylesMap.put("mainHeader3", "Fiber And Count Wise Sales Report");
+	stylesMap.put("mainHeader4", "from "+ partyfromDate +" to "+partythruDate);
+}
+else{
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", "Fiber And Count Wise Sales Report");
+	stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+}
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
 stylesMap.put("mainHeadingCell",1);
 stylesMap.put("mainHeaderBold",true);
 stylesMap.put("columnHeaderBgColor",false);
-stylesMap.put("columnHeaderFontName","TimesNewRoman");
-stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
 stylesMap.put("autoSizeCell",true);
 stylesMap.put("columnHeaderCellHeight",300);
 request.setAttribute("stylesMap", stylesMap);
@@ -297,8 +306,10 @@ for(productCategoryId in productCategoryIds){
 	}
 
 }
+totalsMap.put("prodcatName", "TOTAL");
 totalsMap.put("orderQty", totalQty);
 totalsMap.put("orderValue", totalValue);
+finalCSVList.add(totalsMap);
 context.totalsMap=totalsMap;
 context.prodCatMap=prodCatMap;
 context.finalCSVList=finalCSVList;

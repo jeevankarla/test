@@ -33,6 +33,7 @@ entryThruDate = parameters.IndentRegisterEntryThruDate;
 
 salesChannelEnumId = parameters.salesChannel;
 
+
 context.fromDate=fromDate;
 context.thruDate=thruDate;
 
@@ -100,6 +101,7 @@ BranchList=[];
 	screenFlag = parameters.screenFlag;
 	tallyRefNO = parameters.tallyRefNO;
 	rounding = RoundingMode.HALF_UP;
+	
 	facilityDateStart = null;
 	facilityDateEnd = null;
 	if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
@@ -234,114 +236,79 @@ BranchList=[];
 	totalSalVal=0;
 	orderHeader = delegator.findList("OrderHeader", cond, null, payOrderBy, null, false);
 	orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
-
-	if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
-	
-		headerData4=[:];
-		headerData4.put("orderDate", " ");
-		headerData4.put("orderId", " ");
-		if(facilityPartyId){
-			customerName="";
-			customer = PartyHelper.getPartyName(delegator, facilityPartyId, false);
-			customerName=customer.toUpperCase();
-			headerData4.put("orderNo", "MONTHLY INFORMATION ON YARN SUPPLY FROM NHDC FOR"+" "+customerName);
+	BOAddress="";
+	BOEmail="";
+	if(branchIdForAdd){
+		branchContext=[:];
+		branchContext.put("branchId",branchIdForAdd);
+		try{
+			resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+			if(ServiceUtil.isError(resultCtx)){
+				Debug.logError("Problem in BO Header ", module);
+				return ServiceUtil.returnError("Problem in fetching financial year ");
 			}
-		else{
-			headerData4.put("orderNo", "MONTHLY INFORMATION ON YARN SUPPLY FROM NHDC");
+			if(resultCtx.get("boHeaderMap")){
+				boHeaderMap=resultCtx.get("boHeaderMap");
+				
+				if(boHeaderMap.get("header0")){
+					BOAddress=boHeaderMap.get("header0");
+				}
+				if(boHeaderMap.get("header1")){
+					BOEmail=boHeaderMap.get("header1");
+				}
+			}
+		}catch(GenericServiceException e){
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
 		}
-		headerData4.put("Qty", " ");
-		headerData4.put("productNameCSV", " ");
-		headerData4.put("indentPrice", " ");
-		headerData4.put("indentValue", " ");
-		headerData4.put("poQty", " ");
-		headerData4.put("salInv", " ");
-		headerData4.put("salDate", " ");
-		headerData4.put("salVal", " ");
-		headerData4.put("transporter", " ");
-		headerData4.put("milInv", " ");
-		headerData4.put("value", " ");
-		headerData4.put("paymentReceipt", " ");
-		headerData4.put("amount", " ");
-		headerData4.put("weaverName", " ");
-		headerData4.put("poNo", " ");
-		headerData4.put("poSequenceNo", " ");
-		headerData4.put("poDate", " ");
-		headerData4.put("supplierName", " ");
-		orderList.add(headerData4);
+		context.BOAddress=BOAddress;
+		context.BOEmail=BOEmail;
+		}
+	if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
+		stylesMap=[:];
+		if(branchId){
+			stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD");
+			stylesMap.put("mainHeader2", BOAddress);
+			stylesMap.put("mainHeader3", "INDENT REGISTER REPORT");
+			if(facilityPartyId){
+				customerName="";
+				customer = PartyHelper.getPartyName(delegator, facilityPartyId, false);
+				customerName=customer.toUpperCase();
+				stylesMap.put("mainHeader4", "MONTHLY INFORMATION ON YARN SUPPLY FROM NHDC FOR"+" "+customerName);
+			}
+			else{
+				stylesMap.put("mainHeader4", "MONTHLY INFORMATION ON YARN SUPPLY FROM NHDC");
+			}
+			stylesMap.put("mainHeader5", fromDateForFtl+" "+"to"+" "+thruDateForFtl);
+		}
+		else{
+			stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD");
+			stylesMap.put("mainHeader2", "INDENT REGISTER REPORT");
+			if(facilityPartyId){
+				customerName="";
+				customer = PartyHelper.getPartyName(delegator, facilityPartyId, false);
+				customerName=customer.toUpperCase();
+				stylesMap.put("mainHeader3", "MONTHLY INFORMATION ON YARN SUPPLY FROM NHDC FOR"+" "+customerName);
+			}
+			else{
+				stylesMap.put("mainHeader3", "MONTHLY INFORMATION ON YARN SUPPLY FROM NHDC");
+			}
+			stylesMap.put("mainHeader4", fromDateForFtl+" "+"to"+" "+thruDateForFtl);
+		}
 		
-	headerData2=[:];
-	headerData2.put("orderDate", " ");
-	headerData2.put("orderId", " ");
-	headerData2.put("orderNo", "INDENT REGISTER");
-	headerData2.put("Qty", " ");
-	headerData2.put("productNameCSV", " ");
-	headerData2.put("indentPrice", " ");
-	headerData2.put("indentValue", " ");
-	headerData2.put("poQty", " ");
-	headerData2.put("salInv", " ");
-	headerData2.put("salDate", " ");
-	headerData2.put("salVal", " ");
-	headerData2.put("transporter", " ");
-	headerData2.put("milInv", " ");
-	headerData2.put("value", " ");
-	headerData2.put("paymentReceipt", " ");
-	headerData2.put("amount", " ");
-	headerData2.put("weaverName", " ");
-	headerData2.put("poNo", " ");
-	headerData2.put("poSequenceNo", " ");
-	headerData2.put("poDate", " ");
-	headerData2.put("supplierName", " ");
-	orderList.add(headerData2);
-	
-	headerData1=[:];
-	headerData1.put("orderDate"," ");
-	headerData1.put("orderId", " ");
-	headerData1.put("orderNo", fromDateForFtl+" "+"to"+" "+thruDateForFtl);
-	headerData1.put("Qty", " ");
-	headerData1.put("productNameCSV", " ");
-	headerData1.put("indentPrice", " ");
-	headerData1.put("indentValue", " ");
-	headerData1.put("poQty", " ");
-	headerData1.put("salInv", " ");
-	headerData1.put("salDate", " ");
-	headerData1.put("salVal", " ");
-	headerData1.put("transporter", " ");
-	headerData1.put("milInv", " ");
-	headerData1.put("value", " ");
-	headerData1.put("paymentReceipt", " ");
-	headerData1.put("amount", " ");
-	headerData1.put("weaverName", " ");
-	headerData1.put("poNo", " ");
-	headerData1.put("poSequenceNo", " ");
-	headerData1.put("poDate", " ");
-	headerData1.put("supplierName", " ");
-	orderList.add(headerData1);
-	
-	
-	headerData3=[:];
-	headerData3.put("orderDate"," ");
-	headerData3.put("orderId", " ");
-	headerData3.put("orderNo", " ");
-	headerData3.put("Qty", " ");
-	headerData3.put("productNameCSV", " ");
-	headerData3.put("indentPrice", " ");
-	headerData3.put("indentValue", " ");
-	headerData3.put("poQty", " ");
-	headerData3.put("salInv", " ");
-	headerData3.put("salDate", " ");
-	headerData3.put("salVal", " ");
-	headerData3.put("transporter", " ");
-	headerData3.put("milInv", " ");
-	headerData3.put("value", " ");
-	headerData3.put("paymentReceipt", " ");
-	headerData3.put("amount", " ");
-	headerData3.put("weaverName", " ");
-	headerData3.put("poNo", " ");
-	headerData3.put("poSequenceNo", " ");
-	headerData3.put("poDate", " ");
-	headerData3.put("supplierName", " ");
-	orderList.add(headerData3);
-	
+	stylesMap.put("mainHeaderFontName","Arial");
+	stylesMap.put("mainHeadercellHeight",300);
+	stylesMap.put("mainHeadingCell",3);
+	stylesMap.put("mainHeaderFontSize",10);
+	stylesMap.put("mainHeaderBold",true);
+	stylesMap.put("columnHeaderBgColor",false);
+	stylesMap.put("columnHeaderFontName","Arial");
+	stylesMap.put("columnHeaderFontSize",10);
+	stylesMap.put("autoSizeCell",true);
+	stylesMap.put("columnHeaderCellHeight",300);
+	request.setAttribute("stylesMap", stylesMap);
+	request.setAttribute("enableStyles", true);
+	orderList.add(stylesMap);
 	headerData=[:];
 	headerData.put("orderDate", "Date");
 	headerData.put("orderId", "Cust Order");
@@ -411,15 +378,18 @@ BranchList=[];
 			orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 			orderNo = orderSeqDetails.orderNo;
 		}
-		exprCondList=[];
+		resultCtx = dispatcher.runSync("getAssociateOrder",UtilMisc.toMap("userLogin",userLogin, "orderId", eachHeader.orderId));
+		/*exprCondList=[];
 		exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
 		exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 		EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 		OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
+		*/
+		
 		POorder="NA";
 		isgeneratedPO="N";
-		if(OrderAss){
-			POorder=OrderAss.get("orderId");
+		if(resultCtx.orderId){
+			POorder=resultCtx.orderId;
 			isgeneratedPO = "Y";
 		}
 		poSequenceNo="NA";
@@ -534,7 +504,6 @@ BranchList=[];
 			tempData.put("indentValue", indentValue.setScale(2, rounding));		
 			orderHeader = delegator.findOne("OrderHeader",[orderId : poId] , false);
 			if(orderHeader){
-				
 				tempData.put("poDate", UtilDateTime.toDateString(orderHeader.orderDate, "dd/MM/yyyy"));
 			}
 			shipments = delegator.findList("Shipment", EntityCondition.makeCondition("primaryOrderId",  EntityOperator.EQUALS, poId), null, null, null, false);
@@ -638,34 +607,7 @@ BranchList=[];
 	tempTotMap.put("salVal", totalSalVal);
 	orderList.add(tempTotMap);
 }
-	if(branchIdForAdd){
-	branchContext=[:];
-	branchContext.put("branchId",branchIdForAdd);
-	BOAddress="";
-	BOEmail="";
-	try{
-		resultCtx = dispatcher.runSync("getBoHeader", branchContext);
-		if(ServiceUtil.isError(resultCtx)){
-			Debug.logError("Problem in BO Header ", module);
-			return ServiceUtil.returnError("Problem in fetching financial year ");
-		}
-		if(resultCtx.get("boHeaderMap")){
-			boHeaderMap=resultCtx.get("boHeaderMap");
-			
-			if(boHeaderMap.get("header0")){
-				BOAddress=boHeaderMap.get("header0");
-			}
-			if(boHeaderMap.get("header1")){
-				BOEmail=boHeaderMap.get("header1");
-			}
-		}
-	}catch(GenericServiceException e){
-		Debug.logError(e, module);
-		return ServiceUtil.returnError(e.getMessage());
-	}
-	context.BOAddress=BOAddress;
-	context.BOEmail=BOEmail;
-	}
+	
 	context.orderList=orderList;
 
 	

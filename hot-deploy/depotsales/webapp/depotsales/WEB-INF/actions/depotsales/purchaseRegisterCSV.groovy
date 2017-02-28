@@ -22,6 +22,7 @@ import javolution.util.FastMap;
 import java.text.ParseException;
 import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
+import org.ofbiz.service.GenericServiceException;
 
 BranchList=[];
 	branchMap = [:];
@@ -86,7 +87,7 @@ BranchList=[];
 	inputFields = [:];
 	inputFields.put("noConditionFind", "Y");
 	inputFields.put("hideSearch","Y");
-	
+	branchIdForAdd="";
 	branchList=[];
 	condListb = [];
 	if(UtilValidate.isNotEmpty(branchId)){
@@ -96,7 +97,25 @@ BranchList=[];
 	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
 	branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
 	}
-	
+	if(!branchList){
+		condListb2 = [];
+		//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
+		condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+		condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+		condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+		cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+		
+		PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+		if(PartyRelationship1){
+		branchDetails = EntityUtil.getFirst(PartyRelationship1);
+		branchIdForAdd=branchDetails.partyIdFrom;
+		}
+	}
+	else{
+		if(branchId){
+		branchIdForAdd=branchId;
+		}
+	}
 	if(!branchList)
 	branchList.add(branchId);
 	
@@ -146,7 +165,34 @@ BranchList=[];
 	int totalIndents = 0
 	orderHeader = delegator.findList("OrderHeader", cond, null, payOrderBy, null, false);
 	orderIds=EntityUtil.getFieldListFromEntityList(orderHeader, "orderId", true);
-	
+	BOAddress="";
+	BOEmail="";
+	if(branchIdForAdd){
+	branchContextForADD=[:];
+	branchContextForADD.put("branchId",branchIdForAdd);
+	try{
+		resultCtx = dispatcher.runSync("getBoHeader", branchContextForADD);
+		if(ServiceUtil.isError(resultCtx)){
+			Debug.logError("Problem in BO Header ", module);
+			return ServiceUtil.returnError("Problem in fetching financial year ");
+		}
+		if(resultCtx.get("boHeaderMap")){
+			boHeaderMap=resultCtx.get("boHeaderMap");
+			
+			if(boHeaderMap.get("header0")){
+				BOAddress=boHeaderMap.get("header0");
+			}
+			if(boHeaderMap.get("header1")){
+				BOEmail=boHeaderMap.get("header1");
+			}
+		}
+	}catch(GenericServiceException e){
+	Debug.logError(e, module);
+	return ServiceUtil.returnError(e.getMessage());
+	}
+	context.BOAddress=BOAddress;
+	context.BOEmail=BOEmail;
+	}
 	/*
 	headerData2=[:];
 	headerData2.put("orderDate", "INDENT DATE");
@@ -168,29 +214,53 @@ BranchList=[];
 	headerData2.put("poDate", "PO DATE");
 	headerData2.put("supplierName", "SUPPLIER NAME");
 	orderList.add(headerData2);
-	
-	headerData=[:];
-	headerData.put("orderDate", "________");
-	//headerData.put("orderId", "Cust Order");
-	headerData.put("orderNo", "________");
-	headerData.put("Qty", "________");
-	headerData.put("unit", "________");
-	headerData.put("poQty", "________");
-	headerData.put("salInv", "________");
-	headerData.put("salDate", "________");
-	headerData.put("salVal", "________");
-	headerData.put("transporter", "________");
-	headerData.put("milInv", "________");
-	headerData.put("value", "________");
-	headerData.put("paymentReceipt", "________");
-	headerData.put("amount", "________");
-	headerData.put("weaverName", "________");
-	headerData.put("poNo", "________");
-	headerData.put("poDate", "________");
-	headerData.put("supplierName", "________");
-	orderList.add(headerData);
 	*/
 	
+	stylesMap=[:];
+	if(branchId){
+		stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
+		stylesMap.put("mainHeader2", BOAddress);
+		stylesMap.put("mainHeader3", "Purchase Register Report");	
+	}
+	else{
+		stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
+		stylesMap.put("mainHeader2", "Purchase Register Report");	
+	}
+	stylesMap.put("mainHeaderFontName","Arial");
+	stylesMap.put("mainHeadercellHeight",300);
+	stylesMap.put("mainHeadingCell",5);
+	stylesMap.put("mainHeaderFontSize",10);
+	stylesMap.put("mainHeaderBold",true);
+	stylesMap.put("columnHeaderBgColor",false);
+	stylesMap.put("columnHeaderFontName","Arial");
+	stylesMap.put("columnHeaderFontSize",10);
+	stylesMap.put("autoSizeCell",true);
+	stylesMap.put("columnHeaderCellHeight",300);
+	request.setAttribute("stylesMap", stylesMap);
+	request.setAttribute("enableStyles", true);
+	orderList.add(stylesMap);
+	headerData=[:];
+	headerData.put("orderDate", "Indent Date");
+	//headerData2.put("orderId", "_");
+	headerData.put("orderNo", "Sequence Id");
+	headerData.put("Qty", "Qty");
+	headerData.put("unit", "Unit");
+	headerData.put("poQty", "PO Qty");
+	headerData.put("salInv", "Sale Invoice");
+	headerData.put("salDate", "Sale Date");
+	headerData.put("salVal", "Sale Value");
+	headerData.put("transporter", "Transporter");
+	headerData.put("milInv", "Mil Invoice");
+	headerData.put("value", "Value");
+	headerData.put("paymentReceipt", "Payment Receipt");
+	headerData.put("amount", "Amount");
+	headerData.put("weaverName", "Weaver Name");
+	headerData.put("poSquenceNo", "PO Sequence No");
+	headerData.put("poDate", "PO Date");
+	headerData.put("supplierName", "Supplier Name");
+	headerData.put("salquantity", "Sale Quantity");
+	
+	orderList.add(headerData);
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
 		orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
@@ -232,16 +302,17 @@ BranchList=[];
 			orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 			orderNo = orderSeqDetails.orderNo;
 		}
-		exprCondList=[];
+		/*exprCondList=[];
 		exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
 		exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 		EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
 		OrderAss = EntityUtil.getFirst(delegator.findList("OrderAssoc", disCondition, null,null,null, false));
-		
+		*/
+		resultCtx = dispatcher.runSync("getAssociateOrder",UtilMisc.toMap("userLogin",userLogin, "orderId", orderId));
 		POorder="NA";
 		isgeneratedPO="N";
-		if(OrderAss){
-			POorder=OrderAss.get("orderId");
+		if(resultCtx.orderId){
+			POorder=resultCtx.orderId;
 			isgeneratedPO = "Y";
 		}
 		poSquenceNo="NA";
@@ -275,7 +346,8 @@ BranchList=[];
 		tempData.put("supplierName", supplierPartyName);
 		tempData.put("orderNo", orderNo);
 		tempData.put("orderId", eachHeader.orderId);
-		tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));
+		tempData.put("orderDate", UtilDateTime.toDateString(eachHeader.estimatedDeliveryDate, "dd/MM/yyyy"));
+		//tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));
 		tempData.put("statusId", eachHeader.statusId);
 		if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 			tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));
