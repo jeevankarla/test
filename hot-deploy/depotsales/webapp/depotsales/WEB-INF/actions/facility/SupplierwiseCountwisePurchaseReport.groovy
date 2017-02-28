@@ -163,13 +163,11 @@ conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_E
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
 orderHeaderItemAndRoles = delegator.findList("OrderHeaderItemAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productId","quantity","unitPrice","itemDescription","partyId","orderId"), null, null, false);
-
+BOAddress="";
+BOEmail="";
 if(branchIdForAdd){
 branchContextForADD=[:];
 branchContextForADD.put("branchId",branchIdForAdd);
-
-BOAddress="";
-BOEmail="";
 try{
 	resultCtx = dispatcher.runSync("getBoHeader", branchContextForADD);
 	if(ServiceUtil.isError(resultCtx)){
@@ -201,17 +199,26 @@ prodCatMap=[:];
 totalsMap=[:];
 productId=EntityUtil.getFieldListFromEntityList(orderHeaderItemAndRoles, "productId", true);
 
-stylesMap=[:];    
-stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
-stylesMap.put("mainHeader2", "Supplier Wise Count Wise Purchase Report");
-stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
-stylesMap.put("mainHeadercellHeight",400);
-stylesMap.put("mainHeaderFontSize",12);
-stylesMap.put("mainHeadingCell",1);
+stylesMap=[:]; 
+if(branchId){   
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
+	stylesMap.put("mainHeader2", BOAddress);
+	stylesMap.put("mainHeader3", "Supplier Wise Count Wise Purchase Report");
+	stylesMap.put("mainHeader4", "from "+ partyfromDate +" to "+partythruDate);
+}
+else{
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
+	stylesMap.put("mainHeader2", "Supplier Wise Count Wise Purchase Report");
+	stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+}
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
+stylesMap.put("mainHeadingCell",2);
 stylesMap.put("mainHeaderBold",true);
-stylesMap.put("columnHeaderBgColor",true);
-stylesMap.put("columnHeaderFontName","TimesNewRoman");
-stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("columnHeaderBgColor",false);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
 stylesMap.put("autoSizeCell",true);
 stylesMap.put("columnHeaderCellHeight",300);
 request.setAttribute("stylesMap", stylesMap);
@@ -221,6 +228,7 @@ headingMap=[:];
 headingMap.put("prodcatName", "Product Category");
 headingMap.put("productName", "Product Count");
 headingMap.put("partyName", "Party Name");
+headingMap.put("orderQty", "Order Qty(kgs)");
 headingMap.put("rate", "Rate");
 headingMap.put("orderValue","Order Value");
 
@@ -340,7 +348,7 @@ for(productCategoryId in productCategoryIds){
 	}
 
 }
-Debug.log("finalCSVList======================"+ finalCSVList);
+//Debug.log("finalCSVList======================"+ finalCSVList);
 totalsMap.put("prodcatName", "TOTAL");
 totalsMap.put("orderQty", totalQty);
 totalsMap.put("orderValue", totalValue);

@@ -219,24 +219,24 @@ finalList=[];
 orderIdsCheck=[];
 
 if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
- headerData=[:];
- 
  stylesMap=[:];
  stylesMap.put("mainHeader1", "PENDING SHIPMEMTS REPORTS");
  stylesMap.put("mainHeader2", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD");
- stylesMap.put("mainHeader3", "NHDC Ltd. 4th Floor Chenetha Bhawan Naampally Hyderabad 500001");
- stylesMap.put("mainHeadercellHeight",400);
+ stylesMap.put("mainHeader3", BOAddress);
+ stylesMap.put("mainHeaderFontName","Arial");
+ stylesMap.put("mainHeadercellHeight",300);
  stylesMap.put("mainHeadingCell",5);
- stylesMap.put("mainHeaderFontSize",12);
+ stylesMap.put("mainHeaderFontSize",10);
  stylesMap.put("mainHeaderBold",true);
- stylesMap.put("columnHeaderBgColor",true);
- stylesMap.put("columnHeaderFontName","TimesNewRoman");
- stylesMap.put("columnHeaderFontSize",13);
+ stylesMap.put("columnHeaderBgColor",false);
+ stylesMap.put("columnHeaderFontName","Arial");
+ stylesMap.put("columnHeaderFontSize",10);
  stylesMap.put("autoSizeCell",true);
  stylesMap.put("columnHeaderCellHeight",300);
  request.setAttribute("stylesMap", stylesMap);
  request.setAttribute("enableStyles", true);
  
+ headerData=[:];
  headerData.put("IndentNo", "Indent No");
  headerData.put("IndentDate", "Indent Date");
  headerData.put("indQty", "Indent Qty");
@@ -265,7 +265,7 @@ for(saleOrder in salesOrderDetailsList){
 		orderSeqDetails = EntityUtil.getFirst(orderHeaderSequences);
 		orderNo = orderSeqDetails.orderNo;
 	}
-	exprCondList=[];
+	/*exprCondList=[];
 	exprCondList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, saleOrder.orderId));
 	exprCondList.add(EntityCondition.makeCondition("orderAssocTypeId", EntityOperator.EQUALS, "BackToBackOrder"));
 	EntityCondition disCondition = EntityCondition.makeCondition(exprCondList, EntityOperator.AND);
@@ -275,7 +275,15 @@ for(saleOrder in salesOrderDetailsList){
 	if(OrderAss){
 		POorder=OrderAss.get("orderId");
 		isgeneratedPO = "Y";
+	}*/
+	resultCtx = dispatcher.runSync("getAssociateOrder",UtilMisc.toMap("userLogin",userLogin, "orderId", saleOrder.orderId));
+	POorder="NA";
+	isgeneratedPO="N";
+	if(resultCtx.orderId){
+		POorder=resultCtx.orderId;
+		isgeneratedPO = "Y";
 	}
+	
 	if(isgeneratedPO =="Y"){
 	poSequenceNo="NA";
 	poOrderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , POorder)  , null, null, null, false );

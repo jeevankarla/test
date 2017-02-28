@@ -120,13 +120,13 @@ stylesMap=[:];
 stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
 stylesMap.put("mainHeader2", "Agency Wise Invoice Outstanding Report");
 stylesMap.put("mainHeader3", "As On  "+ dateStr);
-stylesMap.put("mainHeadercellHeight",400);
-stylesMap.put("mainHeaderFontSize",12);
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
 stylesMap.put("mainHeadingCell",1);
 stylesMap.put("mainHeaderBold",true);
-
-stylesMap.put("columnHeaderFontName","TimesNewRoman");
-stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
 stylesMap.put("autoSizeCell",true);
 stylesMap.put("columnHeaderCellHeight",300);
 stylesMap.put("columnHeaderBgColor",false);
