@@ -146,7 +146,7 @@ conditionList = [];
 	context.errorMessage ="Party Id:"+parameters.partyId+"'Don't have any Accounts!!";
 	return "error";
 	}*/
-	Debug.log("finAccountTransInputMap========szdbrgfuydrg");
+	
 	/*yarnlist = [];
 	yarnlist.add("YARN_SALE", "DEPOT_YARN_SALE");
 	Debug.log("yarnlist============="+yarnlist);*/
@@ -158,7 +158,6 @@ conditionList = [];
 	if(UtilValidate.isNotEmpty(roId) && UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
 	finAccountTransInputMap["costCenterId"]=branchList;
 	}
-	Debug.log("segmentId======222222222======"+segmentId);
 	if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE")){
 	finAccountTransInputMap["segmentId"]=segmentId;
 	}
