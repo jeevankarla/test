@@ -5357,7 +5357,305 @@ public class MaterialPurchaseServices {
 		} catch (Exception e) {
 	        Debug.logWarning(e.getMessage(), module);
 	    }
+		 
+		 List<String> purchaseOrderIds = FastList.newInstance();
+		 
+		 try{
 			 
+			    Map resultCtx = FastMap.newInstance();
+				resultCtx = dispatcher.runSync("saleToPoDetails", UtilMisc.toMap("userLogin", userLogin, "orderId", SaleOrderId));
+				if(UtilValidate.isNotEmpty(resultCtx.get("purcahseOrderId")))
+					purchaseOrderIds = (List) resultCtx.get("purcahseOrderId");
+				
+				    purchaseOrderIds.remove(orderId);
+			 
+			} catch (Exception e) {
+		        Debug.logWarning(e.getMessage(), module);
+		    }
+			 
+		 
+		 if (UtilValidate.isNotEmpty(purchaseOrderIds)) {
+		 
+		 for (String eachOrderId : purchaseOrderIds) {
+			 
+			 try{
+					
+					List conditionList = FastList.newInstance();
+					conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId));
+					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CREATED"));
+					List<GenericValue> OrderStatus = delegator.findList("OrderStatus", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+						if(UtilValidate.isNotEmpty(OrderStatus)){
+							delegator.removeAll(OrderStatus);
+							
+							GenericValue OrderHeder = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", eachOrderId), false);
+							OrderHeder.put("statusId", "ORDER_CREATED");
+							OrderHeder.store();
+							
+						}
+						
+					}catch(GenericEntityException e){
+						Debug.logError(e, "Failed to retrive orderItemDetail ", module);
+					}
+		}
+		 
+		 }
+		 
+		
+		if (UtilValidate.isNotEmpty(SaleOrderId)) {
+			try{
+			
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, SaleOrderId));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CREATED"));
+			List<GenericValue> OrderStatus = delegator.findList("OrderStatus", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				if(UtilValidate.isNotEmpty(OrderStatus)){
+					delegator.removeAll(OrderStatus);
+					
+					GenericValue OrderHeder = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", SaleOrderId), false);
+					OrderHeder.put("statusId", "ORDER_CREATED");
+					OrderHeder.store();
+					
+				}
+				
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive orderItemDetail ", module);
+			}
+			
+			
+		}
+		try{
+ 			Map serviceResult  = dispatcher.runSync("getIndentAndUpdateIndenSummaryDetails", UtilMisc.toMap("orderId", SaleOrderId));
+ 			if (ServiceUtil.isError(serviceResult)) {
+ 				Debug.logError("Error While Updateing Indent Summary Details", module);
+            }
+  		}catch(GenericServiceException e){
+			Debug.logError(e, "Error While Updateing Indent Summary Details ", module);
+		}
+		return result;
+	}
+	
+	
+	public static Map<String, Object> cancelPOStatusDC(DispatchContext ctx,Map<String, ? extends Object> context) {
+		Delegator delegator = ctx.getDelegator();
+		LocalDispatcher dispatcher = ctx.getDispatcher();
+        
+		String statusId = (String) context.get("statusId");
+		String orderId = (String) context.get("orderId");
+		String changeReason = (String) context.get("changeReason");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Map result = ServiceUtil.returnSuccess();
+		String SaleOrderId = "";
+		try{
+			
+			GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			
+			if(UtilValidate.isEmpty(orderHeader)){
+				Debug.logError("Order doesn't exists with Id : "+orderId , module);
+  	 			return ServiceUtil.returnError("Order doesn't exists with Id : "+orderId);
+			}
+        	
+        	List conditionList1 = FastList.newInstance();
+        	conditionList1.add(EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId));
+        	conditionList1.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+			List<GenericValue> Shipment1 = delegator.findList("Shipment", EntityCondition.makeCondition(conditionList1, EntityOperator.AND), null, null, null, false);
+        	
+			if(UtilValidate.isNotEmpty(Shipment1)){
+				Debug.logError("Please Cancell the Shipment "+orderId , module);
+  	 			return ServiceUtil.returnError("Please Cancell the Shipment: "+orderId);
+			}
+			
+			Map statusCtx = FastMap.newInstance();
+			statusCtx.put("statusId", statusId);
+			statusCtx.put("orderId", orderId);
+			statusCtx.put("userLogin", userLogin);
+			Map resultCtx = OrderServices.setOrderStatus(ctx, statusCtx);
+			if (ServiceUtil.isError(resultCtx)) {
+				Debug.logError("Order set status failed for orderId: " + orderId, module);
+				return resultCtx;
+			}
+			String oldStatusId = (String)resultCtx.get("orderStatusId");
+			result.put("oldStatusId", oldStatusId);
+			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("quoteId"), null, null, false);
+			
+			List<String> quoteIds = EntityUtil.getFieldListFromEntityList(orderItems, "quoteId", true);
+			
+			if(UtilValidate.isNotEmpty(quoteIds)){
+
+				String quoteId = (String)quoteIds.get(0);
+				GenericValue quote = delegator.findOne("Quote", UtilMisc.toMap("quoteId", quoteId), false);
+				List<GenericValue> quoteItems = delegator.findList("QuoteItem", EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null, null, null, false);
+				
+				boolean quoteStatusChange = Boolean.FALSE; 
+				for(GenericValue quoteItem : quoteItems){
+					String itemStatusId = quoteItem.getString("statusId");
+					
+					if(itemStatusId.equals("QTITM_ORDERED")){
+						Map inputMap = FastMap.newInstance();
+			        	inputMap.put("userLogin", userLogin);
+			        	inputMap.put("quoteId", quoteItem.getString("quoteId"));
+			        	inputMap.put("quoteItemSeqId", quoteItem.getString("quoteItemSeqId"));
+			        	inputMap.put("statusId", "QTITM_QUALIFIED");
+			        	
+			        	Map statusResult = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
+			        	if(ServiceUtil.isError(statusResult)){
+			        		Debug.logError("Error updating QuoteStatus", module);
+			  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+			        	}
+			        	quoteStatusChange = Boolean.TRUE;
+					}
+					
+				}
+				if(quoteStatusChange){
+					Map inputMap = FastMap.newInstance();
+		        	inputMap.put("userLogin", userLogin);
+		        	inputMap.put("quoteId", quoteId);
+		        	inputMap.put("statusId", "QUO_ACCEPTED");
+		        	
+		        	Map statusResult = dispatcher.runSync("setQuoteAndItemStatus", inputMap);
+		        	if(ServiceUtil.isError(statusResult)){
+		        		Debug.logError("Error updating QuoteStatus", module);
+		  	  			return ServiceUtil.returnError("Error updating QuoteStatus");
+		        	}
+		        	String custRequestId="";
+		        	List<GenericValue>  quoteAndItemAndCustRequest = delegator.findList("QuoteAndItemAndCustRequest",EntityCondition.makeCondition("quoteId", EntityOperator.EQUALS, quoteId), null , null, null, false);
+		        	if(UtilValidate.isNotEmpty(quoteAndItemAndCustRequest)){
+		        		custRequestId = (EntityUtil.getFirst(quoteAndItemAndCustRequest)).getString("custRequestId");
+					}
+		        	boolean isOrdered=true;
+		        	statusCtx.clear();
+			 		statusCtx.put("custRequestId", custRequestId);
+			 		statusCtx.put("userLogin", userLogin);
+			 		try {
+				 		Map<String, Object> enquiryResult = (Map)dispatcher.runSync("enquiryStatusValidation", statusCtx);
+				 		isOrdered=(Boolean)enquiryResult.get("isOrdered");
+			 		}catch(Exception e){
+		 	        	Debug.logError("Error in enquiryStatusValidation Service", module);
+		 			    return ServiceUtil.returnError("Error in enquiryStatusValidation Service");
+		 	        }
+			 		if (!isOrdered) {
+			 			statusCtx.clear();
+			 			statusCtx.put("statusId", "ENQ_CREATED");
+			 			statusCtx.put("custRequestId", custRequestId);
+			 			statusCtx.put("userLogin", userLogin);
+			 			try{
+				 			resultCtx = dispatcher.runSync("setRequestStatus", statusCtx);
+				 			if (ServiceUtil.isError(resultCtx)) {
+				 				Debug.logError("Error While Updating Enquiry Status: " + custRequestId, module);
+				 				return resultCtx;
+				 			}
+			 			}catch(Exception e){
+			 	        	Debug.logError("Error While Updating Enquiry Status:" + custRequestId, module);
+			 			    return ServiceUtil.returnError("Error While Updating Enquiry Status:");
+			 	        }
+			 		}
+				}
+				
+			}
+			
+			
+			/*List<GenericValue> orderAssocList = null;
+			
+			
+
+            try {
+            	orderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);            	
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                orderAssocList = null;
+            }
+            if (UtilValidate.isNotEmpty(orderAssocList)) {
+	            try {
+	            	GenericValue orderAssoc = EntityUtil.getFirst(orderAssocList);
+	            	SaleOrderId = orderAssoc.getString("toOrderId");
+	            	orderAssoc.remove();
+	            	Debug.log("order Association Removed!");
+	            } catch (GenericEntityException e) {
+	 	        	Debug.logError("error while removing order Association" + orderId, module);
+	
+	            }
+            }
+            
+            List<GenericValue> orderAssocItemList = null;
+            try {
+            	orderAssocItemList = delegator.findList("OrderItemAssoc", EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId), null, null, null, false);            	
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                orderAssocItemList = null;
+            }
+           
+            if (UtilValidate.isNotEmpty(orderAssocItemList)) {
+	            try {
+	            	delegator.removeAll(orderAssocItemList);
+	            	Debug.log("order Item Association Removed!");
+	            } catch (GenericEntityException e) {
+	 	        	Debug.logError("error while removing order Item Association" + orderId, module);
+	
+	            }
+            }*/
+
+
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.getMessage());
+		}
+		
+		
+		
+		 try{
+			 
+		    Map resultCtx = FastMap.newInstance();
+			resultCtx = dispatcher.runSync("getAssociateOrder", UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
+			if(UtilValidate.isNotEmpty(resultCtx.get("orderId")))
+			  SaleOrderId = (String) resultCtx.get("orderId");
+		 
+		} catch (Exception e) {
+	        Debug.logWarning(e.getMessage(), module);
+	    }
+		 
+		 List<String> purchaseOrderIds = FastList.newInstance();
+		 
+		 try{
+			 
+			    Map resultCtx = FastMap.newInstance();
+				resultCtx = dispatcher.runSync("saleToPoDetails", UtilMisc.toMap("userLogin", userLogin, "orderId", SaleOrderId));
+				if(UtilValidate.isNotEmpty(resultCtx.get("purcahseOrderId")))
+					purchaseOrderIds = (List) resultCtx.get("purcahseOrderId");
+				
+				    purchaseOrderIds.remove(orderId);
+			 
+			} catch (Exception e) {
+		        Debug.logWarning(e.getMessage(), module);
+		    }
+			 
+		 
+		 if (UtilValidate.isNotEmpty(purchaseOrderIds)) {
+		 
+		 for (String eachOrderId : purchaseOrderIds) {
+			 
+			 try{
+					
+					List conditionList = FastList.newInstance();
+					conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachOrderId));
+					conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CREATED"));
+					List<GenericValue> OrderStatus = delegator.findList("OrderStatus", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+						if(UtilValidate.isNotEmpty(OrderStatus)){
+							delegator.removeAll(OrderStatus);
+							
+							GenericValue OrderHeder = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", eachOrderId), false);
+							OrderHeder.put("statusId", "ORDER_CREATED");
+							OrderHeder.store();
+							
+						}
+						
+					}catch(GenericEntityException e){
+						Debug.logError(e, "Failed to retrive orderItemDetail ", module);
+					}
+		}
+		 
+		 }
+		 
 		
 		if (UtilValidate.isNotEmpty(SaleOrderId)) {
 			try{

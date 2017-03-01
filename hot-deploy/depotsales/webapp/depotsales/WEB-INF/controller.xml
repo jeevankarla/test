@@ -1119,7 +1119,7 @@
     
     <request-map uri="CancelOrderDC">
         <security https="true" auth="true"/>
-        <event type="service" invoke="cancelPOStatus"/>
+        <event type="service" invoke="cancelPOStatusDC"/>
         <response name="success" type="view" value="FindPODC"/>
         <response name="error" type="view" value="FindPODC"/>
     </request-map>

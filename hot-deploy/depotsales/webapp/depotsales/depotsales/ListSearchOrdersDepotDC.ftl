@@ -351,10 +351,7 @@ function drawRow(rowData) {
 	   
 	     //For PO Ids
 	     
-	//if(rowData.purcahseOrderId != "NA" )
     	row.append($("<td>" + rowData.purcahseOrderId + "</td>"));
-    //else
-        //row.append($("<td></td>"));
       
        //For Indent View
     
@@ -374,9 +371,6 @@ function drawRow(rowData) {
       buutonName = "Account";
     if(rowData.statusId == "APPROVE_LEVEL2")  
        buutonName = "Regional";
-    
-    
-    
      
      var dataJson = {"orderId":orderId,"statusId":statusMap[statusId],"partyId":partyId};
     
@@ -445,7 +439,7 @@ function drawRow(rowData) {
 	    }
     }else if(rowData.statusId == "ORDER_APPROVED"){
 	     row.append($("<td> Approved </td>"));
-	  }else if ((rowData.paidAmt) != -1 && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N") ){
+	  }else if ((rowData.paidAmt) != -1 && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N") && (rowData.showDraftPO =="N") ){
 	  
 	     if (((rowData.orderTotal)>= 0) && ((rowData.orderTotal)<= 200000)){
 	      

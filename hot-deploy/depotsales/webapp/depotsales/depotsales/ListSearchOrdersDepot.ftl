@@ -626,7 +626,7 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
   <form name="listOrders" id="listOrders"   method="post" >
    
     
-     <table id="coreTable" class="basic-table hover-bar" cellspacing="0">
+     <table id="coreTable" class="basic-table hover-bar"  cellspacing="0">
       <th1ead>
         <tr class="header-row-2">
           <td>Indent Id</td>
