@@ -259,9 +259,17 @@
 					}else{
 					
 						lastPrice = result["lastPrice"];
+						
+						 if(lastPrice != 0){
 						 data[rowCount]["unitPrice"] = lastPrice;
 	                     mainGrid.setData(data);
 	                     mainGrid.render();
+	                     }else{
+	                     
+	                     
+	                       alert("Supplier Product Not Configured");
+	                     
+	                     }
 						 
                		}
                	}							

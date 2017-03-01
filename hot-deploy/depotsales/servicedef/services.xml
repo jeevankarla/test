@@ -48,6 +48,15 @@
         <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
     </service>
+    
+     <service name="CreditapproveDepotSalesOrderDC" engine="java" 
+        location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="CreditapproveDepotOrderDC">
+        <description>Approve Depot Orders</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="approvePurchaseOrderWithEmail" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="approvePurchaseOrderWithEmail">
         <description>Approve Depot Orders</description>

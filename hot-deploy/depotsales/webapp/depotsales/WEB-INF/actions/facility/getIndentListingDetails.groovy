@@ -504,7 +504,7 @@ orderHeader.each{ eachHeader ->
 	tempData.put("supplierPartyName", supplierPartyName);
 	tempData.put("orderNo", orderNo);
 	tempData.put("orderId", eachHeader.orderId);
-	tempData.put("orderDate", String.valueOf(eachHeader.estimatedDeliveryDate).substring(0,10));
+	tempData.put("orderDate", String.valueOf(eachHeader.orderDate).substring(0,10));
 	tempData.put("statusId", eachHeader.statusId);
 	
 

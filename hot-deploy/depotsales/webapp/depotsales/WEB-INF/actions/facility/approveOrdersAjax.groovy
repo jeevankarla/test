@@ -37,7 +37,6 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 
 
 
-JSONArray orderList =new JSONArray();
 
 orderId = parameters.orderId;
 
@@ -46,8 +45,15 @@ statusId = parameters.statusId;
 partyId = parameters.partyId;
 
 
+OrderHeader = delegator.findOne("OrderHeader",[orderId : orderId] , false);
+
+purposeTypeId = OrderHeader.purposeTypeId;
 
 
+if(purposeTypeId == "BRANCH_SALES"){
+	
+JSONArray orderList =new JSONArray();
+	
 response = "";
 if(UtilValidate.isNotEmpty(orderId) && statusId != "ORDER_APPROVED"){
 
@@ -56,15 +62,8 @@ inputCtx.put("userLogin",userLogin);
 inputCtx.put("orderId", orderId);
 inputCtx.put("statusId", statusId);
 try{
-	
-	
-	
  resultCtx = dispatcher.runSync("changeOrderStatus", inputCtx);
- 
- 
- 
  response = resultCtx.responseMessage;
- //Debug.log("resultCtx============"+resultCtx.responseMessage);
  
 }catch(Exception e){}
 
@@ -78,10 +77,7 @@ inputCtx.put("partyId", partyId);
 
 try{
 resultCtx = dispatcher.runSync("CreditapproveDepotSalesOrder", inputCtx);
-
 response = resultCtx.responseMessage;
-
-
 
 }catch(Exception e){}
 
@@ -99,3 +95,50 @@ orderList.add(tempMap);
 
 request.setAttribute("orderList", orderList);
 return "success";
+}else if(purposeTypeId == "DC_SALES"){
+
+JSONArray orderList =new JSONArray();
+
+
+response = "";
+if(UtilValidate.isNotEmpty(orderId) && statusId != "ORDER_APPROVED"){
+
+inputCtx = [:];
+inputCtx.put("userLogin",userLogin);
+inputCtx.put("orderId", orderId);
+inputCtx.put("statusId", statusId);
+try{
+
+resultCtx = dispatcher.runSync("changeOrderStatus", inputCtx);
+
+response = resultCtx.responseMessage;
+
+}catch(Exception e){}
+
+}
+else{
+	
+inputCtx = [:];
+inputCtx.put("userLogin",userLogin);
+inputCtx.put("orderId", orderId);
+inputCtx.put("partyId", partyId);
+
+try{
+resultCtx = dispatcher.runSync("CreditapproveDepotSalesOrderDC", inputCtx);
+response = resultCtx.responseMessage;
+
+}catch(Exception e){}
+
+}
+
+createdStatus = "";
+
+JSONObject tempMap = new JSONObject();
+tempMap.put("response", response);
+
+orderList.add(tempMap);
+
+request.setAttribute("orderList", orderList);
+return "success";
+
+}

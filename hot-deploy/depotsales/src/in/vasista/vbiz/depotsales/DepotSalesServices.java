@@ -363,6 +363,160 @@ public class DepotSalesServices{
       return result;
 	}
    
+   
+   public static Map<String, Object> CreditapproveDepotOrderDC(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String salesChannelEnumId = (String) context.get("salesChannelEnumId");
+		String partyId=(String) context.get("partyId");
+		String orderId = (String) context.get("orderId");
+		Locale locale = (Locale) context.get("locale");
+		
+		String smsContent = "";
+  		String productDetails="";
+  		 String PurchaseOrderId="";
+  		try{
+  			List<GenericValue> items = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);
+  			for (GenericValue item : items) {
+  				String productId = item.getString("productId");
+  				BigDecimal qty=item.getBigDecimal("quantity");
+  				String qtystrng="0";
+  				String desc="";
+  				if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(qty)) {
+  					qtystrng=String.valueOf(qty);                     
+  					GenericValue product = delegator.findOne("Product",UtilMisc.toMap("productId",productId),false);
+  					desc=product.getString("description");
+  				}
+  				productDetails=productDetails+" "+desc+","+qtystrng;
+  				smsContent = smsContent + qtystrng + " KGs of " + desc + ",";
+  			}
+  		}catch(GenericEntityException ex){
+  			Debug.log("Problem in fetching orderItems");
+  		}
+		
+  		
+		
+		try{
+			
+			List<GenericValue> creditPartRoleList=delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId",partyId,"roleTypeId","CR_INST_CUSTOMER"));
+			
+			 GenericValue creditPartyRole = EntityUtil.getFirst(creditPartRoleList);
+			 
+			 if(UtilValidate.isEmpty(creditPartyRole)){
+					GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId",orderId), false);
+					BigDecimal orderTotal = orderHeader.getBigDecimal("grandTotal");
+					Timestamp obDate=UtilDateTime.nowTimestamp();
+					if(UtilValidate.isNotEmpty(orderHeader.getTimestamp("estimatedDeliveryDate"))){
+						obDate=	orderHeader.getTimestamp("estimatedDeliveryDate");
+						obDate=UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(obDate, 1));
+					}
+				
+					BigDecimal arPartyOB  =BigDecimal.ZERO;
+					Map arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , UtilMisc.toMap("userLogin", userLogin, "tillDate",obDate, "partyId",partyId)));
+					if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
+						arPartyOB=(BigDecimal)arOpeningBalanceRes.get("openingBalance");
+						 if (arPartyOB.compareTo(BigDecimal.ZERO) < 0) {
+							 arPartyOB=arPartyOB.negate();
+						 }
+					 }
+					 /*if (arPartyOB.compareTo(orderTotal) < 0) {
+						 Debug.logError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId, module);
+						 return ServiceUtil.returnError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId);
+					 }*/
+					GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+					orderAttribute.set("orderId", orderId);
+					orderAttribute.set("attrName", "CREDIT_APPROVE");
+					orderAttribute.set("attrValue", "Y");
+					delegator.createOrStore(orderAttribute);
+			 }
+           boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+           /*List condList= FastList.newInstance();;
+           condList.add(EntityCondition.makeCondition("toOrderId", EntityOperator.EQUALS, orderId));
+		   EntityCondition condExpress = EntityCondition.makeCondition(condList, EntityOperator.AND);
+		   List<GenericValue> orderAssocList = delegator.findList("OrderAssoc", condExpress, null, null, null, false);
+		   String POOrderId = (EntityUtil.getFirst(orderAssocList)).getString("orderId");*/
+//           boolean POapproved = OrderChangeHelper.approveOrder(dispatcher, userLogin, POOrderId);
+		   
+		   String indentApprovalMessage = UtilProperties.getMessage("ProductUiLabels", "IndentApprovalMessage", locale);
+ 			indentApprovalMessage = indentApprovalMessage.replaceAll("orderId", orderId);
+ 			indentApprovalMessage = indentApprovalMessage.replaceAll("material", smsContent);
+ 			Map<String, Object> getTelParams = FastMap.newInstance();
+         	getTelParams.put("partyId", partyId);
+             getTelParams.put("userLogin", userLogin);                    	
+             Map serviceResult = dispatcher.runSync("getPartyTelephone", getTelParams);
+             if (ServiceUtil.isError(serviceResult)) {
+                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+             } 
+             String contactNumberTo = (String) serviceResult.get("contactNumber");
+             String countryCode = (String) serviceResult.get("countryCode");
+             
+            /* if(UtilValidate.isEmpty(contactNumberTo)){
+             	contactNumberTo = "9100662445";
+             }*/
+             //contactNumberTo = "7330776928";
+             if(UtilValidate.isNotEmpty(contactNumberTo)){
+             	 if(UtilValidate.isNotEmpty(countryCode)){
+             		 contactNumberTo = countryCode + contactNumberTo;
+             	 }
+             	 Map<String, Object> sendSmsParams = FastMap.newInstance();      
+                  sendSmsParams.put("contactNumberTo", contactNumberTo);
+                  sendSmsParams.put("text", indentApprovalMessage); 
+                  serviceResult  = dispatcher.runSync("sendSms", sendSmsParams);  
+                  if (ServiceUtil.isError(serviceResult)) {
+                      Debug.logError(ServiceUtil.getErrorMessage(serviceResult), module);
+                      return serviceResult;
+                  }
+             }
+             
+             
+             
+             List<String> POOrderIds = FastList.newInstance(); 
+             
+  		   try{
+  			    Map resultCtx = FastMap.newInstance();
+  				resultCtx = dispatcher.runSync("saleToPoDetails", UtilMisc.toMap("userLogin", userLogin, "orderId", orderId));
+  				if(UtilValidate.isNotEmpty(resultCtx.get("purcahseOrderId")))
+  					POOrderIds = (List) resultCtx.get("purcahseOrderId");
+  			 
+  			} catch (Exception e) {
+  		        Debug.logWarning(e.getMessage(), module);
+  		    }
+  		   
+  		   
+  		   
+           for (String POOrderId : POOrderIds) {
+		   
+		   Map<String, Object> approvePOParams = FastMap.newInstance();
+ 	  		approvePOParams.put("orderId",POOrderId);
+ 	  		approvePOParams.put("partyId",partyId);
+ 	  		approvePOParams.put("statusId","ORDER_APPROVED");
+ 	  		approvePOParams.put("salesChannelEnumId",salesChannelEnumId);
+ 	  		approvePOParams.put("userLogin",userLogin);
+ 	  		Map approveServiceResult = dispatcher.runSync("approvePurchaseOrderWithEmail", approvePOParams);
+		         if (ServiceUtil.isError(approveServiceResult)) {
+		             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(approveServiceResult));
+		         }
+		         Timestamp nowTimestamp=UtilDateTime.nowTimestamp();
+		         String orderStatusSeqId = delegator.getNextSeqId("OrderStatus");
+	              GenericValue orderStatus = delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", orderStatusSeqId));
+	              /* orderStatus.set("orderId", orderId);
+	              orderStatus.set("statusId", "ORDER_APPROVED");
+	              orderStatus.set("statusDatetime", nowTimestamp);
+	              orderStatus.set("statusUserLogin", userLogin.getString("userLoginId"));
+				  delegator.createOrStore(orderStatus); */  
+	              
+           }         
+		         
+	   }catch(Exception e){
+			Debug.logError(e.toString(), module);
+			return ServiceUtil.returnError(e.toString());
+		}
+      result.put("salesChannelEnumId", salesChannelEnumId);
+      return result;
+	}
+   
    public static String processDepotSaleEvent(HttpServletRequest request, HttpServletResponse response) {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
