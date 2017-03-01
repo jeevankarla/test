@@ -10336,7 +10336,7 @@
                   <widgets>
                      <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                        <decorator-section name="search-options">
-                          <include-form name="FindPayments" location="component://depotsales/widget/DepotSalesForms.xml"/>
+                          <include-form name="FindPaymentsForm" location="component://depotsales/widget/DepotSalesForms.xml"/>
                        </decorator-section>
                        <decorator-section name="search-results">
                           <screenlet title="Payments List"> 
