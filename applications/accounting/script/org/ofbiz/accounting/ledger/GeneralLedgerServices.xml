@@ -2026,6 +2026,10 @@ under the License.
 	         <if-empty field="payment.transactionDate">
 	               <set field="createAcctgTransAndEntriesInMap.transactionDate" from-field="payment.effectiveDate"/>
 	         </if-empty>
+	         <set field="costCenterId" from-field="payment.partyIdTo"/>
+             <if-not-empty field="payment.paymentPurposeType">
+               <set field="createAcctgTransAndEntriesInMap.purposeTypeId" from-field="payment.paymentPurposeType"/>
+             </if-not-empty>
 	          <set field="createAcctgTransAndEntriesInMap.acctgTransEntries" from-field="acctgTransEntries"/>
 	         <call-service service-name="createAcctgTransAndEntries" in-map-name="createAcctgTransAndEntriesInMap">
 	             <result-to-field result-name="acctgTransId"/>
@@ -2446,6 +2450,10 @@ under the License.
            <if-empty field="payment.transactionDate">
                <set field="createAcctgTransAndEntriesInMap.transactionDate" from-field="payment.effectiveDate"/>
            </if-empty>
+           <set field="costCenterId" from-field="payment.partyIdFrom"/>
+           <if-not-empty field="payment.paymentPurposeType">
+               <set field="createAcctgTransAndEntriesInMap.purposeTypeId" from-field="payment.paymentPurposeType"/>
+            </if-not-empty>
             <set field="createAcctgTransAndEntriesInMap.acctgTransEntries" from-field="acctgTransEntries"/>
             <call-service service-name="createAcctgTransAndEntries" in-map-name="createAcctgTransAndEntriesInMap">
                 <result-to-field result-name="acctgTransId"/>
