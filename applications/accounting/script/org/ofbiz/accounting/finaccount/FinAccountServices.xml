@@ -944,7 +944,13 @@ under the License.
     <simple-method method-name="getFinAccountTransListAndTotals" short-description="Retrieve Financial Account Transaction List and Totals">
         <entity-condition entity-name="FinAccountTrans" list="finAccountTransactions">
             <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
-          <condition-expr field-name="segmentId" operator="equals" from-field="parameters.segmentId" ignore-if-empty="true"/>
+            <condition-expr field-name="segmentId" operator="equals" from-field="parameters.segmentId" ignore-if-empty="true"/>
+            <if-compare field="parameters.segmentId" operator="equals" value="YARN_SALE">
+          <condition-list combine="or">
+          <condition-expr field-name="segmentId" operator="equals" value="YARN_SALE" ignore-if-empty="true"/>
+          <condition-expr field-name="segmentId" operator="equals" value="DEPOT_YARN_SALE" ignore-if-empty="true"/>
+          </condition-list>
+          </if-compare>
             <condition-expr field-name="costCenterId" operator="in" from-field="parameters.costCenterId" ignore-if-empty="true"/>
             
              <order-by field-name="transactionDate"/>
@@ -1008,6 +1014,12 @@ under the License.
                     <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
                 </condition-list>
+                 <if-compare field="parameters.segmentId" operator="equals" value="YARN_SALE">
+          			   <condition-list combine="or">
+          			   <condition-expr field-name="segmentId" operator="equals" value="YARN_SALE" ignore-if-empty="true"/>
+          			   <condition-expr field-name="segmentId" operator="equals" value="DEPOT_YARN_SALE" ignore-if-empty="true"/>
+          			   </condition-list>
+          			</if-compare> 
                 <order-by field-name="transactionDate"/>
             </entity-condition>
         <else>
@@ -1025,7 +1037,14 @@ under the License.
                     <condition-expr field-name="transactionDate" operator="less-equals" from-field="parameters.thruTransactionDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
-                </condition-list>
+                     </condition-list>
+                     <if-compare field="parameters.segmentId" operator="equals" value="YARN_SALE">
+          			   <condition-list combine="or">
+          			   <condition-expr field-name="segmentId" operator="equals" value="YARN_SALE" ignore-if-empty="true"/>
+          			   <condition-expr field-name="segmentId" operator="equals" value="DEPOT_YARN_SALE" ignore-if-empty="true"/>
+          			   </condition-list>
+          			</if-compare>
+                
                 <order-by field-name="transactionDate"/>
             </entity-condition>
         </else>

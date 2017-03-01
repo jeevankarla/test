@@ -163,7 +163,7 @@ conditionList = [];
 	}
 	if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE")){
 	finAccountTransInputMap["segmentId"]="YARN_SALE";
-	finAccountTransInputMap["segmentId"]="DEPOT_YARN_SALE";
+	/*finAccountTransInputMap["segmentId"]="DEPOT_YARN_SALE";*/
 	}
 	if(UtilValidate.isEmpty(segmentId) || segmentId.equals("All")){
 		finAccountTransInputMap["segmentId"]=null;
