@@ -258,17 +258,12 @@
 					    alert("Error in order Items");
 					}else{
 					
-						lastPrice = result["lastPrice"];
 						
-						 if(lastPrice != 0){
+						lastPrice = result["lastPrice"];
+						  if(lastPrice != 0){						
 						 data[rowCount]["unitPrice"] = lastPrice;
 	                     mainGrid.setData(data);
 	                     mainGrid.render();
-	                     }else{
-	                     
-	                     
-	                       alert("Supplier Product Not Configured");
-	                     
 	                     }
 						 
                		}
@@ -753,7 +748,7 @@
  			},
 		];
 		
-		columns.push({id:"button", name:"Remove", field:"button", width:80, minWidth:80, cssClass:"cell-title", focusable :false,
+		columns.push({id:"button", name:"Price", field:"button", width:80, minWidth:80, cssClass:"cell-title", focusable :false,
 			formatter: function (row, cell, id, def, datactx) { 
 					return '<a href="#" class="button" onclick="populateProductPrice('+row+');" value="Price">Price</a>'; 
 			} 
