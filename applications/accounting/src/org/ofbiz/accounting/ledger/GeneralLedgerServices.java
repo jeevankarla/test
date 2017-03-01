@@ -1880,7 +1880,7 @@ public class GeneralLedgerServices {
         String glAccountTypeId =(String) context.get("glAccountTypeId");
         List<String> glAccountTypeIds = (List) context.get("glAccountTypeIds");
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
-//        String acctgTransTypeId = (String) context.get("acctgTransTypeId");
+        String acctgTransTypeId = (String) context.get("acctgTransTypeId");
         String fromGlAccountId =(String) context.get("glAccountId");
         String costCenterId =(String) context.get("costCenterId");
         String segmentId =(String) context.get("segmentId");
@@ -1926,11 +1926,14 @@ public class GeneralLedgerServices {
         	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
         	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
         	conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
-//        	conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
-//        	if((UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)) && UtilValidate.isNotEmpty(acctgTransTypeId)){
-//        		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId),EntityOperator.OR,
-//        				                                        EntityCondition.makeCondition("acctgTransTypeId",EntityOperator.EQUALS,acctgTransTypeId)));
-//        	}else
+        	if(UtilValidate.isNotEmpty(glAccountTypeId)){
+        		conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
+        	}
+        	if((UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)) && UtilValidate.isNotEmpty(acctgTransTypeId)){
+        		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId),EntityOperator.OR,
+        				                                        EntityCondition.makeCondition("acctgTransTypeId",EntityOperator.EQUALS,acctgTransTypeId)));
+        	}
+        	
         	if(UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)){
         		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
         	}  
@@ -1946,20 +1949,17 @@ public class GeneralLedgerServices {
     		}
         	if(UtilValidate.isNotEmpty(segmentId)){
     			if(segmentId.equals("YARN_SALE")){
-    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+    				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
     			}
     			else{
-    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.EQUALS,segmentId));
+    				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,segmentId));
     			}
     		}
         	
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	acctgTransEntryList = delegator.find("AcctgTransEntryPartyWiseSums",con , null, null, null,null);
-        	//Debug.log("acctgTransEntryList==========="+acctgTransEntryList.getCompleteList());
-        	if(UtilValidate.isNotEmpty(acctgTransEntryList)){
-        		//Iterator<GenericValue> acctgTran = acctgTransEntryList.iterator();
-        		while (acctgTransEntryList.hasNext()) {
-                    GenericValue acctgTrans = acctgTransEntryList.next();
+            GenericValue acctgTrans;
+            while((acctgTrans = acctgTransEntryList.next())!=null){
 //        		for(GenericValue acctgTrans:acctgTransList){
 //        			String acctgTransId=(String)acctgTrans.get("acctgTransId");
 //        			conditionList.clear();
@@ -2008,7 +2008,6 @@ public class GeneralLedgerServices {
         		}
         		acctgTransEntryList.close();
         		openingBalance=(debit).subtract(credit);
-        	}
         }catch (Exception e) {
 	        Debug.logError(e, "Error While getting the Opening balace.!", module);
 	        return ServiceUtil.returnError(e.getMessage());
@@ -2119,10 +2118,10 @@ public class GeneralLedgerServices {
     		}
         	if(UtilValidate.isNotEmpty(segmentId)){
     			if(segmentId.equals("YARN_SALE")){
-    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+    				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
     			}
     			else{
-    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.EQUALS,segmentId));
+    				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,segmentId));
     			}
     		}
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
