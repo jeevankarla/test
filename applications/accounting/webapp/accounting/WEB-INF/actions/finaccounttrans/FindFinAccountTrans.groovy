@@ -63,6 +63,28 @@ import org.ofbiz.accounting.finaccount.FinAccountServices;
 
 dctx = dispatcher.getDispatchContext();
 reportTypeFlag = parameters.reportTypeFlag;
+
+
+roId = parameters.division;
+segmentId = parameters.segment;
+branchList = [];
+condList = [];
+condList.clear();
+if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+	condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,roId));
+	condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+		branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+		branchList.add(roId);
+	}
+	
+}
+
+
+
 partyTotalDebits=0;
 partyTotalCredits=0;
 //finalpartyDayWiseFinHistryMap=[:];
@@ -113,7 +135,24 @@ if(parameters.multifinAccount == "Y"){
 					Debug.logError(e, "Cannot parse date string: "+fromDate, "");
 				}
 				}
-			finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountId,"transactionDate",fromDateTime));
+			
+			
+			if(roId.equals("Company") && segmentId.equals("All")){
+				finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountId,"transactionDate",fromDateTime,"costCenterId",null, "segmentId", null));
+			}
+			else if(roId.equals("Company") && !segmentId.equals("All")){
+				finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountId,"transactionDate",fromDateTime,"costCenterId",null, "segmentId", segmentId));
+			}
+			else if(!roId.equals("Company") && segmentId.equals("All")){
+				finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountId,"transactionDate",fromDateTime,"roBranchList",branchList, "segmentId", null));
+			}
+			else{
+				finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountId,"transactionDate",fromDateTime,"roBranchList",branchList, "segmentId", segmentId));
+			}
+			
+			
+			
+			//finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountId,"transactionDate",fromDateTime));
 			}
 			oB=0;
 			if(finAccTransMap){

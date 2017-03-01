@@ -43,6 +43,31 @@ import org.ofbiz.service.ServiceUtil;
 
 fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
+
+
+reportTypeFlag = parameters.reportTypeFlag;
+
+roId = parameters.division;
+segmentId = parameters.segment;
+branchList = [];
+condList = [];
+condList.clear();
+if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+	condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,roId));
+	condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+		branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+		branchList.add(roId);
+	}
+	
+}
+
+
+
+
 partyCode = parameters.partyId;
 dctx = dispatcher.getDispatchContext();
 
@@ -121,12 +146,29 @@ conditionList = [];
 	context.errorMessage ="Party Id:"+parameters.partyId+"'Don't have any Accounts!!";
 	return "error";
 	}*/
-	
+	Debug.log("finAccountTransInputMap========szdbrgfuydrg");
+	/*yarnlist = [];
+	yarnlist.add("YARN_SALE", "DEPOT_YARN_SALE");
+	Debug.log("yarnlist============="+yarnlist);*/
 	finAccountTransInputMap=[:];
 	finAccountTransInputMap["fromTransactionDate"]=parameters.fromDateReport;
 	finAccountTransInputMap["thruTransactionDate"]=parameters.thruDateReport;
 	finAccountTransInputMap["statusId"]="FINACT_TRNS_CREATED";
 	finAccountTransInputMap["userLogin"]=userLogin;
+	if(UtilValidate.isNotEmpty(roId) && UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+	finAccountTransInputMap["costCenterId"]=branchList;
+	}
+	Debug.log("segmentId======222222222======"+segmentId);
+	if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE")){
+	finAccountTransInputMap["segmentId"]=segmentId;
+	}
+	if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE")){
+	finAccountTransInputMap["segmentId"]="YARN_SALE";
+	finAccountTransInputMap["segmentId"]="DEPOT_YARN_SALE";
+	}
+	if(UtilValidate.isEmpty(segmentId) || segmentId.equals("All")){
+		finAccountTransInputMap["segmentId"]=null;
+	}
 	List finAccountTransList = [];
 	Map resultCtx = [:];
 	multipleFinAccountHistoryMap=[:];

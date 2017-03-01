@@ -430,7 +430,13 @@ function setOrgPartyId() {
 			             <td width="30%" nowrap>Party Financial History With Dr/Cr</td>
 			             <td width="15%">&nbsp;From<input  type="text" size="15pt" id="PFHFromDateCrDr" readonly  name="partyfromDate"/></td>
 			      		 <td width="15%">Thru<input  type="text" size="15pt" id="PFHThruDateCrDr" readonly  name="partythruDate"/></td>
-			             <td width="10%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			             <td width="5%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="PartyFinancialHistoryWithDrCr" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+			              <td width="7%">Party Group :<select name="roleTypeId" id="roleTypeId">
+  					    <option value=''></option>
+  						<#list roleTypeAttrList as list>
+                         <option value='${list.roleTypeId}'>${list.description?if_exists}</option>
+                         </#list> 
+  						</select></td> 
 			              <td width=""><input type="hidden" name="segment" class="commonSegmentId">
                      	<input type="hidden" name="division" class="commonPartyId"> 
                     	 </td>
