@@ -339,6 +339,9 @@ function reportTypeChangeFunc() {
  			  	  	<select name='segment' id ="segment" onchange="javascript:setOrgPartyId();">	
  			  	  			<option value=""></option>	
  			  	  			<option value="All">All</option>
+ 			  	  			<option value="COMMON">Common</option>
+ 			  	  			<option value="DIES_AND_CHEM_SALE">Dies And Chemicals Sale	</option>
+ 			  	  			<option value="YARN_SALE">Yarn Sale</option>
  						<#list segmentList as segment>	
  							<option value='${segment.enumId}'>${segment.description?if_exists}</option>
            		   		</#list>

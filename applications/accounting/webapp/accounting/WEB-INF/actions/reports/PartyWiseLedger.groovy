@@ -166,7 +166,7 @@ if(UtilValidate.isEmpty(parameters.roleTypeId) && UtilValidate.isEmpty(parameter
 }
 
 	
-	if(UtilValidate.isNotEmpty(roId) && UtilValidate.isNotEmpty(roId)&& !roId.equals("Company"))
+	if(UtilValidate.isNotEmpty(roId) && !roId.equals("Company"))
 		conditionList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));
 	if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
 		conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
@@ -213,7 +213,6 @@ List PaymentGlAccountIds=FastList.newInstance();
  		paymentGlAccountType=delegator.findList("PaymentGlAccountTypeMap",null,null,null,null,false);
 		PaymentGlAccountTypeIds=EntityUtil.getFieldListFromEntityList(paymentGlAccountType,"glAccountTypeId", true);
 		
-		
 		if(roId.equals("Company") && segmentId.equals("All")){
 			unAppledMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeIds",PaymentGlAccountTypeIds,"costCenterId",null, "segmentId", null));
 		}
@@ -226,7 +225,6 @@ List PaymentGlAccountIds=FastList.newInstance();
 		else{
 			unAppledMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeIds",PaymentGlAccountTypeIds,"roBranchList",branchList, "segmentId", segmentId));
 		}
-		
 		if(roId.equals("Company") && segmentId.equals("All")){
 			unAppAmtMap = GeneralLedgerServices.getAcctgTransBalance(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"fromDate",fromDate,"thruDate",thruDate,"glAccountTypeIds",PaymentGlAccountTypeIds,"costCenterId",null, "segmentId", null));
 		}
@@ -239,7 +237,6 @@ List PaymentGlAccountIds=FastList.newInstance();
 		else{
 			unAppAmtMap = GeneralLedgerServices.getAcctgTransBalance(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"fromDate",fromDate,"thruDate",thruDate,"glAccountTypeIds",PaymentGlAccountTypeIds,"roBranchList",branchList, "segmentId", segmentId));
 		}
-		
 		//unAppledMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeIds",PaymentGlAccountTypeIds,"roId",roId, "segmentId", segmentId));
 		//unAppAmtMap = GeneralLedgerServices.getAcctgTransBalance(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"fromDate",fromDate,"thruDate",thruDate,"glAccountTypeIds",PaymentGlAccountTypeIds));
 		PaymentGlAccountTypeIds.clear();
@@ -248,6 +245,18 @@ List PaymentGlAccountIds=FastList.newInstance();
 //		acctgReceiveMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_RECEIVABLE","acctgTransTypeId","INCOMING_PAYMENT"));
 //		acctgPayMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_PAYABLE","acctgTransTypeId","OUTGOING_PAYMENT"));
 		
+		if(roId.equals("Company") && segmentId.equals("All")){
+			acctgPayMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_PAYABLE","acctgTransTypeId","OUTGOING_PAYMENT","costCenterId",null, "segmentId", null));
+		}
+		else if(roId.equals("Company") && !segmentId.equals("All")){
+			acctgPayMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_PAYABLE","acctgTransTypeId","OUTGOING_PAYMENT","costCenterId",null, "segmentId", segmentId));
+		}
+		else if(!roId.equals("Company") && segmentId.equals("All")){
+			acctgPayMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_PAYABLE","acctgTransTypeId","OUTGOING_PAYMENT","roBranchList",branchList, "segmentId", null));
+		}
+		else{
+			acctgPayMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountTypeId","ACCOUNTS_PAYABLE","acctgTransTypeId","OUTGOING_PAYMENT","roBranchList",branchList, "segmentId", segmentId));
+		}
 		
 		if(roId.equals("Company") && segmentId.equals("All")){
 			acctgReceiveMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountId","119000","costCenterId",null, "segmentId", null));
@@ -364,6 +373,7 @@ List PaymentGlAccountIds=FastList.newInstance();
 			existBal=closingUnAppMap[partyId];
 			closingUnAppMap[partyId]=existBal+value;
 		}
+		
 	}
 		if(acctgTransIter){
 //			TransItr = acctgTransList.iterator();
@@ -447,6 +457,7 @@ List PaymentGlAccountIds=FastList.newInstance();
 			}
 			acctgTransIter.close();
 }
+
 context.partyMap=partyMap;
 context.openingBalMap=openingBalMap;
 context.closingUnAppMap=closingUnAppMap;
