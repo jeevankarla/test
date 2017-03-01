@@ -4218,7 +4218,7 @@
          <field name="scheme" title="_"><display/></field>
      </form>
      
-     <form name="FindPayments" type="single" target="TrackPayments" >
+     <form name="FindPaymentsForm" type="single" target="TrackPayments" >
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="transactionId" title="Transaction Id"><text-find/></field>
 		    <field name="transactionDate" title="Transaction Date"><date-find/></field>
@@ -4237,7 +4237,7 @@
           <service service-name="performFind" result-map="result" result-map-list="listIt">
              <field-map field-name="inputFields" from-field="parameters"/>
              <field-map field-name="entityName" value="PaymentGatewayTrans"/>
-             <field-map field-name="orderBy" value="transactionDate"/>
+             <field-map field-name="orderBy" value="transactionDate DESC"/>
              <field-map field-name="viewIndex" from-field="viewIndex"/>
              <field-map field-name="viewSize" from-field="viewSize"/>
           </service>
