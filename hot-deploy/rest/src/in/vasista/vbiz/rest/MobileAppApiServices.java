@@ -79,14 +79,14 @@ public class MobileAppApiServices {
 		request.setAttribute("restHitMap", hitMap);
 	}
 	
-	@GET
+	@POST
 	@Path("/getWeaverDetails")        
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getWeaverDetails(
-				@QueryParam("login.username") String username,@QueryParam("login.password") String password,
-				@QueryParam("tenantId") String tenantId,
-				@QueryParam("partyId") String partyId,
-				@QueryParam("effectiveDate") Timestamp effectiveDate) { 
+				@FormParam("login.username") String username,@FormParam("login.password") String password,
+				@FormParam("tenantId") String tenantId,
+				@FormParam("partyId") String partyId,
+				@FormParam("effectiveDate") Timestamp effectiveDate) { 
 		
 		Map<String, Object> result = FastMap.newInstance();
 
@@ -146,24 +146,24 @@ public class MobileAppApiServices {
     }
 	
 	
-	@GET
+	@POST
 	@Path("/getWeaverIndents")        
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getWeaverIndents(
-				@QueryParam("login.username") String username,@QueryParam("login.password") String password,
-				@QueryParam("tenantId") String tenantId,
-				@QueryParam("orderId") String orderId,
-				@QueryParam("partyIdFrom") String partyIdFrom,
-				@QueryParam("partyId") String partyId,
-				@QueryParam("branchId") String branchId,
-				@QueryParam("productStoreId") String productStoreId,
-				@QueryParam("tallyRefNO") String tallyRefNO,
-				@QueryParam("orderNo") String orderNo,
-				@QueryParam("estimatedDeliveryDate") Timestamp estimatedDeliveryDate,
-				@QueryParam("estimatedDeliveryThruDate") Timestamp estimatedDeliveryThruDate,
-				@QueryParam("statusId") String statusId,
-				@QueryParam("purposeTypeId") String purposeTypeId,
-				@QueryParam("indentDateSort") String indentDateSort
+				@FormParam("login.username") String username,@FormParam("login.password") String password,
+				@FormParam("tenantId") String tenantId,
+				@FormParam("orderId") String orderId,
+				@FormParam("partyIdFrom") String partyIdFrom,
+				@FormParam("partyId") String partyId,
+				@FormParam("branchId") String branchId,
+				@FormParam("productStoreId") String productStoreId,
+				@FormParam("tallyRefNO") String tallyRefNO,
+				@FormParam("orderNo") String orderNo,
+				@FormParam("estimatedDeliveryDate") Timestamp estimatedDeliveryDate,
+				@FormParam("estimatedDeliveryThruDate") Timestamp estimatedDeliveryThruDate,
+				@FormParam("statusId") String statusId,
+				@FormParam("purposeTypeId") String purposeTypeId,
+				@FormParam("indentDateSort") String indentDateSort
 				) { 
         
 		Map<String, Object> result = FastMap.newInstance();
@@ -236,14 +236,14 @@ public class MobileAppApiServices {
 		return Response.ok(resultResult).build();
     }
 	
-	@GET
+	@POST
 	@Path("/getWeaverPayments")        
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getWeaverPayments(
-				@QueryParam("login.username") String username,@QueryParam("login.password") String password,
-				@QueryParam("tenantId") String tenantId,
-				@QueryParam("partyId") String partyId,
-				@QueryParam("paymentId") String paymentId
+				@FormParam("login.username") String username,@FormParam("login.password") String password,
+				@FormParam("tenantId") String tenantId,
+				@FormParam("partyId") String partyId,
+				@FormParam("paymentId") String paymentId
 				) { 
 	
 		Map<String, Object> result = FastMap.newInstance();
@@ -304,16 +304,16 @@ public class MobileAppApiServices {
 	}
 	
 	
-	@GET
+	@POST
 	@Path("/getProducts")        
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getProducts(
-				@QueryParam("login.username") String username,@QueryParam("login.password") String password,
-				@QueryParam("tenantId") String tenantId,
-				@QueryParam("productId") String productId,
-				@QueryParam("primaryProductCategoryId") String primaryProductCategoryId,
-				@QueryParam("productName") String productName,
-				@QueryParam("salesDate") Timestamp salesDate
+				@FormParam("login.username") String username,@FormParam("login.password") String password,
+				@FormParam("tenantId") String tenantId,
+				@FormParam("productId") String productId,
+				@FormParam("primaryProductCategoryId") String primaryProductCategoryId,
+				@FormParam("productName") String productName,
+				@FormParam("salesDate") Timestamp salesDate
 				) { 
 		
 		Map<String, Object> result = FastMap.newInstance();
@@ -375,12 +375,12 @@ public class MobileAppApiServices {
     }
 	
 	
-	@GET
+	@POST
 	@Path("/getTransporters")        
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getTransporters(
-				@QueryParam("login.username") String username,@QueryParam("login.password") String password,
-				@QueryParam("tenantId") String tenantId
+				@FormParam("login.username") String username,@FormParam("login.password") String password,
+				@FormParam("tenantId") String tenantId
 				) { 
 		
 		Map<String, Object> result = FastMap.newInstance();
@@ -438,16 +438,16 @@ public class MobileAppApiServices {
     }
 	
 	
-	@GET
+	@POST
 	@Path("/getSuppliers")        
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSuppliers(
-				@QueryParam("login.username") String username,@QueryParam("login.password") String password,
-				@QueryParam("tenantId") String tenantId,
-				@QueryParam("partyId") String partyId,
-				@QueryParam("partyTypeId") String partyTypeId,
-				@QueryParam("roleTypeId") String roleTypeId,
-				@QueryParam("groupName") String groupName
+				@FormParam("login.username") String username,@FormParam("login.password") String password,
+				@FormParam("tenantId") String tenantId,
+				@FormParam("partyId") String partyId,
+				@FormParam("partyTypeId") String partyTypeId,
+				@FormParam("roleTypeId") String roleTypeId,
+				@FormParam("groupName") String groupName
 				) { 
 		
 		Map<String, Object> result = FastMap.newInstance();
@@ -509,15 +509,15 @@ public class MobileAppApiServices {
     }
 	
 	
-	@GET
+	@POST
 	@Path("/cancelIndent")        
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response cancelIndent(
-				@QueryParam("login.username") String username,@QueryParam("login.password") String password,
-				@QueryParam("tenantId") String tenantId,
-				@QueryParam("partyId") String partyId,
-				@QueryParam("orderId") String orderId,
-				@QueryParam("salesChannelEnumId") String salesChannelEnumId
+				@FormParam("login.username") String username,@FormParam("login.password") String password,
+				@FormParam("tenantId") String tenantId,
+				@FormParam("partyId") String partyId,
+				@FormParam("orderId") String orderId,
+				@FormParam("salesChannelEnumId") String salesChannelEnumId
 				) { 
 		
 		Map<String, Object> result = FastMap.newInstance();
@@ -578,13 +578,13 @@ public class MobileAppApiServices {
     }
 	
 	
-	@GET
+	@POST
 	@Path("/getDepotStock")        
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDepotStock(
-				@QueryParam("login.username") String username,@QueryParam("login.password") String password,
-				@QueryParam("tenantId") String tenantId,
-				@QueryParam("partyId") String partyId
+				@FormParam("login.username") String username,@FormParam("login.password") String password,
+				@FormParam("tenantId") String tenantId,
+				@FormParam("partyId") String partyId
 				) {
 		Map<String, Object> result = FastMap.newInstance();
 
@@ -642,13 +642,13 @@ public class MobileAppApiServices {
 	}
 	
 	
-	@GET
+	@POST
 	@Path("/getIndentShipments")        
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getIndentShipments(
-				@QueryParam("login.username") String username,@QueryParam("login.password") String password,
-				@QueryParam("tenantId") String tenantId,
-				@QueryParam("orderId") String orderId
+				@FormParam("login.username") String username,@FormParam("login.password") String password,
+				@FormParam("tenantId") String tenantId,
+				@FormParam("orderId") String orderId
 				) { 
 		
 		Map<String, Object> result = FastMap.newInstance();
