@@ -1317,10 +1317,14 @@ public class GeneralLedgerServices {
 	    	     
 	    	     while(allPostedTransactionTotalItr != null && (transTotalEntry = allPostedTransactionTotalItr.next()) != null) {
 	    	    	 String glAccountId = transTotalEntry.getString("glAccountId");
+	    	    	 String costCenterId = transTotalEntry.getString("costCenterId");
+	    	    	 String purposeTypeId = transTotalEntry.getString("purposeTypeId");
 	    	    	 Map accountMap = (Map)postedTransactionTotalsMap.get(transTotalEntry.getString("glAccountId"));
 	    	    	 if (UtilValidate.isEmpty(accountMap)) {
 	    	    		 accountMap = FastMap.newInstance();
 	    	    		 accountMap.put("glAccountId", glAccountId);
+	    	    		 accountMap.put("purposeTypeId", purposeTypeId);
+	    	    		 accountMap.put("costCenterId", costCenterId);
 		                 accountMap.put("D", BigDecimal.ZERO);
 		                 accountMap.put("C", BigDecimal.ZERO);
 		             }
@@ -1338,6 +1342,8 @@ public class GeneralLedgerServices {
 	    	    	  Map postedTotalEntry = (Map)entry.getValue();
 	    	    	 GenericValue glAccountHistory = delegator.makeValue("GlAccountHistory");
 	    	    	 glAccountHistory.set("glAccountId", (String)postedTotalEntry.get("glAccountId"));
+	    	    	 glAccountHistory.set("costCenterId", (String)postedTotalEntry.get("costCenterId"));
+	    	    	 glAccountHistory.set("segmentId", (String)postedTotalEntry.get("purposeTypeId"));
 	    	    	 glAccountHistory.set("organizationPartyId",organizationPartyId);
 	    	    	 glAccountHistory.set("customTimePeriodId",customTimePeriodId);
 	    	    	 glAccountHistory.set("postedDebits",(BigDecimal)postedTotalEntry.get("D") );
@@ -1352,7 +1358,7 @@ public class GeneralLedgerServices {
 	        	    	 
 	        	    	 if(!customTimePeriodId.equals(cstTimePeriod.getString("customTimePeriodId"))){
 	        	    		 Map glMap = UtilMisc.toMap("customTimePeriodId",cstTimePeriod.getString("customTimePeriodId"),
-		        	    			 "glAccountId",(String)postedTotalEntry.get("glAccountId"),"organizationPartyId",organizationPartyId);
+		        	    			 "glAccountId",(String)postedTotalEntry.get("glAccountId"),"organizationPartyId",organizationPartyId,"costCenterId",(String)postedTotalEntry.get("costCenterId"),"segmentId",(String)postedTotalEntry.get("purposeTypeId"));
 		        	    	 GenericValue parentGlAccountHistory = delegator.findOne("GlAccountHistory",glMap , false);
 		        	    	 if(UtilValidate.isEmpty(parentGlAccountHistory)){
 		        	    		 GenericValue newEntity = delegator.makeValue("GlAccountHistory");
@@ -1402,22 +1408,44 @@ public class GeneralLedgerServices {
 		    	 String glAccountId = transTotalEntry1.getString("glAccountId");
 		    	 String acctgTransTypeId = transTotalEntry1.getString("acctgTransTypeId");
 		    	 String partyId=transTotalEntry1.getString("partyId");
+		    	 String acctgTransId=transTotalEntry1.getString("acctgTransId");
+		    	 String costCenterId=transTotalEntry1.getString("costCenterId");
+		    	 String segmentId=transTotalEntry1.getString("purposeTypeId");
+		    	/* //getting acctgTransRole
+		    	 List acctgRoleExp = FastList.newInstance();
+	    	     acctgRoleExp.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
+	    	     acctgRoleExp.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransId));
+	    	     EntityCondition andCondRole = EntityCondition.makeCondition(acctgRoleExp, EntityOperator.AND);
+	    	     EntityListIterator acctngTransRoleItr  = delegator.find("AcctgTransRole",andCondRole,null, null, null, null);
+	    	     List acctgTrnsList=FastList.newInstance();
+	    	     String costCenterId=null;
+	    	     if(acctngTransRoleItr != null){
+	    	    	 //acctgTrnsList = EntityUtil.getFieldListFromEntityListIterator(acctngTransRoleItr,"partyId", false);
+	    	    	 acctgTrnsList = acctngTransRoleItr.getCompleteList();
+	    	    	  GenericValue trnsRole = EntityUtil.getFirst(acctgTrnsList);
+	    	    	  costCenterId=(String)trnsRole.get("costCenterId");  	    	  
+	    	     }*/
+	    	     Debug.log("costCenterId==========="+costCenterId);
 		    	 String flag=transTotalEntry1.getString("debitCreditFlag");
 		    	 BigDecimal amtVal=BigDecimal.ZERO;
 		    	 if(UtilValidate.isNotEmpty(transTotalEntry1.getBigDecimal("amount"))){
 		    		 amtVal=transTotalEntry1.getBigDecimal("amount");
 		    	 }
-		    	 if(UtilValidate.isNotEmpty(partyId)){
+		    	 if(UtilValidate.isNotEmpty(partyId)&&UtilValidate.isNotEmpty(costCenterId)){
 	    	    	 if(UtilValidate.isEmpty(postedTransactionTotalsMap1.get(partyId))){
 	    	    		 Map tempMapGlMap=FastMap.newInstance();
 	    	    		 Map tempMapTransTypeMap=FastMap.newInstance();
+	    	    		 Map tempMapTransCostMap=FastMap.newInstance();
+	    	    		 Map tempMapTransSegMap=FastMap.newInstance();
 	    	    		 Map tempMapDetails=FastMap.newInstance();
 	    	    		 	if(flag.equals("D")){
 	    	    		 		tempMapDetails.put("D", amtVal);
 	    	    		 	}else{
 	    	    		 		tempMapDetails.put("C", amtVal);
 	    	    		 	}
-	    	    		 	tempMapTransTypeMap.put(acctgTransTypeId, tempMapDetails);
+	    	    		 	tempMapTransSegMap.put(segmentId,tempMapDetails);
+	    	    		 	tempMapTransCostMap.put(costCenterId, tempMapTransSegMap);
+	    	    		 	tempMapTransTypeMap.put(acctgTransTypeId, tempMapTransCostMap);
 	    	    		 	tempMapGlMap.put(glAccountId, tempMapTransTypeMap);
 	    	    		 	postedTransactionTotalsMap1.put(partyId, tempMapGlMap);
 	    	    	 }else{
@@ -1425,6 +1453,8 @@ public class GeneralLedgerServices {
 	    	    		 	 tempGlWiseDetailsMap.putAll((Map)postedTransactionTotalsMap1.get(partyId));
 	    	    		 	 if(UtilValidate.isEmpty(tempGlWiseDetailsMap.get(glAccountId))){
 	    	    		 		 Map tempGlWiseMap=FastMap.newInstance();
+	    	    		 		 Map tempTrnsCostWiseMap=FastMap.newInstance();
+	    	    		 		Map tempTrnsSegWiseMap=FastMap.newInstance();
 	    	    		 		 Map tempTrnsTypeWiseMap=FastMap.newInstance();
 	    	    		 		 Map tempGlDetailsWise=FastMap.newInstance();
 	    	    		 		if(flag.equals("D")){
@@ -1432,35 +1462,77 @@ public class GeneralLedgerServices {
 	        	    		 	}else{
 	        	    		 		tempGlDetailsWise.put("C", amtVal);
 	        	    		 	}
-	    	    		 		tempTrnsTypeWiseMap.put(acctgTransTypeId, tempGlDetailsWise);
+	    	    		 		tempTrnsSegWiseMap.put(segmentId,tempGlDetailsWise);
+	    	    		 		tempTrnsCostWiseMap.put(costCenterId, tempTrnsSegWiseMap);
+	    	    		 		tempTrnsTypeWiseMap.put(acctgTransTypeId, tempTrnsCostWiseMap);
 	    	    		 		tempGlWiseDetailsMap.put(glAccountId, tempTrnsTypeWiseMap);    	    		 		 
 	    	    		 	 }else{
 	    	    		 		 Map glWiseDetailsMap=FastMap.newInstance();
 	    	    		 		 glWiseDetailsMap.putAll((Map)tempGlWiseDetailsMap.get(glAccountId));
 	    	    		 		 if(UtilValidate.isEmpty(glWiseDetailsMap.get(acctgTransTypeId))){
 	    	    		 			 Map tempTransType=FastMap.newInstance();
+	    	    		 			 Map tempTransCost=FastMap.newInstance();
+	    	    		 			Map tempTransSeg=FastMap.newInstance();
 		    	    		 			if(flag.equals("D")){
 		    	    		 				tempTransType.put("D", amtVal);
 		        	    		 		 }else{
 		        	    		 			tempTransType.put("C", amtVal);
 		        	    		 		 }
-		    	    		 			glWiseDetailsMap.put(acctgTransTypeId,tempTransType);
+		    	    		 			tempTransSeg.put(segmentId,tempTransType);
+		    	    		 			tempTransCost.put(costCenterId, tempTransSeg);
+		    	    		 			glWiseDetailsMap.put(acctgTransTypeId,tempTransCost);
 	    	    		 		 }else{
 	    	    		 			 Map  accntTransTypeMap=FastMap.newInstance();
-	    	    		 			 accntTransTypeMap.putAll((Map)glWiseDetailsMap.get(acctgTransTypeId));
-	    	    		 			 BigDecimal glDebitAmt=BigDecimal.ZERO;
-	        	    		 		 if(UtilValidate.isNotEmpty(accntTransTypeMap.get("D"))){
-	        	    		 			glDebitAmt=(BigDecimal)accntTransTypeMap.get("D");
-	        	    		 		 }
-	        	    		 		 BigDecimal glCrAmt=BigDecimal.ZERO;
-	        	    		 		if(UtilValidate.isNotEmpty(accntTransTypeMap.get("C"))){
-	        	    		 			glCrAmt=(BigDecimal)accntTransTypeMap.get("C");
-	        	    		 		 }
-	        	    		 		if(flag.equals("D")){
-	        	    		 			accntTransTypeMap.put("D", amtVal.add(glDebitAmt));
-	        	    		 		 }else{
-	        	    		 			accntTransTypeMap.put("C", amtVal.add(glCrAmt));
-	        	    		 		 }
+	    	    		 			 accntTransTypeMap.putAll((Map)glWiseDetailsMap.get(acctgTransTypeId));    	    		 			 
+	        	    		 		 
+	    	    		 		     if(UtilValidate.isEmpty(accntTransTypeMap.get(costCenterId))){
+	    	    		 		    	Map tempCostMap=FastMap.newInstance();
+	    	    		 		    	Map tempSegMap=FastMap.newInstance();
+	    	    		 		    	if(flag.equals("D")){
+	    	    		 		    		tempCostMap.put("D", amtVal);
+		        	    		 		 }else{
+		        	    		 			tempCostMap.put("C", amtVal);
+		        	    		 		 }
+	    	    		 		    	tempSegMap.put(segmentId,tempCostMap);
+	    	    		 		    	accntTransTypeMap.put(costCenterId, tempSegMap);
+	    	    		 		    	//glWiseDetailsMap.put(acctgTransTypeId, accntTransTypeMap);
+	    	    		 		     }else{
+	    	    		 		    	 Map acctCostCodeMap=FastMap.newInstance();
+	    	    		 		    	Map acctSegMap=FastMap.newInstance();
+	    	    		 		    	 acctCostCodeMap.putAll((Map)accntTransTypeMap.get(costCenterId));	    	    		 		    	
+		        	    		 		 
+		        	    		 		 if(UtilValidate.isEmpty(acctCostCodeMap.get(segmentId))){
+		        	    		 			 Map tempSeg=FastMap.newInstance();
+		        	    		 			if(flag.equals("D")){
+		        	    		 				tempSeg.put("D", amtVal);
+			        	    		 		 }else{
+			        	    		 			tempSeg.put("C", amtVal);
+			        	    		 		 }
+		        	    		 			acctCostCodeMap.put(segmentId,tempSeg);
+		        	    		 			accntTransTypeMap.put(costCenterId,acctCostCodeMap);
+		        	    		 		 }else{
+		        	    		 			 Map segMap=FastMap.newInstance();
+		        	    		 			 	segMap.putAll((Map)acctCostCodeMap.get(segmentId));
+		        	    		 			 	 BigDecimal glDebitAmt=BigDecimal.ZERO;	        	    		 		
+				        	    		 		 BigDecimal glCrAmt=BigDecimal.ZERO;
+		        	    		 			if(UtilValidate.isNotEmpty(segMap.get("D"))){
+		 	        	    		 			glDebitAmt=(BigDecimal)segMap.get("D");
+		 	        	    		 		 }
+		    	    		 		    	if(UtilValidate.isNotEmpty(segMap.get("C"))){
+			        	    		 			glCrAmt=(BigDecimal)segMap.get("C");
+			        	    		 		 }
+		    	    		 		    	if(flag.equals("D")){
+		    	    		 		    		segMap.put("D", amtVal.add(glDebitAmt));
+			        	    		 		 }else{
+			        	    		 			segMap.put("C", amtVal.add(glCrAmt));
+			        	    		 		 }
+		    	    		 		    	acctCostCodeMap.put(segmentId,segMap);
+		    	    		 		    	accntTransTypeMap.put(costCenterId, acctCostCodeMap);
+		        	    		 			 
+		        	    		 		 }   		 		    	 
+	    	    		 		    	
+	    	    		 		     }	    	    		 			 
+	        	    		 		
 	        	    		 		glWiseDetailsMap.put(acctgTransTypeId,accntTransTypeMap);
 	    	    		 		 }   		 		
 	    	    		 		 
@@ -1507,23 +1579,39 @@ public class GeneralLedgerServices {
 		 						Map tempTransTypeDetailsVal=(Map)tempTransTypeEntry.getValue();
 		 	 					String transTypeId=(String)tempTransTypeEntry.getKey();
 		 					
-	 	 					BigDecimal debitVal=BigDecimal.ZERO;
-	 	 					if(UtilValidate.isNotEmpty(tempTransTypeDetailsVal.get("D"))){
-	 	 						 debitVal=(BigDecimal)tempTransTypeDetailsVal.get("D");
-	 	 					}
-	 	 					BigDecimal creditVal=BigDecimal.ZERO;
-	 	 					if(UtilValidate.isNotEmpty(tempTransTypeDetailsVal.get("C"))){
-	 	 						 creditVal=(BigDecimal)tempTransTypeDetailsVal.get("C");
-	 	 					}
-	 	 					GenericValue glAccountHistoryPartyWise = delegator.makeValue("GlAccountHistoryPartyWise");
-	 	 	    	    	 glAccountHistoryPartyWise.set("glAccountId", glAccId);
-	 	 	    	    	 glAccountHistoryPartyWise.set("organizationPartyId",organizationPartyId);
-	 	 	    	    	 glAccountHistoryPartyWise.set("partyId",party);
-	 	 	    	    	 glAccountHistoryPartyWise.set("acctgTransTypeId",transTypeId);
-	 	 	    	    	 glAccountHistoryPartyWise.set("customTimePeriodId",customTimePeriodId);
-	 	 	    	    	 glAccountHistoryPartyWise.set("postedDebits",debitVal );
-	 	 	    	    	 glAccountHistoryPartyWise.set("postedCredits", creditVal);
-	 	 	    	    	 delegator.createOrStore(glAccountHistoryPartyWise);
+		 	 					Iterator tempEntTypeCostDetailIter = tempTransTypeDetailsVal.entrySet().iterator();
+		 	 				while (tempEntTypeCostDetailIter.hasNext()) {	
+		 	 					Map.Entry tempTransCostEntry = (Entry) tempEntTypeCostDetailIter.next();
+		 	 					String costCenterId=(String)tempTransCostEntry.getKey();
+		 	 					Debug.log("costCenterId========="+costCenterId);
+		 	 					Map costCenterMap=(Map)tempTransCostEntry.getValue();
+		 	 					
+		 	 					Iterator tempEntTypeSegDetailIter = costCenterMap.entrySet().iterator();
+		 	 					while (tempEntTypeSegDetailIter.hasNext()){ 
+			 	 					Map.Entry tempTransSegEntry = (Entry) tempEntTypeSegDetailIter.next();
+			 	 					Map segMap=(Map)tempTransSegEntry.getValue();
+			 	 					String segId=(String)tempTransSegEntry.getKey();
+		 	 					BigDecimal debitVal=BigDecimal.ZERO;
+		 	 					if(UtilValidate.isNotEmpty(segMap.get("D"))){
+		 	 						 debitVal=(BigDecimal)segMap.get("D");
+		 	 					}
+		 	 					BigDecimal creditVal=BigDecimal.ZERO;
+		 	 					if(UtilValidate.isNotEmpty(segMap.get("C"))){
+		 	 						 creditVal=(BigDecimal)segMap.get("C");
+		 	 					}
+		 	 					GenericValue glAccountHistoryPartyWise = delegator.makeValue("GlAccountHistoryPartyWise");
+		 	 	    	    	 glAccountHistoryPartyWise.set("glAccountId", glAccId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("organizationPartyId",organizationPartyId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("partyId",party);
+		 	 	    	    	 glAccountHistoryPartyWise.set("costCenterId",costCenterId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("segmentId",segId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("acctgTransTypeId",transTypeId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("customTimePeriodId",customTimePeriodId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("postedDebits",debitVal );
+		 	 	    	    	 glAccountHistoryPartyWise.set("postedCredits", creditVal);
+		 	 	    	    	 delegator.createOrStore(glAccountHistoryPartyWise);
+		 	 				}
+		 					}
 		 					}
 						}
 					}
