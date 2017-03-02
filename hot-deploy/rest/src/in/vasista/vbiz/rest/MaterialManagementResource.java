@@ -39,6 +39,7 @@ import org.ofbiz.security.Security;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.product.inventory.InventoryServices;
 import in.vasista.vbiz.purchase.MaterialHelperServices;
+import in.vasista.vbiz.rest.util.AuditUtil;
 
 @Path("/materialmgmt")
 public class MaterialManagementResource {
