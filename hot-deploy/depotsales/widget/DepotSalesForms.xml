@@ -147,6 +147,7 @@
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
 	        	<drop-down allow-empty="true">
 	        		<option key="ORDER_CREATED" description="Created"/>
+	        		<option key="DRAFTPO_PROPOSAL" description="DraftPO Raised"/>
 	        		<option key="APPROVE_LEVEL1" description="Level1Approved"/>
 	        	    <option key="APPROVE_LEVEL2" description="Level2Approved"/>
 	        	    <option key="APPROVE_LEVEL3" description="Level3Approved"/>
