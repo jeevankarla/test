@@ -186,7 +186,7 @@
        <attribute name="issuingAuthority" type="String" mode="IN" optional="true"/>
        <attribute name="inFavour" type="String" mode="IN" optional="true"/>
     </service>
-     <service name="makeWeaverPayment" engine="java"  auth="true" export="true" 
+     <!-- <service name="makeWeaverPayment" engine="java"  auth="true" export="true" 
            location="in.vasista.vbiz.depotsales.paymentApiServices" invoke="makeWeaverPayment">
        <description>Creates a payment using the order payment preference</description>
        <attribute name="paymentDate" type="String" mode="IN" optional="true"/>
@@ -200,9 +200,9 @@
        <attribute name="txnRefNo" type="String" mode="IN" optional="true"/>
        <attribute name="txnMessage" type="String" mode="IN" optional="true"/>
        <attribute name="txnStatus" type="String" mode="IN" optional="true"/>
-    </service>
+    </service> -->
     
-    <!-- <service name="makeWeaverPayment" engine="java"  auth="true" export="true" 
+    <service name="makeWeaverPayment" engine="java"  auth="true" export="true" 
            location="in.vasista.vbiz.depotsales.paymentApiServices" invoke="makeWeaverPayment">
        <description>Creates a payment using the order payment preference</description>
        <attribute name="paymentDate" type="String" mode="IN" optional="true"/>
@@ -212,7 +212,7 @@
        <attribute name="transactionId" type="String" mode="IN" optional="true"/>
        <attribute name="paymentMethodTypeId" type="String" mode="OUT" optional="true"/>
        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
-    </service> -->
+    </service>
     
     <service name="getIndentShipments" engine="java"  auth="true" export="true" 
            location="in.vasista.vbiz.depotsales.DepotSalesApiServices" invoke="getIndentShipments">

@@ -185,7 +185,7 @@ public class paymentApiServices {
 	}
     
     
-    /*public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
+    public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -256,9 +256,9 @@ public class paymentApiServices {
 		 }
 
        return result;
-	}*/
+	}
     
-    public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
+    /*public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -390,7 +390,7 @@ public class paymentApiServices {
 		 }
 
        return result;
-	}
+	}*/
     
     
     public static Map<String, Object> createPaymentGatewayTrans(DispatchContext dctx,Map<String, Object> context) {
