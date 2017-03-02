@@ -946,10 +946,7 @@ under the License.
             <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
             <condition-expr field-name="segmentId" operator="equals" from-field="parameters.segmentId" ignore-if-empty="true"/>
             <if-compare field="parameters.segmentId" operator="equals" value="YARN_SALE">
-          <condition-list combine="or">
-          <condition-expr field-name="segmentId" operator="equals" value="YARN_SALE" ignore-if-empty="true"/>
-          <condition-expr field-name="segmentId" operator="equals" value="DEPOT_YARN_SALE" ignore-if-empty="true"/>
-          </condition-list>
+          <condition-expr field-name="segmentId" operator="in" value="YARN_SALE,DEPOT_YARN_SALE" ignore-if-empty="true"/>
           </if-compare>
             <condition-expr field-name="costCenterId" operator="in" from-field="parameters.costCenterId" ignore-if-empty="true"/>
             
@@ -1015,10 +1012,7 @@ under the License.
                     <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
                 </condition-list>
                  <if-compare field="parameters.segmentId" operator="equals" value="YARN_SALE">
-          			   <condition-list combine="or">
-          			   <condition-expr field-name="segmentId" operator="equals" value="YARN_SALE" ignore-if-empty="true"/>
-          			   <condition-expr field-name="segmentId" operator="equals" value="DEPOT_YARN_SALE" ignore-if-empty="true"/>
-          			   </condition-list>
+          			   <condition-expr field-name="segmentId" operator="in" value="YARN_SALE,DEPOT_YARN_SALE" ignore-if-empty="true"/>
           			</if-compare> 
                 <order-by field-name="transactionDate"/>
             </entity-condition>
@@ -1039,10 +1033,7 @@ under the License.
                     <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
                      </condition-list>
                      <if-compare field="parameters.segmentId" operator="equals" value="YARN_SALE">
-          			   <condition-list combine="or">
-          			   <condition-expr field-name="segmentId" operator="equals" value="YARN_SALE" ignore-if-empty="true"/>
-          			   <condition-expr field-name="segmentId" operator="equals" value="DEPOT_YARN_SALE" ignore-if-empty="true"/>
-          			   </condition-list>
+          			   <condition-expr field-name="segmentId" operator="in" value="YARN_SALE,DEPOT_YARN_SALE" ignore-if-empty="true"/>
           			</if-compare>
                 
                 <order-by field-name="transactionDate"/>
