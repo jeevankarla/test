@@ -228,12 +228,12 @@ conditionList.add(EntityCondition.makeCondition("estimatedDeliveryDate", EntityO
 				stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
 				stylesMap.put("mainHeader2", BOAddress);
 				stylesMap.put("mainHeader3", "INDENT VS DISPATCH REPORT");
-				stylesMap.put("mainHeader4", "from "+ partyfromDate +" to "+partythruDate);
+				stylesMap.put("mainHeader4", "From"+fromDateForFtl +" to "+thruDateForFtl);
 			}
 			else{
 				stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
 				stylesMap.put("mainHeader2", "INDENT VS DISPATCH REPORT");
-				stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+				stylesMap.put("mainHeader3", "From"+fromDateForFtl +" to "+thruDateForFtl);
 			}
 			stylesMap.put("mainHeaderFontName","Arial");
 			stylesMap.put("mainHeadercellHeight",300);
