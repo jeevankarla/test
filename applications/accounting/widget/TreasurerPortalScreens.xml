@@ -3144,6 +3144,19 @@
 					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
 					<order-by field-name="invoiceItemSeqId" />
 				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchesListOfRO">
+					<field-map field-name="partyIdFrom" from-field="invoice.partyId" />
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="BRANCH_CUSTOMER"/>
+				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchListOfRO">
+					<field-map field-name="partyIdTo" from-field="invoice.partyId" />
+					<field-map field-name="partyIdFrom" value="Company"/>
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="GROUP_ROLLUP"/>
+				</entity-and>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
 				<entity-condition entity-name="InvoiceItemType"	list="PayrolGroup">
 					<condition-expr field-name="parentTypeId" value="PAYROL" />
@@ -3155,6 +3168,7 @@
 				<set field="invoiceId" value="${invoice.invoiceId}" />
 				<set field="showCreateButton" value="${parameters.showCreateButton}" />
 				<set field="showUpdateButton" value="${parameters.showUpdateButton}" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/fetchBoForRo.groovy" />
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
@@ -3170,7 +3184,10 @@
                                 <screenlet title="${invoiceCreateScreenTitle}">
                                     <include-form name="CreateAPInvoice" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
-                            </widgets>
+									<platform-specific>
+					                         <html><html-template location="component://accounting/webapp/accounting/invoice/fetchBoForRo.ftl"/></html>
+					                 </platform-specific>
+							</widgets>
                         </section>
                         <section>
 							<condition>
@@ -3724,6 +3741,20 @@
 					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
 					<order-by field-name="invoiceItemSeqId" />
 				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchesListOfRO">
+					<field-map field-name="partyIdFrom" from-field="invoice.partyIdFrom" />
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="BRANCH_CUSTOMER"/>
+				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchListOfRO">
+					<field-map field-name="partyIdTo" from-field="invoice.partyIdFrom" />
+					<field-map field-name="partyIdFrom" value="Company"/>
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="GROUP_ROLLUP"/>
+				</entity-and>
+				
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
 				<entity-condition entity-name="InvoiceItemType"	list="PayrolGroup">
 					<condition-expr field-name="parentTypeId" value="PAYROL" />
@@ -3736,6 +3767,7 @@
 				<set field="showCreateButton" value="${parameters.showCreateButton}" />
 				<set field="showUpdateButton" value="${parameters.showUpdateButton}" />
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+            	<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/fetchBoForRo.groovy" />
             </actions>
             <widgets>
             
@@ -3754,6 +3786,9 @@
                                 <screenlet title="${arScreenTitle}">
                                     <include-form name="CreateARInvoice" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
+                                <platform-specific>
+					                         <html><html-template location="component://accounting/webapp/accounting/invoice/fetchBoForRo.ftl"/></html>
+					                 </platform-specific>
                             </widgets>
                             <fail-widgets>
                             	<label style="h3" text="${uiLabelMap.newInvoiceScreenError}"/>
