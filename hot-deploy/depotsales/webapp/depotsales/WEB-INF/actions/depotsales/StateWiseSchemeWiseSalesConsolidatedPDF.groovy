@@ -116,6 +116,16 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 }
 context.daystart=daystart
 context.dayend=dayend
+
+daystart = UtilDateTime.getDayStart(fromDate);
+dayend = UtilDateTime.getDayEnd(thruDate);
+  
+fromDateForCSV=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+thruDateForCSV=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+
+context.fromDateForCSV=fromDateForCSV;
+context.thruDateForCSV=thruDateForCSV;
+
 branchContext=[:];
 branchContext.put("branchId",branchId);
 
@@ -150,7 +160,7 @@ context.finalCSVList2=finalCSVList2;
 finalList = [];
 finalCSVList=[];
 StateTotals=[:];
-csvHeaderMap=[:];
+/*csvHeaderMap=[:];
 
 csvHeaderMap.put("partyName","STATE");
 csvHeaderMap.put("totInvoiceAMT", "TOTAL");
@@ -168,8 +178,50 @@ csvHeaderMap.put("mgpsDepotInvoiceQTY","_");
 
 csvHeaderMap.put("mgpsInvoiceAMT","MGP Scheme(Non Depot)");
 csvHeaderMap.put("mgpsInvoiceQTY","_");
-
+*/
 //finalCSVList.add(csvHeaderMap);
+stylesMap=[:];
+if(branchId){
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", BOAddress);
+	stylesMap.put("mainHeader3", "STATE WISE SCHEME WISE SALES CONSOLIDATED REPORT");
+	stylesMap.put("mainHeader4", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+else{
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", "STATE WISE SCHEME WISE SALES CONSOLIDATED REPORT");
+	stylesMap.put("mainHeader3", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
+stylesMap.put("mainHeadingCell",2);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",false);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+
+headingMap=[:];
+headingMap.put("partyName" ,"Party Name")
+headingMap.put("totInvoiceAMT" ,"Total Inv Amt")
+headingMap.put("totInvoiceQTY" ,"Total Inv Qty")
+headingMap.put("generalInvoiceAMT" ,"Inv Amt")
+headingMap.put("generalInvoiceQTY" ,"Inv Qty")
+headingMap.put("mgpsTenPerDepotInvoiceAMT" ,"MGPS Depot 10%Amt")
+headingMap.put("mgpsTenPerDepotInvoiceQTY" ,"MGPS Depot 10%Qty")
+headingMap.put("mgpsTenPerInvoiceAMT" ,"MGPS 10%Amt")
+headingMap.put("mgpsTenPerInvoiceQTY" ,"MGPS 10%Qty")
+headingMap.put("mgpsDepotInvoiceAMT" ,"MGPS DepotInv Qty")
+headingMap.put("mgpsDepotInvoiceQTY" ,"MGPS DepotInv Amt")
+headingMap.put("mgpsInvoiceAMT" ,"MGPS Inv Amt")
+headingMap.put("mgpsInvoiceQTY" ,"MGPS Inv Qty")
+
+finalCSVList.add(stylesMap);
+finalCSVList.add(headingMap);
 
 for(state in indianStates){
 	

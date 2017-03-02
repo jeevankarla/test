@@ -3910,13 +3910,13 @@
          <field name="mgpsInvoiceQTY" title="_"><display/></field>
      </form> 
      <form name="depotReimburcentSummaryReportCSV" type="list" list-name="finalCSVList" view-size="99999">
-         <field name="partyId" title="STATE"><display/></field>
-         <field name="partyName" title="CUSTOMER"><display/></field>
-         <field name="invoiceQTY" title="QUANTITY SUPPLIED IN KG"><display/></field>
-         <field name="invoiceAMT" title="VALUE OF YARN SUPPLIED RS"><display/></field>
-         <field name="shippingCost" title="ACTUAL COST OF TRANSPORTATION"><display/></field>
-         <field name="reimbursentAMT" title="ACTUAL TRANSPORTATION ELIGIBLE FOR REIMBURSEMENT"><display/></field>
-         <field name="depotCharges" title="DEPOT CHARGES AT 2.5%"><display/></field>
+         <field name="partyId" title="_"><display/></field>
+         <field name="partyName" title="_"><display/></field>
+         <field name="invoiceQTY" title="_"><display/></field>
+         <field name="invoiceAMT" title="_"><display/></field>
+         <field name="shippingCost" title="_"><display/></field>
+         <field name="reimbursentAMT" title="_"><display/></field>
+         <field name="depotCharges" title="_"><display/></field>
      </form> 
        <form name="IndentCSV" type="list" list-name="orderList" view-size="99999">
        <field name="orderNo" title="_"><display/></field>

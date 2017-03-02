@@ -23,7 +23,7 @@ import java.util.Map.Entry;
 
 
 
-SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
+SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
 dayend = null;
 daystart = null;
 
@@ -161,7 +161,20 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 	   //////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
 }
+context.daystart=daystart
+context.dayend=dayend
   
+daystart = UtilDateTime.getDayStart(fromDate);
+dayend = UtilDateTime.getDayEnd(thruDate);
+
+
+fromDateForCSV=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+thruDateForCSV=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+
+context.fromDateForCSV=fromDateForCSV;
+context.thruDateForCSV=thruDateForCSV;
+
+
 branchContext=[:];
 branchContext.put("branchId",branchIdForAdd);
 
@@ -310,16 +323,25 @@ finalList = [];
 
 
 stylesMap=[:];
-stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
-stylesMap.put("mainHeader2", "Depot ReimbursmentReport");
-stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
-stylesMap.put("mainHeadercellHeight",400);
-stylesMap.put("mainHeaderFontSize",12);
-stylesMap.put("mainHeadingCell",4);
+if(branchId){
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", BOAddress);
+	stylesMap.put("mainHeader3", "DEPOT REIMBURSMENT REPORT");
+	stylesMap.put("mainHeader4", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+else{
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", "DEPOT REIMBURSMENT REPORT");
+	stylesMap.put("mainHeader3", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
+stylesMap.put("mainHeadingCell",2);
 stylesMap.put("mainHeaderBold",true);
 stylesMap.put("columnHeaderBgColor",false);
-stylesMap.put("columnHeaderFontName","TimesNewRoman");
-stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
 stylesMap.put("autoSizeCell",true);
 stylesMap.put("columnHeaderCellHeight",300);
 
@@ -327,17 +349,17 @@ request.setAttribute("stylesMap", stylesMap);
 request.setAttribute("enableStyles", true);
 
 headingMap=[:];
-headingMap.put("billno" ,"SALE INVO NO")
-headingMap.put("invoiceDate" ,"INVOICE DATE")
-headingMap.put("invoiceQTY" ,"QUANTITY")
-headingMap.put("invoiceAmount" ,"AMOUNT")
+headingMap.put("billno" ,"Sale Inv No")
+headingMap.put("invoiceDate" ,"Invoice Date")
+headingMap.put("invoiceQTY" ,"Quantity")
+headingMap.put("invoiceAmount" ,"Amount")
 headingMap.put("supplierName" ,"Name Of Supplier")
-headingMap.put("partyName" ,"PARTY NAME")
-headingMap.put("destAddr" ,"DESTINATION")
-headingMap.put("transporter" ,"TRANSPORTER")
-headingMap.put("depotCharges" ,"DEPOT CHARGES")
-headingMap.put("lrNumber" ,"LR NUMBER")
-headingMap.put("lrDate" ,"LR DATE")
+headingMap.put("partyName" ,"Party Name")
+headingMap.put("destAddr" ,"Destination")
+headingMap.put("transporter" ,"Transporter")
+headingMap.put("depotCharges" ,"Depot Charges")
+headingMap.put("lrNumber" ,"LR Number")
+headingMap.put("lrDate" ,"LR Date")
 
 finalList.add(stylesMap);
 finalList.add(headingMap);
