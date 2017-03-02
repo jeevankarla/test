@@ -658,6 +658,7 @@ under the License.
 	  <field type="id-ne" name="claimStatus"/>
       <field name="addtlShippingChargeDesc" type="long-varchar"></field>
       <field name="description" type="description"></field>
+      <field name="shipmentPurposeTypeId" type="id"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>

@@ -511,7 +511,7 @@
             </hyperlink>
         </field> 
           
-          <field name="cancelOrder" title="Cancel" widget-style="buttontext" use-when="((salesButton.equals(&quot;Y&quot;)))">
+          <field name="cancelOrder" title="Cancel" widget-style="buttontext" use-when="((salesButton.equals(&quot;Y&quot;)))&amp;&amp;(!orderStatusId.equals(&quot;ORDER_CANCELLED&quot;))">
            <hyperlink target-type="plain" description="Cancel Order" target="javascript:cancelDepotSaleOrderCaution('${orderId}','${partyId}','${inventoryItemId}','${facilityId}');"></hyperlink>
         </field>
           

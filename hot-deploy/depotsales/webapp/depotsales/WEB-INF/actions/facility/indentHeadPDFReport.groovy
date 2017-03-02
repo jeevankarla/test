@@ -218,7 +218,7 @@ OrderHeader = delegator.findList("OrderHeader",EntityCondition.makeCondition("or
 
 salesAndPurchaseList = [];
 
-
+/*
 decoratorMap=[:];
 decoratorMap.put("main_Header1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
 decoratorMap.put("main_Header2", "Sales and Purchase Report for"+ branchName);
@@ -296,7 +296,7 @@ headingMap.put("actualSaleInvoiceId","Count Of yarn");
 headingMap.put("actualPurInvoiceId","Count Of yarn");
 
 salesAndPurchaseList.add(decoratorMap);
-salesAndPurchaseList.add(headingMap);
+salesAndPurchaseList.add(headingMap);*/
 
 
 

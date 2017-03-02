@@ -106,7 +106,7 @@
 				<actions>
 					<set field="titleProperty" value="Find Purchase Invoices" />
 					<set field="filterByDate" value="true" />
-					<set field="parameters.purposeTypeId" value="YARN_SALE"/>
+					<set field="parameters.purposeTypeId" value="DIES_AND_CHEM_SALE"/>
 					<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/sequenceFilterDC.groovy"/>
 					
 					<!-- <service service-name="performFind" result-map="result">
@@ -1563,6 +1563,7 @@
 			<actions>
 				<set field="titleProperty" value="Find Sales Invoices" />
 				<set field="filterByDate" value="true" />
+				<set field="parameters.purposeTypeId" value="DIES_AND_CHEM_SALE"/>
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/sequenceFilterDC.groovy"/>
 				<service service-name="performFind" result-map="result">
 					<field-map field-name="inputFields" from-field="parameters" />
@@ -2378,7 +2379,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/PurchaseInvoiceDepot.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/PurchaseInvoiceDepotDC.ftl" />
 							</html>
 						</platform-specific>
 					</widgets>
