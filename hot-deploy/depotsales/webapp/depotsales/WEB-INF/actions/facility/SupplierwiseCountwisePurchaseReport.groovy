@@ -114,6 +114,11 @@ if(UtilValidate.isNotEmpty(partythruDate)){
 }
 context.daystart=daystart
 context.dayend=dayend
+fromDateForFtl=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+thruDateForFtl=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+
+context.fromDateForFtl=fromDateForFtl;
+context.thruDateForFtl=thruDateForFtl;
 branchContext=[:];
 branchContext.put("branchId",branchId);
 
@@ -204,12 +209,12 @@ if(branchId){
 	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
 	stylesMap.put("mainHeader2", BOAddress);
 	stylesMap.put("mainHeader3", "Supplier Wise Count Wise Purchase Report");
-	stylesMap.put("mainHeader4", "from "+ partyfromDate +" to "+partythruDate);
+	stylesMap.put("mainHeader4", "From"+fromDateForFtl +" to "+thruDateForFtl);
 }
 else{
 	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
 	stylesMap.put("mainHeader2", "Supplier Wise Count Wise Purchase Report");
-	stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
+	stylesMap.put("mainHeader3", "From"+fromDateForFtl +" to "+thruDateForFtl);
 }
 stylesMap.put("mainHeaderFontName","Arial");
 stylesMap.put("mainHeadercellHeight",300);

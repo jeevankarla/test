@@ -220,9 +220,9 @@ orderIdsCheck=[];
 
 if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
  stylesMap=[:];
- stylesMap.put("mainHeader1", "PENDING SHIPMEMTS REPORTS");
- stylesMap.put("mainHeader2", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD");
- stylesMap.put("mainHeader3", BOAddress);
+ stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD");
+ stylesMap.put("mainHeader2", BOAddress);
+ stylesMap.put("mainHeader3", "PENDING SHIPMEMTS REPORTS");
  stylesMap.put("mainHeaderFontName","Arial");
  stylesMap.put("mainHeadercellHeight",300);
  stylesMap.put("mainHeadingCell",5);
