@@ -912,7 +912,7 @@
              			<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
               			<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
               			<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
-              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="BRANCH_CUSTOMER"/>
+              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
               		</condition-list>
               		<order-by field-name="groupName"/>
          		</entity-condition>
@@ -987,7 +987,7 @@
              			<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
               			<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
               			<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
-              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="BRANCH_CUSTOMER"/>
+              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
               		</condition-list>
               		<order-by field-name="groupName"/>
          		</entity-condition>
@@ -1062,7 +1062,7 @@
              			<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
               			<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
               			<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
-              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="BRANCH_CUSTOMER"/>
+              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
               		</condition-list>
               		<order-by field-name="groupName"/>
          		</entity-condition>
