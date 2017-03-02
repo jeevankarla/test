@@ -816,7 +816,8 @@ under the License.
             </drop-down>
         </field>
          <field name="segmentId"  title="Segment Id">
-            <drop-down>
+            <drop-down allow-empty="false">
+            	<option key="COMMON" description="Common"/>
                 <option key="YARN_SALE" description="Yarn Sale"/>
                 <option key="DIES_AND_CHEM_SALE" description="Dies And Chemicals"/>                
             </drop-down>
@@ -1154,7 +1155,7 @@ under the License.
         </field>
         <field name="costCenterId" title="RO">
         	<drop-down allow-empty="true">
-        		<list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
+        		<list-options key-name="partyId" list-name="internalOrgList" description="${groupName}"/>
          	</drop-down>
         </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
@@ -1218,7 +1219,7 @@ under the License.
         </field>
         <field name="costCenterId" title="RO">
         	<drop-down allow-empty="true">
-        		<list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
+        		<list-options key-name="partyId" list-name="internalOrgList" description="${groupName}"/>
          	</drop-down>
         </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
@@ -1288,7 +1289,7 @@ under the License.
          </field>
         <field name="costCenterId" title="RO">
         	<drop-down allow-empty="true">
-        		<list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
+        		<list-options key-name="partyId" list-name="internalOrgList" description="${groupName}"/>
          	</drop-down>
         </field>
         <field name="finAccountParentId"><hidden value="EMPLOYEE_ADV"/></field>
