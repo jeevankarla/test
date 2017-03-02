@@ -77,7 +77,7 @@ public class JwtUtil {
             JWTClaimsSet claimsSet = new JWTClaimsSet();
             claimsSet.setSubject(username);
             claimsSet.setIssuer("NHDC App");
-            claimsSet.setExpirationTime(new Date(new Date().getTime() + 1440 * 1000)); //::TODO:
+            claimsSet.setExpirationTime(new Date(new Date().getTime() + 1440 * 60 * 1000)); //1 hour = 60*60*1000
 
             SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 
