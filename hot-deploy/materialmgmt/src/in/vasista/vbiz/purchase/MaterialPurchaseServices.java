@@ -301,7 +301,11 @@ public class MaterialPurchaseServices {
 	        newEntity.set("estimatedShipDate", lrDateTimeStamp);
 	        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
 		        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
-	        }else{
+	        }else if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DC_PURCHASE")){
+	        	newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
+	        	newEntity.set("shipmentPurposeTypeId", "DC_SHIPMENT");
+	        }
+	        else{
 	        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
 	        }
 	        newEntity.set("statusId", "DISPATCHED");

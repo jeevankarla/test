@@ -4374,6 +4374,7 @@
         </field>
         <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
          <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field>
+         <field name="shipmentPurposeTypeId"><hidden value="DC_SHIPMENT"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>  

@@ -92,6 +92,8 @@ public class DepotPurchaseServices{
 		Locale locale = UtilHttp.getLocale(request);
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		String partyId = (String) request.getParameter("partyId");
+		String purposeTypeIdFromDc = (String) request.getParameter("purposeTypeId");
+		
 		Map resultMap = FastMap.newInstance();
 		List invoices = FastList.newInstance(); 
 		String vehicleId = (String) request.getParameter("vehicleId");
@@ -624,14 +626,14 @@ public class DepotPurchaseServices{
 		
 		String invProdId = (String) ((Map) productQtyList.get(0)).get("productId");
 
-		try{
+		/*try{
 	  		Map resultCtx = dispatcher.runSync("getPurposeTypeForProduct", UtilMisc.toMap("productId", invProdId, "userLogin", userLogin));  	
 	  		purposeTypeId = (String)resultCtx.get("purposeTypeId");
 	  	}catch (GenericServiceException e) {
 	  		Debug.logError("Unable to analyse purpose type: " + ServiceUtil.getErrorMessage(result), module);
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(result));
 			return "error";
-	  	}
+	  	}*/
 		
 		Map processInvoiceContext = FastMap.newInstance();
 		processInvoiceContext.put("userLogin", userLogin);
@@ -645,6 +647,8 @@ public class DepotPurchaseServices{
 		processInvoiceContext.put("invoiceDate", invoiceDate);
 		processInvoiceContext.put("purchaseTitleTransferEnumId", purchaseTitleTransferEnumId);
 		processInvoiceContext.put("purchaseTaxType", purchaseTaxType);
+		processInvoiceContext.put("purposeTypeIdFromDc", purposeTypeIdFromDc);
+		
 		//processInvoiceContext.put("saleTitleTransferEnumId", saleTitleTransferEnumId);
 		//processInvoiceContext.put("invoiceAdjChargesList", invoiceAdjChargesList);
 		//processInvoiceContext.put("invoiceDiscountsList", invoiceDiscountsList);
@@ -6470,6 +6474,7 @@ public class DepotPurchaseServices{
 		  	String isDisableAcctg = (String) context.get("isDisableAcctg");
 		  	String shipmentId = (String) context.get("shipmentId");
 		  	String tallyrefNo = (String) context.get("tallyrefNo");
+		  	String purposeTypeIdFromDc = (String) context.get("purposeTypeIdFromDc");
 		  	
 			String purchaseTitleTransferEnumId = (String) context.get("purchaseTitleTransferEnumId");
 			String purchaseTaxType = (String) context.get("purchaseTaxType");
@@ -6578,6 +6583,9 @@ public class DepotPurchaseServices{
 		        input.put("partyId",roFroBranch );
 		        input.put("costCenterId",partyIdFrom);
 		        input.put("shipmentId",shipmentId );
+		        if(UtilValidate.isNotEmpty(purposeTypeIdFromDc))
+		        input.put("purposeTypeId", purposeTypeIdFromDc);	
+		        else
 		        input.put("purposeTypeId", purposeTypeId);
 		        if(UtilValidate.isNotEmpty(isDisableAcctg)){
 			        input.put("isEnableAcctg", "N");
