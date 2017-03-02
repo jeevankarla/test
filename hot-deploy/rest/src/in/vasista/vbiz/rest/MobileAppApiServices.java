@@ -61,6 +61,8 @@ import org.ofbiz.entity.util.EntityListIterator;
 
 import javax.ws.rs.core.Response;
 
+import in.vasista.vbiz.rest.util.JwtUtil;
+
 
 @Path("/nhdc")
 public class MobileAppApiServices {
@@ -79,6 +81,75 @@ public class MobileAppApiServices {
 		request.setAttribute("restHitMap", hitMap);
 	}
 	
+	// If token is present, it just returns the username.  If not, the credentials
+	// are authenticated and username is returned
+	String authenticate(LocalDispatcher dispatcher, 
+		Map<String, Object> paramMap) {
+	
+		String usernameFromToken = (String)request.getAttribute("usernameFromToken");
+		if (usernameFromToken != null) {
+			return usernameFromToken;
+		}
+		
+		// no token present, do authentication
+		String username = null;
+		Map<String, Object> resp;
+		try {
+			resp = dispatcher.runSync("userLogin", paramMap);
+		if (ServiceUtil.isError(resp)) {
+			Debug.logWarning("userLogin authentication service failed for " +username, module);				
+				return null;
+			}
+		} catch (GenericServiceException e) {
+			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
+			return null;
+		}	
+		return (String)paramMap.get("login.username");
+	}
+	
+	
+	@POST
+	@Path("/getAuthToken")        
+	@Produces(MediaType.APPLICATION_JSON)
+	public  Response getAuthToken(
+			@FormParam("login.username") String username,
+			@FormParam("login.password") String password,
+			@FormParam("tenantId") String tenantId,
+			@Context HttpServletResponse response) { 
+		
+		Map<String, Object> result = FastMap.newInstance();
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
+			//::TODO:: error handling
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
+		}
+		String tenantDelegatorName =  "default#" + tenantId;
+		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
+		LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher(tenantDelegatorName,delegator);
+		populateHitMap(delegator, "getAuthToken", username);
+
+		Map<String, Object> paramMap = FastMap.newInstance();
+		paramMap.put("login.username", username);
+		paramMap.put("login.password", password);
+
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+		}
+		username = usernameTemp;
+		
+		String token = JwtUtil.generateToken(username);
+		if (token == null) {
+			Debug.logError("Unable to generate token for " +username, module);							
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Unable to generate token for " +username).build();
+		}
+		result.put("token", token);
+		return Response.ok(result).build();
+
+	}
+	
+	
 	@POST
 	@Path("/getWeaverDetails")        
 	@Produces(MediaType.APPLICATION_JSON)
@@ -90,10 +161,10 @@ public class MobileAppApiServices {
 		
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -103,21 +174,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -168,10 +231,10 @@ public class MobileAppApiServices {
         
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -181,21 +244,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -248,34 +303,26 @@ public class MobileAppApiServices {
 	
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
 		LocalDispatcher dispatcher = GenericDispatcher.getLocalDispatcher(tenantDelegatorName,delegator);
-		populateHitMap(delegator, "getWeaverPayments", username);
+		populateHitMap(delegator, "getWeaverIndents", username);
 
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -318,10 +365,10 @@ public class MobileAppApiServices {
 		
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -331,21 +378,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -385,10 +424,10 @@ public class MobileAppApiServices {
 		
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -398,21 +437,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -452,10 +483,10 @@ public class MobileAppApiServices {
 		
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -465,21 +496,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -522,10 +545,10 @@ public class MobileAppApiServices {
 		
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -535,21 +558,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -588,10 +603,10 @@ public class MobileAppApiServices {
 				) {
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -601,21 +616,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -653,10 +660,10 @@ public class MobileAppApiServices {
 		
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -666,21 +673,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -740,10 +739,10 @@ public class MobileAppApiServices {
 				) {
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -753,21 +752,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -828,10 +819,10 @@ public class MobileAppApiServices {
 
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -842,21 +833,12 @@ public class MobileAppApiServices {
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
 
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
-
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
-		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -897,10 +879,10 @@ public class MobileAppApiServices {
 
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -911,22 +893,13 @@ public class MobileAppApiServices {
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
 
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
-
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
-		}
-
+		username = usernameTemp;
+		
 		GenericValue userLogin = null;
 		try{
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
@@ -968,10 +941,10 @@ public class MobileAppApiServices {
 		
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -981,21 +954,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
@@ -1043,10 +1008,10 @@ public class MobileAppApiServices {
 		
 		Map<String, Object> result = FastMap.newInstance();
 
-		if (username == null || password == null || tenantId == null) {
-			Debug.logError("Problem reading http header(s): login.username or login.password or tenantId", module);        	
+		if (tenantId == null) {
+			Debug.logError("Problem reading tenantId", module);        	
 			//::TODO:: error handling
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading http header(s): login.username or login.password or tenantId").build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Problem reading tenantId").build();
 		}
 		String tenantDelegatorName =  "default#" + tenantId;
 		GenericDelegator delegator = (GenericDelegator) DelegatorFactory.getDelegator(tenantDelegatorName);
@@ -1056,21 +1021,13 @@ public class MobileAppApiServices {
 		Map<String, Object> paramMap = FastMap.newInstance();
 		paramMap.put("login.username", username);
 		paramMap.put("login.password", password);
-		Map<String, Object> resp;
-		try {
-			resp = dispatcher.runSync("userLogin", paramMap);
-			if (ServiceUtil.isError(resp)) {
-				return Response.status(Response.Status.UNAUTHORIZED).entity(resp).build();
-			}
-		} catch (GenericServiceException e) {
-			Debug.logWarning("Authentication failed for " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username + " " +  e.getMessage()).build();
-		}
 
-		if (ServiceUtil.isError(resp)) {
-			Debug.logWarning("userLogin authentication service failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("userLogin authentication service failed for " +username).build();
+		String usernameTemp = authenticate(dispatcher, paramMap);
+		if (usernameTemp == null) {
+			Debug.logWarning("Authentication failed for " +username, module);
+			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
 		}
+		username = usernameTemp;
 
 		GenericValue userLogin = null;
 		try{
