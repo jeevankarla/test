@@ -85,4 +85,29 @@
         <servlet-name>restServlet</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
+    
+    <filter>
+   		<filter-name>RestHitCounter</filter-name>
+   		<filter-class>in.vasista.vbiz.rest.filter.RestHitCounter</filter-class>
+	</filter>
+
+	<filter-mapping>
+   		<filter-name>RestHitCounter</filter-name>
+   		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+    <servlet-mapping>
+        <servlet-name>restServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+    
+    <filter>
+   		<filter-name>TokenAuthentication</filter-name>
+   		<filter-class>in.vasista.vbiz.rest.filter.TokenAuthentication</filter-class>
+	</filter>
+
+	<filter-mapping>
+   		<filter-name>TokenAuthentication</filter-name>
+   		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 </web-app>

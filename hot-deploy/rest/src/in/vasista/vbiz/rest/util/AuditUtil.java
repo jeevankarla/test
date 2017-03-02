@@ -1,4 +1,4 @@
-package in.vasista.vbiz.rest;
+package in.vasista.vbiz.rest.util;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,7 +27,7 @@ public class AuditUtil {
     	request = inRequest;
     }
 
-    void saveHit(Map<String, Object> context) {
+    public void saveHit(Map<String, Object> context) {
     	
     	HttpSession session = request.getSession();
         String webappName = "rest";
