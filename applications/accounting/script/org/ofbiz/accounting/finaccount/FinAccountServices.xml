@@ -248,6 +248,9 @@ under the License.
 		<entity-one value-field="finAccount" entity-name="FinAccount">
 			<field-map field-name="finAccountId" from-field="parameters.finAccountId" />
 		</entity-one>	
+		<if-empty field="parameters.segmentId">
+			<set field="parameters.segmentId" value="COMMON"/>
+		</if-empty>
 		<!-- Adjustment Transaction -->	
 		<if-compare operator="equals" value="Adjustment" field="parameters.entryType">
 			<log level="always" message="these are finAccount Details ${finAccount}"></log>					
@@ -257,6 +260,7 @@ under the License.
 			<if-not-empty field="parameters.amount">			
 				<set field="createFinAccountTransMap.amount" from-field="parameters.amount"/>			
 			</if-not-empty>		
+			<set field="createFinAccountTransMap.segmentId" from-field="parameters.segmentId"/>	
 			<set field="createFinAccountTransMap.finAccountId" from-field="parameters.finAccountId"/>
 			<set field="createFinAccountTransMap.partyId" from-field="parameters.partyId"/>
 			<set field="createFinAccountTransMap.glReconciliationId" from-field="parameters.glReconciliationId"/>
@@ -269,7 +273,7 @@ under the License.
 				<result-to-result result-name="finAccountTransId"/>
 			</call-service>
 			<check-errors/>			
-		</if-compare>
+		</if-compare>		
 		<!-- Contra entry Transaction  -->
 		<if-compare operator="equals" value="Contra" field="parameters.entryType">
 			<entity-one value-field="contraFinAccount" entity-name="FinAccount">
@@ -940,6 +944,12 @@ under the License.
     <simple-method method-name="getFinAccountTransListAndTotals" short-description="Retrieve Financial Account Transaction List and Totals">
         <entity-condition entity-name="FinAccountTrans" list="finAccountTransactions">
             <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
+            <condition-expr field-name="segmentId" operator="equals" from-field="parameters.segmentId" ignore-if-empty="true"/>
+            <if-compare field="parameters.segmentId" operator="equals" value="YARN_SALE">
+          <condition-expr field-name="segmentId" operator="in" value="YARN_SALE,DEPOT_YARN_SALE" ignore-if-empty="true"/>
+          </if-compare>
+            <condition-expr field-name="costCenterId" operator="in" from-field="parameters.costCenterId" ignore-if-empty="true"/>
+            
              <order-by field-name="transactionDate"/>
             <use-iterator/>
         </entity-condition>
@@ -993,12 +1003,17 @@ under the License.
                     <condition-expr field-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="statusId" operator="not-equals" from-field="conditionalStatusId" ignore-if-empty="true"/>
                     <condition-expr field-name="statusId" operator="equals" from-field="parameters.statusId" ignore-if-empty="true"/>
+                    <condition-expr field-name="segmentId" operator="equals" from-field="parameters.segmentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="costCenterId" operator="in" from-field="parameters.costCenterId" ignore-if-empty="true"/>
                     <condition-expr field-name="glReconciliationId" operator="equals" from-field="nullField"/>
                     <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromTransactionDate" ignore-if-empty="true"/>
                     <condition-expr field-name="transactionDate" operator="less-equals" from-field="parameters.thruTransactionDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
                 </condition-list>
+                 <if-compare field="parameters.segmentId" operator="equals" value="YARN_SALE">
+          			   <condition-expr field-name="segmentId" operator="in" value="YARN_SALE,DEPOT_YARN_SALE" ignore-if-empty="true"/>
+          			</if-compare> 
                 <order-by field-name="transactionDate"/>
             </entity-condition>
         <else>
@@ -1007,6 +1022,8 @@ under the License.
                     <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
                     <condition-expr field-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="statusId" from-field="parameters.statusId" ignore-if-empty="true"/>
+                     <condition-expr field-name="segmentId" operator="equals" from-field="parameters.segmentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="costCenterId" operator="in" from-field="parameters.costCenterId" ignore-if-empty="true"/>
                     <condition-expr field-name="glReconciliationId" from-field="parameters.glReconciliationId" ignore-if-empty="true"/>
                     <condition-expr field-name="paymentId" from-field="parameters.paymentId" ignore-if-empty="true"/>
                     <condition-expr field-name="finAccountTransId" from-field="parameters.finAccountTransId" ignore-if-empty="true"/>
@@ -1014,7 +1031,11 @@ under the License.
                     <condition-expr field-name="transactionDate" operator="less-equals" from-field="parameters.thruTransactionDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
                     <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
-                </condition-list>
+                     </condition-list>
+                     <if-compare field="parameters.segmentId" operator="equals" value="YARN_SALE">
+          			   <condition-expr field-name="segmentId" operator="in" value="YARN_SALE,DEPOT_YARN_SALE" ignore-if-empty="true"/>
+          			</if-compare>
+                
                 <order-by field-name="transactionDate"/>
             </entity-condition>
         </else>

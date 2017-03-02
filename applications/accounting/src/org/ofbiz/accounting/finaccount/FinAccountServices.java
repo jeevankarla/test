@@ -1336,6 +1336,9 @@ public class FinAccountServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String finAccountId = (String) context.get("finAccountId");
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+        String costCenterId =(String) context.get("costCenterId");
+        String segmentId =(String) context.get("segmentId");
+        List<String> roBranchList = (List) context.get("roBranchList");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(transactionDate, -1));
         List conditionList = FastList.newInstance();
@@ -1348,6 +1351,22 @@ public class FinAccountServices {
         	conditionList.add(EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,finAccountId));
         	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
         	conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"FINACT_TRNS_CANCELED"));
+        	if(UtilValidate.isNotEmpty(costCenterId)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,costCenterId));
+    		}
+        	if(UtilValidate.isNotEmpty(roBranchList)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+    		}
+        	if(UtilValidate.isNotEmpty(segmentId)){
+    			if(segmentId.equals("YARN_SALE")){
+    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+    			}
+    			else{
+    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.EQUALS,segmentId));
+    			}
+    		}
+        	
+        	
         	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	finAccountTransList = delegator.findList("FinAccountTrans",condition,null,null,null,false);
         	if(UtilValidate.isNotEmpty(finAccountTransList)){
