@@ -391,6 +391,863 @@ public class GeneralLedgerServices {
         }
         return result;
     }
+    
+    //glAccount opening balance for party
+    
+    public static Map<String, Object> getGlAccountOpeningBalanceForParty(DispatchContext ctx, Map<String, Object> context) throws GenericEntityException {
+    	Delegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+        //String glAccountId = (String) context.get("glAccountId");
+        String partyId = (String) context.get("partyId");
+        List glAccountIds = (List) context.get("glAccountIds");
+        String organizationPartyId = "Company";
+        GenericValue lastClosedTimePeriod=null;
+        Timestamp lastClosedDate = null;
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        try {
+    	      if(UtilValidate.isNotEmpty(fromDate)){
+	    		 fromDate = UtilDateTime.getDayStart(fromDate);
+	          }
+    	      if(UtilValidate.isNotEmpty(thruDate)){
+    	    	 thruDate = UtilDateTime.getDayEnd(thruDate);
+	          }
+    	      // get lost closed period here
+    	      Map lastFinContext = FastMap.newInstance();
+    	      lastFinContext.put("periodTypeId","FISCAL_YEAR");
+    	      lastFinContext.put("organizationPartyId", organizationPartyId);
+    	      lastFinContext.put("userLogin", userLogin);
+    	      lastFinContext.put("findDate", UtilDateTime.toSqlDate(fromDate));
+    	      //lastFinContext.put("onlyFiscalPeriods", Boolean.FALSE);
+			   Map resultCtx = FastMap.newInstance();
+				try{
+					resultCtx = dispatcher.runSync("findLastClosedDateForPartyLedger", lastFinContext);
+					if(ServiceUtil.isError(resultCtx)){
+						Debug.logError("Problem in fetching financial year ", module);
+						return ServiceUtil.returnError("Problem in fetching financial year ");
+					}
+					lastClosedTimePeriod = (GenericValue)resultCtx.get("lastClosedTimePeriod");
+					lastClosedDate = (Timestamp)resultCtx.get("lastClosedDate");
+				}catch(GenericServiceException e){
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+				} 
+				List customTimePeriodList = FastList.newInstance();
+    	      
+ 			  /*  Map finYearContext = FastMap.newInstance();
+ 				//finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+ 				finYearContext.put("organizationPartyId", organizationPartyId);
+ 				finYearContext.put("userLogin", userLogin);
+ 				finYearContext.put("findDate", fromDate);
+ 				finYearContext.put("excludeNoOrganizationPeriods", "Y");
+ 				List customTimePeriodList = FastList.newInstance();
+ 				resultCtx = FastMap.newInstance();
+ 				try{
+ 					resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+ 					if(ServiceUtil.isError(resultCtx)){
+ 						Debug.logError("Problem in fetching financial year ", module);
+ 						return ServiceUtil.returnError("Problem in fetching financial year ");
+ 					}
+ 				}catch(GenericServiceException e){
+ 					Debug.logError(e, module);
+ 					return ServiceUtil.returnError(e.getMessage());
+ 				}
+ 				customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+ 				*/String finYearId = "";
+ 				Timestamp finYearFromDate=null;
+ 				Timestamp finYearthruDate=null;
+ 				Timestamp finYearNextFromDate=null;
+ 				if(UtilValidate.isNotEmpty(lastClosedTimePeriod)){
+ 					GenericValue customTimePeriod = lastClosedTimePeriod;
+ 					finYearId = (String)customTimePeriod.get("customTimePeriodId");
+ 					finYearFromDate=new java.sql.Timestamp(((Date) customTimePeriod.get("fromDate")).getTime());
+ 					Debug.log("finYearId============"+finYearId);
+ 					
+ 				}
+    			
+ 				List extTransTypeIdsList1 = FastList.newInstance();
+    			List extTransTypeIdsList2 = FastList.newInstance();
+    			List assetAndLiabilityIdsList = FastList.newInstance();
+    			 extTransTypeIdsList1=UtilMisc.toList("SALES","SALES_INVOICE","PURCHASE_INVOICE","INVOICE_APPL");
+    			 extTransTypeIdsList2=UtilMisc.toList("RECEIPT","PAYMENT_ACCTG_TRANS","PAYMENT_APPL","OUTGOING_PAYMENT","INCOMING_PAYMENT");
+    			 extTransTypeIdsList2.add("OB_TB");
+    			 assetAndLiabilityIdsList=UtilMisc.toList("CURRENT_ASSET","LONGTERM_ASSET","CURRENT_LIABILITY","LONGTERM_LIABILITY","CASH_EQUIVALENT");
+    			 BigDecimal finalOpeningBalance = BigDecimal.ZERO;
+     			BigDecimal postedFinalDebits = BigDecimal.ZERO;
+     			BigDecimal postedFinalCredits = BigDecimal.ZERO; 
+     			BigDecimal postedDebits = BigDecimal.ZERO;
+     			BigDecimal postedCredits = BigDecimal.ZERO; 
+ 	    		BigDecimal openingBalance = BigDecimal.ZERO;
+ 				List customTimePeriodIds =FastList.newInstance();
+    			try {      
+    			//List conditionList = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
+    				   List conditionList =FastList.newInstance();
+    			       conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_MONTH"));
+    			       if(UtilValidate.isNotEmpty(lastClosedDate)){
+    			    	   conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(lastClosedDate)));
+    			       }
+    			      
+    			       conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN ,UtilDateTime.toSqlDate(fromDate)));
+    			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    			List<String> orderBy = UtilMisc.toList("-thruDate");
+    			Debug.log("CustomTimePeriod condition==================="+condition);
+    			customTimePeriodList = delegator.findList("CustomTimePeriod", condition, UtilMisc.toSet("customTimePeriodId"), orderBy, null, true);
+    			
+    			customTimePeriodIds = EntityUtil.getFieldListFromEntityList(customTimePeriodList, "customTimePeriodId", true);
+    			Debug.log("customTimePeriodIds============"+customTimePeriodIds);
+    			Timestamp nextDayStartDayEnd =null;
+    			Timestamp fromDatePreviousDayEnd=null;
+    			if(UtilValidate.isNotEmpty(customTimePeriodIds)){
+    				String lastCustPeriodId=(String)customTimePeriodIds.get(0);    				
+    				GenericValue lastCustPeriodDetails = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", lastCustPeriodId), false);
+    	    	     Timestamp lastCustPeriodThru = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastCustPeriodDetails.getDate("thruDate")));
+    	    	      nextDayStartDayEnd = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(lastCustPeriodThru, 1));
+    	    	    
+    	    	      fromDatePreviousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+    	    	    
+    			}else{
+    				nextDayStartDayEnd = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(lastClosedDate, 1));
+    				fromDatePreviousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+    			}
+	    			if(UtilValidate.isNotEmpty(nextDayStartDayEnd)&&UtilValidate.isNotEmpty(fromDatePreviousDayEnd)){
+	    				//getting betweent date entries
+	    				
+	    	    	     List andExprs1 = FastList.newInstance();
+	    	    	     if(UtilValidate.isEmpty(organizationPartyId)){
+	    	    	    	 organizationPartyId = "Company";
+	    	    	     }
+	    	    	     andExprs1.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
+	    	    	     andExprs1.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+	    	    	     if(UtilValidate.isNotEmpty(organizationPartyId)){
+	    	    	    	 //get internal orgs and do in query here
+	    	    	    	 andExprs1.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+	    	    	     }
+	    	    	     
+	    	    	    	    	    	     
+	    	    	     andExprs1.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, nextDayStartDayEnd));
+	    	    	     andExprs1.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDatePreviousDayEnd));
+	    	    	     EntityCondition andCond1 = EntityCondition.makeCondition(andExprs1, EntityOperator.AND);
+	    	    	     
+	    	    	     EntityListIterator allPostedTransactionTotalItr1 = delegator.find("AcctgTransAndEntries", andCond1, null, null, null, null);
+	    	    	     GenericValue transTotalEntry1;
+	    	    	     
+	    	    	     while(allPostedTransactionTotalItr1 != null && (transTotalEntry1 = allPostedTransactionTotalItr1.next()) != null) {
+	    	    	    	// Debug.log("transTotalEntry1======="+transTotalEntry1);
+	    	    	    	 String glAcntId = transTotalEntry1.getString("glAccountId");
+	    	    	    	 String acctgTransTypeId = transTotalEntry1.getString("acctgTransTypeId");
+	    	    	    	 String flag=transTotalEntry1.getString("debitCreditFlag");
+	    	    	    	 BigDecimal amtVal=BigDecimal.ZERO;
+	    	    	    	 if(UtilValidate.isNotEmpty(transTotalEntry1.getBigDecimal("amount"))){
+	    	    	    		 amtVal=transTotalEntry1.getBigDecimal("amount");
+	    	    	    	 }
+	    	    	    	 
+	    	    	    	 
+	    	    	    	 GenericValue glAccntDetails = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId",glAcntId), false);
+		 		    			
+	 		    			 if(UtilValidate.isEmpty(glAccntDetails.get("isControlAcctg"))||(UtilValidate.isNotEmpty(glAccntDetails.get("isControlAcctg"))&&(!"Y".equals(glAccntDetails.get("isControlAcctg"))))){
+	 		    				String glAccountClassId=(String)glAccntDetails.get("glAccountClassId");
+	 		    				 if(extTransTypeIdsList1.contains(acctgTransTypeId)){
+	 		    					 if(glAcntId.equals("121000")||glAcntId.equals("210000")){	
+	 		    						if(flag.equals("D")){
+					 					  postedDebits = postedDebits.add(amtVal);
+	 		    						}else{
+					 					   postedCredits = postedCredits.add(amtVal);
+	 		    						}
+	 		    					 }
+	 		    				 }
+	 		    				 if(extTransTypeIdsList2.contains(acctgTransTypeId)){
+	 		    					 if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+	 		    						if(flag.equals("D")){
+						 					  postedDebits = postedDebits.add(amtVal);
+		 		    						}else{
+						 					   postedCredits = postedCredits.add(amtVal);
+		 		    						}
+	 		    					 }
+	 		    				 }
+	 		    				 if(acctgTransTypeId.equals("JOURNAL")){
+	 		    					 if(glAcntId.equals("121000")||glAcntId.equals("210000")){
+	 		    						if(flag.equals("D")){
+						 				   postedDebits = postedDebits.add(amtVal);
+	 		    						}else{
+					 					   postedCredits = postedCredits.add(amtVal);
+	 		    						}
+	 		    					 }
+	 		    				 }
+	 		    				 if(acctgTransTypeId.equals("ADJUSTMENT")){
+	 		    					if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+	 		    						if(flag.equals("D")){
+							 				   postedDebits = postedDebits.add(amtVal);
+	 		    						}else{
+					 					   postedCredits = postedCredits.add(amtVal);
+	 		    						}
+	 		    					 }
+	 		    				 }
+	 		    			 }   	    	 
+	    	    	     }
+	    	    	     allPostedTransactionTotalItr1.close();
+	    			}
+    			}catch(Exception e){
+ 					Debug.logError(e, module);
+ 					return ServiceUtil.returnError(e.getMessage());
+ 				}    			
+    			//Debug.log("postedCredits==============="+postedCredits);
+    			//Debug.log("postedDebits==============="+postedDebits);
+    			Debug.log("lastClosedTimePeriod============"+lastClosedTimePeriod);
+		    			if(UtilValidate.isNotEmpty(lastClosedTimePeriod)){
+		    				Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForParty(ctx, UtilMisc.toMap("organizationPartyId", organizationPartyId,"customTimePeriodId",finYearId,"partyId",partyId));
+		    				List lastClosedGlBalanceList = (List)lastClosedGlBalances.get("openingGlHistory");
+		    				Debug.log("lastClosedGlBalanceList==============="+lastClosedGlBalanceList);
+		    				if(UtilValidate.isNotEmpty(lastClosedGlBalanceList)){
+		    					for(int l=0;l<lastClosedGlBalanceList.size();l++){
+		    						Map lastClosedPartyGlBal=(Map) lastClosedGlBalanceList.get(l);
+		    						String glAcId=(String)lastClosedPartyGlBal.get("glAccountId");
+		    						String clsGlClassId=(String)lastClosedPartyGlBal.get("glAccountClassId");
+		    						String clsAcctgTransTypeId=(String)lastClosedPartyGlBal.get("acctgTransTypeId");
+		    						GenericValue glAccount = delegator.findOne("GlAccount",UtilMisc.toMap("glAccountId", glAcId), false);
+		    						
+		    						BigDecimal openBal = (BigDecimal)lastClosedPartyGlBal.get("endingBalance");
+		    						if(UtilValidate.isEmpty(glAccount.get("isControlAcctg"))||(UtilValidate.isNotEmpty(glAccount.get("isControlAcctg"))&&(!"Y".equals(glAccount.get("isControlAcctg"))))){
+		    							//Debug.log("glAcId==="+glAcId);
+		    							if(UtilValidate.isNotEmpty(openBal)){
+			    							boolean isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
+				    		    			if (isDebitAccount) {
+				    		    				if(extTransTypeIdsList1.contains(clsAcctgTransTypeId)){
+					 		    					 if(glAcId.equals("121000")||glAcId.equals("210000")){	
+						    		    				if(openBal.compareTo(BigDecimal.ZERO)<0){
+						    		    					postedCredits = postedCredits.add(openBal.negate());
+						    		    				}else {
+						    		    					postedDebits = postedDebits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				}
+				    		    				if(extTransTypeIdsList2.contains(clsAcctgTransTypeId)){
+					 		    					 if(assetAndLiabilityIdsList.contains(clsGlClassId)){
+					 		    						if(openBal.compareTo(BigDecimal.ZERO)<0){
+						    		    					postedCredits = postedCredits.add(openBal.negate());
+						    		    				}else {
+						    		    					postedDebits = postedDebits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				}
+				    		    				 if(clsAcctgTransTypeId.equals("JOURNAL")){
+					 		    					 if(glAcId.equals("121000")||glAcId.equals("210000")){
+					 		    						if(openBal.compareTo(BigDecimal.ZERO)<0){
+						    		    					postedCredits = postedCredits.add(openBal.negate());
+						    		    					
+						    		    				}else {
+						    		    					postedDebits = postedDebits.add(openBal);						    		    					
+						    		    				}
+					 		    					 }
+				    		    				 }
+				    		    				 if(clsAcctgTransTypeId.equals("ADJUSTMENT")){
+						 		    					if(assetAndLiabilityIdsList.contains(clsGlClassId)){
+						 		    						if(openBal.compareTo(BigDecimal.ZERO)<0){
+							    		    					postedCredits = postedCredits.add(openBal.negate());
+							    		    				}else {
+							    		    					postedDebits = postedDebits.add(openBal);
+							    		    				}
+						 		    					}
+				    		    				 }
+				    		    				
+				    		    				
+				    		    			}else {
+				    		    				
+				    		    				
+				    		    				if(extTransTypeIdsList1.contains(clsAcctgTransTypeId)){
+					 		    					 if(glAcId.equals("121000")||glAcId.equals("210000")){	
+					 		    						if (openBal.compareTo(BigDecimal.ZERO)<0) {
+						    		    					postedDebits = postedDebits.add(openBal.negate());
+						    		    				} else {
+						    		    					postedCredits = postedCredits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				}
+				    		    				if(extTransTypeIdsList2.contains(clsAcctgTransTypeId)){
+					 		    					 if(assetAndLiabilityIdsList.contains(clsGlClassId)){
+					 		    						if (openBal.compareTo(BigDecimal.ZERO)<0) {
+						    		    					postedDebits = postedDebits.add(openBal.negate());
+						    		    				} else {
+						    		    					postedCredits = postedCredits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				}
+				    		    				 if(clsAcctgTransTypeId.equals("JOURNAL")){
+					 		    					 if(glAcId.equals("121000")||glAcId.equals("210000")){
+					 		    						if (openBal.compareTo(BigDecimal.ZERO)<0) {
+						    		    					postedDebits = postedDebits.add(openBal.negate());
+						    		    				} else {
+						    		    					postedCredits = postedCredits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				 }
+				    		    				 if(clsAcctgTransTypeId.equals("ADJUSTMENT")){
+				    		    					 if (openBal.compareTo(BigDecimal.ZERO)<0) {
+						    		    					postedDebits = postedDebits.add(openBal.negate());
+						    		    				} else {
+						    		    					postedCredits = postedCredits.add(openBal);
+						    		    				}
+				    		    				 }  				
+				    		    				
+				    		    				
+				    		    			}
+				    		    			
+			    						}
+		    						}
+		    					}
+		    					
+		    				}
+		    				
+		    			}
+		    			//Debug.log("customTimePeriodIds==============="+customTimePeriodIds);
+		    			for(int i=0;i<customTimePeriodIds.size();i++){				   
+						         
+			 					//GenericValue glAccountHistory = delegator.findOne("GlAccountHistory", UtilMisc.toMap("glAccountId", glAccountId,"organizationPartyId","Company","customTimePeriodId",customTimePeriodIds.get(i)),false);
+			 					 List andExprs=FastList.newInstance();
+			 					 andExprs.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+			 					// andExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccId));
+			 					 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+			 		    	     andExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodIds.get(i)));
+			 		    	     List glPartyWiseHistoryList = delegator.findList("GlAccountHistoryPartyWise", EntityCondition.makeCondition(andExprs,EntityOperator.AND), null, null, null, false);
+			 		    	     //Debug.log("glPartyWiseHistoryList==============="+glPartyWiseHistoryList);
+			 		    	     if(UtilValidate.isNotEmpty(glPartyWiseHistoryList)){
+				 		    	    for(int k=0;k<glPartyWiseHistoryList.size();k++){		 		   			
+				 		    	    	Map partyWiseEnty = (Map)glPartyWiseHistoryList.get(k);
+				 		    	    	String glAccntId=(String)partyWiseEnty.get("glAccountId");
+				 		    	    	String accntTransTypeId=(String)partyWiseEnty.get("acctgTransTypeId");
+				 		    	    	
+				 		    	    	 BigDecimal debits = BigDecimal.ZERO;
+					 					    BigDecimal credits = BigDecimal.ZERO;
+		 		    						if(UtilValidate.isNotEmpty(partyWiseEnty.get("postedDebits"))){
+					 					    	debits=(BigDecimal) partyWiseEnty.get("postedDebits");
+					 					    }
+					 					   if(UtilValidate.isNotEmpty(partyWiseEnty.get("postedCredits"))){
+					 						   credits=(BigDecimal)partyWiseEnty.get("postedCredits");
+					 					   }
+				 		    	    	
+				 		    	    	
+				 		    			 //finAccountTransId=accntDetails.finAccountTransId;
+				 		    			GenericValue glAccntDetails = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId",glAccntId), false);
+				 		    			
+				 		    			 if(UtilValidate.isEmpty(glAccntDetails.get("isControlAcctg"))||(UtilValidate.isNotEmpty(glAccntDetails.get("isControlAcctg"))&&(!"Y".equals(glAccntDetails.get("isControlAcctg"))))){
+				 		    				 String glAccountClassId=(String)glAccntDetails.get("glAccountClassId");
+				 		    				 if(extTransTypeIdsList1.contains(accntTransTypeId)){
+				 		    					 if(glAccntId.equals("121000")||glAccntId.equals("210000")){				 		    						
+								 					  postedDebits = postedDebits.add(debits);
+								 					   postedCredits = postedCredits.add(credits);
+				 		    					 }
+				 		    				 }
+				 		    				 if(extTransTypeIdsList2.contains(accntTransTypeId)){
+				 		    					 if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+				 		    						
+				 		    						 postedDebits = postedDebits.add(debits);
+							 					     postedCredits = postedCredits.add(credits);
+				 		    					 }
+				 		    				 }
+				 		    				 if(accntTransTypeId.equals("JOURNAL")){
+				 		    					 if(glAccntId.equals("121000")||glAccntId.equals("210000")){
+				 		    						
+							 					   postedDebits = postedDebits.add(debits);
+							 					   postedCredits = postedCredits.add(credits);
+				 		    					 }
+				 		    				 }
+				 		    				 if(accntTransTypeId.equals("ADJUSTMENT")){
+				 		    					if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+				 		    						
+				 		    						 postedDebits = postedDebits.add(debits);
+							 					     postedCredits = postedCredits.add(credits);
+				 		    					 }
+				 		    				 }
+				 		    			 }	    	
+				 		    	    	
+				 		    	    	/* BigDecimal debits = BigDecimal.ZERO;
+				 					    BigDecimal credits = BigDecimal.ZERO;
+				 					    if(UtilValidate.isNotEmpty(partyWiseEnty.get("postedDebits"))){
+				 					    	debits=(BigDecimal) partyWiseEnty.get("postedDebits");
+				 					    }
+				 					   if(UtilValidate.isNotEmpty(partyWiseEnty.get("postedCredits"))){
+				 						   credits=(BigDecimal)partyWiseEnty.get("postedCredits");
+				 					   }*/
+				 					   //postedDebits = postedDebits.add(debits);
+				 					   //postedCredits = postedCredits.add(credits);
+				 		    	    }
+			 					}
+			 					/*if(UtilValidate.isNotEmpty(glAccountHistory)){
+			 						debits=(BigDecimal) glAccountHistory.get("postedDebits");
+			 						credits=(BigDecimal)glAccountHistory.get("postedCredits");
+			 						postedDebits = postedDebits.add(debits);
+			 						postedCredits = postedCredits.add(credits);
+				 					//openingBalance =openingBalance.add(debits.subtract(credits));
+				 		        } */
+				 		}
+		    			
+		    			/*if(isDebitAccount){
+		    				openingBalance = postedDebits.subtract(postedCredits);
+		    			}else{
+		    				openingBalance = postedCredits.subtract(postedDebits);
+		    			}*/
+		    			 postedFinalDebits = postedFinalDebits.add(postedDebits);
+		    			 postedFinalCredits = postedFinalCredits.add(postedCredits); 
+		    			 finalOpeningBalance = postedFinalDebits.subtract(postedFinalCredits);
+		    		
+	    		//Debug.log("postedFinalDebits=="+postedFinalDebits);
+	    		//Debug.log("postedFinalCredits=="+postedFinalCredits);
+	    		//Debug.log("finalOpeningBalance=="+finalOpeningBalance);
+	    	result.put("postedDebits", postedFinalDebits);
+	    	result.put("postedCredits", postedFinalCredits);	
+        	result.put("openingBal", finalOpeningBalance);
+        	
+        } catch (Exception e) {
+            Debug.logError(e, "Problem getting openingBal for partyId" + partyId, module);
+            return ServiceUtil.returnError("Problem getting openingBal for partyId" + partyId);
+        }
+        return result;
+    }
+    
+//glAccount opening balance for CostCenter    
+    
+    public static Map<String, Object> getGlAccountOpeningBalanceForCostCenter(DispatchContext ctx, Map<String, Object> context) throws GenericEntityException {
+    	Delegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+        String glAccountId = (String) context.get("glAccountId");
+        String costCenterId = (String) context.get("costCenterId");
+        String segmentId = (String) context.get("segmentId");
+        List glAccountIds = (List) context.get("glAccountIds");
+        List<String> roBranchList = (List) context.get("roBranchList");
+        String organizationPartyId = "Company";
+        GenericValue lastClosedTimePeriod=null;
+        Timestamp lastClosedDate = null;
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        try {
+    	      if(UtilValidate.isNotEmpty(fromDate)){
+	    		 fromDate = UtilDateTime.getDayStart(fromDate);
+	          }
+    	      if(UtilValidate.isNotEmpty(thruDate)){
+    	    	 thruDate = UtilDateTime.getDayEnd(thruDate);
+	          }
+    	      // get lost closed period here
+    	      Map lastFinContext = FastMap.newInstance();
+    	      lastFinContext.put("periodTypeId","FISCAL_YEAR");
+    	      lastFinContext.put("organizationPartyId", organizationPartyId);
+    	      lastFinContext.put("userLogin", userLogin);
+    	      lastFinContext.put("findDate", UtilDateTime.toSqlDate(fromDate));
+    	      //lastFinContext.put("onlyFiscalPeriods", Boolean.FALSE);
+			   Map resultCtx = FastMap.newInstance();
+				try{
+					resultCtx = dispatcher.runSync("findLastClosedDateForPartyLedger", lastFinContext);
+					if(ServiceUtil.isError(resultCtx)){
+						Debug.logError("Problem in fetching financial year ", module);
+						return ServiceUtil.returnError("Problem in fetching financial year ");
+					}
+					lastClosedTimePeriod = (GenericValue)resultCtx.get("lastClosedTimePeriod");
+					lastClosedDate = (Timestamp)resultCtx.get("lastClosedDate");
+				}catch(GenericServiceException e){
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+				} 
+				List customTimePeriodList = FastList.newInstance();
+    	      
+ 			  /*  Map finYearContext = FastMap.newInstance();
+ 				//finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+ 				finYearContext.put("organizationPartyId", organizationPartyId);
+ 				finYearContext.put("userLogin", userLogin);
+ 				finYearContext.put("findDate", fromDate);
+ 				finYearContext.put("excludeNoOrganizationPeriods", "Y");
+ 				List customTimePeriodList = FastList.newInstance();
+ 				resultCtx = FastMap.newInstance();
+ 				try{
+ 					resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+ 					if(ServiceUtil.isError(resultCtx)){
+ 						Debug.logError("Problem in fetching financial year ", module);
+ 						return ServiceUtil.returnError("Problem in fetching financial year ");
+ 					}
+ 				}catch(GenericServiceException e){
+ 					Debug.logError(e, module);
+ 					return ServiceUtil.returnError(e.getMessage());
+ 				}
+ 				customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+ 				*/String finYearId = "";
+ 				Timestamp finYearFromDate=null;
+ 				Timestamp finYearthruDate=null;
+ 				Timestamp finYearNextFromDate=null;
+ 				if(UtilValidate.isNotEmpty(lastClosedTimePeriod)){
+ 					GenericValue customTimePeriod = lastClosedTimePeriod;
+ 					finYearId = (String)customTimePeriod.get("customTimePeriodId");
+ 					finYearFromDate=new java.sql.Timestamp(((Date) customTimePeriod.get("fromDate")).getTime());
+ 					Debug.log("finYearId============"+finYearId);
+ 					
+ 				}
+    			
+ 				List extTransTypeIdsList1 = FastList.newInstance();
+    			List extTransTypeIdsList2 = FastList.newInstance();
+    			List assetAndLiabilityIdsList = FastList.newInstance();
+    			 extTransTypeIdsList1=UtilMisc.toList("SALES","SALES_INVOICE","PURCHASE_INVOICE","INVOICE_APPL");
+    			 extTransTypeIdsList2=UtilMisc.toList("RECEIPT","PAYMENT_ACCTG_TRANS","PAYMENT_APPL","OUTGOING_PAYMENT","INCOMING_PAYMENT");
+    			 extTransTypeIdsList2.add("OB_TB");
+    			 extTransTypeIdsList2.add("CAPITALIZATION");
+    			 assetAndLiabilityIdsList=UtilMisc.toList("CURRENT_ASSET","LONGTERM_ASSET","CURRENT_LIABILITY","LONGTERM_LIABILITY","CASH_EQUIVALENT");
+    			 BigDecimal finalOpeningBalance = BigDecimal.ZERO;
+     			BigDecimal postedFinalDebits = BigDecimal.ZERO;
+     			BigDecimal postedFinalCredits = BigDecimal.ZERO; 
+     			BigDecimal postedDebits = BigDecimal.ZERO;
+     			BigDecimal postedCredits = BigDecimal.ZERO; 
+ 	    		BigDecimal openingBalance = BigDecimal.ZERO;
+ 				List customTimePeriodIds =FastList.newInstance();
+    			try {      
+    			//List conditionList = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
+    				   List conditionList =FastList.newInstance();
+    			       conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_MONTH"));
+    			       if(UtilValidate.isNotEmpty(lastClosedDate)){
+    			    	   conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(lastClosedDate)));
+    			       }
+    			      
+    			       conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN ,UtilDateTime.toSqlDate(fromDate)));
+    			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+    			List<String> orderBy = UtilMisc.toList("-thruDate");
+    			customTimePeriodList = delegator.findList("CustomTimePeriod", condition, UtilMisc.toSet("customTimePeriodId"), orderBy, null, true);
+    			
+    			customTimePeriodIds = EntityUtil.getFieldListFromEntityList(customTimePeriodList, "customTimePeriodId", true);
+    			Timestamp nextDayStartDayEnd =null;
+    			Timestamp fromDatePreviousDayEnd=null;
+    			if(UtilValidate.isNotEmpty(customTimePeriodIds)){
+    				String lastCustPeriodId=(String)customTimePeriodIds.get(0);    				
+    				GenericValue lastCustPeriodDetails = delegator.findOne("CustomTimePeriod",UtilMisc.toMap("customTimePeriodId", lastCustPeriodId), false);
+    	    	     Timestamp lastCustPeriodThru = UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(lastCustPeriodDetails.getDate("thruDate")));
+    	    	      nextDayStartDayEnd = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(lastCustPeriodThru, 1));
+    	    	    
+    	    	      fromDatePreviousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+    	    	    
+    			}else{
+    				nextDayStartDayEnd = UtilDateTime.getDayStart(UtilDateTime.addDaysToTimestamp(lastClosedDate, 1));
+    				fromDatePreviousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(fromDate, -1));
+    			}
+	    			if(UtilValidate.isNotEmpty(nextDayStartDayEnd)&&UtilValidate.isNotEmpty(fromDatePreviousDayEnd)){
+	    				//getting betweent date entries
+	    				 /*List acctgRoleExp = FastList.newInstance();
+	    	    	     acctgRoleExp.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
+	    	    	     acctgRoleExp.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, costCenterId));
+	    	    	     EntityCondition andCondRole = EntityCondition.makeCondition(acctgRoleExp, EntityOperator.AND);
+	    	    	     EntityListIterator acctngTransRoleItr  = delegator.find("AcctgTransRole",andCondRole,null, null, null, null);
+	    	    	     List acctgTrnsList=FastList.newInstance();
+	    	    	     if(acctngTransRoleItr != null){
+	    	    	    	 acctgTrnsList = EntityUtil.getFieldListFromEntityListIterator(acctngTransRoleItr,"acctgTransId", false);
+	    	    	     }	 
+	    	    	     acctngTransRoleItr.close();*/
+	    	    	     List andExprs1 = FastList.newInstance();
+	    	    	     if(UtilValidate.isEmpty(organizationPartyId)){
+	    	    	    	 organizationPartyId = "Company";
+	    	    	     }
+	    	    	     andExprs1.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
+	    	    	     if(UtilValidate.isNotEmpty(costCenterId)){
+	    	    	    	 andExprs1.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, costCenterId));
+	    	    	     }
+	    	    	     if(UtilValidate.isNotEmpty(roBranchList)){
+	    	    	    	 andExprs1.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+	    	    	     }
+	    	    	     if(UtilValidate.isNotEmpty(segmentId)){
+	    	    	    	 if(segmentId.equals("YARN_SALE")){
+	    	    	    		 andExprs1.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+	    	    	    	 }else{
+	    	    	    		 andExprs1.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, segmentId));
+	    	    	    	 }
+	    	    	     }
+	    	    	     if(UtilValidate.isNotEmpty(organizationPartyId)){
+	    	    	    	 //get internal orgs and do in query here
+	    	    	    	 andExprs1.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+	    	    	     }   	    	     
+	    	    	    	    	    	     
+	    	    	     andExprs1.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, nextDayStartDayEnd));
+	    	    	     andExprs1.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDatePreviousDayEnd));
+	    	    	     EntityCondition andCond1 = EntityCondition.makeCondition(andExprs1, EntityOperator.AND);
+	    	    	     
+	    	    	     EntityListIterator allPostedTransactionTotalItr1 = delegator.find("AcctgTransAndEntries", andCond1, null, null, null, null);
+	    	    	     GenericValue transTotalEntry1;
+	    	    	     
+	    	    	     while(allPostedTransactionTotalItr1 != null && (transTotalEntry1 = allPostedTransactionTotalItr1.next()) != null) {
+	    	    	    	// Debug.log("transTotalEntry1======="+transTotalEntry1);
+	    	    	    	 String glAcntId = transTotalEntry1.getString("glAccountId");
+	    	    	    	 String acctgTransTypeId = transTotalEntry1.getString("acctgTransTypeId");
+	    	    	    	 String flag=transTotalEntry1.getString("debitCreditFlag");
+	    	    	    	 BigDecimal amtVal=BigDecimal.ZERO;
+	    	    	    	 if(UtilValidate.isNotEmpty(transTotalEntry1.getBigDecimal("amount"))){
+	    	    	    		 amtVal=transTotalEntry1.getBigDecimal("amount");
+	    	    	    	 }
+	    	    	    	 GenericValue glAccntDetails = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId",glAcntId), false);
+		 		    			
+	 		    			 if(UtilValidate.isEmpty(glAccntDetails.get("isControlAcctg"))||(UtilValidate.isNotEmpty(glAccntDetails.get("isControlAcctg"))&&(!"Y".equals(glAccntDetails.get("isControlAcctg"))))){
+	 		    				String glAccountClassId=(String)glAccntDetails.get("glAccountClassId");
+	 		    				 if(extTransTypeIdsList1.contains(acctgTransTypeId)){
+	 		    					 //if(glAcntId.equals("120000")||glAcntId.equals("211000")){	
+	 		    					if("ACCOUNTS_PAYABLE".equals(glAccntDetails.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccntDetails.get("glAccountTypeId"))){
+	 		    						if(flag.equals("D")){
+					 					  postedDebits = postedDebits.add(amtVal);
+	 		    						}else{
+					 					   postedCredits = postedCredits.add(amtVal);
+	 		    						}
+	 		    					 }
+	 		    				 }
+	 		    				 if(extTransTypeIdsList2.contains(acctgTransTypeId)){
+	 		    					 if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+	 		    						if(flag.equals("D")){
+						 					  postedDebits = postedDebits.add(amtVal);
+		 		    						}else{
+						 					   postedCredits = postedCredits.add(amtVal);
+		 		    						}
+	 		    					 }
+	 		    				 }
+	 		    				 if(acctgTransTypeId.equals("JOURNAL")){
+	 		    					// if(glAcntId.equals("120000")||glAcntId.equals("211000")){
+	 		    					if("ACCOUNTS_PAYABLE".equals(glAccntDetails.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccntDetails.get("glAccountTypeId"))){
+	 		    						if(flag.equals("D")){
+						 				   postedDebits = postedDebits.add(amtVal);
+	 		    						}else{
+					 					   postedCredits = postedCredits.add(amtVal);
+	 		    						}
+	 		    					 }
+	 		    				 }
+	 		    				 if(acctgTransTypeId.equals("ADJUSTMENT")){
+	 		    					if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+	 		    						if(flag.equals("D")){
+							 				   postedDebits = postedDebits.add(amtVal);
+	 		    						}else{
+					 					   postedCredits = postedCredits.add(amtVal);
+	 		    						}
+	 		    					 }
+	 		    				 }
+	 		    			 }   	    	 
+	    	    	     }
+	    	    	     allPostedTransactionTotalItr1.close();
+	    			}
+    			}catch(Exception e){
+ 					Debug.logError(e, module);
+ 					return ServiceUtil.returnError(e.getMessage());
+ 				}    			
+    					Map lastClosedGlBalances = FastMap.newInstance();
+		    			if(UtilValidate.isNotEmpty(lastClosedTimePeriod)){
+		    				if(UtilValidate.isNotEmpty(costCenterId)){
+		    					lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(ctx, UtilMisc.toMap("organizationPartyId", organizationPartyId,"customTimePeriodId",finYearId,"costCenterId",costCenterId,"segmentId",segmentId,"glAccountId",glAccountId));
+		    				}
+		    				else{
+		    					lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(ctx, UtilMisc.toMap("organizationPartyId", organizationPartyId,"customTimePeriodId",finYearId, "roBranchList", roBranchList,"segmentId",segmentId,"glAccountId",glAccountId));
+		    				}
+		    				List lastClosedGlBalanceList = (List)lastClosedGlBalances.get("openingGlHistory");
+		    				if(UtilValidate.isNotEmpty(lastClosedGlBalanceList)){
+		    					for(int l=0;l<lastClosedGlBalanceList.size();l++){
+		    						Map lastClosedPartyGlBal=(Map) lastClosedGlBalanceList.get(l);
+		    						String glAcId=(String)lastClosedPartyGlBal.get("glAccountId");
+		    						String clsGlClassId=(String)lastClosedPartyGlBal.get("glAccountClassId");
+		    						String clsAcctgTransTypeId=(String)lastClosedPartyGlBal.get("acctgTransTypeId");
+		    						GenericValue glAccount = delegator.findOne("GlAccount",UtilMisc.toMap("glAccountId", glAcId), false);
+		    						
+		    						BigDecimal openBal = (BigDecimal)lastClosedPartyGlBal.get("totalEndingBalance");
+		    						if(UtilValidate.isEmpty(glAccount.get("isControlAcctg"))||(UtilValidate.isNotEmpty(glAccount.get("isControlAcctg"))&&(!"Y".equals(glAccount.get("isControlAcctg"))))){
+		    							if(UtilValidate.isNotEmpty(openBal)){
+			    							boolean isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
+				    		    			if (isDebitAccount) {
+				    		    				if(extTransTypeIdsList1.contains(clsAcctgTransTypeId)){
+					 		    					 //if(glAcId.equals("120000")||glAcId.equals("211000")){	
+					 		    					   if("ACCOUNTS_PAYABLE".equals(glAccount.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccount.get("glAccountTypeId"))){
+						    		    				if(openBal.compareTo(BigDecimal.ZERO)<0){
+						    		    					postedCredits = postedCredits.add(openBal.negate());
+						    		    				}else {
+						    		    					postedDebits = postedDebits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				}
+				    		    				if(extTransTypeIdsList2.contains(clsAcctgTransTypeId)){
+					 		    					 if(assetAndLiabilityIdsList.contains(clsGlClassId)){
+					 		    						if(openBal.compareTo(BigDecimal.ZERO)<0){
+						    		    					postedCredits = postedCredits.add(openBal.negate());
+						    		    				}else {
+						    		    					postedDebits = postedDebits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				}
+				    		    				 if(clsAcctgTransTypeId.equals("JOURNAL")){
+					 		    					 //if(glAcId.equals("120000")||glAcId.equals("211000")){
+					 		    					 if("ACCOUNTS_PAYABLE".equals(glAccount.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccount.get("glAccountTypeId"))){
+					 		    						if(openBal.compareTo(BigDecimal.ZERO)<0){
+						    		    					postedCredits = postedCredits.add(openBal.negate());
+						    		    					
+						    		    				}else {
+						    		    					postedDebits = postedDebits.add(openBal);						    		    					
+						    		    				}
+					 		    					 }
+				    		    				 }
+				    		    				 if(clsAcctgTransTypeId.equals("ADJUSTMENT")){
+						 		    					if(assetAndLiabilityIdsList.contains(clsGlClassId)){
+						 		    						if(openBal.compareTo(BigDecimal.ZERO)<0){
+							    		    					postedCredits = postedCredits.add(openBal.negate());
+							    		    				}else {
+							    		    					postedDebits = postedDebits.add(openBal);
+							    		    				}
+						 		    					}
+				    		    				 }
+				    		    				
+				    		    				
+				    		    			}else {
+				    		    				
+				    		    				
+				    		    				if(extTransTypeIdsList1.contains(clsAcctgTransTypeId)){
+					 		    					 //if(glAcId.equals("120000")||glAcId.equals("211000")){	
+					 		    					if("ACCOUNTS_PAYABLE".equals(glAccount.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccount.get("glAccountTypeId"))){
+					 		    						if (openBal.compareTo(BigDecimal.ZERO)<0) {
+						    		    					postedDebits = postedDebits.add(openBal.negate());
+						    		    				} else {
+						    		    					postedCredits = postedCredits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				}
+				    		    				if(extTransTypeIdsList2.contains(clsAcctgTransTypeId)){
+					 		    					 if(assetAndLiabilityIdsList.contains(clsGlClassId)){
+					 		    						if (openBal.compareTo(BigDecimal.ZERO)<0) {
+						    		    					postedDebits = postedDebits.add(openBal.negate());
+						    		    				} else {
+						    		    					postedCredits = postedCredits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				}
+				    		    				 if(clsAcctgTransTypeId.equals("JOURNAL")){
+					 		    					// if(glAcId.equals("120000")||glAcId.equals("211000")){
+				    		    					 if("ACCOUNTS_PAYABLE".equals(glAccount.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccount.get("glAccountTypeId"))){
+					 		    						if (openBal.compareTo(BigDecimal.ZERO)<0) {
+						    		    					postedDebits = postedDebits.add(openBal.negate());
+						    		    				} else {
+						    		    					postedCredits = postedCredits.add(openBal);
+						    		    				}
+					 		    					 }
+				    		    				 }
+				    		    				 if(clsAcctgTransTypeId.equals("ADJUSTMENT")){
+				    		    					 if (openBal.compareTo(BigDecimal.ZERO)<0) {
+						    		    					postedDebits = postedDebits.add(openBal.negate());
+						    		    				} else {
+						    		    					postedCredits = postedCredits.add(openBal);
+						    		    				}
+				    		    				 }  				
+				    		    				
+				    		    				
+				    		    			}
+				    		    			
+			    						}
+		    						}
+		    					}
+		    					
+		    				}
+		    				
+		    			}
+		    			
+		    			for(int i=0;i<customTimePeriodIds.size();i++){				   
+						    
+			 					//GenericValue glAccountHistory = delegator.findOne("GlAccountHistory", UtilMisc.toMap("glAccountId", glAccountId,"organizationPartyId","Company","customTimePeriodId",customTimePeriodIds.get(i)),false);
+			 					 List andExprs=FastList.newInstance();
+			 					 if(UtilValidate.isNotEmpty(costCenterId)){
+			 					 andExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, costCenterId));
+			 					 }
+			 					if(UtilValidate.isNotEmpty(segmentId)){
+			 					 andExprs.add(EntityCondition.makeCondition("segmentId", EntityOperator.EQUALS, segmentId));
+			 					}
+			 					// andExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccId));
+			 					 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+			 		    	     andExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodIds.get(i)));
+			 		    	     List glPartyWiseHistoryList = delegator.findList("GlAccountHistoryPartyWise", EntityCondition.makeCondition(andExprs,EntityOperator.AND), null, null, null, false);
+			 					if(UtilValidate.isNotEmpty(glPartyWiseHistoryList)){
+				 		    	    for(int k=0;k<glPartyWiseHistoryList.size();k++){		 		   			
+				 		    	    	Map partyWiseEnty = (Map)glPartyWiseHistoryList.get(k);
+				 		    	    	String glAccntId=(String)partyWiseEnty.get("glAccountId");
+				 		    	    	String accntTransTypeId=(String)partyWiseEnty.get("acctgTransTypeId");
+				 		    	    	
+				 		    	    	 BigDecimal debits = BigDecimal.ZERO;
+					 					    BigDecimal credits = BigDecimal.ZERO;
+		 		    						if(UtilValidate.isNotEmpty(partyWiseEnty.get("postedDebits"))){
+					 					    	debits=(BigDecimal) partyWiseEnty.get("postedDebits");
+					 					    }
+					 					   if(UtilValidate.isNotEmpty(partyWiseEnty.get("postedCredits"))){
+					 						   credits=(BigDecimal)partyWiseEnty.get("postedCredits");
+					 					   }
+				 		    	    	
+				 		    	    	
+				 		    			 //finAccountTransId=accntDetails.finAccountTransId;
+				 		    			GenericValue glAccntDetails = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId",glAccntId), false);
+				 		    			
+				 		    			 if(UtilValidate.isEmpty(glAccntDetails.get("isControlAcctg"))||(UtilValidate.isNotEmpty(glAccntDetails.get("isControlAcctg"))&&(!"Y".equals(glAccntDetails.get("isControlAcctg"))))){
+				 		    				 String glAccountClassId=(String)glAccntDetails.get("glAccountClassId");
+				 		    				 if(extTransTypeIdsList1.contains(accntTransTypeId)){
+				 		    					// if(glAccntId.equals("120000")||glAccntId.equals("211000")){	
+				 		    					if("ACCOUNTS_PAYABLE".equals(glAccntDetails.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccntDetails.get("glAccountTypeId"))){	 
+								 					  postedDebits = postedDebits.add(debits);
+								 					   postedCredits = postedCredits.add(credits);
+				 		    					 }
+				 		    				 }
+				 		    				 if(extTransTypeIdsList2.contains(accntTransTypeId)){
+				 		    					 if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+				 		    						
+				 		    						 postedDebits = postedDebits.add(debits);
+							 					     postedCredits = postedCredits.add(credits);
+				 		    					 }
+				 		    				 }
+				 		    				 if(accntTransTypeId.equals("JOURNAL")){
+				 		    					// if(glAccntId.equals("120000")||glAccntId.equals("211000")){
+				 		    					if("ACCOUNTS_PAYABLE".equals(glAccntDetails.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccntDetails.get("glAccountTypeId"))){	
+							 					   postedDebits = postedDebits.add(debits);
+							 					   postedCredits = postedCredits.add(credits);
+				 		    					 }
+				 		    				 }
+				 		    				 if(accntTransTypeId.equals("ADJUSTMENT")){
+				 		    					if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+				 		    						
+				 		    						 postedDebits = postedDebits.add(debits);
+							 					     postedCredits = postedCredits.add(credits);
+				 		    					 }
+				 		    				 }
+				 		    			 }	    	
+				 		    	    	
+				 		    	    	/* BigDecimal debits = BigDecimal.ZERO;
+				 					    BigDecimal credits = BigDecimal.ZERO;
+				 					    if(UtilValidate.isNotEmpty(partyWiseEnty.get("postedDebits"))){
+				 					    	debits=(BigDecimal) partyWiseEnty.get("postedDebits");
+				 					    }
+				 					   if(UtilValidate.isNotEmpty(partyWiseEnty.get("postedCredits"))){
+				 						   credits=(BigDecimal)partyWiseEnty.get("postedCredits");
+				 					   }*/
+				 					   //postedDebits = postedDebits.add(debits);
+				 					   //postedCredits = postedCredits.add(credits);
+				 		    	    }
+			 					}
+			 					/*if(UtilValidate.isNotEmpty(glAccountHistory)){
+			 						debits=(BigDecimal) glAccountHistory.get("postedDebits");
+			 						credits=(BigDecimal)glAccountHistory.get("postedCredits");
+			 						postedDebits = postedDebits.add(debits);
+			 						postedCredits = postedCredits.add(credits);
+				 					//openingBalance =openingBalance.add(debits.subtract(credits));
+				 		        } */
+				 		}
+		    			
+		    			/*if(isDebitAccount){
+		    				openingBalance = postedDebits.subtract(postedCredits);
+		    			}else{
+		    				openingBalance = postedCredits.subtract(postedDebits);
+		    			}*/
+		    			 postedFinalDebits = postedFinalDebits.add(postedDebits);
+		    			 postedFinalCredits = postedFinalCredits.add(postedCredits); 
+		    			 finalOpeningBalance = postedFinalDebits.subtract(postedFinalCredits);
+		    		
+	    		Debug.log("postedFinalDebits=="+postedFinalDebits);
+	    		Debug.log("postedFinalCredits=="+postedFinalCredits);
+	    		Debug.log("finalOpeningBalance=="+finalOpeningBalance);
+	    	result.put("postedDebits", postedFinalDebits);
+	    	result.put("postedCredits", postedFinalCredits);	
+        	result.put("openingBal", finalOpeningBalance);
+        	
+        } catch (Exception e) {
+            Debug.logError(e, "Problem getting openingBal for costCenterId" + costCenterId, module);
+            return ServiceUtil.returnError("Problem getting openingBal for costCenterId" + costCenterId);
+        }
+        return result;
+    }
     //reCalculateGlHistoryForPeriod
     public static Map<String, Object> reCalculateGlHistoryForPeriod(DispatchContext ctx, Map<String, Object> context) throws GenericEntityException {
 	    Delegator delegator = ctx.getDelegator();
@@ -460,10 +1317,14 @@ public class GeneralLedgerServices {
 	    	     
 	    	     while(allPostedTransactionTotalItr != null && (transTotalEntry = allPostedTransactionTotalItr.next()) != null) {
 	    	    	 String glAccountId = transTotalEntry.getString("glAccountId");
+	    	    	 String costCenterId = transTotalEntry.getString("costCenterId");
+	    	    	 String purposeTypeId = transTotalEntry.getString("purposeTypeId");
 	    	    	 Map accountMap = (Map)postedTransactionTotalsMap.get(transTotalEntry.getString("glAccountId"));
 	    	    	 if (UtilValidate.isEmpty(accountMap)) {
 	    	    		 accountMap = FastMap.newInstance();
 	    	    		 accountMap.put("glAccountId", glAccountId);
+	    	    		 accountMap.put("purposeTypeId", purposeTypeId);
+	    	    		 accountMap.put("costCenterId", costCenterId);
 		                 accountMap.put("D", BigDecimal.ZERO);
 		                 accountMap.put("C", BigDecimal.ZERO);
 		             }
@@ -481,6 +1342,8 @@ public class GeneralLedgerServices {
 	    	    	  Map postedTotalEntry = (Map)entry.getValue();
 	    	    	 GenericValue glAccountHistory = delegator.makeValue("GlAccountHistory");
 	    	    	 glAccountHistory.set("glAccountId", (String)postedTotalEntry.get("glAccountId"));
+	    	    	 glAccountHistory.set("costCenterId", (String)postedTotalEntry.get("costCenterId"));
+	    	    	 glAccountHistory.set("segmentId", (String)postedTotalEntry.get("purposeTypeId"));
 	    	    	 glAccountHistory.set("organizationPartyId",organizationPartyId);
 	    	    	 glAccountHistory.set("customTimePeriodId",customTimePeriodId);
 	    	    	 glAccountHistory.set("postedDebits",(BigDecimal)postedTotalEntry.get("D") );
@@ -495,7 +1358,7 @@ public class GeneralLedgerServices {
 	        	    	 
 	        	    	 if(!customTimePeriodId.equals(cstTimePeriod.getString("customTimePeriodId"))){
 	        	    		 Map glMap = UtilMisc.toMap("customTimePeriodId",cstTimePeriod.getString("customTimePeriodId"),
-		        	    			 "glAccountId",(String)postedTotalEntry.get("glAccountId"),"organizationPartyId",organizationPartyId);
+		        	    			 "glAccountId",(String)postedTotalEntry.get("glAccountId"),"organizationPartyId",organizationPartyId,"costCenterId",(String)postedTotalEntry.get("costCenterId"),"segmentId",(String)postedTotalEntry.get("purposeTypeId"));
 		        	    	 GenericValue parentGlAccountHistory = delegator.findOne("GlAccountHistory",glMap , false);
 		        	    	 if(UtilValidate.isEmpty(parentGlAccountHistory)){
 		        	    		 GenericValue newEntity = delegator.makeValue("GlAccountHistory");
@@ -545,22 +1408,44 @@ public class GeneralLedgerServices {
 		    	 String glAccountId = transTotalEntry1.getString("glAccountId");
 		    	 String acctgTransTypeId = transTotalEntry1.getString("acctgTransTypeId");
 		    	 String partyId=transTotalEntry1.getString("partyId");
+		    	 String acctgTransId=transTotalEntry1.getString("acctgTransId");
+		    	 String costCenterId=transTotalEntry1.getString("costCenterId");
+		    	 String segmentId=transTotalEntry1.getString("purposeTypeId");
+		    	/* //getting acctgTransRole
+		    	 List acctgRoleExp = FastList.newInstance();
+	    	     acctgRoleExp.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
+	    	     acctgRoleExp.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransId));
+	    	     EntityCondition andCondRole = EntityCondition.makeCondition(acctgRoleExp, EntityOperator.AND);
+	    	     EntityListIterator acctngTransRoleItr  = delegator.find("AcctgTransRole",andCondRole,null, null, null, null);
+	    	     List acctgTrnsList=FastList.newInstance();
+	    	     String costCenterId=null;
+	    	     if(acctngTransRoleItr != null){
+	    	    	 //acctgTrnsList = EntityUtil.getFieldListFromEntityListIterator(acctngTransRoleItr,"partyId", false);
+	    	    	 acctgTrnsList = acctngTransRoleItr.getCompleteList();
+	    	    	  GenericValue trnsRole = EntityUtil.getFirst(acctgTrnsList);
+	    	    	  costCenterId=(String)trnsRole.get("costCenterId");  	    	  
+	    	     }*/
+	    	     Debug.log("costCenterId==========="+costCenterId);
 		    	 String flag=transTotalEntry1.getString("debitCreditFlag");
 		    	 BigDecimal amtVal=BigDecimal.ZERO;
 		    	 if(UtilValidate.isNotEmpty(transTotalEntry1.getBigDecimal("amount"))){
 		    		 amtVal=transTotalEntry1.getBigDecimal("amount");
 		    	 }
-		    	 if(UtilValidate.isNotEmpty(partyId)){
+		    	 if(UtilValidate.isNotEmpty(partyId)&&UtilValidate.isNotEmpty(costCenterId)){
 	    	    	 if(UtilValidate.isEmpty(postedTransactionTotalsMap1.get(partyId))){
 	    	    		 Map tempMapGlMap=FastMap.newInstance();
 	    	    		 Map tempMapTransTypeMap=FastMap.newInstance();
+	    	    		 Map tempMapTransCostMap=FastMap.newInstance();
+	    	    		 Map tempMapTransSegMap=FastMap.newInstance();
 	    	    		 Map tempMapDetails=FastMap.newInstance();
 	    	    		 	if(flag.equals("D")){
 	    	    		 		tempMapDetails.put("D", amtVal);
 	    	    		 	}else{
 	    	    		 		tempMapDetails.put("C", amtVal);
 	    	    		 	}
-	    	    		 	tempMapTransTypeMap.put(acctgTransTypeId, tempMapDetails);
+	    	    		 	tempMapTransSegMap.put(segmentId,tempMapDetails);
+	    	    		 	tempMapTransCostMap.put(costCenterId, tempMapTransSegMap);
+	    	    		 	tempMapTransTypeMap.put(acctgTransTypeId, tempMapTransCostMap);
 	    	    		 	tempMapGlMap.put(glAccountId, tempMapTransTypeMap);
 	    	    		 	postedTransactionTotalsMap1.put(partyId, tempMapGlMap);
 	    	    	 }else{
@@ -568,6 +1453,8 @@ public class GeneralLedgerServices {
 	    	    		 	 tempGlWiseDetailsMap.putAll((Map)postedTransactionTotalsMap1.get(partyId));
 	    	    		 	 if(UtilValidate.isEmpty(tempGlWiseDetailsMap.get(glAccountId))){
 	    	    		 		 Map tempGlWiseMap=FastMap.newInstance();
+	    	    		 		 Map tempTrnsCostWiseMap=FastMap.newInstance();
+	    	    		 		Map tempTrnsSegWiseMap=FastMap.newInstance();
 	    	    		 		 Map tempTrnsTypeWiseMap=FastMap.newInstance();
 	    	    		 		 Map tempGlDetailsWise=FastMap.newInstance();
 	    	    		 		if(flag.equals("D")){
@@ -575,35 +1462,77 @@ public class GeneralLedgerServices {
 	        	    		 	}else{
 	        	    		 		tempGlDetailsWise.put("C", amtVal);
 	        	    		 	}
-	    	    		 		tempTrnsTypeWiseMap.put(acctgTransTypeId, tempGlDetailsWise);
+	    	    		 		tempTrnsSegWiseMap.put(segmentId,tempGlDetailsWise);
+	    	    		 		tempTrnsCostWiseMap.put(costCenterId, tempTrnsSegWiseMap);
+	    	    		 		tempTrnsTypeWiseMap.put(acctgTransTypeId, tempTrnsCostWiseMap);
 	    	    		 		tempGlWiseDetailsMap.put(glAccountId, tempTrnsTypeWiseMap);    	    		 		 
 	    	    		 	 }else{
 	    	    		 		 Map glWiseDetailsMap=FastMap.newInstance();
 	    	    		 		 glWiseDetailsMap.putAll((Map)tempGlWiseDetailsMap.get(glAccountId));
 	    	    		 		 if(UtilValidate.isEmpty(glWiseDetailsMap.get(acctgTransTypeId))){
 	    	    		 			 Map tempTransType=FastMap.newInstance();
+	    	    		 			 Map tempTransCost=FastMap.newInstance();
+	    	    		 			Map tempTransSeg=FastMap.newInstance();
 		    	    		 			if(flag.equals("D")){
 		    	    		 				tempTransType.put("D", amtVal);
 		        	    		 		 }else{
 		        	    		 			tempTransType.put("C", amtVal);
 		        	    		 		 }
-		    	    		 			glWiseDetailsMap.put(acctgTransTypeId,tempTransType);
+		    	    		 			tempTransSeg.put(segmentId,tempTransType);
+		    	    		 			tempTransCost.put(costCenterId, tempTransSeg);
+		    	    		 			glWiseDetailsMap.put(acctgTransTypeId,tempTransCost);
 	    	    		 		 }else{
 	    	    		 			 Map  accntTransTypeMap=FastMap.newInstance();
-	    	    		 			 accntTransTypeMap.putAll((Map)glWiseDetailsMap.get(acctgTransTypeId));
-	    	    		 			 BigDecimal glDebitAmt=BigDecimal.ZERO;
-	        	    		 		 if(UtilValidate.isNotEmpty(accntTransTypeMap.get("D"))){
-	        	    		 			glDebitAmt=(BigDecimal)accntTransTypeMap.get("D");
-	        	    		 		 }
-	        	    		 		 BigDecimal glCrAmt=BigDecimal.ZERO;
-	        	    		 		if(UtilValidate.isNotEmpty(accntTransTypeMap.get("C"))){
-	        	    		 			glCrAmt=(BigDecimal)accntTransTypeMap.get("C");
-	        	    		 		 }
-	        	    		 		if(flag.equals("D")){
-	        	    		 			accntTransTypeMap.put("D", amtVal.add(glDebitAmt));
-	        	    		 		 }else{
-	        	    		 			accntTransTypeMap.put("C", amtVal.add(glCrAmt));
-	        	    		 		 }
+	    	    		 			 accntTransTypeMap.putAll((Map)glWiseDetailsMap.get(acctgTransTypeId));    	    		 			 
+	        	    		 		 
+	    	    		 		     if(UtilValidate.isEmpty(accntTransTypeMap.get(costCenterId))){
+	    	    		 		    	Map tempCostMap=FastMap.newInstance();
+	    	    		 		    	Map tempSegMap=FastMap.newInstance();
+	    	    		 		    	if(flag.equals("D")){
+	    	    		 		    		tempCostMap.put("D", amtVal);
+		        	    		 		 }else{
+		        	    		 			tempCostMap.put("C", amtVal);
+		        	    		 		 }
+	    	    		 		    	tempSegMap.put(segmentId,tempCostMap);
+	    	    		 		    	accntTransTypeMap.put(costCenterId, tempSegMap);
+	    	    		 		    	//glWiseDetailsMap.put(acctgTransTypeId, accntTransTypeMap);
+	    	    		 		     }else{
+	    	    		 		    	 Map acctCostCodeMap=FastMap.newInstance();
+	    	    		 		    	Map acctSegMap=FastMap.newInstance();
+	    	    		 		    	 acctCostCodeMap.putAll((Map)accntTransTypeMap.get(costCenterId));	    	    		 		    	
+		        	    		 		 
+		        	    		 		 if(UtilValidate.isEmpty(acctCostCodeMap.get(segmentId))){
+		        	    		 			 Map tempSeg=FastMap.newInstance();
+		        	    		 			if(flag.equals("D")){
+		        	    		 				tempSeg.put("D", amtVal);
+			        	    		 		 }else{
+			        	    		 			tempSeg.put("C", amtVal);
+			        	    		 		 }
+		        	    		 			acctCostCodeMap.put(segmentId,tempSeg);
+		        	    		 			accntTransTypeMap.put(costCenterId,acctCostCodeMap);
+		        	    		 		 }else{
+		        	    		 			 Map segMap=FastMap.newInstance();
+		        	    		 			 	segMap.putAll((Map)acctCostCodeMap.get(segmentId));
+		        	    		 			 	 BigDecimal glDebitAmt=BigDecimal.ZERO;	        	    		 		
+				        	    		 		 BigDecimal glCrAmt=BigDecimal.ZERO;
+		        	    		 			if(UtilValidate.isNotEmpty(segMap.get("D"))){
+		 	        	    		 			glDebitAmt=(BigDecimal)segMap.get("D");
+		 	        	    		 		 }
+		    	    		 		    	if(UtilValidate.isNotEmpty(segMap.get("C"))){
+			        	    		 			glCrAmt=(BigDecimal)segMap.get("C");
+			        	    		 		 }
+		    	    		 		    	if(flag.equals("D")){
+		    	    		 		    		segMap.put("D", amtVal.add(glDebitAmt));
+			        	    		 		 }else{
+			        	    		 			segMap.put("C", amtVal.add(glCrAmt));
+			        	    		 		 }
+		    	    		 		    	acctCostCodeMap.put(segmentId,segMap);
+		    	    		 		    	accntTransTypeMap.put(costCenterId, acctCostCodeMap);
+		        	    		 			 
+		        	    		 		 }   		 		    	 
+	    	    		 		    	
+	    	    		 		     }	    	    		 			 
+	        	    		 		
 	        	    		 		glWiseDetailsMap.put(acctgTransTypeId,accntTransTypeMap);
 	    	    		 		 }   		 		
 	    	    		 		 
@@ -650,23 +1579,39 @@ public class GeneralLedgerServices {
 		 						Map tempTransTypeDetailsVal=(Map)tempTransTypeEntry.getValue();
 		 	 					String transTypeId=(String)tempTransTypeEntry.getKey();
 		 					
-	 	 					BigDecimal debitVal=BigDecimal.ZERO;
-	 	 					if(UtilValidate.isNotEmpty(tempTransTypeDetailsVal.get("D"))){
-	 	 						 debitVal=(BigDecimal)tempTransTypeDetailsVal.get("D");
-	 	 					}
-	 	 					BigDecimal creditVal=BigDecimal.ZERO;
-	 	 					if(UtilValidate.isNotEmpty(tempTransTypeDetailsVal.get("C"))){
-	 	 						 creditVal=(BigDecimal)tempTransTypeDetailsVal.get("C");
-	 	 					}
-	 	 					GenericValue glAccountHistoryPartyWise = delegator.makeValue("GlAccountHistoryPartyWise");
-	 	 	    	    	 glAccountHistoryPartyWise.set("glAccountId", glAccId);
-	 	 	    	    	 glAccountHistoryPartyWise.set("organizationPartyId",organizationPartyId);
-	 	 	    	    	 glAccountHistoryPartyWise.set("partyId",party);
-	 	 	    	    	 glAccountHistoryPartyWise.set("acctgTransTypeId",transTypeId);
-	 	 	    	    	 glAccountHistoryPartyWise.set("customTimePeriodId",customTimePeriodId);
-	 	 	    	    	 glAccountHistoryPartyWise.set("postedDebits",debitVal );
-	 	 	    	    	 glAccountHistoryPartyWise.set("postedCredits", creditVal);
-	 	 	    	    	 delegator.createOrStore(glAccountHistoryPartyWise);
+		 	 					Iterator tempEntTypeCostDetailIter = tempTransTypeDetailsVal.entrySet().iterator();
+		 	 				while (tempEntTypeCostDetailIter.hasNext()) {	
+		 	 					Map.Entry tempTransCostEntry = (Entry) tempEntTypeCostDetailIter.next();
+		 	 					String costCenterId=(String)tempTransCostEntry.getKey();
+		 	 					Debug.log("costCenterId========="+costCenterId);
+		 	 					Map costCenterMap=(Map)tempTransCostEntry.getValue();
+		 	 					
+		 	 					Iterator tempEntTypeSegDetailIter = costCenterMap.entrySet().iterator();
+		 	 					while (tempEntTypeSegDetailIter.hasNext()){ 
+			 	 					Map.Entry tempTransSegEntry = (Entry) tempEntTypeSegDetailIter.next();
+			 	 					Map segMap=(Map)tempTransSegEntry.getValue();
+			 	 					String segId=(String)tempTransSegEntry.getKey();
+		 	 					BigDecimal debitVal=BigDecimal.ZERO;
+		 	 					if(UtilValidate.isNotEmpty(segMap.get("D"))){
+		 	 						 debitVal=(BigDecimal)segMap.get("D");
+		 	 					}
+		 	 					BigDecimal creditVal=BigDecimal.ZERO;
+		 	 					if(UtilValidate.isNotEmpty(segMap.get("C"))){
+		 	 						 creditVal=(BigDecimal)segMap.get("C");
+		 	 					}
+		 	 					GenericValue glAccountHistoryPartyWise = delegator.makeValue("GlAccountHistoryPartyWise");
+		 	 	    	    	 glAccountHistoryPartyWise.set("glAccountId", glAccId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("organizationPartyId",organizationPartyId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("partyId",party);
+		 	 	    	    	 glAccountHistoryPartyWise.set("costCenterId",costCenterId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("segmentId",segId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("acctgTransTypeId",transTypeId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("customTimePeriodId",customTimePeriodId);
+		 	 	    	    	 glAccountHistoryPartyWise.set("postedDebits",debitVal );
+		 	 	    	    	 glAccountHistoryPartyWise.set("postedCredits", creditVal);
+		 	 	    	    	 delegator.createOrStore(glAccountHistoryPartyWise);
+		 	 				}
+		 					}
 		 					}
 						}
 					}
@@ -1023,8 +1968,11 @@ public class GeneralLedgerServices {
         String glAccountTypeId =(String) context.get("glAccountTypeId");
         List<String> glAccountTypeIds = (List) context.get("glAccountTypeIds");
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
-//        String acctgTransTypeId = (String) context.get("acctgTransTypeId");
+        String acctgTransTypeId = (String) context.get("acctgTransTypeId");
         String fromGlAccountId =(String) context.get("glAccountId");
+        String costCenterId =(String) context.get("costCenterId");
+        String segmentId =(String) context.get("segmentId");
+        List<String> roBranchList = (List) context.get("roBranchList");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(transactionDate, -1));
         List partyIds = FastList.newInstance();
@@ -1066,24 +2014,40 @@ public class GeneralLedgerServices {
         	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
         	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
         	conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
-//        	conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
-//        	if((UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)) && UtilValidate.isNotEmpty(acctgTransTypeId)){
-//        		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId),EntityOperator.OR,
-//        				                                        EntityCondition.makeCondition("acctgTransTypeId",EntityOperator.EQUALS,acctgTransTypeId)));
-//        	}else
+        	if(UtilValidate.isNotEmpty(glAccountTypeId)){
+        		conditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,glAccountTypeId));
+        	}
+        	if((UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)) && UtilValidate.isNotEmpty(acctgTransTypeId)){
+        		conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId),EntityOperator.OR,
+        				                                        EntityCondition.makeCondition("acctgTransTypeId",EntityOperator.EQUALS,acctgTransTypeId)));
+        	}
+        	
         	if(UtilValidate.isNotEmpty(glAccountTypeId) || UtilValidate.isNotEmpty(fromGlAccountId)){
         		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
         	}  
         	if(UtilValidate.isNotEmpty(glAccountTypeIds)){
         		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
         	} 
+        	
+        	if(UtilValidate.isNotEmpty(costCenterId)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,costCenterId));
+    		}
+        	if(UtilValidate.isNotEmpty(roBranchList)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+    		}
+        	if(UtilValidate.isNotEmpty(segmentId)){
+    			if(segmentId.equals("YARN_SALE")){
+    				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+    			}
+    			else{
+    				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,segmentId));
+    			}
+    		}
+        	
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	acctgTransEntryList = delegator.find("AcctgTransEntryPartyWiseSums",con , null, null, null,null);
-        	//Debug.log("acctgTransEntryList==========="+acctgTransEntryList.getCompleteList());
-        	if(UtilValidate.isNotEmpty(acctgTransEntryList)){
-        		//Iterator<GenericValue> acctgTran = acctgTransEntryList.iterator();
-        		while (acctgTransEntryList.hasNext()) {
-                    GenericValue acctgTrans = acctgTransEntryList.next();
+            GenericValue acctgTrans;
+            while((acctgTrans = acctgTransEntryList.next())!=null){
 //        		for(GenericValue acctgTrans:acctgTransList){
 //        			String acctgTransId=(String)acctgTrans.get("acctgTransId");
 //        			conditionList.clear();
@@ -1132,7 +2096,6 @@ public class GeneralLedgerServices {
         		}
         		acctgTransEntryList.close();
         		openingBalance=(debit).subtract(credit);
-        	}
         }catch (Exception e) {
 	        Debug.logError(e, "Error While getting the Opening balace.!", module);
 	        return ServiceUtil.returnError(e.getMessage());
@@ -1190,6 +2153,9 @@ public class GeneralLedgerServices {
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp thruDate = (Timestamp) context.get("thruDate");
         String fromGlAccountId =(String) context.get("glAccountId");
+        String costCenterId =(String) context.get("costCenterId");
+        String segmentId =(String) context.get("segmentId");
+        List<String> roBranchList = (List) context.get("roBranchList");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         List partyIds = FastList.newInstance();
         Map<String, Object> openingBalMap = FastMap.newInstance();
@@ -1232,6 +2198,20 @@ public class GeneralLedgerServices {
         	if(UtilValidate.isNotEmpty(glAccountTypeIds)){
         		conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
         	} 
+        	if(UtilValidate.isNotEmpty(costCenterId)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,costCenterId));
+    		}
+        	if(UtilValidate.isNotEmpty(roBranchList)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+    		}
+        	if(UtilValidate.isNotEmpty(segmentId)){
+    			if(segmentId.equals("YARN_SALE")){
+    				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+    			}
+    			else{
+    				conditionList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,segmentId));
+    			}
+    		}
         	EntityCondition con = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	acctgTransEntryList = delegator.find("AcctgTransEntryPartyWiseSums",con , null, null, null,null);
         	if(UtilValidate.isNotEmpty(acctgTransEntryList)){

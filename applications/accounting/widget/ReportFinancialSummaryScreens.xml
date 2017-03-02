@@ -313,23 +313,27 @@
 								<parameter param-name="organizationPartyId"
 									from-field="organizationPartyId" />
 								<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
+								<parameter param-name="division" from-field="parameters.division" />
+								<parameter param-name="segment" from-field="parameters.segment" />
 							</link>
 							<link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext"
 								target="TrialBalanceSearchResultsPdf.pdf">
 								<parameter param-name="organizationPartyId"
 									from-field="organizationPartyId" />
 								<parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId" />
+								<parameter param-name="division" from-field="parameters.division" />
+								<parameter param-name="segment" from-field="parameters.segment" />
 							</link>
 							<include-form name="ListTrialBalance"
 								location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
-							<container style="h3">
+							<!-- <container style="h3">
 								<label
 									text="${uiLabelMap.AccountingDebitFlag}: ${grandTotalPostedRecord.totalPostedDebits}" />
 							</container>
 							<container style="h3">
 								<label
 									text="${uiLabelMap.AccountingCreditFlag}: ${grandTotalPostedRecord.totalPostedCredits}" />
-							</container>
+							</container> -->
 						</screenlet>
 					</widgets>
 				</section>
@@ -3979,6 +3983,7 @@
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/cashBook.js" global="true"/>
 				<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
 				<set field="parameters.screenfinIdFlag" value="Y"/>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 			</actions>
 			<widgets>
 				<section>
@@ -5114,6 +5119,17 @@
 	            		<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
 	            	</condition-list>
 	            </entity-condition>
+	            <entity-condition list="segmentIdList" entity-name="Enumeration">
+	            	<condition-list combine="and">
+	            		<condition-expr field-name="enumId" operator="not-equals" value="BYPROD_PAYMENT"/>
+	            		<condition-expr field-name="enumId" operator="not-equals" value="NON_ROUTE_MKTG"/>
+	            		<condition-expr field-name="enumId" operator="not-equals" value="ROUTE_MKTG"/>
+	            		<condition-expr field-name="enumId" operator="not-equals" value="DEPOT_YARN_SALE"/>
+	            		<condition-expr field-name="enumId" operator="not-equals" value="DEPOT_DIES_CHEM_SALE"/>
+	            		<condition-expr field-name="enumTypeId" operator="equals" value="PAYMENT_PURPOSE"/>
+	            	</condition-list>
+	            </entity-condition>
+	            
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
 			</actions>
 			<widgets>

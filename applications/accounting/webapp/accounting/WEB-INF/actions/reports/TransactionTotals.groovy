@@ -45,6 +45,17 @@ if (!glFiscalTypeId) {
 
 fromDate = UtilDateTime.getDayStart(fromDate);
 thruDate = UtilDateTime.getDayEnd(thruDate);
+//getting branches under Ros
+	conList=[];
+	conList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, partyIds));
+	conList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	conList.add(EntityCondition.makeCondition("roleTypeIdTo",EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	conList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	baseExprs1 = EntityCondition.makeCondition(conList,EntityOperator.AND);
+	//partyRelationShipIds.clear();
+	partyRelationShipIds = delegator.findList("PartyRelationship",baseExprs1,null,null,null,false);
+	partyIds.addAll(EntityUtil.getFieldListFromEntityList(partyRelationShipIds,"partyIdTo",true));
+	
 //  Find the last closed time period to get the fromDate for the transactions in the current period and the ending balances of the last closed period
 Map lastClosedTimePeriodResult = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", organizationPartyId, "findDate", new Date(fromDate.getTime()),"userLogin", userLogin));
 Timestamp lastClosedDate = lastClosedTimePeriodResult.lastClosedDate;
@@ -105,7 +116,7 @@ if (allPostedTransactionTotals) {
                     if (lastClosedTimePeriod) {
 						glhistoryList.add(postedTransactionTotal.glAccountId);
                         List timePeriodAndExprs = FastList.newInstance();
-                        timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+                        timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, organizationPartyId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, postedTransactionTotal.glAccountId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, lastClosedTimePeriod.customTimePeriodId));
                         lastTimePeriodHistory = EntityUtil.getFirst(delegator.findList("GlAccountAndHistory", EntityCondition.makeCondition(timePeriodAndExprs, EntityOperator.AND), null, null, null, false));
@@ -170,7 +181,7 @@ if (allPostedTransactionTotals) {
 		GenericValue glAccount1 = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", zerosPostedBalance.glAccountId), true);
 		glhistoryList.add(zerosPostedBalance.glAccountId);
 		List timePeriodAndExprs = FastList.newInstance();
-		timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+		timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, organizationPartyId));
 		timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, zerosPostedBalance.glAccountId));
 		timePeriodAndExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, lastClosedTimePeriod.customTimePeriodId));
 		lastTimePeriodHistory = EntityUtil.getFirst(delegator.findList("GlAccountAndHistory", EntityCondition.makeCondition(timePeriodAndExprs, EntityOperator.AND), null, null, null, false));
@@ -349,7 +360,7 @@ if (allTransactionTotals) {
                 if (UtilAccounting.isAssetAccount(glAccount) || UtilAccounting.isLiabilityAccount(glAccount) || UtilAccounting.isEquityAccount(glAccount)) {
                     if (lastClosedTimePeriod) {
                         List timePeriodAndExprs = FastList.newInstance();
-                        timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+                        timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, organizationPartyId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, allTransactionTotal.glAccountId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, lastClosedTimePeriod.customTimePeriodId));
                         lastTimePeriodHistory = EntityUtil.getFirst(delegator.findList("GlAccountAndHistory", EntityCondition.makeCondition(timePeriodAndExprs, EntityOperator.AND), null, null, null, false));

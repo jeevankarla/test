@@ -280,6 +280,8 @@ public class FinAccountServices {
         String parentTypeId = (String) context.get("acctParentTypeId");
         String finAccountTypeId=(String) context.get("finAccountTypeId");
         String finAccountParentId = (String)context.get("finAccountParentId");
+        String costCenterId = (String)context.get("costCenterId");
+        String segmentId = (String)context.get("segmentId");
         String finAccountId="";
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp fromDate = null;
@@ -321,6 +323,20 @@ public class FinAccountServices {
             	 finAccountTransTypeId = "WITHDRAWAL";
              }
              
+             GenericValue finAcct = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+             GenericValue finAccntTo = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountIdTo), false);
+             if(UtilValidate.isNotEmpty(finAcct.get("costCenterId"))){
+            	 if(UtilValidate.isEmpty(finAccntTo.get("costCenterId"))){
+            		 finAccntTo.put("costCenterId",(String)finAcct.get("costCenterId"));
+            		 finAccntTo.store();
+                 }
+             }
+             if(UtilValidate.isNotEmpty(finAccntTo.get("costCenterId"))){
+            	 if(UtilValidate.isEmpty(finAcct.get("costCenterId"))){
+            		 finAcct.put("costCenterId",(String)finAccntTo.get("costCenterId"));
+            		 finAcct.store();
+                 }
+             }
              Map<String, Object> transCtxMap = FastMap.newInstance();
              transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
              transCtxMap.put("entryType", entryType);
@@ -332,6 +348,8 @@ public class FinAccountServices {
            	 transCtxMap.put("finAccountTransTypeId", finAccountTransTypeId);
              transCtxMap.put("contraRefNum", contraRefNum);
              transCtxMap.put("userLogin", userLogin);
+             transCtxMap.put("costCenterId", costCenterId);
+             transCtxMap.put("segmentId", segmentId);
              createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
 
              if (ServiceUtil.isError(createResult)) {
@@ -1318,6 +1336,9 @@ public class FinAccountServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String finAccountId = (String) context.get("finAccountId");
         Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+        String costCenterId =(String) context.get("costCenterId");
+        String segmentId =(String) context.get("segmentId");
+        List<String> roBranchList = (List) context.get("roBranchList");
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp previousDayEnd = UtilDateTime.getDayEnd(UtilDateTime.addDaysToTimestamp(transactionDate, -1));
         List conditionList = FastList.newInstance();
@@ -1330,6 +1351,22 @@ public class FinAccountServices {
         	conditionList.add(EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,finAccountId));
         	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,previousDayEnd));
         	conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"FINACT_TRNS_CANCELED"));
+        	if(UtilValidate.isNotEmpty(costCenterId)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,costCenterId));
+    		}
+        	if(UtilValidate.isNotEmpty(roBranchList)){
+        		conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+    		}
+        	if(UtilValidate.isNotEmpty(segmentId)){
+    			if(segmentId.equals("YARN_SALE")){
+    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+    			}
+    			else{
+    				conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.EQUALS,segmentId));
+    			}
+    		}
+        	
+        	
         	EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
         	finAccountTransList = delegator.findList("FinAccountTrans",condition,null,null,null,false);
         	if(UtilValidate.isNotEmpty(finAccountTransList)){

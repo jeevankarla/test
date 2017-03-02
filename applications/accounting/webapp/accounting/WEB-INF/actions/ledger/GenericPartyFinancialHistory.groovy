@@ -41,6 +41,46 @@ import org.ofbiz.service.ServiceUtil;
 
 fromDate=parameters.fromDate;
 thruDate=parameters.thruDate;
+
+reportTypeFlag = parameters.reportTypeFlag;
+roId = parameters.division;
+segmentId = parameters.segment;
+intOrgPartyIdList = [];
+condList = [];
+condList.clear();
+	if(UtilValidate.isNotEmpty(roId)&& !"Company".equals(roId)){
+		condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,roId));
+	}else{
+		condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,"Company"));
+	}
+	condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	
+	if(UtilValidate.isNotEmpty(roId)&& !"Company".equals(roId)){
+		condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"BRANCH_EMPLOYEE"));
+	}else{
+		condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	}
+	
+	
+	
+	if(UtilValidate.isNotEmpty(roId)&& !"Company".equals(roId)){
+		condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	}else{
+		condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"GROUP_ROLLUP"));
+	}
+	
+	List roWiseBranchList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(roWiseBranchList)){
+		intOrgPartyIdList= EntityUtil.getFieldListFromEntityList(roWiseBranchList,"partyIdTo", true);
+		intOrgPartyIdList.add(roId);
+	}
+	
+
+
+
+
+
+
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
 partyCode = parameters.partyId;
@@ -122,16 +162,13 @@ if(UtilValidate.isNotEmpty(context.partyTotalCredits)){
 if(UtilValidate.isNotEmpty(context.partyDayWiseFinHistryMap)){
 	partyFinHistryDayWiseMap=context.partyDayWiseFinHistryMap;
 }
-Debug.log("====partyDebits=====>"+partyDebits+"==partyCredits=="+partyCredits);
-//Debug.log("====partyFinHistryDayWiseMap=====>"+partyFinHistryDayWiseMap);
+
 partyIds=[];
-//partyIdsList
 if(UtilValidate.isNotEmpty(context.partyIdsList)){
 	partyIds=context.partyIdsList;
 }
 //Abstract Ledger Map
 partyWiseLedgerAbstractMap=[:]
-Debug.log("====partyIds=====>OBJJJJJJJJJJJ"+partyIds);
 //Check for Party is Valid or Not
 result = [:];
 /*GenericValue partyDetail = delegator.findOne("Party",UtilMisc.toMap("partyId", parameters.partyId), false);
@@ -155,9 +192,15 @@ if(UtilValidate.isNotEmpty(fromDate)&& UtilValidate.isNotEmpty(thruDate)){
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(fromDateTime)))
 conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateTime)))
 }
-Debug.log("partyIds==========================="+partyIds);
-Debug.log("parameters.partyId==========================="+parameters.partyId);
-intOrgPartyIdList = EntityUtil.getFieldListFromEntityList(delegator.findList("PartyRole", EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO") , null, null, null, false),"partyId", true);
+
+
+
+
+
+//intOrgPartyIdList = EntityUtil.getFieldListFromEntityList(delegator.findList("PartyRole", EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO") , null, null, null, false),"partyId", true);
+
+
+
 
 //adding for Abstract PartyLedger
 if(UtilValidate.isNotEmpty(partyIds)){
@@ -184,6 +227,10 @@ conditionList.add( EntityCondition.makeCondition([
                 ],EntityOperator.AND)
             ],EntityOperator.OR));
 }
+if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
+if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE"))
+conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
 newInvCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
 
@@ -214,7 +261,6 @@ invCounter=0;
 
 for(GenericValue invoice : invoiceAndTypeList) {
 	//invoice = invIterator.next();
-	Debug.log("invoice=========================="+invoice);
 	
 	invoiceDate=invoice.invoiceDate;
 	if(invCounter==0){
@@ -419,6 +465,11 @@ conditionList.add(EntityCondition.makeCondition([
                 ], EntityOperator.AND)
             ], EntityOperator.OR));
 }
+
+if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
+if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE"))
+conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
 newPayCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
 
@@ -583,6 +634,10 @@ if(UtilValidate.isNotEmpty(parameters.pmntVoidRecrdsFlag) && "Y".equals(paramete
 					], EntityOperator.AND)
 				], EntityOperator.OR));
 	}
+if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+	conditionList.add(EntityCondition.makeCondition("paymentPurposeType" , EntityOperator.EQUALS, segmentId));
+if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE"))
+	conditionList.add(EntityCondition.makeCondition("paymentPurposeType" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
 	checkBouncePayCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 		List<String> orderByNew = UtilMisc.toList("paymentDate");
 	payBounceIterator = delegator.find("PaymentAndType", checkBouncePayCondition, null, null, orderByNew, findOpts);

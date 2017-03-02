@@ -2076,7 +2076,7 @@
             	</or>            
             </condition>
 			<link target="FinancialAccountingTransCASH">
-			<parameter param-name="organizationPartyId" value="Company"/>
+			<!-- <parameter param-name="organizationPartyId" value="Company"/> -->
 			</link>
 		 </menu-item>
 		 <!--  <menu-item name="CashierReports" title="CashReports">
@@ -2136,6 +2136,16 @@
             </condition>
 			<link target="FindFinAccountAlt">
 			<parameter param-name="screenFlag" value="BANKACCOUNT"/>
+			</link>
+		 </menu-item>
+		  <menu-item name="InterUnitFindFinAccountAlt" title="Inter RO Accounts">
+          <condition>
+				<or> 
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="InterUnitFindFinAccountAlt">
+			<parameter param-name="screenFlag" value="INTERUNITBANKACCOUNT"/>
 			</link>
 		 </menu-item>
 		 <menu-item name="Grants" title="Grants">
@@ -4335,5 +4345,18 @@
 			<link target="BankAccountDetail"/>
 		</menu-item>
 	</menu>
+	 <menu name="InterUnitBankAccountSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+		<menu-item name="InterUnitFindFinAccountAlt" title="Inter RO Accounts">
+			<condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</or>            
+            </condition>
+			<link target="InterUnitFindFinAccountAlt">
+			<parameter param-name="screenFlag" value="BANKACCOUNT"/>
+			</link>
+		</menu-item>
+	</menu>
+	
 	
 </menus>

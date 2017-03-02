@@ -127,3 +127,13 @@ context.partyClsGrpList=partyClsGrpList;
 context.invoiceItemTypes = invoiceItemTypes;
 
 context.glAccountOrganizationAndClassList = glAccountOrganizationAndClassList;
+
+invoiceId = parameters.invoiceId;
+tempCostCenterId="";
+GenericValue ApInvoice = delegator.findOne("Invoice", [invoiceId : invoiceId] , false);
+if(UtilValidate.isNotEmpty(ApInvoice)){
+	tempCostCenterId = ApInvoice.costCenterId;
+	
+}
+context.tempCostCenterId=tempCostCenterId;
+

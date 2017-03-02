@@ -776,12 +776,15 @@ under the License.
         <field name="lastModifiedByUserLogin" ><hidden  value="${userLogin.userLoginId}"/></field>   	
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+            <!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-<!--                 	<entity-constraint name="partyId" operator="equals" value="Company"/> -->
+                	<entity-constraint name="partyId" operator="equals" value="Company"/>
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
-            </drop-down>
+            </drop-down> -->
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
         </field>
         <field name="partyIdFrom" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
@@ -851,13 +854,16 @@ under the License.
         <field name="statusId"><hidden value="PMNT_SENT"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="1" name="organizationPartyId" parameter-name="partyIdFrom" event="onchange" action="javascript:(document.NewPaymentOut.action = 'Payment'),(document.NewPaymentOut.submit())">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+            <!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <option key="${parameters.partyIdFrom}" description="${partyGroupName}"/>
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-<!--                     <entity-constraint name="partyId" operator="equals" value="Company"/> -->
+                    <entity-constraint name="partyId" operator="equals" value="Company"/>
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
-            </drop-down>
+            </drop-down> -->
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
         </field>
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">

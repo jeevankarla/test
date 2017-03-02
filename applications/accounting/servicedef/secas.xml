@@ -145,7 +145,10 @@ under the License.
         <condition field-name="finAccountId" operator="is-not-empty"/>
         <action service="createFinAcctTransSequence" mode="sync"/>
     </eca>
-    
+    <eca service="createFinAccountTrans" event="global-commit-post-run">
+        <condition field-name="finAccountTransId" operator="is-not-empty"/>
+        <action service="createAccountingRoleForFinTrans" mode="sync"/>
+    </eca>    
     <!-- sample ECA rules for the sampleInvoiceAffiliateCommission service triggering
     <eca service="createPayment" event="commit">
         <condition field-name="statusId" operator="equals" value="PMNT_RECEIVED"/>

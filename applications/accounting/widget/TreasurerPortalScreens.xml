@@ -765,6 +765,51 @@
             </widgets>
         </section>
     </screen>
+      <screen name="InterUnitFindFinAccountAlt">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindFinAccount"/>
+                  <set field="tabButtonItem" value="InterUnitFindFinAccountAlt"/>
+                 <set field="tabButtonItem2" value="InterUnitFindFinAccountAlt"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+               <!--  <set field="displayAdvancedSearch" from-field="parameters.displayAdvancedSearch"/> -->
+<!--                 <set field="parameters.ownerPartyId" value="Company"/> -->
+                <set field="parameters.finAccountTypeId" value="INTERUNIT_ACCOUNT"/>
+                <set field="noConditionFind" value="Y"/>
+                <!-- <field name="noConditionFind"><hidden value="Y"/> -->
+                <set field="screenFlag" value="BANKACCOUNT" /> 
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+              <!--   <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/> --> 
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+            </actions>
+            <widgets>
+                    <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+                    <decorator-section name="body">
+                    <include-menu name="InterUnitBankAccountSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    <include-menu name="CompanyFinAccountTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                    	<section>
+							<widgets>
+								<container style="button-bar">
+									<link target="FinAccountAlt.csv" text="Export As CSV" style="buttontext create">	
+									</link>
+									<link target="FinAccountAlt.pdf" text="Export As PDF" style="buttontext create">				
+									</link>
+								</container>
+								<screenlet title="Bank Accounts List">				
+								 <include-form name="ListInterUnitFinAccountsAlt" location="component://accounting/widget/TreasurerPortalForms.xml"/> 
+								</screenlet>
+							</widgets>      
+                    	</section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditDepositFinAccount">
         <section>
             <actions>
@@ -862,6 +907,15 @@
             			<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
             		</condition-list>
             	</entity-condition>
+            	<entity-condition list="internalOrgList" entity-name="PartyRelationshipAndDetail">
+            		<condition-list combine="and">
+             			<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+              			<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+              			<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
+              		</condition-list>
+              		<order-by field-name="groupName"/>
+         		</entity-condition>
             </actions>
             <widgets>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -928,6 +982,15 @@
             			<condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/>
             		</condition-list>
             	</entity-condition>
+            	<entity-condition list="internalOrgList" entity-name="PartyRelationshipAndDetail">
+            		<condition-list combine="and">
+             			<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+              			<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+              			<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
+              		</condition-list>
+              		<order-by field-name="groupName"/>
+         		</entity-condition>
             </actions>
             <widgets>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -994,6 +1057,15 @@
             			 <condition-expr field-name="ownerPartyId" operator="equals" from-field="parameters.ownerPartyId"/> 
             		</condition-list>
             	</entity-condition>
+            	<entity-condition list="internalOrgList" entity-name="PartyRelationshipAndDetail">
+            		<condition-list combine="and">
+             			<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+              			<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+              			<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+              			<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
+              		</condition-list>
+              		<order-by field-name="groupName"/>
+         		</entity-condition>
             </actions>
             <widgets>
               <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -1503,6 +1575,7 @@
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/findPaymentMethodType.groovy"/>
                	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -2359,6 +2432,7 @@
                 <set field="defaultOrganizationPartyId" value="INT5"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -2962,7 +3036,7 @@
                 <set field="tabButtonItem5" value="${parameters.subTabButtonValue}"/>
                 <set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}"/>
                 <set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
-                
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
            		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
             </actions>
             <widgets>
@@ -3070,6 +3144,19 @@
 					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
 					<order-by field-name="invoiceItemSeqId" />
 				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchesListOfRO">
+					<field-map field-name="partyIdFrom" from-field="invoice.partyId" />
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="BRANCH_CUSTOMER"/>
+				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchListOfRO">
+					<field-map field-name="partyIdTo" from-field="invoice.partyId" />
+					<field-map field-name="partyIdFrom" value="Company"/>
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="GROUP_ROLLUP"/>
+				</entity-and>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
 				<entity-condition entity-name="InvoiceItemType"	list="PayrolGroup">
 					<condition-expr field-name="parentTypeId" value="PAYROL" />
@@ -3081,6 +3168,8 @@
 				<set field="invoiceId" value="${invoice.invoiceId}" />
 				<set field="showCreateButton" value="${parameters.showCreateButton}" />
 				<set field="showUpdateButton" value="${parameters.showUpdateButton}" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/fetchBoForRo.groovy" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -3095,7 +3184,10 @@
                                 <screenlet title="${invoiceCreateScreenTitle}">
                                     <include-form name="CreateAPInvoice" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
-                            </widgets>
+									<platform-specific>
+					                         <html><html-template location="component://accounting/webapp/accounting/invoice/fetchBoForRo.ftl"/></html>
+					                 </platform-specific>
+							</widgets>
                         </section>
                         <section>
 							<condition>
@@ -3649,6 +3741,20 @@
 					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
 					<order-by field-name="invoiceItemSeqId" />
 				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchesListOfRO">
+					<field-map field-name="partyIdFrom" from-field="invoice.partyIdFrom" />
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="BRANCH_CUSTOMER"/>
+				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchListOfRO">
+					<field-map field-name="partyIdTo" from-field="invoice.partyIdFrom" />
+					<field-map field-name="partyIdFrom" value="Company"/>
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="GROUP_ROLLUP"/>
+				</entity-and>
+				
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
 				<entity-condition entity-name="InvoiceItemType"	list="PayrolGroup">
 					<condition-expr field-name="parentTypeId" value="PAYROL" />
@@ -3660,6 +3766,8 @@
 				<set field="invoiceId" value="${invoice.invoiceId}" />
 				<set field="showCreateButton" value="${parameters.showCreateButton}" />
 				<set field="showUpdateButton" value="${parameters.showUpdateButton}" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+            	<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/fetchBoForRo.groovy" />
             </actions>
             <widgets>
             
@@ -3678,6 +3786,9 @@
                                 <screenlet title="${arScreenTitle}">
                                     <include-form name="CreateARInvoice" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
+                                <platform-specific>
+					                         <html><html-template location="component://accounting/webapp/accounting/invoice/fetchBoForRo.ftl"/></html>
+					                 </platform-specific>
                             </widgets>
                             <fail-widgets>
                             	<label style="h3" text="${uiLabelMap.newInvoiceScreenError}"/>
@@ -4384,6 +4495,10 @@
 	            <entity-condition entity-name="InvoiceType" list="invoiceTypeList">
 	                <order-by field-name="invoiceTypeId"/>
 	            </entity-condition>
+	             <entity-condition entity-name="Enumeration" list="segmentList">
+	                    <condition-expr name="enumTypeId" operator="equals" value="SEGMENTS"/>
+	                    <order-by field-name="description"/>
+                </entity-condition>
 	            <set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
 	            <entity-condition list="finAccountList" entity-name="FinAccount">
 					<having-condition-list combine="and">
@@ -4446,6 +4561,14 @@
                <entity-condition list="partyClsfList" entity-name="PartyClassificationGroup">
                	<condition-expr field-name="partyClassificationTypeId" operator="equals" value="ACCTG_TRANS_GP"/>
                </entity-condition>
+               <entity-condition list="internalOrgList" entity-name="PartyRelationshipAndDetail">
+              		<condition-expr field-name="partyIdFrom" operator="equals" value="${organizationPartyId}"/>
+               		<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+               		<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+               		<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
+               	 	<order-by field-name="groupName"/>		
+               </entity-condition>
+               
                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetInternalOrganisations.groovy"/>
               <script location="component:///accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
               </actions>
