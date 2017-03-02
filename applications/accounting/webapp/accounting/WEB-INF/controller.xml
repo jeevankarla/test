@@ -4306,6 +4306,12 @@ under the License.
        <response name="success" type="view" value="PrintBankAccountDetails"/>
        <response name="error" type="view" value="BankAccountDetail"/>    
     </request-map>
+    <request-map uri="getBOsForRO">
+       <security https="true" auth="true"/>
+       <event type="groovy" path="component://accounting/webapp/accounting/WEB-INF/actions/invoice/"  invoke="fetchBoForRo.groovy"/>
+       <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>    
+    </request-map>
 
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>

@@ -32,7 +32,7 @@ under the License.
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 	}
-	
+	var tempCostCenterId = "${tempCostCenterId}";
   	  	
 	function removeInvoiceItem(invoiceItemSeqId, taxAuthPartyId, invoiceId) {
 		$.ajax({
@@ -74,7 +74,7 @@ under the License.
   		var invoiceId = "${invoiceId}";
 		var saveRow = $('#save').parent().parent();
 		var invoiceItemTypeId = $('#invoiceItemTypeId :selected').val();
-		var costCenterId = $('#costCenterId :selected').val();  
+		var costCenterId = $('#costCenterId1 :selected').val();  
 		saveRow.find('td').each (function() {
 		    var eachTd = $(this);
 		    eachTd.find('input').each (function() {
@@ -171,14 +171,32 @@ under the License.
 							  </select>          
 				          </td>
 				          <td>
-				          	<select name="costCenterId" id="costCenterId">
-						         <#list costCenterPartyIdList as partyClsGrp>
-						         <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyClsGrp.partyId?if_exists, false)>
-						            <option value='${partyClsGrp.partyId}'>
-						        	    ${partyName?if_exists}
-						            </option>
-						         </#list>
-							  </select>  
+				          	<select name="costCenterId" id="costCenterId1">
+				          	   <#list branchListOfRO as roWiseBranch>
+					          	   <#if roWiseBranch.partyIdTo=="${tempCostCenterId}">
+					          	   		<option selected value='${roWiseBranch.partyIdTo}'>
+							        	    ${roWiseBranch.groupName?if_exists}
+							            </option>
+					          	   <#else>
+							            <option value='${roWiseBranch.partyIdTo}'>
+							        	    ${roWiseBranch.groupName?if_exists}
+							            </option>
+							        </#if>
+						        </#list>
+						        <#list branchesListOfRO as roWiseBranches>
+						           <#if roWiseBranches.partyIdTo=="${tempCostCenterId}">
+					          	   	    <option selected value='${roWiseBranches.partyIdTo}'>
+							        	    ${roWiseBranches.groupName?if_exists}
+							            </option>
+				          	   
+					          	   <#else>
+							            <option value='${roWiseBranches.partyIdTo}'>
+							        	    ${roWiseBranches.groupName?if_exists}
+							            </option>
+							        </#if>
+						            
+						        </#list>
+							 </select>     
 				          </td>
 				          <td><input id="description" class="input-medium" name="description" type="text" size="60"/></td>
 				          <td><input id="amount" class="input-medium" name="amount" type="text" size="12"/></td>
