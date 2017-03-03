@@ -2158,6 +2158,7 @@ under the License.
                         <field field="taxAuthPartyId" type="String"/>
                         <field field="taxAuthGeoId" type="String"/>
                     </call-class-method>
+                    <set field="debitEntry.costCenterId" from-field="invoice.partyId"/>
                     <set field="debitEntry.origAmount" from-field="taxAmount"/>
                     <set field="debitEntry.origCurrencyUomId" from-field="invoice.currencyUomId"/>
                     <set field="debitEntry.partyId" from-field="taxAuthPartyId"/>
@@ -2281,6 +2282,7 @@ under the License.
                     <set field="creditEntry.origAmount" from-field="taxAmount"/>
                     <set field="creditEntry.origCurrencyUomId" from-field="invoice.currencyUomId"/>
                     <set field="creditEntry.partyId" from-field="taxAuthPartyId"/>
+                    <set field="creditEntry.costCenterId" from-field="invoice.partyIdFrom"/>
                     <set field="creditEntry.roleTypeId" value="TAX_AUTHORITY"/>
                     <clear-field field="taxAuthorityGlAccount"/>
                     <entity-one entity-name="TaxAuthorityGlAccount" value-field="taxAuthorityGlAccount">
@@ -2307,6 +2309,7 @@ under the License.
                 <make-value entity-name="AcctgTransEntry" value-field="creditEntry"/>
                 <set field="creditEntry.debitCreditFlag" value="C"/>
                 <set field="creditEntry.organizationPartyId" from-field="invoice.partyIdFrom"/>
+                <set field="creditEntry.costCenterId" from-field="invoice.partyIdFrom"/>
                 <set field="creditEntry.origAmount" from-field="taxAmount"/>
                 <set field="creditEntry.origCurrencyUomId" from-field="invoice.currencyUomId"/>
                 <set field="creditEntry.glAccountTypeId" value="TAX_ACCOUNT"/>
