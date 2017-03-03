@@ -2993,7 +2993,7 @@ public static Map<String, Object> mappingInvoicesToRO(DispatchContext dctx, Map<
     }
     condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_LIKE,"OB%"));
     condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("DEPOT_YARN_SALE","YARN_SALE")));
-    condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+    //condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
     cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 //    Debug.log("cond=============================="+cond);
     EntityListIterator invoiceItr = null;
@@ -3277,6 +3277,7 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
           try{
         	  if(UtilValidate.isEmpty(acctgTrans)){
 		        	  Map<String, Object> InvoiceReadyResult = dispatcher.runSync("createAcctgTransForSalesInvoice",InvoiceReadyCtx);
+			            Debug.log("InvoiceReadyResult============sal=============="+InvoiceReadyResult);
 				      if (ServiceUtil.isError(InvoiceReadyResult)) {
 					      Debug.logError(InvoiceReadyResult.toString(), module);
 					      return ServiceUtil.returnError(null, null, null, InvoiceReadyResult);
