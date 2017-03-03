@@ -147,25 +147,25 @@
         </field> 
         <field name="approveOrder" title="P And S Approvals" widget-style="buttontext" use-when="statusId.equals(&quot;APPROVE_LEVEL3&quot;) || statusId.equals(&quot;ORDER_APPROVED&quot;) || statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="P And S Approved" /></field> 
         <field name="boapprove" title="Approve" widget-style="buttontext" use-when="statusId.equals(&quot;APPROVE_LEVEL3&quot;)&amp;&amp;boFlag.equals(&quot;Y&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_APPROVE_PO&quot;, session)))}" >
-            <hyperlink target="approvalLevelOfDepotPo" description="BO Credit Approve">
+            <hyperlink target="approvalLevelOfDepotPo" description="BO Approve">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_APPROVED" />
             </hyperlink>
         </field>  
        <field name="boapprove" title="Approve" widget-style="buttontext" use-when="statusId.equals(&quot;APPROVE_LEVEL3&quot;)&amp;&amp;roFlag.equals(&quot;Y&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_APPROVE_PO&quot;, session)))}" >
-            <hyperlink target="approvalLevelOfDepotPo" description="RO Credit Approve">
+            <hyperlink target="approvalLevelOfDepotPo" description="RO Approve">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_APPROVED" />
             </hyperlink>
         </field>
          <field name="boapprove" title="Approve" widget-style="buttontext" use-when="statusId.equals(&quot;APPROVE_LEVEL3&quot;)&amp;&amp;hoFlag.equals(&quot;Y&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_APPROVE_PO&quot;, session)))}" >
-            <hyperlink target="approvalLevelOfDepotPo" description="HO Credit Approve">
+            <hyperlink target="approvalLevelOfDepotPo" description="HO Approve">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_APPROVED" />
             </hyperlink>
         </field> 
          <field name="boapprove" title="Approve" widget-style="buttontext" use-when="statusId.equals(&quot;APPROVE_LEVEL3&quot;)&amp;&amp;mdFlag.equals(&quot;Y&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_APPROVE_PO&quot;, session)))}" >
-            <hyperlink target="approvalLevelOfDepotPo" description="HO Credit Approve">
+            <hyperlink target="approvalLevelOfDepotPo" description="HO Approve">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_APPROVED" />
             </hyperlink>
