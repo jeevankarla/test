@@ -164,7 +164,7 @@ totalsubsidyAmt=0
 BigDecimal totalserviceCharg= BigDecimal.ZERO;
 BigDecimal totalclaimTotal= BigDecimal.ZERO;
 
-
+if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
 // call seperate method for applyStyles in java class 
 
 stylesMap=[:];   //stylesMap
@@ -201,7 +201,7 @@ headingMap.put("claimTotal","Total Claim For Yarn Subsidy And Claim Charges(in R
 
 finalList.add(stylesMap);
 finalList.add(headingMap);
-
+}
 if(UtilValidate.isNotEmpty(InvoiceItem)){
 	sNo=1;
 	summarySNo=0;
