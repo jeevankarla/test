@@ -110,6 +110,29 @@ under the License.
 						            </fo:table-cell>
 							     </fo:table-row>
 							   </#list>
+							   <fo:table-row>
+				                    <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold">TOTAL</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false" font-weight="bold"></fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${tempToMap.quantity}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${tempToMap.value}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${tempToMap.subsidyAmt}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${tempToMap.serviceCharg}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="right" font-size="10pt" white-space-collapse="false" font-weight="bold">${tempToMap.claimTotal?if_exists?string("##0.00")}</fo:block>  
+						            </fo:table-cell>
+							     </fo:table-row>
 							 </fo:table-body>
 						</fo:table>
 						<fo:block linefeed-treatment="preserve">&#xA;</fo:block>	
