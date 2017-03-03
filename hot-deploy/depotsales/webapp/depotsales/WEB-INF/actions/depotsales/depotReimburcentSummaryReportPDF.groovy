@@ -115,8 +115,17 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 }
 context.daystart=daystart
 context.dayend=dayend
+
+daystart = UtilDateTime.getDayStart(fromDate);
+dayend = UtilDateTime.getDayEnd(thruDate);
+  
+fromDateForCSV=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+thruDateForCSV=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+context.fromDateForCSV=fromDateForCSV;
+context.thruDateForCSV=thruDateForCSV;
+
 branchContext=[:];
-branchContext.put("branchId","INT15");
+branchContext.put("branchId",branchId);
 
 BOAddress="";
 BOEmail="";
@@ -146,6 +155,43 @@ context.BOEmail=BOEmail;
 finalList = [];
 finalCSVList=[];
 StateTotals=[:];
+stylesMap=[:];
+if(branchId){
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", BOAddress);
+	stylesMap.put("mainHeader3", "DEPOT REIMBURSMENT SUMMARY REPORT");
+	stylesMap.put("mainHeader4", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+else{
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", "DEPOT REIMBURSMENT SUMMARY REPORT");
+	stylesMap.put("mainHeader3", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
+stylesMap.put("mainHeadingCell",1);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",false);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+
+headingMap=[:];
+headingMap.put("partyId", "State");
+headingMap.put("partyName", "Customer");
+headingMap.put("invoiceQTY", "Quantity Supplied in KGS");
+headingMap.put("invoiceAMT", "Value Of Yarn Supplied RS");
+headingMap.put("shippingCost", "Actual Cost Of Transportation");
+headingMap.put("reimbursentAMT", "Actual Transportation Eligible For Reimbursment");
+headingMap.put("depotCharges", "Depot Charges At 2.5%");
+
+finalCSVList.add(stylesMap);
+finalCSVList.add(headingMap);
+
 for(state in indianStates){
 	tempCSVMap1=[:];
 	tempCSVMap2=[:];

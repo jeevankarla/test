@@ -32,9 +32,6 @@ import org.ofbiz.service.ServiceUtil;
 
 import java.util.Map.Entry;
 
-//SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
-//dayend = null;
-//daystart = null;
 
 Timestamp fromDate;
 Timestamp thruDate;
@@ -56,45 +53,60 @@ context.DateList=DateList;
 branchId = parameters.branchId;
 
 branchName = "";
-
 if(branchId){
-branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
-branchName = branch.get("groupName");
-DateMap.put("branchName", branchName);
+	branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
+	branchName = branch.get("groupName");
+	DateMap.put("branchName", branchName);
 }
 branchList = [];
-
 condListb = [];
 if(branchId){
 condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
 condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
 condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
-
 PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
-
+ 
 branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-
+ 
 if(!branchList)
-branchList.add(branchId);
+	branchList.add(branchId);
 }
-
-
-
+ 
 branchBasedWeaversList = [];
 condListb = [];
 if(branchId){
-condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
-condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
-
-PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
-branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-
+	condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+	condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+	branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
 }
+branchContext=[:];
+branchContext.put("branchId",branchId);
+BOAddress="";
+BOEmail="";
+try{
+	resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+	if(ServiceUtil.isError(resultCtx)){
+		return ServiceUtil.returnError("Problem in fetching financial year ");
+	}
+	if(resultCtx.get("boHeaderMap")){
+		boHeaderMap=resultCtx.get("boHeaderMap");
+		 
+		if(boHeaderMap.get("header0")){
+			BOAddress=boHeaderMap.get("header0");
+		}
+		if(boHeaderMap.get("header1")){
+			BOEmail=boHeaderMap.get("header1");
+		}
+	}
+}catch(GenericServiceException e){
+	return ServiceUtil.returnError(e.getMessage());
+}
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
 
 
-
-//////Debug.log("branchList=================="+branchList);
 productIds = [];
 
 productCategoryIds = [];
@@ -143,10 +155,12 @@ context.errorMessage = "Cannot parse date string: " + e;
 
 daystart = UtilDateTime.getDayStart(fromDate);
 dayend = UtilDateTime.getDayEnd(thruDate);
-//Debug.log("daystart================="+daystart);
-//Debug.log("dayend================="+dayend);
-//////Debug.log("productIds================"+productIds.size());
   
+fromDateForCSV=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+thruDateForCSV=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+
+context.fromDateForCSV=fromDateForCSV;
+context.thruDateForCSV=thruDateForCSV;
 /*daystart = null;
 dayend = null;
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
@@ -173,6 +187,7 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 	   //////////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
 }*/
+
 
 reimbursmentPercentage = [:];
 reimbursmentPercentage.put("SILK", 1);
@@ -258,16 +273,25 @@ totInvAMT = 0;
 tempTotMap=[:];
 
 stylesMap=[:];
-stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
-stylesMap.put("mainHeader2", "State Wise Branch Wise Sales Report");
-stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
-stylesMap.put("mainHeadercellHeight",400);
-stylesMap.put("mainHeaderFontSize",12);
+if(branchId){
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", BOAddress);
+	stylesMap.put("mainHeader3", "STATE WISE BRANCH WISE SALES REPORT");
+	stylesMap.put("mainHeader4", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+else{
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", "STATE WISE BRANCH WISE SALES REPORT");
+	stylesMap.put("mainHeader3", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
 stylesMap.put("mainHeadingCell",2);
 stylesMap.put("mainHeaderBold",true);
 stylesMap.put("columnHeaderBgColor",false);
-stylesMap.put("columnHeaderFontName","TimesNewRoman");
-stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
 stylesMap.put("autoSizeCell",true);
 stylesMap.put("columnHeaderCellHeight",300);
 request.setAttribute("stylesMap", stylesMap);
@@ -303,18 +327,13 @@ for (eachInvoiceList in Invoice) {
 	if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 		invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
 		invoiceSequence = invoiceSeqDetails.invoiceSequence;
-		
-		//////Debug.log("invoiceSequence======2121==========="+invoiceSequence);
-		
+				
 		tempMap.put("billno", invoiceSequence);
 	}else{
 		tempMap.put("billno", eachInvoiceList.invoiceId);
 	}
 	
-	 tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoiceList.invoiceDate,"dd/MM/yyyy"));
-		   
-	// Debug.log("eachInvoiceList.invoiceId================="+eachInvoiceList.invoiceId);
-	 
+	 tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoiceList.invoiceDate,"dd/MM/yyyy"));	 
 	 
    
 	condList.clear();
@@ -372,22 +391,15 @@ for (eachInvoiceList in Invoice) {
 	tempMap.put("invoicprice", invoicprice);
 	//context.invoicprice=invoicprice;
 	
-	
-	////////Debug.log("invoiceAMT================="+invoiceAMT);
-
 	condList.clear();
 	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
 	//conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
 	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 	OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
-   
-	////////Debug.log("OrderItemBilling======================"+OrderItemBilling);
-		   
+   		   
 	 itemOrderId  = OrderItemBilling[0].orderId;
-	 
-	 //////Debug.log("itemOrderId================="+itemOrderId);
-	 
+	 	 
 	 conditionList = [];
 	 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId));
 	 conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["SUPPLIER","ON_BEHALF_OF","BILL_TO_CUSTOMER"]));
@@ -415,9 +427,7 @@ for (eachInvoiceList in Invoice) {
 	 supplierName = "";
 	 if(supplier)
 	 supplierName = PartyHelper.getPartyName(delegator, supplier, false);
-	 
-	 //////Debug.log("supplierName================="+supplierName);
-	 
+	 	 
 	 tempMap.put("supplierName", supplierName);
 	 
 	 tempMap.put("partyName", partyName);
@@ -543,9 +553,8 @@ for (eachInvoiceList in Invoice) {
 	
 	 finalList.add(tempMap);
 }
-tempTotMap.put("billno", "Total");
+tempTotMap.put("billno", "TOTAL");
 tempTotMap.put("invoiceQTY", totInvQTY);
 tempTotMap.put("invoiceAmount", totInvAMT);
 finalList.add(tempTotMap);
 context.finalList = finalList;
-Debug.log("finalList================"+ finalList);

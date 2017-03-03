@@ -24,8 +24,7 @@ import java.util.Map.Entry;
 
 
 
-
-SimpleDateFormat sdf = new SimpleDateFormat("yyyy, MMM dd");
+SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
 dayend = null;
 daystart = null;
 
@@ -36,6 +35,8 @@ DateList=[];
 DateMap = [:];
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
+context.partyfromDate=partyfromDate;
+context.partythruDate=partythruDate;
 partyId=parameters.partyId;
 state=parameters.state;
 productCategory=parameters.productCategory;
@@ -130,7 +131,7 @@ if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
 		fromDate = new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime());
 		daystart = UtilDateTime.getDayStart(fromDate);
 		 } catch (ParseException e) {
-			 //////////Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
+		     //////////Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
 			 }
    
 }
@@ -147,7 +148,14 @@ if(UtilValidate.isNotEmpty(parameters.partythruDate)){
 	   //////////Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
 		}
 }
-  
+daystart = UtilDateTime.getDayStart(fromDate);
+dayend = UtilDateTime.getDayEnd(thruDate);
+fromDateForCSV=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+thruDateForCSV=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+
+context.fromDateForCSV=fromDateForCSV;
+context.thruDateForCSV=thruDateForCSV;
+
 reimbursmentPercentage = [:];
 reimbursmentPercentage.put("SILK", 1);
 reimbursmentPercentage.put("JUTE_YARN", 10);
@@ -176,6 +184,35 @@ if(state && !partyId){
 	}
 }
 
+branchContext=[:];
+branchContext.put("branchId",branchId);
+
+BOAddress="";
+BOEmail="";
+if(UtilValidate.isNotEmpty(branchContext)){
+	try{
+		resultCtx = dispatcher.runSync("getBoHeader", branchContext);
+		if(ServiceUtil.isError(resultCtx)){
+			Debug.logError("Problem in BO Header ");
+			return ServiceUtil.returnError("Problem in fetching financial year ");
+		}
+		if(resultCtx.get("boHeaderMap")){
+			boHeaderMap=resultCtx.get("boHeaderMap");
+			
+			if(boHeaderMap.get("header0")){
+				BOAddress=boHeaderMap.get("header0");
+			}
+			if(boHeaderMap.get("header1")){
+				BOEmail=boHeaderMap.get("header1");
+			}
+		}
+	}catch(GenericServiceException e){
+		return ServiceUtil.returnError(e.getMessage());
+	}
+}
+
+context.BOAddress=BOAddress;
+context.BOEmail=BOEmail;
 
 condList = [];
 //condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "11821"));
@@ -259,6 +296,47 @@ partyIds=EntityUtil.getFieldListFromEntityList(Invoice, "partyId", true);
 
 
 finalList = [];
+stylesMap=[:];
+if(branchId){
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", BOAddress);
+	stylesMap.put("mainHeader3", "REIMBURSMENT TRANSPORTER REPORT");
+	stylesMap.put("mainHeader4", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+else{
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
+	stylesMap.put("mainHeader2", "REIMBURSMENT TRANSPORTER REPORT");
+	stylesMap.put("mainHeader3", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+}
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
+stylesMap.put("mainHeadingCell",2);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",false);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+
+headingMap=[:];
+headingMap.put("billno", "SALE INVO NO");
+headingMap.put("invoiceDate", "Invoice Date");
+headingMap.put("invoiceQTY", "Invoice Qty");
+headingMap.put("invoiceAmount", "Invoice Amount");
+headingMap.put("supplierName", "Supplier Name");
+headingMap.put("destAddr", "Indented Quantity");
+headingMap.put("transporter", "Transporter");
+headingMap.put("claim", "Claim");
+headingMap.put("eligibleAMT", "Eligible AMT");
+headingMap.put("lrNumber", "LR Number");
+headingMap.put("lrDate", "LR Date");
+
+finalList.add(stylesMap);
+finalList.add(headingMap);
+
 dupliInvoices = []as Set;
 
 for (eachInvoiceList in Invoice) {
