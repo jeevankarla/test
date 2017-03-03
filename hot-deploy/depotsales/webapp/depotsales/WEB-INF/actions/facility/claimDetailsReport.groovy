@@ -172,14 +172,14 @@ stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
 stylesMap.put("mainHeader2", "Statement for Claiming Reimbursement against Yarn ");
 stylesMap.put("mainHeader3", "Subsidy allowed to the Handloom Weavers towards the Supply");
 stylesMap.put("mainHeader4", "of Indian Silk and Cotton Hank Yarn from "+ claimFromDate +" to "+claimThruDate);
-stylesMap.put("mainHeadercellHeight",200);  //mainHeadercellHeight
+stylesMap.put("mainHeadercellHeight",300);  //mainHeadercellHeight
 stylesMap.put("mainHeaderfontName","Arial");  //URW Chancery L
-stylesMap.put("mainHeaderFontSize",12);
+stylesMap.put("mainHeaderFontSize",10);
 stylesMap.put("mainHeadingCell",4);
 stylesMap.put("mainHeaderBold",true);
 stylesMap.put("columnHeaderBgColor",false);  //column_header
-stylesMap.put("columnHeaderFontName","TimesNewRoman");
-stylesMap.put("columnHeaderFontSize",13);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
 stylesMap.put("autoSizeCell",true);
 stylesMap.put("columnHeaderCellHeight",300);//columnHeaderCellHeight
 
@@ -360,7 +360,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 } 
 		 }
 	}
-}
+
 totalQty=(totalQty).setScale(2, rounding);
 totalsMap.put("quantity", totalQty);
 totalvalue=(totalvalue).setScale(0, rounding);
@@ -371,6 +371,7 @@ totalserviceCharg= (totalserviceCharg).setScale(0, rounding);
 totalsMap.put("serviceCharg", totalserviceCharg);
 totalclaimTotal= (totalclaimTotal).setScale(0, rounding);
 totalsMap.put("claimTotal", totalclaimTotal);
+}
 context.totalsMap=totalsMap; 
 context.totalsubsidyAmt=totalsubsidyAmt;
 context.totalserviceCharg=totalserviceCharg;
@@ -415,6 +416,26 @@ finalList.add(totMap);
 context.totalList = totalList;
 context.DistrictWiseList = DistrictWiseList;
 context.finalList = finalList;
+BigDecimal totalQtySum= BigDecimal.ZERO;
+BigDecimal totalvalueSum= BigDecimal.ZERO;
+totalsubsidyAmtSum=0
+BigDecimal totalserviceChargSum= BigDecimal.ZERO;
+BigDecimal totalclaimTotalSum= BigDecimal.ZERO;
+tempToMap=[:];
+for(districtDetails in DistrictWiseList){
+	totalQtySum+=new BigDecimal(districtDetails.quantity);
+	totalvalueSum+=new BigDecimal(districtDetails.value);
+	totalsubsidyAmtSum+=new BigDecimal(districtDetails.subsidyAmt);
+	totalserviceChargSum+=new BigDecimal(districtDetails.serviceCharg);
+	totalclaimTotalSum+=new BigDecimal(districtDetails.claimTotal);
+}
+//Debug.log("totalserviceChargSum===@@@@@==="+totalserviceChargSum);
+tempToMap.put("quantity", totalQtySum);
+tempToMap.put("value", totalvalueSum);
+tempToMap.put("subsidyAmt", totalsubsidyAmtSum);
+tempToMap.put("serviceCharg", totalserviceChargSum.setScale(0, rounding));
+tempToMap.put("claimTotal", totalclaimTotalSum);
+context.tempToMap = tempToMap;
 headinglist=[];
 headingFrom = UtilDateTime.toDateString(dayBegin,"dd/MM/yyyy");
 headingThru = UtilDateTime.toDateString(dayEnd,"dd/MM/yyyy");
