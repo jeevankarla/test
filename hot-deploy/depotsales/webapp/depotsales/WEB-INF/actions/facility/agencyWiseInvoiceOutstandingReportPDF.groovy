@@ -115,7 +115,7 @@ totfrthMntInvTotals =0;
 totabove180Days=0;
 totallMonthsTotal=0
 
-
+if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
 stylesMap=[:];
 stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
 stylesMap.put("mainHeader2", "Agency Wise Invoice Outstanding Report");
@@ -144,7 +144,7 @@ headingMap.put("allMonthsTotal","Total Invoice Value");
 
 invocieList.add(stylesMap);
 invocieList.add(headingMap);
-
+}
 
 for(partyId in partyIds){
 	tempMap=[:];

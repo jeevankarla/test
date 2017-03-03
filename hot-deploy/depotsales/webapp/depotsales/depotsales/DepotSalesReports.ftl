@@ -270,7 +270,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			<td width="10%"></td>
 			<td width="10%"></td>
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('agencyWiseInvoiceOutstandingReport', '<@ofbizUrl>agencyWiseInvoiceOutstandingReport.pdf</@ofbizUrl>');" class="buttontext"/></td> 
-				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('agencyWiseInvoiceOutstandingReport', '<@ofbizUrl>agencyWiseInvoiceOutstandingReport.xls</@ofbizUrl>');" class="buttontext"/></td> 	       			
+				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('agencyWiseInvoiceOutstandingReport', '<@ofbizUrl>agencyWiseInvoiceOutstandingReport.xls?header=required</@ofbizUrl>');" class="buttontext"/></td> 	       			
 				
 		</form>	
       </tr>
@@ -640,7 +640,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			</td>
 			<td width="10%"></td>			
 			<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('claimReportDetails', '<@ofbizUrl>claimReportDetails.pdf</@ofbizUrl>');" class="buttontext"/></td>
-			<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('claimReportDetails', '<@ofbizUrl>claimReportDetails.xls</@ofbizUrl>');" class="buttontext"/></td>         			
+			<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('claimReportDetails', '<@ofbizUrl>claimReportDetails.xls?header=required</@ofbizUrl>');" class="buttontext"/></td>         			
 		</form>	
       </tr>
 <tr class="alternate-row">
