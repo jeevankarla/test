@@ -236,6 +236,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="getpartyQuotaDetailsDC">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/" invoke="partyQuotaDetailsDC.groovy"/> 
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
      <request-map uri="getPaymentDetails">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="getPaymentDetails.groovy"/> 
@@ -466,6 +472,12 @@
         <event type="service" path="" invoke="changeOrderStatus"/>
         <response name="success" type="view" value="FindDepotTransPO"/>   
        <response name="failed" type="view" value="FindDepotTransPO"/>  
+    </request-map>
+    <request-map uri="approvalLevelOfDepotPoDC">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="changeOrderStatus"/>
+        <response name="success" type="view" value="FindDepotTransPODC"/>   
+       <response name="failed" type="view" value="FindDepotTransPODC"/>  
     </request-map>
     
      <request-map uri="approvalLevelOfDepotPoDepot">
@@ -1078,6 +1090,10 @@
      <request-map uri="PurchaseOrderViewDEPOT.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseOrderViewDepot"/>
+    </request-map>
+    <request-map uri="PurchaseOrderViewDEPOTDC.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseOrderViewDepotDC"/>
     </request-map>
     
     <request-map uri="PurchaseOrderMinutesReport.pdf">
@@ -1852,6 +1868,11 @@
        <response name="success" type="view" value="DepotTransGRNShipments"/>
        <response name="error" type="view" value="DepotTransGRNShipments"/>
      </request-map>
+     <request-map uri="FindDepotTransGRNShipmentsDC">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="DepotTransGRNShipmentsDC"/>
+       <response name="error" type="view" value="DepotTransGRNShipmentsDC"/>
+     </request-map>
      <request-map uri="CancelDepotTransGrnShipment">
        <security https="true" auth="true"/>
         <event type="service" path="" invoke="processCancelGrnShipment"></event>
@@ -1878,6 +1899,10 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="CreateDepotTransPO"/>
     </request-map>
+    <request-map uri="CreateDepotTransPODC">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="CreateDepotTransPODC"/>
+    </request-map>
     <request-map uri="CreateBranchTransPO">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="CreateBranchTransPO"/>
@@ -1895,6 +1920,13 @@
         <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="CreateMaterialPOEvent" global-transaction="true"/>
          <response name="success"  type="request-redirect-noparam" value="FindDepotTransPO"></response>
         <response name="error" type="view" value="CreateDepotTransPO"/>
+    </request-map>
+    <request-map uri="CreateMaterialDepotTransPODC">
+        <security https="true" auth="true"/>
+        <!-- <event type="service" path="" invoke="CreateMaterialPO"/> -->
+        <event type="java" path="in.vasista.vbiz.purchase.MaterialPurchaseServices" invoke="CreateMaterialPOEvent" global-transaction="true"/>
+         <response name="success"  type="request-redirect-noparam" value="FindDepotTransPODC"></response>
+        <response name="error" type="view" value="CreateDepotTransPODC"/>
     </request-map>
     <request-map uri="ApproveDepotTransPOOrder">
         <security https="true" auth="true"/>
@@ -1993,6 +2025,12 @@
         <response name="success" type="view" value="FindDepotTransPO"/>
         <response name="error" type="view" value="FindDepotTransPO"/>
     </request-map>
+    <request-map uri="CancelDepotTransPOOrderDC">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cancelPOStatus"/>
+        <response name="success" type="view" value="FindDepotTransPODC"/>
+        <response name="error" type="view" value="FindDepotTransPODC"/>
+    </request-map>
     
     <request-map uri="raiseDepotTransGRN">
        <security https="true" auth="true"/>
@@ -2007,6 +2045,10 @@
     <request-map uri="editMaterialDepotTransPO">
   		<security https="true" auth="true"/>
    	<response name="success" type="view" value="EditMaterialDepotTransPO"/>
+    </request-map>
+    <request-map uri="editMaterialDepotTransPODC">
+  		<security https="true" auth="true"/>
+   	<response name="success" type="view" value="EditMaterialDepotTransPODC"/>
     </request-map>
      <request-map uri="PayUBizInit">
     	<security https="true" auth="true"/>  
@@ -2648,6 +2690,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="populateDepotDC">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/" invoke="populateDepotDC.groovy"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     <request-map uri="getOrderTaxTypeByTermType">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/" invoke="termTypesAndParentTypes.groovy"/>
@@ -3195,8 +3243,8 @@
     <view-map name="PurchaseOrderViewDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDepotSalesPDF" content-type="application/pdf"/>
    
     <view-map name="PurchaseOrderViewDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDEPOTpdf" content-type="application/pdf"/>
+    <view-map name="PurchaseOrderViewDepotDC" type="screenfop" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#PurchaseOrderViewDEPOTpdfDC" content-type="application/pdf"/>
     <view-map name="PurchaseOrderMinutesReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderMinutesReport" content-type="application/pdf"/>
-    
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
@@ -3245,15 +3293,20 @@
     <view-map name="DepotTransReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransReceipts"/>
     <view-map name="DepotTransMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialReceipts"/>
     <view-map name="DepotTransGRNShipments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransGRNShipments"/>
+    <view-map name="DepotTransGRNShipmentsDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#DepotTransGRNShipmentsDC"/>
+    
     <view-map name="DepotTransMaterialInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialInvoiceInit"/>
     <view-map name="FindDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindDepotTransPO"/>
     
-     <view-map name="FindDepotTransPODC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#FindDepotTransPODC"/>
+     <!-- <view-map name="FindDepotTransPODC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#FindDepotTransPODC"/> -->
+    <view-map name="FindDepotTransPODC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#FindDepotTransPODC"/>
     <view-map name="CreateDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#CreateDepotTransPO"/>
+    <view-map name="CreateDepotTransPODC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#CreateDepotTransPODC"/>
     <view-map name="CreateBranchTransPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateBranchTransPO"/>
     <view-map name="CreateBranchTransPODC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#CreateBranchTransPODC"/>
     <view-map name="ProcessOrdersSuppliersDepotTrans" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessOrderAndShipmentGeneration"/>
     <view-map name="EditMaterialDepotTransPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#EditMaterialDepotTransPO"/>
+    <view-map name="EditMaterialDepotTransPODC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#EditMaterialDepotTransPODC"/>
     <view-map name="DepotTransPOMaterialReceipts" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotTransPOMaterialReceiptsDepot"/>
     <view-map name="ProcessInventorySalesOrder" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
     <view-map name="FindSalesIndentPayment" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
