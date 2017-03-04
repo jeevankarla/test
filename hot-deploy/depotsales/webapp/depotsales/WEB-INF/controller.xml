@@ -1809,6 +1809,11 @@
         <response name="success" type="view" value="StockDetails"/>
         <response name="error" type="view" value="StockDetails"/>
     </request-map>
+    <request-map uri="StockDetailsDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="StockDetailsDC"/>
+        <response name="error" type="view" value="StockDetailsDC"/>
+    </request-map>
     <request-map uri="IndentorPortalStockDetails">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="IndentorPortalStockDetails"/>
@@ -3235,6 +3240,7 @@
     <view-map name="StockPositionSubDepot" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#StockPositionSubDepot"/>
     <view-map name="DepotSalesInventorySales" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesInventorySales"/>
     <view-map name="StockDetails" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#StockDetails"/>
+    <view-map name="StockDetailsDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#StockDetailsDC"/>
     <view-map name="IndentorPortalStockDetails" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorPortalStockDetails"/>
     <view-map name="DepotTransReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransReceipts"/>
     <view-map name="DepotTransMaterialReceipts" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransMaterialReceipts"/>

@@ -1577,6 +1577,32 @@
 	        <link target="DepotTransAPInvoiceOverview"> <parameter param-name="invoiceId" from-field="parameters.invoiceId" /> </link>
        </menu-item>  
     </menu> 
+    
+    
+      <menu name="DepotOperationMainTabDC" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="StockPositionSubDepot" selected-menuitem-context-field-name="tabButtonItem">
+           
+           <!-- <menu-item name="StockPositionSubDepot" title="Stock Position">
+        	<condition>
+        		<or>
+	        		<if-has-permission permission="DEPOTSALES" action="_STCK_PSTN"/>
+					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>
+        	</condition>
+            <link target="StockPositionSubDepot"/>
+         </menu-item> -->
+         <menu-item name="StockDetailsDC" title="Stock Details">
+		    <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+            </condition> 
+			<link target="StockDetailsDC"></link>
+		</menu-item>  
+		
+    </menu> 
+    
     <menu name="FindDepotTransPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="FindDepotTransPO" title="Find Purchase Order">
         	<link target="FindDepotTransPO"/>
@@ -1936,6 +1962,19 @@
 				<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
+		
+		<menu-item name="DepotTransactionsDC" title="Depot Transactions">
+		    <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+            </condition> 
+			<link target="StockDetailsDC">
+			</link>
+		</menu-item>
+		
+		
 		<menu-item name="invoiceOverViewDC" title="Invoice OverView">
        	<condition>
        	<not>
