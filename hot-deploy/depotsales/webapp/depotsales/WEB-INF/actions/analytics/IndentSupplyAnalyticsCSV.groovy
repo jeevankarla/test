@@ -230,8 +230,10 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				tempMap.put("totalRevenue", df.format((entryValue.get("totQty")/100000)));
 				tempMap.put("saleQty", df.format((entryValue.get("saleQty")/100000)));
 				tempMap.put("totalIndents", df.format((entryValue.get("saleQty")/100000)));
-				tempMap.put("purAmout", df.format((entryValue.get("purAmout")/100000)));
-				tempMap.put("saleAmt", df.format((entryValue.get("saleAmt")/100000)));
+				tempMap.put("purAmout", df.format(entryValue.get("purAmout")));
+				//tempMap.put("purAmout", df.format((entryValue.get("purAmout")/100000)));
+				tempMap.put("saleAmt", df.format(entryValue.get("saleAmt")));
+				//tempMap.put("saleAmt", df.format((entryValue.get("saleAmt")/100000)));
 				tempMap.put("inProcess",df.format(((entryValue.get("totQty") - entryValue.get("saleQty"))/100000)));
 				tempMap.put("completed", entryValue.get("completed"));
 		dataList.add(tempMap);
@@ -257,8 +259,10 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj.put("avgTAT","");
 				newObj.put("totalRevenue", df.format((roWiseEntryValue.get("totQty")/100000)));
 				newObj.put("totalIndents", df.format((roWiseEntryValue.get("saleQty")/100000)));
-				newObj.put("purAmout", df.format((roWiseEntryValue.get("purAmout")/100000)));
-				newObj.put("saleAmt", df.format((roWiseEntryValue.get("saleAmt")/100000)));
+				newObj.put("purAmout", df.format(roWiseEntryValue.get("purAmout")));
+				//newObj.put("purAmout", df.format((roWiseEntryValue.get("purAmout")/100000)));
+				newObj.put("saleAmt", df.format(roWiseEntryValue.get("saleAmt")));
+				//newObj.put("saleAmt", df.format((roWiseEntryValue.get("saleAmt")/100000)));
 				newObj.put("saleQty", df.format((roWiseEntryValue.get("saleQty")/100000)));
 				newObj.put("inProcess",df.format(((roWiseEntryValue.get("totQty") - roWiseEntryValue.get("saleQty"))/100000)));
 				newObj.put("completed", roWiseEntryValue.get("completed"));
@@ -289,8 +293,10 @@ if(UtilValidate.isNotEmpty(thruDate)){
 				newObj1.put("avgTAT","");
 				newObj1.put("totalRevenue", df.format((branchWiseEntryValue.get("totQty")/100000)));
 				newObj1.put("totalIndents", df.format((branchWiseEntryValue.get("saleQty")/100000)));
-				newObj1.put("purAmout", df.format((branchWiseEntryValue.get("purAmout")/100000)));
-				newObj1.put("saleAmt", df.format((branchWiseEntryValue.get("saleAmt")/100000)));
+				newObj1.put("purAmout", df.format(branchWiseEntryValue.get("purAmout")));
+				//newObj1.put("purAmout", df.format((branchWiseEntryValue.get("purAmout")/100000)));
+				newObj1.put("saleAmt", df.format(branchWiseEntryValue.get("saleAmt")));
+				//newObj1.put("saleAmt", df.format((branchWiseEntryValue.get("saleAmt")/100000)));
 				newObj1.put("saleQty", df.format((branchWiseEntryValue.get("saleQty")/100000)));
 				newObj1.put("inProcess",df.format(((branchWiseEntryValue.get("totQty") - branchWiseEntryValue.get("saleQty"))/100000)));
 				newObj1.put("completed", branchWiseEntryValue.get("completed"));
