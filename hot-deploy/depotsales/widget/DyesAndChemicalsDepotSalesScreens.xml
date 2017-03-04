@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+	
+	
+	<screen name="StockDetailsDC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Stock Details" />
+				<!-- <set field="headerItem" value="facility" /> -->
+				<set field="tabButtonItem" value="StockDetailsDC" />
+				<!-- <set field="parameters.facilityId" from-field="parameters.facilityId"></set> -->
+				<set field="isInventorySales" value="Y"/>
+				<script	location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/StockDetails.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotTransCommonDecoratorDC" location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="Find Stock Details">
+							<include-form name="FindStockDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
+						</screenlet>
+						<screenlet title="List Of Stock">
+							<platform-specific><html><html-template location="component://depotsales/webapp/depotsales/depotsales/StockDetails.ftl"/></html></platform-specific>
+							<include-form name="ListStockDetails" location="component://depotsales/widget/DepotSalesForms.xml" />
+						</screenlet>
+						<platform-specific>
+							<html>
+								<html-template location="component://depotsales/webapp/depotsales/depotsales/MakeSaleOrder.ftl" />
+							</html>
+						</platform-specific>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+
+
+
+</screens>
