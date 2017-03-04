@@ -453,7 +453,8 @@ under the License.
              <clear-field field="customTimePeriodList"/>
 
                 <set from-field="createAcctgTransParams.transactionDate" field="findCustomTimePeriodCallMap.findDate"/>
-                <set from-field="acctgTransEntry.organizationPartyId" field="findCustomTimePeriodCallMap.organizationPartyId"/>
+               <!--  <set from-field="acctgTransEntry.organizationPartyId" field="findCustomTimePeriodCallMap.organizationPartyId"/> -->
+                <set value="Company" field="findCustomTimePeriodCallMap.organizationPartyId"/>
                 <set from-field="onlyIncludePeriodTypeIdList" field="findCustomTimePeriodCallMap.onlyIncludePeriodTypeIdList"/>
                 <!-- should we excludeNoOrganizationPeriods? for now, YES, which means to find a CustomTimePeriod one must be setup at least for the top level Organization Party -->
                 <set value="Y" field="findCustomTimePeriodCallMap.excludeNoOrganizationPeriods"/>
