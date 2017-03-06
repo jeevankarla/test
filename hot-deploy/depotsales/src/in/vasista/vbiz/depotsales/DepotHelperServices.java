@@ -3957,27 +3957,84 @@ public static Map<String,Object> getAssociateOrder(DispatchContext dctx, Map<Str
 }
 
 
+public static Map<String, Object> populateShipmentPurposeTypes(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String itemType = (String) context.get("itemType");
+		String decimals = (String) context.get("decimals");
+		String roundType = (String) context.get("roundType");
+		String places = (String) context.get("places");
+		
+		String ro = (String) context.get("ro");
+		
+		String invoiceId = (String) context.get("invoiceId");
+		
+		Locale locale = (Locale) context.get("locale");
+		
+		List<GenericValue> shipmentList = null;
+		List<GenericValue> PartyRelationship = null;
+		List<GenericValue> Invoice = null;
+		List branchList =  FastList.newInstance();
+		List branchWeaversList =  FastList.newInstance();
+		
+		
+		
+		List conditionList = FastList.newInstance();
+		/*conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro));
+		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+		
+		try{
+		PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
+
+	     branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+		}catch(GenericEntityException e){
+		Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+	    }
+		
+	
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+		try{
+		  List<GenericValue> PartyRelationship1 = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
+
+		branchWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship1, "partyIdTo", true);
+		}catch(GenericEntityException e){
+		Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+	    }*/
+		
+		/*conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, branchWeaversList));*/
+		try{
+		shipmentList = delegator.findList("Shipment", null,null, null, null, false);
+
+		}catch(GenericEntityException e){
+		Debug.logError(e, "Failed to retrive Shipment ", module);
+	    }
+		
+		if(UtilValidate.isNotEmpty(shipmentList)){
+			for (GenericValue eachValue : shipmentList) {
+				if(eachValue.getString("shipmentTypeId").equals("BRANCH_SHIPMENT"))
+				  eachValue.set("shipmentPurposeTypeId","YARN_SHIPMENT");
+				else if(eachValue.getString("shipmentTypeId").equals("DEPOT_SHIPMENT"))
+				  eachValue.set("shipmentPurposeTypeId","DEPOT_YARN_SHIPMENT");	
+				try{
+	        	eachValue.store();
+	        	}catch(GenericEntityException e){
+        			Debug.logError(e, "Failed to Populate Invoice ", module);
+        		}
+				
+			}
+		}
+		
+	  result = ServiceUtil.returnSuccess("Rounding Requirements Has been successfully Updated");
+     
+     return result;
+	}
+
 
   	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
