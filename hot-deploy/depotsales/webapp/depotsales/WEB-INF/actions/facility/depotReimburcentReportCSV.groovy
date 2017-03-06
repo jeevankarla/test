@@ -321,7 +321,7 @@ totdepotChargs=0
 totalsMap=[:];
 finalList = [];
 
-
+if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
 stylesMap=[:];
 if(branchId){
 	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
@@ -363,6 +363,7 @@ headingMap.put("lrDate" ,"LR Date")
 
 finalList.add(stylesMap);
 finalList.add(headingMap);
+}
 
 
 for (eachInvoiceList in Invoice) {
