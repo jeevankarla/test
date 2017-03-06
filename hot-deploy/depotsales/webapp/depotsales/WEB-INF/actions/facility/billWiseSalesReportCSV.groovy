@@ -73,17 +73,24 @@ productIds = [];
 productCategoryIds = [];
 condListCat = [];
 if(!partyId){
-	if(productCategory != "OTHER"){
+	if(productCategory != "OTHER" && productCategory != "ALL"){
 		condListCat.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS, productCategory));
 		condListC = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
 		ProductCategory = delegator.findList("ProductCategory", condListC,UtilMisc.toSet("productCategoryId"), null, null, false);
 		productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
 	}else if(productCategory == "OTHER"){
-		condListCat.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.NOT_IN, ["SILK","JUTE_YARN"]));
+		condListCat.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.NOT_IN, ["SILK","COTTON"]));
 		condListC = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
 		ProductCategory = delegator.findList("ProductCategory", condListC,UtilMisc.toSet("productCategoryId"), null, null, false);
 		productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
-	}
+	}else{
+	condListCat.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "NATURAL_FIBERS"));
+	condition1 = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
+	ProductCategory = delegator.findList("ProductCategory", condition1,UtilMisc.toSet("productCategoryId"), null, null, false);
+	productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
+	ProductCategory = delegator.findList("ProductCategory", EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.IN,productCategoryIds),UtilMisc.toSet("productCategoryId"), null, null, false);
+	productCategoryIds = EntityUtil.getFieldListFromEntityList(ProductCategory, "productCategoryId", true);
+}
 	branchContext=[:];
 	branchContext.put("branchId",branchId);
 	BOAddress="";
