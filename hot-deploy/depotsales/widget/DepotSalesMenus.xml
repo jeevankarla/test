@@ -1618,7 +1618,50 @@
 	        </condition>
 	        	<link target="FindDepotTransGRNShipmentsDC"/>
 	     </menu-item>-->
-	    
+	     
+	    <menu-item name="PhysicalInventoryDC" title="Sales Indent">
+ 	      <condition>
+ 	     	    <or>
+ 	        		<if-has-permission permission="DEPOTSALES" action="_PUR_RTRNS"/>
+ 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+ 	        	</or> 
+ 	        </condition>
+             <condition>
+                 <if-compare field="enableInventory" operator="equals" value="true"/>
+             </condition>          
+             <link target="DepotSalesInventorySalesDC">
+ <!--                 <parameter param-name="facilityId" value="STORE"/> -->
+             </link>
+         </menu-item>
+         
+ 		<menu-item name="purchaseinvoiceDC" title="${uiLabelMap.PurchaseInvoices}">
+ 		    <condition>
+ 				<or>
+ 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+ 				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+             	</or>            
+             </condition> 
+ 			<link target="DepotPurchaseInvoiceViewDC">
+ 				<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
+ 				<parameter param-name="subTabButtonValue" value="Manufacturing" />
+ 				<parameter param-name="actionSubTabButtonValue" value="find" />
+ 			</link>
+ 		</menu-item>
+ 		
+ 		<menu-item name="salesInvoiceViewDC" title="${uiLabelMap.SalesInvoices}">
+ 		    <condition>
+ 				<or>
+ 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+ 				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+             	</or>            
+             </condition> 
+ 			<link target="DepotSalesInvoiceViewDepotDC">
+ 				<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
+ 				<parameter param-name="purposeTypeId" value="DEPOT_YARN_SALE" />
+ 				<parameter param-name="subTabButtonValue" value="Manufacturing" />
+ 				<parameter param-name="actionSubTabButtonValue" value="find" />
+ 			</link>
+		</menu-item>
     </menu> 
     
     <menu name="FindDepotTransPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
@@ -1676,7 +1719,19 @@
 	    	</link>
     	</menu-item>
     </menu>
-    
+    <menu name="InventorySalesSubTabBarDC" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+    	<menu-item name="makeInventorySalesDC" title="Inventory Sales">
+	    	<link target="DepotSalesInventorySalesDC">
+<!-- 	    		<parameter param-name="facilityId" value="STORE"/> -->
+	    	</link>
+    	</menu-item>
+    	<menu-item name="paymentForSalesDC" title="Payment for Sales">
+	    	<link target="FindSalesIndentPaymentDC">
+	    	   <parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+	    		<!-- <parameter param-name="facilityId" value="STORE"/> -->
+	    	</link>
+    	</menu-item>
+    </menu>
     <menu name="SupplierPortalMainTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="FindSupplierPO" selected-menuitem-context-field-name="tabButtonItem">
            

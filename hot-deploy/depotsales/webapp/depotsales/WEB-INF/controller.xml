@@ -1179,6 +1179,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotPurchaseInvoiceView"/>
     </request-map>
+    <request-map uri="DepotPurchaseInvoiceViewDC">
+         <security https="true" auth="true"/>
+         <response name="success" type="view" value="DepotPurchaseInvoiceViewDC"/>
+     </request-map>
     <request-map uri="DepotSalesInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotSalesInvoice"/>
@@ -1197,6 +1201,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotSalesInvoiceViewDC"/>
     </request-map>
+    <request-map uri="DepotSalesInvoiceViewDepotDC">
+         <security https="true" auth="true"/>
+         <response name="success" type="view" value="DepotSalesInvoiceViewDepotDC"/>
+     </request-map>
      <request-map uri="createApDepotApPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createVoucherPayment"/>
@@ -1820,6 +1828,11 @@
         <response name="success" type="view" value="DepotSalesInventorySales"/>
         <response name="error" type="view" value="DepotSalesInventorySales"/>
     </request-map>
+    <request-map uri="DepotSalesInventorySalesDC">
+         <security https="true" auth="true"/>
+         <response name="success" type="view" value="DepotSalesInventorySalesDC"/>
+         <response name="error" type="view" value="DepotSalesInventorySalesDC"/>
+     </request-map>
     <request-map uri="StockDetails">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="StockDetails"/>
@@ -2064,6 +2077,11 @@
       <response name="success" type="view" value="FindSalesIndentPayment"/>   
       <response name="error" type="view" value="FindSalesIndentPayment"/>  
 	</request-map>
+	<request-map uri="FindSalesIndentPaymentDC">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="FindSalesIndentPaymentDC"/>   
+       <response name="error" type="view" value="FindSalesIndentPaymentDC"/>  
+ 	</request-map>
 	<request-map uri="DepotSalesIndentIssuance">
       <security https="true" auth="true"/>
       <response name="success" type="view" value="DepotSalesIndentIssuance"/>   
@@ -3263,6 +3281,7 @@
    	<view-map name="DepotSalesInvoiceDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#DepotSalesInvoiceDC"/>
    	<view-map name="DepotSalesInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesInvoiceView"/>
    	<view-map name="DepotSalesInvoiceViewDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#DepotSalesInvoiceViewDC"/>
+   	<view-map name="DepotSalesInvoiceViewDepotDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#DepotSalesInvoiceViewDepotDC"/>
    	
    	<view-map name="FindTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FindTransporter"/>
    	<view-map name="CreateNewTransporter" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreateNewTransporter"/>
@@ -3287,6 +3306,7 @@
     
     <view-map name="StockPositionSubDepot" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#StockPositionSubDepot"/>
     <view-map name="DepotSalesInventorySales" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesInventorySales"/>
+    <view-map name="DepotSalesInventorySalesDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#DepotSalesInventorySalesDC"/>
     <view-map name="StockDetails" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#StockDetails"/>
     <view-map name="StockDetailsDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#StockDetailsDC"/>
     <view-map name="IndentorPortalStockDetails" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorPortalStockDetails"/>
@@ -3310,6 +3330,8 @@
     <view-map name="DepotTransPOMaterialReceipts" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotTransPOMaterialReceiptsDepot"/>
     <view-map name="ProcessInventorySalesOrder" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
     <view-map name="FindSalesIndentPayment" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#ProcessInventorySalesOrder"/>
+    <view-map name="FindSalesIndentPaymentDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#ProcessInventorySalesOrderDC"/>
+    
     <view-map name="DepotSalesIndentIssuance" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#DepotSalesIndentIssuance"/>
     
      <view-map name="FindSupplierPO" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierPO"/>
@@ -3359,6 +3381,8 @@
     <view-map name="ProdConvBilling" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProdConvBilling"/>
     <view-map name="FindDepotReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindDepotReimbursementBilling"/>
 	<view-map name="DepotPurchaseInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoiceView"/>
+	<view-map name="DepotPurchaseInvoiceViewDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#DepotPurchaseInvoiceViewDC"/>
+	
     <view-map name="DepotTransAPInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransAPInvoiceOverview"/>
     <view-map name="DepotTransSalesInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransSalesInvoiceOverview"/>
     <view-map name="editGRN" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#editGRN"/>

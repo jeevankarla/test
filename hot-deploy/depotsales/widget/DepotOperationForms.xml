@@ -279,6 +279,42 @@
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
+    <form name="FindSalesIndentPaymentDC" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+        <field name="salesChannelEnumId" ><hidden value="WEB_SALES_CHANNEL"/></field>  
+        <!-- <field name="orderTypeId">
+           <drop-down no-current-selected-key="SALES_ORDER">
+              <entity-options description="${description}" entity-name="OrderType" key-field-name="orderTypeId">
+                 <entity-constraint name="parentTypeId" operator="like" value="%SALES%"/>
+              </entity-options>
+           </drop-down>
+        </field> -->
+        <field name="partyId" title="${uiLabelMap.Customer}"><lookup target-form-name="LookupPartyName"/></field> 
+        <field name="branchId" title="${uiLabelMap.Branch}">
+             <drop-down allow-empty="true">
+                  <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+              </drop-down>
+        </field>
+        <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
+        <field name="orderNo" title="sequenceId"><text-find/></field>
+        <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
+        <field name="shipmentId" title="ShipmentId"><text/></field>
+        
+        <!-- <field name="sequenceId"><text-find/></field> -->
+      <!--  <field name="productId"><lookup target-form-name="LookupProduct"/></field> -->
+        <!-- <field name="orderTypeId"><hidden value="PURCHASE_ORDER"/></field> -->
+        <field name="statusId">
+	        	<drop-down allow-empty="true">
+	        		<option key="ORDER_CREATED" description="Created"/>
+	        		<option key="ORDER_APPROVED" description="Approved"/>
+	        		<option key="ORDER_CANCELLED" description="Cancelled"/>
+	        		<option key="ORDER_SUSPENDED" description="Suspended"/>
+	        	</drop-down>
+        </field>
+        <field name="findPoFlag"><hidden value="Y"/></field>  
+		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
      <form name="listSupplierPurchaseOrders" type="list" list-name="listIt" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
       	<row-actions>
@@ -464,6 +500,62 @@
     </form>
      
         <form name="ListDepotSearchOrderPayments" type="list" list-name="orderList" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        <field name="shipmentId"><display></display></field> 
+        <field name="partyId"><display></display></field> 
+        <field name="partyName"><display></display></field> 
+        <field name="salesOrder"><display></display></field> 
+         <field name="orderId"><hidden/></field> 
+         <field name="salesButton"><hidden/></field> 
+         <field name="inventoryItemId"><hidden/></field>
+         <field name="isFind"><hidden value="Y"/></field> 
+         
+         
+         
+        <field name="boapprove" title="Status" widget-style="buttontext" use-when="orderStatusId.equals(&quot;ORDER_CREATED&quot;)" >
+            <hyperlink target="approvalLevelOfDepotPoDepot" description="Order Approve"> 
+                <parameter param-name="orderId"/>
+                <parameter param-name="statusId" value="ORDER_APPROVED" />
+                <parameter param-name="inventoryItemId"/>
+                <parameter param-name="facilityId"/>
+            </hyperlink>
+        </field>  
+        <field name="boapprove" title="Status" widget-style="buttontext" use-when="orderStatusId.equals(&quot;ORDER_APPROVED&quot;)" ><display description="Order Approved" /></field>
+         
+        <field name="addContent" title="View" widget-style="buttontext" use-when="true">
+           <hyperlink target-type="plain" description="View" target="javascript:fetchOrderInformation('${orderId}');"></hyperlink>
+        </field>
+        
+           <field name="forIssuance" title="Status" widget-style="buttontext" use-when="(orderShipmentId.equals(&quot;N&quot;))&amp;&amp;(orderStatusId.equals(&quot;ORDER_APPROVED&quot;))" >
+            <hyperlink target="processIndentItemIssuance" description="Issue Indent" target-window="_blank"> 
+                <parameter param-name="orderId"/>
+                <parameter param-name="partyId"/>
+            </hyperlink>
+        </field> 
+        
+        <field name="raiseInvoice" widget-style="buttontext" title="Sales Invoice"  use-when="(salesButton.equals(&quot;Y&quot;))&amp;&amp;(orderStatusId.equals(&quot;ORDER_APPROVED&quot;))&amp;&amp;(orderShipmentId.equals(&quot;Y&quot;))">
+            <hyperlink target="DepotMaterialSalesInvoiceInit" description="Sales Invoice">
+                <parameter param-name="shipmentId"/>
+                 <parameter param-name="partyId"/>
+                  <parameter param-name="orderId"/>
+            </hyperlink>
+        </field> 
+         <field name="raiseInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(salesButton.equals(&quot;N&quot;))">
+          		 <display description="${salesNo}"></display>   
+          </field>
+          <!--   <field name="forIssuance" title="Inssuance" widget-style="buttontext" use-when="(orderShipmentId.equals(&quot;N&quot;))&amp;&amp;(orderStatusId.equals(&quot;ORDER_APPROVED&quot;))">
+           <hyperlink target-type="plain" description="Issue Indent" target="javascript:issueIndentItems('${orderId}','${partyId}');"></hyperlink>
+        </field> -->
+        
+      
+          
+          <field name="cancelOrder" title="Cancel" widget-style="buttontext" use-when="((salesButton.equals(&quot;Y&quot;)))&amp;&amp;(!orderStatusId.equals(&quot;ORDER_CANCELLED&quot;))">
+           <hyperlink target-type="plain" description="Cancel Order" target="javascript:cancelDepotSaleOrderCaution('${orderId}','${partyId}','${inventoryItemId}','${facilityId}');"></hyperlink>
+        </field>
+          
+    </form>
+    
+    <form name="ListDepotSearchOrderPaymentsDC" type="list" list-name="orderList" paginate-target="${targetRequest}"
         odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
         <field name="shipmentId"><display></display></field> 
         <field name="partyId"><display></display></field> 
