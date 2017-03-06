@@ -1600,7 +1600,7 @@
             </condition> 
 			<link target="StockDetailsDC"></link>
 		</menu-item>  
-		<!--<menu-item name="FindDepotTransPODC" title="${uiLabelMap.PurchaseOrder}">
+		<menu-item name="FindDepotTransPODC" title="${uiLabelMap.PurchaseOrder}">
         	<condition>
        		  <or>
 	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
@@ -1617,7 +1617,7 @@
 			 </or>
 	        </condition>
 	        	<link target="FindDepotTransGRNShipmentsDC"/>
-	     </menu-item>-->
+	     </menu-item>
 	     
 	    <menu-item name="PhysicalInventoryDC" title="Sales Indent">
  	      <condition>
