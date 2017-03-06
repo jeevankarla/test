@@ -2351,6 +2351,32 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
+    <form name="FindPhysicalInventoryDepotForSaleDC" title="" type="single" target="DepotSalesInventorySalesDC" header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
+        <field name="estimatedShipDate" title="GRN Shipment Date"><date-find default-option-from="sameDay"  /></field>
+<!--         <field name="primaryOrderId" title="PO no"><text-find/></field> -->
+
+		<field name="partyIdFrom" title="${uiLabelMap.Branch}">
+            <drop-down allow-empty="true">
+               <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
+            </drop-down>
+        </field>
+        <field name="shipmentId" title="GRN Shipment Id"><text-find/></field>
+        <field name="referenceNo" title="PORef.No"><text-find/></field>
+        <field name="partyId" title="Party"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="productId" title="Product"><lookup target-form-name="LookupProduct" size="15" /></field>
+        <field name="facilityId" title="Facility"><lookup target-form-name="ProductionLookupFacility"></lookup></field>
+        <!-- <field name="facilityId" > <hidden value="BRANCH1"/></field> -->
+    <!--     <field name="vehicleId" title="Vehicle No"><text-find/></field> -->
+    		<!-- <field name="supplierInvId" title="Supplier Invoice No"><text-find/></field>-->
+    		<field name="supplierInvId" title="Supplier Invoice No"><text/></field>
+           <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="GOODS_RECEIVED"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
   <form name="ListPhysicalInventoryDepotForSale" type="list" list-name="physicalInventory" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
         <row-actions>
@@ -2422,6 +2448,79 @@
 	             <hyperlink  target-type="plain" description="Transfer"  target="javascript:showInventoryTransferQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>
         </field> -->
     </form>
+    
+    <form name="ListPhysicalInventoryDepotForSaleDC" type="list" list-name="physicalInventory" use-row-submit="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+		   </entity-one>
+		<set field="productName" from-field="product.description"/> 
+		<set field="balancedQty" value="${quantityOnHandTotal-(bookedQuantity)}"/>
+		</row-actions>
+        <field name="shipmentId" title="Shipment Id"><display/></field>
+        <field name="supplierInvoiceId" title="supplier Invoice Id"><display></display></field>
+        <field name="facilityName" title="Depot"><display></display></field>
+        <field name="partyName" title="Supplier"><display></display></field>
+        <field name="poRefNum" title="PORef.No"><display></display></field>
+        <field name="fromPartyId"><hidden/></field>
+        <field name="productStoreId"><hidden/></field>
+        <field name="branchId"><hidden/></field>
+        <field name="estimatedShipDate" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(estimatedShipDate, &quot;dd/MM/yyyy&quot;);}"/></field>
+        <field name="inventoryItemId" > <hidden/></field>
+        <field name="branchName" > <hidden/></field>
+         <field name="orderId" > <hidden/></field>
+          <field name="statusId" > <hidden/></field>
+       <!--  <field name="inventoryItemId" title="Inventory Id" widget-style="buttontext"><display></display></field> -->
+        <field name="productId" widget-style="buttontext" title="Product Name">
+        	<display-entity entity-name="Product" description="${description}"></display-entity>
+        </field>
+        <field name="quantityOnHandTotal" title="Stock Available"><display/></field>
+        <!-- <field name="bookedQuantity" title="Booked Quantity"><display/></field> -->
+        <field name="availbleQuantity" title="Available Quantity(Kgs)"><display/></field>
+        <field name="unitCost" title="unintCost(Kgs)"><display/></field>
+<!--         <field name="Sale" title="Sale Indent" widget-style="buttontext">
+              <hyperlink  target-type="plain" description="Create Sale Indent"  target="javascript:showInventorySaleQTip('${productId}','${productName}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}','${productStoreId}','${uom}','${bundleWeight}','${bundleUnitPrice}','${balancedQty}');"></hyperlink>
+        </field>
+         <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)||(!(statusId.equals(&quot;ORDER_CREATED&quot;)))">
+ -->
+        
+         <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
+		<hyperlink target="DepotSalesOrderNew" description="Sale Indent">
+			<parameter param-name="productId"/>
+			 <parameter param-name="productName"/>
+			  <parameter param-name="quantityOnHandTotal"/>
+			   <!-- <parameter param-name="productStoreId"/> -->
+			<parameter param-name="uom"/>
+			<parameter param-name="bundleWeight"/>
+			<parameter param-name="bundleUnitPrice"/>
+			<parameter param-name="balancedQty"/>
+			<parameter param-name="unitCost"/>
+			<!--  <parameter param-name="bookedQuantity"/> -->
+			 <parameter param-name="inventoryItemId"/>
+			  <parameter param-name="availbleQuantity"/>
+			  <parameter param-name="productStoreId"/>
+			   <parameter param-name="branchName"/>
+			   <parameter param-name="submitFlag" value="NO"/>
+			 </hyperlink>
+        </field>
+        
+     <!--     <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
+            <hyperlink target="approvalLevelOfDepotPoDepot" description="Order Approve">
+                <parameter param-name="orderId"/>
+                <parameter param-name="statusId" value="ORDER_APPROVED" />
+                <parameter param-name="inventoryItemId"/>
+                <parameter param-name="facilityId"/>
+            </hyperlink>
+        </field> 
+         -->
+        
+
+        <!-- <field name="Transfer" title="Transfer" widget-style="buttontext">
+	             <hyperlink  target-type="plain" description="Transfer"  target="javascript:showInventoryTransferQTip('${productId}','${quantityOnHandTotal}','${unitCost}','${inventoryItemId}');"></hyperlink>
+        </field> -->
+    </form>
+    
     <form name="FindPhysicalInventoryDepotTransfer" title="" type="single" target="DepotSalesInventoryTransefer" header-row-style="header-row" default-table-style="basic-table">
         
         <field name="shipmentTypeId"><hidden value="MATERIAL_SHIPMENT"/></field>
@@ -3777,6 +3876,36 @@
 		</field>
 		<field name="billingAccountId"><hidden/></field>
 	</form>
+	
+	<form name="FindApInvoicesForDepotDC" type="single" target="DepotPurchaseInvoiceViewDC" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
+		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
+		<field name="purposeTypeId"><hidden value="DEPOT_YARN_SALE"/></field>
+		<!-- <field name="invoiceTypeId" position="2">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="InvoiceType" description="${description}">
+					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+				</entity-options>
+			</drop-down>
+		</field> -->
+		<field name="statusId" title="${uiLabelMap.CommonStatus}"
+			position="2">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_IN_PROCESS">
+				<entity-options description="${description}"
+					entity-name="StatusItem">
+					<entity-constraint name="statusTypeId" operator="equals"
+						value="INVOICE_STATUS" />
+					<entity-constraint name="statusId" operator="not-equals"
+						value="INVOICE_SENT" />
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="dueDate"><date-find type="timestamp"/></field>
+			<field name="billingAccountId">
+			<hidden />
+		</field>
+		<field name="billingAccountId"><hidden/></field>
+	</form>
+	
     <form name="subsidyDetailsList" type="list" list-name="finalList" view-size="99999">
         <field name="MothDayBegin" title="Period From"><display/></field>
         <field name="MothDayEnd" title="Period To"><display/></field>
