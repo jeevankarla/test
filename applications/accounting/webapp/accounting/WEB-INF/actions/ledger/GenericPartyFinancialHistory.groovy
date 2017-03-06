@@ -467,9 +467,9 @@ conditionList.add(EntityCondition.makeCondition([
 }
 
 if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
-conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
+conditionList.add(EntityCondition.makeCondition("paymentPurposeType" , EntityOperator.EQUALS, segmentId));
 if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE"))
-conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+conditionList.add(EntityCondition.makeCondition("paymentPurposeType" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
 newPayCondition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 
 
