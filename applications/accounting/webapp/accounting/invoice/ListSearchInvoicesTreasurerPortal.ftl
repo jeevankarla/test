@@ -404,12 +404,12 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : invoice.statusId}, true) />
                 ${statusItem.description?default(invoice.statusId)}
               </td>
-              <#if invoice.shipmentId?has_content>
-             	<#assign shipment = delegator.findOne("Shipment", {"shipmentId" : invoice.shipmentId}, true) />
- 		      <td>${(shipment.supplierInvoiceId)?if_exists}</td>
- 		      <#else>
- 		      	<td></td>
-			 </#if>
+             <td>
+             	<#if invoice.shipmentId?has_content && invoice.shipmentId!="OBC">
+					<#assign Shipment = delegator.findOne("Shipment", {"shipmentId" : invoice.shipmentId}, true) />
+                	${Shipment.supplierInvoiceId?default(invoice.shipmentId)}
+			  	</#if>
+             </td>
  			
               <td>${(invoice.description)?if_exists}</td>
  			  <td>${(invoice.cancelComments)?if_exists}</td>
