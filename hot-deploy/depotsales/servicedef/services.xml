@@ -686,6 +686,11 @@
          <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
     </service>
     
+     <service name="populateShipmentPurposeTypes" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="populateShipmentPurposeTypes" transaction-timeout="6000000">
+        <description>populate Shipment</description>
+         <attribute name="ro" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="populatePurchaseInvoiceItemsWithRounding" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="populatePurchaseInvoiceItemsWithRounding" transaction-timeout="6000000">
         <description>populate Rounding</description>
          <attribute name="ro" type="String" mode="IN" optional="false"/>
