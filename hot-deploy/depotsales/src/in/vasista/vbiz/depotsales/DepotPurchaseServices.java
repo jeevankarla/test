@@ -839,6 +839,8 @@ public class DepotPurchaseServices{
 		String partyIdFrom = "";
 		String shipmentId = (String) request.getParameter("shipmentId");
 		String purchaseInvoiceId = (String) request.getParameter("purchaseInvoiceId");
+		String purposeTypeIdField = (String) request.getParameter("purposeTypeId");
+		
 		
 		String saleTitleTransferEnumId = (String) request.getParameter("saleTitleTransferEnumId");
 		String saleTaxType = (String) request.getParameter("saleTaxType");
@@ -1596,14 +1598,14 @@ public class DepotPurchaseServices{
 		
 		String invProdId = (String) ((Map) productQtyList.get(0)).get("productId");
 		
-		try{
+		/*try{
 	  		Map resultCtx = dispatcher.runSync("getPurposeTypeForProduct", UtilMisc.toMap("productId", invProdId, "userLogin", userLogin));  	
 	  		purposeTypeId = (String)resultCtx.get("purposeTypeId");
 	  	}catch (GenericServiceException e) {
 	  		Debug.logError("Unable to analyse purpose type: " + ServiceUtil.getErrorMessage(result), module);
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(result));
 			return "error";
-	  	}
+	  	}*/
 		
 		
 		
@@ -1657,8 +1659,10 @@ public class DepotPurchaseServices{
         }
 		
 		
-		
-	    purposeTypeId = "YARN_SALE";
+		if(UtilValidate.isNotEmpty(purposeTypeIdField) && purposeTypeIdField.equals("DIES_AND_CHEM_SALE"))
+			purposeTypeId = "DIES_AND_CHEM_SALE";
+		else
+			purposeTypeId = "YARN_SALE";
 		
 	    if(UtilValidate.isNotEmpty(purposeTypeId)){
        	 try{
