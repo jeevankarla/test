@@ -2505,7 +2505,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/SalesInvoiceDepot.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/SalesInvoiceDepotDC.ftl" />
 							</html>
 						</platform-specific>
 					</widgets>
