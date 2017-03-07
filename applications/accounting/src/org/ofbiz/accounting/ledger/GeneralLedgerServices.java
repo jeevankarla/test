@@ -120,6 +120,9 @@ public class GeneralLedgerServices {
 		String partyIdFrom = (String) context.get("partyIdFrom");
 		Timestamp tillDate = (Timestamp) context.get("tillDate");
 		String purposeTypeId=(String)context.get("purposeTypeId");
+	    String costCenterId =(String) context.get("costCenterId");
+	    String segmentId =(String) context.get("segmentId");
+	    List<String> roBranchList = (List) context.get("roBranchList");
 		List exprListForParameters = FastList.newInstance();
 		List boothPaymentsList = FastList.newInstance();
 		List partyInvoicesList = FastList.newInstance();
@@ -148,12 +151,18 @@ public class GeneralLedgerServices {
 			exprListForParameters.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"PURCHASE_INVOICE"));
 			//conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,"Company"));
 			exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
-			exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom));
+			//exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom));
+			if(UtilValidate.isNotEmpty(roBranchList)){
+			exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, roBranchList));
+			}
 		}else{//no need to send  For AR
 			exprListForParameters.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS,"SALES_INVOICE"));
 			//conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS,"Company"));
 			exprListForParameters.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-			exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
+			//exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
+			if(UtilValidate.isNotEmpty(roBranchList)){
+			exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, roBranchList));
+			}
 		}
 		
 		if(UtilValidate.isNotEmpty(context.get("purposeTypeId"))){
@@ -165,6 +174,18 @@ public class GeneralLedgerServices {
 		exprListForParameters.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN, dayBegin));
 		exprListForParameters.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, invoiceStatusList));
 		exprListForParameters.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate", EntityOperator.EQUALS, null),EntityOperator.OR, EntityCondition.makeCondition("paidDate",	EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
+		
+    	if(UtilValidate.isNotEmpty(segmentId)){
+			if(segmentId.equals("YARN_SALE")){
+				exprListForParameters.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+			}
+			else{
+				exprListForParameters.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,segmentId));
+			}
+		}
+    	
+		
+		
 		EntityCondition paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
 		EntityFindOptions findOptions = new EntityFindOptions();
 		findOptions.setDistinct(true);
@@ -189,6 +210,23 @@ public class GeneralLedgerServices {
 				exprList.add(EntityCondition.makeCondition("invoiceId",	EntityOperator.EQUALS, invoiceId));
 				exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("paidDate",EntityOperator.EQUALS, null),EntityOperator.OR, EntityCondition.makeCondition("paidDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
 				exprList.add(EntityCondition.makeCondition("pmPaymentDate",	EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+				
+				if(UtilValidate.isNotEmpty(costCenterId)){
+					exprList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.EQUALS,costCenterId));
+	    		}
+	        	if(UtilValidate.isNotEmpty(roBranchList)){
+	        		exprList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+	    		}
+	        	if(UtilValidate.isNotEmpty(segmentId)){
+	    			if(segmentId.equals("YARN_SALE")){
+	    				exprList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+	    			}
+	    			else{
+	    				exprList.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.EQUALS,segmentId));
+	    			}
+	    		}
+	        	
+				
 				EntityCondition cond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
 				try {
 					pendingInvoiceList = delegator.findList("InvoiceAndApplAndPayment", cond, null, null, null,	false);
@@ -258,10 +296,16 @@ public class GeneralLedgerServices {
 		exprList.clear();
 		if(isOBCallForAP){
 			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyId));
-			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyIdFrom));
+			//exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyIdFrom));
+			if(UtilValidate.isNotEmpty(roBranchList)){
+			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, roBranchList));
+			}
 		}else{//no need to send  For AR
 			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
-			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyIdFrom));
+			//exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyIdFrom));
+			if(UtilValidate.isNotEmpty(roBranchList)){
+			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN, roBranchList));
+			}
 		}
 		//exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
 		exprList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.NOT_EQUAL, "SECURITYDEPSIT_PAYIN"));
@@ -291,18 +335,32 @@ public class GeneralLedgerServices {
 		exprList.clear();
 		if(isOBCallForAP){
 			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyId));
-			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyIdFrom));
+			//exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyIdFrom));
+			if(UtilValidate.isNotEmpty(roBranchList)){
+			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN, roBranchList));
+			}
 		}else{//no need to send  For AR
 			exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
-			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyIdFrom));
+			//exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.EQUALS, partyIdFrom));
+			if(UtilValidate.isNotEmpty(roBranchList)){
+			exprList.add(EntityCondition.makeCondition("partyIdTo",EntityOperator.IN, roBranchList));
+			}
 		}
+		
 		//exprList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.EQUALS, partyId));
 		exprList.add(EntityCondition.makeCondition("paymentMethodTypeId",EntityOperator.EQUALS, "CHEQUE_PAYIN"));
 		exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS, "PMNT_VOID"));
 		exprList.add(EntityCondition.makeCondition("chequeReturns",EntityOperator.EQUALS, "Y"));
 		exprList.add(EntityCondition.makeCondition("cancelDate",EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
 		exprList.add(EntityCondition.makeCondition("paymentDate",EntityOperator.LESS_THAN, dayBegin));
-
+        
+		if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE")){
+			exprList.add(EntityCondition.makeCondition("paymentPurposeType" , EntityOperator.EQUALS, segmentId));
+		}
+			if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE")){
+				exprList.add(EntityCondition.makeCondition("paymentPurposeType" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+		
+			}
 		EntityCondition payReturnCond = EntityCondition.makeCondition(exprList,EntityOperator.AND);
 		try {
 			pendingPaymentsList = delegator.findList("Payment", payReturnCond,UtilMisc.toSet("amount"), null, null, false);
