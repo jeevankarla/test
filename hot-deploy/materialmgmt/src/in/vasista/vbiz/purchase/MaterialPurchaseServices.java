@@ -301,12 +301,14 @@ public class MaterialPurchaseServices {
 	        newEntity.set("estimatedShipDate", lrDateTimeStamp);
 	        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
 		        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
+		        newEntity.set("shipmentPurposeTypeId", "YARN_SHIPMENT");
 	        }else if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DC_PURCHASE")){
 	        	newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
 	        	newEntity.set("shipmentPurposeTypeId", "DC_SHIPMENT");
 	        }
-	        else{
+	        else if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DEPOT_PURCHASE")){
 	        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
+	        	newEntity.set("shipmentPurposeTypeId", "DEPOT_YARN_SHIPMENT");
 	        }
 	        newEntity.set("statusId", "DISPATCHED");
 	        newEntity.put("vehicleId",vehicleId);
