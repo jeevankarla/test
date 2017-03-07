@@ -5056,4 +5056,30 @@
         <field name="createButton"><submit button-type="button"/></field>
     </form>
     
+    <form name="orderAmendmentsDepotDC" type="list" list-name="orderAmendmentsList" separate-columns="true"
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+      <actions>
+      	<entity-condition entity-name="OrderItemChange" list="orderAmendmentsList">
+      		<condition-expr field-name="orderId" operator="equals" from-field="parameters.orderId"/>
+      	</entity-condition>
+      </actions>  
+      <row-actions>
+      	<entity-one value-field="OrderItem" entity-name="OrderItem">
+      		<field-map field-name="orderId" from-field="orderId"/>
+      		<field-map field-name="orderItemSeqId" from-field="orderItemSeqId"/>
+      	</entity-one>
+      	<set field="productId"  from-field="OrderItem.productId"/>
+      </row-actions>
+      <field name="orderId"><hidden/></field>
+      <field name="orderItemSeqId" title="Item No"><hidden/></field>
+      <field name="productId" title="Product">
+      		<display-entity entity-name="Product" description="${description}"/>
+      	</field>
+      <field name="quantity"><display></display></field>
+      <field name="unitPrice"><display></display></field>
+      <field name="effectiveDatetime" title="Effective Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(effectiveDatetime, &quot;dd-MMM-yyyy&quot;);}"></display></field>
+      <field name="changeDatetime" title="Changed Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(changeDatetime, &quot;dd-MMM-yyyy&quot;);}"></display></field>
+      <field name="changeUserLogin" title="Changed By"><display></display></field>
+      <field name="changeComments" title="Comments"><display></display></field>
+     </form>   
 </forms>
