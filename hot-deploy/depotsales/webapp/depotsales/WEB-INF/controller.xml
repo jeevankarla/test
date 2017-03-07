@@ -1270,6 +1270,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="partyFinanHistoryDC"/>
     </request-map>
+    <request-map uri="partyFinanHistoryDepotDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="partyFinanHistoryDepotDC"/>
+    </request-map>
     <request-map uri="createPhysicalInventoryVariances">
         <security https="true" auth="true"/>
         <event type="service-multi" path="" invoke="createPhysicalInventoryAndVariance"/>
@@ -3356,6 +3360,7 @@
     <view-map name="PaymentOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PaymentOverview"/>
     <view-map name="PartyFinHistory" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PartyFinHistory"/>
     <view-map name="partyFinanHistoryDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#PartyFinanHistoryDC"/>
+    <view-map name="partyFinanHistoryDepotDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#partyFinanHistoryDepotDC"/>
     <view-map name="ViewIndentRequest" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ViewIndentRequest"/>
     
     <view-map name="StockVariance" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#StockVariance"/>
