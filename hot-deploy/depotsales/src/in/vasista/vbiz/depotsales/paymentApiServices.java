@@ -105,9 +105,9 @@ public class paymentApiServices {
 	private static int decimals;
 	private static int rounding;
     public static final String resource = "AccountingUiLabels";
-    private static String SucUrl = "https://nhdc-test.vasista.in/myportal/control/paymentSucUrl";
-    private static String failUrl = "https://nhdc-test.vasista.in/myportal/control/paymentFailUrl";
-    private static String airtelBaseUrl = "https://sit.airtelmoney.in/ecom/v2/";
+    private static String SucUrl = "https://erp.nhdcltd.co.in/myportal/control/paymentSucUrl";
+    private static String failUrl = "https://erp.nhdcltd.co.in/myportal/control/paymentFailUrl";
+    private static String airtelBaseUrl = "https://ecom.airtelmoney.in/ecom/v2/";
     
     static {
         decimals = 2;// UtilNumber.getBigDecimalScale("order.decimals");
@@ -562,6 +562,7 @@ public class paymentApiServices {
         url = url + "CUST_MOBILE="+mobile+"&";
         url = url + "CUST_EMAIL="+email;
     
+        Debug.log("url====="+url);
         return url;
     }
     
