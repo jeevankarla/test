@@ -448,8 +448,8 @@ public class paymentApiServices {
         if(paymentChannel.equalsIgnoreCase("airtel"))
         {   
         	String rosList[] = {"INT5","INT28","INT26","INT4","INT6","INT3","INT1","INT47","INT2"};
-        	String midList[] = {"25649255","25672457","25672458","25672459","25672460","25672461","25672462","25672463","25672464"};
-        	String saltList[] = {"34602fa0","fghjfgh456","fghjfgh457","fghjfgh458","fghjfgh459","fghjfgh460","fghjfgh461","fghjfgh462","fghjfgh463"};
+        	String midList[] = {"45592380","45592894","45590237","45588195","45590642","45591183","45588871","45591507","45590503"};
+        	String saltList[] = {"dc0csdj3f","dcvfs8j32","cd7cd93l2","gy67gv3ks","x65dnjd9","cd8jw5gd","q68cm95d","sd8cd3d3","a4dwj7kd"};
         	
         	String userLoginParty = null;
             if (userLogin != null && userLogin.get("partyId") != null) {
@@ -493,12 +493,6 @@ public class paymentApiServices {
     			}
     		}
         	
-        	
-        	
-        	
-        	/*String mId = "25649255";
-        	String salt = "34602fa0";*/
-    		
     		String mId = midList[Arrays.asList(rosList).indexOf(roId)];
         	String salt = saltList[Arrays.asList(rosList).indexOf(roId)];
         	
@@ -643,21 +637,13 @@ public class paymentApiServices {
         
         try{
         	
-        	/*postDataObject.put("feSessionId",feSessionId);
+        	postDataObject.put("feSessionId",feSessionId);
     		postDataObject.put("txnRefNO", transactionId);
     		postDataObject.put("txnDate", txnDate);
     		postDataObject.put("request", request);
     		postDataObject.put("merchantId", mId);
     		postDataObject.put("hash", hash);
-    		postDataObject.put("amount", amtStr);*/
-        	
-        	postDataObject.put("feSessionId","4323878555");
-    		postDataObject.put("txnRefNO", "452345435");
-    		postDataObject.put("txnDate", "28012017204540");
-    		postDataObject.put("request", "ECOMM_INQ");
-    		postDataObject.put("merchantId", "25649255");
-    		postDataObject.put("hash", "a4e8f86a55b85fefa675bb85ac52e8ca8fc5113b5ad364c0c6cd3b1d60c3c83c8cffae9ecd18a2bc446168ec7505a0a1485c1f19b8bea993f33240272d695b63");
-    		postDataObject.put("amount", "14");
+    		postDataObject.put("amount", amtStr);
     		
         	URL url = new URL(baseURL);
         	HttpsURLConnection  urlconnection = (HttpsURLConnection ) url.openConnection();
@@ -745,21 +731,21 @@ public class paymentApiServices {
 	        
 	        try{
 	        	
-	        	/*postDataObject.put("feSessionId",feSessionId);
+	        	postDataObject.put("feSessionId",feSessionId);
 	    		postDataObject.put("txnId", pgTransId);
 	    		postDataObject.put("txnDate", txnDate);
 	    		postDataObject.put("request", request);
 	    		postDataObject.put("merchantId", mId);
 	    		postDataObject.put("hash", hash);
-	    		postDataObject.put("amount", amtStr);*/
+	    		postDataObject.put("amount", amtStr);
 	        	
-	        	postDataObject.put("feSessionId","4323878555");
+	        /*	postDataObject.put("feSessionId","4323878555");
 	    		postDataObject.put("txnRefNO", "452345435");
 	    		postDataObject.put("txnDate", "28012017204540");
 	    		postDataObject.put("request", "ECOMM_REVERSAL");
 	    		postDataObject.put("merchantId", "25649255");
 	    		postDataObject.put("hash", "a4e8f86a55b85fefa675bb85ac52e8ca8fc5113b5ad364c0c6cd3b1d60c3c83c8cffae9ecd18a2bc446168ec7505a0a1485c1f19b8bea993f33240272d695b63");
-	    		postDataObject.put("amount", "14");
+	    		postDataObject.put("amount", "14");*/
 	    		
 	        	URL url = new URL(baseURL);
 	        	HttpsURLConnection  urlconnection = (HttpsURLConnection ) url.openConnection();
