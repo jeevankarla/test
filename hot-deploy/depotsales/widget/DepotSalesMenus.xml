@@ -2043,7 +2043,7 @@
 				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
             	</or>            
             </condition> 
-			<link target="StockDetailsDC">
+			<link target="FindDepotTransPODC">
 			</link>
 		</menu-item>
 		
@@ -2406,7 +2406,28 @@
         </menu-item>
       </menu>
       
-      
+      <menu name="FindDepotTransPOSubTabBarDepotDC" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="FindDepotTransPODepotDC" title="Find Purchase Order">
+        	<link target="FindDepotTransPODepotDC"/>
+        </menu-item>
+           <!--<menu-item name="ProcessOrdersSuppliersDepotTrans" title="Process Purchase Order">
+            	<link target="ProcessOrdersSuppliersDepotTrans">
+            	<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
+    	        <parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
+            	</link>
+            </menu-item>
+             <menu-item name="FindDepotTransPurchaseShipment" title="Find Purchase Shipment">
+            	<link target="FindDepotTransPurchaseShipment"/>
+        </menu-item>-->
+        <menu-item name="POoverViewDepotDC" title="Purchase Order OverView">
+        	<condition>
+        		<not>
+					<if-empty  field="parameters.orderId"/>
+				</not>
+        	</condition>
+        	<link target="POoverViewDepotDC"> <parameter param-name="orderId" from-field="parameters.orderId" /> </link>
+        </menu-item>
+      </menu>
       
        
       

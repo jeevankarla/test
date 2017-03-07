@@ -34,12 +34,12 @@
 		</section>
 	</screen>
 	
-<screen name="FindDepotTransPODC">
+<screen name="FindDepotTransPODepotDC">
 		<section>
 			<actions>
 				<set field="titleProperty" value="Find Purchase Order" />
-				<set field="tabButtonItem" value="FindDepotTransPODC" />
-				<set field="tabButtonItem2" value="FindDepotTransPODC" />
+				<set field="tabButtonItem" value="FindDepotTransPODepotDC" />
+				<set field="tabButtonItem2" value="FindDepotTransPODepotDC" />
 				<script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/poRefNoSearchDC.groovy"/>
 				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/DepotTransROSearchFilterDC.groovy" />
 				<service service-name="performFind" result-map="result"
@@ -48,7 +48,7 @@
 					<field-map field-name="entityName" value="OrderHeaderAndSequenceAndRoles" />
 					<field-map field-name="orderBy" value="-orderDate" />
 				</service>
-				<set field="targetRequest" value="FindDepotTransPODC" />
+				<set field="targetRequest" value="FindDepotTransPODepotDC" />
 			<!-- 	<set field="ChannalType" value="MATERIAL_PUR_CHANNEL" />  -->
 				<!-- <set field="partyId" from-field="parameters.partyId" /> -->
 				<set field="roleTypeId" value="BILL_FROM_VENDOR" />
@@ -64,7 +64,7 @@
 				<decorator-screen name="DepotTransCommonDecoratorDC" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
-							name="FindDepotTransPOSubTabBarDC" />
+							name="FindDepotTransPOSubTabBarDepotDC" />
 						<section>
 							<widgets>
 								<section>
@@ -95,8 +95,8 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="Find Purchase Order" />
-				<set field="tabButtonItem" value="FindDepotTransPODC" />
-				<set field="targetRequest" value="FindDepotTransPODC" />
+				<set field="tabButtonItem" value="FindDepotTransPODepotDC" />
+				<set field="targetRequest" value="FindDepotTransPODepotDC" />
 				<!-- <set field="ChannalType" value="PROD_PRCHSE_CHANNEL"/> -->
 				<set field="parameters.roleTypeId" value="SUPPLIER" />
 				<set field="changeFlag" value="PurchaseOrder" />
@@ -162,7 +162,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="Find Purchase Order" />
-				<set field="tabButtonItem" value="FindDepotTransPODC" />
+				<set field="tabButtonItem" value="FindDepotTransPODepotDC" />
 				<set field="targetRequest" value="FindMaterialPODC" />
 				<set field="parameters.roleTypeId" value="SUPPLIER" />
 				<set field="orderId" from-field="parameters.orderId" />
@@ -980,6 +980,186 @@
 						</section>
 					</decorator-section>
 				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PurchageOrderOverViewDepotDC">
+		<section>
+			<actions>
+				<set field="titleProperty"
+					value="Purchase Order OverView - OrderId - ${parameters.orderId}" />
+				<set field="tabButtonItem" value="FindDepotTransPODepotDC" />
+				<set field="tabButtonItem2" value="POoverViewDepotDC" />
+				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/order.js"
+					global="true" />
+				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/OrderShippingInfo.js"
+					global="true" />
+				<set field="layoutSettings.javaScripts[]" value="/ordermgr/images/js/geoAutoCompleter.js"
+					global="true" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/PurchageOrderViewDepotDC.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/POViewWebSecureDepotDC.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotTransCommonDecoratorDC" location="component://depotsales/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<include-menu name="FindDepotTransPOSubTabBarDepotDC"
+							location="component://depotsales/widget/DepotSalesMenus.xml" />
+						<section>
+							<widgets>
+								<container style="lefthalf">
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/PurchageOrderInfoDepotDC.ftl" />
+										</html>
+									</platform-specific>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POItemsDepotDC.ftl" />
+										</html>
+									</platform-specific>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POtermsDepotDC.ftl" />
+										</html>
+									</platform-specific>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POSuspendDepotDC.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Order Amendments">
+										<include-form
+											location="component://depotsales/widget/DepotSalesForms.xml"
+											name="orderAmendmentsDepotDC" />
+									</screenlet>
+									<screenlet title="Order Attributes">
+										<include-screen name="orderAttributesDepotDC" />
+									</screenlet>
+									<include-screen name="orderAssoc" />
+								</container>
+								<container style="righthalf">
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POContactInfoDepotDC.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Receipts For Order">
+										<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" 
+											name="listMaterialShipmentReceipt"/> -->
+										<include-screen name="listMaterialShipmentReceiptDC" />
+									</screenlet>
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POpaymentInfo.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Invoices For Order">
+										<include-form
+											location="component://materialmgmt/widget/MaterialPurchaseForms.xml"
+											name="invoiceDetailListDC" />
+									</screenlet>
+									<!-- <screenlet title="Content">
+										<include-screen name="POcontent" />
+									</screenlet> -->
+									<platform-specific>
+										<html>
+											<html-template
+												location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl" />
+										</html>
+									</platform-specific>
+									<screenlet title="Supply Products Till Date">
+										<include-screen name="supplyProductsTillDateDepotDC" />
+									</screenlet>
+								</container>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="orderAttributesDepotDC">
+		<section>
+			<actions>
+				<entity-and entity-name="OrderAttribute" list="OrderAttributeList">
+					<field-map field-name="orderId" from-field="parameters.orderId" />
+				</entity-and>
+			</actions>
+			<widgets>
+				<!-- <include-form
+					location="component://materialmgmt/widget/materialmgmtForms.xml"
+					name="addAttribute" /> -->
+				<screenlet>
+					<include-form
+						location="component://materialmgmt/widget/materialmgmtForms.xml"
+						name="listAttributeDepotDC" />
+				</screenlet>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="listMaterialShipmentReceiptDepotDC">
+		<section>
+			<actions>
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="20" />
+				<set field="targetRequest" value="FindGRNReceiptsDC" />
+				<service service-name="performFind" result-map="result"
+					result-map-list="listIt">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="ShipmentReceipt" />
+					<field-map field-name="orderBy" value="-receiptId" />
+					<field-map field-name="viewIndex" from-field="viewIndex" />
+					<field-map field-name="viewSize" from-field="viewSize" />
+				</service>
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartmentsDC.groovy" />
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDateDepotDC.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="listMaterialShipmentReceipt"
+					location="component://materialmgmt/widget/MaterialPurchaseForms.xml" />
+				<platform-specific>
+					<html>
+						<html-template
+							location="component://materialmgmt/webapp/materialmgmt/purchase/qcApprovalDepotDC.ftl" />
+					</html>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="supplyProductsTillDateDepotDC">
+		<section>
+			<actions>
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="20" />
+				<set field="targetRequest" value="FindGRNReceiptsDC" />
+				<service service-name="performFind" result-map="result"
+					result-map-list="listIt">
+					<field-map field-name="inputFields" from-field="parameters" />
+					<field-map field-name="entityName" value="ShipmentReceipt" />
+					<field-map field-name="orderBy" value="-receiptId" />
+					<field-map field-name="viewIndex" from-field="viewIndex" />
+					<field-map field-name="viewSize" from-field="viewSize" />
+				</service>
+				<!-- <script location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/purchaseDepartments.groovy"/> -->
+				<script
+					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDate.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="supplyProductstilldateDC"
+					location="component://materialmgmt/widget/MaterialPurchaseForms.xml" />
 			</widgets>
 		</section>
 	</screen>
