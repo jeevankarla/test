@@ -784,7 +784,7 @@ function setOrgPartyId() {
 			  	</td>
 			  	<td width="20%">
 					<table>
-					<tr><td><input type="submit" value="PDF" onClick="javascript:appendParams('advancesReport', '<@ofbizUrl>AdvancesReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
+					<tr><td><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" onClick="javascript:appendParams('advancesReport', '<@ofbizUrl>AdvancesReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
 					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('advancesReport', '<@ofbizUrl>AdvancesReport.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
 					</table>   
 			 	</td>
@@ -809,7 +809,7 @@ function setOrgPartyId() {
 			  	</td>
           		<td width="20%">
 					<table>
-					<tr><td><input type="submit" value="PDF" onClick="javascript:appendParams('subLedgerReport', '<@ofbizUrl>SubLedgerReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
+					<tr><td><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" onClick="javascript:appendParams('subLedgerReport', '<@ofbizUrl>SubLedgerReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
 					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('subLedgerReport', '<@ofbizUrl>SubLedgerReport.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
 					</table>   
 			 	</td>
@@ -836,7 +836,7 @@ function setOrgPartyId() {
 			  	</td>
 				<td width="15%">From<input  type="text" size="18pt" id="prFromDate" readonly  name="fromDate"/></td>
 				<td width="15%">To<input  type="text" size="18pt" id="prThruDate" readonly  name="thruDate"/></td>
-          		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
+          		<td width="5%"><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" class="buttontext"/></td>
       		</form>
       	</tr>
       	<tr> 
@@ -852,7 +852,7 @@ function setOrgPartyId() {
 			  	</td>
 				<td width="15%">From<input  type="text" size="18pt" id="aprFromDate" readonly  name="fromDate"/></td>
 				<td width="15%">To<input  type="text" size="18pt" id="aprThruDate" readonly  name="thruDate"/></td>
-          		<td width="5%"><input type="submit" value="PDF" class="buttontext"/></td>
+          		<td width="5%"><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" class="buttontext"/></td>
       		</form>
       	</tr>
 	</table>
@@ -906,7 +906,7 @@ function setOrgPartyId() {
 				</td>
 				<td width="30%"><input type="submit" value="PDF" onClick="javascript:appendParams('GlLedgerReport', '<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.pdf</@ofbizUrl>');" class="buttontext"/>
 				<input type="submit" value="CSV" onClick="javascript:appendParams('GlLedgerReport', '<@ofbizUrl>AcctgTransEntriesSearchResultsNewPdf.csv</@ofbizUrl>');" class="buttontext"/></td>         			
-          		<input type="submit" value="PDF" class="buttontext"/></td>
+          		<#--<input type="submit" value="PDF" class="buttontext"/></td>-->
           	</tr>
       		</form>
       	</tr>
@@ -1114,7 +1114,7 @@ function setOrgPartyId() {
 			  	<td width="20%">
 					<table>
 					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('invoiceAppReport', '<@ofbizUrl>ArApInvoiceApplication.csv</@ofbizUrl>');" class="buttontext"/></td>
-					<td><input type="submit" value="PDF" onClick="javascript:appendParams('invoiceAppReport', '<@ofbizUrl>ArApInvoiceApplication.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
+					<td><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" onClick="javascript:appendParams('invoiceAppReport', '<@ofbizUrl>ArApInvoiceApplication.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
 					</table>   
 			 	</td>
       		</form>
