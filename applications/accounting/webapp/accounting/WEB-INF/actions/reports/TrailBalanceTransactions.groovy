@@ -65,32 +65,31 @@ roId = parameters.division;
  thruDate=customTimePeriod.thruDate;
  openingBalance = 0;
  if(roId.equals("Company") && segmentId.equals("All")){
-	 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId:null, segmentId:null,userLogin:userLogin]);
+	 result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId:null, segmentId:null,userLogin:userLogin]);
 	 if(UtilValidate.isNotEmpty(result.get("openingBal"))){
 		 openingBalance = result.get("openingBal");
 	 }
  }
  else if(roId.equals("Company") && !segmentId.equals("All")){
-	 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId: null, segmentId:segmentId, userLogin:userLogin]);
+	 result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), costCenterId: null, segmentId:segmentId, userLogin:userLogin]);
 	 if(UtilValidate.isNotEmpty(result.get("openingBal"))){
 		 openingBalance = result.get("openingBal");
 	 }
  }
  else if(!roId.equals("Company") && segmentId.equals("All")){
-	 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), roBranchList: branchList, segmentId:null, userLogin:userLogin]);
+	 result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), roBranchList: branchList, segmentId:null, userLogin:userLogin]);
 	 if(UtilValidate.isNotEmpty(result.get("openingBal"))){
 		 openingBalance = result.get("openingBal");
 	 }
  }
  else{
-	 result=dispatcher.runSync("getGlAccountOpeningBalanceForCostCenter", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), roBranchList: branchList, segmentId: segmentId, userLogin:userLogin]);
+	 result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), roBranchList: branchList, segmentId: segmentId, userLogin:userLogin]);
 	 if(UtilValidate.isNotEmpty(result.get("openingBal"))){
 		 openingBalance = result.get("openingBal");
 	 }
  }
  context.openingBal = openingBalance;
  findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
-
 
  division = parameters.division;
  acctgTransIds = [];

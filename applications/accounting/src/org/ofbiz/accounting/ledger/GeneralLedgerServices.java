@@ -40,6 +40,7 @@ import java.util.TimeZone;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.text.ParseException;
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
@@ -384,7 +385,19 @@ public class GeneralLedgerServices {
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp thruDate = (Timestamp) context.get("thruDate");
         String glAccountId = (String) context.get("glAccountId");
+        String costCenterId = (String) context.get("costCenterId");
+        String segmentId = (String) context.get("segmentId");
+        List<String> roBranchList = (List) context.get("roBranchList");
         Map<String, Object> result = ServiceUtil.returnSuccess();
+        String organizationPartyId = "Company";
+        GenericValue lastClosedTimePeriod=null;
+        String periodTypeId=(String) context.get("periodTypeId");
+        if(periodTypeId!=null){
+        	periodTypeId=periodTypeId;
+        }else{
+        	periodTypeId="FISCAL_MONTH";
+        }
+        Timestamp lastClosedDate = null;
         try {
     	      if(UtilValidate.isNotEmpty(fromDate)){
 	    		 fromDate = UtilDateTime.getDayStart(fromDate);
@@ -392,6 +405,28 @@ public class GeneralLedgerServices {
     	      if(UtilValidate.isNotEmpty(thruDate)){
     	    	 thruDate = UtilDateTime.getDayEnd(thruDate);
 	          }
+    	      
+    	      // get lost closed period here
+    	      Map lastFinContext = FastMap.newInstance();
+    	      lastFinContext.put("periodTypeId","FISCAL_YEAR");
+    	      lastFinContext.put("organizationPartyId", organizationPartyId);
+    	      lastFinContext.put("userLogin", userLogin);
+    	      lastFinContext.put("findDate", UtilDateTime.toSqlDate(fromDate));
+    	      lastFinContext.put("onlyFiscalPeriods", Boolean.TRUE);
+			   Map resultCtx = FastMap.newInstance();
+				try{
+					resultCtx = dispatcher.runSync("findLastClosedDate", lastFinContext);
+					if(ServiceUtil.isError(resultCtx)){
+						Debug.logError("Problem in fetching financial year ", module);
+						return ServiceUtil.returnError("Problem in fetching financial year ");
+					}
+					lastClosedTimePeriod = (GenericValue)resultCtx.get("lastClosedTimePeriod");
+					lastClosedDate = (Timestamp)resultCtx.get("lastClosedDate");
+				}catch(GenericServiceException e){
+					Debug.logError(e, module);
+					return ServiceUtil.returnError(e.getMessage());
+				} 
+				
  			    Map finYearContext = FastMap.newInstance();
  				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
  				finYearContext.put("organizationPartyId", "Company");
@@ -399,7 +434,6 @@ public class GeneralLedgerServices {
  				finYearContext.put("findDate", fromDate);
  				finYearContext.put("excludeNoOrganizationPeriods", "Y");
  				List customTimePeriodList = FastList.newInstance();
- 				Map resultCtx = FastMap.newInstance();
  				try{
  					resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
  					if(ServiceUtil.isError(resultCtx)){
@@ -419,10 +453,47 @@ public class GeneralLedgerServices {
  					finYearFromDate=new java.sql.Timestamp(((Date) customTimePeriod.get("fromDate")).getTime());
  				}
     			List customTimePeriodIds =FastList.newInstance();
+    			BigDecimal openingBalance = BigDecimal.ZERO;
+    			// Code for not to get previous year closing for other than Asset, contra asset, liability and equity.
+    			List AllGlClassIds=FastList.newInstance();
+				GenericValue assetGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","ASSET"), true);
+	    		List assetAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(assetGlAccountClass);
+	    		AllGlClassIds.addAll(assetAccountClassIds);
+	    		GenericValue contraAssetGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","CONTRA_ASSET"), true);
+	    		List contraAssetAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(contraAssetGlAccountClass);
+	    		AllGlClassIds.addAll(contraAssetAccountClassIds);
+	    		GenericValue liabilityGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","LIABILITY"), true);
+	    		List liabilityAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(liabilityGlAccountClass);
+	    		AllGlClassIds.addAll(liabilityAccountClassIds);
+	    		
+	    		GenericValue equityGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","EQUITY"), true);
+	    		List equityAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(equityGlAccountClass);
+	    		AllGlClassIds.addAll(equityAccountClassIds);
+	    		GenericValue glAccount = delegator.findOne("GlAccount",UtilMisc.toMap("glAccountId", glAccountId), false);
+	    		if(!AllGlClassIds.contains(glAccount.get("glAccountClassId"))){
+	    			//lastClosedDate=finYearFromDate;
+	    			//openingBalance=BigDecimal.ZERO;
+	    		}else{
+	    			if(UtilValidate.isNotEmpty(lastClosedTimePeriod)){
+	    				Debug.log("lastClosedTimePeriod========="+lastClosedTimePeriod);
+	    				Debug.log("finYearId========="+finYearId);
+	    				
+	    				Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalance(ctx, UtilMisc.toMap("organizationPartyId", organizationPartyId,"customTimePeriodId", finYearId,"glAccountId",glAccountId,"periodTypeId",periodTypeId,"isTrailBalance","N"));
+	    				List lastClosedGlBalanceList = (List)lastClosedGlBalances.get("openingGlHistory");
+	    				lastClosedDate=(Timestamp)lastClosedGlBalances.get("lastClosedDate");
+	    				if(UtilValidate.isNotEmpty(lastClosedGlBalanceList)){
+	    					GenericValue glHistory = EntityUtil.getFirst(lastClosedGlBalanceList);
+	    					openingBalance = openingBalance.add(glHistory.getBigDecimal("totalEndingBalance"));
+	    				}
+	    				
+	    			}
+	    		}
+	    		
+	    		
     			try {      
-    			List conditionList = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
+    				 List conditionList = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
     			       conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_MONTH"));
-    			       conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(finYearFromDate)));
+    			       conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
     			       conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN ,UtilDateTime.toSqlDate(fromDate)));
     			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
     			customTimePeriodList = delegator.findList("CustomTimePeriod", condition, UtilMisc.toSet("customTimePeriodId"), null, null, true);
@@ -431,18 +502,69 @@ public class GeneralLedgerServices {
  					Debug.logError(e, module);
  					return ServiceUtil.returnError(e.getMessage());
  				}
-    			BigDecimal openingBalance = BigDecimal.ZERO;
+    			
+    			//Check GlAccountType for OB
+    			
+    			BigDecimal postedDebits = BigDecimal.ZERO;
+    			BigDecimal postedCredits = BigDecimal.ZERO; 
+    			
+    			boolean isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
+    			if (isDebitAccount) {
+    				if(openingBalance.compareTo(BigDecimal.ZERO)<0){
+    					postedCredits = openingBalance.negate();
+    				}else {
+    					postedDebits = openingBalance;
+    				}
+    			}else {
+    				if (openingBalance.compareTo(BigDecimal.ZERO)<0) {
+    					postedDebits = openingBalance.negate();
+    				} else {
+    					postedCredits = openingBalance;
+    				}
+    			}
+    			
+    			
     			for(int i=0;i<customTimePeriodIds.size();i++){
 				    BigDecimal debits = BigDecimal.ZERO;
 				    BigDecimal credits = BigDecimal.ZERO;
-	 					GenericValue glAccountHistory = delegator.findOne("GlAccountHistory", UtilMisc.toMap("glAccountId", glAccountId,"organizationPartyId","Company","customTimePeriodId",customTimePeriodIds.get(i)),false);
-	 					if(UtilValidate.isNotEmpty(glAccountHistory)){
-	 						debits=(BigDecimal) glAccountHistory.get("postedDebits");
-	 						credits=(BigDecimal)glAccountHistory.get("postedCredits");
-		 					openingBalance =openingBalance.add(debits.subtract(credits));
-		 		        } 
-		 		}
-        		result.put("openingBal", openingBalance);
+				    List conditionList =FastList.newInstance();
+				    conditionList.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId));
+				    conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+				    conditionList.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodIds.get(i)));
+				    if(costCenterId!=null){
+				    	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, costCenterId));
+   	    	     	}
+   	    	     	if(roBranchList!=null){
+   	    	     	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+   	    	     	}
+   	    	     	if(segmentId!=null){
+	   	    	     	if(segmentId.equals("YARN_SALE")){
+	   	    	     	conditionList.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+	   	    	    	 }else{
+	   	    	    		conditionList.add(EntityCondition.makeCondition("segmentId", EntityOperator.EQUALS, segmentId));
+	   	    	    	 }
+   	    	     	}
+				    
+   	    	     List glAccountHistoryList = delegator.findList("GlAccountHistory", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
+	   	    	     for(int j=0;j<glAccountHistoryList.size();j++){
+	   	    	    	Map glAccountHistory =(Map) glAccountHistoryList.get(j);
+	   	    	    	
+		 					if(UtilValidate.isNotEmpty(glAccountHistory)){
+		 						debits=(BigDecimal) glAccountHistory.get("postedDebits");
+		 						credits=(BigDecimal)glAccountHistory.get("postedCredits");
+		 						postedDebits = postedDebits.add(debits);
+		 						postedCredits = postedCredits.add(credits);
+			 					//openingBalance =openingBalance.add(debits.subtract(credits));
+			 		        } 
+	   	    	     }
+    			}
+   	    	  if(isDebitAccount){
+  				openingBalance = postedDebits.subtract(postedCredits);
+   	    	  }else{
+  				openingBalance = postedCredits.subtract(postedDebits);
+   	    	  }
+   	    	  openingBalance = postedDebits.subtract(postedCredits);
+   	    	  result.put("openingBal", openingBalance);
         } catch (Exception e) {
             Debug.logError(e, "Problem getting openingBal for glAccountId" + glAccountId, module);
             return ServiceUtil.returnError("Problem getting openingBal for glAccountId" + glAccountId);

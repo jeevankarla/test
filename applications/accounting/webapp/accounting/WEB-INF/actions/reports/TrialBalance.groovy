@@ -36,13 +36,13 @@ import org.ofbiz.accounting.util.*;
 
 import org.ofbiz.party.party.PartyHelper;
 
-partyNameList = [];
+/*partyNameList = [];
 parties.each { party ->
 	partyName = PartyHelper.getPartyName(party);
 	partyNameList.add(partyName);
 }
 context.partyNameList = partyNameList;
-
+*/
 asOnDate = parameters.asOnDate;
   dctx = dispatcher.getDispatchContext();
   condList = [];
