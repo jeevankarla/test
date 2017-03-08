@@ -838,11 +838,13 @@ under the License.
             <set field="flag" value="${groovy: return (totalOpening == 0)? 'Y' : 'N';}"/>
             <set field="endingBalFlag" value="${groovy: return (totalEndingBalance == 0)? 'Y' : 'N';}"/>
         </row-actions>
-        <field name="accountName">
-            <hyperlink target="FindAcctgTransEntries" description="${accountName}">
+        <field name="accountCode">
+            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId" value="Company"/>
             </hyperlink>
         </field>
+        <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
         <!--  <field name="openingD" widget-style="tabletextright"><display/><hidden/></field>
         <field name="openingC" widget-style="tabletextright"><display/><hidden/></field>  -->
         <field name="totalOpening" use-when="&quot;${flag}&quot;==&quot;Y&quot;" title="Opening Balance" ><display description="0.00"></display></field>
