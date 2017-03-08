@@ -26,21 +26,25 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-        <#if finAccountReconciliationList?has_content && parameters.noConditionFind?exists && parameters.noConditionFind == 'Y'>
         ${setRequestAttribute("OUTPUT_FILENAME", "ReconcilationStatement.txt")}
         <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
         <fo:static-content flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;Page - <fo:page-number/></fo:block>
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
             </fo:static-content>	
-              	
+              <#if finAccountReconciliationList?has_content && parameters.noConditionFind?exists && parameters.noConditionFind == 'Y'>	
 		        	<fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace" >	
 		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
 				<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="9pt" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-                <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+                <#assign roId = parameters.division>
+              	 	<#assign roHeader = roId+"_HEADER">
+              	 	<#assign roSubheader = roId+"_HEADER01">
+					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
+					<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false"  font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
 			    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
+			     <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportSubHeader.description?if_exists} </fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
                     	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">BANK RECONCILIATION STATEMENT   AS ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy HH:mm:ss")} </fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
@@ -215,16 +219,26 @@ under the License.
 		        		<fo:block text-align="right"  keep-together="always"  white-space-collapse="false">&#160;   Available Balance As Per Bank :<#if finAccount.availableBalance?exists> ${finAccount.availableBalance?if_exists?string("#0.00")} <#else>     </#if>         &#160;&#160;&#160;&#160;</fo:block>
 		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">_________________________________________________________________________________________________________________________________________</fo:block> 
             </fo:block>
-		</fo:flow>
-		</fo:page-sequence>
+		</fo:flow>	
 	<#else>
-	<fo:page-sequence master-reference="main">
     	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-       		 <fo:block font-size="14pt" text-align="center">
+    		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;</fo:block>
+    			<#assign roId = parameters.division>
+              	<#assign roHeader = roId+"_HEADER">
+              	<#assign roSubheader = roId+"_HEADER01">
+              	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
+              	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
+       		 	<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
+				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
+       		 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				<fo:block font-size="10pt" text-align="center">---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+       		 <fo:block font-size="12pt" text-align="center">
             	"No Orders Found".
        		 </fo:block>
     	</fo:flow>
+    	</#if>
 	</fo:page-sequence>	
-	</#if>
  </fo:root>
 </#escape>

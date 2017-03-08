@@ -394,7 +394,7 @@ function setOrgPartyId() {
 							</select>
 						</td>
   					<td width="5%"></td>
-					<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>recStatemetn.pdf</@ofbizUrl>');" class="buttontext"/>
+					<td width="10%"><input type="hidden" name="division" class="commonPartyId"><td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>recStatemetn.pdf</@ofbizUrl>');" class="buttontext"/>
 					<input type="submit" value="CSV" onClick="javascript:appendParams('BankReconciliationReports', '<@ofbizUrl>FinAccountTransForReconsile.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				</form>
               </tr>
@@ -594,7 +594,7 @@ function setOrgPartyId() {
 						   <option value='Detailed'>Detailed</option>
 					   </select>
 				     </td>
-					  <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>');" class="buttontext"/> <input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+					  <td width="10%"><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>');" class="buttontext"/> <input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.csv</@ofbizUrl>');" class="buttontext"/></td>
 					</td>         			
 				</form>
               </tr>
