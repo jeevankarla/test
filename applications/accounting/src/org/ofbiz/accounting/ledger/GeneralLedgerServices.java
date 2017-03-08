@@ -901,6 +901,7 @@ public class GeneralLedgerServices {
     			//List conditionList = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
     				   List conditionList =FastList.newInstance();
     			       conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_MONTH"));
+    			       conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
     			       if(UtilValidate.isNotEmpty(lastClosedDate)){
     			    	   conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toSqlDate(lastClosedDate)));
     			       }
@@ -950,7 +951,7 @@ public class GeneralLedgerServices {
 	    	    	     }
 	    	    	     if(UtilValidate.isNotEmpty(segmentId)){
 	    	    	    	 if(segmentId.equals("YARN_SALE")){
-	    	    	    		 andExprs1.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+	    	    	    		 andExprs1.add(EntityCondition.makeCondition("purposeTypeId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
 	    	    	    	 }else{
 	    	    	    		 andExprs1.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, segmentId));
 	    	    	    	 }
@@ -1025,7 +1026,7 @@ public class GeneralLedgerServices {
     			}catch(Exception e){
  					Debug.logError(e, module);
  					return ServiceUtil.returnError(e.getMessage());
- 				}    			
+ 				}    		
     					Map lastClosedGlBalances = FastMap.newInstance();
 		    			if(UtilValidate.isNotEmpty(lastClosedTimePeriod)){
 		    				if(UtilValidate.isNotEmpty(costCenterId)){
@@ -1129,7 +1130,6 @@ public class GeneralLedgerServices {
 						    		    				}
 				    		    				 }  				
 				    		    				
-				    		    				
 				    		    			}
 				    		    			
 			    						}
@@ -1139,7 +1139,6 @@ public class GeneralLedgerServices {
 		    				}
 		    				
 		    			}
-		    			
 		    			for(int i=0;i<customTimePeriodIds.size();i++){				   
 						    
 			 					//GenericValue glAccountHistory = delegator.findOne("GlAccountHistory", UtilMisc.toMap("glAccountId", glAccountId,"organizationPartyId","Company","customTimePeriodId",customTimePeriodIds.get(i)),false);
@@ -1148,9 +1147,19 @@ public class GeneralLedgerServices {
 			 					 andExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, costCenterId));
 			 					 }
 			 					if(UtilValidate.isNotEmpty(segmentId)){
-			 					 andExprs.add(EntityCondition.makeCondition("segmentId", EntityOperator.EQUALS, segmentId));
+			 						if(segmentId.equals("YARN_SALE")){
+			 							andExprs.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+			 		    			}
+			 		    			else{
+			 		    				andExprs.add(EntityCondition.makeCondition("segmentId", EntityOperator.EQUALS, segmentId));
+			 		    			}
 			 					}
-			 					// andExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccId));
+			 					if(roBranchList!=null){
+			 						andExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, roBranchList));
+			 					}
+			 					if(glAccountId!=null){
+			 						andExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId)); 
+			 					}
 			 					 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
 			 		    	     andExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodIds.get(i)));
 			 		    	     List glPartyWiseHistoryList = delegator.findList("GlAccountHistoryPartyWise", EntityCondition.makeCondition(andExprs,EntityOperator.AND), null, null, null, false);
@@ -1204,7 +1213,6 @@ public class GeneralLedgerServices {
 				 		    					 }
 				 		    				 }
 				 		    			 }	    	
-				 		    	    	
 				 		    	    	/* BigDecimal debits = BigDecimal.ZERO;
 				 					    BigDecimal credits = BigDecimal.ZERO;
 				 					    if(UtilValidate.isNotEmpty(partyWiseEnty.get("postedDebits"))){
