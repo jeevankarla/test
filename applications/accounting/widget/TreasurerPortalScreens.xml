@@ -3046,10 +3046,21 @@
                     	<include-menu name="APInvoiceTabBar" location="component://accounting/widget/AccountingMenus.xml" />
                         <section>
                             <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="menu-bar">
-                                        <container style="button-bar">
-                                          <!--  <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/> --> <!--  NewPurchaseInvoice-->
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">                             	                             	
+                                	<decorator-section name="menu-bar">
+                                    	<section>
+                                    		<condition>
+                                    			<if-compare operator="equals" value="ADMIN_OUT" field="invoiceTypeId"/>
+                                    		</condition>
+	                                    	<widgets>
+		                                        <container style="button-bar">
+		                                            <link target="CreateAPInvoice" text="Create New Invoice" style="buttontext create" >
+		                                        		<parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter>
+		                                        		<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter>
+		                                        		<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
+		                                        		<parameter param-name="showCreateButton" value="Y"></parameter>
+		                                        	</link>
+		                                        	 <!--  <link target="newInvoice" text="${uiLabelMap.CommonCreateNew}" style="buttontext create"/> --> <!--  NewPurchaseInvoice-->
                                             <!-- <link target="newInvoice" text="New Cash Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="CASH"/></link>
                                             <link target="newInvoice" text="New Bank Voucher" style="buttontext create"><parameter param-name="prefPaymentMethodTypeId" value="BANK"/></link>
                                             <link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link> -->
@@ -3059,14 +3070,12 @@
                                             	<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
                                             	<parameter param-name="showCreateButton" value="Y"></parameter>
                                             </link> -->
-                                        	<link target="CreateAPInvoice" text="Create New Invoice" style="buttontext create" >
-                                        		<parameter param-name="prefPaymentMethodTypeId" value="BANK"></parameter>
-                                        		<parameter param-name="subTabButtonValue" value="${parameters.subTabButtonValue}"></parameter>
-                                        		<parameter param-name="invoiceTypeId" value="${parameters.invoiceTypeId}"></parameter>
-                                        		<parameter param-name="showCreateButton" value="Y"></parameter>
-                                        	</link>
+                                     
+                                        	
                                         	<!-- <link target="partyFinanHistory" text="Party Financial History" style="buttontext create"></link> -->
-                                        </container>
+		                                        </container>
+	                                        </widgets>
+                                    	</section>
                                     </decorator-section>
                                     <decorator-section name="search-options">
                                         <include-form name="FindApInvoices" location="component://accounting/widget/TreasurerPortalForms.xml"/>
@@ -3645,7 +3654,7 @@
                                     <decorator-section name="menu-bar">
                                     	<section>
                     						<condition>
-                    							<if-compare operator="equals" value="true" field="hasArInvoiceEditPermission"/>
+                    							<if-compare operator="equals" value="MIS_INCOME_IN" field="invoiceTypeId"/>
                     						</condition>
                     						<widgets>
                                        			 <container style="button-bar">
