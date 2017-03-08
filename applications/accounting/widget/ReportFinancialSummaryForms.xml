@@ -87,6 +87,26 @@ under the License.
         </field>
         <field name="fromDate" required-field="false"><date-time type="date" /></field>
         <field name="thruDate" required-field="false"><date-time type="date"/></field>
+         <field name="costCenterId" title="Cost Center" id-name="costCenterId">
+        	<drop-down>
+        		<option key="Company" description="NHDC"/>
+               <entity-options entity-name="PartyRelationshipAndDetail" key-field-name="partyId" description="${groupName}" filter-by-date="false">
+                    <entity-constraint name="partyIdFrom" operator="equals" value="${organizationPartyId}"/>
+                    <entity-constraint name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+                    <entity-constraint name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+                    <entity-constraint name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+       	</field>
+       	<field name="purposeTypeId" title="Segment" id-name="purposeTypeId">       		
+        	<drop-down allow-empty="true">
+       			<option key="All" description="All"/>
+                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
+                     <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+                 </entity-options>
+	        </drop-down>
+       	</field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">
