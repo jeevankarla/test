@@ -301,8 +301,9 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 tenPeSubDetails = EntityUtil.filterByCondition(invoiceSubsidyDetails1, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
 			 tenPeSubDetail= EntityUtil.getFirst(tenPeSubDetails);
 			 subsidyAmt=subsidyAmt.add(tenPeSubDetail.itemValue*(-1))
+			 if(subsidyAmt){
 			 value=subsidyAmt.multiply(10);
-		
+			 }
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoiceId));
 			 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId",EntityOperator.EQUALS,invoiceSubsidyDetail2.invoiceItemSeqId));
