@@ -42,10 +42,13 @@ under the License.
       
 		        <fo:page-sequence master-reference="main" font-size="12pt">	
 		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-		        	    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-                        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-		        	    
-		        		<fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportHeader.description?if_exists}</fo:block>
+		        	<#assign roId = parameters.division>
+              	 		<#assign roHeader = roId+"_HEADER">
+              	 		<#assign roSubheader = roId+"_HEADER01">
+		        	    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+                        <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
+		        		<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
+		        		<fo:block text-align="center" font-size="13pt" white-space-collapse="false" font-weight="bold">&#160;${reportHeader.description?if_exists}</fo:block>
                     	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportSubHeader.description?if_exists}</fo:block>
                     	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;SUBLEDGER REPORT FOR THE PERIOD FROM: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd/MM/yyyy")} to ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd/MM/yyyy")} </fo:block>
               			<fo:block font-size="11pt" text-align="left">============================================================================================================</fo:block> 

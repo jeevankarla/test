@@ -23,22 +23,27 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="15in"  margin-left=".3in" margin-right=".3in" margin-bottom=".3in" margin-top=".3in">
-        <fo:region-body margin-top="1.3in" margin-bottom=".6in"/>
+        <fo:region-body margin-top="2in" margin-bottom=".6in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>     
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
- <#if partyMap?has_content>
+ 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-              	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >&#160;&#160;&#160;&#160;                                 &#160;${reportHeader.description?if_exists} </fo:block>
-				  	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;               ${reportSubHeader.description?if_exists}                             Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
-				 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+              	 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
+              	<#assign roId = parameters.division>
+              	 <#assign roHeader = roId+"_HEADER">
+              	 <#assign roSubheader = roId+"_HEADER01">
+              	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
+					<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
+					<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
+				  	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
+				 <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
 				<#if reportName == "SUBLEDGER">
                 <#assign glAccount=delegator.findOne("GlAccount",{"glAccountId",fromGlAccountId},true)>
                 <fo:block  text-align="right"  keep-together="always"  white-space-collapse="false" font-weight="bold">GL ACCOUNT :${glAccount.description?if_exists}(${fromGlAccountId})                                          &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
@@ -51,7 +56,8 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                 <fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">PARTY LEDGER FOR THE PERIOD FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
                 </#if>
 				<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-            </fo:static-content>		
+            </fo:static-content>
+            <#if partyMap?has_content>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
 				<#assign partyWiseList = partyMap.entrySet()>
 				<#assign grdDebit=0>
@@ -448,15 +454,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "PartyLedgerGroupReport.pdf")}
                </fo:block>
                <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
 			 </fo:flow>
-			 </fo:page-sequence>
+			
 			  <#else>
-    	<fo:page-sequence master-reference="main">
+    	
 		<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 			<fo:block font-size="14pt">
 	            	${uiLabelMap.NoOrdersFound}.
 	       		 </fo:block>
 		</fo:flow>
-	</fo:page-sequence>	
+		
     </#if>  
+    </fo:page-sequence>
 </fo:root>
 </#escape>

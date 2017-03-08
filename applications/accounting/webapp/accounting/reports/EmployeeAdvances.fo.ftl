@@ -29,20 +29,25 @@ under the License.
     </fo:simple-page-master>   
 </fo:layout-master-set>
 ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.pdf")}
- <#if finAccountTypeIdsMap?has_content>
-	<#assign finAccountTypeId=finAccountTypeIdsMap.entrySet()> 
-	<#list finAccountTypeId as finAccntId>
+ 
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-            </fo:static-content>		
+            </fo:static-content>
+            <#if finAccountTypeIdsMap?has_content>
+			<#assign finAccountTypeId=finAccountTypeIdsMap.entrySet()> 
+			<#list finAccountTypeId as finAccntId>		
             <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
             		<#assign finAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" :finAccntId.getKey()}, true)>
                     <#assign finAccountTypeglAccnt = delegator.findOne("FinAccountTypeGlAccount", {"finAccountTypeId" :finAccntId.getKey(),"organizationPartyId":"Company"}, true)>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                          Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
-					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+					<#assign roId = parameters.division>
+              	 	<#assign roHeader = roId+"_HEADER">
+              	 	<#assign roSubheader = roId+"_HEADER01">
+					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
+					<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false"  font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
 				  	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;               ${reportSubHeader.description?if_exists}                              Page No:<fo:page-number/></fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
@@ -283,16 +288,28 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 </fo:table>
                </fo:block> 
 			 </fo:flow>
+			 </#list>
+			 <#else>	
+				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                          Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
+					<#assign roId = parameters.division>
+              	 	<#assign roHeader = roId+"_HEADER">
+              	 	<#assign roSubheader = roId+"_HEADER01">
+					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
+					<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-size="12pt" font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
+					<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
+				  	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
+					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+					<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+					<fo:block font-size="14pt">
+			            	${uiLabelMap.NoOrdersFound}.
+			       		 </fo:block>
+				</fo:flow>
+		    </#if>
 			 </fo:page-sequence>
-			 </#list>	
-			  <#else>
-    	<fo:page-sequence master-reference="main">
-		<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-			<fo:block font-size="14pt">
-	            	${uiLabelMap.NoOrdersFound}.
-	       		 </fo:block>
-		</fo:flow>
-	</fo:page-sequence>	
-    </#if>  
+			 
+    	  
 </fo:root>
 </#escape>

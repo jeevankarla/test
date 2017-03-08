@@ -19,7 +19,7 @@ dctx = dispatcher.getDispatchContext();
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
 reportTypeFlag = parameters.reportTypeFlag;
-
+roId = parameters.division;
 SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 Timestamp fromDateTs = null;
 if(fromDateStr){
