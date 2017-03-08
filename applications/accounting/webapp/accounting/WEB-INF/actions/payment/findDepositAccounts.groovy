@@ -82,7 +82,7 @@ if ("Y".equals(parameters.noConditionFind)) {
 		tempMap = [:];
 		tempMap["finAccountId"]=finAccountEntry.finAccountId;
 		tempMap["finAccountTypeId"]=finAccountEntry.finAccountTypeId;
-		tempMap["finAccountName"]=finAccountEntry.finAccountName;
+		tempMap["finAccountName"]=finAccountEntry.finAccountTypeId;
 		tempMap["ownerPartyId"]=finAccountEntry.ownerPartyId;
 		tempMap["fromDate"]=finAccountEntry.fromDate;
 		tempMap["actualBalance"]=finAccountEntry.actualBalance;

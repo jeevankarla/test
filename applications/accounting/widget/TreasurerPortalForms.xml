@@ -331,7 +331,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="finAccountId" title="AccountId"><display/></field>
         <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
-        <field name="finAccountName" title="Acc Name"><display/></field>
+        <field name="finAccountName" title="Acc Name"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
         <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
         <field name="fromDate" title="Acc Date"><display/></field>
 <!--         <field name="finAccountType"><display></display></field> -->
@@ -363,7 +363,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="finAccountId" title="AccountId"><display/></field>
         <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
-        <field name="finAccountName" title="Acc Name"><display/></field>
+        <field name="finAccountName" title="Acc Name"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
         <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
         <field name="fromDate" title="Acc Date"><display/></field>
 <!--         <field name="finAccountType"><display></display></field> -->
@@ -1144,7 +1144,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="finAccountName" title="Account Name"><text size="20"/></field>
+        <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="segmentId" title="Payment PurposeType">
         	<drop-down allow-empty="true">
@@ -1208,7 +1208,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="finAccountName" title="Account Name"><text size="20"/></field>
+        <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="segmentId" title="Payment PurposeType">
         	<drop-down allow-empty="true">
