@@ -259,10 +259,24 @@ under the License.
        <#else>
     	<fo:page-sequence master-reference="main">
 		<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-			<fo:block font-size="14pt">
-	            	No Records Found For The Given Duration!
-	       		 </fo:block>
-		</fo:flow>
+    		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;</fo:block>
+    			<#assign roId = parameters.division>
+              	<#assign roHeader = roId+"_HEADER">
+              	<#assign roSubheader = roId+"_HEADER01">
+              	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
+              	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
+       		 	<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
+				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
+       		 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				<fo:block font-size="10pt" text-align="center">---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+       		 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+       		 <fo:block font-size="12pt" text-align="center">
+            	"No Orders Found".
+       		 </fo:block>
+    	</fo:flow>
 	</fo:page-sequence>	
     </#if>  
     </fo:root>

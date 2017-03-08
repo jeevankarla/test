@@ -28,14 +28,18 @@ under the License.
         <fo:region-after extent="1.5in"/>     
             </fo:simple-page-master>
         </fo:layout-master-set>
-        <#if invoiceApplicationDetailList?has_content>
+        
         <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">
               <fo:static-content flow-name="xsl-region-before">
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
-               </fo:static-content>						
+               </fo:static-content>	
+            <#if invoiceApplicationDetailList?has_content>					
             <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-                    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-				    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+                    <#assign roId = parameters.division>
+              	 	<#assign roHeader = roId+"_HEADER">
+              	 	<#assign roSubheader = roId+"_HEADER01">
+                    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+				    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}                             </fo:block>	
           			<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold"    white-space-collapse="false"> Invoice Register Abstract ${dateFrom?if_exists} - ${dateThru?if_exists} </fo:block>
@@ -186,15 +190,14 @@ under the License.
                     </fo:block>
                 
             </fo:flow>
-        </fo:page-sequence>
-       <#else>
-    	<fo:page-sequence master-reference="main">
-		<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-			<fo:block font-size="14pt">
-	            	No Records Found For The Given Duration!
-	       		 </fo:block>
-		</fo:flow>
-	</fo:page-sequence>	
-    </#if>  
+        <#else>
+				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
+					<fo:block font-size="14pt">
+			            	No Records Found For The Given Duration
+		
+		   		 </fo:block>
+				</fo:flow>
+		    </#if>  
+		</fo:page-sequence>
     </fo:root>
 </#escape>
