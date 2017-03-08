@@ -77,10 +77,6 @@ if(UtilValidate.isNotEmpty(parameters.costCenterId)&& !"Company".equals(paramete
 	
 }
 condList.clear();
-Debug.log("parameters.costCenterId======="+parameters.costCenterId);
-//Debug.log("purposeTypeId======="+parameters.purposeTypeId);
-Debug.log("organizationPartyId======="+organizationPartyId);
-Debug.log("branchList======="+branchList);
 GenericValue lastClosedTimePeriod = null; 
 if (lastClosedDate) {
 	
@@ -106,7 +102,6 @@ if(parameters.costCenterId&&!"Company".equals(parameters.costCenterId)){
    andExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
 }
 if(parameters.purposeTypeId&&!"All".equals(parameters.purposeTypeId)){
-	Debug.log("parameters.purposeTypeId========"+parameters.purposeTypeId);
 	andExprs.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, parameters.purposeTypeId));
 }
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
@@ -280,7 +275,6 @@ unpostedTotalDebit = BigDecimal.ZERO;
 unpostedTotalCredit = BigDecimal.ZERO;
 andExprs = FastList.newInstance();
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
-Debug.log("parameters.costCenterId========================"+parameters.costCenterId);
 if(parameters.costCenterId&&!"Company".equals(parameters.costCenterId)){
 	andExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
  }
