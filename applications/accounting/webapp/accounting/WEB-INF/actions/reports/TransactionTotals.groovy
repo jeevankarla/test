@@ -24,7 +24,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
-
+import org.ofbiz.base.util.*;
 import org.ofbiz.accounting.util.UtilAccounting;
 
 import groovy.xml.Entity;
@@ -57,9 +57,30 @@ thruDate = UtilDateTime.getDayEnd(thruDate);
 	partyIds.addAll(EntityUtil.getFieldListFromEntityList(partyRelationShipIds,"partyIdTo",true));
 	
 //  Find the last closed time period to get the fromDate for the transactions in the current period and the ending balances of the last closed period
-Map lastClosedTimePeriodResult = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", organizationPartyId, "findDate", new Date(fromDate.getTime()),"userLogin", userLogin));
+Map lastClosedTimePeriodResult = dispatcher.runSync("findLastClosedDate", UtilMisc.toMap("organizationPartyId", "Company", "findDate", new Date(fromDate.getTime()),"userLogin", userLogin));
 Timestamp lastClosedDate = lastClosedTimePeriodResult.lastClosedDate;
 
+//getting costCenter related branches
+branchList = [];
+condList=[];
+condList.clear();
+if(UtilValidate.isNotEmpty(parameters.costCenterId)&& !"Company".equals(parameters.costCenterId)){
+	condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,parameters.costCenterId));
+	condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+		branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+		branchList.add(parameters.costCenterId);
+	}
+	
+}
+condList.clear();
+Debug.log("parameters.costCenterId======="+parameters.costCenterId);
+//Debug.log("purposeTypeId======="+parameters.purposeTypeId);
+Debug.log("organizationPartyId======="+organizationPartyId);
+Debug.log("branchList======="+branchList);
 GenericValue lastClosedTimePeriod = null; 
 if (lastClosedDate) {
 	
@@ -80,7 +101,14 @@ postedTotals = [];
 postedTotalDebit = BigDecimal.ZERO;
 postedTotalCredit = BigDecimal.ZERO;
 andExprs = FastList.newInstance();
-andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
+//andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
+if(parameters.costCenterId&&!"Company".equals(parameters.costCenterId)){
+   andExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
+}
+if(parameters.purposeTypeId&&!"All".equals(parameters.purposeTypeId)){
+	Debug.log("parameters.purposeTypeId========"+parameters.purposeTypeId);
+	andExprs.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, parameters.purposeTypeId));
+}
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
 andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN, lastClosedDate));
@@ -93,7 +121,13 @@ List allPostedOpeningTransactionTotals = delegator.findList("AcctgTransEntrySums
 //Debug.log("allPostedOpeningTransactionTotals======"+allPostedOpeningTransactionTotals);
 
 andExprs = FastList.newInstance();
-andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
+//andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
+if(parameters.costCenterId&&!"Company".equals(parameters.costCenterId)){
+	andExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
+ }
+ if(parameters.purposeTypeId&&!"All".equals(parameters.purposeTypeId)){
+	 andExprs.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, parameters.purposeTypeId));
+ }
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
 andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
@@ -116,7 +150,13 @@ if (allPostedTransactionTotals) {
                     if (lastClosedTimePeriod) {
 						glhistoryList.add(postedTransactionTotal.glAccountId);
                         List timePeriodAndExprs = FastList.newInstance();
-                        timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, organizationPartyId));
+						if(parameters.costCenterId&&!"Company".equals(parameters.costCenterId)){
+							timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
+						 }
+						if(parameters.purposeTypeId&&!"All".equals(parameters.purposeTypeId)){
+							 timePeriodAndExprs.add(EntityCondition.makeCondition("segmentId", EntityOperator.EQUALS, parameters.purposeTypeId));
+						 }
+                       // timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, organizationPartyId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, postedTransactionTotal.glAccountId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, lastClosedTimePeriod.customTimePeriodId));
                         lastTimePeriodHistory = EntityUtil.getFirst(delegator.findList("GlAccountAndHistory", EntityCondition.makeCondition(timePeriodAndExprs, EntityOperator.AND), null, null, null, false));
@@ -181,7 +221,13 @@ if (allPostedTransactionTotals) {
 		GenericValue glAccount1 = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", zerosPostedBalance.glAccountId), true);
 		glhistoryList.add(zerosPostedBalance.glAccountId);
 		List timePeriodAndExprs = FastList.newInstance();
-		timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, organizationPartyId));
+		if(parameters.costCenterId&&!"Company".equals(parameters.costCenterId)){
+			timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
+		 }
+		 if(parameters.purposeTypeId&&!"All".equals(parameters.purposeTypeId)){
+			 timePeriodAndExprs.add(EntityCondition.makeCondition("segmentId", EntityOperator.EQUALS, parameters.purposeTypeId));
+		 }
+		//timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, organizationPartyId));
 		timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, zerosPostedBalance.glAccountId));
 		timePeriodAndExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, lastClosedTimePeriod.customTimePeriodId));
 		lastTimePeriodHistory = EntityUtil.getFirst(delegator.findList("GlAccountAndHistory", EntityCondition.makeCondition(timePeriodAndExprs, EntityOperator.AND), null, null, null, false));
@@ -233,7 +279,14 @@ unpostedTotals = [];
 unpostedTotalDebit = BigDecimal.ZERO;
 unpostedTotalCredit = BigDecimal.ZERO;
 andExprs = FastList.newInstance();
-andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
+andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+Debug.log("parameters.costCenterId========================"+parameters.costCenterId);
+if(parameters.costCenterId&&!"Company".equals(parameters.costCenterId)){
+	andExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
+ }
+ if(parameters.purposeTypeId&&!"All".equals(parameters.purposeTypeId)){
+	 andExprs.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, parameters.purposeTypeId));
+ }
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "N"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
 andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, lastClosedDate));
@@ -242,7 +295,13 @@ andCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
 List allUnpostedOpeningTransactionTotals = delegator.findList("AcctgTransEntrySums", andCond, null, UtilMisc.toList("glAccountId"), null, false);
 
 andExprs = FastList.newInstance();
-andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
+andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));
+if(parameters.costCenterId&&!"Company".equals(parameters.costCenterId)){
+	andExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
+ }
+ if(parameters.purposeTypeId&&!"All".equals(parameters.purposeTypeId)){
+	 andExprs.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, parameters.purposeTypeId));
+ }
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "N"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
 andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
@@ -360,7 +419,13 @@ if (allTransactionTotals) {
                 if (UtilAccounting.isAssetAccount(glAccount) || UtilAccounting.isLiabilityAccount(glAccount) || UtilAccounting.isEquityAccount(glAccount)) {
                     if (lastClosedTimePeriod) {
                         List timePeriodAndExprs = FastList.newInstance();
-                        timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, organizationPartyId));
+						if(parameters.costCenterId&&!"Company".equals(parameters.costCenterId)){
+							timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
+						 }
+						 if(parameters.purposeTypeId&&!"All".equals(parameters.purposeTypeId)){
+							 timePeriodAndExprs.add(EntityCondition.makeCondition("segmentId", EntityOperator.EQUALS, parameters.purposeTypeId));
+						 }
+                        //timePeriodAndExprs.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, organizationPartyId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, allTransactionTotal.glAccountId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, lastClosedTimePeriod.customTimePeriodId));
                         lastTimePeriodHistory = EntityUtil.getFirst(delegator.findList("GlAccountAndHistory", EntityCondition.makeCondition(timePeriodAndExprs, EntityOperator.AND), null, null, null, false));
