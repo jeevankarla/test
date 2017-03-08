@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.sql.Timestamp;
+
 import org.ofbiz.accounting.AccountingException;
 import org.ofbiz.accounting.period.PeriodServices;
 import org.ofbiz.base.util.Debug;
@@ -191,6 +192,9 @@ public class UtilAccounting {
     	String glAccountId = (String)context.get("glAccountId");
     	String periodTypeId = (String)context.get("periodTypeId");
     	String isTrailBalance=(String) context.get("isTrailBalance");
+    	 String costCenterId = (String) context.get("costCenterId");
+         String segmentId = (String) context.get("segmentId");
+         List<String> roBranchList = (List) context.get("roBranchList");
     	String lastClosedPeriodId = null;
     	List<GenericValue>  openingGlHistory = FastList.newInstance();
     	GenericValue lastClosedPeriod =null;
@@ -248,6 +252,20 @@ public class UtilAccounting {
     		if(UtilValidate.isNotEmpty(glAccountId)){
     			condList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.EQUALS,glAccountId));
     		}
+    		 if(costCenterId!=null){
+    			 condList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, costCenterId));
+    	     	}
+    	     	if(roBranchList!=null){
+    	     		condList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,roBranchList));
+    	     	}
+    	     	if(segmentId!=null){
+	    	     	if(segmentId.equals("YARN_SALE")){
+	    	     		condList.add(EntityCondition.makeCondition("segmentId",EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+	    	    	 }else{
+	    	    		 condList.add(EntityCondition.makeCondition("segmentId", EntityOperator.EQUALS, segmentId));
+	    	    	 }
+    	     	}
+			    
     		
     		List orCondList = FastList.newInstance();
     		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,assetAccountClassIds)));
