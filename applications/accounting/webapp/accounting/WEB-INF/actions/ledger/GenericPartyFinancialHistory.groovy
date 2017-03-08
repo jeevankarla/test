@@ -76,11 +76,6 @@ condList.clear();
 	}
 	
 
-
-
-
-
-
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
 partyCode = parameters.partyId;
@@ -814,13 +809,47 @@ apOpeningBalance  =BigDecimal.ZERO;
 apClosingBalance  =BigDecimal.ZERO;
 
 if(UtilValidate.isNotEmpty(parameters.partyId)){
-	arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId]));
+	//arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId]));
+	
+	
+	if(roId.equals("Company") && segmentId.equals("All")){
+		
+		arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId]));
+	}
+	else if(roId.equals("Company") && !segmentId.equals("All")){
+		arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId]));
+	}
+	else if(!roId.equals("Company") && segmentId.equals("All")){
+		arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,roBranchList:intOrgPartyIdList]));
+	}
+	else{
+		arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,roBranchList:intOrgPartyIdList,segmentId:segmentId]));
+	}
+	
+	
 	//openingBalance2 = (in.vasista.vbiz.byproducts.ByProductNetworkServices.getOpeningBalanceForParty( dctx , [userLogin: userLogin, saleDate: dayBegin, partyId:parameters.partyId])).get("openingBalance");
 	//Debug.log("=======openingBalance====openingBalance2===>"+openingBalance2);
 	if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
 		arOpeningBalance=arOpeningBalanceRes.get("openingBalance");
 	}
-	apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE]));
+	//apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE]));
+	
+	
+	if(roId.equals("Company") && segmentId.equals("All")){
+		apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE]));
+	}
+	else if(roId.equals("Company") && !segmentId.equals("All")){
+		apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE]));
+	}
+	else if(!roId.equals("Company") && segmentId.equals("All")){
+		apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE,roBranchList:intOrgPartyIdList]));
+	}
+	else{
+		apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:parameters.partyId,isOBCallForAP:Boolean.TRUE,roBranchList:intOrgPartyIdList, segmentId:segmentId]));
+	}
+	
+	
+	
 	//Debug.log("=======arOpeningBalance======>"+arOpeningBalanceRes+"=apOpeningBalance==="+apOpeningBalanceRes);
 	if(UtilValidate.isNotEmpty(apOpeningBalanceRes)){
 		apOpeningBalance=apOpeningBalanceRes.get("openingBalance");
@@ -909,7 +938,23 @@ context.partyCBMap=partyCBMap;
 		apPartyCB  =BigDecimal.ZERO;
 		
 		if("ArOnly"==isLedgerCallFor){
-			arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId]));
+			//arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId]));
+			
+			if(roId.equals("Company") && segmentId.equals("All")){
+				arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId]));
+			}
+			else if(roId.equals("Company") && !segmentId.equals("All")){
+				arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId, segmentId:segmentId]));
+			}
+			else if(!roId.equals("Company") && segmentId.equals("All")){
+				arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId,roBranchList:intOrgPartyIdList]));
+			}
+			else{
+				arOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId,roBranchList:intOrgPartyIdList, segmentId:segmentId]));
+			}
+			
+			
+			
 			if(UtilValidate.isNotEmpty(arOpeningBalanceRes)){
 				arPartyOB=arOpeningBalanceRes.get("openingBalance");
 			}
@@ -917,7 +962,23 @@ context.partyCBMap=partyCBMap;
 			partyAbstractTotalInner.putAt("OB",arPartyOB);
 			partyAbstractTotalInner.putAt("CB",arPartyCB);
 		}else{
-			apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId,isOBCallForAP:Boolean.TRUE]));
+			//apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId,isOBCallForAP:Boolean.TRUE]));
+			
+			
+			if(roId.equals("Company") && segmentId.equals("All")){
+				apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId,isOBCallForAP:Boolean.TRUE]));
+			}
+			else if(roId.equals("Company") && !segmentId.equals("All")){
+				apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId,isOBCallForAP:Boolean.TRUE, segmentId:segmentId]));
+			}
+			else if(!roId.equals("Company") && segmentId.equals("All")){
+				apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId,isOBCallForAP:Boolean.TRUE,roBranchList:intOrgPartyIdLists]));
+			}
+			else{
+				apOpeningBalanceRes = (org.ofbiz.accounting.ledger.GeneralLedgerServices.getGenericOpeningBalanceForParty( dctx , [userLogin: userLogin, tillDate: dayBegin, partyId:partyId,isOBCallForAP:Boolean.TRUE,roBranchList:intOrgPartyIdList, segmentId:segmentId]));
+			}
+			
+			
 			if(UtilValidate.isNotEmpty(apOpeningBalanceRes)){
 				apPartyOB=apOpeningBalanceRes.get("openingBalance");
 			}
