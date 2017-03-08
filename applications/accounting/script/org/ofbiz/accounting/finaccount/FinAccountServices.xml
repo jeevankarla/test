@@ -200,6 +200,7 @@ under the License.
             <entity-one value-field="payment" entity-name="Payment">
                <field-map field-name="paymentId" from-field="parameters.paymentId"/>
             </entity-one>
+            <set field="newEntity.segmentId" value="${payment.paymentPurposeType}"/>
              <set field="effectiveDateDayStart" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(payment.effectiveDate)}" type="Timestamp"/>
             <if-compare-field operator="less" field="newEntity.transactionDate" type="Timestamp" to-field="effectiveDateDayStart">
                  <add-error>
