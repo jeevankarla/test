@@ -41,6 +41,13 @@
 	}
    context.chequeInFavour=chequeInFavour;
 	
+   
+   finAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, finAccountTransId), null, null, null, false));
+   finAccntTransSequence = "";
+   if(finAccntTransSequenceEntry){
+	   finAccntTransSequence = finAccntTransSequenceEntry.transSequenceId;
+	   context.finAccntTransSequence = finAccntTransSequence;
+   }
 	
 	
 	

@@ -3368,4 +3368,28 @@ under the License.
         <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>
     
+    <form name="FindPaymentsForGrouping" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="roleTypeId" title="Bill Type" event="onchange" action="javascript:hideFieldsOnchange();">
+        	<drop-down allow-empty="true" >
+        		<list-options key-name="roleTypeId" list-name="roleTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="unitId" id-name="unitId">
+        	<drop-down>
+        	<entity-options entity-name="Facility" description="${facilityName}" key-field-name="facilityId">
+        		<entity-constraint name="facilityTypeId" operator="equals" value="UNIT"/>
+        	</entity-options>
+        	</drop-down>
+        </field>
+        <field name="finAccountId" title="FinAccount">
+        	<drop-down allow-empty="false">
+        		<list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName} [${finAccountId}]"/>
+        	</drop-down>
+        </field>
+        <field name="paymentDate"><date-time/></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form> 
+    
 </forms>
