@@ -241,6 +241,7 @@ under the License.
                 <script location="component://accounting/webapp/ar/WEB-INF/actions/finTypeFinaccounts.groovy"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+                <set field="partyId" from-field="parameters.ownerPartyId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">

@@ -398,7 +398,7 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
+        <field name="finAccountTypeId" title="Advance Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
         <!-- <field name="finAccountName" title="Acc Name"><display/></field> -->
         <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
         <field name="fromDate" title="Acc Date"><display/></field>
@@ -409,6 +409,14 @@ under the License.
         <field name="actualBalance" title="Adv Balance"><display/></field>
         <field name="refund" widget-style="buttontext" event="onclick" action="" >
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}','EmpAdv');" description="Refund">
+            </hyperlink>
+        </field>
+        <field name="Disbursement" widget-style="buttontext">
+            <hyperlink target="EditFinAccountTrans" description="Disbursement" target-window="_blank">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="entryType" value="Contra"/>
+                <parameter param-name="ownerPartyId"/>
+                
             </hyperlink>
         </field>
         <field name="printReceipt" widget-style="buttontext">
