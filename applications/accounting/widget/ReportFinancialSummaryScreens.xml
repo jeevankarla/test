@@ -828,26 +828,21 @@
 				<decorator-screen name="SimpleDecorator"
 					location="component://common/widget/CommonScreens.xml">
 					<decorator-section name="body">
-						
-						<container style="h1">
-							<label text="${uiLabelMap.AccountingTrialBalance}" />
-						</container>
-						
 						<!-- <container style="h3">
 							<label text="${uiLabelMap.AccountingConsolidatedDataFromDivisions}" />
 						</container> -->
 						 <container style="h1">
 							<label text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD." />
 						</container>
-						<container style="h1">
-							<label text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;4th Floor Chenetha Bhawan Naampally Hyderabad 500001" />
-						</container>
+						<!-- <container style="h1">
+							<label text="&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${uiLabelMap.AccountingTrialBalance}" />
+						</container> -->
 						<include-form name="TrialBalanceFinancialTimePeriodSelection"
 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
 						<include-form name="TrialBalanceReport"
 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
-						<include-form name="TrialBalanceGrandTotalReport" 
- 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" /> 
+						<!-- <include-form name="TrialBalanceGrandTotalReport" 
+ 							location="component://accounting/widget/ReportFinancialSummaryForms.xml" />  -->
 						<!-- <container style="h3">
 							<label
 								text="${uiLabelMap.AccountingDebitFlag}: ${grandTotalPostedRecord.totalPostedDebits}" />
