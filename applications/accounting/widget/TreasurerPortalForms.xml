@@ -436,11 +436,12 @@ under the License.
         <actions>
 			<script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/ListContraEntries.groovy"/>
         </actions>
-        <field name="finAccountId" title = "Financial Account">
+        <!-- <field name="finAccountId" title = "Financial Account">
           	<display-entity entity-name="FinAccount" key-field-name="finAccountId" description="${finAccountId}(${finAccountName})"/>
-        </field>
+        </field> -->
+        <field name="finAccountTransId"><display/></field>
         <field name="contraRefNum" title="Instrument Number"><display></display></field>
-        <field name="transactionDate" title="Transaction Date"><display></display></field>
+        <field name="transactionDate" title="Transaction Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(transactionDate, &quot;dd/MM/yyyy&quot;);}"></display></field>
         <field name="amount" title="Amount"><display></display></field>
         <field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;DEPOSIT&quot;" name="Print Cheque" widget-style="buttontext" >
             <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
@@ -449,12 +450,14 @@ under the License.
             </hyperlink>
         </field> 
         <field name="createTransactionDetailReportPDF" title="Accounting Entry" widget-style="buttontext">
-            <hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
-                <parameter param-name="finAccountId"/>
+        	<hyperlink target="depRctAcctgTransReportPdf.pdf" description="${uiLabelMap.AccountingInvoicePDF}" target-window="_blank">
+                <parameter param-name="finAccountTransId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
+        </field>
+        <field name="cancel" widget-style="buttontext" event="onclick" action="" use-when="(&quot;${statusId}&quot;==&quot;FINACT_TRNS_CREATED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;CANCEL&quot;, &quot;_FINTRNS&quot;, session)))}">
+            <hyperlink  target-type="plain" description="cancel" target="javascript:cancelDepositContra('${finAccountTransId}');"></hyperlink>
         </field> 
-       
     </form>
     
     <!-- <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="FindDepositAccount" paginate="true"

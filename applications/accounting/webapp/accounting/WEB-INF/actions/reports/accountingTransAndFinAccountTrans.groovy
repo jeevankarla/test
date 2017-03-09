@@ -41,6 +41,7 @@ accountingTransEntryList = [];
 accountingTransEntries = [:];
 finAccountTransId = parameters.finAccountTransId;
 acctgTransId = parameters.acctgTransId;
+finAccountId = parameters.finAccountId;
 
 //getting invoice tax type
 taxType = "";
@@ -53,12 +54,17 @@ if(UtilValidate.isNotEmpty(invoiceTaxType)){
 }
 context.taxType = taxType;
 
-if(UtilValidate.isNotEmpty(parameters.finAccountId)){
-	finAccountTrns=delegator.findList("FinAccountTrans", EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, parameters.finAccountId), null, null, null, false);
-	finTransValue = EntityUtil.getFirst(finAccountTrns);
-	parameters.finAccountTransId=finTransValue.finAccountTransId;
+if(finAccountId && "depositCheque"==parameters.reportTypeFlag){
+	finAcTransList = delegator.findList("FinAccountTrans",EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId) , null, null, null, false );
+	if(UtilValidate.isNotEmpty(finAcTransList)){
+		finAcTrans = EntityUtil.getFirst(finAcTransList);
+		if(UtilValidate.isNotEmpty(finAcTrans)){
+			finAccountTransId = finAcTrans.finAccountTransId;
+		}
+	}
 }
 conditionList=[];
+allAcctgTransIds=[];
 //finding on AcctgTrans for invoice,payment and finAccnTransId
 if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(parameters.paymentId) ||UtilValidate.isNotEmpty(parameters.finAccountTransId) ){
 	//for invoiceId
@@ -74,11 +80,10 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 		conditionList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS,parameters.finAccountTransId));
 	}
 	conditionAcctgTrans = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	Debug.log("conditionAcctgTrans==========="+conditionAcctgTrans);
 	//finding on AcctgTrans
 	acctgTransList = delegator.findList("AcctgTrans",conditionAcctgTrans , null, null, null, false );
-	Debug.log("acctgTransList==========="+acctgTransList);
 	if(UtilValidate.isNotEmpty(acctgTransList)){
+		allAcctgTransIds= EntityUtil.getFieldListFromEntityList(acctgTransList, "acctgTransId", true);
 		acctgTrans = EntityUtil.getFirst(acctgTransList);
 		if(UtilValidate.isNotEmpty(acctgTrans)){
 			acctgTransId = acctgTrans.acctgTransId
@@ -89,7 +94,12 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 //end of acctngTrans find
 GenericValue finAccntTransSequenceEntry;
 if(UtilValidate.isNotEmpty(acctgTransId)){
-	accountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : acctgTransId] , false);
+	
+	if(UtilValidate.isNotEmpty(allAcctgTransIds)){
+		accountingTransEntries = EntityUtil.getFirst(delegator.findList("AcctgTrans", EntityCondition.makeCondition("acctgTransId", EntityOperator.IN, allAcctgTransIds), null, null, null, false));
+	}else{
+		accountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : acctgTransId] , false);
+	}
 	finAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, accountingTransEntries.finAccountTransId), null, null, null, false));
 }else{
 	if(UtilValidate.isNotEmpty(finAccountTransId)){
@@ -127,12 +137,34 @@ if(UtilValidate.isNotEmpty(finAccntTransSequenceEntry)){
 }
 context.finAccntTransSequence = finAccntTransSequence;
 context.put("accountingTransEntries",accountingTransEntries);
-
 if(UtilValidate.isNotEmpty(acctgTransId)){
-	accountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS , acctgTransId)  , null, null, null, false );
+	if(UtilValidate.isNotEmpty(allAcctgTransIds)){
+		accountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.IN , allAcctgTransIds)  , null, null, null, false );
+	}else{
+		accountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS , acctgTransId)  , null, null, null, false );
+	}
+	tempAccountingTransEntryList=[];
+	for(int i=0;i<accountingTransEntryList.size();i++){
+		accountingTransEntry = accountingTransEntryList.get(i);
+		tempMap=[:];
+		tempMap = UtilMisc.makeMapWritable(accountingTransEntry);
+		int partyIdInt = onlyContainsNumbers(tempMap.partyId);
+		tempMap.put("partyIdInt", partyIdInt);
+		tempAccountingTransEntryList.add(tempMap);
+	}
+	tempAccountingTransEntryList = UtilMisc.sortMaps(tempAccountingTransEntryList, UtilMisc.toList("partyIdInt"));
+	accountingTransEntryList.clear();
+	accountingTransEntryList.addAll(tempAccountingTransEntryList);
 }
 context.put("accountingTransEntryList",accountingTransEntryList);
-
+private int onlyContainsNumbers(String text) {
+	try {
+		 Integer.parseInt(text);
+		return Integer.parseInt(text);
+	} catch (NumberFormatException ex) {
+		return 0;
+	}
+}
 //for Deposit
 payAcctgTransId = "";
 payFinAccountTransId = "";
@@ -143,10 +175,13 @@ payAcctgTransId = parameters.acctgTransId;
 
 finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
 if(UtilValidate.isNotEmpty(finAccountTransAttributeDetails)){
-  payFinAccountTransId = finAccountTransAttributeDetails.attrValue;
+	if(!(finAccountTransAttributeDetails.attrValue).equals("UNION")){
+		payFinAccountTransId = finAccountTransAttributeDetails.attrValue;
+	}
 }
 conditionList.clear();
 //finding on AcctgTrans for invoice,payment and finAccnTransId
+allPayAcctgTransIds=[];
 if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(parameters.paymentId) ||UtilValidate.isNotEmpty(payFinAccountTransId) ){
 	//for invoiceId
 	if(UtilValidate.isNotEmpty(parameters.invoiceId)){
@@ -157,7 +192,7 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 		conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS,parameters.paymentId));
 	}
 	//for finAccountTrans
-	if(UtilValidate.isNotEmpty(parameters.finAccountTransId)){
+	if(UtilValidate.isNotEmpty(payFinAccountTransId)){
 		conditionList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS,payFinAccountTransId));
 	}
 	conditionAcctgTrans = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -165,6 +200,7 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 	//finding on AcctgTrans
 	paymentAcctgTransList = delegator.findList("AcctgTrans",conditionAcctgTrans , null, null, null, false );
 	if(UtilValidate.isNotEmpty(paymentAcctgTransList)){
+		allPayAcctgTransIds= EntityUtil.getFieldListFromEntityList(paymentAcctgTransList, "acctgTransId", true);
 		acctgTrans = EntityUtil.getFirst(paymentAcctgTransList);
 		if(UtilValidate.isNotEmpty(acctgTrans)){
 			payAcctgTransId = acctgTrans.acctgTransId
@@ -174,7 +210,7 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 }
 
 GenericValue payFinAccntTransSequenceEntry;
-if(UtilValidate.isNotEmpty(payAcctgTransId)){
+if(UtilValidate.isNotEmpty(payAcctgTransId) && (payAcctgTransId != acctgTransId)){
 	payAccountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : payAcctgTransId] , false);
 	payFinAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, payAccountingTransEntries.finAccountTransId), null, null, null, false));
 }else{
@@ -215,10 +251,13 @@ context.payFinAccntTransSequence = payFinAccntTransSequence;
 context.put("payAccountingTransEntries",payAccountingTransEntries);
 
 if(UtilValidate.isNotEmpty(payAcctgTransId)){
-	payAccountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS , payAcctgTransId)  , null, null, null, false );
+	if(UtilValidate.isNotEmpty(allPayAcctgTransIds)){
+		payAccountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.IN , allPayAcctgTransIds)  , null, null, null, false );
+	}else{
+		payAccountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS , payAcctgTransId)  , null, null, null, false );
+	}
 }
 context.put("payAccountingTransEntryList",payAccountingTransEntryList);
-
 
 if(UtilValidate.isNotEmpty(parameters.reportTypeFlag)){
 	reportTypeFlag = parameters.reportTypeFlag;
