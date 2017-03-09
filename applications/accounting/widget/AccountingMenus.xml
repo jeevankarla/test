@@ -2050,7 +2050,7 @@
 			<link target="EditFinAccountTransAlt">
 			</link>
 		 </menu-item>
-		 <menu-item name="FinAccountTrans"
+		 <!-- <menu-item name="FinAccountTrans"
 			title="Find FinAccount Transations">
 			<condition>
 				    <if-has-permission permission="ACCOUNTING"  action="_CASHIER"/>
@@ -2059,7 +2059,7 @@
 				<parameter param-name="finAccountId" value="FIN_ACCNT1" />
 				<parameter param-name="subTabItem" value="FinAccountTrans" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		 <!--  <menu-item name="AdhocSalePayment" title="AdhocSale Payment">
           <condition>
 				<or>
@@ -3885,6 +3885,15 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
 		</menu-item> -->
+		<menu-item name="payment" title="Make Payment">
+			<condition>
+				<or>
+					<if-compare field="invoice.statusId" operator="equals" value="INVOICE_READY" />
+					<if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED" />
+				</or>
+			</condition>
+			<link url-mode="plain"  target="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${notAppliedAmount}','${partyName}','${invoice.purposeTypeId?if_exists}');" link-type="anchor"/>
+		</menu-item>
 	</menu>  
 	
 	<menu name="ARInvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
@@ -4323,6 +4332,15 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
 		</menu-item> -->
+		<menu-item name="Receipt" title="Take Receipt">
+			<condition>
+				<or>
+					<if-compare field="invoice.statusId" operator="equals" value="INVOICE_READY" />
+					<if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED" />
+				</or>
+			</condition>
+			<link url-mode="plain"  target="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${notAppliedAmount}','${partyName}','${invoice.purposeTypeId?if_exists}');" link-type="anchor"/>
+		</menu-item>
 	</menu>  
 	 <menu name="cpfAccuntsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="cpfAccounts" title="CPF Accounts">

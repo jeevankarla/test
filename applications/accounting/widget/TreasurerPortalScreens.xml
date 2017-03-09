@@ -3239,6 +3239,8 @@
             	<set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
 				<set field="invoiceId" from-field="parameters.invoiceId" />
 				<set field="catflag" value="Ap" global="true"/>
+				<set field="parameters.parentTypeId" value="PURCHASE_INVOICE"/>
+				<set field="parameters.noConditionFind" value="Y"/>
 				<entity-one entity-name="Invoice" value-field="invoice" />
 				<entity-and entity-name="InvoiceRole" list="invoiceRoles">
 					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
@@ -3268,6 +3270,8 @@
 					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/CreateApplicationList.groovy" />
 				<script
 					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/OrderListInvoiceItem.groovy" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+           		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
 				<set field="invoiceAmount"
 					value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice)}"
 					type="BigDecimal" />
@@ -3302,6 +3306,7 @@
 				<set field="hasApInvoiceEditPermission" from-field="permResult.hasPermission" />
 				<set field="localDispatcherName" value="${parameters.localDispatcherName}" />
 				<set field="requestUri" value="${parameters.targetRequestUri}"/>
+				<set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator,invoice.partyIdFrom, false)}" />
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -3318,7 +3323,9 @@
 									location="component://accounting/widget/AccountingMenus.xml" />
 						<include-menu name="CreateAPInvoiceSubTabBar"
 									location="component://accounting/widget/AccountingMenus.xml" />
-						<container style="h1"><label>For: ${invoice.description} [${invoice.invoiceId}]</label></container>			
+						<container style="h1"><label>For: ${invoice.description} [${invoice.invoiceId}]</label>
+							<platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/apInvoiceTreasurerPortal.ftl"/></html></platform-specific>
+						</container>			
 						<section>
 							<condition>
 								<and>
@@ -3851,6 +3858,8 @@
             	<set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
 				<set field="invoiceId" from-field="parameters.invoiceId" />
 				<set field="catflag" value="AR" global="true"/>
+				<set field="parameters.parentTypeId" value="SALES_INVOICE"/>
+				<set field="parameters.noConditionFind" value="Y"/>
 				<entity-one entity-name="Invoice" value-field="invoice" />
 				<entity-and entity-name="InvoiceRole" list="invoiceRoles">
 					<field-map from-field="parameters.invoiceId" field-name="invoiceId" />
@@ -3880,6 +3889,9 @@
 					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/CreateApplicationList.groovy" />
 				<script
 					location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/OrderListInvoiceItem.groovy" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+           		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
+				
 				<set field="invoiceAmount"
 					value="${bsh:org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice)}"
 					type="BigDecimal" />
@@ -3914,6 +3926,7 @@
 				<set field="hasApInvoiceEditPermission" from-field="permResult.hasPermission" />
 				<set field="localDispatcherName" value="${parameters.localDispatcherName}" />
 				<set field="requestUri" value="${parameters.targetRequestUri}"/>
+				<set field="partyName" value="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator,invoice.partyIdFrom, false)}" />
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -3930,7 +3943,9 @@
 									location="component://accounting/widget/AccountingMenus.xml" />
 						<include-menu name="CreateArInvoiceSubTabBar"
 									location="component://accounting/widget/AccountingMenus.xml" />
-									<container style="h1"><label>For: ${invoice.description} [${invoice.invoiceId}]</label></container>
+									<container style="h1"><label>For: ${invoice.description} [${invoice.invoiceId}]</label>
+										<platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/arInvoiceTreasurerPortal.ftl"/></html></platform-specific>
+									</container>
 						<section>
 							<condition>
 								<and>
