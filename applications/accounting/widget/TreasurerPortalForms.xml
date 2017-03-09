@@ -1459,7 +1459,7 @@ under the License.
                 </entity-options>
             </drop-down>  -->       	
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-            	<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+            	<list-options key-name="partyId" list-name="intOrgList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
             </drop-down>
         </field>
         <field name="partyIdFrom" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
@@ -1709,7 +1709,7 @@ under the License.
                 </entity-options>	
             </drop-down> -->
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+				<list-options key-name="partyId" list-name="intOrgList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
 			</drop-down>
         </field>
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
@@ -2416,7 +2416,7 @@ under the License.
                </entity-options>
             </drop-down> -->
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+				<list-options key-name="partyId" list-name="intOrgList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
 			</drop-down>
         </field>
         <!-- <field position="2" name="costCenterId" parameter-name="costCenterId" required-field="true">
@@ -2543,7 +2543,7 @@ under the License.
                </entity-options>
             </drop-down> -->
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+				<list-options key-name="partyId" list-name="intOrgList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
 			</drop-down>
         </field>
         <field position="2" name="costCenterId" id-name="costCenterId" parameter-name="costCenterId" required-field="true">

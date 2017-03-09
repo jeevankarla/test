@@ -1570,7 +1570,7 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
-                <set field="defaultOrganizationPartyId" value="INT5"/>
+                <set field="defaultOrganizationPartyId" value="HO"/>
                 <set field="parameters.findPaymentMethodType" value="bankOrNonBankMethodType"/>
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/findPaymentMethodType.groovy"/>
                	<set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
@@ -2429,7 +2429,7 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="PAYMENT_EDIT"/>
                 </service>
-                <set field="defaultOrganizationPartyId" value="INT5"/>
+                <set field="defaultOrganizationPartyId" value="HO"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethod.js" global="true"/>
                 <set field="hasPaymentEditPermission" from-field="permResult.hasPermission"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
