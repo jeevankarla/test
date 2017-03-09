@@ -26,16 +26,16 @@ under the License.
               page-width="8.5in" page-height="11in"
               margin-top="0.3in" margin-bottom="0.3in"
               margin-left="0.4in" margin-right="0.3in">
-            <fo:region-body margin-top="1in" margin-bottom="0.5in"/>
-            <fo:region-before extent="1in"/>
+            <fo:region-body margin-top=".5in" margin-bottom="0.5in"/>
+            <fo:region-before extent=".5in"/>
             <fo:region-after extent="0.5in" />
         </fo:simple-page-master>
         <fo:simple-page-master master-name="simple-landscape"
               page-width="11in" page-height="8.5in"
               margin-top="0.3in" margin-bottom="0.3in"
               margin-left="0.4in" margin-right="0.3in">
-            <fo:region-body margin-top="1in" margin-bottom="0.5in"/>
-            <fo:region-before extent="1in"/>
+            <fo:region-body margin-top=".5in" margin-bottom="0.5in"/>
+            <fo:region-before extent=".1in"/>
             <fo:region-after extent="0.5in" />
         </fo:simple-page-master>
     </fo:layout-master-set>
@@ -48,42 +48,18 @@ under the License.
              in the right side cell we put the title, username and date
         -->
         <fo:static-content flow-name="xsl-region-before" font-size="${headerFontSize?default("8pt")}">
-            <fo:table table-layout="fixed">
+           <fo:table table-layout="fixed">
                 <fo:table-column column-number="1" column-width="proportional-column-width(50)"/>
                 <fo:table-column column-number="2" column-width="proportional-column-width(50)"/>
                 <fo:table-body>
                     <fo:table-row>
-                        <#--<fo:table-cell>
-                            <fo:block>
-                            <#if logoImageUrl?exists>
-                                <fo:external-graphic src="${logoImageUrl}" overflow="hidden" height="40px"/>
-                            </#if>
-                            </fo:block>
-                        </fo:table-cell>-->
                         <fo:table-cell>
-                            <#-- The title of the report -->
-                            <fo:block font-weight="bold" text-decoration="underline" space-after="0.03in">
-                                <#if titleProperty?exists>${uiLabelMap.get(titleProperty)}<#else>${title?if_exists}</#if>
-                            </fo:block>
+                             
+									           <fo:block text-align="center" font-size="11pt" font-weight="bold" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Trial Balance</fo:block>
+		                                       
+					              			
                             <#-- Username and date -->
-                            <fo:list-block provisional-distance-between-starts="1in">
-                                <fo:list-item>
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">${uiLabelMap.CommonUsername}</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block><#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                                <fo:list-item>
-                                    <fo:list-item-label>
-                                        <fo:block font-weight="bold">${uiLabelMap.CommonDate}</fo:block>
-                                    </fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()">
-                                        <fo:block>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>
-                                    </fo:list-item-body>
-                                </fo:list-item>
-                            </fo:list-block>
+                            
                         </fo:table-cell>
                     </fo:table-row>
                 </fo:table-body>
