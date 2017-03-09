@@ -246,6 +246,17 @@ under the License.
         	<permission-service service-name="acctgInvoicePermissionCheck" main-action="APINVOICE_EDIT"/>
        		<permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
         </required-permissions>
+        <attribute name="vatAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="cstAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="tdsAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="serviceTaxAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="bedAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="vatType" type="String" mode="IN" optional="true"/>
+        <attribute name="cstType" type="String" mode="IN" optional="true"/>
+        <attribute name="tdsType" type="String" mode="IN" optional="true"/>
+        <attribute name="serviceTaxType" type="String" mode="IN" optional="true"/>
+        <attribute name="parentInvoiceItemSeq" type="String" mode="IN" optional="true"/>
+        <attribute name="bedTaxType" type="String" mode="IN" optional="true"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <override name="invoiceItemSeqId" mode="INOUT" optional="true"/><!-- will optionally assign by the system -->
@@ -260,6 +271,17 @@ under the License.
         </required-permissions>
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="vatAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="cstAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="tdsAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="serviceTaxAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="bedAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="vatType" type="String" mode="IN" optional="true"/>
+        <attribute name="cstType" type="String" mode="IN" optional="true"/>
+         <attribute name="tdsType" type="String" mode="IN" optional="true"/>
+        <attribute name="serviceTaxType" type="String" mode="IN" optional="true"/>
+        <attribute name="bedTaxType" type="String" mode="IN" optional="true"/>
+        <attribute name="parentInvoiceItemSeq" type="String" mode="IN" optional="true"/>
         <override name="invoiceItemSeqId" mode="INOUT" optional="true"/><!-- will optionally assign by the system -->
     </service>
     <service name="updateInvoiceItem" engine="simple" default-entity-name="InvoiceItem"
@@ -695,5 +717,10 @@ under the License.
         <attribute name="finAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="headerCostCenterId" type="String" mode="IN" optional="true"/>
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
-    </service>	
+    </service>
+    <service name="adjustRoundingDiffForInvoice" engine="java"
+                location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="adjustRoundingDiffForInvoice" auth="true">
+         <description>Create Rounding Adjustment For Invoice</description>
+        <attribute name="invoiceId" mode="INOUT" type="String" optional="false"/>
+    </service>  	
 </services>

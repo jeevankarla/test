@@ -3166,6 +3166,11 @@
 					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
 					<field-map field-name="partyRelationshipTypeId" value="GROUP_ROLLUP"/>
 				</entity-and>
+				<entity-condition list="invoiceItemTypesList" entity-name="InvoiceItemTypeMap">
+					<having-condition-list combine="and">
+						<condition-expr field-name="invoiceTypeId" operator="equals" value="STATUTORY_OUT"/>
+					</having-condition-list>
+				</entity-condition>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
 				<entity-condition entity-name="InvoiceItemType"	list="PayrolGroup">
 					<condition-expr field-name="parentTypeId" value="PAYROL" />
@@ -3743,6 +3748,11 @@
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
                 </service>
+                <entity-condition list="invoiceItemTypesList" entity-name="InvoiceItemTypeMap">
+					<having-condition-list combine="and">
+						<condition-expr field-name="invoiceTypeId" operator="equals" value="STATUTORY_IN"/>
+					</having-condition-list>
+				</entity-condition>
                 <set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission"/>
                 <entity-one entity-name="Invoice" value-field="invoice" />
 				<entity-one entity-name="InvoiceItem" value-field="invoiceItem" />
