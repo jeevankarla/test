@@ -67,7 +67,7 @@ under the License.
 		    	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportSubHeader.description?if_exists}</fo:block>
                     <fo:block text-align="right" linefeed-treatment="preserve"></fo:block>
                     <#assign finAccountTransDetails = delegator.findOne("FinAccountTrans", {"finAccountTransId" : finAccountTransId}, false)?if_exists/>
-                    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"><#if finAccountTransDetails?has_content>${(finAccountTransDetails.finAccountTransTypeId)?replace("_"," ")}<#else>${acctgTransTypeId?if_exists?replace("_"," ")}</#if></fo:block>
+                    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"><#--<#if finAccountTransDetails?has_content>${(finAccountTransDetails.finAccountTransTypeId)?replace("_"," ")}<#else>${acctgTransTypeId?if_exists?replace("_"," ")}</#if>--></fo:block>
                     <#--<fo:block text-align="left"  keep-together="always"  font-weight = "bold" white-space-collapse="false">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMMM dd,yyyy")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>-->
                     <fo:block>
                         <fo:table>
@@ -115,7 +115,7 @@ under the License.
 	                   		<#else>		
 	                   			<#if acctgTransTypeId?has_content>
 	            				<fo:table-cell>
-	                        		<fo:block  keep-together="always" text-align="left">Acctg Trans Type Id:${acctgTransTypeId?if_exists}</fo:block>  
+	                        		<fo:block  keep-together="always" text-align="left"><!--Acctg Trans Type Id:${acctgTransTypeId?if_exists}--></fo:block>  
 	                   			</fo:table-cell>
 	                   			<#else>
 	                   			<fo:table-cell>
@@ -168,7 +168,7 @@ under the License.
                     <fo:table-row>
                     		<#if transactionDate?has_content>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" >Transaction Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(transactionDate, "dd-MM-yyyy HH:mm:ss")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" >Transaction Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(transactionDate, "dd-MM-yyyy")}</fo:block>  
                        			</fo:table-cell>
                        			<#else>
                        			<fo:table-cell>
@@ -178,7 +178,7 @@ under the License.
                     
                     		<#if isPosted?has_content>
                 				<fo:table-cell>
-                            		<fo:block  text-align="left"  keep-together="always">Is Posted:${isPosted?if_exists}</fo:block>  
+                            		<fo:block  text-align="left"  keep-together="always"><#--Is Posted:${isPosted?if_exists}--></fo:block>  
                        			</fo:table-cell>
                        			<#else>
                        			<fo:table-cell>
@@ -210,7 +210,7 @@ under the License.
                      <fo:table-row>	
                      <#if glJournalId?has_content>
                        		<fo:table-cell>
-                            		<fo:block  text-align="left"  keep-together="always">GL Journal Id:${glJournalId?if_exists}</fo:block>  
+                            		<fo:block  text-align="left"  keep-together="always"><#--GL Journal Id:${glJournalId?if_exists}--></fo:block>  
                        		</fo:table-cell>
                        		<#else>
                        			<fo:table-cell>
@@ -293,7 +293,7 @@ under the License.
                      <#if partyId?has_content>
                      		<#assign partyFullName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId?if_exists, false)>
                     		<fo:table-cell>
-                            		<fo:block text-align="left" wrap-option="wrap">Party: <fo:inline font-weight="bold">${partyFullName?if_exists}[${partyId?if_exists}]</fo:inline></fo:block>  
+                            		<fo:block text-align="left" wrap-option="wrap"><#if parameters.reportFlag?has_content && parameters.reportFlag =="Y">&#160;<#else>Party: <fo:inline font-weight="bold">${partyFullName?if_exists}[${partyId?if_exists}]</fo:inline></#if></fo:block>  
                        		</fo:table-cell>
                        		<#else>
                        			<fo:table-cell>
@@ -312,7 +312,7 @@ under the License.
                        		<#assign invoiceDetails = delegator.findOne("Invoice", {"invoiceId" : invoiceId}, false)?if_exists/>
                        		<#if invoiceDetails?has_content && invoiceDetails.referenceNumber?has_content>
                      		<fo:table-cell>
-                            		<fo:block  text-align="left"  keep-together="always">Party Invoice No:<fo:inline font-weight="bold">${invoiceDetails.referenceNumber?if_exists}</fo:inline></fo:block>  
+                            		<fo:block  text-align="left"  keep-together="always"><#--Party Invoice No:<fo:inline font-weight="bold">${invoiceDetails.referenceNumber?if_exists}</fo:inline>--></fo:block>  
                        		</fo:table-cell>
                        		<#else>
                        			<fo:table-cell>
@@ -428,14 +428,14 @@ under the License.
                       </fo:table>
             		</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-weight = "bold" font-size = "12pt">Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
+            		<fo:block font-weight = "bold" font-size = "12pt">Acct Code&#160;&#160;&#160;Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
             	<fo:block>
                  	<fo:table>
+                    <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="20pt"/>
-                    <fo:table-column column-width="140pt"/>
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="170pt"/> 
                     <fo:table-body>
 							<#if accountingTransEntryList?has_content>
@@ -443,7 +443,9 @@ under the License.
 							<#assign drTotal = 0>
 							<#list accountingTransEntryList as accntngTransEntry>
 							<fo:table-row>
-                				
+                				<fo:table-cell>
+                            		<fo:block  text-align="left"  white-space-collapse="false">${accntngTransEntry.glAccountId?if_exists}</fo:block>  
+                       			</fo:table-cell>
                        			<#if accntngTransEntry.glAccountId?has_content>  
         						<#assign glAccntDetails = delegator.findOne("GlAccount", {"glAccountId" :accntngTransEntry.glAccountId}, true)>
                 				<fo:table-cell>
@@ -505,9 +507,9 @@ under the License.
                             		<fo:block text-align="right" font-weight="bold" white-space-collapse="false">${crTotal?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
             				</fo:table-row>
-            				<fo:table-row>
+               				<fo:table-row>
 								 <fo:table-cell number-columns-spanned="5">
-			  						<fo:block text-align="left"  white-space-collapse="false" font-size="12pt">Amount in Words : ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(crTotal?string("#0.00")), "%indRupees-and-paise", locale).toUpperCase()} ONLY  </fo:block>	
+			  						<fo:block text-align="left"  white-space-collapse="false" font-size="12pt">Amount in Words : RUPEES ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(crTotal?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()} ONLY  </fo:block>	
 			  					 </fo:table-cell>
 				       		</fo:table-row>
 		  					</#if>
@@ -702,7 +704,7 @@ under the License.
                     <fo:table-row>
                     		<#if transactionDate?has_content>
                 				<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" >Transaction Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(transactionDate, "dd-MM-yyyy HH:mm:ss")}</fo:block>  
+                            		<fo:block  keep-together="always" text-align="left" >Transaction Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(transactionDate, "dd-MM-yyyy")}</fo:block>  
                        			</fo:table-cell>
                        			<#else>
                        			<fo:table-cell>
@@ -827,7 +829,7 @@ under the License.
                      <#if partyId?has_content>
                      		<#assign partyFullName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId?if_exists, false)>
                     		<fo:table-cell>
-                            		<fo:block text-align="left" wrap-option="wrap">Party: <fo:inline font-weight="bold">${partyFullName?if_exists}[${partyId?if_exists}]</fo:inline></fo:block>  
+                            		<fo:block text-align="left" wrap-option="wrap"><#if parameters.reportFlag?has_content && parameters.reportFlag =="Y">&#160;<#else>Party: <fo:inline font-weight="bold">${partyFullName?if_exists}[${partyId?if_exists}]</fo:inline></#if></fo:block>  
                        		</fo:table-cell>
                        		<#else>
                        			<fo:table-cell>
@@ -962,14 +964,14 @@ under the License.
                       </fo:table>
             		</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-weight = "bold" font-size = "12pt">Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
+            		<fo:block font-weight = "bold" font-size = "12pt">Acct Code&#160;&#160;&#160;Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
 		            <fo:block>
                  	<fo:table>
+                    <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="20pt"/>
-                    <fo:table-column column-width="140pt"/>
+                    <fo:table-column column-width="100pt"/>
+                    <fo:table-column column-width="100pt"/>
                     <fo:table-column column-width="170pt"/> 
                     <fo:table-body>
 							<#if payAccountingTransEntryList?has_content>
@@ -977,7 +979,9 @@ under the License.
 							<#assign drTotal = 0>
 							<#list payAccountingTransEntryList as accntngTransEntry>
 							<fo:table-row>
-                				
+                				<fo:table-cell>
+                            		<fo:block  text-align="left"  white-space-collapse="false">${accntngTransEntry.glAccountId?if_exists}</fo:block>  
+                       			</fo:table-cell>
                        			<#if accntngTransEntry.glAccountId?has_content>  
         						<#assign glAccntDetails = delegator.findOne("GlAccount", {"glAccountId" :accntngTransEntry.glAccountId}, true)>
                 				<fo:table-cell>
@@ -1041,7 +1045,7 @@ under the License.
             				</fo:table-row>
             				<fo:table-row>
 								 <fo:table-cell number-columns-spanned="5">
-			  						<fo:block text-align="left"  white-space-collapse="false" font-size="12pt">Amount in Words : ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(crTotal?string("#0.00")), "%indRupees-and-paise", locale).toUpperCase()} ONLY  </fo:block>	
+			  						<fo:block text-align="left"  white-space-collapse="false" font-size="12pt">Amount in Words : RUPEES ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(crTotal?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()} ONLY  </fo:block>	
 			  					 </fo:table-cell>
 				       		</fo:table-row>
 		  					</#if>
