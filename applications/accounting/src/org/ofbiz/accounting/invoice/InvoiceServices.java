@@ -4110,7 +4110,7 @@ public class InvoiceServices {
             		if(UtilValidate.isNotEmpty(bedAmount)){
             			bedItemAmt=bedAmount;
             		}
-            		totalAmt = totalAmt.add(bedItemAmt);
+            		//totalAmt = totalAmt.add(bedItemAmt);
             		if(UtilValidate.isEmpty(bedInvItems)){
             			Map<String, Object> createTaxItemContext = FastMap.newInstance();
             			createTaxItemContext.put("invoiceId", invoiceId);
@@ -4298,7 +4298,7 @@ public class InvoiceServices {
 	        try{   
 	        	    Map roundAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
 	        	    roundAdjCtx.put("invoiceId", invoiceId);
-		  	 		Map roundingResult = dispatcher.runSync("adjustRoundingDiffForInvoice",roundAdjCtx);  	
+		  	 		Map roundingResult = dispatcher.runSync("adjustRoundingDiffForInvoice",roundAdjCtx);
 		  	 		if (ServiceUtil.isError(roundingResult)) {
 		  	 			String errMsg =  ServiceUtil.getErrorMessage(roundingResult);
 		  	 			Debug.logError(errMsg , module);
