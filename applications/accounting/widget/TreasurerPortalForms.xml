@@ -331,7 +331,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="finAccountId" title="AccountId"><display/></field>
         <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
-        <field name="finAccountName" title="Acc Name"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
+       <!--  <field name="finAccountName" title="Acc Name"><display/></field> -->
         <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
         <field name="fromDate" title="Acc Date"><display/></field>
 <!--         <field name="finAccountType"><display></display></field> -->
@@ -363,7 +363,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="finAccountId" title="AccountId"><display/></field>
         <field name="finAccountTypeId" title="Deposit Acc Type"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
-        <field name="finAccountName" title="Acc Name"><display-entity entity-name="FinAccountType" key-field-name="finAccountTypeId" description="${description}"/></field>
+        <!-- <field name="finAccountName" title="Acc Name"><display/></field> -->
         <field name="ownerPartyId" title="Owner Party"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, ownerPartyId, false);}[${ownerPartyId}]"/></field>
         <field name="fromDate" title="Acc Date"><display/></field>
 <!--         <field name="finAccountType"><display></display></field> -->
@@ -3048,21 +3048,44 @@ under the License.
         <field name="subTabButtonValue" ><hidden value="${parameters.subTabButtonValue}"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field name="invoiceTypeId"><hidden/></field>
-        <field name="purposeTypeId"><hidden/></field>
+        <field name="finAccountId"><hidden value="${parameters.finAccountId}"/></field>
+        <field name="purposeTypeId" title="Purpose Type" required-field="true">
+        	<drop-down allow-empty="true">
+        	<option key="COMMON" description="COMMON"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="YARN_SALE" description="YARN SEGMENT"/>
+           </drop-down>
+        </field>
         <field position="1" name="partyIdFrom" title="Party Name" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
         <field position="1" name="invoiceDate" title="Voucher Date" event="onblur" action="javascript:setInvoiceDateAsDueDate();" required-field="true"><date-time/></field>   
         <field name="dueDate"  ><hidden ></hidden></field>     
-        <field position="1" name="organizationPartyId" parameter-name="partyId" title="Unit Name">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                    <entity-order-by field-name="groupName"/>
-                </entity-options>
+        
+         
+       <field position="1" name="organizationPartyId" id-name="organizationPartyId" parameter-name="partyId" required-field="true" event="onchange" action="javascript:getBOsForRO();" >
+            <drop-down allow-empty="true">
+              <entity-options entity-name="PartyRelationshipAndDetail" key-field-name="partyId" description="${groupName}" filter-by-date="false">
+                   <entity-constraint name="partyIdFrom" operator="equals" value="Company"/>
+                   <entity-constraint name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+                   <entity-constraint name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+                   <entity-constraint name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
+                   <entity-order-by field-name="groupName"/>
+               </entity-options>
             </drop-down>
-        </field>              
+        </field>  
+          <field position="2" name="costCenterId" id-name="costCenterId" parameter-name="costCenterId" required-field="true">
+            <drop-down allow-empty="true">
+				<list-options key-name="partyIdTo" list-name="orderList" description="${groupName}"  />
+                <list-options key-name="partyIdTo" list-name="getROList" description="${groupName}"/>
+            </drop-down>
+        </field> 
         <!-- <field position="1" name="referenceNumber" title="Reference Number" encode-output="false" required-field="true"><text size="50"/></field> 
         <field position="2" name="referenceNumberDate" title="Reference Date"><date-time/><hidden/></field>       
         <field position="1" name="description" title="Narration" encode-output="false" required-field="true"><text size="100"/></field>      -->  
         <field position="1" name="createButton" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}" use-when="invoice==null">
+            <submit button-type="button"/>
+        </field>
+         <field position="1" name="updateButton" widget-style="smallSubmit" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;statusId&quot;).equals(&quot;INVOICE_IN_PROCESS&quot;)">
+            
             <submit button-type="button"/>
         </field>
        <!--  <field position="1" name="updateButton" widget-style="smallSubmit" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;statusId&quot;).equals(&quot;INVOICE_IN_PROCESS&quot;)">

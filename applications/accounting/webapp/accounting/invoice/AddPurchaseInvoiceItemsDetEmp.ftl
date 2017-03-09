@@ -309,7 +309,7 @@ under the License.
   		var finAccountId = "${finAccountId}";
 		var saveRow = $('#save').parent().parent();
 		var invoiceItemTypeId = $('#invoiceItemTypeId :selected').val();
-		var costCenterId = $('#costCenterId :selected').val();
+		var costCenterId = $('#costCenterId1 :selected').val();  
 		  
 		saveRow.find('td').each (function() {
 		    var eachTd = $(this);
@@ -448,18 +448,37 @@ under the License.
 				          </td>
 				          <td></td>
 				          <td>
-				          	<select name="costCenterId" id="costCenterId">
-						         <#list partyClsGrpList as partyClsGrp>
-						         <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyClsGrp.partyId?if_exists, false)>
-						            <option value='${partyClsGrp.partyId}'>
-						        	    ${partyName?if_exists}
-						            </option>
-						         </#list>
-							  </select>  
+				          <select name="costCenterId" id="costCenterId1">
+				          	   <#list branchListOfRO as roWiseBranch>
+					          	   <#if roWiseBranch.partyIdTo=="${tempCostCenterId}">
+					          	   		<option selected value='${roWiseBranch.partyIdTo}'>
+							        	    ${roWiseBranch.groupName?if_exists}
+							            </option>
+					          	   <#else>
+							            <option value='${roWiseBranch.partyIdTo}'>
+							        	    ${roWiseBranch.groupName?if_exists}
+							            </option>
+							        </#if>
+						        </#list>
+						        <#list branchesListOfRO as roWiseBranches>
+						           <#if roWiseBranches.partyIdTo=="${tempCostCenterId}">
+					          	   	    <option selected value='${roWiseBranches.partyIdTo}'>
+							        	    ${roWiseBranches.groupName?if_exists}
+							            </option>
+				          	   
+					          	   <#else>
+							            <option value='${roWiseBranches.partyIdTo}'>
+							        	    ${roWiseBranches.groupName?if_exists}
+							            </option>
+							        </#if>
+						            
+						        </#list>
+							 </select>   
 				          </td>
 				          <td><input id="description" class="input-medium" name="description" type="text" size="60"/></td>
 				          <td><input id="amount" class="input-medium" name="amount" type="text" size="12"/>
 				          <input id="invoiceId" name="invoiceId" type="hidden" value="${invoice.invoiceId}" size="12"/>
+				           <input id="purposeTypeId" name="purposeTypeId" type="hidden" value="${invoice.purposeTypeId}" size="12"/>
 				          <input id="paymentMethodId" name="paymentMethodId" type="hidden" value="DEBITNOTE" size="12"/>
 				          <input id="paymentTypeId" name="paymentTypeId" type="hidden" value="AGNSTINV_PAYOUT" size="12"/>
 				          <input id="invoicePartyIdFrom" name="invoicePartyIdFrom" type="hidden" value="${invoice.partyIdFrom}" size="12"/>
@@ -473,19 +492,8 @@ under the License.
 				        </tr>
 				         <tr>
 				           <td></td>	
-				           <td align='right'>
-				           	Invoice Header Cost Center: 
-				           </td>	
-				           <td>
-				           	<select name="headerCostCenterId" id="headerCostCenterId">
-						         <#list partyClsGrpList as partyClsGrp>
-						         <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyClsGrp.partyId?if_exists, false)>
-						            <option value='${partyClsGrp.partyId}'>
-						        	    ${partyName?if_exists}
-						            </option>
-						         </#list>
-							  </select> 
-				           </td>	
+				           
+				           
 				            <td><button id="submit" name="submit"  onClick="return setHeaderCostCenter();" style="buttontext">Save</button></td>
 				           <td></td>	
 				           <td></td>	

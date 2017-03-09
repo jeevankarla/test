@@ -7233,6 +7233,7 @@ public static Map<String, Object> createAccountingRoleForFinTrans(DispatchContex
         Timestamp paymentDate = (Timestamp) context.get("paymentDate");
         String paymentTypeId = (String) context.get("paymentTypeId");
         String finAccountId = (String) context.get("finAccountId");
+        String purposeTypeId = (String) context.get("purposeTypeId");
         String invoicePartyIdFrom =(String) context.get("invoicePartyIdFrom");
         String invoicePartyIdTo = (String) context.get("invoicePartyIdTo");
         String invoiceId =(String) context.get("invoiceId");
@@ -7257,6 +7258,7 @@ public static Map<String, Object> createAccountingRoleForFinTrans(DispatchContex
       	        paymentCtx.put("paymentMethodId", paymentMethodId);//from AP mandatory
       	        paymentCtx.put("organizationPartyId", invoicePartyIdFrom);
                 paymentCtx.put("partyId", invoicePartyIdTo);
+                paymentCtx.put("paymentPurposeType", purposeTypeId);
       	        paymentCtx.put("paymentDate", UtilDateTime.nowTimestamp());
       	        paymentCtx.put("statusId", "PMNT_NOT_PAID");
       	        if (UtilValidate.isNotEmpty(finAccountId) ) {
