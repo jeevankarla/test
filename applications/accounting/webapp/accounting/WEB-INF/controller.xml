@@ -3893,6 +3893,23 @@ under the License.
         <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
         <response name="error" type="view" value="CreateARInvoice"/>
     </request-map>
+    
+    <request-map uri="UpdateInvoiceForPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateInvoice"/>
+        <response name="success" type="request-redirect" value="OGAPCreateInvoiceForEmployee">
+            <redirect-parameter name="invoiceId"/>
+            <redirect-parameter name="partyId"/>
+            <redirect-parameter name="finAccountId"/>
+            <redirect-parameter name="actionSubTabButtonValue"/>
+            <redirect-parameter name="subTabButtonValue"/>
+            <redirect-parameter name="partyIdFrom"/>
+        </response>
+        <!-- <response name="success" type="request" value="newQuickCreateInvoice"/> -->
+        <response name="error" type="view" value="OGAPCreateInvoiceForEmployee"/>
+    </request-map>
+    
+    
     <request-map uri="ARInvoiceOverview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ARInvoiceOverview"/>

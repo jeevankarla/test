@@ -5769,6 +5769,27 @@
                     <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
                 </service>
                 <set field="hasArInvoiceEditPermission" from-field="permResult.hasPermission"/>
+                 <entity-one entity-name="Invoice" value-field="invoice" />
+				<entity-one entity-name="InvoiceItem" value-field="invoiceItem" />
+				<entity-and entity-name="InvoiceItem" list="invoiceItems">
+					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
+					<order-by field-name="invoiceItemSeqId" />
+				</entity-and>
+                <entity-and entity-name="PartyRelationshipAndDetail" list="branchesListOfRO">
+					<field-map field-name="partyIdFrom" from-field="invoice.partyIdFrom" />
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="BRANCH_CUSTOMER"/>
+				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchListOfRO">
+					<field-map field-name="partyIdTo" from-field="invoice.partyIdFrom" />
+					<field-map field-name="partyIdFrom" value="Company"/>
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="GROUP_ROLLUP"/>
+				</entity-and>
+                
+                
                 <entity-one entity-name="Invoice" value-field="invoice" />
 				<entity-one entity-name="InvoiceItem" value-field="invoiceItem" />
 				<entity-and entity-name="InvoiceItem" list="invoiceItems">
@@ -5803,6 +5824,9 @@
                                 <screenlet title="${invoiceCreateScreenTitle}">
                                     <include-form name="CreateInvoiceForPayment" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
+                                <platform-specific>
+					                         <html><html-template location="component://accounting/webapp/accounting/invoice/fetchBoForRo.ftl"/></html>
+					                 </platform-specific>
                             </widgets>
                         </section>
                         <section>
@@ -6267,6 +6291,25 @@
 					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
 					<order-by field-name="invoiceItemSeqId" />
 				</entity-and>
+				 <entity-one entity-name="Invoice" value-field="invoice" />
+				<entity-one entity-name="InvoiceItem" value-field="invoiceItem" />
+				<entity-and entity-name="InvoiceItem" list="invoiceItems">
+					<field-map field-name="invoiceId" from-field="parameters.invoiceId" />
+					<order-by field-name="invoiceItemSeqId" />
+				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchesListOfRO">
+					<field-map field-name="partyIdFrom" from-field="invoice.partyId" />
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="BRANCH_CUSTOMER"/>
+				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchListOfRO">
+					<field-map field-name="partyIdTo" from-field="invoice.partyId" />
+					<field-map field-name="partyIdFrom" value="Company"/>
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="GROUP_ROLLUP"/>
+				</entity-and>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/DisplayInvoiceItemTypes.groovy" />
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/GetInvoiceItemTypes.groovy" />
 				<entity-condition entity-name="InvoiceItemType"	list="PayrolGroup">
@@ -6289,6 +6332,9 @@
                                 <screenlet title="${invoiceCreateScreenTitle}">
                                     <include-form name="CreateInvoiceForPayment" location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                 </screenlet>
+                                <platform-specific>
+					                         <html><html-template location="component://accounting/webapp/accounting/invoice/fetchBoForRo.ftl"/></html>
+					                 </platform-specific>
                             </widgets>
                         </section>
                         <section>
