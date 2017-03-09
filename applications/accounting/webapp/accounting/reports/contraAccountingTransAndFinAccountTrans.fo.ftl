@@ -428,24 +428,22 @@ under the License.
                       </fo:table>
             		</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-weight = "bold" font-size = "12pt">Acct Code&#160;&#160;&#160;Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
+            		<fo:block font-weight = "bold" font-size = "12pt">Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
             	<fo:block>
                  	<fo:table>
+                    <fo:table-column column-width="210pt"/>
                     <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="170pt"/> 
+                    <fo:table-column column-width="90pt"/>
+                    <fo:table-column column-width="170pt"/>
+                    <fo:table-column column-width="20pt"/> 
                     <fo:table-body>
 							<#if accountingTransEntryList?has_content>
 							<#assign crTotal = 0>
 							<#assign drTotal = 0>
 							<#list accountingTransEntryList as accntngTransEntry>
 							<fo:table-row>
-                				<fo:table-cell>
-                            		<fo:block  text-align="left"  white-space-collapse="false">${accntngTransEntry.glAccountId?if_exists}</fo:block>  
-                       			</fo:table-cell>
+                				
                        			<#if accntngTransEntry.glAccountId?has_content>  
         						<#assign glAccntDetails = delegator.findOne("GlAccount", {"glAccountId" :accntngTransEntry.glAccountId}, true)>
                 				<fo:table-cell>
@@ -497,14 +495,14 @@ under the License.
                 				<fo:table-cell>
                             		<fo:block text-align="left" wrap-option="wrap" font-weight="bold"> Totals: </fo:block>  
                        			</fo:table-cell>
-                       			<#--<fo:table-cell>
-                            		<fo:block  text-align="left"  white-space-collapse="false"></fo:block>  
-                       			</fo:table-cell>-->
                        			<fo:table-cell>
-                            		<fo:block text-align="right" font-weight="bold" white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
+                            		<fo:block  text-align="right"  font-weight="bold" white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
                             		<fo:block text-align="right" font-weight="bold" white-space-collapse="false">${crTotal?if_exists?string("#0.00")}</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                            		<fo:block text-align="right" font-weight="bold" white-space-collapse="false"></fo:block>  
                        			</fo:table-cell>
             				</fo:table-row>
                				<fo:table-row>
@@ -601,7 +599,7 @@ under the License.
                                <fo:table-row>
                                <fo:table-cell>
                                   <#assign finAccountTransDetails = delegator.findOne("FinAccountTrans", {"finAccountTransId" : finAccountTransId}, false)?if_exists/>
-                                  <fo:block  keep-together="always" text-align="right" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"></fo:block>
+                                  <fo:block  keep-together="always" text-align="right" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"><#if finAccountTransDetails?has_content>${(finAccountTransDetails.finAccountTransTypeId)?replace("_"," ")}<#else>${acctgTransTypeId?if_exists?replace("_"," ")}</#if></fo:block>
                                </fo:table-cell>
                                </fo:table-row>
                              </fo:table-body>  
@@ -964,24 +962,22 @@ under the License.
                       </fo:table>
             		</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
-            		<fo:block font-weight = "bold" font-size = "12pt">Acct Code&#160;&#160;&#160;Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
+            		<fo:block font-weight = "bold" font-size = "12pt">Acct Name 		        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;  Party  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Debit Amt    &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Credit Amt</fo:block>
             		<fo:block>--------------------------------------------------------------------------------------------</fo:block>
 		            <fo:block>
                  	<fo:table>
+                    <fo:table-column column-width="210pt"/>
                     <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="200pt"/>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="100pt"/>
-                    <fo:table-column column-width="170pt"/> 
+                    <fo:table-column column-width="90pt"/>
+                    <fo:table-column column-width="170pt"/>
+                    <fo:table-column column-width="15pt"/> 
                     <fo:table-body>
 							<#if payAccountingTransEntryList?has_content>
 							<#assign crTotal = 0>
 							<#assign drTotal = 0>
 							<#list payAccountingTransEntryList as accntngTransEntry>
 							<fo:table-row>
-                				<fo:table-cell>
-                            		<fo:block  text-align="left"  white-space-collapse="false">${accntngTransEntry.glAccountId?if_exists}</fo:block>  
-                       			</fo:table-cell>
+                				
                        			<#if accntngTransEntry.glAccountId?has_content>  
         						<#assign glAccntDetails = delegator.findOne("GlAccount", {"glAccountId" :accntngTransEntry.glAccountId}, true)>
                 				<fo:table-cell>
@@ -1033,14 +1029,15 @@ under the License.
                 				<fo:table-cell>
                             		<fo:block text-align="left" wrap-option="wrap" font-weight="bold"> Totals: </fo:block>  
                        			</fo:table-cell>
-                       			<#--<fo:table-cell>
-                            		<fo:block  text-align="left"  white-space-collapse="false"></fo:block>  
-                       			</fo:table-cell>-->
+                       			
                        			<fo:table-cell>
-                            		<fo:block text-align="right" font-weight="bold" white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
+                            		<fo:block  text-align="right"  font-weight="bold" white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
                             		<fo:block text-align="right" font-weight="bold" white-space-collapse="false">${crTotal?if_exists?string("#0.00")}</fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                            		<fo:block text-align="right" font-weight="bold" white-space-collapse="false"></fo:block>  
                        			</fo:table-cell>
             				</fo:table-row>
             				<fo:table-row>
