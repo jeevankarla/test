@@ -681,7 +681,7 @@
 			</condition>
 			<link target="newPayment" />
 		</menu-item> -->
-		<menu-item name="pdf" title="${uiLabelMap.AccountingInvoicePDF}">
+		<menu-item name="pdf" title="Accounting Report">
 			<condition>
 				<and>
 					<not>
@@ -3551,7 +3551,7 @@
 			<link target="newInvoice" />
 		</menu-item> -->
 		
-		<menu-item name="pdf" title="${uiLabelMap.AccountingInvoicePDF}">
+		<menu-item name="pdf" title="Accounting Report">
 			<condition>
 				<not>
 					<if-empty field="invoice.invoiceId" />
@@ -3574,7 +3574,7 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
 		</menu-item>
-		<menu-item name="newBankPdf" title="Bank Voucher PDF">
+		<!-- <menu-item name="newBankPdf" title="Bank Voucher PDF">
 			<condition>
 			<and>
 				<not>
@@ -3586,7 +3586,7 @@
 			<link target="invoiceNew.pdf" target-window="_BLANK">
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="pdfDfltCur"
 			title="${uiLabelMap.AccountingInvoicePDFDefaultCur}(${defaultOrganizationPartyCurrencyUomId})">
 			<condition>
@@ -3995,7 +3995,7 @@
 			<link target="newInvoice" />
 		</menu-item> -->
 		
-		<menu-item name="pdf" title="${uiLabelMap.AccountingInvoicePDF}">
+		<menu-item name="pdf" title="Accounting Report">
 			<condition>
 				<not>
 					<if-empty field="invoice.invoiceId" />
@@ -4018,7 +4018,7 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
 		</menu-item>
-		<menu-item name="newBankPdf" title="Bank Voucher PDF">
+		<!-- <menu-item name="newBankPdf" title="Bank Voucher PDF">
 			<condition>
 			<and>
 				<not>
@@ -4030,7 +4030,7 @@
 			<link target="invoiceNew.pdf" target-window="_BLANK">
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="pdfDfltCur"
 			title="${uiLabelMap.AccountingInvoicePDFDefaultCur}(${defaultOrganizationPartyCurrencyUomId})">
 			<condition>

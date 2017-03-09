@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.2in" margin-bottom=".3in" margin-left=".5in" margin-right=".1in">
-        <fo:region-body margin-top="3.7in"/>
+        <fo:region-body margin-top="3in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -168,6 +168,23 @@ under the License.
                        			</fo:table-cell>
                        			</#if>
                     </fo:table-row>
+                    <fo:table-row>
+                    <#if shipmentId?has_content>
+                    			<fo:table-cell>
+                            		<fo:block  text-align="left"  ></fo:block>  
+                       			</fo:table-cell>
+                				<fo:table-cell>
+                            		<fo:block  text-align="left"  keep-together="always">Miller Bill No:${shipmentId?if_exists}</fo:block>  
+                       			</fo:table-cell>
+                       			<#else>
+                       			<fo:table-cell>
+                            		<fo:block  text-align="left"  ></fo:block>  
+                       			</fo:table-cell>
+                       			<fo:table-cell>
+                            		<fo:block  text-align="left"  keep-together="always">Miller Bill No:${shipmentId?if_exists}</fo:block>  
+                       			</fo:table-cell>
+                       			</#if>
+                    </fo:table-row>   			
                     <fo:table-row>	
                     <#if postedDate?has_content>
                 				<fo:table-cell>
@@ -186,8 +203,7 @@ under the License.
                        			<fo:table-cell>
                             		<fo:block  text-align="left"  ></fo:block>  
                        			</fo:table-cell>
-                       		</#if>
-                       		
+                       		</#if>   		
                      </fo:table-row>
                      <fo:table-row>	
                      <#if glJournalId?has_content>
@@ -406,6 +422,10 @@ under the License.
                 				<fo:table-cell>
                             		<fo:block text-align="left" wrap-option="wrap"> ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(glAccntDetails.accountName?if_exists)),50)} </fo:block>  
                        			</fo:table-cell>
+                       			<#else>
+                       			<fo:table-cell>
+                            		<fo:block  text-align="left"  ></fo:block>  
+                       			</fo:table-cell>
                        			</#if>
                        			<fo:table-cell>
                             		<fo:block  text-align="left"  white-space-collapse="false">${accntngTransEntry.partyId?if_exists}</fo:block>  
@@ -449,14 +469,14 @@ under the License.
                 				<fo:table-cell>
                             		<fo:block text-align="left" wrap-option="wrap" font-weight="bold"> Totals: </fo:block>  
                        			</fo:table-cell>
-                       			<fo:table-cell>
+                       			<#--<fo:table-cell>
                             		<fo:block  text-align="left"  white-space-collapse="false"></fo:block>  
+                       			</fo:table-cell>-->
+                       			<fo:table-cell>
+                            		<fo:block  text-align="right" font-weight="bold" white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
                        			<fo:table-cell>
-                            		<fo:block  text-align="right"  white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
-                       			</fo:table-cell>
-                       			<fo:table-cell>
-                            		<fo:block  text-align="right"  white-space-collapse="false">${crTotal?if_exists?string("#0.00")}</fo:block>  
+                            		<fo:block  text-align="right" font-weight="bold" white-space-collapse="false">${crTotal?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
             				</fo:table-row>
             				<fo:table-row>
@@ -487,6 +507,16 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 				       		</fo:table-row>
+				       		<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       		</fo:table-row>
+				       		<fo:table-row>
+								<fo:table-cell>
+				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+				       			</fo:table-cell>
+				       		</fo:table-row>
 				       		</fo:table-body>
 		                </fo:table>
 		               </fo:block>
@@ -499,16 +529,16 @@ under the License.
 			                    <fo:table-body>
 									  	<fo:table-row>
 			               					<fo:table-cell>
-			                    				<fo:block>PROCD.</fo:block>
+			                    				<fo:block>Prepared By</fo:block>
 			               					</fo:table-cell>
 			               					<fo:table-cell>
-			                    				<fo:block>PRE AUDIT</fo:block>
+			                    				<fo:block></fo:block>
 			               					</fo:table-cell>
 			               					<fo:table-cell>
 			                    				<fo:block keep-together="always">DY.MGR/MGR/GM(FIN)</fo:block>
 			               					</fo:table-cell>
 			               					<fo:table-cell>
-			                    				<fo:block text-align = "right">DIRECTOR</fo:block>
+			                    				<fo:block text-align = "right">Regional Head</fo:block>
 			               					</fo:table-cell>
 					  					</fo:table-row>
 					              </fo:table-body>
