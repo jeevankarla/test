@@ -497,9 +497,9 @@ under the License.
                 				<fo:table-cell>
                             		<fo:block text-align="left" wrap-option="wrap" font-weight="bold"> Totals: </fo:block>  
                        			</fo:table-cell>
-                       			<fo:table-cell>
+                       			<#--<fo:table-cell>
                             		<fo:block  text-align="left"  white-space-collapse="false"></fo:block>  
-                       			</fo:table-cell>
+                       			</fo:table-cell>-->
                        			<fo:table-cell>
                             		<fo:block text-align="right" font-weight="bold" white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
@@ -601,7 +601,7 @@ under the License.
                                <fo:table-row>
                                <fo:table-cell>
                                   <#assign finAccountTransDetails = delegator.findOne("FinAccountTrans", {"finAccountTransId" : finAccountTransId}, false)?if_exists/>
-                                  <fo:block  keep-together="always" text-align="right" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"><#if finAccountTransDetails?has_content>${(finAccountTransDetails.finAccountTransTypeId)?replace("_"," ")}<#else>${acctgTransTypeId?if_exists?replace("_"," ")}</#if></fo:block>
+                                  <fo:block  keep-together="always" text-align="right" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"></fo:block>
                                </fo:table-cell>
                                </fo:table-row>
                              </fo:table-body>  
@@ -1033,9 +1033,9 @@ under the License.
                 				<fo:table-cell>
                             		<fo:block text-align="left" wrap-option="wrap" font-weight="bold"> Totals: </fo:block>  
                        			</fo:table-cell>
-                       			<fo:table-cell>
+                       			<#--<fo:table-cell>
                             		<fo:block  text-align="left"  white-space-collapse="false"></fo:block>  
-                       			</fo:table-cell>
+                       			</fo:table-cell>-->
                        			<fo:table-cell>
                             		<fo:block text-align="right" font-weight="bold" white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
