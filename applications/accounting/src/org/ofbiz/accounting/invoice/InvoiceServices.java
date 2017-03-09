@@ -4059,21 +4059,33 @@ public class InvoiceServices {
         BigDecimal cstPercent = (BigDecimal)context.get("cstPercent");
         BigDecimal bedPercent = (BigDecimal)context.get("bedPercent");
         BigDecimal vatPercent = (BigDecimal)context.get("vatPercent");
+        BigDecimal vatAmountVal=(BigDecimal)context.get("vatAmount");
+        BigDecimal cstAmount = (BigDecimal)context.get("cstAmount");
+        BigDecimal tdsAmount = (BigDecimal)context.get("tdsAmount");
+        BigDecimal servPercent = (BigDecimal)context.get("serviceTaxPercent");
+        BigDecimal servAmount=(BigDecimal)context.get("serviceTaxAmount");
+        BigDecimal bedAmount = (BigDecimal)context.get("bedAmount");
+        String vatType = (String)context.get("vatType");
+        String cstType = (String)context.get("cstType");
+        String tdsType=(String)context.get("tdsType");
+        String serviceTaxType = (String)context.get("serviceTaxType");
+        String bedTaxType = (String)context.get("bedTaxType");
+        //
         BigDecimal amount = (BigDecimal)context.get("amount");
         String productId = (String)context.get("productId");
         BigDecimal quantity = (BigDecimal)context.get("quantity");
+        String costCenterId=(String)context.get("costCenterId");
+        
         if(UtilValidate.isEmpty(amount)){
         	return ServiceUtil.returnError("Amount cannot be empty or ZERO");
         }
         // similarly, tax only for purchase invoices
         try{
-        	
         	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", context);
-        	
             if (ServiceUtil.isError(createInvoiceItemResult)) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource,"AccountingErrorCreatingInvoiceItemFromOrder",locale), null, null, createInvoiceItemResult);
             }
-            
+            String parentInvoiceItemSeq=(String)createInvoiceItemResult.get("invoiceItemSeqId"); 
             BigDecimal totalAmt = BigDecimal.ZERO;
     		if(UtilValidate.isNotEmpty(quantity) && quantity.compareTo(BigDecimal.ZERO)>0){
     			totalAmt = amount.multiply(quantity);
@@ -4084,25 +4096,32 @@ public class InvoiceServices {
     		GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
     		String invoiceTypeId = invoice.getString("invoiceTypeId");
     		List<GenericValue> invoiceTypeMap = delegator.findList("InvoiceItemTypeMap", EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId), null, null, null, false);
-    		
     		List<GenericValue> invoiceItems = delegator.findList("InvoiceItem", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
-        	
         	if(UtilValidate.isNotEmpty(bedPercent) && bedPercent.compareTo(BigDecimal.ZERO)>0){
-        		
         		List<GenericValue> bedItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "BED_%"));
         		if(UtilValidate.isNotEmpty(bedItemTypes)){
         			String invoiceTaxItemType = (EntityUtil.getFirst(bedItemTypes)).getString("invoiceItemTypeId");
-        			List<GenericValue> bedInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType));
+        			if(UtilValidate.isNotEmpty(bedTaxType)){
+        				invoiceTaxItemType=bedTaxType;
+        			}
+        			List<GenericValue> bedInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType),EntityOperator.AND,EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, parentInvoiceItemSeq)));
             		BigDecimal bedItemAmt = BigDecimal.ZERO;
             		bedItemAmt = (totalAmt.multiply(bedPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
+            		if(UtilValidate.isNotEmpty(bedAmount)){
+            			bedItemAmt=bedAmount;
+            		}
             		totalAmt = totalAmt.add(bedItemAmt);
             		if(UtilValidate.isEmpty(bedInvItems)){
-            			
             			Map<String, Object> createTaxItemContext = FastMap.newInstance();
             			createTaxItemContext.put("invoiceId", invoiceId);
             			createTaxItemContext.put("invoiceItemTypeId", invoiceTaxItemType);
             			createTaxItemContext.put("amount", bedItemAmt);
+            			createTaxItemContext.put("parentInvoiceItemSeq", parentInvoiceItemSeq);
+            			createTaxItemContext.put("quantity", BigDecimal.ONE);
             			createTaxItemContext.put("userLogin", userLogin);
+            			if(UtilValidate.isNotEmpty(costCenterId)){
+            				createTaxItemContext.put("costCenterId", costCenterId);
+            			}
                         createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
             		}
             		else{
@@ -4110,6 +4129,9 @@ public class InvoiceServices {
             			BigDecimal extAmt = bedInvItem.getBigDecimal("amount");
             			BigDecimal totalBEDAmt = bedItemAmt.add(extAmt);
             			bedInvItem.set("amount", totalBEDAmt);
+            			if(UtilValidate.isNotEmpty(costCenterId)){
+            				bedInvItem.put("costCenterId", costCenterId);
+            			}
             			bedInvItem.store();
             		}
         		}
@@ -4120,7 +4142,10 @@ public class InvoiceServices {
         		List<GenericValue> cstItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "CST_%"));
         		if(UtilValidate.isNotEmpty(cstItemTypes)){
         			String invoiceTaxItemType = (EntityUtil.getFirst(cstItemTypes)).getString("invoiceItemTypeId");
-        			List<GenericValue> cstInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType));
+        			if(UtilValidate.isNotEmpty(cstType)){
+        				invoiceTaxItemType=cstType;
+        			}
+        			List<GenericValue> cstInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType),EntityOperator.AND,EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, parentInvoiceItemSeq)));
         			BigDecimal cstItemAmt = BigDecimal.ZERO;
         		
         			cstItemAmt = (totalAmt.multiply(cstPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
@@ -4130,16 +4155,62 @@ public class InvoiceServices {
 	        			createTaxItemContext.put("invoiceId", invoiceId);
 	        			createTaxItemContext.put("invoiceItemTypeId", invoiceTaxItemType);
 	        			createTaxItemContext.put("amount", cstItemAmt);
+	        			createTaxItemContext.put("parentInvoiceItemSeq", parentInvoiceItemSeq);
+	        			createTaxItemContext.put("quantity", BigDecimal.ONE);
 	        			createTaxItemContext.put("userLogin", userLogin);
+	        			if(UtilValidate.isNotEmpty(costCenterId)){
+	        				createTaxItemContext.put("costCenterId", costCenterId);
+            			}
 	                    createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
-	                    
 	        		}
 	        		else{
 	        			GenericValue cstInvItem = EntityUtil.getFirst(cstInvItems);
 	        			BigDecimal extAmt = cstInvItem.getBigDecimal("amount");
 	        			BigDecimal totalCSTAmt = cstItemAmt.add(extAmt);
 	        			cstInvItem.set("amount", totalCSTAmt);
+	        			if(UtilValidate.isNotEmpty(costCenterId)){
+	        				cstInvItem.put("costCenterId", costCenterId);
+            			}
 	        			cstInvItem.store();
+	        		}
+        		}
+        	}
+        	if(UtilValidate.isNotEmpty(tdsAmount)){
+        		List<GenericValue> tdsItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "TDS_%"));
+        		if(UtilValidate.isNotEmpty(tdsItemTypes)){
+        			String invoiceTaxItemType = (EntityUtil.getFirst(tdsItemTypes)).getString("invoiceItemTypeId");
+        			if(UtilValidate.isNotEmpty(tdsType)){
+        				invoiceTaxItemType=tdsType;
+        			}
+        			List<GenericValue> tdsInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType),EntityOperator.AND,EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, parentInvoiceItemSeq)));
+        			BigDecimal tdsItemAmt = BigDecimal.ZERO;
+        			//tdsItemAmt = (totalAmt.multiply(cstPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
+        			if(UtilValidate.isNotEmpty(tdsAmount)){
+        				tdsItemAmt=tdsAmount;
+        			}
+        			if(UtilValidate.isEmpty(tdsInvItems)){
+        			
+	        			Map<String, Object> createTaxItemContext = FastMap.newInstance();
+	        			createTaxItemContext.put("invoiceId", invoiceId);
+	        			createTaxItemContext.put("invoiceItemTypeId", invoiceTaxItemType);
+	        			createTaxItemContext.put("parentInvoiceItemSeq", parentInvoiceItemSeq);
+	        			createTaxItemContext.put("amount", tdsItemAmt);
+	        			createTaxItemContext.put("quantity", BigDecimal.ONE);
+	        			createTaxItemContext.put("userLogin", userLogin);
+	        			if(UtilValidate.isNotEmpty(costCenterId)){
+	        				createTaxItemContext.put("costCenterId", costCenterId);
+            			}
+	                    createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
+	        		}
+	        		else{
+	        			GenericValue tdsInvItem = EntityUtil.getFirst(tdsInvItems);
+	        			BigDecimal extAmt = tdsInvItem.getBigDecimal("amount");
+	        			BigDecimal totalTDSAmt = tdsItemAmt.add(extAmt);
+	        			tdsInvItem.set("amount", totalTDSAmt);
+	        			if(UtilValidate.isNotEmpty(costCenterId)){
+	        				tdsInvItem.put("costCenterId", costCenterId);
+            			}
+	        			tdsInvItem.store();
 	        		}
         		}
         	}
@@ -4148,7 +4219,10 @@ public class InvoiceServices {
         		List<GenericValue> vatItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "VAT_%"));
         		if(UtilValidate.isNotEmpty(vatItemTypes)){
         			String invoiceTaxItemType = (EntityUtil.getFirst(vatItemTypes)).getString("invoiceItemTypeId");
-	        		List<GenericValue> vatInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType));
+        			if(UtilValidate.isNotEmpty(vatType)){
+        				invoiceTaxItemType=vatType;
+        			}
+	        		List<GenericValue> vatInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType),EntityOperator.AND,EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, parentInvoiceItemSeq)));
 	        		BigDecimal vatItemAmt = BigDecimal.ZERO;
 	    			vatItemAmt = (totalAmt.multiply(vatPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
 	        		if(UtilValidate.isEmpty(vatInvItems)){
@@ -4156,21 +4230,85 @@ public class InvoiceServices {
 	        			Map<String, Object> createTaxItemContext = FastMap.newInstance();
 	        			createTaxItemContext.put("invoiceId", invoiceId);
 	        			createTaxItemContext.put("invoiceItemTypeId", invoiceTaxItemType);
+	        			createTaxItemContext.put("parentInvoiceItemSeq", parentInvoiceItemSeq);
 	        			createTaxItemContext.put("amount", vatItemAmt);
+	        			createTaxItemContext.put("quantity", BigDecimal.ONE);
+	        			createTaxItemContext.put("parentInvoiceItemSeq", parentInvoiceItemSeq);
+	        			createTaxItemContext.put("quantity", BigDecimal.ONE);
 	        			createTaxItemContext.put("userLogin", userLogin);
+	        			if(UtilValidate.isNotEmpty(costCenterId)){
+	        				createTaxItemContext.put("costCenterId", costCenterId);
+            			}
 	                    createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
-	                    
 	        		}
 	        		else{
 	        			GenericValue vatInvItem = EntityUtil.getFirst(vatInvItems);
 	        			BigDecimal extAmt = vatInvItem.getBigDecimal("amount");
 	        			BigDecimal totalVATAmt = vatItemAmt.add(extAmt);
 	        			vatInvItem.set("amount", totalVATAmt);
+	        			if(UtilValidate.isNotEmpty(costCenterId)){
+	        				vatInvItem.put("costCenterId", costCenterId);
+            			}
 	        			vatInvItem.store();
 	        		}
         		}
         	}
         	
+        	if(UtilValidate.isNotEmpty(servPercent) && servPercent.compareTo(BigDecimal.ZERO)>0){
+        		
+        		List<GenericValue> servItemTypes = EntityUtil.filterByCondition(invoiceTypeMap, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.LIKE, "SERTAX_%"));
+        		if(UtilValidate.isNotEmpty(servItemTypes)){
+        			String invoiceTaxItemType = (EntityUtil.getFirst(servItemTypes)).getString("invoiceItemTypeId");
+        			if(UtilValidate.isNotEmpty(serviceTaxType)){
+        				invoiceTaxItemType=serviceTaxType;
+        			}
+        			List<GenericValue> servTaxInvItems = EntityUtil.filterByCondition(invoiceItems, EntityCondition.makeCondition(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invoiceTaxItemType),EntityOperator.AND,EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, parentInvoiceItemSeq)));
+	        		BigDecimal servTaxItemAmt = BigDecimal.ZERO;
+	        		servTaxItemAmt = (totalAmt.multiply(servPercent)).divide(new BigDecimal(100), TAX_DECIMALS, TAX_ROUNDING);
+	    			
+	    			if(UtilValidate.isNotEmpty(servAmount)){
+	    				servTaxItemAmt=servAmount;
+	    			}
+	        		if(UtilValidate.isEmpty(servTaxInvItems)){
+	        			Map<String, Object> createTaxItemContext = FastMap.newInstance();
+	        			createTaxItemContext.put("invoiceId", invoiceId);
+	        			createTaxItemContext.put("invoiceItemTypeId", invoiceTaxItemType);
+	        			createTaxItemContext.put("parentInvoiceItemSeq", parentInvoiceItemSeq);
+	        			createTaxItemContext.put("amount", servTaxItemAmt);
+	        			createTaxItemContext.put("quantity", BigDecimal.ONE);
+	        			createTaxItemContext.put("userLogin", userLogin);
+	        			if(UtilValidate.isNotEmpty(costCenterId)){
+	        				createTaxItemContext.put("costCenterId", costCenterId);
+            			}
+	                    createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createTaxItemContext);
+	        		}
+	        		else{
+	        			GenericValue servTaxInvItem = EntityUtil.getFirst(servTaxInvItems);
+	        			BigDecimal extAmt = servTaxInvItem.getBigDecimal("amount");
+	        			BigDecimal totalSerTaxAmt = servTaxItemAmt.add(extAmt);
+	        			servTaxInvItem.set("amount", totalSerTaxAmt);
+	        			if(UtilValidate.isNotEmpty(costCenterId)){
+	        				servTaxInvItem.put("costCenterId", costCenterId);
+            			}
+	        			servTaxInvItem.store();
+	        		}
+        		}
+        	}
+        	// let's handle invoice rounding here
+	        try{   
+	        	    Map roundAdjCtx = UtilMisc.toMap("userLogin",userLogin);	  	
+	        	    roundAdjCtx.put("invoiceId", invoiceId);
+		  	 		Map roundingResult = dispatcher.runSync("adjustRoundingDiffForInvoice",roundAdjCtx);  	
+		  	 		if (ServiceUtil.isError(roundingResult)) {
+		  	 			String errMsg =  ServiceUtil.getErrorMessage(roundingResult);
+		  	 			Debug.logError(errMsg , module);
+	  	      		  	return ServiceUtil.returnError(errMsg+"==Error While  Rounding Invoice !");
+		  	 		}
+		  	 	}catch (Exception e) {
+		  			  Debug.logError(e, "Error while Creating Rounding Diff For Invoice", module);
+		              return ServiceUtil.returnError(e+"==Error While  Rounding Invoice !");
+		  	 }
+	        
         	
         }catch(GenericEntityException e){
         	Debug.logError(e, e.getMessage(), module);
@@ -4182,7 +4320,68 @@ public class InvoiceServices {
         }
         return result;
     }
-    
+    public static Map<String, Object> adjustRoundingDiffForInvoice(DispatchContext dctx, Map<String, ? extends Object> context){
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String invoiceId = (String) context.get("invoiceId");
+        Locale locale = (Locale) context.get("locale");     
+        Map result = ServiceUtil.returnSuccess();
+        BigDecimal roundingAmount = BigDecimal.ZERO;
+		try {
+			GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+			    BigDecimal invoiceTotal = ZERO;
+		        List<GenericValue> invoiceItems = null;
+		        try {
+		            invoiceItems = invoice.getRelated("InvoiceItem");
+		            invoiceItems = EntityUtil.filterByAnd(
+		                    invoiceItems, UtilMisc.toList(
+		                            EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, UtilMisc.toList("ROUNDING_ADJUSTMENT"))
+		                          ));
+		        } catch (GenericEntityException e) {
+		            Debug.logError(e, "Trouble getting InvoiceItem list", module);
+		        }
+		        if (invoiceItems != null) {
+		            for (GenericValue invoiceItem : invoiceItems) {
+		                invoiceTotal = invoiceTotal.add(InvoiceWorker.getInvoiceItemTotal(invoiceItem)).setScale(DECIMALS,ROUNDING);
+		            }
+		        }
+			roundingAmount = (invoiceTotal.setScale(0, ROUNDING)).subtract(invoiceTotal);
+			// add rounding  adjustment "ROUNDING_ADJUSTMENT"
+			if(!(roundingAmount.compareTo(BigDecimal.ZERO) == 0)){
+				//finding rounding adjustmentItem if any then reset with new roundingamount
+				List<GenericValue> roundingInvoiceItems = invoice.getRelated("InvoiceItem");
+				roundingInvoiceItems = EntityUtil.filterByAnd(
+						roundingInvoiceItems, UtilMisc.toList(
+		                            EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"ROUNDING_ADJUSTMENT")
+		                          ));
+		            if(UtilValidate.isEmpty(roundingInvoiceItems)){
+		            	Map invoiceItemCtx = FastMap.newInstance();
+		            	invoiceItemCtx.put("invoiceId", invoiceId);
+						invoiceItemCtx.put("amount", roundingAmount);
+						invoiceItemCtx.put("invoiceItemTypeId", "ROUNDING_ADJUSTMENT");
+						invoiceItemCtx.put("quantity", BigDecimal.ONE);
+						invoiceItemCtx.put("userLogin", userLogin);
+						result = dispatcher.runSync("createInvoiceItem", invoiceItemCtx);
+						String invItemSeqId = (String) result.get("invoiceItemSeqId");
+						if (ServiceUtil.isError(result)) {
+							Debug.logError("Error creating ROUNDING ADJUSTMENT item for Invoice : ", module);	
+							return ServiceUtil.returnError("Error creating ROUNDING ADJUSTMENT item for Invoice : ");
+						}
+	        		}else{
+	        			GenericValue roundigInvItem = EntityUtil.getFirst(roundingInvoiceItems);
+	        			roundigInvItem.set("amount", roundingAmount);
+	        			roundigInvItem.store();
+	        		}
+			}//rounding creation end
+		} catch (Exception e) {
+			Debug.logError(e, module);
+			return ServiceUtil.returnError(e.toString());
+		}
+        result = ServiceUtil.returnSuccess("Successfully Created Adjustment For Rounding!!");
+        result.put("invoiceId", invoiceId);
+        return result;
+    }
     /*public static Map<String, Object> updateInvoiceItemAndTax(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
