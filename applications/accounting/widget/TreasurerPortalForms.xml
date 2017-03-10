@@ -298,7 +298,7 @@ under the License.
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
         	</drop-down>
         </field>
-        <field name="ownerPartyId"  title="Employee Id " position="2"><lookup target-form-name="LookupPartyName"  target-parameter="roleTypeId"/></field>        
+        <field name="fromPartyId"  title="Employee Id " position="2"><lookup target-form-name="LookupPartyName"  target-parameter="roleTypeId"/></field>        
         <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="ListDepositAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindDepositAccount" paginate="true"
