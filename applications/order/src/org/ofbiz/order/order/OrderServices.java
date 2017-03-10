@@ -7573,6 +7573,23 @@ public class OrderServices {
                        "OrderOrderPaymentCannotBeCreatedPayToPartyIdNotSet", locale));
            }
 
+           String roFroBranch = "";
+           if (payToPartyId != null) {
+        	   List conditionList = FastList.newInstance();
+        	   conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, payToPartyId));
+        	   conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+        	   conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+        	   EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
+        	   try{
+        		   List<GenericValue> orgsListS = delegator.findList("PartyRelationship", condition, null, UtilMisc.toList("partyIdFrom"), null, false);
+        		   GenericValue orgsList = EntityUtil.getFirst(orgsListS);
+        		   roFroBranch = orgsList.getString("partyIdFrom");
+           				
+        	   }catch (GenericEntityException e) {
+        		   // TODO: handle exception
+        		   Debug.logError(e, module);
+        	   }
+           }
            // create the payment
            Map<String, Object> paymentParams = new HashMap<String, Object>();
            BigDecimal maxAmount = orderPaymentPreference.getBigDecimal("maxAmount");
@@ -7587,7 +7604,7 @@ public class OrderServices {
                paymentParams.put("instrumentDate", instrumentDate);
                paymentParams.put("partyIdFrom", paymentFromId);
                paymentParams.put("currencyUomId", productStore.getString("defaultCurrencyUomId"));
-               paymentParams.put("partyIdTo", payToPartyId);
+               paymentParams.put("partyIdTo", roFroBranch);
            /*}
            else {
                paymentParams.put("paymentTypeId", "CUSTOMER_REFUND"); // JLR 17/7/4 from a suggestion of Si cf. https://issues.apache.org/jira/browse/OFBIZ-828#action_12483045
@@ -7621,7 +7638,19 @@ public class OrderServices {
 	  	        paymentAttribute.create();
            }
            Map<String, Object> result = new HashMap<String, Object>();
-          
+           Map<String, Object> createRoleContext = FastMap.newInstance();
+           if(UtilValidate.isNotEmpty(payToPartyId)){
+        	   createRoleContext.put("userLogin",userLogin);
+        	   createRoleContext.put("paymentId",paymentId);
+        	   createRoleContext.put("partyId",payToPartyId);
+        	   //Debug.log("payment Party--------"+payToPartyId);
+        	   createRoleContext.put("roleTypeId","BRANCH_ROLE");
+        	   Map<String, Object> createPaymentRoleResult = dispatcher.runSync("createPaymentRole", createRoleContext);
+        	   if (ServiceUtil.isError(createPaymentRoleResult)) {
+        		   return ServiceUtil.returnError("Problem in creation of Accounting role", null, null, createPaymentRoleResult);
+        	   }
+           }
+           
            result.put("paymentId",paymentId);
            
            return result;
