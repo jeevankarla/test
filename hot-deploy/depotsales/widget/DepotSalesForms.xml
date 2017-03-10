@@ -2416,8 +2416,8 @@
          <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)||(!(statusId.equals(&quot;ORDER_CREATED&quot;)))">
  -->
         
-         <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
-		<hyperlink target="DepotSalesOrderNew" description="Sale Indent">
+         <field name="Sale" title="Sale Direct Indent" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
+		<hyperlink target="DepotSalesOrderNew" description="Sale Direct Indent">
 			<parameter param-name="productId"/>
 			 <parameter param-name="productName"/>
 			  <parameter param-name="quantityOnHandTotal"/>
@@ -2435,6 +2435,26 @@
 			   <parameter param-name="submitFlag" value="NO"/>
 			 </hyperlink>
         </field>
+        
+        <!-- 
+         <field name="SaleOnbeHalf" title="Sale Indent OnbeHalf" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
+		<hyperlink target="DepotMultiBranchSalesOrder" description="Sale Onbehalf Indent">
+			<parameter param-name="productId"/>
+			 <parameter param-name="productName"/>
+			  <parameter param-name="quantityOnHandTotal"/>
+			<parameter param-name="uom"/>
+			<parameter param-name="bundleWeight"/>
+			<parameter param-name="bundleUnitPrice"/>
+			<parameter param-name="balancedQty"/>
+			<parameter param-name="unitCost"/>
+			 <parameter param-name="inventoryItemId"/>
+			  <parameter param-name="availbleQuantity"/>
+			  <parameter param-name="productStoreId"/>
+			   <parameter param-name="branchName"/>
+			   <parameter param-name="submitFlag" value="NO"/>
+			 </hyperlink>
+        </field>
+         -->
         
      <!--     <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
             <hyperlink target="approvalLevelOfDepotPoDepot" description="Order Approve">
