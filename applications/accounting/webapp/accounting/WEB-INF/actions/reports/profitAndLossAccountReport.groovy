@@ -166,7 +166,7 @@ conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("t
 	conditionList.add(EntityCondition.makeCondition("organizationPartyId",EntityOperator.EQUALS, parameters.organizationPartyId));
 }*/
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-glAccountCategoryMemberDetails = delegator.findList("GlAccountCategoryMember",condition,UtilMisc.toSet("organizationPartyId","glAccountCategoryId","glAccountId"), null, null, false );
+glAccountCategoryMemberDetails = delegator.findList("GlAccountCategoryMember",condition,null, null, null, false );
 glAccountCategoryIds=EntityUtil.getFieldListFromEntityList(glAccountCategoryMemberDetails, "glAccountCategoryId", true);
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("glAccountCategoryId", EntityOperator.IN, glAccountCategoryIds));
@@ -199,7 +199,7 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 			}else{*/
 				condList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, partyIds));
 			/*}*/
-			tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), UtilMisc.toSet("totalPostedDebits","glAccountId","totalPostedCredits","description","organizationPartyId","costCenterId","segmentId"), null, null, false);
+			tempGlAccountAndHistories = delegator.findList("GlAccountAndHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
 			if(UtilValidate.isNotEmpty(tempGlAccountAndHistories)){
 			for(int j=0;j<tempGlAccountAndHistories.size();j++){
 				/*if(UtilValidate.isNotEmpty(parameters.organizationPartyId) && "Company".equalsIgnoreCase(parameters.organizationPartyId)){
