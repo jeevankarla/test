@@ -208,12 +208,15 @@ if(UtilValidate.isEmpty(parameters.roleTypeId) && UtilValidate.isEmpty(parameter
 }
 
 	
-	if(UtilValidate.isNotEmpty(roId) && !roId.equals("Company"))
+	if(UtilValidate.isNotEmpty(roId) && !roId.equals("Company")){
 		conditionList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));
-	if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+	}
+	if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE")){
 		conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
-	if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE"))
+	}
+	if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE")){
 		conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+	}
 		
 	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 	conditionList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
@@ -231,7 +234,7 @@ if(UtilValidate.isNotEmpty(partyIds)){
 	conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,rolePartyIds)));
 					  
 }*/
-conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
+/*conditionList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
 conditionList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 fieldToSelect = UtilMisc.toSet("isPosted","partyId","acctgTransId","acctgTransEntrySeqId","transactionDate","invoiceId");
@@ -240,12 +243,22 @@ fieldToSelect.add("glAccountId");
 fieldToSelect.add("debitCreditFlag");
 fieldToSelect.add("acctgTransTypeId");
 fieldToSelect.add("amount");
-acctgTransIter = delegator.find("AcctgTransAndEntries",condition,null,fieldToSelect,null,null);
+acctgTransIter = delegator.find("AcctgTransAndEntries",condition,null,fieldToSelect,null,null);*/
 
 //getting previous month closing balance
 finalAccountingTransList=[];
 
 conditionList1=[];
+if(UtilValidate.isNotEmpty(roId) && !roId.equals("Company")){
+	conditionList1.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));
+}
+if(UtilValidate.isNotEmpty(segmentId) && !segmentId.equals("All") && !segmentId.equals("YARN_SALE")){
+	conditionList1.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
+}
+if(UtilValidate.isNotEmpty(segmentId) && segmentId.equals("YARN_SALE")){
+	conditionList1.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+}
+
 conditionList1.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
 conditionList1.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 if(UtilValidate.isEmpty(partyIds)){
