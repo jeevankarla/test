@@ -24,6 +24,7 @@ if(UtilValidate.isNotEmpty(employment)){
 	GenericValue empDetail = EntityUtil.getFirst(employment);
 	if(empDetail.partyIdFrom != "Company" || empDetail.partyIdFrom != "HO"){
 		parameters.ownerPartyId = empDetail.partyIdFrom;
+		parameters.roId = empDetail.partyIdFrom;
 	}
 }
 else{
@@ -37,6 +38,7 @@ else{
 		GenericValue empDetail = EntityUtil.getFirst(employment);
 		if(empDetail.partyIdFrom != "Company" || empDetail.partyIdFrom != "HO"){
 			parameters.ownerPartyId = empDetail.partyIdFrom;
+			parameters.roId = empDetail.partyIdFrom;
 		}
 	}
 }
