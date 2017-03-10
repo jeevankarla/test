@@ -3422,7 +3422,7 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
-          <menu-item name="PurchaseInvoice" title="Purchase Invoice">
+          <menu-item name="PurchaseInvoice" title="Miller Invoice">
              <link target="ApInvoices">
              	<parameter param-name="invoiceTypeId" value="PURCHASE_INVOICE" />
              	<parameter param-name="subTabButtonValue" value="PurchaseInvoice" />
@@ -3904,7 +3904,7 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
              </link>
           </menu-item>
-          <menu-item name="salesInvoice" title="Sales Invoice">
+          <menu-item name="salesInvoice" title="Weavers Invoice">
             <link target="ArInvoices">
              	<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
              	<parameter param-name="subTabButtonValue" value="salesInvoice" />
