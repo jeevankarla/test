@@ -4,6 +4,11 @@ import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.util.EntityListIterator;
+
+import net.sf.json.JSONObject;
+import net.sf.json.JSONArray;
+import in.vasista.vbiz.humanres.PayrollService;
 
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -13,7 +18,7 @@ import java.sql.Timestamp;
 
 import javolution.util.FastMap;
 import javolution.util.FastList;
-
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.accounting.payment.PaymentWorker;
 
@@ -21,8 +26,9 @@ import in.vasista.vbiz.humanres.HumanresService;
 
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.accounting.ledger.GeneralLedgerServices;
+import org.ofbiz.accounting.util.UtilAccounting;
 dctx = dispatcher.getDispatchContext();
-
+InvoiceItemDetailMap = [:];
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
 reportTypeFlag = parameters.reportTypeFlag;
@@ -64,14 +70,40 @@ fromDate = UtilDateTime.getDayStart(fromDateTs, timeZone, locale);
 thruDate = UtilDateTime.getDayEnd(thruDateTs, timeZone, locale);
 context.fromDate=fromDate;
 context.thruDate=thruDate;
-
+List assetAndLiabltyGlAcctgClsIds=FastList.newInstance();
+GenericValue assetGlAcc = delegator.findOne("GlAccountClass",UtilMisc.toMap("glAccountClassId", "ASSET"),false);
+GenericValue liabilityGlAcc = delegator.findOne("GlAccountClass",UtilMisc.toMap("glAccountClassId", "LIABILITY"),false);
+List assetGlAcctgClsIds = UtilAccounting.getDescendantGlAccountClassIds(assetGlAcc);
+if(UtilValidate.isNotEmpty(assetGlAcctgClsIds)){
+	assetAndLiabltyGlAcctgClsIds.addAll(assetGlAcctgClsIds);
+}
+List liabilityGlAcctgClsIds = UtilAccounting.getDescendantGlAccountClassIds(liabilityGlAcc);
+if(UtilValidate.isNotEmpty(liabilityGlAcctgClsIds)){
+	assetAndLiabltyGlAcctgClsIds.addAll(liabilityGlAcctgClsIds);
+}
+EntityFindOptions enfo = new EntityFindOptions();
+enfo.setDistinct(true);
+fieldToSelect = UtilMisc.toSet("glAccountId");
+glAcctgClsCond = EntityCondition.makeCondition([EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,assetAndLiabltyGlAcctgClsIds)],EntityOperator.AND);
+EntityListIterator glAccountClsIdList=delegator.find("GlAccount",glAcctgClsCond,null,fieldToSelect,null,enfo);
+List newGlAccountIds=FastList.newInstance();
+List newGlAcctgIds = FastList.newInstance();
+newGlAccountIds=EntityUtil.getFieldListFromEntityListIterator(glAccountClsIdList,"glAccountId",true);
+fieldToSelect = UtilMisc.toSet("glAccountId");
+glAcctgCond = EntityCondition.makeCondition([EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,assetAndLiabltyGlAcctgClsIds),
+	                                         EntityCondition.makeCondition("isControlAcctg",EntityOperator.EQUALS,"Y")],EntityOperator.AND);
+EntityListIterator glAccountIdList=delegator.find("GlAccount",glAcctgCond,null,fieldToSelect,null,enfo);
+if(UtilValidate.isNotEmpty(glAccountIdList)){
+	newGlAcctgIds = EntityUtil.getFieldListFromEntityListIterator(glAccountIdList,"glAccountId",true);
+	newGlAccountIds.removeAll(newGlAcctgIds);
+}
 List glAccountIds=FastList.newInstance();
-glAccountTypeDefaultList = delegator.findList("GlAccountTypeDefault",EntityCondition.makeCondition("glAccountTypeId",EntityOperator.IN,UtilMisc.toList("ACCOUNTS_RECEIVABLE","ACCOUNTS_PAYABLE")),null,null,null,false);
+/*glAccountTypeDefaultList = delegator.findList("GlAccountTypeDefault",EntityCondition.makeCondition("glAccountTypeId",EntityOperator.IN,UtilMisc.toList("ACCOUNTS_RECEIVABLE","ACCOUNTS_PAYABLE")),null,null,null,false);
 glAccountIds=EntityUtil.getFieldListFromEntityList(glAccountTypeDefaultList, "glAccountId", true);
 if(UtilValidate.isNotEmpty(parameters.interUnitFalg) && parameters.interUnitFalg=="InterUnit"){
    glAccountIds.add("119000");
-}
-
+}*/
+glAccountIds.addAll(newGlAccountIds);
 List conditionList = FastList.newInstance();
 List condList = FastList.newInstance();
 //List acctgTransList = FastList.newInstance();
@@ -83,7 +115,7 @@ List acctgPartyIds = FastList.newInstance();
 List opeinigBalPartyId= FastList.newInstance();
 EntityListIterator acctgTransList=null;
 EntityListIterator acctgTransIter=null;
-List nonRolePartyIds=FastList.newInstance();
+
 List rolePartyIds=FastList.newInstance();
 if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
 	if(parameters.roleTypeId=="NONROLE"){
@@ -96,7 +128,7 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
 		conList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 		conList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
 		conList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_IN,rolePartyIds));
-		//sconList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
+		conList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
 		conList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 		EntityCondition con=EntityCondition.makeCondition(conList,EntityOperator.AND);
 		EntityFindOptions efo = new EntityFindOptions();
@@ -120,7 +152,17 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
 					EntityListIterator partyRole = delegator.find("PartyRole",EntityCondition.makeCondition("roleTypeId",EntityOperator.EQUALS,roleType),null,fieldToSelect,null,null);
 					List priorityList = EntityUtil.filterByCondition(roleTypeAttr, EntityCondition.makeCondition("priority",EntityOperator.LESS_THAN,roleTypeValue.get("priority")));
 					List partyRoleNotList = EntityUtil.getFieldListFromEntityList(priorityList, "roleTypeId", true);
-					while (partyRole.hasNext()){
+					partyIds=EntityUtil.getFieldListFromEntityListIterator(partyRole, "partyId", true);
+					
+					/*if(UtilValidate.isNotEmpty(partyRoleNotList)){
+						List condtnList=FastList.newInstance();
+						condtnList.add(EntityCondition.makeCondition("roleTypeId",EntityOperator.NOT_IN,partyRoleNotList));
+						condtnList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
+						EntityCondition cond=EntityCondition.makeCondition(condtnList,EntityOperator.AND);
+						EntityListIterator partyRoleIter = delegator.find("PartyRole",cond,null,fieldToSelect,null,null);
+						partyIds=EntityUtil.getFieldListFromEntityListIterator(partyRoleIter, "partyId", true);
+					}*/
+					/*while (partyRole.hasNext()){
 						GenericValue party = partyRole.next();
 						partyId=party.partyId;
 						List partyRoles= delegator.findList("PartyRole",EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId),UtilMisc.toSet("roleTypeId"),null,null,false);
@@ -139,7 +181,7 @@ if(UtilValidate.isNotEmpty(parameters.roleTypeId)){
 							partyIds.add(partyId);
 						}
 					}
-					partyRole.close();
+					partyRole.close();*/
 				}
 			}
 	    }	
@@ -155,7 +197,7 @@ if(UtilValidate.isEmpty(parameters.roleTypeId) && UtilValidate.isEmpty(parameter
 	List conList=FastList.newInstance();
 	conList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 	conList.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
-	//conList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
+	conList.add(EntityCondition.makeCondition("glAccountId",EntityOperator.IN,glAccountIds));
 	conList.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
 	EntityCondition con=EntityCondition.makeCondition(conList,EntityOperator.AND);
 	EntityFindOptions efo = new EntityFindOptions();
@@ -199,6 +241,86 @@ fieldToSelect.add("debitCreditFlag");
 fieldToSelect.add("acctgTransTypeId");
 fieldToSelect.add("amount");
 acctgTransIter = delegator.find("AcctgTransAndEntries",condition,null,fieldToSelect,null,null);
+
+//getting previous month closing balance
+finalAccountingTransList=[];
+
+conditionList1=[];
+conditionList1.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+conditionList1.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+if(UtilValidate.isEmpty(partyIds)){
+	return;
+}
+if(UtilValidate.isNotEmpty(partyIds)){
+	conditionList1.add(EntityCondition.makeCondition("partyId",EntityOperator.NOT_EQUAL,null));
+	conditionList1.add(EntityCondition.makeCondition(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds)));
+}
+List extTransTypeIdsList1 = FastList.newInstance();
+List extTransTypeIdsList2 = FastList.newInstance();
+List assetAndLiabilityIdsList = FastList.newInstance();
+ extTransTypeIdsList1=UtilMisc.toList("SALES","SALES_INVOICE","PURCHASE_INVOICE","INVOICE_APPL");
+ extTransTypeIdsList2=UtilMisc.toList("RECEIPT","PAYMENT_ACCTG_TRANS","PAYMENT_APPL","OUTGOING_PAYMENT","INCOMING_PAYMENT","OB_TB");
+ assetAndLiabilityIdsList=UtilMisc.toList("CURRENT_ASSET","LONGTERM_ASSET","CURRENT_LIABILITY","LONGTERM_LIABILITY","CASH_EQUIVALENT");
+
+conditionList1.add(EntityCondition.makeCondition("isPosted",EntityOperator.EQUALS,"Y"));
+EntityCondition cond=EntityCondition.makeCondition(conditionList1,EntityOperator.AND);
+List accntTransList=delegator.findList("AcctgTransAndEntries",cond,null,null,null,false);
+ if(UtilValidate.isNotEmpty(accntTransList)){
+	 //accntTransList.each{ accntDetails->
+	 for(int a=0;a<accntTransList.size();a++){
+		 accntDetails=accntTransList.get(a);
+		 accntTransTypeId=accntDetails.acctgTransTypeId;
+		 glAccntId=accntDetails.glAccountId;
+		 glAccountClassId=accntDetails.glAccountClassId;
+		 finAccountTransId=accntDetails.finAccountTransId;
+		 glAccntDetails = delegator.findOne("GlAccount", [glAccountId : glAccntId], false);
+		 if(UtilValidate.isEmpty(glAccntDetails.isControlAcctg)||(UtilValidate.isNotEmpty(glAccntDetails.isControlAcctg)&&(!"Y".equals(glAccntDetails.isControlAcctg)))){
+			 if(extTransTypeIdsList1.contains(accntTransTypeId)){
+				 //if(glAccntId.equals("120000")||glAccntId.equals("210000")){
+				 if("ACCOUNTS_PAYABLE".equals(glAccntDetails.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccntDetails.get("glAccountTypeId"))){
+					 finalAccountingTransList.addAll(accntDetails);
+				 }
+			 }
+			 if(extTransTypeIdsList2.contains(accntTransTypeId)){
+				 if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+					 finalAccountingTransList.addAll(accntDetails);
+				 }
+			 }
+			 if(accntTransTypeId.equals("JOURNAL")){
+				 //if(glAccntId.equals("120000")||glAccntId.equals("210000")){
+				 if("ACCOUNTS_PAYABLE".equals(glAccntDetails.get("glAccountTypeId"))||"ACCOUNTS_RECEIVABLE".equals(glAccntDetails.get("glAccountTypeId"))){
+					 finalAccountingTransList.addAll(accntDetails);
+				 }
+			 }
+			 if(accntTransTypeId.equals("ADJUSTMENT")){
+				 if(assetAndLiabilityIdsList.contains(glAccountClassId)){
+					 finalAccountingTransList.addAll(accntDetails);
+				 }
+				 /*finAccntTrans = delegator.findOne("FinAccountTrans", [finAccountTransId : finAccountTransId], false);
+				
+				 if(UtilValidate.isNotEmpty(finAccntTrans)&&UtilValidate.isNotEmpty(finAccntTrans.finAccountId)){
+					 finAccountId=finAccntTrans.finAccountId;
+					 if(UtilValidate.isNotEmpty(finAccountId)){
+						 finAccnt = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);
+						 finAccntGlAccntId=finAccnt.postToGlAccountId;
+						 if(UtilValidate.isNotEmpty(finAccntGlAccntId)){
+							 if(glAccntId.equals(finAccntGlAccntId)){
+								 finalAccountingTransList.addAll(accntDetails);
+							 }
+						 }
+					 }
+				 }*/
+			 }
+			 if(accntTransTypeId.equals("CAPITALIZATION")){
+					 finalAccountingTransList.addAll(accntDetails);
+			 }
+			 
+			 
+		 }
+		 
+	 }
+ }
+
 partyMap=[:];
 openingBalMap=[:];
 List mapsList = FastList.newInstance();
@@ -288,9 +410,9 @@ List PaymentGlAccountIds=FastList.newInstance();
 			}
 			//interUnitMap = GeneralLedgerServices.getAcctgTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"partyIds",partyIds,"transactionDate",fromDate,"glAccountId","119000","roId",roId, "segmentId", segmentId));
 		}
-		if(UtilValidate.isNotEmpty(acctgReceiveMap)){
+		/*if(UtilValidate.isNotEmpty(acctgReceiveMap)){
 			mapsList.add(acctgReceiveMap);
-		}
+		}*/
 		if(UtilValidate.isNotEmpty(acctgPayMap)){
 			mapsList.add(acctgPayMap);
 		}
@@ -298,14 +420,34 @@ List PaymentGlAccountIds=FastList.newInstance();
 			mapsList.add(interUnitMap);
 		}
 		
-	partyIds.each{partyId->
+	//partyIds.each{partyId->
+		for(p=0;p<partyIds.size();p++){
+		partyId=partyIds.get(p);
 		partyId=partyId.toUpperCase();
 		
 		if(UtilValidate.isEmpty(partyMap[partyId])){
 			tempList=[];
 			partyMap[partyId]=tempList;
 		}
-		mapsList.each{map->
+		finalObMap=[:];
+		obBalMap=[:];
+		partyObDetails = GeneralLedgerServices.getGlAccountOpeningBalanceForParty(dctx, UtilMisc.toMap("userLogin",userLogin,"partyId",partyId,"fromDate",fromDate));
+		if(UtilValidate.isNotEmpty(partyObDetails)){
+			//openingBalMap[partyId]=partyObDetails.get("openingBal");
+			obDebit=partyObDetails.get("postedDebits");
+			obCredit=partyObDetails.get("postedCredits");
+			obbalDetailsMap=[:];
+			obbalDetailsMap["credit"]=obCredit;
+			obbalDetailsMap["debit"]=obDebit;
+			obBalMap.put(partyId,obbalDetailsMap);
+			if(UtilValidate.isNotEmpty(obBalMap)){
+				finalObMap.put("openingBalMap",obBalMap);
+				mapsList.add(finalObMap);
+			}
+		}
+		//mapsList.each{map->
+		 for(m=0;m<mapsList.size();m++){
+			map=mapsList.get(m);
 			Map tempResultMap=map.openingBalMap;
 			credit=0; debit=0;
 			if(UtilValidate.isNotEmpty(tempResultMap)){
@@ -323,10 +465,11 @@ List PaymentGlAccountIds=FastList.newInstance();
 						openingBalMap[partyId]=existBal+balance;
 					}
 				}else{
-				openingBalMap[partyId]=0;
+					openingBalMap[partyId]=0;
 				}
 			}
 		}
+		
 		/*Map tempUnAppMap = unAppAmtMap.openingBalMap;
 		unAppCredit=0; unAppDebit=0;
 		if(UtilValidate.isNotEmpty(tempUnAppMap)){
@@ -351,13 +494,13 @@ List PaymentGlAccountIds=FastList.newInstance();
 		Map tempUnAppliedMap = unAppledMap.get("openingBalMap");
 		Map tempUnAppAmtMap = unAppAmtMap.get("openingBalMap");
 		unAppCredit=0;unAppDebit=0;value=0;
-		if(UtilValidate.isNotEmpty(tempUnAppliedMap)){
+		/*if(UtilValidate.isNotEmpty(tempUnAppliedMap)){
 			Map resultMap=tempUnAppliedMap.get(partyId);
 			if(UtilValidate.isNotEmpty(resultMap)){
 				unAppCredit=resultMap.get("credit");
 				unAppDebit=resultMap.get("debit");
 			}
-		}
+		}*/
 		if(UtilValidate.isNotEmpty(tempUnAppAmtMap)){
 			Map resultMap=tempUnAppAmtMap.get(partyId);
 			if(UtilValidate.isNotEmpty(resultMap)){
@@ -375,7 +518,143 @@ List PaymentGlAccountIds=FastList.newInstance();
 		}
 		
 	}
-		if(acctgTransIter){
+	if(UtilValidate.isNotEmpty(finalAccountingTransList)){		
+		//finalAccountingTransList.each{transEntry->			
+		 for(f=0;f<finalAccountingTransList.size();f++){
+			transEntry=finalAccountingTransList.get(f);
+					partyId=transEntry.partyId;
+					partyId=partyId.toUpperCase();
+					
+					tempMap=[:];
+					tempMap.acctgTransId=transEntry.acctgTransId;
+					tempMap.acctgTransEntrySeqId=transEntry.acctgTransEntrySeqId;
+					tempMap.transactionDate=transEntry.transactionDate;
+					tempMap.acctgTransTypeId=transEntry.acctgTransTypeId;
+				//	tempMap.description=transEntry.description;
+					description="";
+					invoiceId=null;
+					paymentId=null;
+					if(UtilValidate.isNotEmpty(transEntry.invoiceId)){
+						invoiceId=transEntry.invoiceId;
+					}
+					if(UtilValidate.isNotEmpty(transEntry.paymentId)){
+						paymentId=transEntry.paymentId;
+					}
+					tempMap.paymentId=paymentId;
+					tempMap.invoiceId=invoiceId;
+					if(UtilValidate.isNotEmpty(transEntry.glAccountId)){
+						tempMap.glAccountId=transEntry.glAccountId;
+					}
+					invoiceDes="";
+					tempInvTaxMap=[:];
+					if(UtilValidate.isNotEmpty(invoiceId) && UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag.equals("Ledger")){
+						invoiceDetails = delegator.findOne("Invoice", [invoiceId : invoiceId], false);
+						invoiceDes=invoiceDetails.description;
+						invoiceMessage = invoiceDetails.invoiceMessage;
+						tempInvTaxMap["invoiceMessage"]=invoiceMessage;
+						
+					}
+										
+					if(UtilValidate.isNotEmpty(invoiceId)){
+						
+						EntityFindOptions enf = new EntityFindOptions();
+						enf.setDistinct(true);
+						List conList = FastList.newInstance();
+						//fieldToSelect = UtilMisc.toSet("invoiceId");
+				        conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("vatPercent", EntityOperator.NOT_EQUAL, null), EntityOperator.OR, EntityCondition.makeCondition("cstPercent", EntityOperator.NOT_EQUAL, null)));
+						conList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("vatAmount", EntityOperator.NOT_EQUAL, null), EntityOperator.OR, EntityCondition.makeCondition("cstAmount", EntityOperator.NOT_EQUAL, null)));
+						conList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoiceId));
+						invoiceCond = EntityCondition.makeCondition(conList,EntityOperator.AND);
+						EntityListIterator InvoiceItemListItr =delegator.find("InvoiceItem",invoiceCond,null,UtilMisc.toSet("vatPercent","vatAmount","cstPercent","cstAmount","invoiceId"),null,null);
+						vatPercentMap=[:];
+						cstPercentMap=[:];
+						
+							while (entryItem = InvoiceItemListItr.next()){
+								vatPercent = entryItem.get("vatPercent");
+								vatAmount = entryItem.get("vatAmount");
+								cstAmount = entryItem.get("cstAmount");
+								cstPercent = entryItem.get("cstPercent");
+								invoiceId = entryItem.get("invoiceId");
+								if(vatPercent != null){
+								if(UtilValidate.isNotEmpty(vatPercentMap[vatPercent])){
+									vatPercentMap.put(vatPercent,vatPercentMap[vatPercent]+vatAmount);
+								}else{
+								   vatPercentMap.put(vatPercent,vatAmount);
+								}
+								//cst 
+								}else{
+								if(UtilValidate.isNotEmpty(cstPercentMap[cstPercent])){
+								cstPercentMap.put(cstPercent,cstPercentMap[cstPercent]+cstAmount);
+								}else{
+								   cstPercentMap.put(cstPercent,cstAmount);
+								}
+								}
+							}
+							
+							tempInvTaxMap["vatMap"]=vatPercentMap;
+							tempInvTaxMap["cstMap"]=cstPercentMap;
+							invoiceMessage="";
+							
+							InvoiceItemDetailMap.put(invoiceId,tempInvTaxMap);
+							
+			     InvoiceItemListItr.close();
+					
+		}
+						
+					
+					description=invoiceDes;
+					paymentDes="";
+					if(UtilValidate.isNotEmpty(paymentId) && UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag.equals("Ledger")){
+						paymentDetails = delegator.findOne("Payment", [paymentId : paymentId], false);
+						paymentDes=paymentDetails.comments;
+					}
+					if(UtilValidate.isNotEmpty(description) && UtilValidate.isNotEmpty(paymentDes)){
+						description=description+" And "+paymentDes;
+					}else if(UtilValidate.isEmpty(description) && UtilValidate.isNotEmpty(paymentDes)){
+						description=paymentDes;
+					}
+					if(UtilValidate.isEmpty(description) && UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag.equals("Ledger")){
+						glAccount=delegator.findOne("GlAccount",[glAccountId:transEntry.glAccountId],true);
+						description = glAccount.description;
+					}
+					
+					tempMap.description=description;
+		//					tempMap.partyId=transEntry.partyId;
+		//					partyName =  PartyHelper.getPartyName(delegator, transEntry.partyId, false);
+		//					tempMap.name=partyName;
+					tempMap.isPosted=transEntry.isPosted;
+		//					tempMap.postedDate=transEntry.postedDate;
+					debit=0;credit=0;
+					if(transEntry.debitCreditFlag=="C"){
+						credit=transEntry.amount;
+					}
+					if(transEntry.debitCreditFlag=="D"){
+						debit=transEntry.amount;
+					}
+					tempMap.debit=debit;
+					tempMap.credit=credit;
+				if(UtilValidate.isEmpty(partyMap[partyId])){
+					tempList=[];
+					tempList.add(tempMap);
+					partyId=transEntry.partyId;
+					partyId=partyId.toUpperCase();
+					tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("transactionDate"));
+					partyMap[partyId]=tempList;
+				}else{
+						partyId=transEntry.partyId;
+						partyId=partyId.toUpperCase();
+						tempList=partyMap[partyId];
+						tempList.add(tempMap);
+						tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("transactionDate"));
+						partyMap[partyId]=tempList;
+				}
+			
+			
+		}
+	}
+	
+/*	
+	 if(acctgTransIter){
 //			TransItr = acctgTransList.iterator();
 			while (acctgTransIter.hasNext()) {
 				GenericValue transEntry = acctgTransIter.next();
@@ -400,6 +679,21 @@ List PaymentGlAccountIds=FastList.newInstance();
 					}
 					tempMap.paymentId=paymentId;
 					tempMap.invoiceId=invoiceId;
+					
+					// invoice sequence
+					
+					condList.clear();
+					//condList.add(EntityCondition.makeCondition("invoiceSequenceTypeId", EntityOperator.EQUALS , "INVOICE_SEQUENCE"));
+					condList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS , invoiceId));
+					cond2 = EntityCondition.makeCondition(condList,EntityOperator.AND);
+					invsequenceList = delegator.findList("InvoiceSequence", cond2, null, null, null, false);
+					if(invsequenceList){
+						invsequence = EntityUtil.getFirst(invsequenceList);
+						tempMap.sequenceId=invsequence.sequenceId;
+					}else{
+						tempMap.sequenceId="";
+					}
+					
 					if(UtilValidate.isNotEmpty(transEntry.glAccountId)){
 						tempMap.glAccountId=transEntry.glAccountId;
 					}
@@ -456,8 +750,7 @@ List PaymentGlAccountIds=FastList.newInstance();
 				}
 			}
 			acctgTransIter.close();
-}
-
+}*/
 context.partyMap=partyMap;
 context.openingBalMap=openingBalMap;
 context.closingUnAppMap=closingUnAppMap;
@@ -510,7 +803,9 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		tempMap.debit=openDebit;
 		partyLedgerCsv.add(tempMap);
 		totDebit=0;totCredit=0;
-		partyVal.each{acctgTrans->
+		//partyVal.each{acctgTrans->
+		 for(int p=0;p<partyVal.size();p++){
+			acctgTrans=partyVal.get(p);
 			tempTransMap=[:];
 			tempTransMap.acctgTransId=acctgTrans.acctgTransId;
 			tempTransMap.acctgTransEntrySeqId=acctgTrans.acctgTransEntrySeqId;
@@ -588,7 +883,7 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 		totDebit=totDebit+openDebit;
 		totCredit=totCredit+openCredit;
 		tempMap.debit=totDebit;
-		grdDebit=grdDebit+totDebit;
+		grdDebit=grdDebit+totDebit+unAppDebit;
 		tempMap.credit=totCredit;
 		grdCredit=grdCredit+totCredit;
 		partyLedgerCsv.add(tempMap);
@@ -926,4 +1221,5 @@ if(UtilValidate.isNotEmpty(parameters.flag) && parameters.flag=="CSVReport"){
 	context.partyLedgerDetailedAbsCsv=partyLedgerDetailedAbsCsv;
 }
 */
-
+context.InvoiceItemDetailMap = InvoiceItemDetailMap;	
+	
