@@ -4596,12 +4596,15 @@
                <entity-condition list="partyClsfList" entity-name="PartyClassificationGroup">
                	<condition-expr field-name="partyClassificationTypeId" operator="equals" value="ACCTG_TRANS_GP"/>
                </entity-condition>
-               <entity-condition list="internalOrgList" entity-name="PartyRelationshipAndDetail">
-              		<condition-expr field-name="partyIdFrom" operator="equals" value="${organizationPartyId}"/>
+               <entity-condition list="intrOrgList" entity-name="PartyRelationshipAndDetail">
+               		<condition-list combine="and">
+              		<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
                		<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
                		<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
                		<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
-               	 	<order-by field-name="groupName"/>		
+               		<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+               	 	</condition-list>
+               	 	<order-by field-name="groupName"/>	
                </entity-condition>
                
                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GetInternalOrganisations.groovy"/>

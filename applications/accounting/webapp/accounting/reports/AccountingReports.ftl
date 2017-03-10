@@ -330,7 +330,7 @@ function reportTypeChangeFunc() {
  			 	  	<select name='division' id ="division" onchange="javascript:setOrgPartyId();">	
  			 	  			<option value=""></option>	
  			  	  			<option value="Company">NHDC</option>
- 						<#list internalOrgList as internalOrg>	
+ 						<#list intrOrgList as internalOrg>	
  							<option value='${internalOrg.partyId}'>${internalOrg.groupName?if_exists}</option>
            		   		</#list>
  				 	</select>
