@@ -337,7 +337,7 @@ function datepick()
           <td>Due Date</td>
           <td>${uiLabelMap.CommonStatus}</td>
           <td>${uiLabelMap.CommonDescription}</td>
-           <td>Sales Channel</td>
+           <td>Miller Bill Number</td>
           <td>${uiLabelMap.AccountingFromParty}</td> 
           <td>${uiLabelMap.AccountingToParty}</td>
           <td>${uiLabelMap.AccountingAmount}</td>
@@ -367,6 +367,12 @@ function datepick()
                 ${statusItem.description?default(invoice.statusId)}
               </td>
               <td>${(invoice.description)?if_exists}</td>
+              <td>
+             	<#if invoice.shipmentId?has_content && invoice.shipmentId!="OBC">
+					<#assign Shipment = delegator.findOne("Shipment", {"shipmentId" : invoice.shipmentId}, true) />
+                	${Shipment.supplierInvoiceId?default(invoice.shipmentId)}
+			  	</#if>
+             </td>
               <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)?if_exists/>
             
             
