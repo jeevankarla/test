@@ -3892,7 +3892,7 @@
 					<if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED" />
 				</or>
 			</condition>
-			<link url-mode="plain"  target="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${notAppliedAmount}','${partyName}','${invoice.purposeTypeId?if_exists}');" link-type="anchor"/>
+			<link url-mode="plain"  target="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${notAppliedAmount}','${partyName}','${invoice.purposeTypeId}');" link-type="anchor"/>
 		</menu-item>
 	</menu>  
 	
@@ -4339,7 +4339,7 @@
 					<if-compare field="invoice.statusId" operator="equals" value="INVOICE_APPROVED" />
 				</or>
 			</condition>
-			<link url-mode="plain"  target="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${notAppliedAmount}','${partyName}','${invoice.purposeTypeId?if_exists}');" link-type="anchor"/>
+			<link url-mode="plain"  target="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${notAppliedAmount}','${partyName}','${invoice.purposeTypeId}');" link-type="anchor"/>
 		</menu-item>
 	</menu>  
 	 <menu name="cpfAccuntsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
