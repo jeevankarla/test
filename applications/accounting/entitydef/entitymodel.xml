@@ -2576,6 +2576,7 @@
 		<field name="glResourceTypeId" type="id"></field>
 		<field name="glXbrlClassId" type="id"></field>
 		<field name="parentGlAccountId" type="id"></field>
+		<field name="isControlAcctg" type="indicator"></field>
 		<field name="accountCode" type="name"></field>
 		<field name="accountName" type="name"></field>
 		<field name="description" type="description"></field>
