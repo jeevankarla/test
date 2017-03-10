@@ -803,11 +803,23 @@ public class PaymentWorker {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         try {
 			GenericValue payment = delegator.findByPrimaryKey("Payment", UtilMisc.toMap("paymentId", paymentId));
+			//getting paymentMethod related finAccount
+			if(payment!=null){
+				String paymentMethodId=(String)payment.get("paymentMethodId");
+				if(paymentMethodId !=null){
+					GenericValue paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+					if(paymentMethod!=null){
+						finAccountId=(String)paymentMethod.get("finAccountId");						
+					}
+				}
+			}
 			/*if(!UtilAccounting.isPaymentType(payment, "RECEIPT")){
 				return result; 
 			}*/
 			List<EntityExpr> condList = FastList.newInstance();
 			if(UtilAccounting.isPaymentMethodType(payment, "CASH")){
+				String partyIdTo=(String) payment.get("partyIdTo");
+				condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyIdTo));
 				condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"CASH"));
 				condList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.NOT_EQUAL,"PETTY_CASH"));
 				EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
