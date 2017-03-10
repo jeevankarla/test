@@ -82,10 +82,16 @@ under the License.
 	//endof qtip;
 
 
-function cancelForm(){
-		jQuery('#paymentButton').removeAttr('disabled');		 
+	function cancelForm(){
+		$('#paymentButton').removeAttr('disabled');		 
 		return false;
 	}
+	
+	$(document).keyup(function(e) {
+   		if (e.keyCode == 27) { 
+       cancelForm();
+   		}
+	});
 	function disableGenerateButton(){			
 		   $("input[type=submit]").attr("disabled", "disabled");
 		  	
