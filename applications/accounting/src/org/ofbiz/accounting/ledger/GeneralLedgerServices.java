@@ -475,7 +475,6 @@ public class GeneralLedgerServices {
 	    			//openingBalance=BigDecimal.ZERO;
 	    		}else{
 	    			if(UtilValidate.isNotEmpty(lastClosedTimePeriod)){
-	    				Debug.log("lastClosedTimePeriod========="+lastClosedTimePeriod);
 	    				Debug.log("finYearId========="+finYearId);
 	    				
 	    				Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalance(ctx, UtilMisc.toMap("organizationPartyId", organizationPartyId,"customTimePeriodId", finYearId,"glAccountId",glAccountId,"periodTypeId",periodTypeId,"isTrailBalance","N"));
@@ -672,11 +671,9 @@ public class GeneralLedgerServices {
     			       conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN ,UtilDateTime.toSqlDate(fromDate)));
     			EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
     			List<String> orderBy = UtilMisc.toList("-thruDate");
-    			Debug.log("CustomTimePeriod condition==================="+condition);
     			customTimePeriodList = delegator.findList("CustomTimePeriod", condition, UtilMisc.toSet("customTimePeriodId"), orderBy, null, true);
     			
     			customTimePeriodIds = EntityUtil.getFieldListFromEntityList(customTimePeriodList, "customTimePeriodId", true);
-    			Debug.log("customTimePeriodIds============"+customTimePeriodIds);
     			Timestamp nextDayStartDayEnd =null;
     			Timestamp fromDatePreviousDayEnd=null;
     			if(UtilValidate.isNotEmpty(customTimePeriodIds)){
@@ -774,11 +771,9 @@ public class GeneralLedgerServices {
  				}    			
     			//Debug.log("postedCredits==============="+postedCredits);
     			//Debug.log("postedDebits==============="+postedDebits);
-    			Debug.log("lastClosedTimePeriod============"+lastClosedTimePeriod);
 		    			if(UtilValidate.isNotEmpty(lastClosedTimePeriod)){
 		    				Map lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForParty(ctx, UtilMisc.toMap("organizationPartyId", organizationPartyId,"customTimePeriodId",finYearId,"partyId",partyId));
 		    				List lastClosedGlBalanceList = (List)lastClosedGlBalances.get("openingGlHistory");
-		    				Debug.log("lastClosedGlBalanceList==============="+lastClosedGlBalanceList);
 		    				if(UtilValidate.isNotEmpty(lastClosedGlBalanceList)){
 		    					for(int l=0;l<lastClosedGlBalanceList.size();l++){
 		    						Map lastClosedPartyGlBal=(Map) lastClosedGlBalanceList.get(l);
@@ -1058,7 +1053,6 @@ public class GeneralLedgerServices {
  					GenericValue customTimePeriod = lastClosedTimePeriod;
  					finYearId = (String)customTimePeriod.get("customTimePeriodId");
  					finYearFromDate=new java.sql.Timestamp(((Date) customTimePeriod.get("fromDate")).getTime());
- 					Debug.log("finYearId============"+finYearId);
  					
  				}
     			
