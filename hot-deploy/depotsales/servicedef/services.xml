@@ -877,6 +877,11 @@
         <attribute mode="IN" name="partyId" optional="true" type="String"/>
         <attribute mode="IN" name="finAccountTransTypeId" optional="true" type="String"/>
    </service>
+   <service name="removeProductFromInvoiceItemSales" engine="java" location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="removeProductFromInvoiceItemSales" transaction-timeout="6000000">
+            <description>populate Rounding</description>
+             <attribute name="ro" type="String" mode="IN" optional="false"/>
+             <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+    </service>
     
 </services>
 
