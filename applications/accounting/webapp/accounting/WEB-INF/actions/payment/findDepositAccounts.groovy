@@ -71,8 +71,8 @@ if ("Y".equals(parameters.noConditionFind)) {
 		   exprListForParameters.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, AccDateEnd));
 	   }
 
-	if (parameters.ownerPartyId) {
-		   exprListForParameters.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+	if (parameters.fromPartyId) {
+		   exprListForParameters.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.fromPartyId));
 	   }
 	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
 	List<String> orderBy = UtilMisc.toList("-fromDate");				
