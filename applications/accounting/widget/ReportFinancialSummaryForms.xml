@@ -663,24 +663,24 @@ under the License.
         <field name="thruDate" title="Thru Date" id-name="thruDate"><date-time type="date"/></field>
         <field name="organizationPartyId"><hidden/></field>
         <field name="reportTypeFlag"><hidden/></field>
-        <field name="finAccountId" title="Financial Account" id-name="finAccountId">
+        <!-- <field name="finAccountId" title="Financial Account" id-name="finAccountId">
         	<drop-down allow-empty="false">
                 <list-options list-name="finAccountList" key-name="finAccountId" description="${finAccountName}"/>
             </drop-down>
-            <!-- <drop-down>
+            <drop-down>
                 <entity-options entity-name="GlAccountOrganizationAndClass" description="${glAccountId} ${accountName}">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
                     <entity-order-by field-name="glAccountId"/>
                 </entity-options>
-            </drop-down> -->
-        </field>
-        <!-- <field name="finAccountId" title="Financial Account" id-name="finAccountId">
-            <drop-down>
-                <entity-options entity-name="FinAccount" description="${finAccountTypeId}">
-                    <entity-constraint name="finAccountId" operator="equals" value="FIN_ACCNT1"/>
-                </entity-options>
             </drop-down>
         </field> -->
+        <field name="finAccountId" title="Financial Account" id-name="finAccountId">
+            <drop-down>
+                <entity-options entity-name="FinAccount" description="${finAccountName}">
+                    <entity-constraint name="finAccountTypeId" operator="equals" value="CASH"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field position="1" name="organizationPartyId" >
             <!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
