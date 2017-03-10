@@ -1303,6 +1303,7 @@
     <request-map uri="MultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="MultiBranchSalesOrder"/></request-map>
     <request-map uri="SilkMultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkMultiBranchSalesOrder"/></request-map>
     <request-map uri="CottonMultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="CottonMultiBranchSalesOrder"/></request-map>
+    <request-map uri="DepotMultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="DepotMultiBranchSalesOrder"/></request-map>
     <request-map uri="OtherMultiBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="OtherMultiBranchSalesOrder"/></request-map>
     <request-map uri="IndentorBranchSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="IndentorBranchSalesOrder"/></request-map>
     <request-map uri="SilkIndentorSalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="SilkIndentorSalesOrder"/></request-map>
@@ -3018,6 +3019,7 @@
     <view-map name="MultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MultiBranchSalesOrder"/>
     <view-map name="SilkMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#SilkMultiBranchSalesOrder"/>
     <view-map name="CottonMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CottonMultiBranchSalesOrder"/>
+    <view-map name="DepotMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotMultiBranchSalesOrder"/>
     <view-map name="OtherMultiBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#OtherMultiBranchSalesOrder"/>
     <view-map name="FebricBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FebricBranchSalesOrder"/>
     <view-map name="FebricMultiIndentorSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#FebricMultiIndentorSalesOrder"/>
