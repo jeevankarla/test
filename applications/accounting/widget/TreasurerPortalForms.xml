@@ -340,12 +340,12 @@ under the License.
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}','ReceivedAccount');" description="Refund">
             </hyperlink>
         </field>
-        <field name="printReceipt" widget-style="buttontext">
+       <!--  <field name="printReceipt" widget-style="buttontext">
             <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_blank">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="transactionView" widget-style="buttontext" >
             <hyperlink target="viewDepositTransactions" description="View Transactions" target-window="_blank">
              	<parameter param-name="finAccountId"/>
@@ -372,12 +372,12 @@ under the License.
             <hyperlink target-type="plain" target="javascript:showDepositRefundEntry('${finAccountId}','PaidAccount');" description="Refund">
             </hyperlink>
         </field>
-        <field name="printReceipt" widget-style="buttontext">
+        <!-- <field name="printReceipt" widget-style="buttontext">
             <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_blank">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="transactionView" widget-style="buttontext" >
             <hyperlink target="viewDepositTransactions" description="View Transactions" target-window="_blank">
              	<parameter param-name="finAccountId"/>
@@ -419,12 +419,12 @@ under the License.
                 
             </hyperlink>
         </field>
-        <field name="printReceipt" widget-style="buttontext">
+        <!-- <field name="printReceipt" widget-style="buttontext">
             <hyperlink target="printDepositReport.pdf" description="Print Receipt" target-window="_blank">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="depositCheque"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="transactionView" widget-style="buttontext" >
             <hyperlink target="viewDepositTransactions" description="View Transactions" target-window="_blank">
              	<parameter param-name="finAccountId"/>

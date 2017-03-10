@@ -552,7 +552,7 @@ function setOrgPartyId() {
 			      		 			<option value="TDS_194C">TDS_194C</option>
 			      		 			<option value="TDS_194H">TDS_194H</option>
 			      		 			<option value="TDS_194J">TDS_194J</option>
-			      		 			<option value="TCS_206C">TCS_206C</option>
+			      		 			<option value="TDS_194I">TCS_206C</option>
 			      		 			
 			      		 			</select></td>  
 	 			  					<td width="5%"></td>

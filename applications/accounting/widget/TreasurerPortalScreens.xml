@@ -4566,7 +4566,7 @@
                </entity-condition>
                <entity-condition list="FinAccountTypeList" entity-name="FinAccountType">
                	<condition-list>
-               		<condition-expr field-name="parentTypeId" operator="equals" value="LOAN_ACCOUNT"/>
+               		<condition-expr field-name="parentTypeId" operator="equals" value="EMPLOYEE_ADV"/>
                	</condition-list>
                </entity-condition>
                <entity-condition list="FinAccountTypesList" entity-name="FinAccountType">
