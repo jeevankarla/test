@@ -32,7 +32,7 @@ under the License.
 ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
 			<fo:static-content flow-name="xsl-region-before">
-				    <#assign roId = parameters.organizationPartyId>
+				    <#assign roId = partyIdForAdd>
  					<#assign roHeader = roId+"_HEADER">
  					<#assign roSubheader = roId+"_HEADER01">
 			        <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>

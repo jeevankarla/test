@@ -689,7 +689,8 @@ under the License.
                 </entity-options>
             </drop-down> -->
             <drop-down allow-empty="false">
-				<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+            	<option description="Company" key="Company"/>
+				<!--<list-options key-name="partyId" list-name="orgPartyIdList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>-->
 			</drop-down>
         </field>
         <field name="isPosted" id-name="isPosted">
@@ -699,7 +700,7 @@ under the License.
                 <option description="${uiLabelMap.CommonAll}" key="ALL"/>
             </drop-down>
         </field>
-        <!-- <field name="pdf" title=" " widget-style="buttontext" event="onclick" action="javascript:appendParams('FinancialAccountTransForMonth', this);" id-name="cashBookPdf">
+        <field name="pdf" title=" " widget-style="buttontext" event="onclick" action="javascript:appendParams('FinancialAccountTransForMonth', this);" id-name="cashBookPdf">
             <hyperlink target="FinancialAccountTransForMonth.pdf" description="PDF" target-window="_blank"> 	
                   <parameter param-name="organizationPartyId" value="${parameters.organizationPartyId}"/> 
                	  <parameter param-name="finAccountId" from-field="finAccountId" />
@@ -708,7 +709,7 @@ under the License.
                	  <parameter param-name="isPosted" from-field="isPosted" />
                	  <parameter param-name="reportTypeFlag" from-field="reportTypeFlag" />
             </hyperlink>
-        </field> -->
+        </field>
         <field name="submitButton"  widget-style="buttontext" action=""><submit button-type="text-link"/></field>
     </form>
 	<form name="FinancialAccountTransCSV" type="list" list-name="financialAcctgTransList" view-size="99999">

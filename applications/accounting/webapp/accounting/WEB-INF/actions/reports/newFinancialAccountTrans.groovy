@@ -33,6 +33,7 @@ import java.text.ParseException;
 import org.ofbiz.party.party.PartyHelper;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+
 financialAcctgTransList=[];
 if (organizationPartyId) {
     onlyIncludePeriodTypeIdList = [];
@@ -53,18 +54,22 @@ if (organizationPartyId) {
         context.isDebitAccount = isDebitAccount;
         context.glAccount = glAccount;
     }
+	partyIdForAdd="";
 	if (parameters.finAccountId) {
 		finAccountId=parameters.finAccountId;
 		finAccount = delegator.findOne("FinAccount", [finAccountId : finAccountId], false);//to only showing postedGlAccountId
+		partyIdForAdd=finAccount.costCenterId;
 		if(UtilValidate.isNotEmpty(finAccount.postToGlAccountId)){
-		postedGlAccount=finAccount.postToGlAccountId;
-		glAccount = delegator.findOne("GlAccount", [glAccountId : postedGlAccount], false);
-		glAccountId = glAccount.glAccountId;
-		isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
-		context.isDebitAccount = isDebitAccount;
-		context.glAccount = glAccount;
+			postedGlAccount=finAccount.postToGlAccountId;
+			glAccount = delegator.findOne("GlAccount", [glAccountId : postedGlAccount], false);
+			glAccountId = glAccount.glAccountId;
+			isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
+			context.isDebitAccount = isDebitAccount;
+			context.glAccount = glAccount;
 		}
 	}
+	context.partyIdForAdd = partyIdForAdd;
+	
     currentTimePeriod = null;
     BigDecimal balanceOfTheAcctgForYear = BigDecimal.ZERO;
 	openingBalance = BigDecimal.ZERO;
@@ -709,6 +714,7 @@ if(UtilValidate.isNotEmpty(dayFinAccountTransList)){
 	}
 }
 context.dayFinAccountTransList = finalFinAccntTransList;
+
 
 
 
