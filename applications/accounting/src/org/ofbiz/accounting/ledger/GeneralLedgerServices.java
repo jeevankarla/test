@@ -1516,7 +1516,9 @@ public class GeneralLedgerServices {
 		                 accountMap.put("D", BigDecimal.ZERO);
 		                 accountMap.put("C", BigDecimal.ZERO);
 		             }
-	    	    	 
+	    	    	 if("INT4".equals(transTotalEntry.get("costCenterId"))){
+	    	    		 Debug.log("accountMap============="+accountMap);
+	    	    	 }
 	    	         UtilMisc.addToBigDecimalInMap(accountMap , transTotalEntry.getString("debitCreditFlag"), transTotalEntry.getBigDecimal("amount"));
 	    	         postedTransactionTotalsMap.put(glAccountId, accountMap);
 	    	     }
@@ -1537,6 +1539,9 @@ public class GeneralLedgerServices {
 	    	    	 glAccountHistory.set("postedDebits",(BigDecimal)postedTotalEntry.get("D") );
 	    	    	 glAccountHistory.set("postedCredits", (BigDecimal)postedTotalEntry.get("C"));
 	    	    	 delegator.createOrStore(glAccountHistory);
+	    	    	 if("INT4".equals(postedTotalEntry.get("costCenterId"))){
+	    	    		 Debug.log("glAccountHistory============="+glAccountHistory);
+	    	    	 }
 	    	    	 //Debug.log("glAccountHistory============="+glAccountHistory);
 	    	    	 
 	    	    	 
@@ -1553,6 +1558,9 @@ public class GeneralLedgerServices {
 		        	    		 newEntity.putAll(glMap);
 		        	    		 newEntity.set("postedDebits",BigDecimal.ZERO );
 		        	    		 newEntity.set("postedCredits", BigDecimal.ZERO);
+		        	    		 if("INT4".equals(postedTotalEntry.get("costCenterId"))){
+		    	    	    		 Debug.log("newEntity============="+newEntity);
+		    	    	    	 }
 		    	    	    	 delegator.createOrStore(newEntity);
 		    	    	    	 parentGlAccountHistory = delegator.findOne("GlAccountHistory",glMap , false);
 		        	    	 }
