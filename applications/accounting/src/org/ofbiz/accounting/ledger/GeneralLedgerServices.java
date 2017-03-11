@@ -1560,7 +1560,7 @@ public class GeneralLedgerServices {
 	    	        		 }else{
 	    	        			 Map valuesMap=(Map)segTempMap.get(purposeTypeId);
 	    	        			 valuesMap.put("D",debitAmt.add((BigDecimal)valuesMap.get("D")));
-	    	        			 valuesMap.put("C",debitAmt.add((BigDecimal)valuesMap.get("C")));
+	    	        			 valuesMap.put("C",creditAmt.add((BigDecimal)valuesMap.get("C")));
 	    	        			 segTempMap.put(purposeTypeId,valuesMap);
 	    	        		 }
 	    	        		 tempCostValMap.put(costCenterId,segTempMap);	    	        		 
