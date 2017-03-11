@@ -105,8 +105,8 @@ public class paymentApiServices {
 	private static int decimals;
 	private static int rounding;
     public static final String resource = "AccountingUiLabels";
-    private static String SucUrl = "https://erp.nhdcltd.co.in/myportal/control/paymentSucUrl";
-    private static String failUrl = "https://erp.nhdcltd.co.in/myportal/control/paymentFailUrl";
+    private static String SucUrl = "https://erp.nhdc.org.in/myportal/control/paymentSucUrl";
+    private static String failUrl = "https://erp.nhdc.org.in/myportal/control/paymentFailUrl";
     private static String airtelBaseUrl = "https://ecom.airtelmoney.in/ecom/v2/";
     
     static {
@@ -185,7 +185,7 @@ public class paymentApiServices {
 	}
     
     
-    public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
+    /*public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -256,9 +256,9 @@ public class paymentApiServices {
 		 }
 
        return result;
-	}
+	}*/
     
-    /*public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
+    public static Map<String, Object> makeWeaverPayment(DispatchContext dctx,Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -390,7 +390,7 @@ public class paymentApiServices {
 		 }
 
        return result;
-	}*/
+	}
     
     
     public static Map<String, Object> createPaymentGatewayTrans(DispatchContext dctx,Map<String, Object> context) {
