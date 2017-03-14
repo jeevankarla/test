@@ -265,7 +265,7 @@ under the License.
 			    <#if kanAndKalRo?has_content> 
 					<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("unitPriceIncTax")?has_content>${invoiceDetail.get("unitPriceIncTax")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
 			    <#else>
-					<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("amount")?has_content>${invoiceDetail.get("amount")} <#else>${0.00}</#if></fo:block>
+					<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("amount")?has_content>${invoiceDetail.get("amount")?if_exists?string("#0.00")} <#else>${0.00}</#if></fo:block>
 				</#if>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
