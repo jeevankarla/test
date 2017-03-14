@@ -364,17 +364,7 @@ function setOrgPartyId() {
  
 </script>
 
-<script type="text/javascript">
-function setOrgPartyId() {
-	$(".commonPartyId").each(function() {
-		$(this).val($("#division").val());
-    });
-    $(".commonSegmentId").each(function() {
-			$(this).val($("#segment").val());
-	    });
-  }	
- 
-</script>
+
 <div class="screenlet">
     <div class="screenlet-title-bar">
       <h2><center>Accounting Reports</center></h2>
@@ -552,7 +542,7 @@ function setOrgPartyId() {
 			      		 			<option value="TDS_194C">TDS_194C</option>
 			      		 			<option value="TDS_194H">TDS_194H</option>
 			      		 			<option value="TDS_194J">TDS_194J</option>
-			      		 			<option value="TDS_194I">TCS_206C</option>
+			      		 			<option value="TDS_194I">TDS_194I</option>
 			      		 			
 			      		 			</select></td>  
 	 			  					<td width="5%"></td>
@@ -594,7 +584,10 @@ function setOrgPartyId() {
 						   <option value='Detailed'>Detailed</option>
 					   </select>
 				     </td>
-					  <td width="10%"><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>');" class="buttontext"/> <input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+				    
+					 <td width="10%"><input type="hidden" name="division" class="commonPartyId">
+					  <input type="hidden" name="segment" class="commonSegmentId">
+					  <input type="submit" value="PDF" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>');" class="buttontext"/> <input type="submit" value="CSV" onClick="javascript:appendParams('EmployeeAdvancesAndSubSchedule', '<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.csv</@ofbizUrl>');" class="buttontext"/></td>
 					</td>         			
 				</form>
               </tr>
