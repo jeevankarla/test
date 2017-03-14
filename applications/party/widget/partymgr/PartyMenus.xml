@@ -190,6 +190,11 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
+         <menu-item name="FinAccountDetails" title="${uiLabelMap.FinAccountDetails}">
+            <link target="FinAccountDetails">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
        <!-- <menu-item name="PartyGeoLocation" title="${uiLabelMap.CommonGeoLocation}">
             <link target="PartyGeoLocation">
                 <parameter param-name="partyId"/>

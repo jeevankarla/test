@@ -10986,4 +10986,7 @@
         <value xml:lang="th">ไม่ได้ใส่รหัสไปรษณีย์/รหัสพื้นที่</value>
         <value xml:lang="zh">找不到邮政编码</value>
     </property>
+    <property key="FinAccountDetails">
+    	 <value xml:lang="en">Bank Account Details</value>	
+    </property>
 </resource>

@@ -329,7 +329,43 @@ under the License.
             </widgets>
         </section>
     </screen>
-
+	 <screen name="FinAccountDetails">
+        <section>
+            <actions>
+                <set field="titleProperty" value="EditAccountDetails"/>
+                <set field="tabButtonItem" value="viewprofile"/>
+                <set field="labelTitleProperty" value="EditAccountDetails"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="viewprofile"/>
+                <set field="createUserLoginURI" value="ProfileAccountDetails"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="finAccountTypeId" value="VENDOR_BANK"/>
+                <set field="roleTypeId" value="VENDOR"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
+				<!-- <script location="component://humanres/webapp/humanres/WEB-INF/actions/humanres/Accountinfo.groovy"/> -->
+				<entity-condition list="EditAccountDetailsList" entity-name="FinAccount">
+					<condition-list combine="and">
+						<condition-expr field-name="finAccountTypeId"  operator="equals" value="VENDOR_BANK"/>
+						<condition-expr field-name="ownerPartyId"  operator="equals" from-field="parameters.partyId" />
+					</condition-list>
+				</entity-condition>
+				<set field="finAccountCode" value="${EditAccountDetailsList[0].finAccountCode}"/>
+				<set field="finAccountName" value="${EditAccountDetailsList[0].finAccountName}"/>
+				<set field="finAccountBranch" value="${EditAccountDetailsList[0].finAccountBranch}"/>
+				<set field="ifscCode" value="${EditAccountDetailsList[0].ifscCode}"/>
+				<set field="date" value="${EditAccountDetailsList[0].fromDate}"/>
+				
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+	                   <screenlet id="EditAccountDetails" title="${uiLabelMap.AccountPanel1}" >
+			                 <include-form name="EditAccountDetails" location="component://party/widget/partymgr/PartyForms.xml"/>
+	                   </screenlet>
+               		</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="EditPartyTaxAuthInfos">
         <section>
             <actions>
