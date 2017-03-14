@@ -2049,4 +2049,98 @@ public class PartyServices {
 		return result;
 	}
 	
+	 public static Map<String, Object> updatePartyFinancialAccount(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	      LocalDispatcher dispatcher = dctx.getDispatcher();
+	      GenericValue userLogin = (GenericValue) context.get("userLogin");
+	      String partyId = (String) context.get("partyId");
+	      String finAccountCode = (String)context.get("finAccountCode");
+	      String finAccountName = (String)context.get("finAccountName");
+	      String finAccountBranch = (String)context.get("finAccountBranch");
+	      String ifscCode = (String)context.get("ifscCode");
+	      //String finAccountId = (String)context.get("disbursmentBank");
+	      String finAccountTypeId = (String)context.get("finAccountTypeId");
+	      String roleTypeId = (String)context.get("roleTypeId");
+	      String date =  (String)context.get("date");
+	      Map result = ServiceUtil.returnSuccess();
+	      String finAccountId = null;
+	      Timestamp thruDate=null;
+	      Timestamp dateTime=null;
+	      if(UtilValidate.isNotEmpty(date)){
+	    	  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    	  try{
+	    		  dateTime=new java.sql.Timestamp(sdf.parse(date+" 00:00:00").getTime());
+	    		  thruDate=UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(dateTime), -1);
+	    	  }catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: "+ date, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: "	+ date, module);
+				}
+	      }
+	      try{
+	    	  List conditionList = FastList.newInstance();
+	    	  conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyId));
+	    	  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	  List<GenericValue> finAccountList = delegator.findList("FinAccount", condition, null, null, null, false);
+	    		  if(UtilValidate.isEmpty(finAccountList)){
+						GenericValue newEntity = delegator.makeValue("FinAccount");
+						//newEntity.set("finAccountId", partyId);
+						newEntity.set("finAccountCode", finAccountCode);
+						newEntity.set("finAccountName", finAccountName);
+						newEntity.set("organizationPartyId", "Company");
+						newEntity.set("ownerPartyId", partyId);
+						newEntity.set("finAccountTypeId", finAccountTypeId);
+						newEntity.set("statusId", "FNACT_ACTIVE");
+						if(UtilValidate.isNotEmpty(finAccountBranch)){
+							newEntity.set("finAccountBranch", finAccountBranch);
+						}
+						if(UtilValidate.isNotEmpty(ifscCode)){
+							newEntity.set("ifscCode", ifscCode);
+						}
+						newEntity.set("fromDate", dateTime);
+						try {  
+							delegator.createSetNextSeqId(newEntity);
+							finAccountId = (String) newEntity.get("finAccountId");
+						} catch (GenericEntityException e) {
+							Debug.logError(e, module);
+							return ServiceUtil.returnError("Failed to create a new Entry "+ e);
+						}
+					}else{	
+						GenericValue finAccount = finAccountList.get(0);
+						
+						if(!finAccountCode.equals(finAccount.getString("finAccountCode"))){
+							finAccount.set("finAccountCode",finAccountCode);
+						}
+						if(!finAccountName.equals(finAccount.getString("finAccountName"))){
+							finAccount.set("finAccountName",finAccountName);
+						}
+						if((UtilValidate.isNotEmpty(finAccountBranch))){
+							if(!finAccountBranch.equals(finAccount.getString("finAccountBranch"))){
+								finAccount.set("finAccountBranch", finAccountBranch);
+							}
+						}						
+						if((UtilValidate.isNotEmpty(ifscCode))){
+							if(!ifscCode.equals(finAccount.getString("ifscCode"))){
+								finAccount.set("ifscCode", ifscCode);
+							}
+						}
+						if((UtilValidate.isNotEmpty(dateTime))){
+							Timestamp fromdatestrr = finAccount.getTimestamp("fromDate");
+			    		  	if(fromdatestrr.compareTo(dateTime)!=0){
+								finAccount.set("fromDate", dateTime);
+			    		  	}
+						}
+						finAccount.store();
+					}
+	    		  /*if(UtilValidate.isNotEmpty(finAccountId) && UtilValidate.isNotEmpty(date)){
+	    			  Map resultMap=updateDisbursmentBank(dctx,UtilMisc.toMap("userLogin",userLogin,"disbursmentBank",finAccountId,"partyId",partyId,"date",date,"roleTypeId",roleTypeId));
+	    		  }*/
+	      }catch(GenericEntityException e){
+				Debug.logError("Error while creating new FinAccount"+e.getMessage(), module);
+			}
+	      result = ServiceUtil.returnSuccess("New FinAccount Created Sucessfully...!");
+	      return result;
+	    }
+	
+	
 }

@@ -196,7 +196,50 @@ under the License.
         <field name="externalId"><display/></field>
         <field name="statusId"><display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/></field>
     </form>
-
+    
+	<form name="EditAccountDetails" type="single" separate-columns="true"
+		target="updateEmplFinAccount">
+		<actions>
+<!-- 		<set field="date" value="${groovy: return org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/> -->
+		</actions>
+		<field name="partyId">
+			<hidden />
+		</field>
+		<field name="finAccountId">
+			<hidden />
+		</field>
+		<field name="finAccountTypeId">
+			<hidden />
+		</field>
+		<field name="roleTypeId">
+			<hidden />
+		</field>
+		<field name="finAccountCode" title="Account Number"
+			tooltip="${uiLabelMap.CommonRequired}" widget-style="required"
+			required-field="true">
+			<text size="20" maxlength="20"></text>
+		</field>
+		<field name="finAccountName" title="Bank Name"
+			tooltip="${uiLabelMap.CommonRequired}" widget-style="required"
+			required-field="true">
+			<text size="20"></text>
+		</field>
+		<field name="finAccountBranch" title="Account Branch">
+			<text size="20" maxlength="20"></text>
+		</field>
+		<field name="ifscCode" title="IFSC Code"
+		  tooltip="${uiLabelMap.CommonRequired}" widget-style="required"
+			required-field="true">
+			<text size="10"></text>
+		</field>
+		<field name="date"  parameter-name="date" title="${uiLabelMap.From}"><date-time type="date" ></date-time> </field>
+		 <field name="createdStamp" title="Created Date" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(createdStamp, &quot;dd/MM/yyyy &quot;);}"></display></field>
+			<field name="submitButton"
+			use-when="${groovy:((security.hasEntityPermission(&quot;HR_PROFILE&quot;, &quot;_ADMIN&quot;, session)))}"
+			title="${uiLabelMap.CommonUpdate}">
+			<submit button-type="button" />
+		</field>
+	</form>
     <form name="ViewPartyPerson" type="single" default-map-name="lookupPerson">
         <field name="partyId"><display/></field>
         <field name="name" title="${uiLabelMap.PartyName}"><display description="${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName}"/></field>
