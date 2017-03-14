@@ -309,7 +309,7 @@ function datepick()
     			<#--<td><span class="label"> Issuing Authority:</span>
     				<input class='h3' type='text' id='issuingAuthority' name='issuingAuthority'/>
     			</td>-->
-    			<td><span class="label">Fin Account</span>
+    			<#-- <td><span class="label">Fin Account</span>
     				<select name="finAccountId" id="finAccountId" style="width:50%">
     				<option value=""></option>
     				<#if finAccounts1?has_content>
@@ -318,7 +318,7 @@ function datepick()
     				</#list>
     				</#if>
     				</select>
-    			</td>
+    			</td> -->
     			<input type="hidden" name="paymentGroupTypeId" id="paymentGroupTypeId" value="${roleTypeId?if_exists}">
     			<td><span class="label">${roleTypeId?if_exists} Amount:</span><input class='h3' type='text' id='payAmount' name='payAmount' readonly/></td>
     			<td><span class="label"> Payment Date (<font color='red'>*</font>):</span><input class='h3' type='text' id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td>
