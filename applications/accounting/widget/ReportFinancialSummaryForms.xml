@@ -676,9 +676,7 @@ under the License.
         </field> -->
         <field name="finAccountId" title="Financial Account" id-name="finAccountId">
             <drop-down>
-                <entity-options entity-name="FinAccount" description="${finAccountName}">
-                    <entity-constraint name="finAccountTypeId" operator="equals" value="CASH"/>
-                </entity-options>
+                <list-options key-name="finAccountId" list-name="finAccountList" description="${finAccountName}"/>
             </drop-down>
         </field>
         <field position="1" name="organizationPartyId" >

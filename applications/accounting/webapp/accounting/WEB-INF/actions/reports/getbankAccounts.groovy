@@ -58,12 +58,14 @@ if(UtilValidate.isNotEmpty(context.flag) && context.flag == "Y"){
 		glAccnt = delegator.findList("GlAccountOrganizationAndClass", EntityCondition.makeCondition(["organizationPartyId" : organizationPartyId]), null, null, null, true);
 		glAccntIds = EntityUtil.getFieldListFromEntityList(glAccnt, "glAccountId", true);
 			conditionList = [];
-			 if(UtilValidate.isNotEmpty(parameters.screenFlag)){
+			 /*if(UtilValidate.isNotEmpty(parameters.screenFlag)){
 			
 			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"),EntityOperator.OR,
 				EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "CASH")));
-			}
+			}*/
 			//conditionList.add( EntityCondition.makeCondition("postToGlAccountId", EntityOperator.IN, glAccntIds));
+			
+			conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, ["BANK_ACCOUNT","CASH"]));
 			if(UtilValidate.isNotEmpty(parameters.ownerPartyId) &&  parameters.ownerPartyId!=null){
 				conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 			}
