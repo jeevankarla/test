@@ -19,7 +19,26 @@ dctx = dispatcher.getDispatchContext();
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.thruDate;
 reportTypeFlag = parameters.reportTypeFlag;
+condList = [];
 roId = parameters.division;
+context.roId = roId;
+segmentId = parameters.segment;
+branchList = [];
+condList.clear();
+if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+	condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,roId));
+	condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+		branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+		branchList.add(roId);
+	}
+	
+}
+condList.clear();
+
 SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 Timestamp fromDateTs = null;
 if(fromDateStr){
@@ -88,8 +107,19 @@ finAccountList.each{finAccountTypeId->
 	finAccntMap["finAccountTypeId"]=finAccountTypeId.finAccountTypeId;
 	finAccntMap["Name"]=partyName;
 	finAccntMap["partyId"]=finAccountTypeId.ownerPartyId;
-	
-	Map finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountTypeId.finAccountId,"transactionDate",fromDate));
+	Map finAccTransMap;
+	if(roId.equals("Company") && segmentId.equals("All")){
+		finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountTypeId.finAccountId,"transactionDate",fromDate, "costCenterId", null, "segmentId", null));
+	}
+	else if(roId.equals("Company") && !segmentId.equals("All")){
+		finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountTypeId.finAccountId,"transactionDate",fromDate, "costCenterId", null, "segmentId", segmentId));
+	}
+	else if(!roId.equals("Company") && segmentId.equals("All")){
+		finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountTypeId.finAccountId,"transactionDate",fromDate, "roBranchList", branchList, "segmentId", null));
+	}
+	else{
+		finAccTransMap = FinAccountServices.getFinAccountTransOpeningBalances(dctx, UtilMisc.toMap("userLogin",userLogin,"finAccountId",finAccountTypeId.finAccountId,"transactionDate",fromDate, "roBranchList", branchList, "segmentId", segmentId));
+	}
 	/*if(UtilValidate.isNotEmpty(finAccTransMap)){
 		if(UtilValidate.isNotEmpty(finAccTransMap.get("withDrawal"))){
 			openBalanceCredit=finAccTransMap.get("withDrawal");
@@ -114,11 +144,25 @@ finAccountList.each{finAccountTypeId->
 	finAccntMap["openBalanceDebit"]=openBalanceDebit;
 	finAccntMap["openBalanceCredit"]=openBalanceCredit;
 	finAccntDetailedCsv.addAll(finAccntMap);
+	exprList = [];
 	
-	cond=EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,finAccountTypeId.finAccountId),
+	if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company"))
+		exprList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));
+	if(!segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+		exprList.add(EntityCondition.makeCondition("segmentId" , EntityOperator.EQUALS, segmentId));
+	if(segmentId.equals("YARN_SALE"))
+		exprList.add(EntityCondition.makeCondition("segmentId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+	exprList.add(EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,finAccountTypeId.finAccountId));
+	exprList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+	exprList.add(EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
+	exprList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"FINACT_TRNS_CANCELED"));
+	EntityCondition cond = EntityCondition.makeCondition(exprList ,EntityOperator.AND);
+	
+	/*cond=EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,finAccountTypeId.finAccountId),
 										 EntityCondition.makeCondition("transactionDate",EntityOperator.GREATER_THAN_EQUAL_TO,fromDate),
 										 EntityCondition.makeCondition("transactionDate",EntityOperator.LESS_THAN_EQUAL_TO,thruDate),
-										 EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"FINACT_TRNS_CANCELED")],EntityOperator.AND);
+										 EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"FINACT_TRNS_CANCELED")],EntityOperator.AND);*/
+	
 	finAccountTranses=delegator.findList("FinAccountTrans",cond,null,null,null,false);
 	DaywiseMap=[:];
 	if(UtilValidate.isNotEmpty(finAccountTranses)){
