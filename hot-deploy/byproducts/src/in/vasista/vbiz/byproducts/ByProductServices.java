@@ -7519,13 +7519,13 @@ public class ByProductServices {
 				  	  finDepositCtx.put("paymentIds", paymentIds);
 				  	  finDepositCtx.put("finAccountId", finAccountId);
 				  	  finDepositCtx.put("transactionDate", paymentDate);
-				  	  Map resultDepositMap = dispatcher.runSync("depositWithdrawPayments", finDepositCtx);
-				  	  if(ServiceUtil.isError(resultDepositMap)){
+				  	 /*  Map resultDepositMap = dispatcher.runSync("depositWithdrawPayments", finDepositCtx);
+				  	 if(ServiceUtil.isError(resultDepositMap)){
 				  		  Debug.logError("Problems in service depositWithdrawPayments", module);
 				  		  request.setAttribute("_ERROR_MESSAGE_", "Error in service depositWithdrawPayments");
 				  		  TransactionUtil.rollback();
 				  		  return "error";
-				  	  }
+				  	  }*/
 			  	  }
 			  	 
 			  	 if(UtilValidate.isNotEmpty(paymentIds)){
