@@ -218,11 +218,11 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 					if(UtilValidate.isNotEmpty(totalPostedCredits)){
 						childCatCreditTotal=childCatCreditTotal+totalPostedCredits;
 					}
-					glTempVal=0
+					glTempVal=0					
 					glTempVal=totalPostedDebits-totalPostedCredits;
-					if(glTempVal<0){
+					/*if(glTempVal<0){
 						glTempVal=glTempVal.multiply(-1);
-					}
+					}*/
 					if(GlAccountIdsWiseMap && GlAccountIdsWiseMap.get(glAccntCategoryId)){
 						tempGlMap=GlAccountIdsWiseMap.get(glAccntCategoryId);
 						if( tempGlMap && tempGlMap.get(glAccountId)){
