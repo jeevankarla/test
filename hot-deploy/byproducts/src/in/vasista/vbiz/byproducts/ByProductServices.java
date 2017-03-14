@@ -7428,6 +7428,8 @@ public class ByProductServices {
 		  		  if (paramMap.containsKey("invoiceId" + thisSuffix)) {
 		  			invoiceId = (String) paramMap.get("invoiceId"+thisSuffix);
 		  		  }
+		  		 GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+		  		 String purposeTypeId = invoice.getString("purposeTypeId");
 		  		  if (paramMap.containsKey("partyId" + thisSuffix)) {
 		  			partyIdFrom = (String) paramMap.get("partyId"+thisSuffix);
 		  		  }
@@ -7456,6 +7458,7 @@ public class ByProductServices {
 		  			if(UtilValidate.isNotEmpty(amount) && amount.compareTo(BigDecimal.ZERO) > 0){
 		  				Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", "AGNSTINV_PAYOUT");
 			  	        paymentCtx.put("paymentMethodId", paymentMethodId);//from AP mandatory
+			  	        paymentCtx.put("paymentPurposeType", purposeTypeId);
 			  	        paymentCtx.put("paymentMethodTypeId", paymentMethodTypeId);
 			  	        paymentCtx.put("organizationPartyId", partyIdTo);
 			            paymentCtx.put("partyId", partyIdFrom);
@@ -7540,7 +7543,7 @@ public class ByProductServices {
 			  			serviceCtx.put("finAccountId", finAccountId);
 			  		  }
 			  		  serviceCtx.put("amount", totInvoiceAMount);
-			  		  serviceCtx.put("paymentGroupTypeId", "SUPLR_BATCH_PMNT");
+			  		  serviceCtx.put("paymentGroupTypeId", "GROUP_PAYMENT");
 			  		  serviceCtx.put("createdDate", UtilDateTime.nowTimestamp());
 			  		  serviceCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
 			  		  serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
