@@ -42,7 +42,7 @@ if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 }
 invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 partyId = invoiceList.get("partyId");
-partyIdFrom=invoiceList.get("partyIdFrom");
+partyIdFrom=invoiceList.get("costCenterId");
 branchRo = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyIdFrom)  , UtilMisc.toSet("partyIdFrom"), null, null, false );
 roID = EntityUtil.getFirst(branchRo);
 
@@ -57,7 +57,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	invoiceDate = invoiceList.get("invoiceDate");
 	context.invoiceDate = invoiceDate;
 	shipmentId = invoiceList.get("shipmentId");
-	partyIdFrom = invoiceList.partyIdFrom;
+	partyIdFrom = invoiceList.costCenterId;
 	context.partyIdFrom = partyIdFrom;
 	
 	conditionList = [];
@@ -1053,7 +1053,7 @@ context.partyId = partyId;
 invoiceDate = invoiceList.get("invoiceDate");
 context.invoiceDate = invoiceDate;
 shipmentId = invoiceList.get("shipmentId");
-partyIdFrom = invoiceList.partyIdFrom;
+partyIdFrom = invoiceList.costCenterId;
 context.partyIdFrom = partyIdFrom;
 
 conditionList = [];
