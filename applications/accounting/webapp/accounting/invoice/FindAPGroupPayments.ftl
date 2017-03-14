@@ -17,7 +17,7 @@ $(document).ready(function(){
 	
 </script>	
 <form method="post" name="findAPGroupPayments" action="<@ofbizUrl>findAPGroupPayment</@ofbizUrl>">  
-      <input type="hidden" name="paymentGroupTypeId" id="paymentGroupTypeId" value="SUPLR_BATCH_PMNT"/>
+      <input type="hidden" name="paymentGroupTypeId" id="paymentGroupTypeId" value="GROUP_PAYMENT"/>
       <input type="hidden" name="statusId" id="statusId" value="PAYGRP_CREATED"/>
       <input type="hidden" name="isFormSubmitted" id="isFormSubmitted" value="Y"/>
       
