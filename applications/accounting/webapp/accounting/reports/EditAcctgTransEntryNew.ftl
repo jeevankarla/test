@@ -281,8 +281,8 @@ under the License.
 				            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
 				              <td>
 				              <#if acctgTransEntry.glAccountId?has_content>
-					              <#assign glAccntDetails = delegator.findOne("GlAccount", {"glAccountId" : acctgTransEntry.glAccountId}, true)>
-					              ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(glAccntDetails.get("accountName")?if_exists)),25)}
+					             
+					              ${acctgTransEntry.glAccountId?if_exists}
 					              <input id="glAccountId1" name="glAccountId1" type="hidden" value="${acctgTransEntry.glAccountId?if_exists}" size="12"/>
 				              </#if></td>
 				              <td><#if acctgTransEntry.partyId?has_content>
