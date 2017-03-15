@@ -698,7 +698,7 @@ under the License.
                 <option description="${uiLabelMap.CommonAll}" key="ALL"/>
             </drop-down>
         </field> -->
-       <field name="isPosted" id-name="isPosted" value="Y"><hidden/></field>
+       <field name="isPosted" id-name="isPosted" ><hidden value="Y"/></field>
         <field name="pdf" title=" " widget-style="buttontext" event="onclick" action="javascript:appendParams('FinancialAccountTransForMonth', this);" id-name="cashBookPdf">
             <hyperlink target="FinancialAccountTransForMonth.pdf" description="PDF" target-window="_blank"> 	
                   <parameter param-name="organizationPartyId" value="${parameters.organizationPartyId}"/> 
