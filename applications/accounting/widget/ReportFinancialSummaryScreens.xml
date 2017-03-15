@@ -5384,5 +5384,104 @@
 			 	<include-form name="SalesAnalysisCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
             </widgets>
 		</section>
-	</screen>			
+	</screen>
+	<screen name="BankReportCSV">
+        <section>
+            <actions>
+                <set field="finAccntTransGroupId" from-field="parameters.finAccntTransGroupId"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="bankTypeFlag" from-field="parameters.bankTypeFlag"/>
+				<set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
+			   	<entity-condition list="finAccountList" entity-name="FinAccount">
+					<having-condition-list combine="and">
+						<!-- <condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+						<!-- <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/> -->
+						<condition-expr field-name="finAccountTypeId" operator="in"  from-field="finAccountTypeIds"/>
+						<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+					</having-condition-list>
+					<order-by field-name="finAccountName"/>
+				</entity-condition>	
+				<entity-condition list="roleTypes" entity-name="RoleType">
+					<condition-expr field-name="parentTypeId" operator="equals" value="BATCH_BILLING"/>
+			    </entity-condition>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/bankReport.groovy"/>
+            </actions>
+            <widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="SBI" field="bankTypeFlag" />
+					</condition>
+					<widgets>
+							<include-form name="SBIBankCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="CANARA" field="bankTypeFlag" />
+					</condition>
+					<widgets>	
+							<include-form name="CanaraBankCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+        </section>
+    </screen>
+        
+    <screen name="BankReportPDF">
+        <section>
+            <actions>
+                <set field="finAccntTransGroupId" from-field="parameters.finAccntTransGroupId"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="bankTypeFlag" from-field="parameters.bankTypeFlag"/>
+				<set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
+			   	<entity-condition list="finAccountList" entity-name="FinAccount">
+					<having-condition-list combine="and">
+						<!-- <condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+						<!-- <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/> -->
+						<condition-expr field-name="finAccountTypeId" operator="in"  from-field="finAccountTypeIds"/>
+						<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+					</having-condition-list>
+					<order-by field-name="finAccountName"/>
+				</entity-condition>	
+				<entity-condition list="roleTypes" entity-name="RoleType">
+					<condition-expr field-name="parentTypeId" operator="equals" value="BATCH_BILLING"/>
+			    </entity-condition>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/bankReport.groovy"/>
+            </actions>
+            <widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="SBI" field="bankTypeFlag" />
+					</condition>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+							    <html-template location="component://accounting/webapp/accounting/reports/SbiBankReport.fo.ftl" />
+									</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="CANARA" field="bankTypeFlag" />
+					</condition>
+					<widgets>	
+							<platform-specific>
+							<xsl-fo>
+							    <html-template location="component://accounting/webapp/accounting/reports/CanaraBankReport.fo.ftl" />
+									</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+        </section>
+    </screen>			
 </screens>
