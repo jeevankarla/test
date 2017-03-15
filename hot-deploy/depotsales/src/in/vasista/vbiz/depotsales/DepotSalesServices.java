@@ -21369,7 +21369,7 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
  			    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
  			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
  		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
- 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
+ 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
  			 
  		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, false);
 				
