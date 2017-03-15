@@ -26,7 +26,7 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="paymentId"><text-find ignore-case="true"/></field>
         <field name="paymentSequenceId"><text-find ignore-case="true"/></field>
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>
+        <!-- <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field> -->
         <field name="comments"><text-find ignore-case="true"/></field>
         <field name="paymentMethodTypeId">
             <drop-down allow-empty="true">
@@ -91,7 +91,7 @@ under the License.
                 <parameter param-name="paymentSequenceId" value="${paymentSequenceId}"/>
             </hyperlink>
         </field>
-        <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display/></field>
+        <!-- <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display/></field> -->
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="comments" title="Comments"><display/></field>
@@ -145,7 +145,7 @@ under the License.
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="facilityId" title="${uiLabelMap.RetailerId}"><display/></field>
+        <!-- <field name="facilityId" title="${uiLabelMap.RetailerId}"><display/></field> -->
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
         <field name="paymentMethodTypeId" title="Payment Method"><display-entity entity-name="PaymentMethodType" description="${description}"></display-entity></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
