@@ -4316,6 +4316,14 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="implGrantReportPDF"/>
     </request-map>
+    <request-map uri="printBankReport.xls">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="BankReportCSV"/>    	
+    </request-map>
+    <request-map uri="printBankReport.pdf">
+    	<security https="true" auth="true"/>    	
+    	<response name="success" type="view" value="BankReportPDF"/>    	
+    </request-map>
     
     <request-map uri="BankAccountDetail">
         <security https="true" auth="true"/>
@@ -4937,5 +4945,7 @@ under the License.
 	<view-map name="balanceSheetReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#balanceSheetReportPDF" content-type="application/pdf" encoding="none"/>
 	<view-map name="scheduleReportPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#scheduleReportPdf" content-type="application/pdf" encoding="none"/>
 	<view-map name="profitAndLossAccountReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#profitAndLossAccountReportPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="BankReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BankReportCSV" content-type="text/csv" encoding="none"/>
+  	<view-map name="BankReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BankReportPDF" content-type="application/pdf" encoding="none"/>
    <!-- end of view mappings -->
 </site-conf>

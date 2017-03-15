@@ -1499,4 +1499,33 @@ under the License.
     	<field name="EMPLOYEE" title="*"><display></display></field>
     	<field name="OTHER" title="*"><display></display></field>
     </form>
+    <form name="SBIBankCSV" type="list" list-name="bankTypeList" odd-row-style="alternate-row" default-table-style="basic-table " separate-columns="true"  header-row-style="header-row-2" >
+        <!-- <field name="paymentGroupId" ><display/></field> -->
+        <field name="empId" title="EMP_CD"><display/></field>
+        <field name="empName" title="EMP_NM"><display/></field>
+        <field name="position" title="SDESIGN"><display/></field>
+        <field name="empDate" title="SYYMM"><display/></field>
+        <field name="netSal" title="SNET_SAL"><display/></field>
+        <field name="accntNo" title="SAL_ACNO"><display/></field>
+        <field name="ifscCode" title="IFSC_CODE"><display/></field>
+        <field name="branchName" title="SAL_BRNM"><display/></field>
+        <field name="bankName" title="SAL_BKNM"><display/></field>
+    </form>
+    
+    <form name="CanaraBankCSV" type="list" list-name="bankTypeList" odd-row-style="alternate-row" default-table-style="basic-table " separate-columns="true"  header-row-style="header-row-2">
+        
+        <field name="TxnType" title="Txn Type"><display/></field>
+        <field name="accntNo" title="SOCY A/C"><display/></field>
+        <field name="branchCode" title="Branch Code"><display/></field>
+        <field name="txnCode" title="Txn Code"><display/></field>
+        <field name="txnDate" title="Txn Date"><display/></field>
+        <field name="DrCr" title="Dr/Cr"><display/></field>
+        <field name="txnCCY" title="Txn CCY"><display/></field>
+        <field name="empty" title=""><display/></field>
+        <field name="amount" title="Amt TCY"><display/></field>
+        <field name="rateConfig" title="Rate Config"><display/></field>
+        <field name="refNo" title="Ref No"><display/></field>
+        <field name="refDocNo" title="Ref Doc No"><display/></field>
+    </form>
+    
 </forms>
