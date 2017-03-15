@@ -46,6 +46,14 @@ finAccountId = parameters.finAccountId;
 //getting invoice tax type
 taxType = "";
 invoice = delegator.findOne("Invoice",[invoiceId : parameters.invoiceId] , false);
+if(invoice.invoiceTypeId=="ADMIN_OUT" || invoice.invoiceTypeId=="PURCHASE_INVOICE"){
+	partyIdForAdd=invoice.partyId;
+	context.partyIdForAdd=partyIdForAdd;
+}
+else if(invoice.invoiceTypeId=="MIS_INCOME_IN" || invoice.invoiceTypeId=="SALES_INVOICE"){
+	partyIdForAdd=invoice.partyIdFrom;
+	context.partyIdForAdd=partyIdForAdd;
+}
 if(UtilValidate.isNotEmpty(invoice)){
 	invoiceTaxType = delegator.findOne("InvoiceAttribute",["invoiceId":parameters.invoiceId,"attrName":"ORDER_TAX_TYPE"],false);
 if(UtilValidate.isNotEmpty(invoiceTaxType)){
