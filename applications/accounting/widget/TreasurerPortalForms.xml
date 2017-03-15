@@ -2708,7 +2708,8 @@ under the License.
                 <parameter param-name="paymentSequenceId" value="${paymentSequenceId}"/>
             </hyperlink>
         </field>
-        <field use-when="&quot;${paymentMethodTypeId}&quot;==&quot;CHEQUE_PAYIN&quot;" name="Print Cheque" widget-style="buttontext" >
+        <!-- <field use-when="&quot;${paymentMethodTypeId}&quot;==&quot;CHEQUE_PAYIN&quot;" name="Print Cheque" widget-style="buttontext"> -->
+          <field use-when="&quot;${paymentMethodTypeId}&quot;==&quot;CHEQUE_PAYOUT&quot;" name="Print Cheque" widget-style="buttontext">
             <hyperlink target="printChecks.pdf" description="Print Cheque" target-window="_blank">
              	<parameter param-name="paymentId"/>
             </hyperlink>
