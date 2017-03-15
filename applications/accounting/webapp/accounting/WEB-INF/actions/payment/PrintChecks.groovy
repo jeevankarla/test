@@ -218,12 +218,18 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "contraCheque"){
 			amountWords = UtilFormatOut.formatCurrency(amount, context.get("currencyUomId"), locale);
 			amountStr = amountWords.replace("Rs"," ");
 		}
-		if(UtilValidate.isNotEmpty(paymentDetails.partyIdFrom) && (paymentDetails.partyIdFrom == "Company")){
+		/*if(UtilValidate.isNotEmpty(paymentDetails.partyIdFrom) && (paymentDetails.partyIdFrom == "Company")){
 			partyId = paymentDetails.partyIdTo;
 		}else{
 			partyId = paymentDetails.partyIdFrom;
+		}*/
+		if(UtilValidate.isNotEmpty(paymentDetails.partyIdTo)){
+			partyId = paymentDetails.partyIdTo;
 		}
+		partyName="";
+		if(partyId){
 		partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		}
 		finAccountTransList = delegator.findList("FinAccountTrans", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), null, null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountTransList)){
 			finAccountTransDetails = EntityUtil.getFirst(finAccountTransList);
