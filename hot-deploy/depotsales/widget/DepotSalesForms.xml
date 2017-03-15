@@ -3654,62 +3654,62 @@
     </form>
    
     <form name="salePurchaseReport" type="list" list-name="salesAndPurchaseList" view-size="99999">
-			<field name="invoiceId" title="Invoice Id"><display/></field>
-			<field name="invoiceDate" title="Invoice Date"><display/></field>
-			<field name="invoiceAmount" title="Invoice Amount"><display/></field>
-			<field name="altaxAmt" title="At/OtherTax"><display/></field>
-			<field name="schemeQty" title="Scheme Qty"><display/></field>
-			<field name="subsidyAmt" title="Subsidy Amt"><display/></field>
-			<field name="allAdjWitOutTEN" title="Adjustment Amount"><display/></field>
-			<field name="invoiceNetAmt" title="Net Amount"><display/></field>
-			<field name="userAgency" title="User Agency"><display/></field>
-			<field name="partyClassification" title="Party Classification"><display/></field>
-			<field name="cluster" title="Cluster"><display/></field>
-			<field name="District" title="District"><display/></field>
-			<field name="branch" title="Branch"><display/></field>
-			<field name="sate" title="State"><display/></field>
-			<field name="AgencyType" title="PAN No"><display/></field>
-			<field name="Depo" title="Depo"><display/></field>
-			 <field name="scheme" title="Scheme"><display/></field>
-			<field name="orderNo" title="Order No"><display/></field>
-			<field name="indentDate" title="Indent Date"><display/></field>
-			<field name="custIndDate" title="CustInd Date"><display/></field>
-			<field name="advance" title="Advance"><display/></field>
-			<field name="paidAmt" title="Advance"><display/></field>
-			<field name="appliedAmt" title="Advance"><display/></field>
-			<field name="balance" title="Advance"><display/></field>
-			<field name="cheque/dd" title="Cheque/dd"><display/></field>
-			<field name="tallyBillAmt" title="TallyBillAmt"><display/></field>
-			<field name="supplierName" title="Supplier Name"><display/></field>
-			<field name="millState" title="Mill State"><display/></field>
-			<field name="source" title="Source"><display/></field>
-			<field name="TallyPoNumber" title="Tally Po Number"><display/></field>
-			<field name="poOrderId" title="PO Order Id"><display/></field>
-			<field name="poorderDate" title="PO Order Date"><display/></field>
-			<field name="destAddr" title="Dest Addr"><display/></field>
-			<field name="ProductCategoryId" title="Product Category Id"><display/></field>
-			<field name="itemDescription" title="Item Description"><display/></field>
-			<field name="ledgerName" title="Ledger Name"><display/></field>
-			<field name="purchaseQuantity" title="Purchase Quantity"><display/></field>
-			<field name="salesQuantity" title="Sales Quantity"><display/></field>
-			<field name="rate" title="Rate"><display/></field>
-			<field name="tallyRefNo" title="Tally Bill No"><display/></field>
-			<field name="tallyRefDate" title="Tally Reference Date"><display/></field>
-			<field name="supplierInvoiceId" title="Supplier Invoice"><display/></field>
-			<field name="supplierInvoiceDate" title="Supplier Invoice Date"><display/></field>
-			<field name="millInvoiceId" title="Purchase Invoice No"><display/></field>
-			<field name="millInvoiceDate" title="Purchase Invoice Date"><display/></field>
-			<field name="poInvoiceAmt" title="Purchase Invoice Amount"><display/></field>
-			<field name="purTax" title="Purchase Tax"><display/></field>
-			<field name="allAdjPur" title="Purchase Adjustments"><display/></field>
-			<field name="purInvoiceNetAmt" title="Purchase Invoice Net Amount"><display/></field>
-			<field name="transporter" title="Transporter Name"><display/></field>
-			<field name="lrNumber" title="Lr Number"><display/></field>
-			<field name="lrDate" title="Lr Date"><display/></field>
-			<field name="freight" title="Freight Amount"><display/></field>
-			<field name="shipmentId" title="Shipment Id"><display/></field>
-			<field name="actualSaleInvoiceId" title="Internal Sales Invoice Id"><display/></field>
-			<field name="actualPurInvoiceId" title="Internal Purchase Invoice Id"><display/></field>
+			<field name="invoiceId" title="_"><display/></field>
+			<field name="invoiceDate" title="_"><display/></field>
+			<field name="invoiceAmount" title="_"><display/></field>
+			<field name="altaxAmt" title="_"><display/></field>
+			<field name="schemeQty" title="_"><display/></field>
+			<field name="subsidyAmt" title="_"><display/></field>
+			<field name="allAdjWitOutTEN" title="_"><display/></field>
+			<field name="invoiceNetAmt" title="_"><display/></field>
+			<field name="userAgency" title="_"><display/></field>
+			<field name="partyClassification" title="_"><display/></field>
+			<field name="cluster" title="_"><display/></field>
+			<field name="District" title="_"><display/></field>
+			<field name="branch" title="_"><display/></field>
+			<field name="sate" title="_"><display/></field>
+			<field name="AgencyType" title="_"><display/></field>
+			<field name="Depo" title="_"><display/></field>
+			 <field name="scheme" title="_"><display/></field>
+			<field name="orderNo" title="_"><display/></field>
+			<field name="indentDate" title="_"><display/></field>
+			<field name="custIndDate" title="_"><display/></field>
+			<field name="advance" title="_"><display/></field>
+			<field name="paidAmt" title="_"><display/></field>
+			<field name="appliedAmt" title="_"><display/></field>
+			<field name="balance" title="_"><display/></field>
+			<field name="chequeordd" title="_"><display/></field>
+			<field name="tallyBillAmt" title="_"><display/></field>
+			<field name="supplierName" title="_"><display/></field>
+			<field name="millState" title="_"><display/></field>
+			<field name="source" title="_"><display/></field>
+			<field name="TallyPoNumber" title="_"><display/></field>
+			<field name="poOrderId" title="_"><display/></field>
+			<field name="poorderDate" title="_"><display/></field>
+			<field name="destAddr" title="_"><display/></field>
+			<field name="ProductCategoryId" title="_"><display/></field>
+			<field name="itemDescription" title="_"><display/></field>
+			<field name="ledgerName" title="_"><display/></field>
+			<field name="purchaseQuantity" title="_"><display/></field>
+			<field name="salesQuantity" title="_"><display/></field>
+			<field name="rate" title="_"><display/></field>
+			<field name="tallyRefNo" title="_"><display/></field>
+			<field name="tallyRefDate" title="_"><display/></field>
+			<field name="supplierInvoiceId" title="_"><display/></field>
+			<field name="supplierInvoiceDate" title="_"><display/></field>
+			<field name="millInvoiceId" title="_"><display/></field>
+			<field name="millInvoiceDate" title="_"><display/></field>
+			<field name="poInvoiceAmt" title="_"><display/></field>
+			<field name="purTax" title="_"><display/></field>
+			<field name="allAdjPur" title="_"><display/></field>
+			<field name="purInvoiceNetAmt" title="_"><display/></field>
+			<field name="transporter" title="_"><display/></field>
+			<field name="lrNumber" title="_"><display/></field>
+			<field name="lrDate" title="_"><display/></field>
+			<field name="freight" title="_"><display/></field>
+			<field name="shipmentId" title="_"><display/></field>
+			<field name="actualSaleInvoiceId" title="_"><display/></field>
+			<field name="actualPurInvoiceId" title="_"><display/></field>
 
 
 
