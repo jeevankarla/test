@@ -57,7 +57,9 @@ under the License.
         <#if paymentId?has_content || finAccountId?has_content>  
         <fo:page-sequence master-reference="main">
         	<fo:static-content flow-name="xsl-region-before">
+        	<#if paymentDate?has_content>
         	<fo:block  keep-together="always" text-align="right" font-size = "13pt" font-family="Courier,monospace" white-space-collapse="false" font-weight= "bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateStringBankFormat(paymentDate?if_exists, "ddMMyyyy")}</fo:block>
+        	</#if>
         	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
         	</fo:static-content>
         	<fo:flow flow-name="xsl-region-body">
