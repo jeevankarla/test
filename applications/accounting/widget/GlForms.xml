@@ -736,7 +736,26 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field name="glAccountId" position="1" id-name="glAccountId" tooltip=" "><text/>
+        <!--  <field name="glAccountId" position="1" id-name="glAccountId" tooltip=""><text/>
+        </field> -->
+        <field name="glAccountId">
+        	<drop-down current="selected" allow-empty="false">
+                <entity-options entity-name="GlAccount" key-field-name="glAccountId" description="${glAccountId}-${accountName}"/>
+            </drop-down>
+        </field>
+        <field name="purposeTypeId">
+        	<drop-down current="selected" allow-empty="false">
+               <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">                   
+                   <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+               </entity-options>
+            </drop-down>
+        </field>
+        <field name="costCenterId">
+        	<drop-down current="selected" allow-empty="false">
+               <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
+                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="productId" position="1"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
         <field name="partyId" position="2"><lookup target-form-name="LookupPartyName" size="20" maxlength="20"/></field>

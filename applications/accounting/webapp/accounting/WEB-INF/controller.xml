@@ -4245,6 +4245,10 @@ under the License.
        <response name="success" type="request" value="json"/>
        <response name="error" type="request" value="json"/>    
     </request-map>
+    <request-map uri="updateAcctngTransEntryNew">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="updateAcctngTransEntryNew"/>
+    </request-map>
     <request-map uri="deleteAcctgTransEntrySer">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteAcctgTransEntry"/>
@@ -4434,7 +4438,7 @@ under the License.
     <view-map name="FindGlAccountReconciliation" type="screen" page="component://accounting/widget/GlScreens.xml#FindGlAccountReconciliation"/>
     <view-map name="FindGlAccountReconciliations" type="screen" page="component://accounting/widget/GlScreens.xml#FindGlAccountReconciliations"/>
     <view-map name="EditGlReconciliation" type="screen" page="component://accounting/widget/GlScreens.xml#EditGlReconciliation"/>
-
+    <view-map name="updateAcctngTransEntryNew" type="screen" page="component://accounting/widget/GlScreens.xml#updateAcctngTransEntryNew"/>
     <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#AddGlAccount"/>
     <!-- NOTE/TODO: these 2 appear to never have been implemented all the way, just request and view defs so far...
     <view-map name="EditGlobalGlAccountOrganizations" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#EditGlobalGlAccountOrganizations"/>
@@ -4491,7 +4495,6 @@ under the License.
     <view-map name="CreateNewInterUnitContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewInterUnitContra"/>
     <view-map name="CreateNewInterUnitContraPayments" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewInterUnitContraPayments"/>
     <view-map name="CreateNewBatchContra" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#CreateNewBatchContra"/>
-    
     <view-map name="FindBankDepositOrWithdraw" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#PaymentsDepositWithdraw"/>
     <view-map name="FinAccountTransForReconsile" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsile"/>
     <view-map name="FinAccountTransForReconsileNEWWW" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FinAccountTransForReconsileNNNN"/>

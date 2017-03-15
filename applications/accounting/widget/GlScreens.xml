@@ -727,7 +727,41 @@ reportType:byAccount -->
 			</widgets>
 		</section>
 	</screen>
-
+	<screen name="updateAcctngTransEntryNew">
+        <section>
+            <actions>
+              <set field="titleProperty" value="PageTitleEditTransaction" />
+				<set field="tabButtonItem" value="FindAcctgTrans" />
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"
+					global="true" />
+				<set field="acctgTransId" from-field="parameters.acctgTransId" />
+            	<entity-one entity-name="AcctgTrans" value-field="acctgTrans" />
+				<entity-one entity-name="AcctgTransEntry" value-field="acctgTransEntry1">
+					<field-map field-name="acctgTransId" from-field="parameters.acctgTransId"/>
+					<field-map field-name="acctgTransEntrySeqId" from-field="parameters.acctgTransEntrySeqId"/>
+				</entity-one>
+				<set field="acctgTransEntry" value="${acctgTransEntry1}"/>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/organizationGLForJournalVocher.groovy"/>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/autoCompleteGl.js" global="true"/>
+            </actions>
+            <widgets>
+              <decorator-screen name="CommonPartyAccountingTransactionDecorator"
+					location="${parameters.partyGlDecoratorLocation}">
+					<decorator-section name="body">                     
+                        <section>                           
+                            <widgets>                              
+                                <label style="h1" text="Edit Accounting Entry" ></label>
+                                <screenlet>
+                                    <include-form name="EditAcctgTransEntryNew" location="component://accounting/widget/GlForms.xml" />
+                                </screenlet>
+                            </widgets>                            
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 	<screen name="ListUnpostedAcctgTrans">
 		<section>
 			<actions>

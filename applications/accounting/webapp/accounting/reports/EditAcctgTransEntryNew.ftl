@@ -310,7 +310,7 @@ under the License.
 					          <input id="acctgTransTypeId" name="acctgTransTypeId" type="hidden" value="JOURNAL" size="12"/>
 				               </td>
  
-				             <td><a name="update" href="" onClick="return updateAcctTransEntry('${i}','${acctgTransEntry.acctgTransId?if_exists}', '${acctgTransEntry.organizationPartyId?if_exists}', '${acctgTransEntry.acctgTransEntrySeqId?if_exists}','${acctgTransEntry.glAccountId?if_exists}','${acctgTransEntry.partyId?if_exists}','${acctgTransEntry.costCenterId?if_exists}','${acctgTransEntry.purposeTypeId?if_exists}');">Update</a></td>
+				             <td><a name="update" href="updateAcctngTransEntryNew?acctgTransId=${acctgTransEntry.acctgTransId?if_exists}&amp;acctgTransEntrySeqId=${acctgTransEntry.acctgTransEntrySeqId?if_exists}">Update</a></td>
 				           <td><a name="remove" href="" onClick="return removeAcctTransEntry('${acctgTransEntry.acctgTransId?if_exists}', '${acctgTransEntry.organizationPartyId?if_exists}', '${acctgTransEntry.acctgTransEntrySeqId?if_exists}');">Remove</a></td>
 				            </tr>
 				            <#-- toggle the row color -->
