@@ -85,6 +85,16 @@ finAccounts = delegator.findList("FinAccount", cond, null, null, null, false);
 
 context.finAccounts1=finAccounts;
 
+paymentCondList = [];
+if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
+	paymentCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+}
+paymentCondList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, ["CASH_PAYOUT","CHEQUE_PAYOUT"]));
+cond = EntityCondition.makeCondition(paymentCondList, EntityOperator.AND);
+paymentMethods = [];
+paymentMethods = delegator.findList("PaymentMethodAndType", cond, null, null, null, false);
+context.paymentMethods = paymentMethods;
+
 
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
 if(UtilValidate.isEmpty(parameters.noConditionFind)){
@@ -337,4 +347,3 @@ arScreenTitle = uiLabelMap.AccountingCreateNewBankSalesInvoice;
 }
 prefPaymentMethodTypeId=arVoucherType;
 context.arScreenTitle=arScreenTitle;
-

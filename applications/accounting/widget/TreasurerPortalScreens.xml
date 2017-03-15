@@ -5580,12 +5580,12 @@
 	    				<condition-expr field-name="finAccountTypeId" value="BANK_ACCOUNT"/>
 	    			</condition-list>
     			</entity-condition>
-    			<entity-condition list="paymentMethods" entity-name="PaymentMethodAndType">
+    			<!-- <entity-condition list="paymentMethods" entity-name="PaymentMethodAndType">
 					<condition-list combine="and">
-						<!-- <condition-expr field-name="parentTypeId" operator="equals" value="MONEY"/> -->
+						<condition-expr field-name="parentTypeId" operator="equals" value="MONEY"/>
 						<condition-expr field-name="paymentMethodTypeId" operator="not-equals" value="CASH_PAYOUT"/>
 					</condition-list>
-				</entity-condition>
+				</entity-condition> -->
 				<set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
 				<entity-condition list="finAccountList" entity-name="FinAccount">
 					<having-condition-list combine="and">
