@@ -218,7 +218,7 @@ under the License.
 												 	</#if>
 												 	<fo:table-row >
 											             <fo:table-cell border="solid" >
-															 <fo:block text-align="left"  >${glAccountIdWise.get("glAccountId")} - ${glAccountIdWise.get("description")} </fo:block>
+															 <fo:block text-align="left"  ><#--${glAccountIdWise.get("glAccountId")}-->${glAccountIdWise.get("description")} </fo:block>
 														 </fo:table-cell>
 														 <fo:table-cell border="solid">
 															 <fo:block text-align="right" keep-together="always" >${presentYrGlIdVal?if_exists?string("#0.00")}</fo:block>
@@ -334,7 +334,7 @@ under the License.
 													 	</#if>
 													 	<fo:table-row >
 												             <fo:table-cell border="solid" >
-																 <fo:block text-align="left"  >${glAccountIdWise.get("glAccountId")} - ${glAccountIdWise.get("description")} </fo:block>
+																 <fo:block text-align="left"  ><#--${glAccountIdWise.get("glAccountId")}--> ${glAccountIdWise.get("description")} </fo:block>
 															 </fo:table-cell>
 															 <fo:table-cell border="solid">
 																 <fo:block text-align="right" keep-together="always" >${presentYrGlIdVal?if_exists?string("#0.00")}</fo:block>
