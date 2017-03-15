@@ -329,8 +329,8 @@ function reportTypeChangeFunc() {
  			<td width="10%">Regional Office 
  			 	  	<select name='division' id ="division" onchange="javascript:setOrgPartyId();">	
  			 	  			<option value=""></option>	
- 			  	  			<option value="Company">NHDC</option>
- 						<#list intrOrgList as internalOrg>	
+ 			  	
+ 						<#list intOrgList as internalOrg>	
  							<option value='${internalOrg.partyId}'>${internalOrg.groupName?if_exists}</option>
            		   		</#list>
  				 	</select>
@@ -378,7 +378,7 @@ function setOrgPartyId() {
 				    <td width="15%"><#--To<input  type="text" size="18pt" id="FinacialThruDate" readonly  name="thruDate"/> --></td>
 				    <td width="15%">Bank<select name='finAccountId' id ="finAccountId">	
 							<option value=""></option>								
-						<#list finAccounts as finAcunt> 	
+						<#list finAccountList as finAcunt> 	
 							<option value='${finAcunt.finAccountId}'>${finAcunt.finAccountName?if_exists}</option>
               		   </#list>
 							</select>
