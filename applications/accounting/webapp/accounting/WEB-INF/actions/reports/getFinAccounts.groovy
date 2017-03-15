@@ -8,7 +8,11 @@ import org.ofbiz.entity.util.EntityUtil;
 
 condList = [];
 /*condList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, "Company"));*/
-condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+if(parameters.finAccountTypeId){
+	condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, parameters.finAccountTypeId));
+}else{
+	condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+}
 if(UtilValidate.isNotEmpty(parameters.ownerPartyId) && parameters.ownerPartyId!=null){
 	condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 }
