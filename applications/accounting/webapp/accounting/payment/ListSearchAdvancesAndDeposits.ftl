@@ -234,7 +234,7 @@ function setVoidPaymentParameters(currentPayment){
               		Voucher
               	</a>
               </td>
-              <#if payment.statusId?has_content && (payment.statusId=="PMNT_RECEIVED" || payment.statusId=="PMNT_SENT")>
+              <#if payment.statusId?has_content && (payment.statusId=="PMNT_CONFIRMED" || payment.statusId=="PMNT_SENT")>
               <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?paymentId=${payment.paymentId}</@ofbizUrl>">Cheque</a></td>
              	<#else>
                <td align="center"></td>
