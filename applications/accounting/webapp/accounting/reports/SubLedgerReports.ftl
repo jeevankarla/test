@@ -408,8 +408,8 @@ function reportTypeChangeFunc() {
 				  	  <input type="hidden" name="glAccountCategoryTypeId" value="PL" /> 
 				  	  <select name="roPartyId" id="roPartyId" > 
 				  	  <option value="">--Select--</option>
-				  	  	<option value="Company">Company</option>
-				  	  <#list partyRelationList as party>
+				  	  	<#--<option value="Company">Company</option>-->
+				  	  <#list intOrgList as party>
 				  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, party.partyIdTo, false)>
 				  	  	<option value="${party.partyIdTo}">${partyName?if_exists}</option>
 				  	  </#list>	
@@ -448,8 +448,8 @@ function reportTypeChangeFunc() {
 				  	  <input type="hidden" name="glAccountCategoryTypeId" value="BS" /> 
 				  	  <select name="roPartyId" id="roPartyId" > 
 				  	  <option value="">--Select--</option>
-				  	  	<option value="Company">Company</option>
-				  	  <#list partyRelationList as party>
+				  	  	<#--<option value="Company">Company</option>-->
+				  	  <#list intOrgList as party>
 				  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, party.partyIdTo, false)>
 				  	  	<option value="${party.partyIdTo}">${partyName?if_exists}</option>
 				  	  </#list>	

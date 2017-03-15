@@ -5127,7 +5127,7 @@
 	            		<condition-expr field-name="enumTypeId" operator="equals" value="PAYMENT_PURPOSE"/>
 	            	</condition-list>
 	            </entity-condition>
-	            
+	            <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
 			</actions>
 			<widgets>
