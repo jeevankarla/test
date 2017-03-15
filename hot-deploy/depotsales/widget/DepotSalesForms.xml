@@ -3678,7 +3678,7 @@
 			<field name="paidAmt" title="_"><display/></field>
 			<field name="appliedAmt" title="_"><display/></field>
 			<field name="balance" title="_"><display/></field>
-			<field name="chequeordd" title="_"><display/></field>
+			<field name="chequeOrdd" title="_"><display/></field>
 			<field name="tallyBillAmt" title="_"><display/></field>
 			<field name="supplierName" title="_"><display/></field>
 			<field name="millState" title="_"><display/></field>
