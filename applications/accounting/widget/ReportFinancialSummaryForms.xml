@@ -88,15 +88,8 @@ under the License.
         <field name="fromDate" required-field="false"><date-time type="date" /></field>
         <field name="thruDate" required-field="false"><date-time type="date"/></field>
          <field name="costCenterId" title="Cost Center" id-name="costCenterId">
-        	<drop-down>
-        		<option key="Company" description="NHDC"/>
-               <entity-options entity-name="PartyRelationshipAndDetail" key-field-name="partyId" description="${groupName}" filter-by-date="false">
-                    <entity-constraint name="partyIdFrom" operator="equals" value="${organizationPartyId}"/>
-                    <entity-constraint name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
-                    <entity-constraint name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
-                    <entity-constraint name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
-                    <entity-order-by field-name="groupName"/>
-                </entity-options>
+        	<drop-down allow-empty="false">
+                <list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
             </drop-down>
        	</field>
        	<field name="purposeTypeId" title="Segment" id-name="purposeTypeId">       		
@@ -783,15 +776,8 @@ under the License.
         </field>
 
         <field name="division" title="Office" id-name="division">
-        	<drop-down>
-        		<option key="Company" description="NHDC"/>
-               <entity-options entity-name="PartyRelationshipAndDetail" key-field-name="partyId" description="${groupName}" filter-by-date="false">
-                    <entity-constraint name="partyIdFrom" operator="equals" value="${organizationPartyId}"/>
-                    <entity-constraint name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
-                    <entity-constraint name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
-                    <entity-constraint name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
-                    <entity-order-by field-name="groupName"/>
-                </entity-options>
+        	<drop-down allow-empty="false">
+                <list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
             </drop-down>
        	</field>
        	<field name="segment" title="Segment" id-name="Segment">       		
