@@ -666,6 +666,7 @@
 					<field-map field-name="mainAction" value="REPORTS" />
 				</service>
 				<set field="hasReportsEditPermission" from-field="permResult.hasPermission" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 			</actions>
 			<widgets>
 				<section>
@@ -1729,6 +1730,7 @@
 					default-value="${nowTimestamp}" />
 				<set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId"
 					default-value="ACTUAL" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 				<script
 					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/MonthSelection.groovy" />
 				<script
