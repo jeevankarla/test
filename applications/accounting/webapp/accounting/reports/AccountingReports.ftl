@@ -777,7 +777,9 @@ function setOrgPartyId() {
 			  	</td>
 			  	<td width="20%">
 					<table>
-					<tr><td><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" onClick="javascript:appendParams('advancesReport', '<@ofbizUrl>AdvancesReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
+					<tr><td><input type="hidden" name="division" class="commonPartyId">
+						<input type="hidden" name="segment" class="commonSegmentId">
+					<input type="submit" value="PDF" onClick="javascript:appendParams('advancesReport', '<@ofbizUrl>AdvancesReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
 					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('advancesReport', '<@ofbizUrl>AdvancesReport.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
 					</table>   
 			 	</td>
@@ -802,7 +804,9 @@ function setOrgPartyId() {
 			  	</td>
           		<td width="20%">
 					<table>
-					<tr><td><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" onClick="javascript:appendParams('subLedgerReport', '<@ofbizUrl>SubLedgerReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
+					<tr><td><input type="hidden" name="division" class="commonPartyId">
+						<input type="hidden" name="segment" class="commonSegmentId">
+					<input type="submit" value="PDF" onClick="javascript:appendParams('subLedgerReport', '<@ofbizUrl>SubLedgerReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
 					<tr><td><input type="submit" value="CSV" onClick="javascript:appendParams('subLedgerReport', '<@ofbizUrl>SubLedgerReport.csv</@ofbizUrl>');" class="buttontext"/></td></tr>
 					</table>   
 			 	</td>
