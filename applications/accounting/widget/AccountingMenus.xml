@@ -851,12 +851,12 @@
 				<parameter param-name="paymentId" from-field="payment.paymentId"/>
 			</link>
 		</menu-item> -->
-		<menu-item name="paymentVoucher"
+		<!-- <menu-item name="paymentVoucher"
 			title="Payment Voucher">
 			<link target="printAdvAndDepositReceipt.pdf" target-window="_BLANK">
 				<parameter param-name="paymentId" from-field="payment.paymentId"/>
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<menu-item name="paymentCheque"
 			title="Print Cheque">
 			<link target="printChecks.pdf" target-window="_BLANK">
