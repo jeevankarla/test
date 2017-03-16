@@ -208,10 +208,10 @@ under the License.
 															 <fo:block text-align="center" keep-together="always" font-weight="bold">${profitValues.get("scheduleNo")}</fo:block>
 														 </fo:table-cell>
 														 <fo:table-cell border="solid">
-															 <fo:block text-align="right" keep-together="always" font-weight="bold">${presentYearVal?if_exists?string("#0.00")}</fo:block>
+															 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (presentYearVal>=0)>${presentYearVal?if_exists?string("#0.00")}<#else>${(presentYearVal*-1)?if_exists?string("#0.00")}</#if></fo:block>
 														 </fo:table-cell>
 							                             <fo:table-cell border="solid">
-							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold">${prevsYearVal?if_exists?string("#0.00")}&#160;</fo:block>
+							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (prevsYearVal>=0)>${prevsYearVal?if_exists?string("#0.00")}&#160;<#else>${(prevsYearVal*-1)?if_exists?string("#0.00")}&#160;</#if></fo:block>
 														 </fo:table-cell>
 												 	</fo:table-row>
 												 	</#list>
@@ -229,10 +229,10 @@ under the License.
 															 <fo:block text-align="center" keep-together="always" font-weight="bold"></fo:block>
 														 </fo:table-cell>
 														 <fo:table-cell border="solid">
-															 <fo:block text-align="right" keep-together="always" font-weight="bold">${presentYearProfitVal?string("#0.00")}</fo:block>
+															 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (presentYearProfitVal>=0)>${presentYearProfitVal?string("#0.00")}<#else>${(presentYearProfitVal*-1)?string("#0.00")}</#if></fo:block>
 														 </fo:table-cell>
 							                             <fo:table-cell border="solid">
-							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold">${prevsYearProfitVal?if_exists?string("#0.00")}&#160;</fo:block>
+							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (prevsYearProfitVal>=0)>${prevsYearProfitVal?if_exists?string("#0.00")}&#160;<#else>${(prevsYearProfitVal*-1)?if_exists?string("#0.00")}&#160;</#if></fo:block>
 														 </fo:table-cell>
 												 	</fo:table-row>
 												 	</#if>
@@ -307,10 +307,10 @@ under the License.
 																 <fo:block text-align="center" keep-together="always" font-weight="bold">${values.get("scheduleNo")}</fo:block>
 															 </fo:table-cell>
 															 <fo:table-cell border="solid">
-																 <fo:block text-align="right" keep-together="always" font-weight="bold">${presentYearVal?if_exists?string("#0.00")}</fo:block>
+																 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (presentYearVal>=0)>${presentYearVal?if_exists?string("#0.00")}<#else>${(presentYearVal*-1)?if_exists?string("#0.00")}</#if></fo:block>
 															 </fo:table-cell>
 								                             <fo:table-cell border="solid">
-								                             	 <fo:block text-align="right" keep-together="always" font-weight="bold">${prevsYearVal?if_exists?string("#0.00")}</fo:block>
+								                             	 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (prevsYearVal>=0)>${prevsYearVal?if_exists?string("#0.00")}<#else>${(prevsYearVal*-1)?if_exists?string("#0.00")}</#if></fo:block>
 															 </fo:table-cell>
 													 	</fo:table-row>
 													 	</#list>
@@ -352,10 +352,10 @@ under the License.
 															 <fo:block text-align="left" keep-together="always" font-weight="bold"></fo:block>
 														 </fo:table-cell>
 														 <fo:table-cell border="solid">
-															 <fo:block text-align="right" keep-together="always" font-weight="bold">${presentYearLiablityTotVal?string("#0.00")}</fo:block>
+															 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (presentYearLiablityTotVal>0)>${presentYearLiablityTotVal?string("#0.00")}<#else>${(presentYearLiablityTotVal*-1)?string("#0.00")}</#if></fo:block>
 														 </fo:table-cell>
 							                             <fo:table-cell border="solid">
-							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold">${prevYearLiablityTotVal?string("#0.00")}</fo:block>
+							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (prevYearLiablityTotVal>0)>${prevYearLiablityTotVal?string("#0.00")}<#else>${(prevYearLiablityTotVal*-1)?string("#0.00")}</#if></fo:block>
 														 </fo:table-cell>
 													 </fo:table-row>
 											     </fo:table-body>
@@ -378,10 +378,10 @@ under the License.
 															 <fo:block text-align="left" keep-together="always" font-weight="bold"></fo:block>
 														 </fo:table-cell>
 														 <fo:table-cell border="solid">
-															 <fo:block text-align="right" keep-together="always" font-weight="bold">${presentYearAssetsTotVal?string("#0.00")}</fo:block>
+															 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (presentYearAssetsTotVal>0)>${presentYearAssetsTotVal?string("#0.00")}<#else>${(presentYearAssetsTotVal*-1)?string("#0.00")}</#if></fo:block>
 														 </fo:table-cell>
 							                             <fo:table-cell border="solid">
-							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold">${prevYearAssetsTotVal?string("#0.00")}</fo:block>
+							                             	 <fo:block text-align="right" keep-together="always" font-weight="bold"><#if (prevYearAssetsTotVal>0)>${prevYearAssetsTotVal?string("#0.00")}<#else>${(prevYearAssetsTotVal*-1)?string("#0.00")}</#if></fo:block>
 														 </fo:table-cell>
 													 </fo:table-row>
 											     </fo:table-body>
