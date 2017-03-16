@@ -22,12 +22,12 @@ import org.ofbiz.party.party.PartyHelper;
 
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 productStoreDetails = resultCtx.get("productStoreList");
-Debug.log("productStoreDetails======================="+productStoreDetails);
+
 productStoreIds = EntityUtil.getFieldListFromEntityList(productStoreDetails, "productStoreId", true);
 	
 	
 	if(productStoreIds.size() == 1){
-		Debug.log("productStoreIds.get(0)===================="+productStoreIds.get(0));
+		
 		context.ownerPartyId = productStoreIds.get(0);
 		parameters.ownerPartyId = productStoreIds.get(0);
 	}

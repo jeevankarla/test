@@ -45,15 +45,19 @@ finAccountId = parameters.finAccountId;
 
 //getting invoice tax type
 taxType = "";
+partyIdForAdd="";
 invoice = delegator.findOne("Invoice",[invoiceId : parameters.invoiceId] , false);
-if(invoice.invoiceTypeId=="ADMIN_OUT" || invoice.invoiceTypeId=="PURCHASE_INVOICE"){
-	partyIdForAdd=invoice.partyId;
-	context.partyIdForAdd=partyIdForAdd;
+if(UtilValidate.isNotEmpty(invoice)){
+	if(invoice.invoiceTypeId=="ADMIN_OUT" || invoice.invoiceTypeId=="PURCHASE_INVOICE"){
+		partyIdForAdd=invoice.partyId;
+		
+	}
+	else if(invoice.invoiceTypeId=="MIS_INCOME_IN" || invoice.invoiceTypeId=="SALES_INVOICE"){
+		partyIdForAdd=invoice.partyIdFrom;
+		
+	}
 }
-else if(invoice.invoiceTypeId=="MIS_INCOME_IN" || invoice.invoiceTypeId=="SALES_INVOICE"){
-	partyIdForAdd=invoice.partyIdFrom;
-	context.partyIdForAdd=partyIdForAdd;
-}
+
 if(UtilValidate.isNotEmpty(invoice)){
 	invoiceTaxType = delegator.findOne("InvoiceAttribute",["invoiceId":parameters.invoiceId,"attrName":"ORDER_TAX_TYPE"],false);
 if(UtilValidate.isNotEmpty(invoiceTaxType)){
@@ -157,6 +161,9 @@ if(UtilValidate.isNotEmpty(acctgTransId)){
 		tempMap=[:];
 		tempMap = UtilMisc.makeMapWritable(accountingTransEntry);
 		int partyIdInt = onlyContainsNumbers(tempMap.partyId);
+		if(UtilValidate.isEmpty(partyIdForAdd)){
+			partyIdForAdd=tempMap.costCenterId;
+		}
 		tempMap.put("partyIdInt", partyIdInt);
 		tempAccountingTransEntryList.add(tempMap);
 	}
@@ -271,7 +278,7 @@ if(UtilValidate.isNotEmpty(parameters.reportTypeFlag)){
 	reportTypeFlag = parameters.reportTypeFlag;
 	context.put("reportTypeFlag",reportTypeFlag);
 }
-
+context.partyIdForAdd=partyIdForAdd;
 
 /*invSequenceNum = "";
 
