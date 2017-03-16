@@ -777,6 +777,7 @@ under the License.
 
         <field name="division" title="Office" id-name="division">
         	<drop-down allow-empty="false">
+        		<option key="Company" description="NHDC"/>
                 <list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
             </drop-down>
        	</field>
