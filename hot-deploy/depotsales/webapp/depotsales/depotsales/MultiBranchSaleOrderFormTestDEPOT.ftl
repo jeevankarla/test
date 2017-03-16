@@ -859,7 +859,7 @@
 	<#elseif parameters.formAction?has_content && (parameters.formAction=="ChemicalMultiBranchSalesOrder") >
 	    <#include "MultiBranchSalesOrderInternalFormCHEMI.ftl"/>    		
 	<#else>
-		<#include "MultiBranchSalesOrderInternalForm.ftl"/>
+		<#include "MultiBranchSalesOrderInternalFormDEPOT.ftl"/>
 	</#if>
 	<#include "EditUDPPriceDepot.ftl"/>
 	<div class="top" id="exp_outer">
@@ -1603,6 +1603,7 @@
 					<label style="float:left" id="totalDiscount" class="labelItemHeader"></label>
 					<label style="float:left" id="totalPayable" class="labelItemHeader"></label>
 					<label style="float:left" id="totalQtyKgs" class="labelItemHeader"></label>
+					<label style="float:left" id="totalInventory"></label>
 				</div>
 			    <div class="screenlet-body">
 			    	<#if booth?exists || party?exists || partyId?exists >
