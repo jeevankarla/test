@@ -329,7 +329,7 @@ function reportTypeChangeFunc() {
  			<td width="10%">Regional Office 
  			 	  	<select name='division' id ="division" onchange="javascript:setOrgPartyId();">	
  			 	  			<option value=""></option>	
- 			  	
+ 			  				<option value="Company">Company</option>
  						<#list intOrgList as internalOrg>	
  							<option value='${internalOrg.partyId}'>${internalOrg.groupName?if_exists}</option>
            		   		</#list>
@@ -340,8 +340,8 @@ function reportTypeChangeFunc() {
  			  	  			<option value=""></option>	
  			  	  			<option value="All">All</option>
  			  	  			<option value="COMMON">Common</option>
- 			  	  			<option value="DIES_AND_CHEM_SALE">Dies And Chemicals Sale	</option>
- 			  	  			<option value="YARN_SALE">Yarn Sale</option>
+ 			  	  			<option value="DIES_AND_CHEM_SALE">Dies And Chemicals Segment</option>
+ 			  	  			<option value="YARN_SALE">Yarn Segment</option>
  						<#list segmentList as segment>	
  							<option value='${segment.enumId}'>${segment.description?if_exists}</option>
            		   		</#list>
