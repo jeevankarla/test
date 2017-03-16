@@ -345,6 +345,8 @@
 												<parameter param-name="glJournalId" from-field="parameters.glJournalId"/>
 												<parameter param-name="isPosted" from-field="parameters.isPosted"/>
 												<parameter param-name="partyId" from-field="parameters.partyId"/>
+												<parameter param-name="costCenterId" from-field="parameters.costCenterId"/>
+												<parameter param-name="purposeTypeId" from-field="parameters.purposeTypeId"/>
 												<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
 												<parameter param-name="paymentId" from-field="parameters.paymentId"/>
 												<parameter param-name="fromDate" from-field="parameters.fromDate"/>
@@ -360,6 +362,8 @@
 												<parameter param-name="glFiscalTypeId" from-field="parameters.glFiscalTypeId"/>
 												<parameter param-name="glJournalId" from-field="parameters.glJournalId"/>
 												<parameter param-name="isPosted" from-field="parameters.isPosted"/>
+												<parameter param-name="costCenterId" from-field="parameters.costCenterId"/>
+												<parameter param-name="purposeTypeId" from-field="parameters.purposeTypeId"/>
 												<parameter param-name="partyId" from-field="parameters.partyId"/>
 												<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
 												<parameter param-name="paymentId" from-field="parameters.paymentId"/>
@@ -1168,6 +1172,10 @@ reportType:byAccount -->
 							from-field="parameters.isPosted" ignore-if-empty="true" />
 						<condition-expr field-name="partyId" operator="equals"
 							from-field="parameters.partyId" ignore-if-empty="true" />
+							<condition-expr field-name="costCenterId" operator="equals"
+							from-field="parameters.costCenterId" ignore-if-empty="true" />
+							<condition-expr field-name="purposeTypeId" operator="equals"
+							from-field="parameters.purposeTypeId" ignore-if-empty="true" />
 						<condition-expr field-name="invoiceId" operator="equals"
 							from-field="parameters.invoiceId" ignore-if-empty="true" />
 						<condition-expr field-name="paymentId" operator="equals"

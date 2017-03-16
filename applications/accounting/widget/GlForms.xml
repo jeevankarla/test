@@ -234,6 +234,20 @@ under the License.
                 <option description="${uiLabelMap.CommonYes}" key="Y"/>
             </drop-down>
         </field>
+        <field name="purposeTypeId">
+        	<drop-down current="selected" allow-empty="false">
+               <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">                   
+                   <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+               </entity-options>
+            </drop-down>
+        </field>
+        <field name="costCenterId">
+        	<drop-down current="selected" allow-empty="false">
+               <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
+                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <lookup target-form-name="LookupPartyName" size="20" maxlength="20"/>
         </field>
@@ -263,6 +277,9 @@ under the License.
                     <condition-expr field-name="acctgTransTypeId" operator="equals" from-field="parameters.acctgTransTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="glJournalId" operator="equals" from-field="parameters.glJournalId" ignore-if-empty="true"/>
+                    <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
+                    <condition-expr field-name="costCenterId" operator="equals" from-field="parameters.costCenterId" ignore-if-empty="true"/>
+                    <condition-expr field-name="purposeTypeId" operator="equals" from-field="parameters.purposeTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
                     <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId" ignore-if-empty="true"/>
                     <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
@@ -328,6 +345,8 @@ under the License.
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
+        <field name="costCenterId" position="2" use-when="costCenterId!=null"><display/></field>
+        <field name="purposeTypeId" position="2" use-when="purposeTypeId!=null"><display/></field>
         <field name="partyId" position="2" use-when="partyId==null"><display/></field>
         <field name="productId" position="2" use-when="productId!=null" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${productId}" target="/catalog/control/EditProduct" target-type="inter-app">
@@ -1243,6 +1262,9 @@ under the License.
                     <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="glJournalId" operator="equals" from-field="parameters.glJournalId" ignore-if-empty="true"/>
                     <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
+                    <condition-expr field-name="costCenterId" operator="equals" from-field="parameters.costCenterId" ignore-if-empty="true"/>
+                    <condition-expr field-name="purposeTypeId" operator="equals" from-field="parameters.purposeTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
                     <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId" ignore-if-empty="true"/>
                     <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
                     <condition-expr field-name="paymentId" operator="equals" from-field="parameters.paymentId" ignore-if-empty="true"/>
@@ -1276,6 +1298,8 @@ under the License.
         <field name="productId"><display></display></field>
         <field name="transDescription"><display/></field>
         <field name="partyId"><display/></field>
+        <field name="costCenterId"><display/></field>
+        <field name="purposeTypeId"><display/></field>
         <field name="partyName" title="${uiLabelMap.PartyName}" entry-name="partyId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
         </field>
