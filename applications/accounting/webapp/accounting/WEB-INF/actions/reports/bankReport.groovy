@@ -97,7 +97,6 @@
 	 
 	 if(paymentGroup && UtilValidate.isNotEmpty(paymentGroup.finAccountId)){
 		 finAccDetails = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", paymentGroup.finAccountId), false);
-		 Debug.log("finAccDetails============1111111111116766661111====="+finAccDetails);
 		 if(finAccDetails && !UtilValidate.isEmpty(finAccDetails.finAccountPin)){
 			 accPin = finAccDetails.finAccountPin;
 		 }
@@ -199,8 +198,6 @@
 				 if(!UtilValidate.isEmpty(finAccountDet)){
 					 
 					 ownerPartyFinAccList = EntityUtil.filterByCondition(finAccountDet, EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyIdTo));
-					 Debug.log("ownerPartyFinAccList============1111111111111111====="+ownerPartyFinAccList);
-					 
 					 if(ownerPartyFinAccList){
 						 bankName = EntityUtil.getFirst(ownerPartyFinAccList).finAccountName;
 						 finAccountId = EntityUtil.getFirst(ownerPartyFinAccList).finAccountId;
