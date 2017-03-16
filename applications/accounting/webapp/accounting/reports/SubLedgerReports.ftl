@@ -399,8 +399,8 @@ function reportTypeChangeFunc() {
                <td width="30%">Segment 
 				  	   <select name="segmentId" id="segmentId" >
 				  	  <option value="ALL">All</option>
-				  	  <option value="YARN_SALE">YARN SALE</option>
-				  	  <option value="DIES_AND_CHEM_SALE">DIES AND CHEM SALE</option>
+				  	  <option value="YARN_SALE">YARN SEGMENT</option>
+				  	  <option value="DIES_AND_CHEM_SALE">DIES AND CHEM SEGMENT</option>
 				  	  <option value="COMMON">COMMON</option>
                </select>
 				  	  </td>
@@ -408,7 +408,7 @@ function reportTypeChangeFunc() {
 				  	  <input type="hidden" name="glAccountCategoryTypeId" value="PL" /> 
 				  	  <select name="roPartyId" id="roPartyId" > 
 				  	  <option value="">--Select--</option>
-				  	  	<#--<option value="Company">Company</option>-->
+				  	  	<option value="Company">Company</option>
 				  	  <#list intOrgList as party>
 				  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, party.partyIdTo, false)>
 				  	  	<option value="${party.partyIdTo}">${partyName?if_exists}</option>
@@ -439,8 +439,8 @@ function reportTypeChangeFunc() {
                <td width="30%">Segment
 				  	  <select name="segmentId" id="segmentId" >
 				  	  <option value="ALL">All</option>
-				  	  <option value="YARN_SALE">YARN SALE</option>
-				  	  <option value="DIES_AND_CHEM_SALE">DIES AND CHEM SALE</option>
+				  	  <option value="YARN_SALE">YARN SEGMENT</option>
+				  	  <option value="DIES_AND_CHEM_SALE">DIES AND CHEM SEGMENT</option>
 				  	  <option value="COMMON">COMMON</option>
                </select>
 				  	  </td>
@@ -448,7 +448,7 @@ function reportTypeChangeFunc() {
 				  	  <input type="hidden" name="glAccountCategoryTypeId" value="BS" /> 
 				  	  <select name="roPartyId" id="roPartyId" > 
 				  	  <option value="">--Select--</option>
-				  	  	<#--<option value="Company">Company</option>-->
+				  	  	<option value="Company">Company</option>
 				  	  <#list intOrgList as party>
 				  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, party.partyIdTo, false)>
 				  	  	<option value="${party.partyIdTo}">${partyName?if_exists}</option>
