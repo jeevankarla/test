@@ -44,37 +44,28 @@ under the License.
             	 <fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">
             	<fo:block border-style="solid" space-before="2in" >
 		 		<fo:table>
-		 			<fo:table-column column-width="7%"/>
-		 			<fo:table-column column-width="13%"/>
+		 			<fo:table-column column-width="10%"/>
+		 			<fo:table-column column-width="15%"/>
+					<fo:table-column column-width="20%"/>
 					<fo:table-column column-width="15%"/>
-					<fo:table-column column-width="8%"/>
-					<fo:table-column column-width="7%"/>
-					<fo:table-column column-width="11%"/>
-					<fo:table-column column-width="11%"/>
-					<fo:table-column column-width="12%"/>
+					<fo:table-column column-width="9%"/>
+					<fo:table-column column-width="15%"/>
 					<fo:table-column column-width="16%"/>
+					
+					
 						<fo:table-body>
          					 <fo:table-row>
          						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
          						 	<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;EmpID</fo:block>
+         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Party ID</fo:block>
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
          						 	<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Emp Name </fo:block>
+         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Party Name </fo:block>
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid">
           							<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Designation</fo:block>
-          						</fo:table-cell>
-          						<fo:table-cell border-right-style="solid">
-          							<fo:block font-size="4pt">&#160;</fo:block>	
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Salary Date</fo:block>
-          						</fo:table-cell>
-          						
-          						<fo:table-cell border-right-style="solid">
-          							<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Net Sal</fo:block>
+         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Net Payment Sal</fo:block>
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid">
           							<fo:block font-size="4pt">&#160;</fo:block>
@@ -106,14 +97,6 @@ under the License.
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="">&#160;<#if eachDet.empName?has_content>${eachDet.get("position")?if_exists}</#if></fo:block>
-              						</fo:table-cell>
-              						<fo:table-cell border-style="solid">
-              							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="">&#160;<#if eachDet.empDate?has_content>${eachDet.get("empDate")?if_exists}</#if></fo:block>
-              						</fo:table-cell>
-              						<fo:table-cell border-style="solid">
-              							<fo:block font-size="4pt">&#160;</fo:block>
              							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachDet.netSal?has_content>${eachDet.get("netSal")?if_exists?string("#0.00")}</#if>&#160;</fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
@@ -137,16 +120,9 @@ under the License.
   								</#list>
   								
   								<fo:table-row >
-             						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
-             						 	<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always"></fo:block>
-              						</fo:table-cell>
+             						
               						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
              						 	<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together=""></fo:block>
-              						</fo:table-cell>
-              						<fo:table-cell border-style="solid">
-              							<fo:block font-size="4pt">&#160;</fo:block>
              							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together=""></fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
@@ -169,10 +145,6 @@ under the License.
               							<fo:block font-size="4pt">&#160;</fo:block>
              							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together=""></fo:block>
               						</fo:table-cell>
-              						<fo:table-cell border-style="solid">
-              							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always"></fo:block>
-              						</fo:table-cell>
   								</fo:table-row>
   							
 	                </fo:table-body>
@@ -184,31 +156,20 @@ under the License.
             <fo:block linefeed-treatment="preserve">&#xA;</fo:block>	
         	<fo:block  keep-together="always" text-align="right" font-size="15pt" white-space-collapse="false">
         	<fo:table>
-		 			<fo:table-column column-width="7%"/>
-		 			<fo:table-column column-width="13%"/>
+		 			
+					<fo:table-column column-width="10%"/>
+		 			<fo:table-column column-width="15%"/>
+					<fo:table-column column-width="20%"/>
 					<fo:table-column column-width="15%"/>
-					<fo:table-column column-width="8%"/>
-					<fo:table-column column-width="7%"/>
-					<fo:table-column column-width="11%"/>
-					<fo:table-column column-width="11%"/>
-					<fo:table-column column-width="12%"/>
+					<fo:table-column column-width="9%"/>
+					<fo:table-column column-width="15%"/>
 					<fo:table-column column-width="16%"/>
+					
+					
 						<fo:table-body>
   								<fo:table-row >
-             						<fo:table-cell>
-             						 	<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always"></fo:block>
-              						</fo:table-cell>
               						<fo:table-cell>
              						 	<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together=""></fo:block>
-              						</fo:table-cell>
-              						<fo:table-cell>
-              							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together=""></fo:block>
-              						</fo:table-cell>
-              						<fo:table-cell>
-              							<fo:block font-size="4pt">&#160;</fo:block>
              							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together=""></fo:block>
               						</fo:table-cell>
               						<fo:table-cell>
@@ -238,8 +199,8 @@ under the License.
         	
         	</fo:block>	
         	
-			<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always">For THE TAMILNADU CO-OP MILK PRODUCERS'</fo:block>
-			<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always">FEDERATION LTD.</fo:block>
+			<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always">For NHDC LTD.</fo:block>
+			<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
 			<fo:block text-align="left" font-size="12pt" white-space-collapse="false">Enclosure to Cheque No. ${paymentRefNum?if_exists}&#160;Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate, "dd/MM/yyyy")}</fo:block>
 			<fo:block text-align="left" font-size="12pt" white-space-collapse="false">Drawn on for transfer through RTGS/NEFT.</fo:block>
 			<fo:block text-align="left" font-size="12pt" white-space-collapse="false">For Rs. ${totnetSal?if_exists?string("#0.00")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
