@@ -13,6 +13,7 @@ import org.ofbiz.content.content.ContentWorker
 import org.ofbiz.content.data.DataResourceWorker
 import java.sql.Date;
 import java.sql.Timestamp;
+import org.ofbiz.accounting.util.UtilAccounting;
 
 import javolution.util.FastList;
 acctgTransId = "";
@@ -36,6 +37,15 @@ if(UtilValidate.isNotEmpty(parameters.paymentId)){
 		}
 	}
 }
+paymentDetails = delegator.findOne("Payment",[paymentId : parameters.paymentId] , false);
+if (UtilAccounting.isReceipt(paymentDetails)) {
+	partyIdForAdd=paymentDetails.partyIdTo;
+	context.partyIdForAdd=partyIdForAdd;
+}else{
+	partyIdForAdd=paymentDetails.partyIdFrom;
+	context.partyIdForAdd=partyIdForAdd;
+}
+
 GenericValue finAccntTransSequenceEntry;
 if(UtilValidate.isNotEmpty(acctgTransId)){
 	accountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : acctgTransId] , false);
