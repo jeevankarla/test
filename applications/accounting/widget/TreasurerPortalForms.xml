@@ -828,9 +828,9 @@ under the License.
         </field>
          <field name="segmentId"  title="Segment Id">
             <drop-down allow-empty="false">
-            	<option key="COMMON" description="Common"/>
-                <option key="YARN_SALE" description="Yarn Sale"/>
-                <option key="DIES_AND_CHEM_SALE" description="Dies And Chemicals"/>                
+            <option key="YARN_SALE" description="YARN SEGMENT"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="COMMON" description="COMMON"/>               
             </drop-down>
         </field>
          <field name="contraFinAccountId"  title="To Financial Account"  >
@@ -1159,9 +1159,9 @@ under the License.
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="segmentId" title="Payment PurposeType">
         	<drop-down allow-empty="true">
-        	<option key="COMMON" description="COMMON"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1223,9 +1223,9 @@ under the License.
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="segmentId" title="Payment PurposeType">
         	<drop-down allow-empty="true">
-        	<option key="COMMON" description="COMMON"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1293,9 +1293,9 @@ under the License.
          </field> -->
          <field name="segmentId" title="Payment PurposeType">
         	<drop-down allow-empty="true">
-        	<option key="COMMON" description="COMMON"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="COMMON" description="COMMON"/>
            </drop-down>
          </field>
         <field name="costCenterId" title="RO">
@@ -1490,7 +1490,7 @@ under the License.
         <field name="paymentPurposeType" position="2" title="Payment PurposeType"><text/>
         	<drop-down allow-empty="true">
                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">                   
-                   <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+                   <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE,COMMON"/>
                </entity-options>
            </drop-down>
         </field>
@@ -1732,7 +1732,7 @@ under the License.
         <field name="paymentPurposeType" position="2" title="Payment PurposeType"><text/>
 	           	<drop-down allow-empty="true">
 	                  <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
-	                      <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
+	                      <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE,COMMON"/>
 	                  </entity-options>
 	              </drop-down>
         </field>
@@ -2442,9 +2442,9 @@ under the License.
         <field position="2" name="referenceDate" title="Refrence Date"><date-time/></field>                            
         <field name="purposeTypeId" title="Purpose Type" required-field="true">
         	<drop-down allow-empty="true">
-        	<option key="COMMON" description="COMMON"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type"  required-field="true">
@@ -2557,9 +2557,9 @@ under the License.
         <field position="2" name="dueDate" required-field="true"><date-time/></field>
         <field name="purposeTypeId" title="Purpose Type" required-field="true">
         	<drop-down allow-empty="true">
-        	<option key="COMMON" description="COMMON"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type" required-field="true">
@@ -3029,9 +3029,7 @@ under the License.
         </field>
         <field name="PDF" widget-style="buttontext" >
             <hyperlink target="printBankReport.pdf" description="Bank Report" target-window="_blank">
-               	  <parameter param-name="paymentGroupId"/>
-               	  <parameter param-name="paymentDate" from-field="paymentDate"/>
-               	  <parameter param-name="paymentRefNum" from-field="paymentRefNum"/>
+               	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field>
         <field name="Print Voucher" widget-style="buttontext" >
@@ -3075,9 +3073,9 @@ under the License.
         <field name="finAccountId"><hidden value="${parameters.finAccountId}"/></field>
         <field name="purposeTypeId" title="Purpose Type" required-field="true">
         	<drop-down allow-empty="true">
-        	<option key="COMMON" description="COMMON"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
+        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <field position="1" name="partyIdFrom" title="Party Name" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
