@@ -771,7 +771,6 @@
 	      	setCustomerIdOnCustomerChange(args.item,args);
 	    });
         grid.onCellChange.subscribe(function(e,args) {
-
 	     	setUndefinedValues(data[args.row]);
 		 	grid.updateRow(args.row);
 			var prod = data[args.row]["cProductId"];
@@ -889,12 +888,14 @@
 				*/
 				
 				updatePayableAmount(args.row);
-				updateTotalIndentAmount();
+				updateTotalIndentAmount(args.row);
 				
 			} 
 	 	});
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
+		           
+
 			if (args.cell == 1 ) {
    				var currentrow=args.row;
    				if(data[currentrow-1] != undefined && data[currentrow-1]["cProductId"] != undefined){
@@ -987,6 +988,8 @@
 	      		grid.render();
 	      		$(grid.getCellNode(args.row+1, 1)).click();
 			}
+			
+			
 		});
 		
 		grid.onValidationError.subscribe(function(e, args) {
@@ -1144,7 +1147,7 @@
 	}
 	
 	
-	function updateTotalIndentAmount(){
+	function updateTotalIndentAmount(row){
 		var totalAmount = 0;
 		var totalDiscount = 0;
 		var totalPayable = 0;
@@ -1154,6 +1157,20 @@
 			totalDiscount += parseFloat(data[i]["SUBSIDY"]);
 			totalQuantity += data[i]["quantity"];
 		}
+		
+		var availbleQuantity = $("#availbleQuantity").val();
+		            
+			if(availbleQuantity<=totalQuantity){
+			  grid.setOptions({enableAddRow: false});
+			   data[row]["quantity"] = 0;
+		       data[row]["baleQuantity"] = 0;
+		       grid.updateRow(row);
+			}else{
+			  grid.setOptions({enableAddRow: true});
+			}
+		
+		
+		
 		var totalAmount = parseFloat(Math.round((totalPayable) * 100) / 100) + parseFloat(Math.round((totalDiscount) * 100) / 100);
 		
 		jQuery("#totalAmount").html("<b> &nbsp; Selected: "+totalAmount+" &nbsp; </b>");

@@ -358,7 +358,7 @@
         </field>
         <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
          <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field>
-         <field name="shipmentPurposeTypeId"><hidden value="YARN_SHIPMENT"/></field>
+       <!--  <field name="shipmentPurposeTypeId"><hidden value="YARN_SHIPMENT"/></field>  -->
         
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -2243,7 +2243,7 @@
         </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="shipmentPurposeTypeId"><hidden value="DEPOT_YARN_SHIPMENT"/></field>
+     <!--   <field name="shipmentPurposeTypeId"><hidden value="DEPOT_YARN_SHIPMENT"/></field> -->
         
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -2436,7 +2436,7 @@
 			 </hyperlink>
         </field>
         
-        <!-- 
+        
          <field name="SaleOnbeHalf" title="Sale Indent OnbeHalf" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
 		<hyperlink target="DepotMultiBranchSalesOrder" description="Sale Onbehalf Indent">
 			<parameter param-name="productId"/>
@@ -2454,7 +2454,7 @@
 			   <parameter param-name="submitFlag" value="NO"/>
 			 </hyperlink>
         </field>
-         -->
+         
         
      <!--     <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
             <hyperlink target="approvalLevelOfDepotPoDepot" description="Order Approve">
@@ -4527,7 +4527,7 @@
         </field>
         <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
          <field name="shipmentTypeId"><hidden value="BRANCH_SHIPMENT"/></field>
-         <field name="shipmentPurposeTypeId"><hidden value="DC_SHIPMENT"/></field>
+     <!--    <field name="shipmentPurposeTypeId"><hidden value="DC_SHIPMENT"/></field> -->
         
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>  

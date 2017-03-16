@@ -56,6 +56,7 @@ $(document).ready(function(){
 	    makeDatePicker1("AWIORDate");
 	    makeDatePicker1("CASHFromDateId","");
 	    makeDatePicker1("billWiseSalesReportFrom","billWiseSalesReportThru");
+	    makeDatePicker1("billWisePurchaseReportFrom","billWisePurchaseReportThru");
 	    makeDatePicker1("IndentRegisterFromDate","IndentRegisterThruDate");
 	    makeDatePicker1("IndentRegisterEntryFromDate","IndentRegisterEntryThruDate");
 	     makeDatePicker1("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
@@ -492,6 +493,43 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				
 			</form>
           </tr>
+     <#--     <tr class="alternate-row">
+      	   <form id="billWisePurchaseReport" name="billWisePurchaseReport" method="post" action="<@ofbizUrl>billWisePurchaseReport.pdf</@ofbizUrl>" target="_blank">        
+             <td width="10%">Bill Wise Purchase Report</td>
+             <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="billWisePurchaseReportFrom" readonly  name="billReportfromDate" required /></br>
+      		 To</br><input  type="text" size="15pt" id="billWisePurchseReportThru" readonly  name="billReportthruDate" required /></td>
+             <td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId" required>
+					<option value=''></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				 </select>    								
+			  </span>
+			 
+			<span class='h3'>State</br>
+				 <select name="state" id="state">
+				     <option value=''></option>
+				     <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span>
+			 </td>
+			 <td width="15%"><span class='h3'>Category 
+				 <select name="productCategory" id="productCategory">
+				     <option value="ALL">ALL</option>
+				     <option value='COTTON'>COTTON</option>
+				     <option value='SILK'>SILK</option>
+				     <option value='OTHER'>OTHERS</option>
+				  </select>    								
+			  </span>
+			 </td>
+				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="billWisePurchaseReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	
+				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('billWiseSalesReport', '<@ofbizUrl>billWisePurchaseReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
+				<td width="10%"></td> 
+           </form>
+        </tr>-->
 		</#if>
 		<#if ReportsType?has_content &&  ReportsType=="SALE_REPORTS">
 			 <tr class="alternate-row">
