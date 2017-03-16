@@ -61,10 +61,13 @@ under the License.
         	
            <fo:page-sequence master-reference="main" force-page-count="no-force" font-size="12pt" font-family="Courier,monospace">					
 		    	<fo:static-content flow-name="xsl-region-before">
-		    	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-		    	<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-		    	<fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportHeader.description?if_exists}</fo:block>
-		    	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportSubHeader.description?if_exists}</fo:block>
+		    	     <#assign roHeader = partyIdForAdd+"_HEADER">
+              	 	<#assign roSubheader = partyIdForAdd+"_HEADER01">
+		    	    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>   
+                    <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
+                    <fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  ${reportHeader.description?if_exists} </fo:block>
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >  ${reportSubHeader.description?if_exists}  </fo:block>
                     <fo:block text-align="right" linefeed-treatment="preserve"></fo:block>
                     <#assign finAccountTransDetails = delegator.findOne("FinAccountTrans", {"finAccountTransId" : finAccountTransId}, false)?if_exists/>
                     <fo:block  keep-together="always" text-align="center" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"><#--<#if finAccountTransDetails?has_content>${(finAccountTransDetails.finAccountTransTypeId)?replace("_"," ")}<#else>${acctgTransTypeId?if_exists?replace("_"," ")}</#if>--></fo:block>
@@ -72,8 +75,12 @@ under the License.
                     <fo:block>
                         <fo:table>
 	                    <fo:table-column column-width="50%"/>
+	                    <fo:table-column column-width="50%"/>
 		                    <fo:table-body>
-			                    <fo:table-row>	                    	
+			                    <fo:table-row>
+			                    	<fo:table-cell>
+		                        		<fo:block text-align="left" font-weight="bold">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMMM dd,yyyy")}</fo:block>  
+		                   			</fo:table-cell>
 		                   			<fo:table-cell>
 		                        		<fo:block text-align="right" font-weight="bold"><#if invSequenceNum?has_content>Sequence Number:<fo:inline font-weight="bold">${invSequenceNum?if_exists}</fo:inline><#elseif finAccntTransSequence?has_content>Sequence Number:<fo:inline font-weight="bold">${finAccntTransSequence?if_exists}</fo:inline><#else></#if></fo:block>  
 		                   			</fo:table-cell>
@@ -81,10 +88,9 @@ under the License.
 		                    </fo:table-body>
 	                    </fo:table>
                     </fo:block>
+              		<fo:block>---------------------------------------------------------------------------------------------</fo:block>
               		</fo:static-content>		
             		<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-		            <fo:block text-align="left" font-weight="bold">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMMM dd,yyyy")}</fo:block>  
-              		<fo:block>---------------------------------------------------------------------------------------------</fo:block>
             		<fo:block><fo:table>
                     <fo:table-column column-width="50%"/>
                     <fo:table-column column-width="70%"/>
@@ -558,10 +564,7 @@ under the License.
 					              </fo:table-body>
 		                	</fo:table>
 		               </fo:block>
-		                 
-		              <#if entryList?has_content> 
-		              <#list entryList as payAccountingTransEntries>
-		              <#--<#if entryList?has_content>-->
+		               <#if payAccountingTransEntries?has_content> 
         	             <#assign acctgTransId = payAccountingTransEntries.acctgTransId?if_exists>
         	             <#assign acctgTransTypeId = payAccountingTransEntries.acctgTransTypeId?if_exists>
         	             <#assign description = payAccountingTransEntries.description?if_exists>
@@ -588,10 +591,8 @@ under the License.
         	             <#assign theirAcctgTransId = payAccountingTransEntries.theirAcctgTransId?if_exists>
         	             <#assign createdByUserLogin = payAccountingTransEntries.createdByUserLogin?if_exists>
          	             <#assign lastModifiedByUserLogin = payAccountingTransEntries.lastModifiedByUserLogin?if_exists>
-         	             
-         	             <fo:block>
+		               <fo:block>
 		               <fo:block> &#160;</fo:block>
-		               <fo:block> &#180;</fo:block>
 		               <fo:block>---------------------------------------------------------------------------------------------</fo:block>
 		               <fo:block> &#160;</fo:block>
 		                 <fo:table>
@@ -601,7 +602,7 @@ under the License.
                                <fo:table-row>
                                <fo:table-cell>
                                   <#assign finAccountTransDetails = delegator.findOne("FinAccountTrans", {"finAccountTransId" : finAccountTransId}, false)?if_exists/>
-                                  <fo:block  keep-together="always" text-align="right" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"><#--<#if finAccountTransDetails?has_content>${(finAccountTransDetails.finAccountTransTypeId)?replace("_"," ")}<#else>${acctgTransTypeId?if_exists?replace("_"," ")}</#if>--></fo:block>
+                                  <fo:block  keep-together="always" text-align="right" font-weight = "bold" font-family="Courier,monospace" white-space-collapse="false"><#if finAccountTransDetails?has_content>${(finAccountTransDetails.finAccountTransTypeId)?replace("_"," ")}<#else>${acctgTransTypeId?if_exists?replace("_"," ")}</#if></fo:block>
                                </fo:table-cell>
                                </fo:table-row>
                              </fo:table-body>  
@@ -624,7 +625,6 @@ under the License.
 	                    </fo:table>
                     </fo:block>
 		               <fo:block>---------------------------------------------------------------------------------------------</fo:block>
-		               <#assign transType = "">
 		               <fo:block><fo:table>
                     <fo:table-column column-width="50%"/>
                     <fo:table-column column-width="70%"/>
@@ -642,8 +642,7 @@ under the License.
                    			<#if reportTypeFlag?has_content>
                     				<#if finAccountTransDetails?has_content>
 	            				<fo:table-cell>
-	                        		<fo:block  keep-together="always" text-align="left" >Acctg Trans Type Id:${finAccountTransDetails.finAccountTransTypeId?if_exists}</fo:block>
-	                        		<#assign transType = finAccountTransDetails.finAccountTransTypeId>  
+	                        		<fo:block  keep-together="always" text-align="left" >Acctg Trans Type Id:${finAccountTransDetails.finAccountTransTypeId?if_exists}</fo:block>  
 	                   			</fo:table-cell>
 	                   			<#else>
 	                   			<fo:table-cell>
@@ -653,8 +652,7 @@ under the License.
 	                   		<#else>		
 	                   			<#if acctgTransTypeId?has_content>
 	            				<fo:table-cell>
-	                        		<fo:block  keep-together="always" text-align="left">Acctg Trans Type Id:${acctgTransTypeId?if_exists}</fo:block>
-	                        		<#assign transType = acctgTransTypeId>  
+	                        		<fo:block  keep-together="always" text-align="left">Acctg Trans Type Id:${acctgTransTypeId?if_exists}</fo:block>  
 	                   			</fo:table-cell>
 	                   			<#else>
 	                   			<fo:table-cell>
@@ -977,14 +975,13 @@ under the License.
                     <fo:table-column column-width="170pt"/>
                     <fo:table-column column-width="15pt"/> 
                     <fo:table-body>
-							<#if finalMap?has_content>
+							<#if payAccountingTransEntryList?has_content>
 							<#assign crTotal = 0>
 							<#assign drTotal = 0>
-							<#assign acctngEntriesList = finalMap(transType)> 
-							<#list acctngEntriesList as accntngTransEntry>
+							<#list payAccountingTransEntryList as accntngTransEntry>
 							<fo:table-row>
+                				
                        			<#if accntngTransEntry.glAccountId?has_content>  
-                       			<#assign accntngTransEntry = "">
         						<#assign glAccntDetails = delegator.findOne("GlAccount", {"glAccountId" :accntngTransEntry.glAccountId}, true)>
                 				<fo:table-cell>
                             		<fo:block text-align="left" wrap-option="wrap"> ${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(glAccntDetails.accountName?if_exists)),50)}</fo:block>
@@ -1035,6 +1032,7 @@ under the License.
                 				<fo:table-cell>
                             		<fo:block text-align="left" wrap-option="wrap" font-weight="bold"> Totals: </fo:block>  
                        			</fo:table-cell>
+                       			
                        			<fo:table-cell>
                             		<fo:block  text-align="right"  font-weight="bold" white-space-collapse="false">${drTotal?if_exists?string("#0.00")}</fo:block>  
                        			</fo:table-cell>
@@ -1045,7 +1043,7 @@ under the License.
                             		<fo:block text-align="right" font-weight="bold" white-space-collapse="false"></fo:block>  
                        			</fo:table-cell>
             				</fo:table-row>
-               				<fo:table-row>
+            				<fo:table-row>
 								 <fo:table-cell number-columns-spanned="5">
 			  						<fo:block text-align="left"  white-space-collapse="false" font-size="12pt">Amount in Words : RUPEES ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(crTotal?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()} ONLY  </fo:block>	
 			  					 </fo:table-cell>
@@ -1101,9 +1099,8 @@ under the License.
 					              </fo:table-body>
 		                	</fo:table>
 		               </fo:block>
-         	             
-         	             </#list>
-         	           </#if>
+		            
+		            </#if>
 					</fo:flow>
 					</fo:page-sequence>
 			  <#else>
