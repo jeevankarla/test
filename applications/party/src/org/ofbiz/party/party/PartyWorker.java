@@ -463,7 +463,7 @@ public class PartyWorker {
             EntityConditionList<EntityExpr> baseExprs = EntityCondition.makeCondition(UtilMisc.toList(
                     EntityCondition.makeCondition("partyIdFrom", partyIdFrom),
                     EntityCondition.makeCondition("partyRelationshipTypeId", partyRelationshipTypeId)), EntityOperator.AND);
-            List<GenericValue> associatedParties = delegator.findList("PartyRelationship", baseExprs, null, null, null, true);
+            List<GenericValue> associatedParties = delegator.findList("PartyRelationship", baseExprs, UtilMisc.toSet("partyIdTo"), null, null, true);
             partyList.addAll(associatedParties);
             while (UtilValidate.isNotEmpty(associatedParties)) {
                 List<GenericValue> currentAssociatedParties = FastList.newInstance();
@@ -471,7 +471,7 @@ public class PartyWorker {
                     EntityConditionList<EntityExpr> innerExprs = EntityCondition.makeCondition(UtilMisc.toList(
                             EntityCondition.makeCondition("partyIdFrom", associatedParty.get("partyIdTo")),
                             EntityCondition.makeCondition("partyRelationshipTypeId", partyRelationshipTypeId)), EntityOperator.AND);
-                    List<GenericValue> associatedPartiesChilds = delegator.findList("PartyRelationship", innerExprs, null, null, null, true);
+                    List<GenericValue> associatedPartiesChilds = delegator.findList("PartyRelationship", innerExprs, UtilMisc.toSet("partyIdTo"), null, null, true);
                     if (UtilValidate.isNotEmpty(associatedPartiesChilds)) {
                         currentAssociatedParties.addAll(associatedPartiesChilds);
                     }
