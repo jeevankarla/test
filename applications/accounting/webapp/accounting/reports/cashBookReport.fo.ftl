@@ -141,6 +141,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                                    <fo:block text-align="center"></fo:block>
 	                                </fo:table-cell>
 	                                </#if>	
+	                                <#if paymentId?has_content>
+	                                <#assign paymentDetails = delegator.findOne("Payment", {"paymentId" : paymentId}, true)>
+	                                <#assign  isReceipt= Static["org.ofbiz.accounting.util.UtilAccounting"].isReceipt(paymentDetails?if_exists) > 
+	                                <#if isReceipt >
+	                                	<#assign partyId=paymentDetails.get("partyIdFrom")>	                                	
+	                                <#else>
+	                                	<#assign partyId=paymentDetails.get("partyIdTo")>
+	                                </#if>
+	                                	<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+	                                </#if>
 	                       			<#if ((partyId)?has_content)>
                                 	<fo:table-cell border-style="solid" font-weight="bold">
 	                                    <fo:block font-size="13pt" text-align="left">${(partyId)}</fo:block>
