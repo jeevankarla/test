@@ -70,25 +70,34 @@ payAccountingTransEntries = [:];
 conditionList.clear();
 //finding on AcctgTrans for payment
 
+entryList=[];
+finalMap=[:];
 if(UtilValidate.isNotEmpty(acctgTransList) && acctgTransList.size()>0){
-	acctgTrans = acctgTransList[1];
+	for(int i=1 ; i < (acctgTransList.size()); i++){
+	acctgTrans = acctgTransList[i];
+	transType = "";
 	if(UtilValidate.isNotEmpty(acctgTrans)){
 		payAcctgTransId = acctgTrans.acctgTransId
+		GenericValue payFinAccntTransSequenceEntry;
+		if(UtilValidate.isNotEmpty(payAcctgTransId) && (payAcctgTransId != acctgTransId)){
+			payAccountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : payAcctgTransId] , false);
+			payFinAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, payAccountingTransEntries.finAccountTransId), null, null, null, false));
+			transType = payAccountingTransEntries.acctgTransTypeId;
+			}
+		entryList.addAll(payAccountingTransEntries);
+		payFinAccntTransSequence = "";
+		if(UtilValidate.isNotEmpty(payFinAccntTransSequenceEntry)){
+			payFinAccntTransSequence = payFinAccntTransSequenceEntry.transSequenceNo;
+		}
+		context.payFinAccntTransSequence = payFinAccntTransSequence;
+		context.put("payAccountingTransEntries",payAccountingTransEntries);
+		
+		if(UtilValidate.isNotEmpty(payAcctgTransId)){
+			payAccountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS , payAcctgTransId)  , null, null, null, false );
+			}
+			finalMap.put(transType,payAccountingTransEntryList);
+		}
 	}
 }
-GenericValue payFinAccntTransSequenceEntry;
-if(UtilValidate.isNotEmpty(payAcctgTransId) && (payAcctgTransId != acctgTransId)){
-	payAccountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : payAcctgTransId] , false);
-	payFinAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, payAccountingTransEntries.finAccountTransId), null, null, null, false));
-}
-payFinAccntTransSequence = "";
-if(UtilValidate.isNotEmpty(payFinAccntTransSequenceEntry)){
-	payFinAccntTransSequence = payFinAccntTransSequenceEntry.transSequenceNo;
-}
-context.payFinAccntTransSequence = payFinAccntTransSequence;
-context.put("payAccountingTransEntries",payAccountingTransEntries);
-if(UtilValidate.isNotEmpty(payAcctgTransId)){
-	payAccountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS , payAcctgTransId)  , null, null, null, false );
-}
-context.put("payAccountingTransEntryList",payAccountingTransEntryList);
-
+context.put("finalMap",finalMap);
+context.put("entryList",entryList);
