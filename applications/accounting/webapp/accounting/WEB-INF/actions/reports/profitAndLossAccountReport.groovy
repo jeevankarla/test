@@ -277,7 +277,7 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 				profitChildWiseMap.put(glAccntCategoryId, tempMap);
 			}
 		}else if(childCurrentYearBal<0){
-			childCurrentYearBal=childCurrentYearBal.multiply(-1);
+			/*childCurrentYearBal=childCurrentYearBal.multiply(-1);*/
 			lossGrandTotal=lossGrandTotal+childCurrentYearBal;
 			if(lossChildWiseMap && lossChildWiseMap.get(glAccntCategoryId)){
 				existMap=lossChildWiseMap.get(glAccntCategoryId);

@@ -390,9 +390,9 @@ if(UtilValidate.isNotEmpty(glAccountCategoryDetails)){
 			scheduleNo = glAccountChildCategory.get("categoryNarration");
 		}
 		childCurrentYearBal= childCatDebitTotal-childCatCreditTotal;
-		if(childCurrentYearBal<0){
+		/*if(childCurrentYearBal<0){
 			childCurrentYearBal=childCurrentYearBal.multiply(-1);
-		}
+		}*/
 		if(assetCategoryList.contains(glAccntCategoryId)){	
 			assetsGrandTotal=assetsGrandTotal+childCurrentYearBal;
 			if(assetsChildWiseMap && assetsChildWiseMap.get(glAccntCategoryId)){
