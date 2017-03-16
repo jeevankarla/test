@@ -4316,7 +4316,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="implGrantReportPDF"/>
     </request-map>
-    <request-map uri="printBankReport.xls">
+    <request-map uri="printBankReport.csv">
     	<security https="true" auth="true"/>    	
     	<response name="success" type="view" value="BankReportCSV"/>    	
     </request-map>
