@@ -80,19 +80,19 @@
   }
   
  paymentRefNum = parameters.paymentRefNum;
- context.put("paymentDate",paymentDate);
+ 
  context.put("paymentRefNum",paymentRefNum);
  
  partyPaymentGroupMap = [:];
  bankTypeList =[];
- String bankTypeFlag ="";
+ String bankTypeFlag ="SBI";
  String empTypeFlag = "";
  String bankFlag = "";
  if(UtilValidate.isNotEmpty(paymentGroupId)){
 	 paymentGroupMemberList = delegator.findList("PaymentGroupMember",EntityCondition.makeCondition("paymentGroupId", EntityOperator.EQUALS , paymentGroupId), null, null, null, false );
 	 
 	 GenericValue paymentGroup = delegator.findOne("PaymentGroup", [paymentGroupId :paymentGroupId], false);
-	 
+	 paymentDate=paymentGroup.paymentDate;
 	 String accPin = "";
 	 
 	 if(paymentGroup && UtilValidate.isNotEmpty(paymentGroup.finAccountId)){
@@ -242,6 +242,7 @@
 		 }
 	 }
  }
+ context.put("paymentDate",paymentDate);
  context.totnetSal=totnetSal;
  context.bankTypeFlag = bankTypeFlag;
  context.bankTypeList = bankTypeList;
