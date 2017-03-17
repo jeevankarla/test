@@ -70,7 +70,56 @@ under the License.
 			}
 		});		
 	}
- 
+    
+     function toggleInvoiceId(master) {
+        var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
+
+        jQuery.each(invoices, function() {
+            this.checked = master.checked;
+        });
+        getInvoiceRunningTotal();
+    }
+    function getInvoiceRunningTotal() {
+		var checkedInvoices = jQuery("input[name='invoiceIds']:checked");
+		
+        if(checkedInvoices.size() > 0) {
+        	var runningTotalVal = 0;
+        	var testList = new Array();
+        	jQuery.each(checkedInvoices, function() {
+            	if (jQuery(this).is(':checked')) {
+            		var domObj = $(this).parent().parent();
+					var test = $($(domObj).find("#fromPartyId")).val();
+					if(testList.length>0 && jQuery.inArray(test, testList)==-1){
+						$("#paymentButton").hide();	
+					}
+					testList.push(test);
+	            }
+    	    });
+    	    var uniqueList = testList.filter(function(itm,i,testList){
+    			return i==testList.indexOf(itm);
+			});
+			if(uniqueList.length == 1){
+				$("#paymentButton").show();
+			}
+            jQuery.ajax({
+                url: 'getInvoiceRunningTotal',
+                type: 'POST',
+                async: true,
+                data: jQuery('#listInvoices').serialize(),
+                success: function(data) { jQuery('#showInvoiceRunningTotal').html(data.invoiceRunningTotal + '  (' + checkedInvoices.size() + ')') }
+            });
+
+            if(jQuery('#serviceName').val() != "") {
+            	jQuery('#submitButton').removeAttr('disabled');                
+            }
+
+        } else {
+            jQuery('#submitButton').attr('disabled', 'disabled');
+            jQuery('#showInvoiceRunningTotal').html("");
+        }
+    }
+    
+    
 	function Alert(message, title)
 	{
 		// Content will consist of the message and an cancel and submit button
@@ -345,6 +394,7 @@ function datepick()
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
           <td>Pay</td>
           <td>select</td>
+          <td>${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>
       </thead>
       <tbody>
@@ -397,6 +447,7 @@ function datepick()
               </td>	
              <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
             </tr>
+            
             </#if>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
