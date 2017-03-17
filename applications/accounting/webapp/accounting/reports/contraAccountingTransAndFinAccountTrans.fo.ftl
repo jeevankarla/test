@@ -539,14 +539,15 @@ under the License.
 				       		</fo:table-body>
 		                </fo:table>
 		               </fo:block>
-				       		<fo:block>
+				       	<fo:block>
 			                 	<fo:table>
-			                    <fo:table-column column-width="33%"/>
-			                    <fo:table-column column-width="33%"/>
-			                    <fo:table-column column-width="33%"/>
+			                    <fo:table-column column-width="25%"/>
+			                    <fo:table-column column-width="25%"/>
+			                    <fo:table-column column-width="25%"/>
+			                    <fo:table-column column-width="25%"/>
 			                    <fo:table-body>
 			                    		<fo:table-row>
-			               					<fo:table-cell number-columns-spanned="3">   						
+			               					<fo:table-cell number-columns-spanned="2">   						
 										 	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 											</fo:table-cell>
 					  					</fo:table-row>
@@ -557,8 +558,11 @@ under the License.
 			               					<fo:table-cell >
 			                    				<fo:block text-align="center">Checked By</fo:block>
 			               					</fo:table-cell>
+			               					<fo:table-cell>
+			                    				<fo:block text-align="center">Finance Incharge</fo:block>
+			               					</fo:table-cell>
 			               					<fo:table-cell >
-			                    				<fo:block text-align="center" keep-together="always">Approved By</fo:block>
+			                    				<fo:block text-align="center" keep-together="always">RO Incharge</fo:block>
 			               					</fo:table-cell>
 					  					</fo:table-row>
 					              </fo:table-body>
@@ -1076,12 +1080,13 @@ under the License.
 		               </fo:block>
 				       		<fo:block>
 			                 	<fo:table>
-			                    <fo:table-column column-width="33%"/>
-			                    <fo:table-column column-width="33%"/>
-			                    <fo:table-column column-width="33%"/>
+			                    <fo:table-column column-width="25%"/>
+			                    <fo:table-column column-width="25%"/>
+			                    <fo:table-column column-width="25%"/>
+			                    <fo:table-column column-width="25%"/>
 			                    <fo:table-body>
 			                    		<fo:table-row>
-			               					<fo:table-cell number-columns-spanned="3">   						
+			               					<fo:table-cell number-columns-spanned="2">   						
 										 	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 											</fo:table-cell>
 					  					</fo:table-row>
@@ -1092,8 +1097,11 @@ under the License.
 			               					<fo:table-cell >
 			                    				<fo:block text-align="center">Checked By</fo:block>
 			               					</fo:table-cell>
+			               					<fo:table-cell>
+			                    				<fo:block text-align="center">Finance Incharge</fo:block>
+			               					</fo:table-cell>
 			               					<fo:table-cell >
-			                    				<fo:block text-align="center" keep-together="always">Approved By</fo:block>
+			                    				<fo:block text-align="center" keep-together="always">RO Incharge</fo:block>
 			               					</fo:table-cell>
 					  					</fo:table-row>
 					              </fo:table-body>

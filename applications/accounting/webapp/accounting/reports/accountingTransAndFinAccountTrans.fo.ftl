@@ -525,28 +525,34 @@ under the License.
 		               </fo:block>
 				       		<fo:block>
 			                 	<fo:table>
-			                    <fo:table-column column-width="100pt"/>
-			                    <fo:table-column column-width="200pt"/>
-			                    <fo:table-column column-width="200pt"/>
-			                    <fo:table-column column-width="100pt"/>
+			                    <fo:table-column column-width="25%"/>
+			                    <fo:table-column column-width="25%"/>
+			                    <fo:table-column column-width="25%"/>
+			                    <fo:table-column column-width="25%"/>
 			                    <fo:table-body>
+			                    		<fo:table-row>
+			               					<fo:table-cell number-columns-spanned="2">   						
+										 	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+											</fo:table-cell>
+					  					</fo:table-row>
 									  	<fo:table-row>
 			               					<fo:table-cell>
-			                    				<fo:block>Prepared By</fo:block>
+			                    				<fo:block text-align="center">Prepared By</fo:block>
+			               					</fo:table-cell>
+			               					<fo:table-cell >
+			                    				<fo:block text-align="center">Checked By</fo:block>
 			               					</fo:table-cell>
 			               					<fo:table-cell>
-			                    				<fo:block></fo:block>
+			                    				<fo:block text-align="center">Finance Incharge</fo:block>
 			               					</fo:table-cell>
-			               					<fo:table-cell>
-			                    				<fo:block keep-together="always">DY.MGR/MGR/GM(FIN)</fo:block>
-			               					</fo:table-cell>
-			               					<fo:table-cell>
-			                    				<fo:block text-align = "right">Regional Head</fo:block>
+			               					<fo:table-cell >
+			                    				<fo:block text-align="center" keep-together="always">RO Incharge</fo:block>
 			               					</fo:table-cell>
 					  					</fo:table-row>
 					              </fo:table-body>
 		                	</fo:table>
-		               </fo:block>		
+		               </fo:block>
+		            
 					 </fo:flow>
 					 </fo:page-sequence>
 			  <#else>
