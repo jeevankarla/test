@@ -898,6 +898,13 @@
 
 			if (args.cell == 1 ) {
    				var currentrow=args.row;
+   				
+   				
+   				if(currentrow == 0){
+	   				var availbleQuantity = $("#availbleQuantity").val();
+	   				$("#showInventoryQuantity").html("Inventory Quantity : "+availbleQuantity);
+   				}
+   				
    				if(data[currentrow-1] != undefined && data[currentrow-1]["cProductId"] != undefined){
 		       		var prod=data[currentrow-1]["cProductId"];
 		       		data[args.row]['cProductId'] = data[currentrow-1]["cProductId"];
@@ -1166,7 +1173,7 @@
 		
 		var availbleQuantity = $("#availbleQuantity").val();
 		            
-			if(availbleQuantity<=totalQuantity){
+			if(availbleQuantity<totalQuantity){
 			  grid.setOptions({enableAddRow: false});
 			   data[row]["quantity"] = 0;
 		       data[row]["baleQuantity"] = 0;

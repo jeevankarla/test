@@ -1575,6 +1575,7 @@
 					</div>  -->
 					</#if> 
 					</#if>
+					<label  align="center" id="showInventoryQuantity"style="color: blue" ></label>
 					<div id="myGrid1" style="width:100%;height:210px;"></div>
 						  
 						<#assign formAction='processDepotSalesOrderDepot'>			

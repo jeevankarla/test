@@ -847,17 +847,6 @@
 			  	data[args.row]["totPayable"] = roundedAmount;
 			  	
 			}
-			
-			
-			if(balQuty > availableQuantity){
-			
-			alert("Quantity is greater than stock available...!!");
-			
-			  data[args.row]["baleQuantity"] = "";
-			  data[args.row]["quantity"] = "";
-			}
-			
-			
 			else if(args.cell == 3){
 				quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
 				
@@ -872,6 +861,16 @@
 			  	data[args.row]["quantity"] = quantity;
 			 	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
 			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+			  	
+			  	
+			  	if(quantity > availableQuantity){
+			
+			alert("Quantity is greater than stock available...!!");
+			
+			  data[args.row]["baleQuantity"] = "";
+			  data[args.row]["quantity"] = "";
+			}
+			  	
 			}
 			else if(args.cell == 5){
 			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
