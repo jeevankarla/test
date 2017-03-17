@@ -274,8 +274,9 @@ partyList.each{ partyList ->
 	fcondP = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	
 	PartyRelationship = delegator.findList("PartyRelationship", fcondP, null, null, null, false);
-
-	
+	if(PartyRelationship){
+		PartyRelationshipDetails=EntityUtil.getFirst(PartyRelationship);
+	}
 	branchName = "";
 	
 	if(PartyRelationship.size() !=1){
@@ -290,8 +291,8 @@ partyList.each{ partyList ->
 			
 			i++;
 		}
-	}else{
-	  branchName = branchName + PartyHelper.getPartyName(delegator, partyList.partyIdFrom, false);
+	}else if(PartyRelationshipDetails.partyIdFrom){
+	  branchName = branchName + PartyHelper.getPartyName(delegator, PartyRelationshipDetails.partyIdFrom, false);
 	}	
 	
 	
