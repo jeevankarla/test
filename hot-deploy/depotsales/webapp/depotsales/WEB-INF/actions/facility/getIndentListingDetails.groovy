@@ -121,7 +121,7 @@ facilityPartyId = parameters.partyId;
  screenFlag = parameters.screenFlag;
  tallyRefNO = parameters.tallyRefNO;
  scheme = parameters.scheme;
- 
+ indentTypeId = parameters.indentTypeId;
  indentEntryFromDate = parameters.indentEntryFromDate;
  indentEntryThruDate = parameters.indentEntryThruDate;
    
@@ -196,8 +196,18 @@ if(scheme && searchOrderId.size() == 0){
 	schemeOrderIds=EntityUtil.getFieldListFromEntityListIterator(schemeOrderIdsList, "orderId", true);
  }
 
+indentTypeIds = [];
+if(indentTypeId && searchOrderId.size() == 0){
+	indentTypeIdsList = delegator.find("OrderAttribute", EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS, indentTypeId), null, UtilMisc.toSet("orderId"), null, null);
+	indentTypeIds=EntityUtil.getFieldListFromEntityListIterator(indentTypeIdsList, "orderId", true);
+}
+
 if(UtilValidate.isNotEmpty(schemeOrderIds) && searchOrderId.size() == 0){
 	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,schemeOrderIds));
+}
+
+if(UtilValidate.isNotEmpty(indentTypeIds) && searchOrderId.size() == 0){
+	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,indentTypeIds));
 }
 
 if(UtilValidate.isNotEmpty(searchOrderId)){
@@ -304,6 +314,17 @@ if((facilityStatusId || searchOrderId || facilityDateStart || facilityPartyId ||
 		schemeOrderIds=EntityUtil.getFieldListFromEntityListIterator(schemeOrderIdsList, "orderId", true);
 		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,schemeOrderIds));
 	 }
+	conditionList=[];
+		conditionList.add(EntityCondition.makeCondition("attrValue" ,EntityOperator.EQUALS,indentTypeId));
+		conditionList.add(EntityCondition.makeCondition("attrName" ,EntityOperator.EQUALS,"ON_BEHALF_OF"));
+		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	
+	indentTypeIds = [];
+	if(indentTypeId && searchOrderId.size() == 0){
+		indentTypeIdsList = delegator.find("OrderAttribute", cond, null, UtilMisc.toSet("orderId"), null, null);
+		indentTypeIds=EntityUtil.getFieldListFromEntityListIterator(indentTypeIdsList, "orderId", true);
+		condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN,indentTypeIds));
+	}
 	if(UtilValidate.isNotEmpty(facilityDeliveryDate)){
 		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, facilityDateStart));
 		condList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, facilityDateEnd));

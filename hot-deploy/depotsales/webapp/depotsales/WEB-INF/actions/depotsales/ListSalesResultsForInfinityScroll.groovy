@@ -540,6 +540,7 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 salesChannel = parameters.salesChannelEnumId;
 
 scheme = ""; 
+indentTypeId = "";
 tallyRefNO = "";
 paramOrderId = "";
 paramFacilityId = "";
@@ -595,6 +596,9 @@ if(parameters.indentDateSort)
 if(parameters.scheme)
 scheme = parameters.scheme;
 
+if(parameters.indentTypeId)
+indentTypeId = parameters.indentTypeId;
+
 if(parameters.salesChannel)
 salesChannel = parameters.salesChannel;
   
@@ -611,6 +615,7 @@ context.paramBranch = paramBranch;
 context.tallyRefNO = tallyRefNO;
 context.indentDateSort = indentDateSort;
 context.scheme = scheme;
+context.indentTypeId = indentTypeId;
 context.salesChannel = salesChannel;
 
 BankList = delegator.findList("Bank", null, null, null, null, false);
