@@ -809,7 +809,9 @@ public class PaymentWorker {
 				if(paymentMethodId !=null){
 					GenericValue paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
 					if(paymentMethod!=null){
-						finAccountId=(String)paymentMethod.get("finAccountId");						
+						if(UtilValidate.isNotEmpty(paymentMethod.get("finAccountId"))){
+							finAccountId=(String)paymentMethod.get("finAccountId");	
+						}
 					}
 				}
 			}
@@ -838,7 +840,7 @@ public class PaymentWorker {
 			if(UtilValidate.isEmpty(payment.getString("transactionDate"))){
 				depositWithdrawPaymentCtx.put("transactionDate",payment.getTimestamp("effectiveDate"));
 			}
-			depositWithdrawPaymentCtx.put("finAccountId",finAccountId);
+			depositWithdrawPaymentCtx.put("finAccountId",finAccountId);			
 			if(UtilValidate.isNotEmpty(depositReceiptFlag) && "Y".equals(depositReceiptFlag)){
 				Map<String, Object> depositResult = dispatcher.runSync("depositWithdrawPayments", depositWithdrawPaymentCtx);
 				if (ServiceUtil.isError(depositResult)) {
