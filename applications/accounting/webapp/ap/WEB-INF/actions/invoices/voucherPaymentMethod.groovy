@@ -257,16 +257,25 @@ if("SALES_INVOICE"==parentTypeId){
 		}
 		
 	}
+	JSONArray finalJSON = new JSONArray();
 	bankPaymentMethodList.each{ methodTypeEach->
 		JSONObject newPMethodObj = new JSONObject();
 		newPMethodObj.put("value",methodTypeEach.paymentMethodTypeId);
 		newPMethodObj.put("text", methodTypeEach.description);
-		bankMethodItemsJSON.add(newPMethodObj);
+		if("FT_PAYIN".equals(methodTypeEach.paymentMethodTypeId)){
+			finalJSON.add(newPMethodObj);
+		}else{
+			bankMethodItemsJSON.add(newPMethodObj);
+		}
+			
+		
 		if(!allPaymentMethods.contains(methodTypeEach.paymentMethodTypeId)){
 			allMethodItemsJSON.add(newPMethodObj);
 			allPaymentMethods.add(methodTypeEach.paymentMethodTypeId);
 		}
 	}
+	finalJSON.addAll(bankMethodItemsJSON);	
+	bankMethodItemsJSON=finalJSON;	
 }else if("PURCHASE_INVOICE"==parentTypeId){
 		cList = [];
 		cList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN,bankPaymentMethodIdsList));
