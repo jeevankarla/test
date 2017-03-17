@@ -981,6 +981,12 @@
 			      	 }
   		 		}
    			}
+   			
+   			if (args.cell == 3) {
+   			
+   			updateTotalIndentAmount(args.row);
+   			}
+   			
    			if (args.cell == 12 && data[args.row] != null) {
         		grid.invalidateRow(data.length);
 	      		grid.updateRow(args.row+1);

@@ -1278,61 +1278,17 @@
 						        	</#if>
 				               	</tr>	               
 				               	-->      	
+				               	
+				               <#if parameters.submitFlag?exists && parameters.submitFlag != "YES">    	
 				               	<tr>
-					       			<td>&nbsp;</td>
-					       			<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
-						          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
-										<#if suplierPartyId?exists && suplierPartyId?has_content>  
-								  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${suplierPartyId?if_exists}"/>  
-							          		<td valign='middle'>
-							            		<div><font color="green">
-							               			${suplierPartyId}  [${suplierPartyName}]  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-							            		</div>
-							          		</td>       
-							          	</#if>
-							    	<#else>
-										<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>  
-								  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${parameters.suplierPartyId?if_exists}"/>  
-							          		<td valign='middle'>
-							            		<div><font color="green">
-							               			${parameters.suplierPartyId} [${suppPartyName?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
-							            		</div>
-							          		</td>       
-							          	<#else>
-							          		<td valign='middle'>
-							          			<input type="text" name="suplierPartyId" id="suplierPartyId"  />
-							          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
-							          			<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
-							          		</td>
-							          		
-							          	</#if>
-						        	</#if>
-						        	
-						        	<#if parameters.suplierAdd?exists && parameters.suplierAdd?has_content>  
-						        	  <td width="10%" keep-together="always" align="left"> Supplier Address : </td><td width="50%"> <label  align="left" id="supplierAddress" style="color: green">${parameters.suplierAdd}</label></td>
-									<#else>
-									<#if (supplierAddress?has_content)>
-									  <td width="10%" align="left"> Supplier Address : </td><td width="50%"> <label  align="left" id="supplierAdd" style="color: green">${supplierAddress?if_exists}</label></td>
-									<#else>
-									  <td width="10%" keep-together="always" align="left"><font color="green" > Supplier Address : </font></td><td width="50%"><span  align="left" id="suplierPartyName" style="color: blue"></span> <p><label  align="left" id="supplierAddress" style="color: blue"></label><p></td>
-									  <input type="hidden" name="suplierAdd" id="suplierAdd" />  
-									</#if>
-									</#if>
-									
-				               	</tr>
-				               	<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>
-								<tr>
-								</tr>
-								<#else>
 				               		<tr>
 					       	  		<td>&nbsp;</td>
 					       			<td>&nbsp;</td>
 					       			<td align='left' valign='middle' nowrap="nowrap">
-					       				<#-->	<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' /> -->
+					       					<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' /> 
 					       			</td>
-				               		
-									</tr>
-				               	</#if>
+								</tr>
+							  </#if>
 				                 <#--	
 				               	<tr>
 				               		<td>&nbsp;</td>
