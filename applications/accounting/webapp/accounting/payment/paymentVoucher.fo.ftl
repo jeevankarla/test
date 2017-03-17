@@ -373,7 +373,7 @@
 						        						 <#if payment.comments?has_content>
 						        						 <fo:table-row> 
 						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;COMMENTS: ${payment.comments?if_exists}</fo:block>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
 						        						 	</fo:table-cell>
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
@@ -431,10 +431,11 @@
 						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;1</fo:block>
 						        							  		  </fo:table-cell>
 						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${partyName?if_exists} </fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${payment.comments?if_exists} </fo:block>
 						        							  		  </fo:table-cell>
+						        							  		  <#assign partyNamee = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId?if_exists, false)>
 						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${partyId?if_exists}</fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160;${partyNamee}[${partyId?if_exists}]</fo:block>
 						        							  		  </fo:table-cell>
 						        							  		  <#assign paymentAmount = payment.amount?if_exists>
 						        							  		  <fo:table-cell border-style="solid">
