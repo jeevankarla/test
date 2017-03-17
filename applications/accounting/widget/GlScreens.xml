@@ -1498,7 +1498,7 @@ reportType:byAccount -->
 				<platform-specific>
 					<xsl-fo>
 					<html-template
-							location="component://accounting/webapp/accounting/reports/contraAccountingTransAndFinAccountTrans.fo.ftl" />
+							location="component://accounting/webapp/accounting/reports/AccountingReportOverviewScreen.fo.ftl" />
 					</xsl-fo>
 				</platform-specific>
 			</widgets>

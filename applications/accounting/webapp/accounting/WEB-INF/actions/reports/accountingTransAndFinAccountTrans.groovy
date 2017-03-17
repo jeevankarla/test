@@ -75,6 +75,16 @@ if(finAccountId && "depositCheque"==parameters.reportTypeFlag){
 		}
 	}
 }
+
+newList = [];
+FinAccountTransList = [];
+newList = delegator.findList("FinAccountTrans",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS , accountingTransEntries.finAccountTransId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(newList)){
+	FinAccountTransList = EntityUtil.getFirst(newList);
+}
+context.put("FinAccountTransList",FinAccountTransList);
+
+
 conditionList=[];
 allAcctgTransIds=[];
 //finding on AcctgTrans for invoice,payment and finAccnTransId

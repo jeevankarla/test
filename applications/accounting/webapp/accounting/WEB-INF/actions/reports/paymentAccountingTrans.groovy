@@ -37,6 +37,30 @@ if(UtilValidate.isNotEmpty(parameters.paymentId)){
 		}
 	}
 }
+partyIdForAdd="";
+invoice = delegator.findOne("Invoice",[invoiceId : parameters.invoiceId] , false);
+if(UtilValidate.isNotEmpty(invoice)){
+	if(invoice.invoiceTypeId=="ADMIN_OUT" || invoice.invoiceTypeId=="PURCHASE_INVOICE"){
+		partyIdForAdd=invoice.partyId;
+		
+	}
+	else if(invoice.invoiceTypeId=="MIS_INCOME_IN" || invoice.invoiceTypeId=="SALES_INVOICE"){
+		partyIdForAdd=invoice.partyIdFrom;
+		
+	}
+}
+
+
+newList = [];
+FinAccountTransList = [];
+newList = delegator.findList("FinAccountTrans",EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS , accountingTransEntries.finAccountTransId)  , null, null, null, false );
+if(UtilValidate.isNotEmpty(newList)){
+	FinAccountTransList = EntityUtil.getFirst(newList);
+}
+context.put("FinAccountTransList",FinAccountTransList);
+
+
+
 paymentDetails = delegator.findOne("Payment",[paymentId : parameters.paymentId] , false);
 if (UtilAccounting.isReceipt(paymentDetails)) {
 	partyIdForAdd=paymentDetails.partyIdTo;
