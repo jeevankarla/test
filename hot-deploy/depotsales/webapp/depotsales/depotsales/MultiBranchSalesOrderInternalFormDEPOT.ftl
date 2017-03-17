@@ -973,6 +973,9 @@
 						      		 	
 						      		 	var row = args.row;
 						      		 	
+						      		 	if(qut>0)
+						      		 	updateTotalIndentAmount(args.row);
+						      		 	
 						      		 	/*
 										getProductTaxDetails("VAT_SALE", $("#branchGeoId").val(), prod, row, amount, $("#schemeCategory").val(), $("#orderTaxType").val());
 				   	                     */
