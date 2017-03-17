@@ -132,6 +132,12 @@
         <field name="orderNo" title="sequenceId" position="2"><text-find/></field>
         <field title="Indent From Date" name="estimatedDeliveryDate"><date-time/></field>
         <field title="Indent Thru Date" name="estimatedDeliveryThruDate" position="2"><date-time/></field>
+        <field name="indentTypeId" title="Indent Type" position="3"><text-find/>
+	        	<drop-down allow-empty="true">
+	        		<option key="N" description="DIRECT"/>
+	        		<option key="Y" description="ON_BEHALF_OF"/>
+	        	</drop-down>
+        </field>
         <field title="Indent Entry From Date" name="indentEntryFromDate"><date-time/></field>
         <field title="Indent Entry Thru Date" name="indentEntryThruDate" position="2"><date-time/></field>
           
