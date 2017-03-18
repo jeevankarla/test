@@ -260,6 +260,7 @@
         </field>
         <field name="orderId" title="${uiLabelMap.IndentId}"><text/></field>
         <field name="orderNo" title="sequenceId"><text-find/></field>
+        <field name="sequence" title="Invoice sequenceId"><text-find/></field>
         <field title="${uiLabelMap.IndentDate}" name="estimatedDeliveryDate"><date-time/></field>
         <field name="shipmentId" title="ShipmentId"><text/></field>
         
