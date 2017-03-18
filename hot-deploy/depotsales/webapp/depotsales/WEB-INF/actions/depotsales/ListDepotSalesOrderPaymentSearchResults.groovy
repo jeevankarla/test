@@ -141,15 +141,15 @@ if(shipmentId){
    searchOrderIdList.add(searchOrderId);
 
 }
-
-invoiceidslist = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceSequence", EntityOperator.EQUALS , sequence)  , UtilMisc.toSet("invoiceId"), null, null, false );
-invoiceids = EntityUtil.getFieldListFromEntityList(invoiceidslist, "invoiceId", true);
-
-orderIdlist = delegator.findList("OrderItemBilling",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceids)  , UtilMisc.toSet("orderId"), null, null, false );
-orderIds = EntityUtil.getFieldListFromEntityList(orderIdlist, "orderId", true);
-
-searchOrderIdList.add(orderIds);
-
+if(sequence){
+	invoiceidslist = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceSequence", EntityOperator.EQUALS , sequence)  , UtilMisc.toSet("invoiceId"), null, null, false );
+	invoiceids = EntityUtil.getFieldListFromEntityList(invoiceidslist, "invoiceId", true);
+	
+	orderIdlist = delegator.findList("OrderItemBilling",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceids)  , UtilMisc.toSet("orderId"), null, null, false );
+	orderIds = EntityUtil.getFieldListFromEntityList(orderIdlist, "orderId", true);
+	
+	searchOrderIdList.add(orderIds);
+}
 condList = [];
 if(UtilValidate.isNotEmpty(searchOrderIdList)){
 	condList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.IN, searchOrderIdList));
