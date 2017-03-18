@@ -2797,7 +2797,7 @@
      	<security https="true" auth="true"/>
     	<response name="success" type="view" value="SupplierMastersCSV"/>
     </request-map>
-    <request-map uri="indentHeadReport.xls">
+    <request-map uri="indentHeadReport.csv">
      	<security https="true" auth="true"/>
     	<response name="success" type="view" value="indentHeadReportCSV"/>
     </request-map>
