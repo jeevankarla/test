@@ -616,11 +616,11 @@
 						<parameter param-name="menuName" value="DyesIndent"/>
 				   </link>  
 				</menu-item>
-				<menu-item name="ChemicalIndent" title="${uiLabelMap.ChemicalIndent}">
+			<!-- 	<menu-item name="ChemicalIndent" title="${uiLabelMap.ChemicalIndent}">
 				       <link target="ChemicalSalesOrder">
 						<parameter param-name="menuName" value="ChemicalIndent"/>
 				   </link>  
-				</menu-item>
+				</menu-item> -->
 				<!-- <menu-item name="FebricIndent" title="Fabric Indent">
 				    <link target="FebricBranchSalesOrder">
 						<parameter param-name="menuName" value="FebricIndent"/>

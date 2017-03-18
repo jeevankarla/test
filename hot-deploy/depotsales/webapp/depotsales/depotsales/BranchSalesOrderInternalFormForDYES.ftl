@@ -651,9 +651,9 @@
 			{id:"cProductName", name:"${uiLabelMap.Product}", field:"cProductName", width:350, minWidth:350, cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains" ,editor: AutoCompleteEditor, validator: productValidator, sortable:false ,toolTip:""},
 			{id:"remarks", name:"Specifications", field:"remarks", width:150, minWidth:150, sortable:false, cssClass:"cell-title", focusable :true,editor:TextCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
-			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},
-			{id:"unitPrice", name:"${uiLabelMap.UnitPrice} (Bundle)", field:"unitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs"},
+			<#--{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},-->
+			{id:"package", name:"Packaging", field:"Packaging", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"quantity", name:"Wt.(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
 			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice} (KGs)", field:"KgunitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#if scheme == "General">
@@ -808,120 +808,27 @@
 			var bundleWeight = parseFloat(data[args.row]["bundleWeight"]);	
 			var price = parseFloat(data[args.row]["unitPrice"]);
 			var amt = parseFloat(data[args.row]["amount"]);
+			var baleQuantity = parseFloat(data[args.row]["baleQuantity"]);
+			
+			var packaging = parseFloat(data[args.row]["Packaging"]);
 
 			var roundedAmount =calculateBundlePrice(balQuty,uom,price);
-			if(args.cell != 7){
-		  		if(uom!="KGs"){
-		   			kgUnitPrice=price/bundleWeight;
-		  		}
-				else{
-				    kgUnitPrice=price;
-				}
-		 	}
-
-			if (args.cell == 2) {
-			  	if(isNaN(roundedAmount)){
-					roundedAmount = 0;
-			  	}
-			  	if(isNaN(kgUnitPrice)){
-					kgUnitPrice = 0;
-			  	}	
-			  	quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
-			  	data[args.row]["quantity"]=quantity;
-			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
-			  	data[args.row]["amount"] = roundedAmount;
-			  	data[args.row]["totPayable"] = roundedAmount;
-			    data[args.row]["unitPricePur"] = kgUnitPrice;
-			  	
-			  	
-			}
-			else if(args.cell == 3){
-				quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
-				
-				data[args.row]["KgunitPrice"] = kgUnitPrice;
-				data[args.row]["unitPricePur"] = kgUnitPrice;
-				data[args.row]["quantity"] = quantity;
-				data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-				data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
 			
-			}
-			else if(args.cell == 4){
-			  	quantity=calculateBundleWeight(balQuty,uom,bundleWeight);
-			  	data[args.row]["quantity"] = quantity;
-			 	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
-			}
-			else if(args.cell == 5){
-			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
-			  	data[args.row]["unitPricePur"] = kgUnitPrice;
-			  	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
-			  	data[args.row]["unitPricePur"] = kgUnitPrice;
-			}
-			else if(args.cell == 6){
-			  	baleQty=calculateKgs(quantity,uom,bundleWeight);
-			  	data[args.row]["baleQuantity"]=baleQty;
-			  	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
-			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
-			}
-			else if(args.cell == 7){
-			  	var upb=0;
-			  	if(uom == "Bale" ||uom == "Half-Bale" || uom == "Bundle"){
-					upb=kgUnitPrice*bundleWeight;
-				}
-			  	else if(uom == "KGs" ){
-					upb=kgUnitPrice;
-			 	}
-			  	var roundedAmount=calculateBundlePrice(balQuty,uom,upb);
-			  	data[args.row]["amount"] = roundedAmount;
-			  	data[args.row]["unitPrice"] = upb;
-			  	
-			}
-			else if(args.cell == 8){
-		    	var upb=0;
-				var bundle=0;
-				if(uom == "Bale"){
-					bundle=balQuty*40;
-				}
-				if(uom == "Half-Bale"){
-					bundle=balQuty*20;
-				}
-				if(uom == "Bundle" || uom == "KGs" ){
-					bundle=balQuty;
-				}
-				upb=amt/bundle;
-				kgprice=amt/quantity;
-				data[args.row]["KgunitPrice"] = kgprice;
-				data[args.row]["unitPrice"] = upb;
-				data[args.row]["unitPricePur"] = kgprice;
-			}
-			if(args.cell != 1){
-				addServiceCharge(args.row);
-					
-				updateOtherCharges(args.row);
-				updateSaleBaseAmount(args.row);
-				updateSubsidyAmt(args.row);	
-						
-				// Un comment this if we want to include service charge to taxes
-								
-				var saleBaseAmt = roundedAmount;
-				if(data[args.row]["saleBaseAmt"]){
-					saleBaseAmt = data[args.row]["saleBaseAmt"];
-				}
-					
-				var taxAmt = data[args.row]["taxAmt"];
-				
-				if(taxAmt != undefined && taxAmt != 0){
-					updateTax(args.row);
-				}
-				else{
-					getProductPurchaseTaxDetails($("#supplierGeoId").val(), prod, args.row, saleBaseAmt, $("#purchaseTaxType").val());
-					getProductTaxDetails($("#branchGeoId").val(), prod, args.row, saleBaseAmt, $("#saleTaxType").val());
-				}
-				updatePayableAmount(args.row);
-				updateTotalIndentAmount();
-				updateCurrentQuota(args.row);
-			} 
+
+            data[args.row]['quantity'] = baleQuantity;
+			data[args.row]['KgunitPrice'] = packaging*baleQuantity;
+			data[args.row]['unitPricePur'] = packaging*baleQuantity;
+			
+			var kgUnitPrice = data[args.row]['KgunitPrice'];
+			var quantity = parseFloat(data[args.row]["quantity"]);
+							
+			data[args.row]['amount'] = kgUnitPrice*quantity;				
+							
+			addServiceCharge(args.row);				
+			updatePayableAmount(args.row);
+			updateTotalIndentAmount();
+			updateCurrentQuota(args.row);
+							
 	 	});
 		
 		grid.onActiveCellChanged.subscribe(function(e,args) {
@@ -1569,6 +1476,9 @@
 		if(isNaN(row["quantity"])){
 			row["quantity"] = 0;
 		 }
+		 if(isNaN(row["Packaging"])){
+			row["Packaging"] = 0;
+		 }
 		 if(isNaN(row["amount"])){
 			row["amount"] = 0;
 		 }
@@ -1578,8 +1488,14 @@
 		 if(isNaN(row["taxAmt"])){
 			row["taxAmt"] = 0;
 		 }
+		 if(isNaN(row["OTH_CHARGES_AMT"])){
+			row["OTH_CHARGES_AMT"] = 0;
+		 }
 		 if(isNaN(row["SERVICE_CHARGE_AMT"])){
 			row["SERVICE_CHARGE_AMT"] = 0;
+		 }
+		 if(isNaN(row["SUBSIDY"])){
+			row["SUBSIDY"] = 0;
 		 }
 	 }
 </script>			
