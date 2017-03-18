@@ -5467,7 +5467,7 @@ public class InvoiceServices {
             	 Debug.log("invoiceId================="+invoiceId);
             	 invoiceApplCtx.put("amountApplied", amountAppliedRunningTotal);
                  if(UtilValidate.isNotEmpty(invoiceAmountMap)){
-                	 Debug.log("invAmountMap================="+invoiceAmountMap.get(invoiceId));
+                	 Debug.log("ivAmount================="+invoiceAmountMap.get(invoiceId));
                 	 invoiceApplCtx.put("amountApplied", (BigDecimal) invoiceAmountMap.get(invoiceId));
             	 }
              	Map<String, Object> invoiceApplResult = dispatcher.runSync("createPaymentApplication",invoiceApplCtx);
@@ -5476,11 +5476,11 @@ public class InvoiceServices {
              		 Debug.logError(invoiceApplResult.toString(), module);
                      return ServiceUtil.returnError(null, null, null, invoiceApplResult);
                  }
-             	amountAppliedRunningTotal = amountAppliedRunningTotal.subtract(outstandingAmount);
+             	/*amountAppliedRunningTotal = amountAppliedRunningTotal.subtract(outstandingAmount);
              	if( amountAppliedRunningTotal.compareTo(BigDecimal.ZERO) <= 0){
              		break;
              		
-             	}
+             	}*/
              }catch(GenericServiceException e){
              	Debug.logError(e, e.toString(), module);
                  return ServiceUtil.returnError(e.toString());
