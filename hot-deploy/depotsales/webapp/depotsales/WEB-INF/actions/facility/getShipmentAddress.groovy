@@ -35,7 +35,7 @@ partyId = parameters.partyId;
 
 contactMechId = parameters.contactMechId;
 
-Debug.log("contactMechId==============="+contactMechId);
+//Debug.log("contactMechId==============="+contactMechId);
 
 
 
@@ -69,13 +69,15 @@ if(listAddress){
 	else
 	  tempMap.put("address2","");
 	  
-	  if(listAddress.country)
-	  tempMap.put("country",listAddress.country);
+	  if(listAddress.countryGeoName)
+	  //tempMap.put("country",listAddress.country);
+	  tempMap.put("country",listAddress.countryGeoName);
 	else
 	  tempMap.put("country","");
 	  
-	  if(listAddress.state)
-	  tempMap.put("state",listAddress.state);
+	  if(listAddress.stateGeoName)
+	  //tempMap.put("state",listAddress.state);
+	  tempMap.put("state",listAddress.stateGeoName);
 	else
 	  tempMap.put("state","TamilNadu");
 	  
@@ -93,7 +95,7 @@ if(listAddress){
 	  
 }
 
-Debug.log("tempMap==============="+tempMap);
+//Debug.log("tempMap==============="+tempMap);
 
 
 request.setAttribute("OrderAddress", tempMap);
