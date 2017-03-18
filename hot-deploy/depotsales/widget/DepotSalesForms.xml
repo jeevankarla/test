@@ -354,6 +354,7 @@
         		<option key="DOCUMENTS_RECEIVED" description="Documents Received" ></option>
         		<option key="DOCUMENTS_ENDORSED" description="Documents Endorsed" > </option>
         		<option key="GOODS_RECEIVED" description="Goods Received"  ></option>
+        		<option key="SHIPMENT_CANCELLED" description="Cancelled" > </option>
         	</drop-down>
         </field>
         <field name="roleTypeId"><hidden value="BILL_TO_CUSTOMER"/></field>
