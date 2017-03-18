@@ -4354,6 +4354,22 @@
          <field name="DurBWSoAndPo" title="__"><display/></field>
          <field name="DurBwSoAndShip" title="__"><display/></field>
      </form>
+     
+     
+     <form name="billWisePurchaseReportCSV" type="list" list-name="finalList" view-size="99999">
+         <field name="invoiceId" title="_"><display/></field>
+         <field name="invoiceSeqId" title="_"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+          <field name="shipmentId" title="_"><display/></field>
+         <field name="partyIdFrom" title="_"><display/></field>
+         <field name="partyIdTo" title="_"><display/></field>
+         <field name="quantity" title="_"><display/></field>
+         <field name="purTax" title="_"><display/></field>
+         <field name="adj" title="_"><display/></field>
+         <field name="totalItemValue" title="_"><display/></field>
+     </form>
+     
+     
      <form name="billWiseSalesReportCSV" type="list" list-name="finalList" view-size="99999">
          <field name="invoiceDate" title="_"><display/></field>
          <field name="billno" title="_"><display/></field>
