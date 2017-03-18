@@ -444,8 +444,12 @@ BranchList=[];
 		orderAssocList = delegator.findList("OrderAssoc", custCond1, null, null, null, false);
 		if(UtilValidate.isNotEmpty(orderAssocList)){
 			orderAssoc = EntityUtil.getFirst(orderAssocList);
-			poId=orderAssoc.get("orderId");
-*/			custCondList.clear();
+			poId=orderAssoc.get("orderId");*/	
+			resultCtx = dispatcher.runSync("getAssociateOrder",UtilMisc.toMap("userLogin",userLogin, "orderId", eachHeader.orderId));
+			if(resultCtx.orderId){
+				poId=resultCtx.orderId;	
+			}
+			custCondList.clear();
 			custCondList.add(EntityCondition.makeCondition("orderId",  EntityOperator.EQUALS, orderId));
 			custCond2 = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
 			orderItemList = delegator.findList("OrderItem", custCond2, null, null, null, false);
@@ -485,8 +489,12 @@ BranchList=[];
 					
 				}
 				
-				orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
-				if(UtilValidate.isNotEmpty(orderItemList)){
+				//orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
+				custCondList.clear();
+				custCondList.add(EntityCondition.makeCondition("orderId",  EntityOperator.EQUALS, poId));
+				custCond2 = EntityCondition.makeCondition(custCondList, EntityOperator.AND);
+				orderItemList2 = delegator.findList("OrderItem", custCond2, null, null, null, false);
+				if(UtilValidate.isNotEmpty(orderItemList2)){
 					for(orderItem in orderItemList2){
 						poQty=poQty+orderItem.quantity;
 						totalPoQty=totalPoQty+orderItem.quantity;
