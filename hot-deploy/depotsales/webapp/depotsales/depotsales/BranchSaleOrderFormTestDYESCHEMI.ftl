@@ -844,14 +844,14 @@
 			 return false; 
 		}
 		
-		function autoCompletePartyId(){
+		function autoCompletePartyIdDyes(){
 			var productStoreId = $("#productStoreId").val();
 		      $("#partyId").autocomplete({ 
 		      
 		      		
 		      		source: function( request, response ) {
 	        			$.ajax({
-	          					url: "LookupBranchCustomers",
+	          					url: "LookupBranchCustomersDyes",
 	          					dataType: "html",
 	          					data: {
 	            					ajaxLookup: "Y",
@@ -1144,7 +1144,7 @@ function fillPartyQuota(partyId){
 							          		</td>       
 							       		<#else>               
 							          		<td valign='middle' colspan="6">
-							          			<input type='text' id='partyId' name='partyId' onfocus='javascript:autoCompletePartyId();' size='13'/><span class="tooltip" id='partyTooltip'></span>
+							          			<input type='text' id='partyId' name='partyId' onfocus='javascript:autoCompletePartyIdDyes();' size='13'/><span class="tooltip" id='partyTooltip'></span>
 							          		</td>
 							          	</#if>
 						        	</#if>
