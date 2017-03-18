@@ -69,7 +69,7 @@ var paramBranch = $("#paramBranch").val();
 var indentDateSort = $("#indentDateSort").val();
 var tallyRefNO = $("#tallyRefNO").val();
 var scheme = $("#scheme").val();
-ar indentTypeId = $("#indentTypeId").val();
+var indentTypeId = $("#indentTypeId").val();
 var salesChannel = $("#salesChannel").val();
 
 
