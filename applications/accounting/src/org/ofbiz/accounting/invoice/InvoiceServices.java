@@ -5354,8 +5354,9 @@ public class InvoiceServices {
         String comments=(String) context.get("comments");
         Timestamp instrumentDate = (Timestamp) context.get("instrumentDate");
         List invoiceIds =(List) context.get("invoices");
+        Debug.log("invoiceIds========="+invoiceIds);
         Map invoiceAmountMap = (Map) context.get("invoiceAmountMap");
-        
+        Debug.log("invoiceAmountMap========="+invoiceAmountMap);
         String paymentId = "";
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         try {       	
@@ -5416,6 +5417,7 @@ public class InvoiceServices {
             Debug.logError(e, e.toString(), module);
             return ServiceUtil.returnError(e.toString());
         }
+        Debug.log("paymentAmount============="+paymentAmount);
         BigDecimal amountAppliedRunningTotal = paymentAmount;
         for( int i=0; i< invoiceIds.size(); i++){
         	String invoiceId = (String)invoiceIds.get(i);
@@ -5462,8 +5464,10 @@ public class InvoiceServices {
             		 Debug.logError(result.toString(), module);
                      return ServiceUtil.returnError(null, null, null, result);
                  }
+            	 Debug.log("invoiceId================="+invoiceId);
             	 invoiceApplCtx.put("amountApplied", amountAppliedRunningTotal);
                  if(UtilValidate.isNotEmpty(invoiceAmountMap)){
+                	 Debug.log("invAmountMap================="+invoiceAmountMap.get(invoiceId));
                 	 invoiceApplCtx.put("amountApplied", (BigDecimal) invoiceAmountMap.get(invoiceId));
             	 }
              	Map<String, Object> invoiceApplResult = dispatcher.runSync("createPaymentApplication",invoiceApplCtx);
