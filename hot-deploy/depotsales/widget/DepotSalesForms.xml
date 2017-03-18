@@ -2437,7 +2437,7 @@
         </field>
         
         
-       <!--   <field name="SaleOnbeHalf" title="Sale Indent OnbeHalf" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
+         <field name="SaleOnbeHalf" title="Sale Indent OnbeHalf" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
 		<hyperlink target="DepotMultiBranchSalesOrder" description="Sale Onbehalf Indent">
 			<parameter param-name="productId"/>
 			 <parameter param-name="productName"/>
@@ -2453,7 +2453,7 @@
 			   <parameter param-name="branchName"/>
 			   <parameter param-name="submitFlag" value="NO"/>
 			 </hyperlink>
-        </field> -->
+        </field> 
          
         
      <!--     <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CREATED&quot;)" >
