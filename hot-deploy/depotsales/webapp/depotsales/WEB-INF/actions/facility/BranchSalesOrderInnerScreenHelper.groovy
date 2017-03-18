@@ -244,7 +244,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		
 		if(parameters.screenFlag == "DyesIndent" ){
 		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.EQUALS,"DYES"));
+		conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.IN,["DYES","CHEMICALS"]));
 		condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 			
 		productIdsList = EntityUtil.getFieldListFromEntityList(delegator.findList("ProductCategoryAndMember",condition, UtilMisc.toSet("productId"), null, null, false), "productId", true);
