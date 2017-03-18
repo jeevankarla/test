@@ -526,12 +526,12 @@ under the License.
                 <parameter param-name="organizationPartyId" value="Company"/>
             </hyperlink>
         </field>
-        <field name="openingD" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="openingC" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="D" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="C" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="closingD" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="closingC" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="openingD" widget-style="tabletextright"><display/></field>
+        <field name="openingC" widget-style="tabletextright"><display/></field>
+        <field name="D" title="${uiLabelMap.AccountingDebitFlag}" widget-style="tabletextright"><display/></field>
+        <field name="C" title="${uiLabelMap.AccountingCreditFlag}" widget-style="tabletextright"><display/></field>
+        <field name="closingD" widget-style="tabletextright"><display/></field>
+        <field name="closingC" widget-style="tabletextright"><display/></field>
     </form>
     <form name="UnpostedTransactionTotalList" type="list" list-name="unpostedTransactionTotals"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" extends="PostedTransactionTotalList">
