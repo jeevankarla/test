@@ -640,6 +640,7 @@ public class PaymentWorker {
 	  		  return "error";
 	  	  }
 	  	  String paymentId = "";
+	  	  String paymentMethodTypeId = "";
 	  	  String inFavourOf = "";
 	  	  String paymentMethodId = "";
 	  	  String paymentType = "";
@@ -688,6 +689,8 @@ public class PaymentWorker {
 			  	partyIdTo = (String) paramMap.get("fromPartyId");
 			  	partyIdFrom = (String) paramMap.get("partyId");
 			  	paymentMethodId = (String) paramMap.get("paymentMethodId");
+			  	paymentMethodTypeId=(String) paramMap.get("paymentMethodTypeId");
+			  	Debug.log("paymentMethodTypeId=========="+paymentMethodTypeId);
 			  	finAccountId = (String) paramMap.get("finAccountId");
 			  	instrumentDateStr = (String) paramMap.get("instrumentDate");
 			  	paymentDateStr = (String) paramMap.get("paymentDate");
@@ -722,6 +725,7 @@ public class PaymentWorker {
 		  			if(UtilValidate.isNotEmpty(totalAmount) && totalAmount.compareTo(BigDecimal.ZERO) > 0){
 		  				Map<String, Object> paymentCtx = UtilMisc.<String, Object>toMap("paymentTypeId", paymentType);
 			  	        paymentCtx.put("paymentMethodId", paymentMethodId);//from AP mandatory
+			  	        paymentCtx.put("paymentMethodTypeId", paymentMethodTypeId);
 			  	        paymentCtx.put("organizationPartyId", partyIdTo);
 			            paymentCtx.put("partyId", partyIdFrom);
 			  	        if (!UtilValidate.isEmpty(paymentRefNum) ) {
