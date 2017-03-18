@@ -312,7 +312,7 @@ under the License.
 						        						 <#if paymentListReport.comments?has_content>
 						        						 <fo:table-row> 
 						        						 	<fo:table-cell>
-						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;COMMENTS: ${paymentListReport.comments?if_exists}</fo:block>
+						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
 						        						 	</fo:table-cell>
 						        						 	<fo:table-cell>
 						        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
@@ -371,10 +371,10 @@ under the License.
 						        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always">&#160;${sno}</fo:block>
 						        							  		  </fo:table-cell>
 						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${partyName?if_exists} </fo:block>
-						        							  		  </fo:table-cell>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${paymentListReport.comments?if_exists} </fo:block>
+						        							  		  </fo:table-cell> <#assign partyNamee = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId?if_exists, false)>
 						        							  		  <fo:table-cell border-style="solid">
-						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160; ${partyId?if_exists}</fo:block>
+						        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160;${partyNamee}[${partyId?if_exists}]</fo:block>
 						        							  		  </fo:table-cell>
 						        							  		  <#assign paymentAmount = paymentListReport.amount?if_exists>
 						        							  		  <fo:table-cell border-style="solid">
