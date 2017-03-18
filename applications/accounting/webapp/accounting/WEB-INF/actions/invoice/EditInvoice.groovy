@@ -348,8 +348,10 @@ if (invoice) {
    
 	Details=delegator.findList("Shipment",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , invoice.shipmentId)  , null, null, null, false );
 	supplierInvoiceIdDetails = EntityUtil.getFirst(Details);
+	if(supplierInvoiceIdDetails){
 	supplierInvoiceid = supplierInvoiceIdDetails.supplierInvoiceId;
 	context.supplierInvoiceid = supplierInvoiceid;
+	}
 }
 
 context.paymentId = paymentId;
