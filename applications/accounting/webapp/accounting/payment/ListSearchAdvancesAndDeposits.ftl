@@ -184,8 +184,10 @@ function setVoidPaymentParameters(currentPayment){
               </td>
               <td>
               	<input type="hidden" name="paymentMethodTypeId" id="paymentMethodTypeId" value="${payment.paymentMethodTypeId?if_exists}"> 
+                <#if payment.paymentMethodTypeId?has_content>
                 <#assign paymentMethodType = delegator.findOne("PaymentMethodType", {"paymentMethodTypeId" : payment.paymentMethodTypeId}, true) />
                 ${paymentMethodType.description?default(payment.paymentMethodTypeId)}
+               </#if>
               </td>              
               <td>
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : payment.statusId}, true) />
