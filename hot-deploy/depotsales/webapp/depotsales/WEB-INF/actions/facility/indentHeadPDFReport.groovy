@@ -218,7 +218,7 @@ OrderHeader = delegator.findList("OrderHeader",EntityCondition.makeCondition("or
 
 salesAndPurchaseList = [];
 
-
+/*
 stylesMap=[:];
 stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD");
 if(branchName){	
@@ -299,7 +299,7 @@ headingMap.put("freight","Freight Amount");
 headingMap.put("shipmentId","Shipment Id");
 headingMap.put("actualSaleInvoiceId","Internal Sales Invoice Id");
 headingMap.put("actualPurInvoiceId","Internal Purchase Invoice Id");
-salesAndPurchaseList.add(headingMap);
+salesAndPurchaseList.add(headingMap);*/
 
 purchaseWiseDetails = [];
 if(invoice){
