@@ -690,7 +690,7 @@ public class PaymentWorker {
 			  	partyIdFrom = (String) paramMap.get("partyId");
 			  	paymentMethodId = (String) paramMap.get("paymentMethodId");
 			  	paymentMethodTypeId=(String) paramMap.get("paymentMethodTypeId");
-			  	Debug.log("paymentMethodTypeId=========="+paymentMethodTypeId);
+			  	Debug.log("invoiceAmountMap======frm===="+invoiceAmountMap);
 			  	finAccountId = (String) paramMap.get("finAccountId");
 			  	instrumentDateStr = (String) paramMap.get("instrumentDate");
 			  	paymentDateStr = (String) paramMap.get("paymentDate");
