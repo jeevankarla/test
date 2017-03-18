@@ -3034,6 +3034,9 @@ under the License.
     <request-map uri="LookupCommEvent"><security auth="true" https="true"/><response name="success" type="view" value="LookupCommEvent"/></request-map>
     <request-map uri="LookupEmpanelledPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupEmpanelledPartyName"/></request-map>
     <request-map uri="LookupBranchCustomers" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupBranchCustomers"/></request-map>
+    
+     <request-map uri="LookupBranchCustomersDyes" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupBranchCustomersDyes"/></request-map>
+    
     <request-map uri="LookupIndividualPartyName" track-serverhit="false" track-visit="false"><security auth="true" https="true"/><response name="success" type="view" value="LookupIndividualPartyName"/></request-map>
     <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
     <request-map uri="LookupSupplierProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupSupplierProduct"/></request-map>
@@ -3274,6 +3277,7 @@ under the License.
     <view-map name="LookupCommEvent" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCommEvent"/>
     <view-map name="LookupEmpanelledPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupEmpanelledPartyName"/>
     <view-map name="LookupBranchCustomers" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupBranchCustomers"/>
+    <view-map name="LookupBranchCustomersDyes" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupBranchCustomersDyes"/>
     
     <view-map name="LookupIndividualPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupIndividualPartyName"/>
 
