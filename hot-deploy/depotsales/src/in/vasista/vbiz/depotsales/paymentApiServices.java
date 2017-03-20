@@ -415,6 +415,8 @@ public class paymentApiServices {
 		    	
 		    	paymentParams.put("partyIdTo", roId);
 		    	
+		    	Debug.log("paymentParams========fff==================="+paymentParams);
+		    	
 		    	Map<String, Object> createPayment = FastMap.newInstance();
 				try{
 					createPayment = dispatcher.runSync("createPayment", paymentParams);
@@ -521,8 +523,8 @@ public class paymentApiServices {
         if(paymentChannel.equalsIgnoreCase("airtel"))
         {   
         	String rosList[] = {"INT5","INT28","INT26","INT4","INT6","INT3","INT1","INT47","INT2"};
-        	String midList[] = {"45592380","45592894","45590237","45588195","45590642","45591183","25649255","45591507","45590503"};
-        	String saltList[] = {"dc0csdj3f","dcvfs8j32","cd7cd93l2","gy67gv3ks","x65dnjd9","cd8jw5gd","34602fa0","sd8cd3d3","a4dwj7kd"};
+        	String midList[] = {"45592380","45592894","45590237","45588195","45590642","45591183","45588871","45591507","45590503"};
+        	String saltList[] = {"dc0csdj3f","dcvfs8j32","cd7cd93l2","gy67gv3ks","x65dnjd9","cd8jw5gd","q68cm95d","sd8cd3d3","a4dwj7kd"};
         	
         	String userLoginParty = null;
             if (userLogin != null && userLogin.get("partyId") != null) {
