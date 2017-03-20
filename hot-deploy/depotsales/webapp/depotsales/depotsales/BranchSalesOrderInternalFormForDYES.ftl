@@ -656,9 +656,10 @@
 			{id:"package", name:"Packaging", field:"Packaging", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"quantity", name:"Wt.(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
 			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice} (KGs)", field:"KgunitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			<#--
 			<#if scheme == "General">
 			{id:"unitPricePur", name:"UnitPrice(PUR)", field:"unitPricePur", width:100, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
-			</#if>
+			</#if> -->
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"Amt.(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor},	
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
@@ -814,10 +815,29 @@
 
 			var roundedAmount =calculateBundlePrice(balQuty,uom,price);
 			
+			var productId = data[args.row]['cProductId'];
+			
 
             data[args.row]['quantity'] = baleQuantity;
-			data[args.row]['KgunitPrice'] = packaging*baleQuantity;
-			data[args.row]['unitPricePur'] = packaging*baleQuantity;
+			//data[args.row]['KgunitPrice'] = packaging*baleQuantity;
+			//data[args.row]['unitPricePur'] = packaging*baleQuantity;
+			
+			 var lastPrice = 0;
+		    $.ajax({
+	        	type: "POST",
+	         	url: "getProductPrice",
+	       	 	data: {productId: productId, fromDc: "DC" },
+	       	 	dataType: 'json',
+	       	 	async: true,
+	    	 	success: function(result) {
+	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
+	   	  				alert(result["_ERROR_MESSAGE_"]);
+	      			}else{
+	      		     lastPrice =result["lastPrice"];
+	      		}
+	      		}
+	    	});
+		
 			
 			var kgUnitPrice = data[args.row]['KgunitPrice'];
 			var quantity = parseFloat(data[args.row]["quantity"]);

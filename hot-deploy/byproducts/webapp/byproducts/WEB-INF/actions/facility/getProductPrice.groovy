@@ -34,11 +34,7 @@ productId = parameters.productId;
 
 facilityId = parameters.facilityId;
 
-Debug.log("supplierId=============="+supplierId);
-
-Debug.log("productId=============="+productId);
-
-Debug.log("facilityId=============="+facilityId);
+fromDc = parameters.fromDc;
 
 
 daystart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
@@ -59,9 +55,29 @@ if(supplierId && productId && facilityId){
 	 
 	 
 	}catch(Exception e){}
+	
+	
+	request.setAttribute("lastPrice", lastPrice);
+	
+	return "sucess";
 
 }
+if(productId && fromDc == "DC"){
+	inputCtx = [:];
+	inputCtx.put("userLogin",userLogin);
+	inputCtx.put("productId", productId);
+	try{
+		resultCtx = dispatcher.runSync("getProductPrice", inputCtx);
+		
+		lastPrice = resultCtx.productPrice;
+		
+		
+	   }catch(Exception e){}
+	   
+	   request.setAttribute("lastPrice", lastPrice);
+	   
+	   return "sucess";
+   
+	
+}
 
-request.setAttribute("lastPrice", lastPrice);
-
-return "sucess";
