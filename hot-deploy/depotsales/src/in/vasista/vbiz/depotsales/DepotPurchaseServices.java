@@ -11573,6 +11573,13 @@ public class DepotPurchaseServices{
 		
 		//Timestamp nowTimeStamp = 
 		  //String invoiceId = null;
+		try{
+		  GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", orderId), false);
+
+		  shipmentId = (String) OrderHeader.getString("shipmentId");
+		} catch (Exception e) {
+            Debug.logError(e, "Problem calling the OrderHeader Entity", module);
+        }
 		  Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", invoiceDate, "userLogin", userLogin, "ignoreAdjustmentsList", ignoreAdjustmentsList, "itemAdjMap", itemAdjMap);
           serviceContext.put("shipmentId",shipmentId);
           try {

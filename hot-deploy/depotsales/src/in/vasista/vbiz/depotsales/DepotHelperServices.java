@@ -3747,6 +3747,41 @@ public static Map<String,Object> getSupplierProductPrice(DispatchContext dctx, M
    return result;
 }
 
+public static Map<String,Object> getProductPrice(DispatchContext dctx, Map<String, ? extends Object> context) {
+	Delegator delegator = dctx.getDelegator();
+    LocalDispatcher dispatcher = dctx.getDispatcher();   
+    Map<String, Object> result = new HashMap<String, Object>();
+    GenericValue userLogin = (GenericValue) context.get("userLogin");
+    Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
+    String productId = (String) context.get("productId");
+    String partyId = (String) context.get("partyId");
+    String facilityId = (String) context.get("facilityId");
+    BigDecimal supplierProdPrice =BigDecimal.ZERO;
+    try {
+    	List condList = FastList.newInstance();
+    	condList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+    	condList.add(EntityCondition.makeCondition("productPriceTypeId", EntityOperator.EQUALS, "DEFAULT_PRICE"));
+    	condList.add(EntityCondition.makeCondition("productPricePurposeId", EntityOperator.EQUALS, "COMPONENT_PRICE"));
+    	condList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+    	condList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+        List<GenericValue> supplierProductList = delegator.findList("ProductPrice", EntityCondition.makeCondition(condList, EntityOperator.AND), UtilMisc.toSet("price"), null, null, false);
+        if(UtilValidate.isNotEmpty(supplierProductList)){
+        	//result = ServiceUtil.returnError("Supplier Product price Mapping not found.....  ");
+        	//return result;
+        	 GenericValue supplierProduct = EntityUtil.getFirst(supplierProductList);
+             supplierProdPrice=supplierProduct.getBigDecimal("price");
+        }
+       
+        
+    } catch (GenericEntityException e) {
+        Debug.logError(e, module);
+        result = ServiceUtil.returnError("Unable to fetch Data from Supplier Product Entity.....  ");
+        return result;
+    }
+   result.put("productPrice",supplierProdPrice);
+   return result;
+}
+
 
 
 

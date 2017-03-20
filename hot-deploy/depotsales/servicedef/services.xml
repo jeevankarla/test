@@ -772,6 +772,13 @@
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="supplierProdPrice" type="BigDecimal" mode="OUT" optional="false"/>
     </service>
+    
+    <service name="getProductPrice" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getProductPrice">
+        <description>Returns Supplier Product active Price</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPrice" type="BigDecimal" mode="OUT" optional="false"/>
+    </service>
+    
      <service name="getOrderSaleBillQty" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getOrderSaleBillQty">
         <description>Populate Order Details </description>
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
