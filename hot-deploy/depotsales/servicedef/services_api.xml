@@ -231,7 +231,7 @@
            location="in.vasista.vbiz.depotsales.paymentApiServices" invoke="createPaymentGatewayTrans">
        <description>Create payment gateway transaction</description>
        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-       <attribute name="orderId" type="String" mode="IN" optional="false"/>
+       <attribute name="orderId" type="String" mode="IN" optional="true"/>
        <attribute name="amount" type="String" mode="IN" optional="false"/>
        <attribute name="mobileNumber" type="String" mode="IN" optional="false"/>
        <attribute name="email" type="String" mode="IN" optional="true"/>
