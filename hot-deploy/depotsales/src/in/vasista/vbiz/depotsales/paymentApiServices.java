@@ -415,8 +415,6 @@ public class paymentApiServices {
 		    	
 		    	paymentParams.put("partyIdTo", roId);
 		    	
-		    	Debug.log("paymentParams========fff==================="+paymentParams);
-		    	
 		    	Map<String, Object> createPayment = FastMap.newInstance();
 				try{
 					createPayment = dispatcher.runSync("createPayment", paymentParams);
