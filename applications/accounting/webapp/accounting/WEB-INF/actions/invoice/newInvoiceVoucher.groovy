@@ -1416,15 +1416,14 @@ tempMapSer = [:];
 totAmtse = 0;
 
 if(invoiceAdjusService){
-	for (eachType in invoiceAdjusService) {
-			adjType = eachType.invoiceItemTypeId;
+	for (eachType in invoiceAdjusService) {		
+			//adjType = eachType.invoiceItemTypeId;
 			totAmtse = totAmtse+eachType.itemValue;
-			tempMapSer.put("invoiceItemTypeId", adjType);
-			if(eachType.description)
-			tempMapSer.put("description", eachType.description);
-			tempMapSer.put("itemValue", totAmtse);
-			invoiceRemainigAdjItemListConsolidate.add(tempMapSer);
 	}
+	tempMapSer.put("invoiceItemTypeId", "INVOICE_ITM_ADJ");
+	tempMapSer.put("description","Service Charge");
+	tempMapSer.put("itemValue", totAmtse);
+	invoiceRemainigAdjItemListConsolidate.add(tempMapSer);
 }
 
 context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemListConsolidate;
