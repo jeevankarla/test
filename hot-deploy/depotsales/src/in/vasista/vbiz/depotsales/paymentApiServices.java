@@ -327,9 +327,8 @@ public class paymentApiServices {
 		    }
 			
 						  					
-	      
 			if (UtilValidate.isEmpty(paymentDate)) {
-	    	  eventDate = UtilDateTime.nowTimestamp();
+	    	  eventDate = nowTimeStamp;
 			}
 		    Debug.log("eventDate=============="+eventDate);
 		    String paymentId = "";
@@ -372,6 +371,49 @@ public class paymentApiServices {
 		    	paymentParams.put("statusId", "PMNT_RECEIVED");
 		    	paymentParams.put("paymentDate", eventDate);
 		    	paymentParams.put("paymentRefNum", paymentRefNum);
+		    	paymentParams.put("partyIdFrom", partyIdFrom);
+		    	
+		    	String roId = "";
+		    	
+		    	List conditionList = FastList.newInstance();
+		        conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, userLogin.get("partyId")));
+		        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
+		        conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER" ));
+				conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+				conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+				conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+						EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
+				List branchList = FastList.newInstance();
+				try{
+					branchList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
+		    	}catch (GenericEntityException e) {
+					// TODO: handle exception
+		    		Debug.logError(e, module);
+				}
+				if(UtilValidate.isNotEmpty(branchList)){
+					conditionList.clear();
+					List roList = FastList.newInstance();
+					try{
+						conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(branchList, "partyIdFrom", true)));
+				        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION" ));
+				        conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
+						conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
+						conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
+						conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+								EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimeStamp)));
+						roList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("partyIdFrom"), null, false);
+						if(UtilValidate.isNotEmpty(roList)){
+							roId = EntityUtil.getFirst(roList).getString("partyIdFrom");
+						}
+			    	}catch (GenericEntityException e) {
+						// TODO: handle exception
+			    		Debug.logError(e, module);
+					}
+				}
+		    	
+		    	
+		    	
+		    	paymentParams.put("partyIdTo", roId);
 		    	
 		    	Map<String, Object> createPayment = FastMap.newInstance();
 				try{
@@ -479,8 +521,8 @@ public class paymentApiServices {
         if(paymentChannel.equalsIgnoreCase("airtel"))
         {   
         	String rosList[] = {"INT5","INT28","INT26","INT4","INT6","INT3","INT1","INT47","INT2"};
-        	String midList[] = {"45592380","45592894","45590237","45588195","45590642","45591183","25649255","45591507","45590503"};
-        	String saltList[] = {"dc0csdj3f","dcvfs8j32","cd7cd93l2","gy67gv3ks","x65dnjd9","cd8jw5gd","34602fa0","sd8cd3d3","a4dwj7kd"};
+        	String midList[] = {"45592380","45592894","45590237","45588195","45590642","45591183","45588871","45591507","45590503"};
+        	String saltList[] = {"dc0csdj3f","dcvfs8j32","cd7cd93l2","gy67gv3ks","x65dnjd9","cd8jw5gd","q68cm95d","sd8cd3d3","a4dwj7kd"};
         	
         	String userLoginParty = null;
             if (userLogin != null && userLogin.get("partyId") != null) {
