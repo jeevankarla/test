@@ -279,12 +279,6 @@ public class paymentApiServices {
 			 
 			 String purposeTypeId = null;
 		  	GenericValue orderHeader = null;
-		    try {
-		    	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
-		    } catch (GenericEntityException e) {
-	            Debug.logError(e, "error fetching order with order id :"+orderId, module);
-	            return ServiceUtil.returnError("error fetching order with order id :"+orderId);
-	        }
 		    
 		    Timestamp eventDate = null;
 			Timestamp nowTimeStamp=UtilDateTime.nowTimestamp();
@@ -339,26 +333,63 @@ public class paymentApiServices {
 			}
 		    Debug.log("eventDate=============="+eventDate);
 		    String paymentId = "";
-		    try {
-		    	 Map<String, Object> OrderPref = ServiceUtil.returnSuccess();
-		    	 OrderPref = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
-		         orderPaymentPreferenceId = (String) OrderPref.get("orderPaymentPreferenceId");
-		         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"userLogin", userLogin, "purposeTypeId",purposeTypeId);
-		         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
-		         paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
-		         result.put("paymentId",paymentId);
-		         GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
-		         if(UtilValidate.isNotEmpty(payment)){
-		        	 result.put("paymentMethodTypeId",payment.getString("paymentMethodTypeId"));
-	        		 payment.set("paymentRefNum", paymentRefNum);
-	        		 payment.store();
-		         }
-		         
-		         
-		  	} catch (Exception e) {
-					 Debug.logError(e, e.toString(), module);
-					  return ServiceUtil.returnError("AccountingTroubleCallingCreateOrderPaymentPreferenceService");	
-		  	}
+		    
+		    if(UtilValidate.isNotEmpty(orderId)){
+		    	try {
+			    	orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+			    } catch (GenericEntityException e) {
+		            Debug.logError(e, "error fetching order with order id :"+orderId, module);
+		            return ServiceUtil.returnError("error fetching order with order id :"+orderId);
+		        }
+		    	
+		    	try {
+			    	 Map<String, Object> OrderPref = ServiceUtil.returnSuccess();
+			    	 OrderPref = dispatcher.runSync("createOrderPaymentPreference", serviceContext);
+			         orderPaymentPreferenceId = (String) OrderPref.get("orderPaymentPreferenceId");
+			         Map<String, Object> serviceCustPaymentContext = UtilMisc.toMap("orderPaymentPreferenceId", orderPaymentPreferenceId,"amount",amount,"eventDate",eventDate,"userLogin", userLogin, "purposeTypeId",purposeTypeId);
+			         createCustPaymentFromPreferenceMap = dispatcher.runSync("createCustPaymentFromPreference", serviceCustPaymentContext);
+			         paymentId = (String)createCustPaymentFromPreferenceMap.get("paymentId");
+			         result.put("paymentId",paymentId);
+			         GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
+			         if(UtilValidate.isNotEmpty(payment)){
+			        	 result.put("paymentMethodTypeId",payment.getString("paymentMethodTypeId"));
+		        		 payment.set("paymentRefNum", paymentRefNum);
+		        		 payment.store();
+			         }
+			         
+			         
+			  	} catch (Exception e) {
+						 Debug.logError(e, e.toString(), module);
+						  return ServiceUtil.returnError("AccountingTroubleCallingCreateOrderPaymentPreferenceService");	
+			  	}
+		    }
+		    else{
+		    	Map<String, Object> paymentParams = new HashMap<String, Object>();
+		    	
+		    	paymentParams.put("paymentTypeId", "ONACCOUNT_PAYIN");
+		    	paymentParams.put("paymentMethodTypeId", "MOBILE_PAYIN");
+		    	paymentParams.put("amount", new BigDecimal(amount));
+		    	paymentParams.put("statusId", "PMNT_RECEIVED");
+		    	paymentParams.put("paymentDate", eventDate);
+		    	paymentParams.put("paymentRefNum", paymentRefNum);
+		    	
+		    	Map<String, Object> createPayment = FastMap.newInstance();
+				try{
+					createPayment = dispatcher.runSync("createPayment", paymentParams);
+				   if (ServiceUtil.isError(createPayment)) {
+						Debug.logWarning("There was an error making Payment: "
+								+ ServiceUtil.getErrorMessage(createPayment), module);
+						return ServiceUtil
+								.returnError("There was an error making Payment:"
+										+ ServiceUtil.getErrorMessage(createPayment));
+				   }
+				   paymentId = (String)createPayment.get("paymentId");
+				   	
+				}catch (Exception e) {
+					 return ServiceUtil.returnError("Error While Creating Payment");	
+			  	}
+		    }
+		    
 		    try {
 		    	String pgTransStatus = (String)context.get("txnStatus");
 			    String txnMessage = (String)context.get("txnMessage");
@@ -448,8 +479,8 @@ public class paymentApiServices {
         if(paymentChannel.equalsIgnoreCase("airtel"))
         {   
         	String rosList[] = {"INT5","INT28","INT26","INT4","INT6","INT3","INT1","INT47","INT2"};
-        	String midList[] = {"45592380","45592894","45590237","45588195","45590642","45591183","45588871","45591507","45590503"};
-        	String saltList[] = {"dc0csdj3f","dcvfs8j32","cd7cd93l2","gy67gv3ks","x65dnjd9","cd8jw5gd","q68cm95d","sd8cd3d3","a4dwj7kd"};
+        	String midList[] = {"45592380","45592894","45590237","45588195","45590642","45591183","25649255","45591507","45590503"};
+        	String saltList[] = {"dc0csdj3f","dcvfs8j32","cd7cd93l2","gy67gv3ks","x65dnjd9","cd8jw5gd","34602fa0","sd8cd3d3","a4dwj7kd"};
         	
         	String userLoginParty = null;
             if (userLogin != null && userLogin.get("partyId") != null) {
