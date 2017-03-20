@@ -810,6 +810,45 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 		
 	};
 	
+    function fetchPOInformation(purcahseOrderId) {
+    	purcahseOrderId = purcahseOrderId;
+    	var dataJson = {"purcahseOrderId": JSON.stringify(purcahseOrderId)};
+		jQuery.ajax({
+                url: 'getPOInformation',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+                success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+					
+						POData = result["POInformationDetails"];
+						
+						
+						showPOInformation(purcahseOrderId);
+						
+               		}
+               	}
+		});
+    }
+    
+     function showPOInformation(purcahseOrderId) {
+     	var message = "";     	
+     	if(POData != undefined){
+     	
+     	message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
+     	
+     	message += "<thead><td align='center' class='h3'>PO Id</td><td align='center' class='h3'>PO No</td><td align='center' class='h3'>View</td>";
+     	
+     	for (i = 0; i < POData.length; ++i) {
+     		message += "<tr><td align='center' class='h4'>" + POData[i].purcahseOrderId + "</td><td align='center' class='h4'>" + POData[i].orderNo + "</td><td align='center' class='h4'><a class='buttontext' href='<@ofbizUrl>PurchaseOrderViewDepotSales.pdf?orderId=" + POData[i].purcahseOrderId + "</@ofbizUrl>' target='_blank'>Report</a></td></tr>";
+     	}
+     	message += "<tr class='h3'><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();'>Close</button></span></td></tr>";    	
+     	message += "</table>";
+     	Alert(message);
+     }
+  };
     
     function cancelOrderCaution(orderId,partyId) {
 		var message = "";
@@ -967,3 +1006,4 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 	
 	
 </script>
+

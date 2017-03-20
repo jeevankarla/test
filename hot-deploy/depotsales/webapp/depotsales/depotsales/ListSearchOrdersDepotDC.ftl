@@ -353,6 +353,13 @@ function drawRow(rowData) {
 	     
     	row.append($("<td>" + rowData.purcahseOrderId + "</td>"));
       
+      	//For PO View
+	     var purcahseOrderId = "'" + rowData.purcahseOrderId + "'";
+	     var Method = "javascript:fetchPOInformation("+purcahseOrderId+")";
+		 var viewButton ='<input type=button name="viewPOs" id=viewPOs value="view POs" onclick="'+Method+'">';
+		
+		 row.append($("<td align=center>" +  viewButton  +"</td>"));
+      
        //For Indent View
     
     var orderParam = '\'' + rowData.orderId + '\'';
@@ -393,7 +400,7 @@ function drawRow(rowData) {
     
     }
     
-    if((rowData.POorder != "NA") && (rowData.statusId != "ORDER_CANCELLED")){
+    <#--if((rowData.POorder != "NA") && (rowData.statusId != "ORDER_CANCELLED")){
     var poOrder= '\'' + rowData.POorder + '\'';;
    	var showqtipmthod = "javascript:showAgencyAddress("+ poOrder + ")";
     var PoReport ='<input type=button name="POReport" id=POReport value="PO Report" onclick="'+showqtipmthod+'">';
@@ -403,7 +410,7 @@ function drawRow(rowData) {
 	      row.append($("<td>Order Cancelled</td>"));
 	  }else{
        row.append($("<td></td>")); 
-    }
+    }-->
     
     if ((rowData.orderTotal) <= (rowData.paidAmt) && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N")){
     
@@ -510,13 +517,13 @@ function drawRow(rowData) {
     }
     
     
-    if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId == "ORDER_APPROVED"){
+    <#--if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId == "ORDER_APPROVED"){
       var amendButton = '<a class="buttontext" href="<@ofbizUrl>amendOrder?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Amend Indent</a>';
       row.append($("<td>" +  amendButton  +"</td>"));  
    }else{
    
     row.append($("<td></td>"));
-   }
+   }-->
     
 
 }    
@@ -651,12 +658,13 @@ $('div#orderSpinn').html('<img src="/images/loadingImage.gif" height="70" width=
           <td>Minutes</td>
           <td>DraftPO</td>
           <td>POIds</td>
+          <td>view POs</td>
           <td>P&S Approvals</td>
-          <td>PO Report</td>
+          <#--<td>PO Report</td>-->
           <td>Approve</td>
           <td>Indent Detail</td> 
            <td>Cancel</td>
-           <td>Amend Indent</td>
+           <#--<td>Amend Indent</td>-->
         </tr>
       </thead>
       <tbody>
