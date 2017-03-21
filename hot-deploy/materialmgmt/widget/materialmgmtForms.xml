@@ -917,6 +917,30 @@
                 <parameter param-name="orderId"/>
             </hyperlink>
     </field>
-    </form> 
+    </form>
+    <form name="listOrderAssocDepotDC" type="list" list-name="OrderAssocList" default-table-style="basic-table hover-bar" odd-row-style="alternate-row" header-row-style="header-row">
+     <actions>
+     </actions>
+     <field name="orderId" use-when="orderId.equals(assocId);" ><display/></field>
+     <field name="orderId" title="OrderId" widget-style="buttontext" use-when="!orderId.equals(assocId);" >
+     	<hyperlink target="POoverViewDepotDC" description="${orderId}" target-window="_blank">
+      			<parameter param-name="orderId" value="${orderId}"/>
+      		</hyperlink>
+     </field>
+     <field name="toOrderId" use-when="toOrderId.equals(assocId);" title="Associated Orders"><display/></field>
+     <field name="toOrderId" title="Associated Orders" widget-style="buttontext" use-when="!toOrderId.equals(assocId);">
+     	<hyperlink target="POoverViewDepotDC" description="${toOrderId}" target-window="_blank">
+      			<parameter param-name="orderId" value="${toOrderId}"/>
+      		</hyperlink>
+     </field>
+     <field name="orderAssocTypeId" title="Order Type"><display-entity description="${description}" entity-name="OrderAssocType"/></field>
+     <!-- <field name="deleteOrderAssoc" title="Delete" widget-style="buttontext">
+    	<hyperlink target="deleteOrderAssoc" description="Delete">
+                <parameter param-name="orderId"/>
+                <parameter param-name="toOrderId"/>
+                <parameter param-name="orderAssocTypeId"/>
+            </hyperlink>
+    </field> -->
+     </form> 
     
 </forms>

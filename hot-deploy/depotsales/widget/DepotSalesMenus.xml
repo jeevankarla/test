@@ -1600,14 +1600,14 @@
             </condition> 
 			<link target="StockDetailsDC"></link>
 		</menu-item>  
-		<menu-item name="FindDepotTransPODC" title="${uiLabelMap.PurchaseOrder}">
+		<menu-item name="FindDepotTransPODepotDC" title="${uiLabelMap.PurchaseOrder}">
         	<condition>
        		  <or>
 	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
 			 </or>
 	        </condition>
-	        	<link target="FindDepotTransPODC"/>
+	        	<link target="FindDepotTransPODepotDC"/>
 	    </menu-item> 
 	    <menu-item name="DepotTransReceiptsDC" title="${uiLabelMap.ReceiptOfGoods}">
        		 <condition>
@@ -2043,7 +2043,7 @@
 				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
             	</or>            
             </condition> 
-			<link target="StockDetails">
+			<link target="FindDepotTransPODepotDC">
 			</link>
 		</menu-item>
 		
