@@ -264,7 +264,7 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			result = ServiceUtil.returnError("Error fetching userLogin: "+username);
+			result = ServiceUtil.returnError("Error fetching userLogin "+username);
 			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
@@ -340,7 +340,7 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			result = ServiceUtil.returnError("Error fetching userLogin :" +username);
+			result = ServiceUtil.returnError("Error fetching userLogin " +username);
 			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
