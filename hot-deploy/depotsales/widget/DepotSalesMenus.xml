@@ -1475,14 +1475,14 @@
 			<link target="StockDetails"></link>
 		</menu-item>  
 		
-         <menu-item name="FindDepotTransPODepotDC" title="${uiLabelMap.PurchaseOrder}">
+         <menu-item name="FindDepotTransPO" title="${uiLabelMap.PurchaseOrder}">
         	<condition>
        		  <or>
 	        		<if-has-permission permission="DEPOTSALES" action="_PORDER_VIEW"/>
 					<if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
 			 </or>
 	        </condition>
-	        	<link target="FindDepotTransPODepotDC"/>
+	        	<link target="FindDepotTransPO"/>
 	    </menu-item> 
          <menu-item name="DepotTransReceipts" title="${uiLabelMap.ReceiptOfGoods}">
        		 <condition>
