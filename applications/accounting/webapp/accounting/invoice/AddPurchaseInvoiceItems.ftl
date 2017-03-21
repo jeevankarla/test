@@ -294,19 +294,36 @@ under the License.
 		Alert(message, title);
 	}
 	
-	function showLessTaxForm() {	
+	function showLessTaxForm(thisObj) {
+	  var rowObjNew =$(thisObj).parent().parent();
+	 var amount = $(rowObjNew).find('[name=amount]').val();
 		var message = "";
 		message += "<form name='addLessTaxTypes' method='post'><table cellspacing=10 cellpadding=10>" ; 		
 			message += "<br/><br/>";
 				message += 	"<tr class='h3'><td align='left' class='h3' width='40%'>Type:</td><td align='left' width='70%'><select name='tdsTypeId' id='tdsTypeId'>"+
 						"<#list invoiceItemTypesList as invoiceItemType><option value='${invoiceItemType.invoiceItemTypeId?if_exists}' >${invoiceItemType.invoiceItemTypeId?if_exists}</option></#list></select></td></tr>"+
-						"<tr class='h3'><td align='left' class='h3' width='40%'>Amount</td><td align='left' width='10%'><input class='h3' type='text' id='tdsAmount' name='tdsAmount'  size='20'/></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='40%'>Taxable Amt</td><td align='left' width='10%'><input class='h3' type='text' id='taxableAmt' name='taxableAmt' value="+amount+"  size='5'/></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='40%'>Tax</td><td align='left' width='10%'><input class='h3' type='text' id='TaxPer' name='TaxPer'  size='5' onChange='javascript:amountWithTaxCall(this);'/></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='40%'>Amount</td><td align='left' width='10%'><input class='h3' type='text' id='tdsAmount' name='tdsAmount'  size='5'/></td></tr>"+
+						
 						"<tr class='h3'><td align='right'><span align='right'><input type='button' name='addTaxItems' value='Add' id='addTaxItems' class='smallSubmit' onclick='javascript:setLessTaxParameters();'/></span></td><td class='h3' width='80%' align='center'><span align='right'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>";
 		message += "</table></form>";				
-		var title = "<h2><center>Add Taxes</center></h2>";
+		var title = "<h2><center>Less Taxes</center></h2>";
 		Alert(message, title);
 	}
-	
+	function amountWithTaxCall(thisObjNew) {
+	   var rowObjNew =$(thisObjNew).parent().parent().parent();
+       var TaxPer = $(rowObjNew).find('[name=TaxPer]').val();
+	   var taxableAmt = $(rowObjNew).find('[name=taxableAmt]').val();
+		
+		if(TaxPer != "undefined" && TaxPer != null && TaxPer != "undefined" && TaxPer != null){
+	 	  var tdsAmount =(TaxPer*taxableAmt)/100;
+	  	    $("#tdsAmount").val(tdsAmount)
+	  	  
+	  	 }
+	  	  
+	  
+	}
 	function datepick()
 	{		
 		$( "#effectiveDate" ).datepicker({
@@ -467,7 +484,7 @@ under the License.
 				        <#list invoiceItems as invoice>
 				            <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
 				              <td><input class="input-medium" name="taxAuthPartyId" type="hidden" size="4"/>${invoice.invoiceItemSeqId}</td>
-				              <#assign invoiceItemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoice.invoiceItemTypeId}, true) />	
+				              <#assign invoiceItemType = delegator.findOne("InvoiceItemType", {"invoiceItemTypeId" : invoice.invoiceItemTypeId?if_exists}, true) />	
 				              <td>${invoiceItemType.description}</td>
 				              <td>${invoice.costCenterId?if_exists}</td>
 				              <td>${invoice.description?if_exists}</td>
@@ -521,7 +538,7 @@ under the License.
 				          <td><input id="description" class="input-medium" name="description" type="text" size="60"/></td>
 				          <td><input id="amount" class="input-medium" name="amount" type="text" size="12"/></td>
 				          <td><input id="addTax" type="button"  onclick="javascript:showTaxForm();" value="Add Tax" /></td>
-				          <td><input id="addLessTax" type="button"  onclick="javascript:showLessTaxForm();" value="Less Tax" /></td>
+				          <td><input id="addLessTax" type="button"  onclick="javascript:showLessTaxForm(this);" value="Less Tax" /></td>
 				          <td><button id="save" name="save" onClick="return saveInvoiceItem();" style="buttontext">Add</button></td>
 				        </tr>
 				      </tbody>
