@@ -178,7 +178,7 @@ invoice = delegator.findList("Invoice", EntityCondition.makeCondition(condList,E
 //invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
 
 finalList=[];
-stylesMap=[:];
+/*stylesMap=[:];
 stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
 stylesMap.put("mainHeader2", "BILL WISE PURCHASE REPORT");
 if(UtilValidate.isNotEmpty(fromDateForCSV) && UtilValidate.isNotEmpty(thruDateForCSV)){
@@ -196,22 +196,73 @@ stylesMap.put("autoSizeCell",true);
 stylesMap.put("columnHeaderCellHeight",300);
 request.setAttribute("stylesMap", stylesMap);
 request.setAttribute("enableStyles", true);
-
- 
- headingMap=[:];
- headingMap.put("invoiceId", "Invoice Id");
- headingMap.put("invoiceSeqId", "Invoice Sequence Id");
- headingMap.put("invoiceDate", "Invoice Date");
- headingMap.put("shipmentId", "Shipment Id");
- headingMap.put("partyIdFrom", "From Party");
- headingMap.put("partyIdTo", "To Party");
- headingMap.put("quantity", "Quantity");
- headingMap.put("purTax", "Tax");
- headingMap.put("adj", "Adjustments");
- headingMap.put("totalItemValue", "Total Item Value");
+headingMap=[:];
+headingMap.put("invoiceId", "Invoice Id");
+headingMap.put("invoiceSeqId", "Invoice Sequence Id");
+headingMap.put("invoiceDate", "Invoice Date");
+headingMap.put("shipmentId", "Shipment Id");
+headingMap.put("partyIdFrom", "From Party");
+headingMap.put("partyIdTo", "To Party");
+headingMap.put("quantity", "Quantity");
+headingMap.put("purTax", "Tax");
+headingMap.put("adj", "Adjustments");
+headingMap.put("totalItemValue", "Total Item Value");
  
 finalList.add(stylesMap);
+finalList.add(headingMap);*/
+
+headingMap=[:];
+headingMap.put("invoiceId", " ");
+headingMap.put("invoiceSeqId", " ");
+headingMap.put("invoiceDate", " ");
+headingMap.put("shipmentId", " ");
+headingMap.put("partyIdFrom", "___BILL WISE PURCHASE REPORT___");
+headingMap.put("partyIdTo", " ");
+headingMap.put("quantity", " ");
+headingMap.put("purTax", " ");
+headingMap.put("adj", " ");
+headingMap.put("totalItemValue", " ");
 finalList.add(headingMap);
+
+headingMap1=[:];
+headingMap1.put("invoiceId", " ");
+headingMap1.put("invoiceSeqId", " ");
+headingMap1.put("invoiceDate", " ");
+headingMap1.put("shipmentId", " ");
+headingMap1.put("partyIdFrom", "From "+ fromDateForCSV +" to "+thruDateForCSV);
+headingMap1.put("partyIdTo", " ");
+headingMap1.put("quantity", " ");
+headingMap1.put("purTax", " ");
+headingMap1.put("adj", " ");
+headingMap1.put("totalItemValue", " ");
+finalList.add(headingMap1);
+
+headingMap2=[:];
+headingMap2.put("invoiceId", " ");
+headingMap2.put("invoiceSeqId", " ");
+headingMap2.put("invoiceDate", " ");
+headingMap2.put("shipmentId", " ");
+headingMap2.put("partyIdFrom", " ");
+headingMap2.put("partyIdTo", " ");
+headingMap2.put("quantity", " ");
+headingMap2.put("purTax", " ");
+headingMap2.put("adj", " ");
+headingMap2.put("totalItemValue", " ");
+finalList.add(headingMap2);
+ 
+headingMap3=[:];
+headingMap3.put("invoiceId", "Invoice Id");
+headingMap3.put("invoiceSeqId", "Invoice Sequence Id");
+headingMap3.put("invoiceDate", "Invoice Date");
+headingMap3.put("shipmentId", "Shipment Id");
+headingMap3.put("partyIdFrom", "From Party");
+headingMap3.put("partyIdTo", "To Party");
+headingMap3.put("quantity", "Quantity");
+headingMap3.put("purTax", "Tax");
+headingMap3.put("adj", "Adjustments");
+headingMap3.put("totalItemValue", "Total Item Value");
+finalList.add(headingMap3);
+
 if(invoice){
 	for(eachInvoice in invoice){
 		conditionList=[];
