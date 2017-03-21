@@ -496,7 +496,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
              
           
       <tr class="alternate-row">
-      	   <form id="billWisePurchaseReport" name="billWisePurchaseReport" method="post" action="<@ofbizUrl>billWisePurchaseReport.xls</@ofbizUrl>" target="_blank">        
+      	   <form id="billWisePurchaseReport" name="billWisePurchaseReport" method="post" action="<@ofbizUrl>billWisePurchaseReport.csv</@ofbizUrl>" target="_blank">        
              <td width="10%">Bill Wise Purchase Report</td>
              <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="billWisePurchaseReportFrom" readonly  name="billReportfromDate" required /></br>
       		 To</br><input  type="text" size="15pt" id="billWisePurchaseReportThru" readonly  name="billReportthruDate" required /></td>
@@ -521,7 +521,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="billWisePurchaseReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>-->	
 				<td width="10%"></td> 
 				<td width="10%"></td> 
-				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('billWiseSalesReport', '<@ofbizUrl>billWisePurchaseReport.xls</@ofbizUrl>');" class="buttontext"/></td>         			
+				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('billWisePurchaseReport', '<@ofbizUrl>billWisePurchaseReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				<td width="10%"></td> 
            </form>
         </tr>

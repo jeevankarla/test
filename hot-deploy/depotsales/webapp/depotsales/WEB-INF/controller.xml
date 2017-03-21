@@ -3030,7 +3030,7 @@
         <response name="error" type="view" value="billWiseSalesReport"/>
     </request-map>
     
-    <request-map uri="billWisePurchaseReport.xls">
+    <request-map uri="billWisePurchaseReport.csv">
         <security auth="true" https="true"/>    
         <response name="success" type="view" value="billWisePurchaseReportCSV"/>
         <response name="error" type="view" value="billWisePurchaseReportCSV"/>
