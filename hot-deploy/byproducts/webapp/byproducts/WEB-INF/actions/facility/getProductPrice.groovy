@@ -71,7 +71,7 @@ if(productId && fromDc == "DC"){
 		
 		lastPrice = resultCtx.productPrice;
 		
-		
+		Debug.log("lastPrice==========="+lastPrice);
 	   }catch(Exception e){}
 	   
 	   request.setAttribute("lastPrice", lastPrice);
