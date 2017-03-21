@@ -162,6 +162,8 @@
 			var batchNo = data[rowCount]["batchNo"];
 			var days = data[rowCount]["daysToStore"];
 			var bundleUnitPrice = data[rowCount]["unitPrice"];
+			var Packaging = data[rowCount]["Packaging"];
+			var packets = data[rowCount]["packets"];
 			var unitPrice = data[rowCount]["KgunitPrice"];
 			var unitPricePur = 0;
 			if(data[rowCount]["unitPricePur"])
@@ -221,6 +223,8 @@
 				var inputChangeTenPercentage = jQuery("<input>").attr("type", "hidden").attr("name", "changeTenPercentage_o_" + rowCount).val(changeTenPercentage);
 				var inputChangeTenPercentageAmout = jQuery("<input>").attr("type", "hidden").attr("name", "changeTenPercentageAmout_o_" + rowCount).val(changeTenPercentageAmout);
 			
+			    var inputPackaging = jQuery("<input>").attr("type", "hidden").attr("name", "Packaging_o_" + rowCount).val(Packaging);
+			    var inputpackets = jQuery("<input>").attr("type", "hidden").attr("name", "packets_o_" + rowCount).val(packets);
 				
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
@@ -240,6 +244,9 @@
 				jQuery(formId).append(jQuery(inputUsedQuota));
 				jQuery(formId).append(jQuery(inputChangeTenPercentage));
 				jQuery(formId).append(jQuery(inputChangeTenPercentageAmout));
+				
+				jQuery(formId).append(jQuery(inputPackaging));
+				jQuery(formId).append(jQuery(inputpackets));
 				
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
@@ -653,7 +660,8 @@
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
 			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs"},
 			<#--{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false, editor:FloatCellEditor},-->
-			{id:"package", name:"Packaging", field:"Packaging", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"package", name:"Packaging(KGS)", field:"Packaging", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"packets", name:"packets", field:"packets", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"quantity", name:"Wt.(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false, editor:FloatCellEditor},
 			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice} (KGs)", field:"KgunitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--
@@ -817,12 +825,10 @@
 			
 			var productId = data[args.row]['cProductId'];
 			
-
             data[args.row]['quantity'] = baleQuantity;
 			//data[args.row]['KgunitPrice'] = packaging*baleQuantity;
 			//data[args.row]['unitPricePur'] = packaging*baleQuantity;
 			
-			 var lastPrice = 0;
 		    $.ajax({
 	        	type: "POST",
 	         	url: "getProductPrice",
@@ -833,11 +839,19 @@
 	          		if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){            	  
 	   	  				alert(result["_ERROR_MESSAGE_"]);
 	      			}else{
-	      		     lastPrice =result["lastPrice"];
+	      		     var lastPrice =result["lastPrice"];
+	      		     data[args.row]['KgunitPrice'] = lastPrice;
 	      		}
 	      		}
 	    	});
 		
+		    if(args.cell == 4){
+		    
+		    var Packaging = data[args.row]['Packaging'];
+		    var quantity = data[args.row]['quantity'];
+		    data[args.row]['packets'] = quantity/Packaging;
+		    
+		    }
 			
 			var kgUnitPrice = data[args.row]['KgunitPrice'];
 			var quantity = parseFloat(data[args.row]["quantity"]);
@@ -865,6 +879,8 @@
 	      		$(grid.getCellNode(args.row, 2)).click();
 			}
 		});
+		
+		
 		
 		grid.onValidationError.subscribe(function(e, args) {
         var validationResult = args.validationResults;

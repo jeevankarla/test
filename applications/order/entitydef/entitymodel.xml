@@ -865,6 +865,8 @@ under the License.
       <field name="Uom" type="comment"></field>
       <field name="quotaQuantity" type="fixed-point"></field>
       <field name="discountAmount" type="currency-amount"></field>
+      <field name="packQuantity" type="fixed-point"></field>
+      <field name="packets" type="fixed-point"></field>
       <field name="changeUserLogin" type="id-vlong"></field>
       
       <prim-key field="orderItemDetailId"/>

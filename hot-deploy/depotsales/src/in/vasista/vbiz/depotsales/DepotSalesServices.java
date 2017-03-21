@@ -4024,6 +4024,10 @@ public class DepotSalesServices{
 		String basicPriceStr = null;
 		String basicPricePurStr = null;
 		
+		String packagingStr = null;
+		String packetsStr = null;
+		
+		
 		
 		String bundleUnitPriceStr=null;
 		/*String vatPriceStr = null;
@@ -4052,6 +4056,10 @@ public class DepotSalesServices{
 		BigDecimal serviceChargeAmt = BigDecimal.ZERO;
 		BigDecimal quotaAvbl = BigDecimal.ZERO;
 		BigDecimal manualQuota = BigDecimal.ZERO;
+		
+		BigDecimal packaging = BigDecimal.ZERO;
+		BigDecimal packets = BigDecimal.ZERO;
+		
 		/*BigDecimal cstPrice = BigDecimal.ZERO;
 		BigDecimal tcsPrice = BigDecimal.ZERO;
 		BigDecimal vatPrice = BigDecimal.ZERO;
@@ -4176,6 +4184,14 @@ public class DepotSalesServices{
 					bundleWeightStr = (String) paramMap
 							.get("bundleWeight" + thisSuffix);
 				}
+				if (paramMap.containsKey("Packaging" + thisSuffix)) {
+					packagingStr = (String) paramMap
+							.get("Packaging" + thisSuffix);
+				}
+				if (paramMap.containsKey("packets" + thisSuffix)) {
+					packetsStr = (String) paramMap
+							.get("packets" + thisSuffix);
+				}
 				if (paramMap.containsKey("yarnUOM" + thisSuffix)) {
 					yarnUOMStr = (String) paramMap
 							.get("yarnUOM" + thisSuffix);
@@ -4214,12 +4230,10 @@ public class DepotSalesServices{
 					taxListStr = (String) paramMap.get("taxList"
 							+ thisSuffix);
 					
-					Debug.log("taxListStr =============="+taxListStr);
 					
 					String[] taxList = taxListStr.split(",");
 					for (int j = 0; j < taxList.length; j++) {
 						String taxType = taxList[j];
-						Debug.log("taxType =============="+taxType);
 						Map taxRateMap = FastMap.newInstance();
 						taxRateMap.put("orderAdjustmentTypeId",taxType);
 						taxRateMap.put("sourcePercentage",BigDecimal.ZERO);
@@ -4228,7 +4242,6 @@ public class DepotSalesServices{
 						
 						if (paramMap.containsKey(taxType + thisSuffix)) {
 							String taxPercentage = (String) paramMap.get(taxType + thisSuffix);
-							Debug.log("taxPercentage =============="+taxPercentage);
 							if(UtilValidate.isNotEmpty(taxPercentage) && !(taxPercentage.equals("NaN"))){
 								taxRateMap.put("sourcePercentage",new BigDecimal(taxPercentage));
 							}
@@ -4236,7 +4249,6 @@ public class DepotSalesServices{
 						}
 						if (paramMap.containsKey(taxType+ "_AMT" + thisSuffix)) {
 							String taxAmt = (String) paramMap.get(taxType+ "_AMT" + thisSuffix);
-							Debug.log("taxAmt =============="+taxAmt);
 							if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
 								taxRateMap.put("amount",new BigDecimal(taxAmt));
 							}
@@ -4247,17 +4259,14 @@ public class DepotSalesServices{
 						taxRateList.add(tempTaxMap);
 					}
 				}
-                  Debug.log("taxRateList =============="+taxRateList);
 				
 				if (paramMap.containsKey("orderAdjustmentsList" + thisSuffix)) {
 					orderAdjustmentsListStr = (String) paramMap.get("orderAdjustmentsList"+ thisSuffix);
 					
-					Debug.log("orderAdjustmentsListStr =============="+orderAdjustmentsListStr);
 					
 					String[] orderAdjustmentsList = orderAdjustmentsListStr.split(",");
 					for (int j = 0; j < orderAdjustmentsList.length; j++) {
 						String orderAdjustmentType = orderAdjustmentsList[j];
-						Debug.log("orderAdjustmentType =============="+orderAdjustmentType);
 						Map adjTypeMap = FastMap.newInstance();
 						adjTypeMap.put("orderAdjustmentTypeId",orderAdjustmentType);
 						adjTypeMap.put("sourcePercentage",BigDecimal.ZERO);
@@ -4292,8 +4301,6 @@ public class DepotSalesServices{
 						orderAdjustmentList.add(tempAdjMap);
 					}
 				}
-				Debug.log("assessableAdjustmentAmount ================="+assessableAdjustmentAmount);
-				Debug.log("orderAdjustmentList ================="+orderAdjustmentList);
 				
 				// Purchase tax list
 				
@@ -4301,12 +4308,10 @@ public class DepotSalesServices{
 					purTaxListStr = (String) paramMap.get("purTaxList"
 							+ thisSuffix);
 					
-					Debug.log("purTaxListStr =============="+purTaxListStr);
 					
 					String[] taxList = purTaxListStr.split(",");
 					for (int j = 0; j < taxList.length; j++) {
 						String taxType = taxList[j];
-						Debug.log("taxType =============="+taxType);
 						Map taxRateMap = FastMap.newInstance();
 						
 						String purTaxType = taxType.replace("_SALE", "_PUR");
@@ -4336,7 +4341,6 @@ public class DepotSalesServices{
 						purTaxRateList.add(tempTaxMap);
 					}
 				}
-				Debug.log("purTaxRateList =============="+purTaxRateList);
 				
 				
 				String purchaseBasicAmountStr = null;
@@ -4347,12 +4351,10 @@ public class DepotSalesServices{
 				if (paramMap.containsKey("purOrderAdjustmentsList" + thisSuffix)) {
 					purOrderAdjustmentsListStr = (String) paramMap.get("purOrderAdjustmentsList"+ thisSuffix);
 					
-					Debug.log("purOrderAdjustmentsListStr =============="+purOrderAdjustmentsListStr);
 					
 					String[] purOrderAdjustmentsList = purOrderAdjustmentsListStr.split(",");
 					for (int j = 0; j < purOrderAdjustmentsList.length; j++) {
 						String orderAdjustmentType = purOrderAdjustmentsList[j];
-						Debug.log("orderAdjustmentType =============="+orderAdjustmentType);
 						Map adjTypeMap = FastMap.newInstance();
 						adjTypeMap.put("orderAdjustmentTypeId",orderAdjustmentType);
 						adjTypeMap.put("sourcePercentage",BigDecimal.ZERO);
@@ -4386,8 +4388,6 @@ public class DepotSalesServices{
 						purOrderAdjustmentList.add(tempAdjMap);
 					}
 				}
-				Debug.log("purAssessableAdjustmentAmount ================="+purAssessableAdjustmentAmount);
-				Debug.log("purOrderAdjustmentList ================="+purOrderAdjustmentList);
 				
 				
 				
@@ -4483,7 +4483,12 @@ public class DepotSalesServices{
 					if (UtilValidate.isNotEmpty(purchaseBasicAmountStr)) {
 						purchaseBasicAmount = new BigDecimal(purchaseBasicAmountStr);
 					}
-					Debug.log("purchaseBasicAmount ==============="+purchaseBasicAmount);
+					if (UtilValidate.isNotEmpty(packagingStr)) {
+						packaging = new BigDecimal(packagingStr);
+					}
+					if (UtilValidate.isNotEmpty(packetsStr)) {
+						packets = new BigDecimal(packetsStr);
+					}
 					
 					/*if (UtilValidate.isNotEmpty(cstPriceStr)) {
 						cstPrice = new BigDecimal(cstPriceStr);
@@ -4570,6 +4575,8 @@ public class DepotSalesServices{
 						tempconsolMap.put("checkE2Form", checkE2Form);
 						tempconsolMap.put("checkCForm", checkCForm);
 						tempconsolMap.put("quotaAvbl", quotaAvbl);
+						tempconsolMap.put("packaging", packaging);
+						tempconsolMap.put("packets", packets);
 						consolMap.put(productId,tempconsolMap);						
 					}
 				}
@@ -4601,6 +4608,8 @@ public class DepotSalesServices{
 				productQtyMap.put("checkE2Form", checkE2Form);
 				productQtyMap.put("checkCForm", checkCForm);
 				productQtyMap.put("quotaAvbl", quotaAvbl);
+				productQtyMap.put("packaging", packaging);
+				productQtyMap.put("packets", packets);
 				
 				/*productQtyMap.put("bedPrice", bedPrice);
 				productQtyMap.put("cstPrice", cstPrice);
@@ -7825,6 +7834,8 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 		BigDecimal taxPercent = BigDecimal.ZERO;
 		BigDecimal serviceCharge = BigDecimal.ZERO;
 		BigDecimal quotaAvbl = BigDecimal.ZERO;
+		BigDecimal packaging = BigDecimal.ZERO;
+		BigDecimal packets = BigDecimal.ZERO;
 		BigDecimal serviceChargeAmt = BigDecimal.ZERO;
 		String bundleUnitPrice="";
 		String quotaQuantity="";
@@ -7925,6 +7936,17 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 		}
 		if(UtilValidate.isNotEmpty(prodQtyMap.get("quotaAvbl"))){
 			quotaAvbl = (BigDecimal)prodQtyMap.get("quotaAvbl");
+		}
+		if(UtilValidate.isNotEmpty(prodQtyMap.get("packaging"))){
+			packaging = (BigDecimal)prodQtyMap.get("packaging");
+			
+			Debug.log("packaging============="+packaging);
+			
+		}
+		if(UtilValidate.isNotEmpty(prodQtyMap.get("packets"))){
+			packets = (BigDecimal)prodQtyMap.get("packets");
+			
+			Debug.log("packets============="+packets);
 		}
 		
 		BigDecimal purchaseBasicPrice = BigDecimal.ZERO;
@@ -8086,6 +8108,12 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 			if(UtilValidate.isNotEmpty(checkCForm)){
 				item.setOrderItemAttribute("checkCForm",checkCForm);
 			}
+			if(UtilValidate.isNotEmpty(packaging)){
+				item.setOrderItemAttribute("packQuantity",packaging.toString());
+			}
+			if(UtilValidate.isNotEmpty(packets)){
+				item.setOrderItemAttribute("packets",packets.toString());
+			}
 			
 			/*if(quota.compareTo(BigDecimal.ZERO)>0){
 				
@@ -8195,6 +8223,14 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 			productQtyMap.put("quotaAvbl", quotaAvbl);
 			productQtyMap.put("assessableAdjustmentAmount", assessableAdjustmentAmount);
 			productQtyMap.put("assessableAmtPerUnit", assessableAdjustmentAmount.divide(quantity));
+			if(UtilValidate.isNotEmpty(packaging)){
+				productQtyMap.put("packaging", packaging);				
+			}
+			if(UtilValidate.isNotEmpty(packets)){
+				productQtyMap.put("packets", packets);				
+			}
+			
+			
 			directIndentProductList.add(productQtyMap);
 		  }	
 		itemIndex=itemIndex-1;
@@ -8442,6 +8478,8 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 			BigDecimal prdPrice=BigDecimal.ZERO;
 			BigDecimal quotaAvbl = BigDecimal.ZERO;
 			BigDecimal assessableAmtPerUnit = BigDecimal.ZERO;
+			BigDecimal packaging1 = BigDecimal.ZERO;
+			BigDecimal packets1 = BigDecimal.ZERO;
 			
 			String Uom="";
 			String specification="";
@@ -8481,6 +8519,14 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 			}
 			if(UtilValidate.isNotEmpty(prodItemMap.get("quotaAvbl"))){
 				quotaAvbl = (BigDecimal)prodItemMap.get("quotaAvbl");
+			}
+			
+			if(UtilValidate.isNotEmpty(prodItemMap.get("packaging"))){
+				packaging1 = (BigDecimal)prodItemMap.get("packaging");
+			}
+			
+			if(UtilValidate.isNotEmpty(prodItemMap.get("packets"))){
+				packets1 = (BigDecimal)prodItemMap.get("packets");
 			}
 			
 			//Debug.log("quotaAvbl ==================="+quotaAvbl);
@@ -8641,6 +8687,8 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 			orderItemDetail.put("remarks",specification);
 			orderItemDetail.put("quotaQuantity",quotaQuantity);
 			orderItemDetail.put("quantity",Kgquantity);
+			orderItemDetail.put("packQuantity",packaging1);
+			orderItemDetail.put("packets",packets1);
 			orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
 
 			try{
@@ -10642,7 +10690,7 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
-  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, UtilMisc.toList("EMPANELLED_CUSTOMER", "BRANCH_EMPLOYEE") ));
+  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, UtilMisc.toList("EMPANELLED_CUSTOMER", "BRANCH_EMPLOYEE","DYS_CMLS_CUSTOMER") ));
 			conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
 			List roList = FastList.newInstance();
 			try{
