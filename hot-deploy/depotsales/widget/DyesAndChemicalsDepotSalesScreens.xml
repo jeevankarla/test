@@ -1170,7 +1170,7 @@
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
-				<set field="targetRequest" value="FindGRNReceiptsDC" />
+				<set field="targetRequest" value="FindGRNShipmentsDepotDC" />
 				<service service-name="performFind" result-map="result"
 					result-map-list="listIt">
 					<field-map field-name="inputFields" from-field="parameters" />

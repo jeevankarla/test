@@ -648,7 +648,7 @@
        <response name="success" type="view" value="PurchageOrderOverViewDC"/>
        <response name="error" type="view" value="PurchageOrderOverViewDC"/>
      </request-map>
-     <request-map uri="POoverviewDepotDC">
+     <request-map uri="POoverViewDepotDC">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="PurchageOrderOverViewDepotDC"/>
        <response name="error" type="view" value="PurchageOrderOverViewDepotDC"/>
