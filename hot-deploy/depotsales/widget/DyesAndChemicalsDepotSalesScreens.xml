@@ -204,7 +204,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="Find GRN Shipments" />
-				<set field="tabButtonItem" value="DepotTransReceipts" />
+				<set field="tabButtonItem" value="DepotTransReceiptsDC" />
 				<set field="tabButtonItem2" value="DepotTransGRNShipmentsDC" />
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
@@ -1044,7 +1044,7 @@
 									<platform-specific>
 										<html>
 											<html-template
-												location="component://materialmgmt/webapp/materialmgmt/purchase/POItemsDepotDC.ftl" />
+												location="component://materialmgmt/webapp/materialmgmt/purchase/POItemsDC.ftl" />
 										</html>
 									</platform-specific>
 									<platform-specific>
@@ -1067,7 +1067,7 @@
 									<screenlet title="Order Attributes">
 										<include-screen name="orderAttributesDepotDC" />
 									</screenlet>
-									<include-screen name="orderAssoc" />
+									<include-screen name="orderAssocDepotDc" />
 								</container>
 								<container style="righthalf">
 									<platform-specific>
@@ -1079,7 +1079,7 @@
 									<screenlet title="Receipts For Order">
 										<!-- <include-form location="component://materialmgmt/widget/MaterialPurchaseForms.xml" 
 											name="listMaterialShipmentReceipt"/> -->
-										<include-screen name="listMaterialShipmentReceiptDC" />
+										<include-screen name="listMaterialShipmentReceiptDepotDC" />
 									</screenlet>
 									<platform-specific>
 										<html>
@@ -1098,7 +1098,7 @@
 									<platform-specific>
 										<html>
 											<html-template
-												location="component://materialmgmt/webapp/materialmgmt/purchase/PONotes.ftl" />
+												location="component://materialmgmt/webapp/materialmgmt/purchase/PONotesDepotDC.ftl" />
 										</html>
 									</platform-specific>
 									<screenlet title="Supply Products Till Date">
@@ -1138,7 +1138,7 @@
 				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" />
 				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
 					default-value="20" />
-				<set field="targetRequest" value="FindGRNReceiptsDC" />
+				<set field="targetRequest" value="FindGRNShipmentsDepotDC" />
 				<service service-name="performFind" result-map="result"
 					result-map-list="listIt">
 					<field-map field-name="inputFields" from-field="parameters" />
@@ -1153,12 +1153,12 @@
 					location="component://materialmgmt/webapp/materialmgmt/WEB-INF/actions/purchases/SupplyTillDateDepotDC.groovy" />
 			</actions>
 			<widgets>
-				<include-form name="listMaterialShipmentReceipt"
+				<include-form name="listMaterialShipmentReceiptDepotDC"
 					location="component://materialmgmt/widget/MaterialPurchaseForms.xml" />
 				<platform-specific>
 					<html>
 						<html-template
-							location="component://materialmgmt/webapp/materialmgmt/purchase/qcApprovalDepotDC.ftl" />
+							location="component://depotsales/webapp/depotsales/depotsales/qcApprovalDepotDC.ftl" />
 					</html>
 				</platform-specific>
 			</widgets>
@@ -1186,6 +1186,27 @@
 			<widgets>
 				<include-form name="supplyProductstilldateDC"
 					location="component://materialmgmt/widget/MaterialPurchaseForms.xml" />
+			</widgets>
+		</section>
+	</screen>
+	<screen name="orderAssocDepotDc">
+		<section>
+			<actions>
+				<entity-condition list="OrderAssocList"
+					entity-name="OrderAssoc">
+					<condition-list combine="or">
+						<condition-expr field-name="orderId" from-field="parameters.orderId" />
+						<condition-expr field-name="toOrderId" from-field="parameters.orderId" />
+					</condition-list>
+				</entity-condition>
+				<set field="assocId" value="${parameters.orderId}" />
+			</actions>
+			<widgets>
+				<screenlet title="Order Associations">
+					<include-form
+						location="component://materialmgmt/widget/materialmgmtForms.xml"
+						name="listOrderAssocDepotDC" />
+				</screenlet>
 			</widgets>
 		</section>
 	</screen>

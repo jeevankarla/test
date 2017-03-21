@@ -585,6 +585,51 @@
      
     </form>
     
+    <form name="listMaterialShipmentReceiptDepotDC" type="list" list-name="listIt" paginate-target="${targetRequest}"
+        odd-row-style="alternate-row" header-row-style="header-row"  target="sendReceiptQtyForQC" default-table-style="basic-table hover-bar">
+       <!--  <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="ShipmentReceipt"/>
+                <field-map field-name="orderBy"  value="-receiptId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions> -->
+        <row-actions>
+        	<entity-one value-field="product" entity-name="Product">
+				<field-map field-name="productId" from-field="productId"/>
+			</entity-one>
+			<entity-one value-field="uom" entity-name="Uom">
+				<field-map field-name="uomId" from-field="product.quantityUomId"/>
+			</entity-one>
+			<set field="dec" from-field="uom.description"/>
+        </row-actions>
+      	<field name="receiptId" title="GRN Item No">
+      		<display/>
+      	</field>
+      	<field name="productId" title="Code- Name [UOM]">
+      		<display-entity entity-name="Product" description="${productId} ${description}[${dec}]"/>
+      	</field>
+        <field name="datetimeReceived" title="Received Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(datetimeReceived, &quot;dd-MMM-yyyy&quot;);}"/></field>
+        <field name="shipmentId" title="GRN ShipmentId"><display/></field>
+       <field name="orderId" title="PO No"><display/></field> 
+        <field name="statusId" title="Status">
+        	<display-entity entity-name="StatusItem" description="${description}"/>
+        </field>
+      	<field name="quantityAccepted" title="Quantity"><display/></field>
+      	<field name="quantityRejected" title="Qty Rejected"><display/></field>
+   <!--    	<field name="supplyTillDate"><display/></field>  -->
+      	<field name="receivedByUserLoginId" title="Entry by"><display/></field>	
+      	
+        <field name="statusIdTo"  > <hidden  value="SR_QUALITYCHECK" /> </field>
+         <!-- <field name="SendtoQC" title="Send to QC"   use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"    widget-style="buttontext"> 
+           <submit button-type="button"  />
+        </field> -->
+      	<!-- <field name="SendtoQC" use-when="statusId.equals(&quot;SR_RECEIVED&quot;)"  title="Send to QC" widget-style="buttontext">
+             <hyperlink  target-type="plain" description="Send to QC"  target="javascript:showQCApprovalQTip('${receiptId}');"></hyperlink>
+        </field>  -->
+    </form>
     
     
     

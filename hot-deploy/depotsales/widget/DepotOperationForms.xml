@@ -729,7 +729,7 @@
       		<set field="mdFlag" value="${groovy: if(grandTotal &gt; 10000000) return 'Y'; else return 'N';}"/>
       	</row-actions>
       	<field name="orderId" widget-style="buttontext">
-      		<hyperlink target="POoverviewDC" description="${groovy: if(orderNo !=null) return orderNo; else return orderId;}" target-window="_blank">
+      		<hyperlink target="POoverViewDepotDC" description="${groovy: if(orderNo !=null) return orderNo; else return orderId;}" target-window="_blank">
       			<parameter param-name="orderId"/>
       		</hyperlink>
       	</field>
