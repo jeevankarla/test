@@ -1126,6 +1126,11 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseOrderMinutesReport"/>
     </request-map>
+    
+    <request-map uri="PurchaseOrderMinutesReportDepotDC.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseOrderMinutesReportDepotDC"/>
+    </request-map>
     <request-map uri="arcOrder.pdf">
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="ArcOrderPDF"/>
@@ -3347,6 +3352,7 @@
     <view-map name="PurchaseOrderViewDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDEPOTpdf" content-type="application/pdf"/>
     <view-map name="PurchaseOrderViewDepotDC" type="screenfop" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#PurchaseOrderViewDEPOTpdfDC" content-type="application/pdf"/>
     <view-map name="PurchaseOrderMinutesReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderMinutesReport" content-type="application/pdf"/>
+    <view-map name="PurchaseOrderMinutesReportDepotDC" type="screenfop" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#PurchaseOrderMinutesReportDepotDC" content-type="application/pdf"/>
     <view-map name="ArcOrderPDF" type="screenfop" page="component://component://depotsales/widget/DepotSalesReportScreens.xml#ArcOrderPDF" content-type="application/pdf"/>
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
