@@ -135,14 +135,16 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 		
 		String token = JwtUtil.generateToken(username);
 		if (token == null) {
-			Debug.logError("Unable to generate token for " +username, module);							
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Unable to generate token for " +username).build();
+			Debug.logError("Unable to generate token for " +username, module);	
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		result.put("token", token);
 		return Response.ok(result).build();
@@ -178,7 +180,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -187,7 +190,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		
@@ -199,11 +203,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("getWeaverDetails", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Weaver Details "+resultResult ).build();
+				result = ServiceUtil.returnError("Error getting Weaver Details "+resultResult );
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error getting Weaver Details");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Weaver Details " ).build();
+			result = ServiceUtil.returnError("Error getting Weaver Details " );
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
     }
@@ -248,7 +254,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -257,7 +264,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin: "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		
@@ -282,11 +290,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("getWeaverIndents", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Indents "+resultResult ).build();
+				result = ServiceUtil.returnError("Error getting Indents ");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error getting Indents");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Indents " ).build();
+			result = ServiceUtil.returnError("Error getting Indents ");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
     }
@@ -320,7 +330,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -329,7 +340,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin :" +username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -340,11 +352,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("getWeaverPayments", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Payments "+resultResult ).build();
+				result = ServiceUtil.returnError("Error getting Payments");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error getting Payments");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Payments " ).build();
+			result = ServiceUtil.returnError("Error getting Payments");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
 		
@@ -382,7 +396,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -391,7 +406,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -404,11 +420,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("getProducts", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Products "+resultResult ).build();
+				result = ServiceUtil.returnError("Error getting Products");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error getting Products");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Products " ).build();
+			result = ServiceUtil.returnError("Error getting Products");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
     }
@@ -441,7 +459,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -450,7 +469,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -459,11 +479,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("getTransporters", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Transporters "+resultResult ).build();
+				result = ServiceUtil.returnError("Error getting Transporters");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error getting Transporters");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Transporters " ).build();
+			result = ServiceUtil.returnError("Error getting Transporters");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
     }
@@ -500,7 +522,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -509,7 +532,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -522,11 +546,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("getSuppliers", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Suppliers "+resultResult ).build();
+				result = ServiceUtil.returnError("Error getting Suppliers");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error getting Suppliers");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Suppliers " ).build();
+			result = ServiceUtil.returnError("Error getting Suppliers");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
     }
@@ -562,7 +588,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -571,7 +598,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -583,11 +611,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("cancelIndent", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occured while cancel Indent "+resultResult ).build();
+				result = ServiceUtil.returnError("Error occured while cancel Indent");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error occured while cancel Indent");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error occured while cancel Indent " ).build();
+			result = ServiceUtil.returnError("Error occured while cancel Indent");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
     }
@@ -620,7 +650,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -629,7 +660,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -639,11 +671,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("getDepotStock", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while getting depot stock"+resultResult ).build();
+				result = ServiceUtil.returnError("Error while getting depot stock");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error while getting depot stock");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while getting depot stock " ).build();
+			result = ServiceUtil.returnError("Error while getting depot stock");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
 	}
@@ -677,7 +711,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -686,7 +721,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -696,11 +732,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("getIndentShipments", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while getting shipments"+resultResult ).build();
+				result = ServiceUtil.returnError("Error while getting shipments");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error while getting shipments");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while getting shipments " ).build();
+			result = ServiceUtil.returnError("Error while getting shipments");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
     }
@@ -756,7 +794,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -765,7 +804,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -800,11 +840,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("createBranchSalesIndent", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while Creating indent"+resultResult ).build();
+				result = ServiceUtil.returnError("Error while Creating indent");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error while Creating indent");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while Creating indent " ).build();
+			result = ServiceUtil.returnError("Error while Creating indent");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
 	}
@@ -836,7 +878,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -845,8 +888,9 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
-		}        
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
+		}      
 
 		Map<String, Object> inputMap = FastMap.newInstance();
 		inputMap.put("userLoginId", username);
@@ -859,12 +903,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("updatePassword", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error Updating the password:  "+ServiceUtil.getErrorMessage(resultResult)).build();
+				result = ServiceUtil.returnError("Error Updating the password");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error Updating the password");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error Updating the password:  ").build();
-	  
+			result = ServiceUtil.returnError("Error Updating the password");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
 
@@ -896,7 +941,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 		
@@ -905,22 +951,22 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
-		}        
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
+		}     
 		Map<String, Object> inputMap = FastMap.newInstance();
 		inputMap.put("userLogin", userLogin);
 		Map<String, Object> resultResult;
 		try {
 			resultResult = dispatcher.runSync("getMobilePermissions", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				// Validation problems!
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Mobile Permission service:   "+ServiceUtil.getErrorMessage(resultResult)).build();
-				//response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				result = ServiceUtil.returnError("Error getting Mobile Permission service");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error getting Mobile Permission service");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error getting Mobile Permission service:   ").build();
-  
+			result = ServiceUtil.returnError("Error getting Mobile Permission service");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
 
@@ -958,7 +1004,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -967,7 +1014,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -982,11 +1030,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("makeWeaverPayment", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while making payment"+resultResult ).build();
+				result = ServiceUtil.returnError("Error while making payment");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error while making payment");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while making payment " ).build();
+			result = ServiceUtil.returnError("Error while making payment");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
     }
@@ -1025,7 +1075,8 @@ public class MobileAppApiServices {
 		String usernameTemp = authenticate(dispatcher, paramMap);
 		if (usernameTemp == null) {
 			Debug.logWarning("Authentication failed for " +username, module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Authentication failed for " +username).build();			
+			result = ServiceUtil.returnError("Authentication failed");
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		username = usernameTemp;
 
@@ -1034,7 +1085,8 @@ public class MobileAppApiServices {
 			userLogin = delegator.findOne("UserLogin",UtilMisc.toMap("userLoginId",username), false);
 		}catch(GenericEntityException e){
 			Debug.logWarning("Error fetching userLogin " +username + " " +  e.getMessage(), module);
-			return Response.status(Response.Status.UNAUTHORIZED).entity("Error fetching userLogin " +username + " " +  e.getMessage()).build();
+			result = ServiceUtil.returnError("Error fetching userLogin  "+username);
+			return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
 		}
 		
 		Map<String, Object> inputMap = FastMap.newInstance();
@@ -1050,11 +1102,13 @@ public class MobileAppApiServices {
 		try {
 			resultResult = dispatcher.runSync("createPaymentGatewayTrans", inputMap);
 			if (ServiceUtil.isError(resultResult)) {
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while creating payment gateway trans"+resultResult ).build();
+				result = ServiceUtil.returnError("Error while creating payment gateway trans");
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 			}
 		} catch (GenericServiceException e) {
 			Debug.logError(e, "Error while creating payment gateway trans");
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while creating payment gateway trans " ).build();
+			result = ServiceUtil.returnError("Error while creating payment gateway trans");
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
 		}
 		return Response.ok(resultResult).build();
     }
