@@ -2233,6 +2233,7 @@ public class MaterialPurchaseServices {
 		//old PO flow starts from here
 		String partyId = (String) request.getParameter("supplierId");
 		String orderId = (String) request.getParameter("orderId");
+		String purposeTypeId = (String) request.getParameter("purposeTypeId");
 		String billFromPartyId = (String) request.getParameter("billToPartyId");
 		String shipToPartyId = (String) request.getParameter("facilityId");
 		String issueToDeptId = (String) request.getParameter("issueToDeptId");
@@ -2818,6 +2819,7 @@ public class MaterialPurchaseServices {
 		processOrderContext.put("productQtyList", itemDetail);
 		processOrderContext.put("orderTypeId", orderTypeId);
 		processOrderContext.put("orderId", orderId);
+		processOrderContext.put("purposeTypeId", purposeTypeId);
 		processOrderContext.put("termsList", termsList);
 		processOrderContext.put("partyId", partyId);
 		processOrderContext.put("grandTotal", grandTotal);
@@ -2910,6 +2912,7 @@ public class MaterialPurchaseServices {
 	  	String salesChannel = (String) context.get("salesChannel");
 	  	Map taxTermsMap = (Map) context.get("taxTermsMap");
 	  	String partyId = (String) context.get("partyId");
+	  	String purposeTypeId = (String) context.get("purposeTypeId");
 	  	String billFromPartyId = (String) context.get("billFromPartyId");
 	  	String shipToPartyId = (String) context.get("shipToPartyId");
 		String issueToDeptId = (String) context.get("issueToDeptId");
@@ -2968,7 +2971,12 @@ public class MaterialPurchaseServices {
 			cart.setBillFromVendorPartyId(partyId);
 		    cart.setShipFromVendorPartyId(partyId);
 		    cart.setSupplierAgentPartyId(partyId);
-		    cart.setPurposeTypeId("DEPOT_PURCHASE");
+		    if(UtilValidate.isNotEmpty(purposeTypeId)){
+		    	cart.setPurposeTypeId(purposeTypeId);
+		    }
+		    else{
+		    	cart.setPurposeTypeId("DEPOT_PURCHASE");
+		    }
 			cart.setEstimatedDeliveryDate(estimatedDeliveryDate);
 			cart.setOrderName(orderName);
 			//cart.setOrderDate(effectiveDate);
