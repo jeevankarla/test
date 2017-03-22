@@ -464,7 +464,7 @@ $( "#lrDate" ).datepicker({
 				<div id="myGrid1" style="width:100%;height:200px;"></div>
 			  
 			    <#assign formAction = "">
-			    <#if purposeTypeId?has_content &&  purposeTypeId == "DEPOT_PURCHASE">
+			    <#if purposeTypeId?has_content &&  (purposeTypeId == "DEPOT_PURCHASE" || purposeTypeId == "DC_DEPOT_PURCHASE")>
 				<#assign formAction ='processDepotTransReceiptItemsDEPOT'>			
 				<#else>
 				<#assign formAction ='processDepotTransReceiptItems'>	

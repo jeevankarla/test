@@ -441,6 +441,8 @@ function makeDatePicker(fromDateId ,thruDateId){
 	<tr>
 	    <td class="label">Supplier(<font color="red">*</font>) : </td>
 	    <input type="hidden" name="orderId" id="orderId"  value="${orderId?if_exists}" />
+	    <input type="hidden" name="purposeTypeId" id="purposeTypeId"  value="DC_DEPOT_PURCHASE" />
+	    
 	     <#--<input type="hidden" name="productStoreId"  value="${productStoreId?if_exists}" />-->
 	    <#if changeFlag?exists && changeFlag=='InterUnitPurchase'>
 	       <input type="hidden" name="salesChannel" id="salesChannel" value="INTER_PRCHSE_CHANNEL"/> 
