@@ -4902,7 +4902,7 @@
         	<display></display>
         </field>
         <field name="salesOrder" title="PO No" widget-style="buttontext">
-        	<hyperlink target="POoverviewDC" description="${salesOrder}" target-window="_blank">
+        	<hyperlink target="POoverViewDepotDC" description="${salesOrder}" target-window="_blank">
       			<parameter param-name="orderId" value="${primaryOrderId}"/>
       		</hyperlink>
         </field>
@@ -4975,6 +4975,7 @@
         <option key="GENERATED" description="Generated"  ></option>
         </drop-down>
         </field>
+        <field name="shipmentPurposeTypeId"><hidden value="DC_DEPOT_SHIPMENT"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
