@@ -548,7 +548,7 @@
                     <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
                     
                 </hyperlink> -->
-                 <hyperlink target="MaterialSalesInvoiceInit" description="Sales Invoice">
+                 <hyperlink target="MaterialSalesInvoiceInitDC" description="Sales Invoice">
                     <parameter param-name="shipmentId"/>
                     <parameter param-name="partyIdTo"/>
                     <parameter param-name="orderId" value="${orderId}"/>
