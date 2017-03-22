@@ -197,6 +197,8 @@ OrderItemBillingFilter = EntityUtil.filterByCondition(OrderItemBilling, EntityCo
 invoiceIds=EntityUtil.getFieldListFromEntityList(OrderItemBillingFilter, "invoiceId", true);
 condList = [];
 condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+if(branchList)
+condList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
 Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 partyIds=EntityUtil.getFieldListFromEntityList(Invoice, "partyId", true);
 partyPassMap= [:];
@@ -366,7 +368,6 @@ for(int i=0;i < Invoice.size();i++){
 		roDetails = delegator.findOne("PartyGroup",[partyId : roId] , false);		
 		roName = roDetails.groupName;
 	}
-	
 	invoiceDetailMap.put("ro",roName);
 	
 	finalList.add(invoiceDetailMap);
