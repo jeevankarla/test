@@ -829,6 +829,7 @@
 			//data[args.row]['KgunitPrice'] = packaging*baleQuantity;
 			//data[args.row]['unitPricePur'] = packaging*baleQuantity;
 			
+			if(args.cell == 2){
 		    $.ajax({
 	        	type: "POST",
 	         	url: "getProductPrice",
@@ -844,6 +845,8 @@
 	      		}
 	      		}
 	    	});
+	    	
+	    	}
 		
 		    if(args.cell == 4){
 		    
@@ -853,7 +856,7 @@
 		    
 		    }
 			
-			var kgUnitPrice = data[args.row]['KgunitPrice'];
+			//var kgUnitPrice = data[args.row]['KgunitPrice'];
 			var quantity = parseFloat(data[args.row]["quantity"]);
 							
 			data[args.row]['amount'] = kgUnitPrice*quantity;				
