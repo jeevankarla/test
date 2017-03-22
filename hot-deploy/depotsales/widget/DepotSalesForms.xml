@@ -548,7 +548,7 @@
                     <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
                     
                 </hyperlink> -->
-                 <hyperlink target="MaterialSalesInvoiceInitDC" description="Sales Invoice">
+                 <hyperlink target="MaterialSalesInvoiceInit" description="Sales Invoice">
                     <parameter param-name="shipmentId"/>
                     <parameter param-name="partyIdTo"/>
                     <parameter param-name="orderId" value="${orderId}"/>
@@ -4366,7 +4366,7 @@
          <field name="invoiceSeqId" title="_"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
           <field name="shipmentId" title="_"><display/></field>
-         <field name="partyIdFrom" title="__NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. __"><display/></field>
+         <field name="partyIdFrom" title="_"><display/></field>
          <field name="partyIdTo" title="_"><display/></field>
          <field name="quantity" title="_"><display/></field>
          <field name="purTax" title="_"><display/></field>
@@ -4734,7 +4734,7 @@
                     <parameter param-name="purchaseInvoiceId" from-field="${purchaseInvoiceId}"/>
                     
                 </hyperlink> -->
-                 <hyperlink target="MaterialSalesInvoiceInitDC" description="Sales Invoice">
+                 <hyperlink target="MaterialSalesInvoiceInit" description="Sales Invoice">
                     <parameter param-name="shipmentId"/>
                     <parameter param-name="partyIdTo"/>
                     <parameter param-name="orderId" value="${orderId}"/>
