@@ -128,7 +128,7 @@ conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LES
 conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"SALES_INVOICE"));
 conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
 if(UtilValidate.isNotEmpty(branchId)){
-	conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN,partyIdToList));
+	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,partyIdToList));
 }
 if(UtilValidate.isNotEmpty(geoId)){
 	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,partyIds));
@@ -223,7 +223,7 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 invoiceDate = UtilDateTime.toDateString(invoice.invoiceDate,"dd/MM/yyyy");
 			 temMap.put("invoiceDate", invoiceDate);
 			 partyId = invoice.partyId;
-			 partyIdFrom = invoice.partyIdFrom;
+			 partyIdFrom = invoice.costCenterId;
 			 userAgency = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);
 			 temMap.put("userAgency", userAgency);
 			 districtName = "";
