@@ -232,7 +232,7 @@
 				<decorator-screen name="DepotTransCommonDecoratorDC"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
-						<include-menu name="DepotTransReceiptTabBar"
+						<include-menu name="DepotTransReceiptTabBarDC"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 						<section>
 							<widgets>
@@ -250,6 +250,7 @@
 									</decorator-section>
 									<decorator-section name="search-results">
 										<screenlet title="">
+										
 											<include-form name="listDepotTransMaterialShipmentsDC"
 												location="component://depotsales/widget/DepotSalesForms.xml" />
 										</screenlet>
@@ -874,7 +875,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="Material Invoice Entry" />
-				<set field="tabButtonItem" value="DepotTransReceipts" />
+				<set field="tabButtonItem" value="DepotTransReceiptsDC" />
 				<set field="tabButtonItem2" value="DepotTransMaterialInvoiceInitDC" />
 				<set field="shipmentId" from-field="parameters.shipmentId" />
 				<set field="supplyDate" from-field="parameters.supplyDate" />
@@ -890,7 +891,7 @@
 				<decorator-screen name="DepotTransCommonDecoratorDC"
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
-						<include-menu name="DepotTransReceiptTabBar"
+						<include-menu name="DepotTransReceiptTabBarDC"
 							location="component://depotsales/widget/DepotSalesMenus.xml" />
 						<section>
 							<condition>
@@ -898,7 +899,7 @@
 									value="" />
 							</condition>
 							<widgets>
-								<include-screen name="PurchaseDepotInvoiceInner" />
+								<include-screen name="PurchaseDepotInvoiceInnerDC" />
 							</widgets>
 						</section>
 						<section>

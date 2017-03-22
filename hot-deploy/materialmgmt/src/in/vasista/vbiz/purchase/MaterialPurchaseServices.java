@@ -299,6 +299,7 @@ public class MaterialPurchaseServices {
 			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 			GenericValue newEntity = delegator.makeValue("Shipment");
 	        newEntity.set("estimatedShipDate", lrDateTimeStamp);
+	        //Debug.log("purposeTypeId========@@@========"+purposeTypeId);
 	        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
 		        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
 		        newEntity.set("shipmentPurposeTypeId", "YARN_SHIPMENT");
@@ -309,6 +310,10 @@ public class MaterialPurchaseServices {
 	        else if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DEPOT_PURCHASE")){
 	        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
 	        	newEntity.set("shipmentPurposeTypeId", "DEPOT_YARN_SHIPMENT");
+	        }
+	        else if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DC_DEPOT_PURCHASE")){
+	        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
+	        	newEntity.set("shipmentPurposeTypeId", "DC_DEPOT_SHIPMENT");
 	        }
 	        newEntity.set("statusId", "DISPATCHED");
 	        newEntity.put("vehicleId",vehicleId);
@@ -1132,11 +1137,27 @@ public class MaterialPurchaseServices {
 			productList = EntityUtil.getFieldListFromEntityList(orderItems, "productId", true);
 			GenericValue newEntity = delegator.makeValue("Shipment");
 	        newEntity.set("estimatedShipDate", lrDateTimeStamp);
+	        //Debug.log("purposeTypeId========@@@========"+purposeTypeId);
 	        if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
+		        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
+		        newEntity.set("shipmentPurposeTypeId", "YARN_SHIPMENT");
+	        }else if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DC_PURCHASE")){
+	        	newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
+	        	newEntity.set("shipmentPurposeTypeId", "DC_SHIPMENT");
+	        }
+	        else if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DEPOT_PURCHASE")){
+	        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
+	        	newEntity.set("shipmentPurposeTypeId", "DEPOT_YARN_SHIPMENT");
+	        }
+	        else if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DC_DEPOT_PURCHASE")){
+	        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
+	        	newEntity.set("shipmentPurposeTypeId", "DC_DEPOT_SHIPMENT");
+	        }
+	        /*if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("BRANCH_PURCHASE")){
 		        newEntity.set("shipmentTypeId", "BRANCH_SHIPMENT");
 	        }else{
 	        	newEntity.set("shipmentTypeId", "DEPOT_SHIPMENT");
-	        }
+	        }*/
 	        newEntity.set("statusId", "DISPATCHED");
 	        newEntity.put("vehicleId",vehicleId);
 	        newEntity.put("lrNumber",lrNumber);
