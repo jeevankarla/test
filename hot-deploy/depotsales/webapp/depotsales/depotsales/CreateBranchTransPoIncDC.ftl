@@ -130,6 +130,9 @@
 			
 			var remarks = parseFloat(data[rowCount]["remarks"]);
 			
+			var Packaging = data[rowCount]["Packaging"];
+			var packets = data[rowCount]["packets"];
+			
 			dataMap["remarks_o_"+rowCount] = remarks;
 			dataMap["orderItemSeqId_o_"+rowCount] = data[rowCount]["orderItemSeqId"];
 			
@@ -294,6 +297,9 @@
 			
 			var remarks = data[rowCount]["remarks"];
 			
+			var Packaging = data[rowCount]["Packaging"];
+			var packets = data[rowCount]["packets"];
+			
 			var orderItemSeqId = data[rowCount]["orderItemSeqId"];
 			
 			var vatPercent = data[rowCount]["vatPercent"];
@@ -327,6 +333,12 @@
 				
 				var remarks = jQuery("<input>").attr("type", "hidden").attr("name", "remarks_o_" + rowCount).val(remarks);
 				jQuery(formId).append(jQuery(remarks));
+				
+				var inputPackaging = jQuery("<input>").attr("type", "hidden").attr("name", "Packaging_o_" + rowCount).val(Packaging);
+			    var inputpackets = jQuery("<input>").attr("type", "hidden").attr("name", "packets_o_" + rowCount).val(packets);
+                
+                jQuery(formId).append(jQuery(inputPackaging));
+                jQuery(formId).append(jQuery(inputpackets)); 
                  
                 
                 // Purchase taxes
@@ -727,6 +739,8 @@
 			{id:"cProductName", name:"Product", field:"cProductName", width:270, minWidth:270, <#if orderId?exists>cssClass:"readOnlyColumnClass", focusable :false,<#else>cssClass:"cell-title", availableTags: availableTags, regexMatcher:"contains", editor: AutoCompleteEditor, validator: productValidator,</#if> sortable:false ,toolTip:""},
 			{id:"quantity", name:"Qty(Kgs)", field:"quantity", width:70, minWidth:70, cssClass:"cell-title",editor:FloatCellEditor, sortable:false ,focusable :false, formatter: quantityFormatter, cssClass:"readOnlyColumnClass" , validator: quantityValidator},
 			{id:"remarks", name:"Remarks", field:"remarks", width:150, minWidth:150, cssClass:"readOnlyColumnClass", sortable:false, focusable :false, align:"right", toolTip:"Unit of Measure"},
+			{id:"package", name:"Packaging(KGS)", field:"Packaging", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"packets", name:"packets", field:"packets", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			{id:"unitPrice", name:"Basic Unit Price in Kgs", field:"unitPrice", width:90, minWidth:90, cssClass:"cell-title",editor:FloatCellEditor, sortable:false, formatter: rateFormatter, align:"right", toolTip:"UD Price"},
 			{id:"amount", name:"Basic Amount(Rs)", field:"amount", width:100, minWidth:100, cssClass:"readOnlyColumnClass", sortable:false, formatter: rateFormatter, focusable :false},
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},

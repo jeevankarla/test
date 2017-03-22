@@ -618,6 +618,8 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 		
 		
 		remarks="";
+		packets ="";
+		packQuantity = "";
 		uom="";
 		baleQty=0;
 		bundleWght=0;
@@ -626,6 +628,8 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 		orderItemDtl = EntityUtil.filterByCondition(orderItemDetails, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 		if(UtilValidate.isNotEmpty(orderItemDtl)){
 			remarks = (orderItemDtl.get(0)).get("remarks");
+			packets = (orderItemDtl.get(0)).get("packets");
+			packQuantity = (orderItemDtl.get(0)).get("packQuantity");
 			uom = (orderItemDtl.get(0)).get("Uom");
 			bundleWght=(orderItemDtl.get(0)).get("bundleWeight");
 			if(uom==null){
@@ -655,6 +659,8 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 		newObj.put("unitPrice",eachItem.unitPrice);
 		newObj.put("itemAdjustments",itemAdjustmentJSON);
 		newObj.put("OTH_CHARGES_AMT",totalItemAdjAmt);
+		newObj.put("packets",packets);
+		newObj.put("Packaging",packQuantity);
 		
 		totalTaxAmt = 0;
 		if(purchaseTitleTransferEnumId){

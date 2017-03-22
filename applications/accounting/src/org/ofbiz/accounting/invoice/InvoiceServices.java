@@ -5711,7 +5711,7 @@ public class InvoiceServices {
 	       			//Debug.log("prefix============="+prefix);
 	       			if(UtilValidate.isNotEmpty(shipmentId)){
 	       				
-	       				if(UtilValidate.isEmpty(orderAssoc)){
+	  /*     				if(UtilValidate.isEmpty(orderAssoc)){
 	       					
 	       				    List condList = FastList.newInstance();
 			                condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -5738,7 +5738,16 @@ public class InvoiceServices {
 			                if(UtilValidate.isNotEmpty(orderRolesDetails)){
 			                	indentTypeId = "O";
 			                }
-	       				}
+	       				}*/
+	       				
+	       			    List condList = FastList.newInstance();
+		                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+						EntityCondition condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+						List<GenericValue> orderRolesDetails = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+		                if(UtilValidate.isNotEmpty(orderRolesDetails)){
+		                	indentTypeId = "O";
+		                }
 	                
 	                //Debug.log("indentTypeId============="+indentTypeId);
 	       			GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
