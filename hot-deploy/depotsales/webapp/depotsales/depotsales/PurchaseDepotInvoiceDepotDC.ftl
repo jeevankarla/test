@@ -112,6 +112,7 @@ input[type=button]:hover {
 				        <td width="40%">
 			    			<table  border="0" cellspacing="0" cellpadding="0" class="form-style-8">
 				        		<tr>
+				        			<input type="hidden" name="purposeTypeId"  value="DEPOT_DIES_CHEM_SALE" />
 	          						<input type="hidden" name="isFormSubmitted"  value="YES" />
 							        <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Invoice Date :</div></td>
 							        <#if effectiveDate?exists && effectiveDate?has_content>  

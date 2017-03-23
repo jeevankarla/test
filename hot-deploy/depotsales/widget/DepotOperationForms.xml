@@ -670,7 +670,7 @@
 	        	</drop-down>
         </field>
 <!--         <field name="roleTypeId"><hidden value="SUPPLIER_AGENT"/></field> -->
-         <field name="purposeTypeId"><hidden value="DEPOT_PURCHASE"/></field> 
+         <!-- <field name="purposeTypeId"><hidden value="DEPOT_PURCHASE"/></field>  -->
          <field name="findPoFlag"><hidden value="Y"/></field>  
     	<field name="supplierId" title="Supplier"><lookup target-form-name="SupplierLookupPartyName" target-parameter="roleTypeId"/></field>
     	<field name="purposeTypeId"><hidden value="DC_DEPOT_PURCHASE"/></field>
