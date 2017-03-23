@@ -570,7 +570,7 @@
          
          
         <field name="boapprove" title="Status" widget-style="buttontext" use-when="orderStatusId.equals(&quot;ORDER_CREATED&quot;)" >
-            <hyperlink target="approvalLevelOfDepotPoDepot" description="Order Approve"> 
+            <hyperlink target="approvalLevelOfDepotPoDepotDC" description="Order Approve"> 
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_APPROVED" />
                 <parameter param-name="inventoryItemId"/>
@@ -584,14 +584,14 @@
         </field>
         
            <field name="forIssuance" title="Status" widget-style="buttontext" use-when="(orderShipmentId.equals(&quot;N&quot;))&amp;&amp;(orderStatusId.equals(&quot;ORDER_APPROVED&quot;))" >
-            <hyperlink target="processIndentItemIssuance" description="Issue Indent" target-window="_blank"> 
+            <hyperlink target="processIndentItemIssuanceDC" description="Issue Indent" target-window="_blank"> 
                 <parameter param-name="orderId"/>
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field> 
         
         <field name="raiseInvoice" widget-style="buttontext" title="Sales Invoice"  use-when="(salesButton.equals(&quot;Y&quot;))&amp;&amp;(orderStatusId.equals(&quot;ORDER_APPROVED&quot;))&amp;&amp;(orderShipmentId.equals(&quot;Y&quot;))">
-            <hyperlink target="DepotMaterialSalesInvoiceInit" description="Sales Invoice">
+            <hyperlink target="DepotMaterialSalesInvoiceInitDC" description="Sales Invoice">
                 <parameter param-name="shipmentId"/>
                  <parameter param-name="partyId"/>
                   <parameter param-name="orderId"/>

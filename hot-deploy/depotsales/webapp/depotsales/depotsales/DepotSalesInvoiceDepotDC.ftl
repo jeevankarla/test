@@ -305,7 +305,7 @@ input[type=button]:hover {
 					</div>
 				</div>
 				</div>-->
-				<#assign formAction ='processNewSalesInvoiceDepot'>	
+				<#assign formAction ='processNewSalesInvoiceDepotDC'>	
 				<#if partyId?exists>
 			    	<div align="center">
 			    		<h3>

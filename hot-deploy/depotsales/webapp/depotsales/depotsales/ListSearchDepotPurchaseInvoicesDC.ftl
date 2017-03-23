@@ -373,7 +373,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 	function showCancelInvoiceQtip(invoiceId){
 		var invoiceId = invoiceId;
      	var message = "";
-            message += "<html><head></head><body><form id='invoicestatuschange' method='post' action='cancelDepotPurchaseInvoice' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+            message += "<html><head></head><body><form id='invoicestatuschange' method='post' action='cancelDepotPurchaseInvoiceDC' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
       		message += "<tr class='h2'><td align='left' class='h5' width='60%'>Invoice Id:</td><td align='left'  width='90%'>"+invoiceId+"</td></tr>";
   			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'>"	
   			message += "<input type='hidden' id='invId' name='invoiceId' value='"+invoiceId+"' >"
@@ -462,7 +462,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)?if_exists>
           	<#assign invoiceSequence = Static["org.ofbiz.accounting.invoice.InvoiceServices"].getInvoiceSequence(delegator, invoice.invoiceId)?if_exists/>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a class="buttontext" href="<@ofbizUrl>DepotTransAPInvoiceOverview?invoiceId=${invoice.invoiceId}&amp;subTabButtonValue=${tabButtonItem5}</@ofbizUrl>">${invoiceSequence}</a></td>
+              <td><a class="buttontext" href="<@ofbizUrl>DepotTransAPInvoiceOverviewDC?invoiceId=${invoice.invoiceId}&amp;subTabButtonValue=${tabButtonItem5}</@ofbizUrl>">${invoiceSequence}</a></td>
               <td>
                 <#assign invoiceType = delegator.findOne("InvoiceType", {"invoiceTypeId" : invoice.invoiceTypeId}, true) />
                 ${invoiceType.description?default(invoice.invoiceTypeId)}
@@ -509,7 +509,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               </#if>
               
               
-               <#if invoice.statusId != "INVOICE_CANCELLED"><td><a class="buttontext" target='_blank' href="<@ofbizUrl>DepotpurchaseInvoiceEdit?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
+               <#if invoice.statusId != "INVOICE_CANCELLED"><td><a class="buttontext" target='_blank' href="<@ofbizUrl>DepotpurchaseInvoiceEditDC?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
                   <#else>
  		   	          <td></td>
                </#if>

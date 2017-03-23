@@ -157,7 +157,7 @@ else{
 	condList.add(EntityCondition.makeCondition("salesChannelEnumId" ,EntityOperator.EQUALS, salesChannel));
 }
 */
-	condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "DEPOT_SALES"));
+	condList.add(EntityCondition.makeCondition("purposeTypeId" ,EntityOperator.EQUALS, "DC_DEPOT_SALES"));
 
 
 //condList.add(EntityCondition.makeCondition("shipmentId" ,EntityOperator.EQUALS, null)); // Review

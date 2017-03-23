@@ -860,7 +860,7 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 		var inventoryItemId = inventoryItemId;
 		var facilityId = facilityId;
 		
-		message += "<html><head></head><body><form action='cancelDepotSaleOrder' id='cancelDepotSaleOrder' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
+		message += "<html><head></head><body><form action='cancelDepotSaleOrderDC' id='cancelDepotSaleOrderDC' method='post' onsubmit='return disableGenerateButton();'><table hight=400 width=400>";
 			//message += "<br/><br/>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
 			message += "<tr class='h3'><td align='center' class='h3' ></td> </tr>";
