@@ -506,7 +506,7 @@ function drawRow(rowData) {
     if((rowData.POorder == "NA" && rowData.statusId == "ORDER_CREATED") || hasPermission){
        var orderParam = '\'' + rowData.orderId + '\'';
         var partyId = '\'' + rowData.partyId + '\'';
-    var cancellorder = "javascript:cancelOrderCaution("+ orderParam + ","+ partyId +")";
+    var cancellorder = "javascript:cancelOrderCautionDC("+ orderParam + ","+ partyId +")";
     var viewButton ='<input type=button name="viewOrder" id=viewOrder value="cancel" onclick="'+cancellorder+'">';
     
     row.append($("<td>" +  viewButton  +"</td>"));

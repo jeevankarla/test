@@ -500,6 +500,12 @@
         <response name="success" type="view" value="FindIndents"/>   
        <response name="failed" type="view" value="FindIndents"/>  
     </request-map>
+    <request-map uri="cancelDepotOrderDC">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelIndentOrder"/>
+        <response name="success" type="view" value="FindIndentsDC"/>   
+       <response name="failed" type="view" value="FindIndentsDC"/>  
+    </request-map>
     <request-map uri="cancelDepotSaleOrder">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="cancelIndentOrderDepot"/>
