@@ -545,7 +545,9 @@ function setOrgPartyId() {
 			      		 			<option value="TDS_194I">TDS_194I</option>
 			      		 			
 			      		 			</select></td>  
-	 			  					<td width="5%"></td>
+	 			  					<td width="5%"><input type="hidden" name="division" class="commonPartyId">
+					  					<input type="hidden" name="segment" class="commonSegmentId">
+					  				</td>
 									<td width="20%">
 										<table>
 										<tr><td><input type="submit" value="PDF" onClick="javascript:appendParams('MonthlyTDSAnnexure', '<@ofbizUrl>TDSReport.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
