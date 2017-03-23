@@ -13158,6 +13158,17 @@ public class DepotPurchaseServices{
 				
 			}
 			
+			condList.clear();
+	    	condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+	    	condList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+	        List<GenericValue> OrderItemDetail = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+
+	        for (GenericValue eachDeatail : OrderItemDetail) {
+	        	eachDeatail.set("unitPrice",eachItem.getBigDecimal("unitPrice"));
+	        	eachDeatail.store();
+			}
+			
+			
 		} 
 		
 		 }catch(GenericEntityException e){

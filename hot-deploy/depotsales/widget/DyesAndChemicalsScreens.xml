@@ -848,7 +848,7 @@
 				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/indentCheckListReport.groovy"/> -->
 				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enableBoothAutoComplete.groovy"/> -->
 				<script
-					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoComplete.groovy" />
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoCompleteDC.groovy" />
 				<set field="routeId" from-field="parameters.routeId" />
 			</actions>
 			<widgets>
