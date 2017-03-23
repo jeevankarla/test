@@ -85,7 +85,7 @@ input[type=button]:hover {
 	     </div>
 	      
 	    <div class="screenlet-body">
-	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit">  
+	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInitDC</@ofbizUrl>" id="purchaseEntryInit">  
 	      <table width="60%" border="0" cellspacing="0" cellpadding="0">
 			    	<tr>
 				        <td width="40%">
