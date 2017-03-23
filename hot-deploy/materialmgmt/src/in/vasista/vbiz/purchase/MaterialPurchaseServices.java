@@ -630,6 +630,8 @@ public class MaterialPurchaseServices {
 				}
 			}
 			GenericValue orderHeaderDetails = null;
+			GenericValue orderHeaderDetailsSale = null;
+			String orderStatusId = null;
 			orderHeaderDetails = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 	        String statusId = orderHeaderDetails.getString("statusId");
 	        if(statusId.equals("ORDER_COMPLETED")){
@@ -637,7 +639,10 @@ public class MaterialPurchaseServices {
 				String toOrderId ="";
 				if(UtilValidate.isNotEmpty(orderAssoc)){
 					toOrderId = (EntityUtil.getFirst(orderAssoc)).getString("toOrderId");
+					orderHeaderDetailsSale = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", toOrderId), false);
+					orderStatusId = orderHeaderDetailsSale.getString("statusId");
 				}
+				if(!orderStatusId.equals("ORDER_COMPLETED")){	
 	        	Map statusCtx = FastMap.newInstance();
 	 			statusCtx.put("statusId", statusId);
 	 			statusCtx.put("orderId", toOrderId);
@@ -647,6 +652,9 @@ public class MaterialPurchaseServices {
 	 				Debug.logError("Order set status failed for orderId: " + orderId, module);
 	 				return "error";
 	 			} 
+	 			
+				}
+	 			
 	        }
 	if(UtilValidate.isNotEmpty(hideQCflow)&&("Y".equals(hideQCflow))){
 				
