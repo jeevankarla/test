@@ -4771,7 +4771,7 @@
 	            <display description="Approved"></display>
 	        </field>
             <field name="salesInvoiceStatusId" title="Sales Invoice Approval" widget-style="buttontext" use-when="(salesInvoiceId !=null) &amp;&amp;(salesInvoiceStatusId.equals(&quot;INVOICE_IN_PROCESS&quot;))" >
-	             <hyperlink target="approveSalesInvoice" description="Approve Invoice">
+	             <hyperlink target="approveSalesInvoiceDC" description="Approve Invoice">
                     <parameter param-name="salesInvoiceId" from-field="${salesInvoiceId}"/>
                 </hyperlink>
 	        </field>
@@ -4779,7 +4779,7 @@
 	            <display description="Approved"></display>
 	        </field>
             <field name="cancelGRN" widget-style="buttontext" title="Cancel Ship" use-when="(&quot;${invSize}&quot; == &quot;0&quot;)&amp;&amp;(invoiceReceiptSize.equals(&quot;0&quot;))&amp;&amp;(!statusId.equals(&quot;SHIPMENT_CANCELLED&quot;))&amp;&amp; ${groovy:((security.hasEntityPermission(&quot;DEPOTSALES&quot;, &quot;_RAISE_GRN&quot;, session)))}">
-                <hyperlink target="CancelGrnShipment" description="Cancel">
+                <hyperlink target="CancelGrnShipmentDCNew" description="Cancel">
                     <parameter param-name="shipmentId"/>
                 </hyperlink>
             </field> 
