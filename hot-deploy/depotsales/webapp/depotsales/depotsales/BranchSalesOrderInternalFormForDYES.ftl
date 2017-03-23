@@ -79,7 +79,7 @@
 	
 </style>			
 	
-<#include "EditUDPPriceDepotTest.ftl"/>		
+<#include "EditUDPPriceDepotTestDC.ftl"/>		
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>

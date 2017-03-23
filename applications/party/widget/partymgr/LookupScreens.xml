@@ -675,7 +675,7 @@ under the License.
                 <set field="queryString" from-field="result.queryString"/>
                 <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
-                <set field="parameters.roleTypeId" value="DYS_CMLS_CUSTOMER" />
+                <set field="parameters.roleTypeId" value="EMPANELLED_CUSTOMER" />
                 <!-- <entity-one value-field="productStore" entity-name="ProductStore">
 					<field-map field-name="productStoreId" from-field="parameters.productStoreId" />
 					<select-field field-name="propertyValue" />
