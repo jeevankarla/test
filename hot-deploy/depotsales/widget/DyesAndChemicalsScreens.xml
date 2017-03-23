@@ -559,7 +559,7 @@
 			<section>
 				<actions>
 					<set field="titleProperty" value="Material Invoice Entry" />
-					<set field="tabButtonItem" value="FindGRNReceipts" />
+					<set field="tabButtonItem" value="FindGRNReceiptsDC" />
 					<set field="tabButtonItem2" value="purchaseInvoiceEditDC" />
 					<set field="shipmentId" from-field="parameters.shipmentId" />
 					<set field="invoiceId" from-field="parameters.invoiceId" />
@@ -2250,7 +2250,7 @@
 									value="" />
 							</condition>
 							<widgets>
-								<include-screen name="SalesEditInvoiceInner" />
+								<include-screen name="SalesEditInvoiceInnerDC" />
 							</widgets>
 						</section>
 						<section>
@@ -2271,7 +2271,7 @@
 	
 	
 	
-	<screen name="SalesEditInvoiceInner">
+	<screen name="SalesEditInvoiceInnerDC">
 		<section>
 			<actions>
 				<set field="changeFlag" from-field="changeFlag" />
@@ -2299,7 +2299,7 @@
 						<platform-specific>
 							<html>
 								<html-template
-									location="component://depotsales/webapp/depotsales/depotsales/SalesEditInvoiceDepot.ftl" />
+									location="component://depotsales/webapp/depotsales/depotsales/SalesEditInvoiceDepotDC.ftl" />
 							</html>
 						</platform-specific>
 					</widgets>
@@ -2367,7 +2367,7 @@
 										<platform-specific>
 											<html>
 												<html-template
-													location="component://depotsales/webapp/depotsales/depotsales/qcApprovalDepotDC.ftl" />
+													location="component://depotsales/webapp/depotsales/depotsales/qcApprovalDepotDCNew.ftl" />
 											</html>
 										</platform-specific>
 									</decorator-section>

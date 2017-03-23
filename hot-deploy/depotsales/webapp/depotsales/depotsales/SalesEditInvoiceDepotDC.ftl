@@ -1,24 +1,5 @@
 <link type="text/css" href="<@ofbizContentUrl>/images/jquery/ui/css/ui-lightness/jquery-ui-1.8.13.custom.css</@ofbizContentUrl>" rel="Stylesheet" />	
 
-<style type="text/css">
-
-	.grid-header {
-		    border: 1px solid gray;
-		    border-bottom: 0;
-		    border-top: 0;
-		    background: url('../images/header-bg.gif') repeat-x center top;
-		    color: black;
-		    height: 24px;
-		    line-height: 24px;
-		    border-radius: 7px;
-		    background-color: #FFFFFF;
-		}
-
-
-</style>
-
-
-
 <script type="text/javascript">
 	
 $(document).ready(function(){
@@ -28,7 +9,6 @@ $(document).ready(function(){
 			dateFormat:'d MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
-			minDate: new Date(${minimumtime?if_exists}),
 			onSelect: function( selectedDate ) {
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}
@@ -90,36 +70,35 @@ input[type=button]:hover {
 
 </style>
 
-
-
 <#assign changeRowTitle = "Changes">                
 
-<#include "PurchaseInvoiceDepotIncDC.ftl"/>
-<#include "EditPurchaseInvoicePrice.ftl"/>
+<#include "SalesEditInvoiceDepotInc.ftl"/>
+<#include "EditSaleInvoicePrice.ftl"/>
 
-<div class="full" style="width:100%">
+<div class="full">
 	
 		<div class="screenlet-title-bar">
 	         <div class="grid-header" style="width:100%">
-				<label>Purchase Invoice Entry</label>
+				<label>Sales Invoice Entry </label>
 			</div>
 	     </div>
 	      
 	    <div class="screenlet-body">
-	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInitDC</@ofbizUrl>" id="purchaseEntryInit">  
-	      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	    <form method="post" name="purchaseEntryInit" action="<@ofbizUrl>MaterialInvoiceInit</@ofbizUrl>" id="purchaseEntryInit">  
+	      <table width="60%" border="0" cellspacing="0" cellpadding="0">
 			    	<tr>
 				        <td width="40%">
 			    			<table  border="0" cellspacing="0" cellpadding="0" class="form-style-8">
 				        		<tr>
 	          						<input type="hidden" name="isFormSubmitted"  value="YES" />
-							        <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Invoice Date :</div></td>
-							        <#if effectiveDate?exists && effectiveDate?has_content>  
-								  	 	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
+							        <input type="hidden" id="invoiceId" name="invoiceId"  value="${invoiceId}" />
+	         						<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Invoice Date :</div></td>
+							        <#if invoDate?exists && invoDate?has_content>  
+								  	 	<#--<input type="hidden" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>-->  
 							          	<td valign='middle'>
-							            	<div class='tabletext h4'><font color="green">${effectiveDate}         
-							            	</div>
-							          	</td>       
+	            							<#--<div class='tabletext h3'>${invoDate}</div>-->
+	            							<input type="text" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>
+	          							</td>     
 							       	<#else> 
 							          	<td valign='middle'><font color="green">          
 							           		<input class='h4' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
@@ -138,19 +117,7 @@ input[type=button]:hover {
 				          			</#if>
 	        				   </tr>
 	        				   
-	        				   <#--
-	        <tr>
-	          <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Shipment Date:</div></td>
-				<#if shipmentDate?exists && shipmentDate?has_content>  
-		  	  		<input type="hidden" name="estimatedShipDate" id="estimatedShipDate" value="${shipmentDate?if_exists}"/>  
-	          		<td valign='middle'>
-	            		<div class='tabletext h4'>
-	            			${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentDate, "dd MMMM, yyyy")?if_exists}
-	            		</div>
-	          		</td>       
-	          	</#if>
-	        </tr> 
-	        -->
+	        				   
 	        <tr><td><br/></td></tr>
 	        <tr>
 	          <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Supplier:</div></td>
@@ -178,12 +145,12 @@ input[type=button]:hover {
 	          	</#if>
 	        </tr>
 	        <tr>
-	        <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Customer:</div></td>
-	        <#if weaverPartyId?exists && weaverPartyId?has_content>  
-	      		<td valign='middle' colspan="5">
-	        		<div class='tabletext h4'><font color="green">
-	        			<#assign cutomerName = delegator.findOne("PartyNameView", {"partyId" : weaverPartyId}, true) />
-	           			${weaverPartyId?if_exists} [ ${cutomerName.groupName?if_exists} ${cutomerName.firstName?if_exists} ${cutomerName.lastName?if_exists}]             
+	        <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Branch:</div></td>
+	        <#if branchPartyId?exists && branchPartyId?has_content>  
+	      		<td valign='middle'>
+	        		<div class='tabletext h3'>
+	        			<#assign branchName = delegator.findOne("PartyNameView", {"partyId" : branchPartyId}, true) />
+	           			${branchPartyId?if_exists} [ ${branchName.groupName?if_exists} ${branchName.firstName?if_exists} ${branchName.lastName?if_exists}]             
 	        		</div>
 	      		</td>       
 	         </#if>
@@ -203,24 +170,30 @@ input[type=button]:hover {
 	            		<input class='h3' type="text" name="tallyrefNo" id="tallyrefNo" value="${tallyRefNo}"/>           		
 	            	</td>
 	       	  </#if> -->
-	       	  
+	       	  <#if tallyRefNo?exists && tallyRefNo?has_content>  
 	       	  <td valign='middle'><font color="green">          
+	            		<input class='h4' type="text" name="tallyrefNo" id="tallyrefNo" value="${tallyRefNo}"/>           		
+	            	</td>
+	            	<#else>
+	            	<td valign='middle'><font color="green">          
 	            		<input class='h4' type="text" name="tallyrefNo" id="tallyrefNo" />           		
 	            	</td>
+	            	</#if>
 	       	  
 	        </tr>
-	       	<tr>
-	            <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Vehicle No:</div></td>
-				<#if vehicleId?exists && vehicleId?has_content>  
-		  	  		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId?if_exists}"/>  
-	          		<td valign='middle' colspan="5"><font color="green">
-	            		<div class='tabletext h4'>${vehicleId?if_exists}</div> 
+	       <tr>
+	            <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>invoiceId:</div></td>
+				<#if invoiceId?exists && invoiceId?has_content>  
+		  	  		<input type="hidden" name="invoiceId" id="invoiceId" value="${invoiceId?if_exists}"/>  
+	          		<td valign='middle'><font color="green">
+	            		<div class='tabletext h4'>${invoiceId?if_exists}</div> 
 	          		</td>       
 	          	</#if>
-	        </tr> 
+	        </tr>  
+	       	
 	        <tr><td><br/></td></tr>
 	       	<tr>
-	            <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Purchase Order No:</div></td>
+	            <td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Sales Order No:</div></td>
 				<#if orderId?exists && orderId?has_content>  
 		  	  		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/> 
 		  	  		<#if orderNo?exists && orderNo?has_content>   
@@ -237,11 +210,11 @@ input[type=button]:hover {
 	        
 	        <tr>
 	        	
-		       	  		<td align='left' nowrap="nowrap"><div class='h4'>Purchase Tax Type:</div></td>
+		       	  		<td align='left' nowrap="nowrap"><div class='h4'>Sale Tax Type:</div></td>
 		       	  		<td valign='middle'>
-	          				<select name="purchaseTaxType" id="purchaseTaxType" class='h4' style="width:120px">
-	          					<#if purchaseTaxType?exists && purchaseTaxType?has_content>
-	          						<#if purchaseTaxType == "Intra-State">
+	          				<select name="saleTaxType" id="saleTaxType" class='h4' style="width:120px">
+	          					<#if saleTaxType?exists && saleTaxType?has_content>
+	          						<#if saleTaxType == "Intra-State">
 	          							<option value="Intra-State" selected>With In State</option>
 	          						<#else>
 	          							<option value="Inter-State" selected>Inter State</option>
@@ -250,8 +223,8 @@ input[type=button]:hover {
 	          					<option value="Intra-State">With In State</option>
 	          					<option value="Inter-State">Inter State</option>
 	          				</select>
-	          				<#if supplierGeoId?exists && supplierGeoId?has_content>
-					    		<input type="hidden" name="supplierGeoId" id="supplierGeoId" size="18" maxlength="60" value="${supplierGeoId}" readonly/>
+	          				<#if customerGeoId?exists && customerGeoId?has_content>
+					    		<input type="hidden" name="customerGeoId" id="customerGeoId" size="18" maxlength="60" value="${customerGeoId}" readonly/>
 					    	</#if>
 					      	<#if branchGeoId?exists && branchGeoId?has_content>
 					    		<input type="hidden" name="branchGeoId" id="branchGeoId" size="18" maxlength="60" value="${branchGeoId}" readonly/>
@@ -260,15 +233,15 @@ input[type=button]:hover {
 		          		<td>&nbsp;</td>
 		          		<td align='left' nowrap="nowrap"><div class='h4'>Tax Form:</div></td>
 		       			<td valign='middle'>
-	          				<select name="purchaseTitleTransferEnumId" id="purchaseTitleTransferEnumId" class='h4' style="width:205px">
-	          					<#if purchaseTitleTransferEnumId?exists && purchaseTitleTransferEnumId?has_content>
-	          						<#if purchaseTitleTransferEnumId == "CST_CFORM">
+	          				<select name="saleTitleTransferEnumId" id="saleTitleTransferEnumId" class='h4' style="width:205px">
+	          					<#if saleTitleTransferEnumId?exists && saleTitleTransferEnumId?has_content>
+	          						<#if saleTitleTransferEnumId == "CST_CFORM">
 	          							<option value="CST_CFORM" selected>Transaction With C Form</option>
 	          						</#if>
-	          						<#if purchaseTitleTransferEnumId == "CST_NOCFORM">
+	          						<#if saleTitleTransferEnumId == "CST_NOCFORM">
 	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
 	          						</#if>
-	          						<#if purchaseTitleTransferEnumId == "NO_E2_FORM">
+	          						<#if saleTitleTransferEnumId == "NO_E2_FORM">
 	          							<option value="NO_E2_FORM" selected></option>
 	          						</#if> 
 	          					</#if> 
@@ -280,85 +253,13 @@ input[type=button]:hover {
 	          				</select>
 	          			</td>
 		       		</tr>  
-		       		</table>
-	    			</td>
-	    			<td border="1">
-	    			<#if ShipmentDetail?has_content>
-	    				<table  class="form-style-7">
-				      	  <tr>
-				      	  
-				      		  <td align="center" colspan="5">
-				       			<font ><b><u> Shipment History</u></b></font>
-				       		 </td>
-	    				 </tr>
-	    				 <tr>
-	    				 	<td width="10%" align="center">
-								<b>ShipmentId</b>	    						 
-			    			</td>
-	    					<td width="40%" align="center">
-								<b>Supplier Invoice No.</b>	    						 
-			    			</td>
-			    			<td width="20%" align="center">
-								<b>Supplier Invoice Date</b>    						 
-			    			</td>
-			    			<td width="40%" align="center">
-			    				<b>Delivery Challan No.</b>
-			    			</td>
-			    			<td width="20%" align="center">
-			    				<b>Delivery Challan Date</b>
-			    			</td>
-			    			<td width="40%" align="center">
-			    				<b>LR No</b>
-			    			</td>
-			    			<td width="20%" align="center">
-			    				<b>LR Date</b>
-			    			</td>
-			    			<td width="40%" align="center">
-								<b>Carrier/Courier Name</b>  						 
-			    			</td>
-			    			<td width="20%" align="center">
-								<b>Freight Charges</b>  						 
-			    			</td>
-	    				 </tr>
-	    				 <tr>
-	    				 	<td width="10%">
-	    						 ${ShipmentDetail.get("shipmentId")}
-			    			</td>
-	    					<td width="40%" align="left">
-	    						  ${ShipmentDetail.get("supplierInvoiceId")?if_exists}
-			    			</td>
-			    			<td width="20%" align="center">
-	    						  ${ShipmentDetail.get("supplierInvoiceDate")?if_exists}
-			    			</td>
-			    			<td  width="40%" align="left">
-	    						${ShipmentDetail.get("deliveryChallanNumber")?if_exists}
-			    			</td>
-			    			<td width="20%" align="center">
-	    						 ${ShipmentDetail.get("deliveryChallanDate")?if_exists}
-			    			</td>
-			    			<td  width="40%" align="left">
-	    						 ${ShipmentDetail.get("lrNumber")?if_exists}
-			    			</td>
-			    			<td width="20%" align="center">
-	    						 ${ShipmentDetail.get("estimatedReadyDate")?if_exists}
-			    			</td>
-			    			<td  width="40%" align="center">
-	    						 ${ShipmentDetail.get("carrierName")?if_exists}
-			    			</td>
-			    			<td width="20%" align="right">
-	    						 ${ShipmentDetail.get("estimatedShipCost")?if_exists}
-			    			</td>		    			
-	    				 </tr>
-	    				</table>
-	    			</#if>
-	    			</td>
-	    			</tr>        
-	      </table>
-	      <div id="sOFieldsDiv" >
+		       	</table>
+		       	</td>
+		       	
+		       </table>	
+	    	<div id="sOFieldsDiv" >
 	      </div> 
 	</form>
-	</div>
-		</div>
 	<br/>
     <form method="post" id="indententry" action="<@ofbizUrl>purchaseEntryInit</@ofbizUrl>">  
 	<#-- passing BillToPartyId: -->
@@ -379,23 +280,22 @@ input[type=button]:hover {
 	<div class="screenlet">
 	    <div class="screenlet-title-bar">
 	 		<div class="grid-header" style="width:100%">
-				<label>Purchase Items</label><span id="totalAmount"></span>
+				<label>Sales Items</label><span id="totalAmount"></span>
 			</div>
 			 <div class="screenlet-body" id="FieldsDIV" >
 				<div id="myGrid1" style="width:100%;height:150px;">
 					<div class="grid-header" style="width:100%">
 					</div>
 				</div>
-				<#--
-				<div class="lefthalf">
+			  <#--	<div class="lefthalf">
 				<div class="screenlet-title-bar">
 					<div class="grid-header" style="width:100%">
 						<label>Additional Charges</label><span id="totalAmount"></span>
 					</div>
-					<div id="myGrid2" style="width:100%;height:200px;">
+					<div id="myGrid2" style="width:100%;height:180px;">
 						<div class="grid-header" style="width:100%">
 						</div>
-					</div>
+					</div> 
 				</div>
 				</div>
 				<div class="righthalf" >
@@ -403,20 +303,19 @@ input[type=button]:hover {
 					<div class="grid-header" style="width:100%">
 						<label>Discounts</label><span id="totalAmount"></span>
 					</div>
-					<div id="myGrid3" style="width:100%;height:200px;">
+					<div id="myGrid3" style="width:100%;height:180px;">
 						<div class="grid-header" style="width:100%">
 						</div>
-					</div>
+					</div>-->
 				</div>
 				</div>
-				-->
-				<#assign formAction ='processPurchaseInvoiceDC'>	
-				<#if partyId?exists>
+				<#assign formAction ='processEditSalesInvoiceDC'>	
+				<#if invoiceId?exists>
 			    	<div align="center">
 			    		<h3>
 			    		<input type="submit" style="padding:.4em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 			    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			    		<input type="submit" style="padding:.4em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>FindGRNShipmentsDepot</@ofbizUrl>');"/>
+			    		<input type="submit" style="padding:.4em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>FindGRNShipmentsDepotDC</@ofbizUrl>');"/>
 			    		</h3>   	
 			    	</div>     
 				</#if>  	

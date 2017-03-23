@@ -708,6 +708,12 @@
        <response name="success" type="request-redirect-noparam" value="FindSupplierShipments"/>
        <response name="error" type="view" value="FindSupplierShipments"/>
      </request-map>
+     <request-map uri="CancelGrnShipmentDCNew">
+       <security https="true" auth="true"/>
+        <event type="service" path="" invoke="processCancelGrnShipment"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepotDC"/>
+       <response name="error" type="view" value="FindGRNShipmentsDepotDC"/>
+     </request-map>
      <request-map uri="CancelGrnShipmentDC">
        <security https="true" auth="true"/>
         <event type="service" path="" invoke="processCancelGrnShipment"></event>
@@ -802,6 +808,12 @@
        <response name="success" type="view" value="FindGRNShipmentsDepot"/>
        <response name="error" type="view" value="FindGRNShipmentsDepot"/>
      </request-map>
+     <request-map uri="processPurchaseInvoiceDC">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotPurchaseInvoice" global-transaction="true"/>
+       <response name="success" type="view" value="FindGRNShipmentsDepotDC"/>
+       <response name="error" type="view" value="FindGRNShipmentsDepotDC"/>
+     </request-map>
      
      
      <request-map uri="processDepotPurchaseInvoice">
@@ -826,12 +838,27 @@
         </response>
        <response name="error" type="view" value="DepotSalesInvoice"/>
      </request-map>
+     <request-map uri="processNewSalesInvoiceDC">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processNewDepotSalesInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect" value="DepotSalesInvoiceDC">
+        <redirect-parameter  name="invoiceId"/>
+        <redirect-parameter name="noConditionFind" value="Y"/>     
+        </response>
+       <response name="error" type="view" value="DepotSalesInvoiceDC"/>
+     </request-map>
      
       <request-map uri="processEditSalesInvoice">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processEditSalesInvoice" global-transaction="true"/>
        <response name="success" type="request-redirect-noparam" value="DepotSalesInvoice"/>
        <response name="error" type="view" value="DepotSalesInvoice"/>
+     </request-map>
+      <request-map uri="processEditSalesInvoiceDC">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processEditSalesInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="DepotSalesInvoiceDC"/>
+       <response name="error" type="view" value="DepotSalesInvoiceDC"/>
      </request-map>
      
       <request-map uri="processDepotEditSalesInvoice">
@@ -846,6 +873,12 @@
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processEditPurchaseInvoice" global-transaction="true"/>
        <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoice"/>
        <response name="error" type="view" value="DepotPurchaseInvoice"/>
+     </request-map>
+     <request-map uri="processEditPurchaseInvoiceDC">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processEditPurchaseInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="DepotPurchaseInvoiceDC"/>
+       <response name="error" type="view" value="DepotPurchaseInvoiceDC"/>
      </request-map>
      
      <request-map uri="processEditPurchaseInvoiceDEPOT">
@@ -873,6 +906,12 @@
         <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="approveSalesInvoice" global-transaction="true"/>
        <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
        <response name="error" type="request-redirect-noparam" value="DepotSalesInvoice"/>
+     </request-map>
+     <request-map uri="approveSalesInvoiceDC">
+       <security https="true" auth="true"/>
+        <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="approveSalesInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepotDC"/>
+       <response name="error" type="request-redirect-noparam" value="DepotSalesInvoiceDC"/>
      </request-map>
      
      <request-map uri="FindMaterialInvoices">
@@ -908,6 +947,12 @@
        <event type="service" path="" invoke="acceptShipmentAndApproveInvoice"></event>
        <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
        <response name="error" type="request-redirect-noparam" value="FindGRNShipmentsDepot"/>
+     </request-map>
+     <request-map uri="acceptShipmentAndApproveInvoiceDC">
+       <security https="true" auth="true"/>
+       <event type="service" path="" invoke="acceptShipmentAndApproveInvoice"></event>
+       <response name="success" type="request-redirect-noparam" value="FindGRNShipmentsDepotDC"/>
+       <response name="error" type="request-redirect-noparam" value="FindGRNShipmentsDepotDC"/>
      </request-map>
       <request-map uri="MaterialForQCApproval">
        <security https="true" auth="true"/>

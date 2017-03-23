@@ -315,13 +315,13 @@ input[type=button]:hover {
 					</div>
 				</div>
 				</div>-->
-				<#assign formAction ='processNewSalesInvoice'>	
+				<#assign formAction ='processNewSalesInvoiceDC'>	
 				<#if partyId?exists>
 			    	<div align="center">
 			    		<h3>
 			    		<input type="submit" style="padding:.4em" id="changeSave" value="Submit" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"/>
 			    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			    		<input type="submit" style="padding:.4em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>FindGRNShipmentsDepot</@ofbizUrl>');"/>
+			    		<input type="submit" style="padding:.4em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>FindGRNShipmentsDepotDC</@ofbizUrl>');"/>
 			    		</h3>   	
 			    	</div>     
 				</#if>  	
