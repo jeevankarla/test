@@ -390,9 +390,9 @@ function datepick()
           <td>${uiLabelMap.AccountingFromParty}</td> 
           <td>${uiLabelMap.AccountingToParty}</td>
           <td>${uiLabelMap.AccountingAmount}</td>
-          <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
-          <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
-          <td>Pay</td>
+          <td>Invoice Amount</td>
+          <td>Payable Amount</td>
+          <td>Outstanding Amount</td>
           <td>select</td>
           <td>${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>

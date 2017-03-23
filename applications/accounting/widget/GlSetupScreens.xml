@@ -162,6 +162,7 @@
 				<set field="labelTitleProperty"
 					value="${uiLabelMap.AccountingAvailableInternalOrganizations}" />
 				<entity-condition entity-name="PartyAcctgPrefAndGroup" list="parties">
+				<condition-expr field-name="partyId" operator="equals" value="Company"/>
 					<order-by field-name="groupName"/>
 				</entity-condition>
 				<service service-name="acctgPrefPermissionCheck" result-map="permResult">
