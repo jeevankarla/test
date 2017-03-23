@@ -630,7 +630,7 @@
 							<platform-specific>
 								<html>
 									<html-template
-										location="component://depotsales/webapp/depotsales/depotsales/PurchaseInvoiceEditDepotDCNew.ftl" />
+										location="component://depotsales/webapp/depotsales/depotsales/PurchaseInvoiceEditDepot.ftl" />
 								</html>
 							</platform-specific>
 						</widgets>
