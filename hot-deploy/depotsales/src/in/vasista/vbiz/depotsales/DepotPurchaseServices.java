@@ -8421,9 +8421,9 @@ public class DepotPurchaseServices{
 							cstPercentStr = (String) paramMap.get("cstPercent"
 									+ thisSuffix);
 						}
-						if (paramMap.containsKey("Packing" + thisSuffix)) {
+						if (paramMap.containsKey("Packaging" + thisSuffix)) {
 							packingStr = (String) paramMap
-									.get("Packing" + thisSuffix);
+									.get("Packaging" + thisSuffix);
 						}
 						if (paramMap.containsKey("packets" + thisSuffix)) {
 							packetsStr = (String) paramMap
@@ -9192,6 +9192,13 @@ public class DepotPurchaseServices{
 						item = cart.findCartItem(itemIndx);
 						
 						item.setOrderItemAttribute("remarks",remarks);
+						
+						if(UtilValidate.isNotEmpty(packing))
+						item.setOrderItemAttribute("packetQuantity",packing.toString());
+						
+						if(UtilValidate.isNotEmpty(packets))
+						item.setOrderItemAttribute("packets",packets.toString());
+						
 						
 						if( (UtilValidate.isNotEmpty(orderItemSeqId)) && (UtilValidate.isNotEmpty(orderId))){
 							item.setAssociatedOrderId(orderId);
