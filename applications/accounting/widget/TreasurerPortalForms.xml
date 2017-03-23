@@ -1463,7 +1463,7 @@ under the License.
             </drop-down>
         </field>
         <field name="partyIdFrom" position="2" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1" required-field="true">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="PaymentType">
                     <entity-constraint name="parentTypeId" value="ADVANCES_PAYIN"/>
@@ -1479,7 +1479,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field position="2" name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}" event="onchange" action="javascript:paymentFieldsOnchange();" >
+        <field position="2" name="paymentMethodTypeId" title="${uiLabelMap.FormFieldTitle_paymentMethodTypeId}" event="onchange" action="javascript:paymentFieldsOnchange();" required-field="true">
             <drop-down allow-empty="true">
                  <list-options list-name="paymentMethodTypeList" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
@@ -1487,7 +1487,7 @@ under the License.
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}"><text/></field>
         <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
         <field name="transactionDate" position="1" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
-        <field name="paymentPurposeType" position="2" title="Payment PurposeType"><text/>
+        <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
         	<drop-down allow-empty="true">
                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">                   
                    <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE,COMMON"/>
