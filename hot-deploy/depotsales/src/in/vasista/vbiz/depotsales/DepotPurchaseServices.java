@@ -8235,6 +8235,8 @@ public class DepotPurchaseServices{
 				String cstPercentStr = null;
 				String tcsPercentStr = null;
 				String serviceTaxPercentStr = null;
+				String packingStr = null;
+				String packetsStr = null;
 				
 				String purTaxListStr = null;
 				
@@ -8244,6 +8246,9 @@ public class DepotPurchaseServices{
 				BigDecimal cstPercent=BigDecimal.ZERO;
 				BigDecimal tcsPercent=BigDecimal.ZERO;
 				BigDecimal serviceTaxPercent=BigDecimal.ZERO;
+				
+				BigDecimal packing=BigDecimal.ZERO;
+				BigDecimal packets=BigDecimal.ZERO;
 				
 				String orderAdjustmentsListStr = null;
 
@@ -8416,6 +8421,14 @@ public class DepotPurchaseServices{
 							cstPercentStr = (String) paramMap.get("cstPercent"
 									+ thisSuffix);
 						}
+						if (paramMap.containsKey("Packing" + thisSuffix)) {
+							packingStr = (String) paramMap
+									.get("Packing" + thisSuffix);
+						}
+						if (paramMap.containsKey("packets" + thisSuffix)) {
+							packetsStr = (String) paramMap
+									.get("packets" + thisSuffix);
+						}
 						
 // Purchase tax list
 						
@@ -8531,6 +8544,13 @@ public class DepotPurchaseServices{
 							if (UtilValidate.isNotEmpty(cstPercentStr)) {
 								cstPercent = new BigDecimal(cstPercentStr);
 							}
+							if (UtilValidate.isNotEmpty(packingStr)) {
+								packing = new BigDecimal(packingStr);
+							}
+							if (UtilValidate.isNotEmpty(packetsStr)) {
+								packets = new BigDecimal(packetsStr);
+							}
+							
 							
 							
 						} catch (Exception e) {
@@ -8558,6 +8578,9 @@ public class DepotPurchaseServices{
 						productQtyMap.put("orderItemSeqId", orderItemSeqId);
 						productQtyMap.put("purTaxRateList", purTaxRateList);
 						productQtyMap.put("orderAdjustmentList", orderAdjustmentList);
+						productQtyMap.put("packing", packing);
+						productQtyMap.put("packets", packets);
+						
 						
 						itemDetail.add(productQtyMap);
 
@@ -9004,6 +9027,8 @@ public class DepotPurchaseServices{
 					BigDecimal bedcessAmount = BigDecimal.ZERO;
 					BigDecimal bedseccessAmount = BigDecimal.ZERO;
 					BigDecimal bedseccessPercent = BigDecimal.ZERO;*/
+					BigDecimal packing=BigDecimal.ZERO;
+					BigDecimal packets=BigDecimal.ZERO;
 					
 					
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("productId"))){
@@ -9041,6 +9066,13 @@ public class DepotPurchaseServices{
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("orderItemSeqId"))){
 						orderItemSeqId = (String)prodQtyMap.get("orderItemSeqId");
 					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("packing"))){
+						packing = (BigDecimal)prodQtyMap.get("packing");
+					}
+					if(UtilValidate.isNotEmpty(prodQtyMap.get("packets"))){
+						packets = (BigDecimal)prodQtyMap.get("packets");
+					}
+					
 					/*if(UtilValidate.isNotEmpty(prodQtyMap.get("bedAmount"))){
 						bedAmount = (BigDecimal)prodQtyMap.get("bedAmount");
 					}
