@@ -125,6 +125,7 @@ if(productStoreIds.size() == 1){
 	parameters.productStoreId = productStoreIds.get(0);
 }
 productStoreIds.each{ productStoreId ->
+	if(productStoreId == "Tirupur" || productStoreId == "PANIPAT" ){
 	JSONArray brcpartyJSON = new JSONArray();
 	customersList=[];
 	JSONObject newbranchObj = new JSONObject();
@@ -141,6 +142,8 @@ productStoreIds.each{ productStoreId ->
 		newbranchObj.put("label",storeName);
 		}
 		branchJSON.add(newbranchObj);
+	}
+		
 	}
 	/*customersList = in.vasista.vbiz.depotsales.DepotSalesHelperServices.getBranchCustomers(dctx , UtilMisc.toMap("productStoreId",productStoreId,"userLogin", userLogin));
 	customersList.each{eachParty ->
