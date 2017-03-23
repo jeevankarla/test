@@ -65,6 +65,7 @@ under the License.
 	            }
     	    });
         }
+        runningTotalVal= runningTotalVal.toFixed(2);
         $('#payAmount').val(runningTotalVal);
         
     }

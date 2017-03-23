@@ -698,13 +698,13 @@ under the License.
                 <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
         </field>
-        <field name="printVoucher" widget-style="buttontext">
+       <!--  <field name="printVoucher" widget-style="buttontext">
             <hyperlink target="printContraReport.pdf" description="Print Voucher" target-window="_blank">
                 <parameter param-name="finAccountTransId"/>
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
-        </field>
+        </field> -->
     	<field use-when="&quot;${finAccountTransTypeId}&quot;==&quot;WITHDRAWAL&quot;" name="Print Cheque" widget-style="buttontext" >
             <hyperlink target="printContraChecks.pdf" description="Print Cheque" target-window="_blank">
              <parameter param-name="finAccountId"/>
@@ -714,6 +714,9 @@ under the License.
              <parameter param-name="transactionDate"/>
              <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
+        </field> 
+        <field name="cancel" widget-style="buttontext" event="onclick" action="" use-when="(&quot;${statusId}&quot;==&quot;FINACT_TRNS_CREATED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;CANCEL&quot;, &quot;_FINTRNS&quot;, session)))}">
+            <hyperlink  target-type="plain" description="cancel" target="javascript:cancelDepositContra('${finAccountTransId}');"></hyperlink>
         </field> 
     </form>
     <form name="ListInterUnitContraEntries" type="list" list-name="finAccountTransList" odd-row-style="alternate-row" 

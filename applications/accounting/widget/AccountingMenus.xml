@@ -3727,7 +3727,7 @@
 				<parameter param-name="statusId" value="INVOICE_READY" />
 			</link>
 		</menu-item>
-		<menu-item name="statusToPaid"
+		<!-- <menu-item name="statusToPaid"
 			title="${uiLabelMap.AccountingInvoiceStatusToPaid}">
 			<condition>
 				<and>
@@ -3748,7 +3748,7 @@
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_PAID" />
 			</link>
-		</menu-item>
+		</menu-item> -->
 		<!-- <menu-item name="statusToWriteoff"
 			title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}">
 			<condition>

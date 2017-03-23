@@ -125,7 +125,8 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 	conditionList.add(EntityCondition.makeCondition("reasonEnumId", EntityOperator.EQUALS, "FATR_CONTRA"));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FINACT_TRNS_CREATED"));
 	condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	finAccountTransList = delegator.findList("FinAccountTrans", condition , null, null, null, false );
+	List<String> orderBy = UtilMisc.toList("-transactionDate");
+	finAccountTransList = delegator.findList("FinAccountTrans", condition , null, orderBy, null, false );
 	if(UtilValidate.isNotEmpty(finAccountTransList)){
 		context.put("finAccountTransList",finAccountTransList);
 	}
