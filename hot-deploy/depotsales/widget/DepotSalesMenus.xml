@@ -1688,6 +1688,18 @@
  				<parameter param-name="actionSubTabButtonValue" value="find" />
  			</link>
 		</menu-item>
+		
+		<menu-item name="DepotSalesOrderDC" title="Indent Entry">
+		    <condition>
+				<or>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+				    <if-has-permission permission="DEPOTSALES" action="_MANAGER"/>
+            	</or>            
+            </condition> 
+			<link target="DepotSalesOrder">
+				<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
+			</link>
+		</menu-item>
     </menu> 
     
     <menu name="FindDepotTransPOSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">

@@ -2980,6 +2980,8 @@ public class DepotSalesServices{
 		String inventoryItemId = (String) request.getParameter("inventoryItemId");
 
 		
+		String purposeTypeId = (String) request.getParameter("purposetypeId");
+
 		String cfcId = (String) request.getParameter("cfcId");
 		if(UtilValidate.isNotEmpty(cfcId)){
 			productStoreId = cfcId;
@@ -3716,6 +3718,7 @@ public class DepotSalesServices{
 		processOrderContext.put("saleTitleTransferEnumId", saleTitleTransferEnumId);
 		processOrderContext.put("saleTaxType", saleTaxType);
 		processOrderContext.put("purchaseTaxType", purchaseTaxType);
+		processOrderContext.put("purposeTypeId", purposeTypeId);
 		
 		
 		try{
@@ -6229,6 +6232,7 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 		//Debug.log("purchaseTaxType ============="+purchaseTaxType);
 		
 		String supplierPartyId = (String) context.get("supplierPartyId");
+		String purposeTypeId = (String) context.get("purposeTypeId");
 		//Debug.log("supplierPartyId ============="+supplierPartyId);
 	  	List<Map> orderAdjChargesList = (List) context.get("orderAdjChargesList");
 	  	BigDecimal manualQuota= (BigDecimal)context.get("manualQuota");
@@ -7097,6 +7101,9 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 			
 			//Debug.log("orderHeader =====purposeTypeId========"+orderHeader);
 			
+			if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DC_DEPOT_SALES"))
+				orderHeader.set("purposeTypeId", "DC_DEPOT_SALES");
+			else
 			orderHeader.set("purposeTypeId", "DEPOT_SALES");
 			orderHeader.store();
 		}catch (Exception e) {

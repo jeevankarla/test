@@ -2516,7 +2516,7 @@
  -->
         
          <field name="Sale" title="Sale Indent" widget-style="buttontext" use-when="(&quot;${availbleQuantity}&quot; != &quot;0&quot;)">
-		<hyperlink target="DepotSalesOrderNew" description="Sale Indent">
+		<hyperlink target="DepotSalesOrderNewDC" description="Sale Indent">
 			<parameter param-name="productId"/>
 			 <parameter param-name="productName"/>
 			  <parameter param-name="quantityOnHandTotal"/>
