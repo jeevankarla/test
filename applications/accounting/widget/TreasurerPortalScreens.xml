@@ -4635,6 +4635,18 @@
 			</widgets>
 		</section>
 	</screen>
+	 <screen name="AdvancesReportDays">
+		<section>
+			<actions>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AdvancesReportDays.groovy"/>
+            </actions>
+			<widgets>
+				<platform-specific> 
+					<xsl-fo><html-template location="component://accounting/webapp/accounting/reports/AdvancesReportDays.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="SubLedgerReport">
 		<section>
 			<actions>

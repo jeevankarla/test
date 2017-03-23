@@ -4001,6 +4001,9 @@ under the License.
     <request-map uri="AdvancesReport.pdf"><security https="true" auth="true"/>
 		<response name="success" type="view" value="AdvancesReport"></response>    
     </request-map>
+    <request-map uri="AdvancesReportDays.pdf"><security https="true" auth="true"/>
+		<response name="success" type="view" value="AdvancesReportDays"></response>    
+    </request-map>
      <request-map uri="AdvancesReport.csv"><security https="true" auth="true"/>
 		<response name="success" type="view" value="AdvancesReportCSV"></response>    
     </request-map>
@@ -4882,6 +4885,7 @@ under the License.
    <view-map name="AccountReports" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#AccountReports" />
    
    <view-map name="AdvancesReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#AdvancesReport" content-type="application/pdf" encoding="none"/>
+   <view-map name="AdvancesReportDays" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#AdvancesReportDays" content-type="application/pdf" encoding="none"/>
    <view-map name="SubLedgerReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#SubLedgerReport" content-type="application/pdf" encoding="none"/>
    <view-map name="GroupPaymentNew" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#GroupPaymentNew"/>
    <view-map name="cpfAccounts" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#cpfAccounts"/>

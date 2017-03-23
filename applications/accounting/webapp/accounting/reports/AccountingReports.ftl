@@ -99,6 +99,29 @@ function makeDatePicker1(fromDateId ,thruDateId){
 			}
 		});
 	}
+	function makeDatePicker10(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'MM d, yy',
+			changeMonth: true,
+			changeYear: true,
+			yearRange: "-20:+0",
+			onSelect: function(selectedDate) {
+			date = $(this).datepicker('getDate');
+			var maxDate = new Date(date.getTime());
+	        	maxDate.setDate(maxDate.getDate() + 366);
+				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'MM d, yy',
+			changeMonth: true,
+			changeYear: true,
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+	}
 	function makeDatePicker2(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
 			dateFormat: 'M-yy',
@@ -205,6 +228,7 @@ function reportTypeChangeFunc() {
 
 	    makeDatePicker3("FinacialFromDate","FinacialThruDate");
 	    makeDatePicker3("advFromDate","advThruDate");
+	    makeDatePicker10("advDaysFromDate");
 	    makeDatePicker3("subLedgerFromDate","subLedgerThruDate");
 	    makeDatePicker("eObFromDate");
 	    makeDatePicker("prFromDate","prThruDate");
@@ -768,7 +792,6 @@ function setOrgPartyId() {
           		   		</#list>
 				 	</select>
 			  	</td>
-			  	
 				<td width="15%">From<input  type="text" size="18pt" id="advFromDate" readonly  name="fromDate"/></td>
 				<td width="15%">To<input  type="text" size="18pt" id="advThruDate" readonly  name="thruDate"/></td>
           		<td width="5%">&#160;</td>
@@ -808,6 +831,37 @@ function setOrgPartyId() {
 			 	</td>
       		</form>
       	</tr>
+	</table>
+</div>
+<div class="screenlet">
+    <div class="screenlet-title-bar">
+      <h3>Advances Days Reports</h3>
+    </div>
+    <div class="screenlet-body">
+      <table class="basic-table hover-bar h3" style="border-spacing: 0 10px;" >  
+      	<tr class="alternate-row"> 
+      		<form id="advancesDaysReport" name="advancesDaysReport" method="post" action="<@ofbizUrl>AdvancesReportDays.pdf</@ofbizUrl>" target="_blank">	
+      		  	<td width="10%">Advances Days Report</td>
+			  	
+			  	<td width="25%">Payment Type
+			  	  	<select name='paymentTypeId' id ="paymentTypeId">	
+					 	<option value="ONACCOUNT_PAYIN">OnAccount PayIn</option>								
+						<option value="ONACCOUNT_PAYOUT">OnAccount PayOut</option>
+				 	</select>
+			  	</td>
+				<td width="15%">Date<input  type="text" size="18pt" id="advDaysFromDate" readonly  name="fromDate"/></td>
+          		<td width="5%">&#160;</td>
+			  	<td width="25%">
+      		  		&#160;
+			  	</td>
+			  	<td width="20%">
+					<table>
+					<tr><td><input type="hidden" name="division" class="commonPartyId"><input type="submit" value="PDF" onClick="javascript:appendParams('advancesDaysReport', '<@ofbizUrl>AdvancesReportDays.pdf</@ofbizUrl>');" class="buttontext"/></td></tr>
+					</table>   
+			 	</td>
+      		</form>
+      	</tr>
+      	
 	</table>
 </div>
 <div class="screenlet">
