@@ -2442,6 +2442,12 @@ if(invoice){
 					   tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
 					   else
 					   tempMap.put("poInvoiceAmt", "");
+					   
+					   if(!purchaseWiseDetails.contains(poOrderId))
+					   tempMap.put("purchaseQuantity", POInvoiceItemList[0].quantity);
+					   else
+					   tempMap.put("purchaseQuantity", "");
+					   
 					
 					   purchaseWiseDetails.add(primaryOrderId);
 
@@ -2562,10 +2568,11 @@ if(invoice){
 
 				tempMap.put("ledgerName", "");
 
-				if(POInvoiceItemList[0])
+				/*if(POInvoiceItemList[0])
 					tempMap.put("purchaseQuantity", POInvoiceItemList[0].quantity);
 				else
-					tempMap.put("purchaseQuantity", "");
+					tempMap.put("purchaseQuantity", "");*/
+			
 
 
 				tempMap.put("salesQuantity", eachItem.quantity);
