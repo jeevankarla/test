@@ -31,6 +31,30 @@
     	<PortalPagePortlet portalPageId="MYPORTAL_SUPPL_TRANS" portalPortletId="SUPPL_TRANS_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
     	
     	
+    	
+    	<!-- Dyes and chemicals Dashboard -->
+    	
+    	<SecurityPermission description="Dyes and chemicals Dashboard Portal View" permissionId="MYPORTAL_DC_TRANS"/>
+        <SecurityGroup description="Dyes and chemicals Dashboard Portal View" groupId="MYPORTAL_DC_TRANS"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_DC_TRANS" permissionId="MYPORTAL_DC_TRANS"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_DC_TRANS" permissionId="MYPORTALBASE_ADMIN"/> 
+	 	<SecurityGroupPermission groupId="MYPORTAL_DC_TRANS" permissionId="ACCOUNTING_VIEW"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_DC_TRANS" permissionId="DEPOTSALES_VIEW"/>
+	 	
+	 	<SecurityGroupPermission groupId="MYPORTAL_DC_TRANS" permissionId="DEPOTSALES_PORDER_VIEW"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_DC_TRANS" permissionId="DEPOTSALES_MANAGER"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_DC_TRANS" permissionId="DEPOTSALES_GRECEIPTS_VIEW"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_DC_TRANS" permissionId="ACCOUNTING_TREASURER"/>
+	   
+	    <PortalPortlet portalPortletId="DC_TRANS_PAGE" portletName="Dyes and chemicals Portal Screen" screenName="DCPortal"
+            screenLocation="component://depotsales/widget/DyesAndChemicalsScreens.xml" description="Dyes and Chemicals Portal Screen"/>
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_DC_TRANS" sequenceNum="0" portalPageName="Dyes and chemicals Operations" description="The vbiz System Dyes and chemicals page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_DC_TRANS"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_DC_TRANS" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_DC_TRANS" portalPortletId="DC_TRANS_PAGE" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+    	
+    	<!-- <SecurityGroupPermission groupId="MYPORTAL_DC_TRANS" permissionId="MYPORTAL_SUPPL_TRANS"/> -->
+    	
     	<!-- CFC User Dashboard -->
     	
     	 <SecurityPermission description="Cfc User Dashboard Portal View" permissionId="MYPORTAL_CFC_USER"/>

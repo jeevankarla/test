@@ -3096,7 +3096,11 @@
        <response name="success" type="view"  value="TrackPayments"/>
        <response name="error" type="view" value="TrackPayments"/>
      </request-map>
-
+	 <request-map uri="DCPortal">
+       <security https="true" auth="true"/>
+       <response name="success" type="view"  value="DCPortal"/>
+       <response name="error" type="view" value="DCPortal"/>
+     </request-map>
 
      <!-- View Mappings -->
      
@@ -3509,4 +3513,5 @@
     <view-map name="paymentSucUrl" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#AirtelPaymentReceipt"/>
     <view-map name="paymentFailUrl" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#AirtelPaymentReceipt"/>
     <view-map name="TrackPayments" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#TrackPayments"/>
+    <view-map name="DCPortal" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#DCPortal"/>
 </site-conf>
