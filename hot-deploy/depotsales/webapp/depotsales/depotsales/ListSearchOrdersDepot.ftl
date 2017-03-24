@@ -487,7 +487,7 @@ function drawRow(rowData) {
     </#if>
     //if((rowData.statusId != "ORDER_APPROVED" && rowData.statusId != "ORDER_PENDING" && rowData.statusId != "ORDER_COMPLETED") && (rowData.statusId != "ORDER_CANCELLED") && (rowData.statusId != "DRAFTPO_PROPOSAL") || hasPermission){
       
-    if((rowData.POorder == "NA")){
+    if(rowData.statusId != "ORDER_CANCELLED" && (rowData.POorder == "NA")){
        var orderParam = '\'' + rowData.orderId + '\'';
         var partyId = '\'' + rowData.partyId + '\'';
     var cancellorder = "javascript:cancelOrderCaution("+ orderParam + ","+ partyId +")";
