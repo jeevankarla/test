@@ -858,6 +858,14 @@
          <attribute mode="IN" name="thruDate" optional="true" type="Timestamp"/>
          <attribute mode="IN" name="shipmentId" optional="true" type="String"/>
     </service>
+    
+     <service name="populateInvoiceItemsWithAdjustment" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="populateInvoiceItemsWithAdjustment" transaction-timeout="6000000">
+         <description>populate Shipment Grand Total </description>
+          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+          <attribute name="amount" type="String" mode="IN" optional="false"/>
+          <attribute name="adjustmentTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="populateFinYearIndentSummaryDetailsData" engine="java" 
         location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="finYearPopulationIndentSummaryDetails" transaction-timeout="10800000">
         <description>run populate Indent summary Orders</description>
