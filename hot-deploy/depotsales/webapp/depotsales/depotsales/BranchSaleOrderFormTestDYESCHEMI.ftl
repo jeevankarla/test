@@ -594,6 +594,7 @@
 		       	  				   var issueDate=contactDetails["issueDate"];
 		       	  				   var facilityType=contactDetails["facilityType"];
 		       	  				   var psbNo=contactDetails["psbNo"];
+		       	  				   var panNo=contactDetails["panNo"];
 		       	  				   var prodStoreId=contactDetails["productStoreId"];
 		       	  				   var productStoreJSON=contactDetails["productStoreJSON"];
 		       	  				   var partyType=contactDetails["partyType"];
@@ -618,6 +619,7 @@
 		   						   $("#address").html("<h4>"+address1+"</h4>");
 		       	  				   $("#partyName").html("<h4>"+custName+"</h4>");
 		       	  				    $("#psbNo").html("<h4>"+psbNo+"</h4>");
+		       	  				    $("#panNo").html("<h4>"+panNo+"</h4>");
 		       	  				   	$("#DAO").html("<h4>"+DAO+"</h4>");
 		       	  				   	$("#issueDate").html("<h4>"+issueDate+"</h4>");		       	  				   	
 		       	  				   	$("#Depo").html("<h4>"+Depo+"</h4>");
@@ -742,10 +744,12 @@
 	  			alert("Branch is Mandatory");
 	  			indententryinit.isFormSubmitted.value="";
 	  		}
+	  		/*
 	  		if(indententryinit.suplierPartyId.value.length < 1){
 	  			alert("Supplier Party ID is Mandatory");
 	  			indententryinit.isFormSubmitted.value="";
 	  		}
+	  		 */
 	  		if(indententryinit.partyId.value.length < 1){
 	  			alert("Party ID is Mandatory");
 	  			indententryinit.isFormSubmitted.value="";
@@ -1388,7 +1392,9 @@ function fillPartyQuota(partyId){
 						        	</#if>
 				               	</tr>	               
 				               	-->      	
-				             <#--  	<tr>
+				            
+				            
+				            				               	<tr>
 					       			<td>&nbsp;</td>
 					       			<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>${uiLabelMap.ProductSupplier} :<font color="red">*</font></div></td>
 						          	<#if changeFlag?exists && changeFlag=='EditDepotSales'>
@@ -1396,7 +1402,7 @@ function fillPartyQuota(partyId){
 								  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${suplierPartyId?if_exists}"/>  
 							          		<td valign='middle'>
 							            		<div><font color="green">
-							               			${suplierPartyId}  [${suplierPartyName}]  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>           
+							               			${suplierPartyId}  [${suplierPartyName}]  <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 							            		</div>
 							          		</td>       
 							          	</#if>
@@ -1405,13 +1411,13 @@ function fillPartyQuota(partyId){
 								  	  		<input type="hidden" name="suplierPartyId" id="suplierPartyId" value="${parameters.suplierPartyId?if_exists}"/>  
 							          		<td valign='middle'>
 							            		<div><font color="green">
-							               			${parameters.suplierPartyId} [${suppPartyName?if_exists}] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>            
+							               			${parameters.suplierPartyId} [${suppPartyName?if_exists}] <#--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="javascript:processChangeIndentParty()" class="buttontext">Party Change</a>-->             
 							            		</div>
 							          		</td>       
 							          	<#else>
 							          		<td valign='middle'>
 							          			<input type="text" name="suplierPartyId" id="suplierPartyId"  />
-							          			<span class="tooltip">Input Supplier and Press Enter</span>
+							          			<#--<span class="tooltip">Input Supplier and Press Enter</span>-->
 							          			<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
 							          		</td>
 							          		
@@ -1421,21 +1427,15 @@ function fillPartyQuota(partyId){
 						        	<#if parameters.suplierAdd?exists && parameters.suplierAdd?has_content>  
 						        	  <td width="10%" keep-together="always" align="left"> Supplier Address : </td><td width="50%"> <label  align="left" id="supplierAddress" style="color: green">${parameters.suplierAdd}</label></td>
 									<#else>
+									<#if (supplierAddress?has_content)>
+									  <td width="10%" align="left"> Supplier Address : </td><td width="50%"> <label  align="left" id="supplierAdd" style="color: green">${supplierAddress?if_exists}</label></td>
+									<#else>
 									  <td width="10%" keep-together="always" align="left"><font color="green" > Supplier Address : </font></td><td width="50%"><span  align="left" id="suplierPartyName" style="color: blue"></span> <p><label  align="left" id="supplierAddress" style="color: blue"></label><p></td>
 									  <input type="hidden" name="suplierAdd" id="suplierAdd" />  
 									</#if>
+									</#if>
 									
-									
-				               	</tr>-->
-				               	<tr>
-				               	<td>&nbsp;</td>
-					       			<td align='left' valign='middle' nowrap="nowrap"></td>
-				               	<td valign='left'>
-									<input type="submit" style="padding:.3em" value="submit" name="submit" id="submit" onclick= 'javascript:formSubmit(this);' />
-									</td>
 				               	</tr>
-				               	
-				               	
 				               	<#if parameters.suplierPartyId?exists && parameters.suplierPartyId?has_content>
 								<tr>
 								</tr>
@@ -1449,7 +1449,9 @@ function fillPartyQuota(partyId){
 				               		
 									</tr>
 				               	</#if>
-				                 <#--	
+				            
+				            
+				             <#--	
 				               	<tr>
 				               		<td>&nbsp;</td>
 				               		<td>&nbsp;</td>
@@ -1604,7 +1606,9 @@ function fillPartyQuota(partyId){
 									<td width="100%">
 					      				<table width="100%" border="1" border-style="solid">
 						               
+						               
 						               		<tr>
+						               		<#--
 						               			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
 						               				<td keep-together="always"><font color="green"><b>PassBook: </font></td><td><font color="blue"><b>${parameters.psbNo}</b></font></td>
 						               			<#else>
@@ -1622,9 +1626,16 @@ function fillPartyQuota(partyId){
 								       			<#else>
 								       				<td><font color="green"><b>partyType: </font></td><td><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
 								       			</#if>
+								       			-->
+								       			<#if parameters.panNo?exists && parameters.panNo?has_content> 
+						               				<td keep-together="always"><font color="green"><b>Pan Number: </font></td><td><font color="blue"><b>${parameters.panNo}</b></font></td>
+						               			<#else>
+								       				<td keep-together="always"><font color="green"><b>Pan Number: </font></td><td> <label  align="left" id="panNo" style="color: blue"></label></td>
+								       			</#if>
+								       	
 						               		</tr>
 						               
-						               
+						               <#--
 							       			<tr>
 								       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
 								       				<td><font color="green"><b>${uiLabelMap.Depot}: </font></td><td><font color="blue"><b> ${parameters.Depo}</b></font></td>
@@ -1641,6 +1652,7 @@ function fillPartyQuota(partyId){
 							       			      
 							       			
 							       			</tr>
+							       			-->
 							       			
 							       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
 							       			<tr>
@@ -1675,13 +1687,7 @@ function fillPartyQuota(partyId){
 				       	</tr>
 				       	-->		
 				     		</table>
-				     	<hr class="style18"></hr>
-				     	<table width="100%" id="loomTypes" class="loomTypes" border="10%" cellspacing="1" cellpadding="2">
-		       				<tr align="left">
-		       				<td><a class="buttontext" href="<@ofbizUrl>addOtherAddressView?partyId="DC0012"&amp;</@ofbizUrl>" target="_blank"/>Add Facility</td> 
-		       				</tr>
-		       			</table>
-		       			<hr class="style18"></hr>
+				     	
 			       	</form>
 				
 				</div>     

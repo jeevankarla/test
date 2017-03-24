@@ -218,6 +218,13 @@ if(partyIdentification){
 	}
 }
 
+
+panNo="";
+partyRegIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", parameters.partyId, "partyIdentificationTypeId", "PAN_NUMBER"), false);
+if(partyRegIdentification){
+	panNo = partyRegIdentification.get("idValue");
+}
+
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin, "partyId", parameters.partyId));
 	
 	productStoreIds=[];
@@ -244,7 +251,7 @@ resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",us
 
 partyJSON.put("storeSize",storeSize);
 partyJSON.put("psbNo",psbNo);
-
+partyJSON.put("panNo",panNo);
 partyJSON.put("address1",address1);
 partyJSON.put("address2",address2);
 partyJSON.put("city",city);
