@@ -36,6 +36,29 @@
 	thruDateStr = parameters.thruDate;
 	partyId = parameters.partyId;
 	
+	condList = [];
+	roId = parameters.division;
+	context.roId = roId;
+	segmentId = parameters.segment;
+	branchList = [];
+	condList.clear();
+	if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+		condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,roId));
+		condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+		condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+		condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+		List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+		if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+			branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+			branchList.add(roId);
+		}
+		
+	}
+	condList.clear();
+	Debug.log("roId==================="+roId);
+	Debug.log("segmentId==================="+segmentId);
+	Debug.log("branchList==================="+branchList);
+	
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy, MMM dd");
 	Timestamp fromDateTs = null;
 	if(fromDateStr){
@@ -56,7 +79,7 @@
 	context.fromDate = fromDate;
 	context.thruDate = thruDate;
 	paymentTypeId = parameters.paymentTypeId;
-	
+	Debug.log("paymentTypeId==================="+paymentTypeId);
 	paymentType = delegator.findOne("PaymentType", [paymentTypeId : paymentTypeId], false);
 	context.paymentType = paymentType;
 	
@@ -67,6 +90,26 @@
 	context.GlAccount = GlAccount;
 	}
 	conditionList = [];
+	if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+		if(paymentTypeId!=null){
+			if(paymentTypeId.equals("ONACCOUNT_PAYOUT")){
+				Debug.log("branchList=======if============"+branchList);
+				conditionList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.IN, branchList));
+			}else{
+			Debug.log("branchList=======else============"+branchList);
+				conditionList.add(EntityCondition.makeCondition("partyIdTo" , EntityOperator.IN, branchList));
+			}
+		}
+	}
+	
+	/*if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company"))
+		conditionList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));*/
+	
+	if(!segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+		conditionList.add(EntityCondition.makeCondition("paymentPurposeType" , EntityOperator.EQUALS, segmentId));
+	if(segmentId.equals("YARN_SALE"))
+		conditionList.add(EntityCondition.makeCondition("paymentPurposeType" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("PMNT_SENT", "PMNT_CONFIRMED")));
 	if(UtilValidate.isNotEmpty(partyId)){
 		conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
@@ -75,7 +118,14 @@
 	conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 	List paymentList = delegator.findList("Payment", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toList("paymentDate"), null, false);
 	paymentIdsList = EntityUtil.getFieldListFromEntityList(paymentList, "paymentId", true);
-	partyIdsList = EntityUtil.getFieldListFromEntityList(paymentList, "partyIdTo", true);
+	if(paymentTypeId.equals("ONACCOUNT_PAYOUT")){
+		partyIdsList = EntityUtil.getFieldListFromEntityList(paymentList, "partyIdTo", true);
+		Debug.log("partyIdsList=======if============"+partyIdsList);
+	}
+	else{
+		partyIdsList = EntityUtil.getFieldListFromEntityList(paymentList, "partyIdFrom", true);
+		Debug.log("partyIdsList=======else============"+partyIdsList);
+	}
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIdsList));

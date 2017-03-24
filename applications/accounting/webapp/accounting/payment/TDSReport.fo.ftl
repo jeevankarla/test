@@ -437,6 +437,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
 							<fo:table-cell border-style="solid"><fo:block  text-align="center" font-size="10" font-weight="bold">Minor Head of Challan (See Note 9)</fo:block></fo:table-cell>
 			       		</fo:table-row>
 			       	<#assign rcount = 0>
+			       	<#if listTaxPaid?has_content>
 			       		<#list listTaxPaid as taxPaid>
 			       		<#assign rcount = rcount+1>
 			       		<fo:table-row>
@@ -454,6 +455,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
 			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10"></fo:block> </fo:table-cell>
 			       		</fo:table-row>
 			       		</#list>
+			       	</#if>
 			       </fo:table-body>
         	</fo:table>
 </fo:block> 
@@ -549,11 +551,11 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
                     <fo:table-body>
                     			<fo:table-row>
                     	<fo:table-cell border-style="solid"><fo:block   text-align="left" font-size="10" font-weight="bold">Name of the Deductor</fo:block></fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${deductorName}</fo:block></fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${deductorName?if_exists}</fo:block></fo:table-cell>
                     			</fo:table-row>
                     			<fo:table-row>
                     	<fo:table-cell border-style="solid"><fo:block   text-align="left" font-size="10" font-weight="bold">TAN</fo:block></fo:table-cell>
-			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${TAN}</fo:block></fo:table-cell>
+			       		<fo:table-cell border-style="solid"><fo:block   text-align="center" font-size="10">${TAN?if_exists}</fo:block></fo:table-cell>
                     			</fo:table-row>
                     			</fo:table-body>
                    </fo:table>
@@ -603,11 +605,12 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
 							<fo:table-cell border-style="solid"><fo:block  text-align="center" font-size="10" font-weight="bold">Number of thecertificate under section 197 issued by the Assessing Officer for non deduction/lower Deduction(see note 3)</fo:block></fo:table-cell>
 			       		</fo:table-row>   
 			       			<#assign rcount = 0>
-		       			<#assign month = monthCheck>
+		       			<#assign month = monthCheck?if_exists>
    						<#assign amtTotal = 0>
    						<#assign invoiceTotalEach = 0>
    						<#assign grandTotalAmt = 0>
    						<#assign grandTotalInvoice = 0>
+   						<#if listAnnexure?has_content>
 			       		<#list listAnnexure as mList>
 			       		<#if month.equals(mList.get("month"))>
    						<#assign amtTotal = amtTotal + mList.get("amount")>
@@ -653,6 +656,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "TDSReport.pdf")}
 		       			<#assign invoiceTotalEach = 0>
 			       		</#if>
 			       		</#list>
+			       		</#if>
 			       		<fo:table-row border-style="solid">
 			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>
 			       		<fo:table-cell><fo:block   text-align="center" font-size="10" ></fo:block></fo:table-cell>

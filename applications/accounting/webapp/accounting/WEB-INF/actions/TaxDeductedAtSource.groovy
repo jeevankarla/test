@@ -16,6 +16,27 @@ import org.ofbiz.party.party.PartyHelper;
 dctx = dispatcher.getDispatchContext();
 
 fromMonth=parameters.fromMonth;
+
+condList = [];
+roId = parameters.division;
+context.roId = roId;
+segmentId = parameters.segment;
+branchList = [];
+condList.clear();
+if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company")){
+	condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,roId));
+	condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+		branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+		branchList.add(roId);
+	}
+	
+}
+condList.clear();
+
 if(UtilValidate.isEmpty(fromMonth)){
 	Debug.logError("Month Cannot Be Empty","");
 	context.errorMessage = "Month Cannot Be Empty";
@@ -46,14 +67,15 @@ Timestamp monthEnd = UtilDateTime.getMonthEnd(thruMonthTime, timeZone, locale);
 Debug.log("monthBegin 11111111111111111111111111111 "+monthBegin);
 Debug.log("monthEnd 11111111111111111111111111111 "+monthEnd);
 
+context.put("fromMonthTime",fromMonthTime);
+context.put("thruMonthTime",thruMonthTime);
+
 totalDays=UtilDateTime.getIntervalInDays(monthBegin,monthEnd);
 if(totalDays>93){
 	Debug.logError("Total Days Must Be Lessthan 93 Days","");
 	context.errorMessage = "Total Days Must Be Lessthan 93 Days";
 	return;
 }
-context.put("fromMonthTime",fromMonthTime);
-context.put("thruMonthTime",thruMonthTime);
 
 Debug.log("fromMonthTime @@@ "+fromMonthTime);
 
@@ -121,12 +143,14 @@ if(group){
 	partyGroup = "-----";
 }
 conditionListAddress = [];
-conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+/*conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
 conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "PRIMARY_EMAIL"));
-conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "FAX_BILLING"));
-conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.OR);
-listAddress = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
-listPartyAddress = EntityUtil.filterByCondition(listAddress, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "FAX_BILLING"));*/
+conditionListAddress.add(EntityCondition.makeCondition("contactMechPurposeTypeId" , EntityOperator.IN, UtilMisc.toList("BILLING_LOCATION", "PRIMARY_EMAIL", "FAX_BILLING")));
+conditionListAddress.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));
+conditionAddress = EntityCondition.makeCondition(conditionListAddress,EntityOperator.AND);
+listPartyAddress = delegator.findList("PartyContactDetailByPurpose", conditionAddress, null, null, null, false);
+/*listPartyAddress = EntityUtil.filterByCondition(listAddress, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, "Company"));*/
 	Debug.log("listPartyAddress @@@ "+listPartyAddress);
 	if(listPartyAddress){
 	listPartyAddress.each{ addressList ->
@@ -163,10 +187,16 @@ listPartyAddress = EntityUtil.filterByCondition(listAddress, EntityCondition.mak
 condList = [];
 condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "STATUTORY_OUT"));
 condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "TAX1"));
+if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company"))
+	condList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));
+if(!segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+	condList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
+if(segmentId.equals("YARN_SALE"))
+	condList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+
 condStatutory = EntityCondition.makeCondition(condList,EntityOperator.AND);
 listStatutory = delegator.findList("Invoice", condStatutory, null, null, null, false);
 statutoryInvoiceIds = EntityUtil.getFieldListFromEntityList(listStatutory, "invoiceId", true);
-
 //-------------------------
 conditionListFilter = [];
 conditionListFilter.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "INVOICE_PAID"));
@@ -266,6 +296,13 @@ while(flag)
 	Debug.log("monthEndNew== "+monthEndNew);
 
 conditionList = [];
+if(UtilValidate.isNotEmpty(roId)&& !roId.equals("Company"))
+	conditionList.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN, branchList));
+if(!segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
+	conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.EQUALS, segmentId));
+if(segmentId.equals("YARN_SALE"))
+	conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
+
 conditionList.add(EntityCondition.makeCondition("taxAuthPartyId", EntityOperator.EQUALS, "TAX1"));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, sectionCode));
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN,UtilMisc.toList(monthBeginNew,monthEndNew)));
