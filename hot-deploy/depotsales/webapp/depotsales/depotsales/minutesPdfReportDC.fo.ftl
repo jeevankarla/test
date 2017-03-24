@@ -63,13 +63,13 @@ under the License.
 				    </fo:table>
 			   </fo:block>	
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">--------------------------------------------------------------------------------------------- </fo:block>
-        		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>
+        		<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>
         		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
              	<fo:block  text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">Minutes of Purchase and Sales Committee meeting held on :<#if heldOnDate?has_content> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(heldOnDate, "dd-MMM-yyyy")?if_exists}</#if></fo:block>
              	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">The committee recommended/approved purchse of following items(s) as per the rates mention</fo:block>
              	<fo:block  text-align="left" font-size="10pt" font-style="bold">against each to be procured from M/S : <fo:inline font-weight="bold"><#if supplierPartyId?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierPartyId, false)} [${SupplierCity?if_exists}]<#else>&#160;</#if></fo:inline></fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">towards the requirement of user agency M/s : <fo:inline font-weight="bold">${partyName} [${weaverCity?if_exists}]</fo:inline></fo:block>  
-        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">vide their indent No: ${orderId} date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists} ref.no.${externalOrderId?if_exists} <#-->Meeting held on ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists} --></fo:block>  
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">vide their indent No: <fo:inline font-weight="bold"> ${orderId} </fo:inline>date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists} ref.no.${externalOrderId?if_exists} <#-->Meeting held on ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists} --></fo:block>  
         		<fo:block  text-align="left" font-size="12pt" font-weight="bold">PRICE FIXATION CHART :</fo:block>
         		<fo:block>
              		<fo:table border-style="solid">
@@ -412,13 +412,13 @@ under the License.
 	                                <#if paymentAmt<toTunitPrice>
 	                                    <#assign outSandAmt=toTunitPrice-paymentAmt>
 	                                </#if>
-	                                <fo:block>4. Total outstanding of M/S ${partyName} is Rs <fo:inline font-weight="bold">${outSandAmt?string("#0.00")} </fo:inline></fo:block>
-	                                <fo:block>5. Payment dues with interest from the party M/S: <fo:inline font-weight="bold">${partyName}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:inline> is Rs.${outSandAmt?string("#0.00")} </fo:block>
-	                                <fo:block>6. Payment to the Mill to be paid Cheque/Demand Draft for Rs.<fo:inline font-weight="bold">${toTunitPrice?string("#0.00")} </fo:inline> after receipt of Mill invoice/LR</fo:block>
-	                                <fo:block>7. No. of Days credit extended by Mills to NHDC from date of despatch ........</fo:block>
-	                                <fo:block>8. No. of Days credit extended by NHDC to Agency from date of despatch </fo:block>
-	                                <fo:block>9. Any other specific information ...................</fo:block>
-	                               <fo:block>10. Local Taxes as applicable.</fo:block>
+	                                <fo:block>3. Total outstanding of M/S ${partyName} is Rs <fo:inline font-weight="bold">${outSandAmt?string("#0.00")} </fo:inline></fo:block>
+	                                <fo:block>4. Payment dues with interest from the party M/S: <fo:inline font-weight="bold">${partyName}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:inline> is Rs.${outSandAmt?string("#0.00")} </fo:block>
+	                                <fo:block>5. Payment to the Mill to be paid Cheque/Demand Draft for Rs.<fo:inline font-weight="bold">${toTunitPrice?string("#0.00")} </fo:inline> after receipt of Mill invoice/LR</fo:block>
+	                                <fo:block>6. No. of Days credit extended by Mills to NHDC from date of despatch ........</fo:block>
+	                                <fo:block>7. No. of Days credit extended by NHDC to Agency from date of despatch </fo:block>
+	                                <fo:block>8. Any other specific information ...................</fo:block>
+	                               <fo:block>9. Local Taxes as applicable.</fo:block>
 					           </fo:table-cell>
                                <#--<fo:table-cell border-style="solid">
 									<fo:block>1. Yarn will be received with self certification subject to testing of the yarn at Textile committee /our QC department.If the test results are differed to our specifications, the material will be rejected at the cost of the supplier.</fo:block>

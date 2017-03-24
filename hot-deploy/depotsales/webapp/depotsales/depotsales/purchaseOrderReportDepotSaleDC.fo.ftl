@@ -75,12 +75,12 @@ under the License.
 			   <fo:table-column column-width="100pt"/>               
 				   <fo:table-body>
 				       <fo:table-row>
-				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always">P.O.NO:<#if allDetailsMap.get("poSquenceNo")?has_content>${allDetailsMap.get("poSquenceNo")}<#else>${allDetailsMap.get("orderId")?if_exists}</#if></fo:block></fo:table-cell>       			
+				           <fo:table-cell  ><fo:block text-align="left" font-weight="bold" font-size="11pt"  keep-together="always">P.O.NO: <#if allDetailsMap.get("poSquenceNo")?has_content>${allDetailsMap.get("poSquenceNo")}<#else>${allDetailsMap.get("orderId")?if_exists}</#if></fo:block></fo:table-cell>       			
 				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>       		
 				           <fo:table-cell  ><fo:block text-align="left" keep-together="always" font-size="11pt" number-columns-spanned="2" >&#160;&#160;P.O.DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yyyy")}</fo:block></fo:table-cell>       		
                        </fo:table-row>
                        <fo:table-row>
-				          <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always">Indent No.: ${allDetailsMap.get("indentSquienceNo")?if_exists}</fo:block></fo:table-cell>       			
+				          <fo:table-cell  ><fo:block text-align="left" font-weight="bold" font-size="11pt"  keep-together="always">Indent No.: ${allDetailsMap.get("indentSquienceNo")?if_exists}</fo:block></fo:table-cell>       			
    				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>
    				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>       		
                        </fo:table-row>
@@ -100,7 +100,7 @@ under the License.
 			   <fo:table-column column-width="800pt"/>               
 				   <fo:table-body>
                       <fo:table-row>
-						  <fo:table-cell><fo:block text-align="left" font-weight="bold" font-size="11pt">&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;                               Form for purchase of Dyes and Chemicals with terms and conditions</fo:block></fo:table-cell>
+						  <fo:table-cell><fo:block text-align="left" font-weight="bold" font-size="11pt">&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;                               Form for purchase of Dyes & Chemicals with terms and conditions</fo:block></fo:table-cell>
                       </fo:table-row>
 			      </fo:table-body>
 			  </fo:table>
@@ -367,29 +367,33 @@ under the License.
         				<fo:table-column column-width="50%"/>
         		
         				<fo:table-body>
-        					<fo:table-cell >
-        		
+        					<fo:table-cell >	
         						<fo:block text-align="left" font-size="11pt" ><fo:inline  text-decoration="underline"  >Customer Address</fo:inline></fo:block>
-						 		<fo:block text-align="left" font-size="11pt" >${customerAdd.get("toName")?if_exists}</fo:block> 
-								<fo:block text-align="left" font-size="11pt" >${customerAdd.get("address1")?if_exists}</fo:block> 
-							<fo:block text-align="left" font-size="11pt" >${customerAdd.get("address2")?if_exists}</fo:block>
-							<fo:block text-align="left" font-size="11pt" >${customerAdd.get("city")?if_exists}</fo:block>
-							<fo:block text-align="left" font-size="11pt" >${customerAdd.get("postalCode")?if_exists}</fo:block>  
-	        		 	</fo:table-cell>
-        		 		<fo:table-cell >
-        		 			<fo:block text-align="left" font-size="11pt" ><fo:inline  text-decoration="underline" >Delivery Destination:</fo:inline></fo:block>
-		        		 	<#if OrderItemShipGroup?has_content>
-		        		 		<#list OrderItemShipGroup as eachList>
-					                 <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${eachList.get("city")?if_exists}(Quantity : ${eachList.get("quantity")?if_exists} )</fo:block>
-					            </#list>
-		        		 	<#else>
-		        		 	  <#if allDetailsMap.get("DstAddr")?has_content>
-		        		 	   		<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${allDetailsMap.get("DstAddr")?if_exists}</fo:block>
-		        		 	 <#else>
-		        		 			<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
-		        		 	 </#if>
-	        		 	  </#if>
-	        		 </fo:table-cell>
+						 		<#if customerAdd?has_content>
+							 		<fo:block text-align="left" font-size="11pt" >${customerAdd.get("toName")?if_exists}</fo:block> 
+									<fo:block text-align="left" font-size="11pt" >${customerAdd.get("address1")?if_exists}</fo:block> 
+									<fo:block text-align="left" font-size="11pt" >${customerAdd.get("address2")?if_exists}</fo:block>
+									<fo:block text-align="left" font-size="11pt" >${customerAdd.get("city")?if_exists}</fo:block>
+									<fo:block text-align="left" font-size="11pt" >${customerAdd.get("postalCode")?if_exists}</fo:block> 
+									<#if customerAdd.get("tinNumber")?has_content>
+										<fo:block text-align="left" font-size="11pt" >TIN NO. :  ${customerAdd.get("tinNumber")?if_exists}</fo:block>   
+	        		 				</#if>
+	        		 			</#if>
+	        		 		</fo:table-cell>
+        		 			<fo:table-cell >
+	        		 			<fo:block text-align="left" font-size="11pt" ><fo:inline  text-decoration="underline" >Delivery Destination:</fo:inline></fo:block>
+			        		 	<#if OrderItemShipGroup?has_content>
+			        		 		<#list OrderItemShipGroup as eachList>
+						                 <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${eachList.get("city")?if_exists}(Quantity : ${eachList.get("quantity")?if_exists} )</fo:block>
+						            </#list>
+			        		 	<#else>
+			        		 	  <#if allDetailsMap.get("DstAddr")?has_content>
+			        		 	   		<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${allDetailsMap.get("DstAddr")?if_exists}</fo:block>
+			        		 	 <#else>
+			        		 			<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
+			        		 	 </#if>
+		        		 	  </#if>
+	        		 		</fo:table-cell>
 	        		 	
 	        		</fo:table-body>
 	                    

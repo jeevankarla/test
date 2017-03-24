@@ -797,7 +797,18 @@ if(customerAddressDetails){
 		}
 	}
 }
+partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , shipToParty.partyId)  , null, null, null, false );
 
+
+if(UtilValidate.isNotEmpty(partyIdentification)){
+	tinNumber="";
+	tinDetails = EntityUtil.filterByCondition(partyIdentification, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
+	if(UtilValidate.isNotEmpty(tinDetails)){
+		tinDetails=EntityUtil.getFirst(tinDetails);
+		tinNumber=tinDetails.idValue;
+		customerAdd.put("tinNumber",tinNumber);
+	}
+}
 
 context.customerAdd=customerAdd;
 
