@@ -298,7 +298,7 @@
 		partyName= partyName;
 		purposeTypeId=purposeTypeId1;
 		
-		message += "<html><head></head><body><form action='createDepotInvoiceApplyPayment' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
+		message += "<html><head></head><body><form action='createDepotInvoiceApplyPaymentDC' id='chequePayForm' method='post' onsubmit='return disableGenerateButton();'><table cellspacing=20 cellpadding=20 width=550>";
 			//message += "<br/><br/>";
 		
 		
