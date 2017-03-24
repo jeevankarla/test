@@ -98,7 +98,7 @@ function showAgencyAddress(orderId){
 	  var action;
      var message = "";
 
-                message += "<html><head></head><body><form id='agencyAddress' target='_blank'  name='agencyAddress'method='post' action='PurchaseOrderViewDepotSales.pdf' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+                message += "<html><head></head><body><form id='agencyAddress' target='_blank'  name='agencyAddress'method='post' action='PurchaseOrderViewDepotSalesDC.pdf' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
       			message += "<tr class='h2'><td align='left' class='h5' width='60%'><font size=45%>Include User Agency Address:</font> </td><td align='left'  width='90%'><input type='checkbox' name='agencyAddress' id='agencyAddress'/><input class='h4' type='hidden' id='orderId' name='orderId' value='"+orderId+"' /></td></tr>";
       			message += "<tr class='h2'><td align='left' class='h5' width='60%'><font size=45%></font><input type='radio' id='docType' name='docType' value='Original'>Original </td><td align='left'  width='90%'><input type='radio' id='docType' name='docType' value='Duplicate'>Duplicate</td></tr>";
      		    message += "<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='newtab' onclick='return submitForm();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='cancel' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>";

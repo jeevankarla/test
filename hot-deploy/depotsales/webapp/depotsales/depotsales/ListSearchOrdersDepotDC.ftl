@@ -303,7 +303,7 @@ function drawRow(rowData) {
     */
    
    if(rowData.statusId != "ORDER_CANCELLED"){
-      var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReport.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Minutes</a>';
+      var minutesReport = '<a class="buttontext" href="<@ofbizUrl>minutesPdfReportDC.pdf?orderId='+rowData.orderId+'&&partyName='+rowData.partyName+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Minutes</a>';
       row.append($("<td>" +  minutesReport  +"</td>"));  
    }else{
    
