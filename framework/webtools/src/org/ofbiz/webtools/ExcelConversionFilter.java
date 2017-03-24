@@ -152,7 +152,6 @@ public class ExcelConversionFilter extends ContextFilter {
 		             }
 		         }
 		     }
-             
 	         buffReader.close(); 
 	         /*FileOutputStream fileOutputStream =  new FileOutputStream(tmpUploadRepository+"/outputFile.xls");
 	         workBook.write(fileOutputStream);
@@ -258,8 +257,9 @@ public class ExcelConversionFilter extends ContextFilter {
         		ArrayList tempArrayList = new ArrayList<String>();
         		if(headerKeys.contains(styles.get(i)))
         		{
+        			ArrayList<?> innerData = (ArrayList<?>) allRowAndColData.get(i);
         			tempArrayList.add(stylesMap.get(styles.get(i)));
-        			for(int j=0; j<allRowAndColData.size()-1; j++)
+        			for(int j=0; j<innerData.size()-1; j++)
         			{
         				tempArrayList.add("");
         			}
@@ -273,10 +273,10 @@ public class ExcelConversionFilter extends ContextFilter {
 		             HSSFCellStyle style = workBook.createCellStyle();
 		        	 HSSFFont font = workBook.createFont(); 
 		             ArrayList<?> ardata = (ArrayList<?>) allRowAndColData.get(i);
-		             HSSFRow row = sheet.createRow((short) 0 + i);
+		             HSSFRow row = sheet.createRow(i);
 		             for (int k = 0; k < ardata.size(); k++)
 		             {
-		                HSSFCell cell = row.createCell((short) k);
+		                HSSFCell cell = row.createCell(k);
 		                if(k==mainHeadingCell && i<=noOfheads)
 		                {
 		                	if(UtilValidate.isNotEmpty(mainHeadercellHeight))

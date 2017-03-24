@@ -528,7 +528,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 		</#if>
 		<#if ReportsType?has_content &&  ReportsType=="SALE_REPORTS">
 			 <tr class="alternate-row">
-      	   <form id="salesPurchaseReport" name="salesPurchaseReport" method="post" action="<@ofbizUrl>indentHeadReport.csv</@ofbizUrl>" target="_blank">        
+      	   <form id="salesPurchaseReport" name="salesPurchaseReport" method="post" action="<@ofbizUrl>indentHeadReport.xls</@ofbizUrl>" target="_blank">        
              <td width="10%">Sales and Purchase Report</td>
              <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="salesPurchaseReportFRO" readonly  name="partyfromDate"/></br>
       		 To</br><input  type="text" size="15pt" id="salesPurchaseReportTHRU" readonly  name="partythruDate"/></td>
