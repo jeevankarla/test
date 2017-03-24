@@ -1352,9 +1352,9 @@
 	
 	  
 	  
-	  <form name="FindSalesApInvoicesForDepotDC" type="single" target="DepotSalesInvoiceViewDC" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
+	  <form name="FindSalesApInvoicesForDepotDC" type="single" target="DepotSalesInvoiceViewDepotDC" extends="FindInvoices" extends-resource="component://depotsales/widget/DepotSalesForms.xml">
 		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
-		<field name="purposeTypeId"><hidden value="DEPOT_YARN_SALE"/></field>
+		<field name="purposeTypeId"><hidden value="DEPOT_DIES_CHEM_SALE"/></field>
 		<!-- <field name="invoiceTypeId" position="2">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="InvoiceType" description="${description}">

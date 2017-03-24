@@ -778,6 +778,12 @@
        <response name="error" type="view" value="MaterialDepotSalesEditInvoiceInit"/>
      </request-map>
      
+     <request-map uri="MaterialDepotSalesEditInvoiceInitDC">
+       <security https="true" auth="true"/>
+       <response name="success" type="view" value="MaterialDepotSalesEditInvoiceInitDC"/>
+       <response name="error" type="view" value="MaterialDepotSalesEditInvoiceInitDC"/>
+     </request-map>
+     
      <request-map uri="purchaseInvoiceEdit">
        <security https="true" auth="true"/>
        <response name="success" type="view" value="purchaseInvoiceEdit"/>
@@ -866,6 +872,13 @@
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotEditSalesInvoice" global-transaction="true"/>
        <response name="success" type="request-redirect-noparam" value="DepotSalesInvoiceView"/>
        <response name="error" type="view" value="DepotSalesInvoiceView"/>
+     </request-map>
+     
+     <request-map uri="processDepotEditSalesInvoiceDC">
+       <security https="true" auth="true"/>
+       <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processDepotEditSalesInvoice" global-transaction="true"/>
+       <response name="success" type="request-redirect-noparam" value="DepotSalesInvoiceViewDepotDC"/>
+       <response name="error" type="view" value="DepotSalesInvoiceViewDepotDC"/>
      </request-map>
      
      <request-map uri="processEditPurchaseInvoice">
@@ -1361,6 +1374,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotTransSalesInvoiceOverview"/>
     </request-map>
+    <request-map uri="DepotTransSalesInvoiceOverviewDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotTransSalesInvoiceOverviewDC"/>
+    </request-map>
     <request-map uri="paymentOverview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="PaymentOverview"/>
@@ -1846,6 +1863,16 @@
       	<redirect-parameter name="invoiceId"/>
       	</response>
          <response name="failed" type="view" value="DepotSalesInvoiceView"/>  
+      </request-map>
+      
+      <request-map uri="createDepotInvoiceApplyPaymentDC">
+          <security https="true" auth="true"/>
+        <!--   <event type="java" path="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="createOrderPayment"/> -->
+           <event type="service" path="" invoke="createInvoiceApplyPayment"/>
+            <response name="success" type="request-redirect" value="DepotSalesInvoiceViewDC">
+      	<redirect-parameter name="invoiceId"/>
+      	</response>
+         <response name="failed" type="view" value="DepotSalesInvoiceViewDepotDC"/>  
       </request-map>
       
        <request-map uri="createDepotPurcahseInvoiceApplyPayment">
@@ -3092,6 +3119,14 @@
         </response>
         <response name="error" type="view" value="DepotSalesInvoiceView"/>
     </request-map>
+    <request-map uri="cancelDepotSalesInvoiceDC">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setInvoiceStatus"/>
+        <response name="success" type="request-redirect" value="DepotSalesInvoiceViewDepotDC">
+            <redirect-parameter name="invoiceTypeId" value="SALES_INVOICE"/>
+        </response>
+        <response name="error" type="view" value="DepotSalesInvoiceViewDepotDC"/>
+    </request-map>
     <request-map uri="cancelSalesInvoiceDC">
         <security https="true" auth="true"/>
         <event path="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" type="simple" invoke="setInvoiceStatus"/>
@@ -3428,6 +3463,9 @@
     <view-map name="MaterialSalesEditInvoiceInitDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#MaterialSalesEditInvoiceInitDC"/>
     
     <view-map name="MaterialDepotSalesEditInvoiceInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#MaterialDepotSalesEditInvoiceInit"/>
+    
+    <view-map name="MaterialDepotSalesEditInvoiceInitDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#MaterialDepotSalesEditInvoiceInitDC"/>
+    
     <view-map name="purchaseInvoiceEdit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#purchaseInvoiceEdit"/>
     
     <view-map name="purchaseInvoiceEditDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#purchaseInvoiceEditDC"/>
@@ -3618,6 +3656,7 @@
     <view-map name="DepotTransAPInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransAPInvoiceOverview"/>
     <view-map name="DepotTransAPInvoiceOverviewDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#DepotTransAPInvoiceOverviewDC"/>
     <view-map name="DepotTransSalesInvoiceOverview" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotTransSalesInvoiceOverview"/>
+    <view-map name="DepotTransSalesInvoiceOverviewDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#DepotTransSalesInvoiceOverviewDC"/>
     <view-map name="editGRN" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#editGRN"/>
 	<view-map name="editGRNDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#editGRNDC"/>
 	<view-map name="subsidyDetailsCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#subsidyDetailsCSV" content-type="text/csv"/>

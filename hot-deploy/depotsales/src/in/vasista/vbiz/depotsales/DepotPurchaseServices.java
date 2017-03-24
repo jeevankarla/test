@@ -10906,7 +10906,7 @@ public class DepotPurchaseServices{
 		String saleTitleTransferEnumId = (String) request.getParameter("saleTitleTransferEnumId");
 		String saleTaxType = (String) request.getParameter("saleTaxType");
 		
-		String purposeTypeId = "DEPOT_YARN_SALE";
+		String purposeTypeId = "DEPOT_DIES_CHEM_SALE";
 	  
 		Timestamp invoiceDate = null;
 		Timestamp suppInvDate = null;
@@ -11703,11 +11703,15 @@ public class DepotPurchaseServices{
 		
 		
 		
-	    purposeTypeId = "DEPOT_YARN_SALE";
+	    purposeTypeId = "DEPOT_DIES_CHEM_SALE";
 		
 	    if(UtilValidate.isNotEmpty(purposeTypeId)){
        	 try{
     	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+    	    	if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DEPOT_DIES_CHEM_SALE"))
+    				purposeTypeId = "DEPOT_DIES_CHEM_SALE";
+    			else
+    				purposeTypeId = "DEPOT_YARN_SALE";
     	    	invoice.set("purposeTypeId", purposeTypeId);
     	    	if(UtilValidate.isNotEmpty(tallyrefNo))
     	    	invoice.set("referenceNumber", tallyrefNo);
