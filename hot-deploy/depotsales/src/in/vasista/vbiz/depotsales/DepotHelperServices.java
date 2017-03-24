@@ -4203,7 +4203,51 @@ public static Map<String, Object> populateInvoiceItemsWithAdjustment(DispatchCon
 			Debug.logError(e, "Failed to retrive Shipment ", module);
 		}
 			
-			i++;
+			List<GenericValue> InvoiceItemG = null;	
+			 List conditionList1 = FastList.newInstance();
+			 conditionList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceId.trim()));
+	    	 try{
+	    		 InvoiceItemG = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList1, EntityOperator.AND), null, null, null, false);
+	    	 
+	    	 }catch(GenericEntityException e){
+					Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+			 }
+	    	 
+		   	 if(UtilValidate.isNotEmpty(InvoiceItemG)){
+		       	 
+		   		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+		   		 
+		       	for(GenericValue eachInvoiceItem : InvoiceItemG){
+		       	
+		       		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+		       		BigDecimal amount1 = eachInvoiceItem.getBigDecimal("amount");
+		       		BigDecimal itemValue1 = quantity.multiply(amount1);
+		       		BigDecimal roundedAmount = (itemValue1.setScale(0, rounding));
+		       		
+		       		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+		       		
+		       		eachInvoiceItem.set("itemValue",roundedAmount);
+		       		try{
+		       		eachInvoiceItem.store();
+		       		}catch(GenericEntityException e){
+		       			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+		       		}
+		       	}
+		       	
+		       	try{
+		       		
+		       		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
+		       		
+		       	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+		       	InvoiceHeader.store();
+		       	}catch(GenericEntityException e){
+		   			Debug.logError(e, "Failed to Populate Invoice ", module);
+		   		}
+		       	
+		   	 }
+			
+		   	i++;
+			
 		}
 		
 		
@@ -4290,10 +4334,63 @@ public static Map<String, Object> populateInvoiceItemsWithAdjustment(DispatchCon
 				Debug.logError(e, "Failed to retrive Shipment ", module);
 			}
 				
+				
+				
+				List<GenericValue> InvoiceItemG = null;	
+				 List conditionList1 = FastList.newInstance();
+				 conditionList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceId.trim()));
+		    	 try{
+		    		 InvoiceItemG = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList1, EntityOperator.AND), null, null, null, false);
+		    	 
+		    	 }catch(GenericEntityException e){
+						Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+				 }
+		    	 
+			   	 if(UtilValidate.isNotEmpty(InvoiceItemG)){
+			       	 
+			   		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+			   		 
+			       	for(GenericValue eachInvoiceItem : InvoiceItemG){
+			       	
+			       		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+			       		BigDecimal amount1 = eachInvoiceItem.getBigDecimal("amount");
+			       		BigDecimal itemValue1 = quantity.multiply(amount1);
+			       		BigDecimal roundedAmount = (itemValue1.setScale(0, rounding));
+			       		
+			       		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
+			       		
+			       		eachInvoiceItem.set("itemValue",roundedAmount);
+			       		try{
+			       		eachInvoiceItem.store();
+			       		}catch(GenericEntityException e){
+			       			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+			       		}
+			       	}
+			       	
+			       	try{
+			       		
+			       		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
+			       		
+			       	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
+			       	InvoiceHeader.store();
+			       	}catch(GenericEntityException e){
+			   			Debug.logError(e, "Failed to Populate Invoice ", module);
+			   		}
+			       	
+			   	 }
+				
+				
+				
+				
+				
 				i++;
 			}
 		
 		}
+		
+		
+
+
 		
 	  result = ServiceUtil.returnSuccess("Adjustments Has been successfully Updated");
      return result;
