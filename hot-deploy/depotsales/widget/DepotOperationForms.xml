@@ -595,6 +595,7 @@
                 <parameter param-name="shipmentId"/>
                  <parameter param-name="partyId"/>
                   <parameter param-name="orderId"/>
+                  <parameter param-name="purposeTypeId" value="DEPOT_DIES_CHEM_SALE"/>
             </hyperlink>
         </field> 
          <field name="raiseInvoice" widget-style="buttontext" title="Sales Invoice" use-when="(salesButton.equals(&quot;N&quot;))">

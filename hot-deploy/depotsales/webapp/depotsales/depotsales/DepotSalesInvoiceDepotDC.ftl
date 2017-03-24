@@ -267,6 +267,7 @@ input[type=button]:hover {
 		<input type="hidden" name="vehicleId" id="vehicleId" value="${vehicleId?if_exists}"/>
 		<input type="hidden" name="orderId" id="orderId" value="${orderId?if_exists}"/>
 		<input type="hidden" name="isDisableAcctg" id="isDisableAcctg" value="N"/>
+		<input type="hidden" name="purposeTypeId" id="purposeTypeId" value="DEPOT_DIES_CHEM_SALE"/>
 		<br>
 	</form>
 	</div>
