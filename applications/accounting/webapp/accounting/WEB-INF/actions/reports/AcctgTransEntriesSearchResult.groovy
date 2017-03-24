@@ -40,6 +40,24 @@ import java.text.ParseException;
 fromDateStr = parameters.fromDate;
 thruDateStr = parameters.fromDate;
 glAccountId=parameters.glAccountId;
+purposeTypeId = parameters.purposeTypeId;
+costCenterId = parameters.costCenterId;
+branchList = [];
+condList = [];
+if(UtilValidate.isNotEmpty(costCenterId)){
+	condList.add(EntityCondition.makeCondition("partyIdFrom" , EntityOperator.EQUALS,costCenterId));
+	condList.add(EntityCondition.makeCondition("roleTypeIdFrom" , EntityOperator.EQUALS,"PARENT_ORGANIZATION"));
+	condList.add(EntityCondition.makeCondition("roleTypeIdTo" , EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+	condList.add(EntityCondition.makeCondition("partyRelationshipTypeId" , EntityOperator.EQUALS,"BRANCH_CUSTOMER"));
+	List roWiseBranchaList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
+	if(UtilValidate.isNotEmpty(roWiseBranchaList)){
+		branchList= EntityUtil.getFieldListFromEntityList(roWiseBranchaList,"partyIdTo", true);
+	}
+	branchList.add(costCenterId);
+}
+else{
+	branchList.add("Company");
+}
 def sdf = new SimpleDateFormat("yyyy-MM-dd");
 if (UtilValidate.isEmpty(fromDateStr)) {
 	fromDate = UtilDateTime.nowTimestamp();
@@ -62,7 +80,9 @@ else{
 	}
 }
 
-result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:fromDate,thruDate:thruDate,userLogin:userLogin]);
+result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate)),thruDate:UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate)), roBranchList: branchList, segmentId: purposeTypeId, userLogin:userLogin]);
+
+//result=dispatcher.runSync("getGlAccountOpeningBalance", [glAccountId:glAccountId,fromDate:fromDate,thruDate:thruDate,userLogin:userLogin]);
 Debug.log("parameters.customTimePeriodId==="+parameters.customTimePeriodId);
 context.put("openingBal",result.get("openingBal"));
 
