@@ -1205,6 +1205,10 @@
         <security https="true" auth="true"/>
     	<response name="success" type="view" value="PurchaseOrderViewDepotSalesPDF"/>
     </request-map>
+    <request-map uri="PurchaseOrderViewDepotSalesDC.pdf">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="PurchaseOrderViewDepotSalesPDFDC"/>
+    </request-map>
     
      <request-map uri="PurchaseOrderViewDEPOT.pdf">
         <security https="true" auth="true"/>
@@ -2432,6 +2436,11 @@
          <response name="success" type="view" value="minutesPDFreport"/>
 	     <response name="error" type="view" value="minutesPDFreport"/>
     </request-map>
+    <request-map uri="minutesPdfReportDC.pdf">
+        <security auth="true" https="true"/>
+         <response name="success" type="view" value="minutesPDFreportDC"/>
+	     <response name="error" type="view" value="minutesPDFreportDC"/>
+    </request-map>
     
      <request-map uri="reimburcentTransporterReport.pdf">
         <security auth="true" https="true"/>
@@ -3270,6 +3279,7 @@
  
    
     <view-map name="minutesPDFreport" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#minutesPDFreport" content-type="application/pdf"/>
+    <view-map name="minutesPDFreportDC" type="screenfop" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#minutesPDFreportDC" content-type="application/pdf"/>
    <view-map name="reimburcentTransporterReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesScreens.xml#reimburcentTransporterReportPDF" content-type="application/pdf"/>
     <view-map name="IndentCsvReport" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#IndentCsvReport" content-type="text/csv"/>
     <view-map name="PayUBizInit" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#PayUBizInit"/>
@@ -3486,6 +3496,7 @@
     
     <view-map name="CreatePO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CreatePO"/>
     <view-map name="PurchaseOrderViewDepotSalesPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDepotSalesPDF" content-type="application/pdf"/>
+    <view-map name="PurchaseOrderViewDepotSalesPDFDC" type="screenfop" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#PurchaseOrderViewDepotSalesPDFDC" content-type="application/pdf"/>
    
     <view-map name="PurchaseOrderViewDepot" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#PurchaseOrderViewDEPOTpdf" content-type="application/pdf"/>
     <view-map name="PurchaseOrderViewDepotDC" type="screenfop" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#PurchaseOrderViewDEPOTpdfDC" content-type="application/pdf"/>
