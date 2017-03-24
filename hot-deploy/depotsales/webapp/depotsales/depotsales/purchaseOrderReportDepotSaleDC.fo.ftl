@@ -100,7 +100,7 @@ under the License.
 			   <fo:table-column column-width="800pt"/>               
 				   <fo:table-body>
                       <fo:table-row>
-						  <fo:table-cell><fo:block text-align="left" font-weight="bold" font-size="11pt">&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;                               Form for purchase of Dyes & Chemicals with terms and conditions</fo:block></fo:table-cell>
+						  <fo:table-cell><fo:block text-align="left" font-weight="bold" font-size="11pt">&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;                               Form for purchase of Dyes and Chemicals with terms and conditions</fo:block></fo:table-cell>
                       </fo:table-row>
 			      </fo:table-body>
 			  </fo:table>

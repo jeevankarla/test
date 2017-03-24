@@ -842,7 +842,7 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
      	message += "<thead><td align='center' class='h3'>PO Id</td><td align='center' class='h3'>PO No</td><td align='center' class='h3'>View</td>";
      	
      	for (i = 0; i < POData.length; ++i) {
-     		message += "<tr><td align='center' class='h4'>" + POData[i].purcahseOrderId + "</td><td align='center' class='h4'>" + POData[i].orderNo + "</td><td align='center' class='h4'><a class='buttontext' href='<@ofbizUrl>PurchaseOrderViewDepotSales.pdf?orderId=" + POData[i].purcahseOrderId + "</@ofbizUrl>' target='_blank'>Report</a></td></tr>";
+     		message += "<tr><td align='center' class='h4'>" + POData[i].purcahseOrderId + "</td><td align='center' class='h4'>" + POData[i].orderNo + "</td><td align='center' class='h4'><a class='buttontext' href='<@ofbizUrl>PurchaseOrderViewDepotSalesDC.pdf?orderId=" + POData[i].purcahseOrderId + "</@ofbizUrl>' target='_blank'>Report</a></td></tr>";
      	}
      	message += "<tr class='h3'><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();'>Close</button></span></td></tr>";    	
      	message += "</table>";
