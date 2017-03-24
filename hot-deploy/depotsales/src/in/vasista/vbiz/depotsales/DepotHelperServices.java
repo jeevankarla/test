@@ -4162,11 +4162,15 @@ public static Map<String, Object> populateInvoiceItemsWithAdjustment(DispatchCon
     	 
     	 //Debug.log("itemValue============"+itemValue);
     	 
-    	 BigDecimal sourcePercentage =  amount.divide(itemValue);
+    	 double source = amount.doubleValue()/itemValue.doubleValue();
+    	 
+    	 source = source*100;
+    	 
+    	 BigDecimal sourcePercentage =  new BigDecimal(source);
     	 
     	 //Debug.log("sourcePercentage====11========"+sourcePercentage);
     	 
-    	 sourcePercentage = sourcePercentage.multiply(new BigDecimal(100));
+    	// sourcePercentage = sourcePercentage.multiply(source);
     	 
     	 //Debug.log("sourcePercentage============"+sourcePercentage);
     	 
@@ -4181,6 +4185,7 @@ public static Map<String, Object> populateInvoiceItemsWithAdjustment(DispatchCon
 	            createInvoiceItemContext.put("quantity", BigDecimal.ONE);
 	            if(UtilValidate.isNotEmpty(amount) && (amount).compareTo(BigDecimal.ZERO)>0){
 		            createInvoiceItemContext.put("amount", amount);
+		            createInvoiceItemContext.put("sourcePercentage", sourcePercentage);
 		            createInvoiceItemContext.put("userLogin", userLogin);
 					try{
 		            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
@@ -4226,6 +4231,36 @@ public static Map<String, Object> populateInvoiceItemsWithAdjustment(DispatchCon
 	    	 GenericValue InvoiceItemFirst = EntityUtil.getFirst(InvoiceItem);
 	    	 String invoiceItemSeqId = InvoiceItemFirst.getString("invoiceItemSeqId");
 	    	 
+
+	    	 List<GenericValue> InvoiceItem1 = null;	
+	    	 conditionList.clear();
+	    	 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceId));
+	    	 conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqId));
+	    	 try{
+	    	   InvoiceItem1 = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, orderBy, null, false);
+	    	 
+	    	 }catch(GenericEntityException e){
+					Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+			 }
+	    	 
+	    	 //Debug.log("InvoiceItem1============"+InvoiceItem1);
+	    	 
+	    	 GenericValue InvoiceItemSec = EntityUtil.getFirst(InvoiceItem1);
+	    	 
+	    	 //Debug.log("InvoiceItemSec============"+InvoiceItemSec);
+	    	 
+	    	 BigDecimal itemValue = InvoiceItemSec.getBigDecimal("itemValue");
+	    	 
+	    	 //Debug.log("itemValue============"+itemValue);
+	    	 
+	    	 double source = amount.doubleValue()/itemValue.doubleValue();
+	    	 
+	    	 source = source*100;
+	    	 
+	    	 BigDecimal sourcePercentage =  new BigDecimal(source);
+
+	    	 
+	    	 
 				try{
 		
 					Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
@@ -4237,6 +4272,7 @@ public static Map<String, Object> populateInvoiceItemsWithAdjustment(DispatchCon
 		            createInvoiceItemContext.put("quantity", BigDecimal.ONE);
 		            if(UtilValidate.isNotEmpty(amount) && (amount).compareTo(BigDecimal.ZERO)>0){
 			            createInvoiceItemContext.put("amount", amount.negate());
+			            createInvoiceItemContext.put("sourcePercentage", sourcePercentage);
 			            createInvoiceItemContext.put("userLogin", userLogin);
 						try{
 			            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
