@@ -10906,8 +10906,7 @@ public class DepotPurchaseServices{
 		String saleTitleTransferEnumId = (String) request.getParameter("saleTitleTransferEnumId");
 		String saleTaxType = (String) request.getParameter("saleTaxType");
 		
-		String purposeTypeId = "DEPOT_DIES_CHEM_SALE";
-	  
+		String purposeTypeId = (String) request.getParameter("purposeTypeId");
 		Timestamp invoiceDate = null;
 		Timestamp suppInvDate = null;
 		
@@ -11641,14 +11640,14 @@ public class DepotPurchaseServices{
 		
 		String invProdId = (String) ((Map) productQtyList.get(0)).get("productId");
 		
-		try{
+		/*try{
 	  		Map resultCtx = dispatcher.runSync("getPurposeTypeForProduct", UtilMisc.toMap("productId", invProdId, "userLogin", userLogin));  	
 	  		purposeTypeId = (String)resultCtx.get("purposeTypeId");
 	  	}catch (GenericServiceException e) {
 	  		Debug.logError("Unable to analyse purpose type: " + ServiceUtil.getErrorMessage(result), module);
 			request.setAttribute("_ERROR_MESSAGE_", "Unable to analyse purpose type :"+ServiceUtil.getErrorMessage(result));
 			return "error";
-	  	}
+	  	}*/
 		
 		
 		
@@ -11701,17 +11700,14 @@ public class DepotPurchaseServices{
             Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
         }
 		
-		
-		
-	    purposeTypeId = "DEPOT_DIES_CHEM_SALE";
-		
-	    if(UtilValidate.isNotEmpty(purposeTypeId)){
+	    
        	 try{
     	    	GenericValue invoice = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
     	    	if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DEPOT_DIES_CHEM_SALE"))
     				purposeTypeId = "DEPOT_DIES_CHEM_SALE";
     			else
     				purposeTypeId = "DEPOT_YARN_SALE";
+    	    	
     	    	invoice.set("purposeTypeId", purposeTypeId);
     	    	if(UtilValidate.isNotEmpty(tallyrefNo))
     	    	invoice.set("referenceNumber", tallyrefNo);
@@ -11723,7 +11719,7 @@ public class DepotPurchaseServices{
    				return "error";
     		}
 
-	    }
+	   
 	    
 	    
 	  //============================================Service Charge===============================
