@@ -204,6 +204,7 @@ under the License.
        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    TOTAL VALUE (RS) : &#160;${(allDetailsMap.get("total")+grandToT)?if_exists?string("##0.00")}</fo:block> </#if>
 	   
 	<!-- <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >${C2E2Form?if_exists} </fo:block> -->
+	   <fo:block>Transaction Type:${TransactionTypevalue}</fo:block>
 	   
 	   <#if parentMap?has_content>
 	      <#assign parent=parentMap.entrySet()>
