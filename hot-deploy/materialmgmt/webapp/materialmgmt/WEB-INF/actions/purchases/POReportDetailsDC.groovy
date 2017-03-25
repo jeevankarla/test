@@ -250,6 +250,17 @@ if(UtilValidate.isNotEmpty(orderId)){
 		
 	}
 
+//Transaction Type
+TransactionTypeId=delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"purchaseTitleTransferEnumId"],false);
+if(TransactionTypeId){
+	TransactionType=TransactionTypeId.get("attrValue");
+	if(TransactionType == "CST_CFORM"){
+		TransactionTypevalue = "Transaction With C Form";
+	}
+	else
+		TransactionTypevalue = "Transaction Without C Form";
+}
+context.TransactionTypevalue=TransactionTypevalue;
 //FileNo
 fileNumber = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"FILE_NUMBER"],false);
 if(fileNumber){
