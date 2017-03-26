@@ -390,7 +390,8 @@ under the License.
     <screen name="PaymentOverview">
         <section>
             <actions>
-                <set field="titleProperty" value="Payment Overview"/>
+             <set field="flag" from-field="parameters.flag"/>
+                <set field="titleProperty" value="${flag} Overview"/>
                 <set field="tabButtonItem" value="paymentOverview"/>
                 <set field="labelTitleProperty" value="Payment"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
@@ -437,7 +438,7 @@ under the License.
                                 <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatus.ftl"/></html>
                             </platform-specific>
                                 <container style="lefthalf">
-                                    <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
+                                    <screenlet title="${flag} Overview">
                                         <link target="editPayment" text="ad${uiLabelMap.CommonUpdate}" style="buttontext">
                                             <parameter param-name="paymentId"/>
                                         </link>
