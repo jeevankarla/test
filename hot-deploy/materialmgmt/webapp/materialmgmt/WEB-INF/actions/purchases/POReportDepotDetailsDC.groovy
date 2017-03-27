@@ -315,7 +315,16 @@ if(UtilValidate.isNotEmpty(orderId)){
 			}
 		
 	}
-
+TransactionTypeId=delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"purchaseTitleTransferEnumId"],false);
+if(TransactionTypeId){
+	TransactionType=TransactionTypeId.get("attrValue");
+	if(TransactionType == "CST_CFORM"){
+		TransactionTypevalue = "Transaction With C Form";
+	}
+	else
+		TransactionTypevalue = "Transaction Without C Form";
+}
+context.TransactionTypevalue=TransactionTypevalue;
 
 //FileNo
 fileNumber = delegator.findOne("OrderAttribute",["orderId":orderId,"attrName":"FILE_NUMBER"],false);
@@ -387,11 +396,19 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		OrderItemDetail=EntityUtil.getFirst(OrderItemDetail);
 		
 		remarks = "";
+		packetQuantity="";
+		packets="";
 		if(OrderItemDetail)
 		remarks = OrderItemDetail.remarks;
+		if(OrderItemDetail)
+		packetQuantity = OrderItemDetail.packetQuantity;
+		if(OrderItemDetail)
+		packets = OrderItemDetail.packets;
 		
 		orderDetailsMap["remarks"]=remarks;
 		orderDetailsMap["quantity"]=orderitems.quantity;
+		orderDetailsMap["packetQuantity"]=packetQuantity;
+		orderDetailsMap["packets"]=packets;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
 		
 		orderDetailsMap["numQuantity"]=OrderItemDetail.baleQuantity;

@@ -75,7 +75,7 @@ under the License.
 			   <fo:table-column column-width="100pt"/>               
 				   <fo:table-body>
 				       <fo:table-row>
-				           <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always">P.O.NO:<#if allDetailsMap.get("orderNo")?has_content>${allDetailsMap.get("orderNo")}<#else>${allDetailsMap.get("orderId")?if_exists}</#if></fo:block></fo:table-cell>       			
+				           <fo:table-cell  ><fo:block text-align="left" font-weight="bold" font-size="11pt"  keep-together="always">P.O.NO:<#if allDetailsMap.get("orderNo")?has_content>${allDetailsMap.get("orderNo")}<#else>${allDetailsMap.get("orderId")?if_exists}</#if></fo:block></fo:table-cell>       			
 				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;Tally PO.No:${allDetailsMap.get("refNo")?if_exists}</fo:block></fo:table-cell>       		
 				           <fo:table-cell  ><fo:block text-align="left" keep-together="always" font-size="11pt" number-columns-spanned="2" >&#160;&#160;P.O.DATE: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(allDetailsMap.get("orderDate")?if_exists, "dd-MMM-yyyy")}</fo:block></fo:table-cell>       		
                        </fo:table-row>
@@ -97,7 +97,7 @@ under the License.
 			   <fo:table-column column-width="800pt"/>               
 				   <fo:table-body>
                       <fo:table-row>
-						  <fo:table-cell><fo:block text-align="left" font-weight="bold" font-size="11pt">&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;                               Form for purchase of Yarn  with terms and conditions</fo:block></fo:table-cell>
+						  <fo:table-cell><fo:block text-align="left" font-weight="bold" font-size="11pt">&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;                               Form for purchase of Dyes and Chemicals with terms and conditions</fo:block></fo:table-cell>
                       </fo:table-row>
 			      </fo:table-body>
 			  </fo:table>
@@ -148,21 +148,33 @@ under the License.
       	<fo:block font-weight="bold">
             <fo:table text-align="center" border-style="solid">
             <fo:table-column column-width="40pt"/>
-            <fo:table-column column-width="140pt"/>
-       	    <fo:table-column column-width="100pt"/>
-       	    <fo:table-column column-width="65pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="60pt"/>
-            <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="100pt"/>
+       	    <fo:table-column column-width="80pt"/>
+       	    <fo:table-column column-width="65pt"/>
+       	    <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="80pt"/>
                <fo:table-body text-align="center">
                <fo:table-row>
                		<fo:table-cell ><fo:block text-align="center"  font-size="10pt" >SNO</fo:block></fo:table-cell>
-               		<fo:table-cell ><fo:block text-align="center" font-size="10pt">ITEM</fo:block></fo:table-cell>
+               		<fo:table-cell ><fo:block text-align="center" font-size="10pt">PRODUCT</fo:block>
+               		<fo:block text-align="center" font-size="10pt">DESCRIPTION</fo:block>
+               		</fo:table-cell>
                		<fo:table-cell ><fo:block text-align="center" font-size="10pt">REMARKS</fo:block></fo:table-cell>
                		<fo:table-cell >
                			<fo:block text-align="center" font-size="10pt">QUANTITY</fo:block>
                			<fo:block text-align="center" font-size="10pt">(Kgs)</fo:block>
+               		</fo:table-cell>
+               		<fo:table-cell >
+               			<fo:block text-align="center" font-size="10pt">PACKING</fo:block>
+               			<fo:block text-align="center" font-size="10pt">SIZE</fo:block>
+               		</fo:table-cell>
+               		<fo:table-cell >
+               			<fo:block text-align="center" font-size="10pt">PACKING</fo:block>
+               			<fo:block text-align="center" font-size="10pt">NO</fo:block>
                		</fo:table-cell>
                		<fo:table-cell >
                			<fo:block text-align="center" font-size="10pt">BASIC RATE</fo:block>
@@ -189,13 +201,15 @@ under the License.
     	 <fo:block>
             <fo:table text-align="center" >
             <fo:table-column column-width="40pt"/>
-            <fo:table-column column-width="140pt"/>
-       	    <fo:table-column column-width="100pt"/>
-       	    <fo:table-column column-width="65pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="60pt"/>
-            <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="100pt"/>
+       	    <fo:table-column column-width="80pt"/>
+       	    <fo:table-column column-width="65pt"/>
+       	    <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="80pt"/>
                <fo:table-body text-align="center">
                   <#assign sNo=1>
 	              <#list orderDetailsList as orderListItem>
@@ -209,7 +223,9 @@ under the License.
   				       <fo:table-cell  >
   				      	 	<fo:block text-align="center"  font-size="10pt">${orderListItem.get("quantity")?if_exists?string("##0.000")}</fo:block>
 							<fo:block text-align="center"  font-size="9pt"><#if orderListItem.get("Unit")?has_content &&  orderListItem.get("Unit")!="KGs">${orderListItem.get("baleqty")?if_exists?string("##0.000")}(${orderListItem.get("Unit")?if_exists})<#else></#if></fo:block>
-						</fo:table-cell>     
+						</fo:table-cell>
+						<fo:table-cell  ><fo:block text-align="center"  font-size="10pt">${orderListItem.get("packetQuantity")?if_exists}</fo:block></fo:table-cell>     
+						<fo:table-cell  ><fo:block text-align="center"  font-size="10pt">${orderListItem.get("packets")?if_exists}</fo:block></fo:table-cell>              
   			           <fo:table-cell  >
   			           		<fo:block text-align="center"   font-size="10pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block>
 							<fo:block text-align="center"  font-size="9pt"><#if orderListItem.get("bundleUnitListPrice")?has_content &&  orderListItem.get("Unit")!="KGs">${orderListItem.get("bundleUnitListPrice")?if_exists?string("##0.00")}(Bundle)<#else></#if></fo:block>
@@ -305,7 +321,7 @@ under the License.
 	 </fo:block> 
 
 		</#if>
-	   
+	    <fo:block>Transaction Type:${TransactionTypevalue}</fo:block>
 	<!-- <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >${C2E2Form?if_exists} </fo:block> -->
 	   
 	   <#if parentMap?has_content>
