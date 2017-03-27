@@ -1077,7 +1077,7 @@
                                 <not><if-empty field="finAccountId" /></not>
                             </condition>
                             <widgets>
-                                <label style="h1" text="Employee Deposit" ></label>
+                                <label style="h1" text="Employee Advance" ></label>
                                 <platform-specific>
                                     <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/SetDepositAccntTypeDropDown.ftl"/></html>
                                 </platform-specific>
