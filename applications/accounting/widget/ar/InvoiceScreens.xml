@@ -123,6 +123,7 @@ under the License.
                 <set field="viewSize" value="50" type="Integer"/>
                 <set field="nextFlag" type="String" default-value="Y"/>
                 <set field="prevFlag" type="String" default-value="N"/>
+                <set field="flag" type="String" value="Ar"></set>
                 <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>

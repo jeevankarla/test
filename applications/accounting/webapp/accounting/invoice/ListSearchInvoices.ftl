@@ -160,7 +160,7 @@ function datepick()
                 data: jQuery('#listInvoices').serialize(),
                 success: function(data) { jQuery('#showInvoiceRunningTotal').html(data.invoiceRunningTotal + '  (' + checkedInvoices.size() + ')') }
             });
-
+            
             if(jQuery('#serviceName').val() != "") {
             	jQuery('#submitButton').removeAttr('disabled');                
             }
@@ -305,8 +305,6 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 		jQuery("#amount").val(amount);
 		jQuery("#inFavourOf").val(partyName);
 		jQuery("#comments").val(comments);
-		
-
 		$('#paymentMethodTypeId').html(paymentMethodList.join(''));
 		//$("#paymentMethodTypeId").addOption(paymentMethodList, false); 
 		//$("#paymentMethodTypeId")[0].options.add(paymentMethodList);
@@ -401,7 +399,13 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
       <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
       <input type="hidden" name="bulkSms" id="bulkSms" value="<@ofbizUrl>bulkSms</@ofbizUrl>"/>
       <input type="hidden" name="bulkEmail" id="bulkEmail" value="<@ofbizUrl>bulkEmail</@ofbizUrl>"/>
+      <#if flag?has_content>
+      <#if flag == "Ar">
+	  <input id="paymentButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Take Receipt" />
+	  <#else>
 	  <input id="paymentButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" />
+	  </#if>
+	  </#if>
 	 </div>
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
