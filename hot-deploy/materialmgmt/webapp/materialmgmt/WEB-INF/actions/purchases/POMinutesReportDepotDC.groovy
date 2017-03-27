@@ -274,7 +274,8 @@ context.scheme = scheme;
 				double quotaQuantity = 0;
 				double baleQuantity = 0;
 				double bundleUnitPrice = 0;
-				
+				double packQuantity=0;
+				double packets=0;
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
 				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
@@ -332,6 +333,23 @@ context.scheme = scheme;
 				  
 				  }else{
 				  tempMap.put("remarks", "");
+				  }
+				  
+				  if(OrderItemDetail[0]){
+					  
+					 if(OrderItemDetail[0].packQuantity){
+					  tempMap.put("packQuantity", OrderItemDetail[0].packQuantity);
+					 }
+					 else{
+					  tempMap.put("packQuantity",packQuantity);
+					 }
+					  if(OrderItemDetail[0].packQuantity){
+					  tempMap.put("packets", OrderItemDetail[0].packets);
+					  }
+					  else{
+					  tempMap.put("packets",packets);
+					  }
+									   
 				  }
 			  if(scheme != "General"){
 					  if(quantity > quotaQuantity)

@@ -210,7 +210,8 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">SNo</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Items</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Product</fo:block>
+					            <fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Description</fo:block>
 					            </fo:table-cell >
 					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Unit</fo:block>

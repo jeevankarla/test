@@ -63,24 +63,26 @@ under the License.
 				    </fo:table>
 			   </fo:block>	
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">--------------------------------------------------------------------------------------------- </fo:block>
-        		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>
+        		<fo:block  text-align="left" font-size="10pt" font-weight="bold" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>
         		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
              	<fo:block  text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">Minutes of Purchase and Sales Committee meeting held on :<#if heldOnDate?has_content> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(heldOnDate, "dd-MMM-yyyy")?if_exists}</#if></fo:block>
              	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">The committee recommended/approved purchse of following items(s) as per the rates mention</fo:block>
              	<fo:block  text-align="left" font-size="10pt" font-style="bold">against each to be procured from M/S : <fo:inline font-weight="bold">${partyName?if_exists}</fo:inline></fo:block>
         		<fo:block text-align="left" keep-together="always" white-space-collapse="false">towards the requirement of user agency M/s : <fo:inline font-weight="bold">${partyName?if_exists}</fo:inline></fo:block>  
-        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">vide their indent No: ${orderId} date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists} ref.no.${externalOrderId?if_exists} <#-->Meeting held on ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists} --></fo:block>  
+        		<fo:block text-align="left" keep-together="always" white-space-collapse="false">vide their indent No: <fo:inline font-weight="bold"> ${orderId} </fo:inline> date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists} ref.no.${externalOrderId?if_exists} <#-->Meeting held on ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists} --></fo:block>  
         		<fo:block  text-align="left" font-size="12pt" font-weight="bold">PRICE FIXATION CHART :</fo:block>
         		<fo:block>
              		<fo:table border-style="solid">
              		    <fo:table-column column-width="4%"/>
-			            <fo:table-column column-width="25%"/>
+			            <fo:table-column column-width="13%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
+			            <fo:table-column column-width="7%"/>
+			            <fo:table-column column-width="7%"/>
 			            <fo:table-column column-width="17%"/>
 	                    <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="15%"/>
+			            <fo:table-column column-width="14%"/>
 			            <#--<fo:table-column column-width="10%"/>-->
 			            
 			            <fo:table-body>
@@ -89,7 +91,8 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">SNo</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Items</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Product</fo:block>
+					            <fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Description</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Remarks</fo:block>
@@ -105,6 +108,14 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Quantity</fo:block>
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(KGS)</fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Size</fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">No</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Purchase Rate/Unit</fo:block>
@@ -136,6 +147,12 @@ under the License.
 					            </fo:table-cell>  
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.00")} </fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("packQuantity")?if_exists} </fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("packets")?if_exists} </fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("PurunitPrice")?has_content>${orderList.get("PurunitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
@@ -173,9 +190,15 @@ under the License.
              		    <fo:table-column column-width="4%"/>
 			            <fo:table-column column-width="15%"/>
 			            <fo:table-column column-width="10%"/>
+			             <fo:table-column column-width="10%"/>
+			              <fo:table-column column-width="10%"/>
 			             <#--<fo:table-column column-width="10%"/>-->
+			              <#if scheme == "MGPS_10Pecent">
 			            <fo:table-column column-width="10%"/>
+			            </#if>
+			            <#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 			            <fo:table-column column-width="10%"/>
+			            </#if>
 	                    <fo:table-column column-width="11%"/>
 			            <fo:table-column column-width="15%"/>
 			            <fo:table-column column-width="11%"/>
@@ -186,7 +209,8 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">SNo</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Items</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Product</fo:block>
+					            <fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Description</fo:block>
 					            </fo:table-cell >
 					            <#--<fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="10pt" white-space-collapse="false">Unit</fo:block>
@@ -196,13 +220,25 @@ under the License.
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(KGS)</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Size</fo:block>
+					            </fo:table-cell >
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">No</fo:block>
+					            </fo:table-cell >
+					            <#if scheme == "MGPS_10Pecent">
+					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">10 %</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Qty(Kgs)</fo:block>
 					            </fo:table-cell >
+					            </#if>
+					            <#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">MGPS</fo:block>
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Qty(Kgs)</fo:block>
 					            </fo:table-cell >
+					            </#if>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Purchase Rate/Unit</fo:block>
 					            	<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">(Rs.)</fo:block>
@@ -226,6 +262,8 @@ under the License.
 							</fo:table-row>
 			                     <#assign sr=1>
 			                     <#assign totquantityKgs = 0>
+			                     <#assign totPackingSizekgs = 0>
+			                      <#assign totPackets= 0>
 			                      <#assign toTunitPrice = 0>
 			                       <#assign totSalesValue = 0>
 			                       <#assign tenPreTOT = 0>
@@ -244,16 +282,28 @@ under the License.
 					            </fo:table-cell> -->
 					            <fo:table-cell border-style="solid">
 					            <#assign totquantityKgs=totquantityKgs+orderList.get("quantity")>
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists?string("#0.00")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("quantity")?if_exists}</fo:block>
 					            </fo:table-cell>
+					             <#assign totPackingSizekgs=totPackingSizekgs+orderList.get("packQuantity")>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("packQuantity")?if_exists} </fo:block>
+					            </fo:table-cell>
+					             <#assign totPackets=totPackets+orderList.get("packets")>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("packets")?if_exists} </fo:block>
+					            </fo:table-cell>
+					            <#if scheme == "MGPS_10Pecent">
 					            <fo:table-cell border-style="solid">
 					            <#assign tenPreTOT=tenPreTOT+orderList.get("tenPerQty")>
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("tenPerQty")?if_exists?string("#0.00")} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("tenPerQty")?if_exists} </fo:block>
 					            </fo:table-cell>
+					            </#if>
+					            <#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 					            <fo:table-cell border-style="solid">
 					               <#assign mgpsQtyTOT=mgpsQtyTOT+orderList.get("mgpsQty")>
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("mgpsQty")?if_exists?string("#0.00")} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${orderList.get("mgpsQty")?if_exists} </fo:block>
 					            </fo:table-cell>
+					            </#if>
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("PurunitPrice")?has_content>${orderList.get("PurunitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false"><#if orderList.get("Uom") == "/Bale">${orderList.get("baleQuantity")*40}(Bundles)<#elseif orderList.get("Uom") == "/Half-Bale">${orderList.get("baleQuantity")*20}(Bundles)<#elseif orderList.get("Uom") == "/Bundle">${orderList.get("baleQuantity")}(Bundles)</#if></fo:block> 
@@ -281,14 +331,24 @@ under the License.
 					            	<fo:block  keep-together="always" text-align="center" font-size="11pt" white-space-collapse="false">Total</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totquantityKgs?string("#0.000")} </fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totquantityKgs} </fo:block>
 					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackingSizekgs} </fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackets} </fo:block>
+					            </fo:table-cell>
+					            <#if scheme == "MGPS_10Pecent">
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${tenPreTOT?string("#0.000")} </fo:block>
 					            </fo:table-cell>
+					            </#if>
+					            <#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${mgpsQtyTOT?string("#0.000")}</fo:block>
+					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${mgpsQtyTOT}</fo:block>
 					            </fo:table-cell>
+					            </#if>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false"></fo:block>
 					            </fo:table-cell>
@@ -305,7 +365,7 @@ under the License.
 						</fo:table-body>
 					</fo:table>
 				</fo:block>
-				<fo:block text-align="left" font-size="10pt"   white-space-collapse="false"><#if scheme == "MGPS_10Pecent">MGP 10%<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if> Scheme <#if scheme != "General"><#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></#if></fo:block>
+				<#--<fo:block text-align="left" font-size="10pt"   white-space-collapse="false"><#if scheme == "MGPS_10Pecent">MGP 10%<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if> Scheme <#if scheme != "General"><#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></#if></fo:block>-->
 				
 		        <#assign grandToT = 0>
 		        <#assign typeBase=typeBasedMap.entrySet()>
@@ -323,11 +383,11 @@ under the License.
 				<fo:block font-weight="bold" font-size="10pt">Summary</fo:block>
 				<fo:block>a) Actual Purchase Value (Rs): ${purchaeTot?string("#0.00")} </fo:block>
 				<fo:block>b) Total Sale Value     (Rs): ${toTunitPrice?string("#0.00")} </fo:block>
-				<fo:block>c) Difference of the Sale</fo:block>
+				<#--<fo:block>c) Difference of the Sale</fo:block>
 				<fo:block> &#160;&#160; Value &amp; actual payment made to Mill: Nil</fo:block>
 				<fo:block>d) 0 days interest on the credit:</fo:block>
 				<#assign orderAdj = delegator.findByAnd("OrderAdjustment", {"orderId" : orderId, "orderAdjustmentTypeId" : "SERVICE_CHARGE" })?if_exists />
-				<fo:block>e) Percentage of Trading Contribution: <#if orderAdj?has_content><#if orderAdj[0].sourcePercentage?has_content>${orderAdj[0].sourcePercentage}<#else>0</#if><#else>0</#if>%</fo:block>
+				<fo:block>e) Percentage of Trading Contribution: <#if orderAdj?has_content><#if orderAdj[0].sourcePercentage?has_content>${orderAdj[0].sourcePercentage}<#else>0</#if><#else>0</#if>%</fo:block>-->
 			    <fo:block>	
 			        <fo:table border-style="solid">
              		    <fo:table-column column-width="100%"/>
@@ -345,14 +405,14 @@ under the License.
 					             <fo:table-cell border-style="solid">
 									<fo:block>1. Goods will be despatched on Freight To-Pay basis to M/S: <fo:inline font-weight="bold">${partyName?if_exists}</fo:inline> </fo:block>
 				                    <fo:block white-space-collapse="false">2. Payment will be made by user agency within BACK TO BACK/ ON CREDIT days / immediately failing which interest @ per annum will be charged for the total number of days payment delayed.</fo:block>
-	                                <fo:block>3. One total financial outflow in this transaction is Rs.</fo:block>
-	                                <fo:block>4. Total outstanding of M/S ${partyName?if_exists} is Rs <fo:inline font-weight="bold">${toTunitPrice?string("#0.00")} </fo:inline></fo:block>
-	                                <fo:block>5. Payment dues with interest from the party M/S: <fo:inline font-weight="bold">${partyName?if_exists}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:inline> is Rs.${balanceAmt?if_exists} </fo:block>
-	                                <fo:block>6. Payment to the Mill to be paid Cheque/Demand Draft for Rs.<fo:inline font-weight="bold">${toTunitPrice?string("#0.00")} </fo:inline> after receipt of Mill invoice/LR</fo:block>
-	                                <fo:block>7. No. of Days credit extended by Mills to NHDC from date of despatch ........</fo:block>
-	                                <fo:block>8. No. of Days credit extended by NHDC to Agency from date of despatch </fo:block>
-	                                <fo:block>9. Any other specific information ...................</fo:block>
-	                               <fo:block>10. Local Taxes as applicable.</fo:block>
+	                                <#--<fo:block>3. One total financial outflow in this transaction is Rs.</fo:block>-->
+	                                <fo:block>3. Total outstanding of M/S ${partyName?if_exists} is Rs <fo:inline font-weight="bold">${toTunitPrice?string("#0.00")} </fo:inline></fo:block>
+	                                <fo:block>4. Payment dues with interest from the party M/S: <fo:inline font-weight="bold">${partyName?if_exists}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:inline> is Rs.${balanceAmt?if_exists} </fo:block>
+	                                <fo:block>5. Payment to the Mill to be paid Cheque/Demand Draft for Rs.<fo:inline font-weight="bold">${toTunitPrice?string("#0.00")} </fo:inline> after receipt of Mill invoice/LR</fo:block>
+	                                <fo:block>6. No. of Days credit extended by Mills to NHDC from date of despatch ........</fo:block>
+	                                <fo:block>7. No. of Days credit extended by NHDC to Agency from date of despatch </fo:block>
+	                                <fo:block>8. Any other specific information ...................</fo:block>
+	                               <fo:block>9. Local Taxes as applicable.</fo:block>
 					           </fo:table-cell>
                                <#--<fo:table-cell border-style="solid">
 									<fo:block>1. Yarn will be received with self certification subject to testing of the yarn at Textile committee /our QC department.If the test results are differed to our specifications, the material will be rejected at the cost of the supplier.</fo:block>
