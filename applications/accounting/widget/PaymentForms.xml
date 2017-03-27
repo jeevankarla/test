@@ -82,6 +82,7 @@ under the License.
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
+                <parameter param-name="flag" from-field="flag"/>
                 <parameter param-name="paymentSequenceId" value="${paymentSequenceId}"/>
             </hyperlink>
         </field>

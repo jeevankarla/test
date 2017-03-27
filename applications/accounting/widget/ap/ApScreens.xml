@@ -36,6 +36,7 @@ under the License.
 	                <field-map field-name="viewSize" from-field="viewSize"/>
 	            </service>
 	            <set field="listIt" from-field="result.listIt"/>
+	             <set field="flag" value="Payment"/>
 	            <script location="component://accounting/webapp/accounting/WEB-INF/actions/PaymentSearchFilter.groovy"/>
             </actions>
             <widgets>

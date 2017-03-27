@@ -289,7 +289,7 @@ under the License.
         <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
-        <field name="finAccountId" position="1" title="Employee Id"><text-find/></field>
+        <field name="finAccountId" position="1" title="Account Id"><text-find/></field>
         <field name="AccDate" position="2" title="Date" event="onclick" action="javascript:datepick2();" id-name ="AccDate"><text  size="12"/></field> 
         <field name="finAccountName" position="1" title="Name"><text-find/></field>
         <field name="amount" position="2"><text/></field>

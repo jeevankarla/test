@@ -177,7 +177,7 @@ function setVoidPaymentParameters(currentPayment){
         <#list paymentList as payment>
         	<#assign amountToApply = Static["org.ofbiz.accounting.payment.PaymentWorker"].getPaymentNotApplied(delegator, payment.paymentId)>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><a class="buttontext" href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>">${payment.get("paymentId")}</a>
+              <td><a class="buttontext" href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}&amp;flag=${flag}</@ofbizUrl>">${payment.get("paymentId")}</a>
               <input type="hidden" name="paymentId" id="paymentId" value="${payment.paymentId?if_exists}">
               </td>
               <td><#if payment.paymentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.paymentDate ,"dd/MM/yyyy HH:mm:ss")}</#if></td>              
