@@ -879,7 +879,7 @@
     	    var totalValue=0;
         	
         	var isIncTax = $('#incTax').is(':checked');
-        	if (args.cell == 0 || args.cell == 1 || args.cell == 2 || args.cell == 3 || args.cell == 5 || args.cell == 6 || args.cell == 7) {
+        	if (args.cell == 0 || args.cell == 1 || args.cell == 2 || args.cell == 4 || args.cell == 3 || args.cell == 5 || args.cell == 6 || args.cell == 7) {
 				var prod = data[args.row]["cProductId"];
 				var qty = parseFloat(data[args.row]["quantity"]);
 				//var uomId = productUOMMap[prod];
@@ -890,6 +890,8 @@
 				var vatPercent = parseFloat(data[args.row]["vatPercent"]);
 				var cstPercent = parseFloat(data[args.row]["cstPercent"]);
 				var cessPercent = parseFloat(data[args.row]["cessPercent"]);
+				
+				
 				
 				var price = data[args.row]['unitPrice'];
 				if(isNaN(price)){

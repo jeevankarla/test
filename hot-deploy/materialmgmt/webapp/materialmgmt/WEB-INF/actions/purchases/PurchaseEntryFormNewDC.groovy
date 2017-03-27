@@ -99,7 +99,18 @@ dctx = dispatcher.getDispatchContext();
 //exprList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, "_NA_"));
 //exprList.add(EntityCondition.makeCondition("isVirtual", EntityOperator.NOT_EQUAL, "Y"));
 
-prodList =delegator.findList("Product", null,null, null, null, false);
+
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.IN,["DYES","CHEMICALS"]));
+condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	
+productIdsList = EntityUtil.getFieldListFromEntityList(delegator.findList("ProductCategoryAndMember",condition, UtilMisc.toSet("productId"), null, null, false), "productId", true);
+
+prodList = delegator.findList("Product", EntityCondition.makeCondition("productId", EntityOperator.IN, productIdsList),null, null, null, false);
+
+
+
+//prodList =delegator.findList("Product", null,null, null, null, false);
 /*resultMap = MaterialHelperServices.getMaterialProducts(dctx, context);
 prodList.addAll(resultMap.get("productList"));*/
 JSONArray productItemJSON = new JSONArray();
