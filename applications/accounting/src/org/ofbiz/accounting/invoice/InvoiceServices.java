@@ -167,6 +167,7 @@ public class InvoiceServices {
         }
 
         String orderId = (String) context.get("orderId");
+        String purposeTypeId = (String) context.get("purposeTypeId");
         List<GenericValue> billItems = UtilGenerics.checkList(context.get("billItems"));
         String invoiceId = (String) context.get("invoiceId");
         String shipmentId = (String) context.get("shipmentId");
@@ -277,6 +278,7 @@ public class InvoiceServices {
                 // start with INVOICE_IN_PROCESS, in the INVOICE_READY we can't change the invoice (or shouldn't be able to...)
                 createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
                 createInvoiceContext.put("currencyUomId", orderHeader.getString("currencyUom"));
+                createInvoiceContext.put("purposeTypeId", purposeTypeId);
                 createInvoiceContext.put("userLogin", userLogin);
 
                 // store the invoice first
@@ -5579,6 +5581,8 @@ public class InvoiceServices {
      return result;
 	}
 	
+
+	
 	public static Map<String, Object> createTaxInvoiceSequence(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();              
@@ -5607,6 +5611,7 @@ public class InvoiceServices {
        		
        	 //Debug.log("enableTaxInvSeq============="+enableTaxInvSeq);
        		Timestamp invDate=null;
+       		String purPoseTypeId = "";
        		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId)){
        			List<GenericValue> invoiceItems = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
        			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceTypeId", true);
@@ -5615,6 +5620,10 @@ public class InvoiceServices {
        			}    
        			if(UtilValidate.isEmpty(invDate)){
        				invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("invoiceDate");
+       			}
+       			if(UtilValidate.isNotEmpty((EntityUtil.getFirst(invoiceItems)).getString("purposeTypeId"))){
+       				purPoseTypeId = (EntityUtil.getFirst(invoiceItems)).getString("purposeTypeId");
+       				purPoseTypeId = purPoseTypeId.trim();
        			}
        			
        		   // Debug.log("invDate============="+invDate);
@@ -5711,7 +5720,7 @@ public class InvoiceServices {
 	       			//Debug.log("prefix============="+prefix);
 	       			if(UtilValidate.isNotEmpty(shipmentId)){
 	       				
-	  /*     				if(UtilValidate.isEmpty(orderAssoc)){
+	      				if(UtilValidate.isEmpty(orderAssoc) && ((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
 	       					
 	       				    List condList = FastList.newInstance();
 			                condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
@@ -5738,16 +5747,16 @@ public class InvoiceServices {
 			                if(UtilValidate.isNotEmpty(orderRolesDetails)){
 			                	indentTypeId = "O";
 			                }
-	       				}*/
+	       				}
 	       				
-	       			    List condList = FastList.newInstance();
+	       			   /* List condList = FastList.newInstance();
 		                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 		                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
 						EntityCondition condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
 						List<GenericValue> orderRolesDetails = delegator.findList("OrderRole", condExpr1, null, null, null, false);
 		                if(UtilValidate.isNotEmpty(orderRolesDetails)){
 		                	indentTypeId = "O";
-		                }
+		                }*/
 	                
 	                //Debug.log("indentTypeId============="+indentTypeId);
 	       			GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
@@ -5813,7 +5822,10 @@ public class InvoiceServices {
     				billOfSale.put("finYearId", finYearId);
     				billOfSale.put("partyId", partyId);
     				billOfSale.put("invoiceDueDate", invDate);
-    				billOfSale.put("productCategoryId", "Y");
+                    if(UtilValidate.isNotEmpty(purPoseTypeId) && (purPoseTypeId.equals("DIES_AND_CHEM_SALE") || purPoseTypeId.equals("DEPOT_DIES_CHEM_SALE")))
+                     billOfSale.put("productCategoryId", "DC");
+                    else	
+                     billOfSale.put("productCategoryId", "Y");
     				delegator.setNextSubSeqId(billOfSale, "sequenceId", 6, 1);
     				billOfSale.put("indentTypeId",indentTypeId);
     	            delegator.create(billOfSale);
@@ -5831,7 +5843,10 @@ public class InvoiceServices {
     				billOfSale.put("partyId", partyId);
     				billOfSale.put("finYearId", finYearId);
     				billOfSale.put("invoiceDueDate", invDate);
-    				billOfSale.put("productCategoryId", "Y");
+    				if(UtilValidate.isNotEmpty(purPoseTypeId) && (purPoseTypeId.equals("DIES_AND_CHEM_SALE") || purPoseTypeId.equals("DEPOT_DIES_CHEM_SALE")))
+                    billOfSale.put("productCategoryId", "DC");
+                    else	
+                    billOfSale.put("productCategoryId", "Y");
     				delegator.setNextSubSeqId(billOfSale, "sequenceId", 6, 1);
     				billOfSale.put("indentTypeId",indentTypeId);
     	            delegator.create(billOfSale);
@@ -5862,6 +5877,9 @@ public class InvoiceServices {
         }
         return result;
 	}
+	
+	
+	
 	public static Map<String, Object> createCreditNoteOrDebitNoteForInvoice(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();              
