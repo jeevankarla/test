@@ -1582,7 +1582,13 @@ public class DepotPurchaseServices{
 		
 		//Timestamp nowTimeStamp = 
 		  //String invoiceId = null;
-		  Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", invoiceDate, "userLogin", userLogin, "ignoreAdjustmentsList", ignoreAdjustmentsList, "itemAdjMap", itemAdjMap);
+		
+		if(UtilValidate.isNotEmpty(purposeTypeIdField) && purposeTypeIdField.equals("DIES_AND_CHEM_SALE"))
+			purposeTypeId = "DIES_AND_CHEM_SALE";
+		else
+			purposeTypeId = "YARN_SALE";
+		
+		  Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", invoiceDate, "userLogin", userLogin, "ignoreAdjustmentsList", ignoreAdjustmentsList, "itemAdjMap", itemAdjMap,"purposeTypeId",purposeTypeId);
           serviceContext.put("shipmentId",shipmentId);
           try {
                result = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);
@@ -1658,11 +1664,6 @@ public class DepotPurchaseServices{
             Debug.logError(gse, "Problem calling the createInvoiceAttribute service", module);
         }
 		
-		
-		if(UtilValidate.isNotEmpty(purposeTypeIdField) && purposeTypeIdField.equals("DIES_AND_CHEM_SALE"))
-			purposeTypeId = "DIES_AND_CHEM_SALE";
-		else
-			purposeTypeId = "YARN_SALE";
 		
 	    if(UtilValidate.isNotEmpty(purposeTypeId)){
        	 try{
@@ -11617,6 +11618,10 @@ public class DepotPurchaseServices{
 		
 		//Timestamp nowTimeStamp = 
 		  //String invoiceId = null;
+		if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DEPOT_DIES_CHEM_SALE"))
+			purposeTypeId = "DEPOT_DIES_CHEM_SALE";
+		else
+			purposeTypeId = "DEPOT_YARN_SALE";
 		try{
 		  GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", orderId), false);
 
@@ -11624,7 +11629,7 @@ public class DepotPurchaseServices{
 		} catch (Exception e) {
             Debug.logError(e, "Problem calling the OrderHeader Entity", module);
         }
-		  Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", invoiceDate, "userLogin", userLogin, "ignoreAdjustmentsList", ignoreAdjustmentsList, "itemAdjMap", itemAdjMap);
+		  Map<String, Object> serviceContext = UtilMisc.toMap("orderId", orderId,"billItems", toBillItems, "eventDate", invoiceDate, "userLogin", userLogin, "ignoreAdjustmentsList", ignoreAdjustmentsList, "itemAdjMap", itemAdjMap,"purposeTypeId",purposeTypeId);
           serviceContext.put("shipmentId",shipmentId);
           try {
                result = dispatcher.runSync("createInvoiceForOrderOrig", serviceContext);

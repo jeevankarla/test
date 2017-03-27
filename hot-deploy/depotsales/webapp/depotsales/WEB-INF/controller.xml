@@ -2188,11 +2188,11 @@
      <request-map uri="processNewSalesInvoiceDepot">
        <security https="true" auth="true"/>
        <event type="java" path="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="processNewSalesInvoiceDepot" global-transaction="true"/>
-       <response name="success" type="request-redirect" value="DepotSalesInvoiceViewDC">
+       <response name="success" type="request-redirect" value="DepotSalesInvoiceView">
         <redirect-parameter  name="invoiceId"/>
         <redirect-parameter name="noConditionFind" value="Y"/>     
         </response>
-       <response name="error" type="view" value="DepotSalesInvoiceViewDC"/>
+       <response name="error" type="view" value="DepotSalesInvoiceView"/>
      </request-map>
      
     <request-map uri="processNewSalesInvoiceDepotDC">
