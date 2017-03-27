@@ -247,8 +247,8 @@ if(parameters.multifinAccount == "Y"){
 			          if(UtilValidate.isNotEmpty(paymentMethodType)){
 			            tempFinAccountTransMap["paymentMethodTypeId"]=paymentMethodType.description;
 			          }
-				}else if(UtilValidate.isEmpty(finAccountTrans.reasonEnumId) || (finAccountTrans.reasonEnumId=="FATR_CONTRA")){
-				contraFinTransEntry = delegator.findOne("FinAccountTransAttribute", ["finAccountTransId" : finAccountTrans.finAccountTransId,"attrName" : "FATR_CONTRA"], true);
+			      }else if(UtilValidate.isNotEmpty(finAccountTrans.reasonEnumId) &&(finAccountTrans.reasonEnumId=="FATR_CONTRA")){
+					          contraFinTransEntry = delegator.findOne("FinAccountTransAttribute", ["finAccountTransId" : finAccountTrans.finAccountTransId,"attrName" : "FATR_CONTRA"], true);
 				          if(UtilValidate.isNotEmpty(contraFinTransEntry)){
 								contraFinAccountTrans = delegator.findOne("FinAccountTrans", ["finAccountTransId" : contraFinTransEntry.finAccountTransId], false);
 								if(UtilValidate.isNotEmpty(contraFinTransEntry)){
