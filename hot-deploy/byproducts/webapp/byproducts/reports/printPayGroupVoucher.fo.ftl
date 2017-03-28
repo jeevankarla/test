@@ -109,12 +109,11 @@ under the License.
         						  <#assign sno=sno+1>
         						  <#assign  partyName="">
         						  <#assign  partyId="">
-        						  <#if paymentListReport.partyIdFrom?exists && paymentListReport.partyIdFrom == "Company">
+        						  <#if paymentListReport.partyIdTo?exists>
 			            			  <#assign partyId = paymentListReport.partyIdTo>
-			            		  <#else>
-			            			  <#assign partyId = paymentListReport.partyIdFrom>
+			            		  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)> 
 			            		  </#if>
-        						 <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>      						 
+        						     						 
         						 	<fo:table-row>
 		        						<fo:table-cell>
 		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
