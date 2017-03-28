@@ -1,4 +1,4 @@
-<#include "CreateDepotTransPOInc.ftl"/>
+<#include "CreateDepotTransPOIncDC.ftl"/>
 <#--
 <link href="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.css</@ofbizContentUrl>" rel="stylesheet">
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/steps/jquery.steps.js</@ofbizContentUrl>"></script>

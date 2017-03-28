@@ -988,7 +988,7 @@ function fillPartyQuota(partyId){
 	<#else>
 		<#include "BranchSalesOrderInternalFormDepot.ftl"/>
 	</#if>
-	<#include "EditUDPPriceDepotTest.ftl"/>
+	<#include "EditUDPPriceDepotTestDepot.ftl"/>
 	<div class="top" id="exp_outer">
 		<div class="full"  style="margin: auto; position: relative;">
 			<div class="lefthalf" id="chld1">
