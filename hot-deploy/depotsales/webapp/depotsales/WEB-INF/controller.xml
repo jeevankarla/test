@@ -1080,6 +1080,16 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="SupplierwiseCountwisePurchaseReportCSV"/>
     </request-map>
+    
+    <request-map uri="stockreport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="stockreportPDF"/>
+    </request-map>
+    <request-map uri="stockreport.xls">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="stockreportCSV"/>
+    </request-map>
+    
     <request-map uri="fiberAndCountWiseSalesReport.pdf">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="fiberAndCountWiseSalesReportPDF"/>
@@ -3521,6 +3531,9 @@
     <view-map name="fiberAndCountWiseSalesReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#fiberAndCountWiseSalesReportPDF" content-type="application/pdf"/>
     <view-map name="SupplierwiseCountwisePurchaseReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierwiseCountwisePurchaseReportCSV" content-type="text/csv"/>
     <view-map name="SupplierwiseCountwisePurchaseReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#SupplierwiseCountwisePurchaseReportPDF" content-type="application/pdf"/>
+     
+     <view-map name="stockreportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#stockreportPDF" content-type="application/pdf"/>
+     <view-map name="stockreportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#stockreportCSV" content-type="text/csv"/>
      
      <view-map name="MillwisecountwisePurchaseofYarnReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#MillwisecountwisePurchaseofYarnReportCSV" content-type="text/csv"/>
     <view-map name="MillwisecountwisePurchaseofYarnReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#MillwisecountwisePurchaseofYarnReportPDF" content-type="application/pdf"/>

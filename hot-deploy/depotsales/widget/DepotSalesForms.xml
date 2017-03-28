@@ -3615,6 +3615,19 @@
         </field>
 
 	</form>
+	<form name="stockreportCSV" type="list" list-name="physicalInventory" view-size="99999">
+    	 <field name="shipmentId" title="_"><display/></field>
+    	 <field name="supplierInvoiceId" title="_"><display/></field>
+    	 <field name="facilityName" title="_"><display/></field>
+    	 <field name="partyName" title="_"><display/></field>         
+         <field name="poRefNum" title="_"><display/></field>
+         <field name="estimatedShipDate" title="_"><display/></field>
+         <field name="productName" title="_"><display/></field>
+    	 <field name="quantityOnHandTotal" title="_"><display/></field>
+    	 <field name="availbleQuantity" title="_"><display/></field>
+    	 <field name="unitCost" title="_"><display/></field>         
+    </form>
+	
        <form name="SupplierwiseCountwisePurchaseReportCSV" type="list" list-name="finalCSVList" view-size="99999">
     	 <field name="prodcatName" title="_"><display/></field>
     	 <field name="productName" title="_"><display/></field>
