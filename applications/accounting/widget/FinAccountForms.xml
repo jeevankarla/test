@@ -412,7 +412,7 @@ under the License.
             </drop-down>
         </field>
          <field name="contraFinAccountTypeId" title="FinAccountType" use-when="&quot;${entryType}&quot;==&quot;Contra&quot;" action="javascript:setFinAccountType(this,'${finAccountTypeMap}');" event="onChange">
-            <drop-down>
+            <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccountType" description="${description}[${finAccountTypeId}]" key-field-name="finAccountTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
