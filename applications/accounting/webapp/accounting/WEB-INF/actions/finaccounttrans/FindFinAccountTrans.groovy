@@ -188,6 +188,7 @@ if(parameters.multifinAccount == "Y"){
 				tempFinAccountTransMap["paymentPartyId"]="";
 				tempFinAccountTransMap["paymentPartyName"]="";
 				tempFinAccountTransMap["transactionDate"]=UtilDateTime.toDateString(finAccountTrans.transactionDate,"dd-MM-yy hh:mm:ss");
+				tempFinAccountTransMap["realisationDate"]=UtilDateTime.toDateString(finAccountTrans.realisationDate,"dd-MM-yy hh:mm:ss");
 				tempFinAccountTransMap["instrumentNo"]="";
 				tempFinAccountTransMap["amount"]=finAccountTrans.amount;
 				tempFinAccountTransMap["paymentId"]=finAccountTrans.paymentId;
@@ -246,8 +247,8 @@ if(parameters.multifinAccount == "Y"){
 			          if(UtilValidate.isNotEmpty(paymentMethodType)){
 			            tempFinAccountTransMap["paymentMethodTypeId"]=paymentMethodType.description;
 			          }
-				   }else if(UtilValidate.isNotEmpty(finAccountTrans.reasonEnumId) &&(finAccountTrans.reasonEnumId=="FATR_CONTRA")){
-				          contraFinTransEntry = delegator.findOne("FinAccountTransAttribute", ["finAccountTransId" : finAccountTrans.finAccountTransId,"attrName" : "FATR_CONTRA"], true);
+			      }else if(UtilValidate.isNotEmpty(finAccountTrans.reasonEnumId) &&(finAccountTrans.reasonEnumId=="FATR_CONTRA")){
+					          contraFinTransEntry = delegator.findOne("FinAccountTransAttribute", ["finAccountTransId" : finAccountTrans.finAccountTransId,"attrName" : "FATR_CONTRA"], true);
 				          if(UtilValidate.isNotEmpty(contraFinTransEntry)){
 								contraFinAccountTrans = delegator.findOne("FinAccountTrans", ["finAccountTransId" : contraFinTransEntry.finAccountTransId], false);
 								if(UtilValidate.isNotEmpty(contraFinTransEntry)){
@@ -269,6 +270,32 @@ if(parameters.multifinAccount == "Y"){
 									tempFinAccountTransMap["paymentPartyId"] = contraFinAccount.ownerPartyId;
 								}
 							}
+				
+				else{
+					
+					  FinAccountTranss = delegator.findOne("FinAccountTrans", ["finAccountTransId" : finAccountTrans.finAccountTransId], false);
+					  if(UtilValidate.isNotEmpty(FinAccountTranss)){
+						  if(UtilValidate.isNotEmpty(FinAccountTranss.finAccountTransTypeId)){
+							  if( FinAccountTranss.finAccountTransTypeId=="WITHDRAWAL"){
+								  //if deposit for partyLedger it is Cr
+								  innerMap["creditValue"]=FinAccountTranss.amount;
+								  partyTotalCredits+=FinAccountTranss.amount;
+								  innerMap["crOrDbId"]="C";
+							  }else if(FinAccountTranss.finAccountTransTypeId=="DEPOSIT"){
+								  //if deposit for partyLedger it is Dr
+								  innerMap["debitValue"]=FinAccountTranss.amount;
+								  partyTotalDebits+=FinAccountTranss.amount;
+								  innerMap["crOrDbId"]="D";
+							  }
+						  }
+						  if(UtilValidate.isNotEmpty(FinAccountTranss.finAccountId)){
+							  FinAccountt= delegator.findOne("FinAccount", ["finAccountId" :FinAccountTranss.finAccountId], false);
+							  tempFinAccountTransMap["paymentPartyName"] = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, FinAccountt.ownerPartyId, false);
+							  tempFinAccountTransMap["paymentPartyId"] = FinAccountt.ownerPartyId;
+						  }
+					  }
+					  
+				  }
 				        tempFinAccountTransMap["instrumentNo"]=finAccountTrans.finAccountTransId;
 			    }
 				   //adding required fields to partyLedgerInnerMap

@@ -37,11 +37,6 @@ under the License.
 		        	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
 				<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="9pt" font-weight="bold" white-space-collapse="false">UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if></fo:block>
-                <#assign roId = parameters.division>
-              	 	<#assign roHeader = roId+"_HEADER">
-              	 	<#assign roSubheader = roId+"_HEADER01">
-					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
-					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
 					<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false"  font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
                     	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
                     	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">BANK RECONCILIATION STATEMENT   AS ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy HH:mm:ss")} </fo:block>
@@ -52,8 +47,8 @@ under the License.
               			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">_________________________________________________________________________________________________________________________________________</fo:block>
               			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Unreconciled Deposits</fo:block> 
 		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">_________________________________________________________________________________________________________________________________________</fo:block> 
-		        		<fo:block text-align="left"  keep-together="always" font-size="11pt" font-family="Courier,monospace"  white-space-collapse="false">Fin Account Fin Account  Payment Party  Transaction  Instrument      Amount   Payment     Payment    PaymentMethod    Status       Comments </fo:block>
-		        		<fo:block text-align="left"  keep-together="always" font-size="11pt" font-family="Courier,monospace"  white-space-collapse="false">&#160;Trans Id   TransType                       Date      No                         Id         Type       Type                     </fo:block>  
+		        		<fo:block text-align="left"  keep-together="always" font-size="11pt" font-family="Courier,monospace"  white-space-collapse="false">Fin Account Fin Account  Payment Party  Transaction  Instrument      Amount   Payment     Payment    PaymentMethod   Reco    Status       Comments </fo:block>
+		        		<fo:block text-align="left"  keep-together="always" font-size="11pt" font-family="Courier,monospace"  white-space-collapse="false">&#160;Trans Id   TransType                       Date      No                         Id         Type       Type      				Date </fo:block>  
 		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">_________________________________________________________________________________________________________________________________________</fo:block>		        
             	<fo:block>
                  	<fo:table>
@@ -66,8 +61,9 @@ under the License.
             		<fo:table-column column-width="60pt"/>
             		<fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="90pt"/>
-            		<fo:table-column column-width="90pt"/> 
-            		<fo:table-column column-width="149pt"/> 
+            		<fo:table-column column-width="70pt"/>
+            		<fo:table-column column-width="70pt"/> 
+            		<fo:table-column column-width="100pt"/>  
             		<#assign depositFinal_Amount=0>
             		<#assign withdrawFinal_Amount=0>
             		<fo:table-body>
@@ -109,6 +105,9 @@ under the License.
 							<fo:table-cell border-style="solid">
                        			<fo:block  keep-together="always" font-size="10pt" >${finAccountTrans.paymentMethodTypeId?if_exists}</fo:block>  
                    			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                       			<fo:block  font-size="10pt"><#if (finAccountTrans.realisationDate)?has_content>${finAccountTrans.realisationDate}</#if></fo:block>  
+                   			</fo:table-cell>
                    			 <#assign glAccountType = delegator.findOne("StatusItem", {"statusId" : finAccountTrans.statusId}, false)>
 							<fo:table-cell border-style="solid">
                        			<fo:block  keep-together="always" font-size="10pt" text-align="left" white-space-collapse="false">${glAccountType.description?if_exists}</fo:block>  
@@ -149,8 +148,9 @@ under the License.
             		<fo:table-column column-width="60pt"/>
             		<fo:table-column column-width="90pt"/>
             		<fo:table-column column-width="90pt"/>
-            		<fo:table-column column-width="90pt"/> 
-            		<fo:table-column column-width="149pt"/> 
+            		<fo:table-column column-width="70pt"/>
+            		<fo:table-column column-width="70pt"/> 
+            		<fo:table-column column-width="100pt"/> 
             		<fo:table-body>
             		<#list finAccountReconciliationList as finAccountTrans>            		  
 			          <#assign finAccountTypeId=finAccountTrans.finAccountTransTypeId>
@@ -170,10 +170,18 @@ under the License.
                    			<fo:table-cell border-style="solid">
                        			<fo:block   font-size="9pt" >${Static["org.ofbiz.order.order.OrderServices"].nameTrim((StringUtil.wrapString(finAccountTrans.paymentPartyName?if_exists)),20)}</fo:block>  
                    			</fo:table-cell>
+                   			<#else>
+                   			<fo:table-cell border-style="solid">
+                       			<fo:block   font-size="9pt" ></fo:block>  
+                   			</fo:table-cell>
                    			</#if>
                    		<#if finAccountTrans.transactionDate?has_content>
                    				<fo:table-cell border-style="solid">
                        			<fo:block font-size="10pt" text-align="left" white-space-collapse="false">${finAccountTrans.transactionDate?if_exists}</fo:block>  
+                   			</fo:table-cell>
+                   			<#else>
+                   			<fo:table-cell border-style="solid">
+                       			<fo:block font-size="10pt" text-align="left" white-space-collapse="false"></fo:block>  
                    			</fo:table-cell>
                    		</#if>    
                    		<fo:table-cell border-style="solid">
@@ -193,6 +201,9 @@ under the License.
                    			</fo:table-cell>
                    			           			<fo:table-cell border-style="solid">
                        			<fo:block  keep-together="always" font-size="10pt" text-align="center" white-space-collapse="false">${finAccountTrans.paymentMethodTypeId?if_exists}</fo:block>  
+                   			</fo:table-cell>
+                   			<fo:table-cell border-style="solid">
+                       			<fo:block  font-size="10pt"><#if (finAccountTrans.realisationDate)?has_content>${finAccountTrans.realisationDate}</#if></fo:block>  
                    			</fo:table-cell>
                    			 <#assign glAccountType = delegator.findOne("StatusItem", {"statusId" : finAccountTrans.statusId}, false)>           
                    			<fo:table-cell border-style="solid">
@@ -221,14 +232,8 @@ under the License.
 	<#else>
     	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
     		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;</fo:block>
-    			<#assign roId = parameters.division>
-              	<#assign roHeader = roId+"_HEADER">
-              	<#assign roSubheader = roId+"_HEADER01">
-              	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
-				<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
               	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
-       		 	<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
-				<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
+       		 	
        		 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				<fo:block font-size="10pt" text-align="center">---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
