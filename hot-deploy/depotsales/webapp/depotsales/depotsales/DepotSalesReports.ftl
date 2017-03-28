@@ -159,6 +159,25 @@ function makeDatePicker3(fromDateId ,thruDateId){
 
 	    <#if ReportsType?has_content && ReportsType=="MANAGEMENT_REPORTS">
 		 
+		 <tr class="alternate-row">
+		 	<form id="stockreport" name="stockreport" method="post" action="<@ofbizUrl>stockreport.pdf</@ofbizUrl>" target="_blank">
+		 	<td width="40%">Stock Report</td>
+		 	<td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+					<option value=''></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
+  			<td width="15%">ShipmentId <input  type="text" size="18pt" id="shipmentId" name="shipmentId"/></td>
+  			
+  			<td width="15%">FacilityId<@htmlTemplate.lookupField size="10" maxlength="22" formName="stockreport" name="facilityId" id="facilityId" fieldFormName="ProductionLookupFacility"/></td>
+  			<td width="10%"></td>
+		 	<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('stockreport', '<@ofbizUrl>stockreport.pdf</@ofbizUrl>');" class="buttontext"/></td>
+			<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('stockreport', '<@ofbizUrl>stockreport.xls</@ofbizUrl>');" class="buttontext"/></td>
+		 </form>
+		 </tr>
 		<tr class="alternate-row">
 			<form id="SupplierwiseCountwisePurchaseReport" name="SupplierwiseCountwisePurchaseReport" method="post" action="<@ofbizUrl>SupplierwiseCountwisePurchaseReport.pdf</@ofbizUrl>" target="_blank">	
 				<td width="40%">Supplier wise Count wise Purchase Report</td>
