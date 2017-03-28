@@ -381,7 +381,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
       <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
       <input type="hidden" name="bulkSms" id="bulkSms" value="<@ofbizUrl>bulkSms</@ofbizUrl>"/>
       <input type="hidden" name="bulkEmail" id="bulkEmail" value="<@ofbizUrl>bulkEmail</@ofbizUrl>"/>
-	  <input id="paymentButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Make Payment" />
+	  <input id="paymentButton" type="button"  onclick="javascript:massPaymentSubmit(this);" value="Take Receipt" />
 	 </div>
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
@@ -398,7 +398,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
-          <td>Payment</td> 
+          <td>Receipt</td> 
           <td>Voucher</td>
           <td>Cheque</td> 
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
@@ -447,7 +447,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               		  <#if invoicepaymentpurpose.purposeTypeId?has_content>
               		  <#assign purposeTypeId=invoicepaymentpurpose.purposeTypeId>
               		  </#if>
-              		  <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}','${purposeTypeId}');"/></td>
+              		  <td align="center"><input type="button"  name="paymentBuuton" value="Receipt" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}','${purposeTypeId}');"/></td>
                	    <#else>
                 	  <td align="center"></td>
                	  </#if>
