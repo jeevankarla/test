@@ -494,7 +494,9 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <#else>
                <td align="center"></td>
                </#if>
+               <#if (invoicePaymentInfo.outstandingAmount != 0)>
               <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
+             </#if>
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>
