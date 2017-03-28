@@ -429,15 +429,14 @@
 	    			
 	    			var transporterId = $("#transporterId").val();
 	    			var tallyReferenceNo = $("#tallyReferenceNo").val();
-	    			//var purposetypeId = $("#purposetypeId").val();
-	    			//alert(purposetypeId);
+	    			
+	    			
 			        var transporte = jQuery("<input>").attr("type", "hidden").attr("name", "transporterId").val(transporterId);
 			         var tallyReferenceNo = jQuery("<input>").attr("type", "hidden").attr("name", "tallyReferenceNo").val(tallyReferenceNo);
-					//var purposeType=jQuery("<input>").attr("type", "hidden").attr("name", "purposetypeId").val(purposetypeId);
+					
 					
 					jQuery(indententryinit).append(jQuery(transporte));
 					jQuery(indententryinit).append(jQuery(tallyReferenceNo));
-					//jQuery(indententryinit).append(jQuery(purposeType));
 					
 	    			$('#indententryinit').submit();
 	    			return false;   
@@ -987,9 +986,9 @@ function fillPartyQuota(partyId){
 	<#if parameters.formAction?has_content && (parameters.formAction=="SilkBranchSalesOrder" || parameters.formAction=="OtherBranchSalesOrder")>
 		<#include "SilkBranchSalesOrderInternalForm.ftl"/>
 	<#else>
-		<#include "BranchSalesOrderInternalFormDepot.ftl"/>
+		<#include "BranchSalesOrderInternalFormDepotDC.ftl"/>
 	</#if>
-	<#include "EditUDPPriceDepotTest.ftl"/>
+	<#include "EditUDPPriceDepotTestDepot.ftl"/>
 	<div class="top" id="exp_outer">
 		<div class="full"  style="margin: auto; position: relative;">
 			<div class="lefthalf" id="chld1">
@@ -1289,7 +1288,6 @@ function fillPartyQuota(partyId){
 							 				</td>
 										</#if>
 									</#if>
-									
 					       	  </tr>	-->
 					       	  
 					       	  <#--
@@ -1489,7 +1487,7 @@ function fillPartyQuota(partyId){
 						<input type="hidden" name="contactMechId" id="contactMechId" value="${parameters.contactMechId?if_exists}" />
 						<input type="hidden" name="manualQuota" id="manualQuota" value="${parameters.manualQuota?if_exists}" />
 						<input type="hidden" name="supplierAddress" id="supplierAddress" value="${parameters.supplierAddress?if_exists}" />
-						<input type="hidden" name="purposetypeId" id="purposetypeId" value="DC_DEPOT_SALES" />
+						
 						<br>
 					</form>    
 				</div>
@@ -1746,7 +1744,7 @@ function fillPartyQuota(partyId){
 					    	<div align="center">
 					    		<input type="submit" style="padding:.3em" id="changeSave" value="${uiLabelMap.CommonSubmit}" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>${formAction}</@ofbizUrl>');"  />
 					    		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>processDepotSalesOrderDepotDC</@ofbizUrl>');"/>   	
+					    		<input type="submit" style="padding:.3em" id="changeCancel" value="Cancel" onclick="javascript:processIndentEntry('indententry','<@ofbizUrl>DepotSalesInventorySalesDC</@ofbizUrl>');"/>   	
 					    	</div>     
 						</#if>
 						

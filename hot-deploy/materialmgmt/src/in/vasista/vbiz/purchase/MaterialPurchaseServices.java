@@ -2416,6 +2416,10 @@ public class MaterialPurchaseServices {
 		String cstPercentStr = null;
 		String tcsPercentStr = null;
 		String serviceTaxPercentStr = null;
+		String packagingStr = null;
+		String packetStr = null;
+		
+		
 		
 		String purTaxListStr = null;
 		
@@ -2429,6 +2433,9 @@ public class MaterialPurchaseServices {
 		BigDecimal yarnUOM1=BigDecimal.ZERO;
 		BigDecimal bundleWeight1=BigDecimal.ZERO;
 		BigDecimal baleQuantity1=BigDecimal.ZERO;
+		
+		BigDecimal packaging=BigDecimal.ZERO;
+		BigDecimal packet=BigDecimal.ZERO;
 		
 		
 		String orderAdjustmentsListStr = null;
@@ -2602,6 +2609,15 @@ public class MaterialPurchaseServices {
 					cstPercentStr = (String) paramMap.get("cstPercent"
 							+ thisSuffix);
 				}
+				if (paramMap.containsKey("Packaging" + thisSuffix)) {
+					packagingStr = (String) paramMap.get("Packaging"
+							+ thisSuffix);
+				}
+				if (paramMap.containsKey("packets" + thisSuffix)) {
+					packetStr = (String) paramMap.get("packets"
+							+ thisSuffix);
+				}
+				
 				
 //Purchase tax list
 				
@@ -2721,7 +2737,12 @@ public class MaterialPurchaseServices {
 					if (UtilValidate.isNotEmpty(baleQuantity)) {
 						baleQuantity1 = new BigDecimal(baleQuantity);
 					}
-					
+					if (UtilValidate.isNotEmpty(packagingStr)) {
+						packaging = new BigDecimal(packagingStr);
+					}
+					if (UtilValidate.isNotEmpty(packetStr)) {
+						packet = new BigDecimal(packetStr);
+					}
 					
 				} catch (Exception e) {
 					Debug.logError(e, "Problems parsing quantity string: "
@@ -2752,6 +2773,9 @@ public class MaterialPurchaseServices {
 				productQtyMap.put("orderItemSeqId", orderItemSeqId);
 				productQtyMap.put("purTaxRateList", purTaxRateList);
 				productQtyMap.put("orderAdjustmentList", orderAdjustmentList);
+				productQtyMap.put("packaging", packaging);
+				productQtyMap.put("packet", packet);
+				
 				itemDetail.add(productQtyMap);
 			}//end of productQty check
 		}//end row count for loop
@@ -3058,6 +3082,8 @@ public class MaterialPurchaseServices {
 				BigDecimal bundleUnitPrice = BigDecimal.ZERO;
 			    BigDecimal bundleWeight = BigDecimal.ZERO;
 			    BigDecimal baleQty = BigDecimal.ZERO;
+			    BigDecimal packaging = BigDecimal.ZERO;
+			    BigDecimal packet = BigDecimal.ZERO;
 				String remarks = "";
 				String yarnUOM= "";
 				BigDecimal vatPercent = BigDecimal.ZERO;
@@ -3117,6 +3143,12 @@ public class MaterialPurchaseServices {
 				}*/
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("cstPercent"))){
 					cstPercent = (BigDecimal)prodQtyMap.get("cstPercent");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("packaging"))){
+					packaging = (BigDecimal)prodQtyMap.get("packaging");
+				}
+				if(UtilValidate.isNotEmpty(prodQtyMap.get("packet"))){
+					packet = (BigDecimal)prodQtyMap.get("packet");
 				}
 				if(UtilValidate.isNotEmpty(prodQtyMap.get("orderItemSeqId"))){
 					orderItemSeqId = (String)prodQtyMap.get("orderItemSeqId");
@@ -3243,6 +3275,8 @@ public class MaterialPurchaseServices {
 				
 					item = cart.findCartItem(itemIndx);
 					item.setOrderItemAttribute("remarks",remarks);
+					item.setOrderItemAttribute("packetQuantity",packaging.toString());
+					item.setOrderItemAttribute("packet",packet.toString());
 					item.setListPrice(unitListPrice);
 					item.setTaxDetails(taxList);
 					count++;
