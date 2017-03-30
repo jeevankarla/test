@@ -597,8 +597,7 @@
 		<field name="realisationDate" type="date-time"></field>
 		<field name="reasonEnumId" type="id"></field>
 		<field name="costCenterId" type="id"></field>
-		<field name="segmentId" type="id"></field>
-		<field name="realisationDate" type="date-time"></field>
+		<field name="segmentId" type="id"></field>		
 		<field name="comments" type="comment"></field>
 		<field name="statusId" type="id"></field>
 		<prim-key field="finAccountTransId" />
