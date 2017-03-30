@@ -396,18 +396,18 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		OrderItemDetail=EntityUtil.getFirst(OrderItemDetail);
 		
 		remarks = "";
-		packetQuantity="";
+		packQuantity="";
 		packets="";
 		if(OrderItemDetail)
 		remarks = OrderItemDetail.remarks;
 		if(OrderItemDetail)
-		packetQuantity = OrderItemDetail.packetQuantity;
+		packQuantity = OrderItemDetail.packQuantity;
 		if(OrderItemDetail)
 		packets = OrderItemDetail.packets;
 		
 		orderDetailsMap["remarks"]=remarks;
 		orderDetailsMap["quantity"]=orderitems.quantity;
-		orderDetailsMap["packetQuantity"]=packetQuantity;
+		orderDetailsMap["packetQuantity"]=packQuantity;
 		orderDetailsMap["packets"]=packets;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
 		
