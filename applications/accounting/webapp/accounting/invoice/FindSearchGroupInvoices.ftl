@@ -8,6 +8,7 @@
             singleFieldDelimiter: ',',
             caseSensitive: false,
             fieldName:'partyIdFrom',
+            allowSpaces: true,
             tagSource:function(request,response){
             	var params= "ajaxLookup=Y&_LAST_VIEW_NAME_=apGroupPayment&searchValueFieldName=partyId&term="+request.term+"&entityName=PartyNameView";
             	$.ajax({
