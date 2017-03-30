@@ -3036,6 +3036,9 @@ public class DepotSalesServices{
 		String basicPriceStr = null;
 		String basicPricePurStr = null;
 		
+		String packagingStr = null;
+		String packetsStr = null;
+		
 		
 		String bundleUnitPriceStr=null;
 		/*String vatPriceStr = null;
@@ -3064,6 +3067,8 @@ public class DepotSalesServices{
 		BigDecimal serviceChargeAmt = BigDecimal.ZERO;
 		BigDecimal quotaAvbl = BigDecimal.ZERO;
 		BigDecimal manualQuota = BigDecimal.ZERO;
+		BigDecimal packaging = BigDecimal.ZERO;
+		BigDecimal packets = BigDecimal.ZERO;
 		/*BigDecimal cstPrice = BigDecimal.ZERO;
 		BigDecimal tcsPrice = BigDecimal.ZERO;
 		BigDecimal vatPrice = BigDecimal.ZERO;
@@ -3423,6 +3428,15 @@ public class DepotSalesServices{
 					quotaAvblStr = (String) paramMap.get("usedQuota"+ thisSuffix);
 				}
 				
+				if (paramMap.containsKey("Packaging" + thisSuffix)) {
+					packagingStr = (String) paramMap
+							.get("Packaging" + thisSuffix);
+				}
+				if (paramMap.containsKey("packets" + thisSuffix)) {
+					packetsStr = (String) paramMap
+							.get("packets" + thisSuffix);
+		        }	
+				
 				/*if (paramMap.containsKey("vatPrice" + thisSuffix)) {
 					vatPriceStr = (String) paramMap
 							.get("vatPrice" + thisSuffix);
@@ -3495,6 +3509,13 @@ public class DepotSalesServices{
 					if (UtilValidate.isNotEmpty(purchaseBasicAmountStr)) {
 						purchaseBasicAmount = new BigDecimal(purchaseBasicAmountStr);
 					}
+					
+					if (UtilValidate.isNotEmpty(packagingStr)) {
+						packaging = new BigDecimal(packagingStr);
+					}
+					if (UtilValidate.isNotEmpty(packetsStr)) {
+						packets = new BigDecimal(packetsStr);
+	                }
 					Debug.log("purchaseBasicAmount ==============="+purchaseBasicAmount);
 					
 					/*if (UtilValidate.isNotEmpty(cstPriceStr)) {
@@ -3582,6 +3603,8 @@ public class DepotSalesServices{
 						tempconsolMap.put("checkE2Form", checkE2Form);
 						tempconsolMap.put("checkCForm", checkCForm);
 						tempconsolMap.put("quotaAvbl", quotaAvbl);
+						tempconsolMap.put("packaging", packaging);
+						tempconsolMap.put("packets", packets);
 						consolMap.put(productId,tempconsolMap);						
 					}
 				}
@@ -3613,6 +3636,8 @@ public class DepotSalesServices{
 				productQtyMap.put("checkE2Form", checkE2Form);
 				productQtyMap.put("checkCForm", checkCForm);
 				productQtyMap.put("quotaAvbl", quotaAvbl);
+				productQtyMap.put("packaging", packaging);
+				productQtyMap.put("packets", packets);
 				
 				/*productQtyMap.put("bedPrice", bedPrice);
 				productQtyMap.put("cstPrice", cstPrice);
@@ -6531,6 +6556,8 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 			BigDecimal serviceCharge = BigDecimal.ZERO;
 			BigDecimal quotaAvbl = BigDecimal.ZERO;
 			BigDecimal serviceChargeAmt = BigDecimal.ZERO;
+			BigDecimal packaging = BigDecimal.ZERO;
+			BigDecimal packets = BigDecimal.ZERO;
 			String bundleUnitPrice="";
 			String quotaQuantity="";
 			String applicableTaxType = "";
@@ -6631,6 +6658,13 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 			if(UtilValidate.isNotEmpty(prodQtyMap.get("quotaAvbl"))){
 				quotaAvbl = (BigDecimal)prodQtyMap.get("quotaAvbl");
 			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("packaging"))){
+				packaging = (BigDecimal)prodQtyMap.get("packaging");
+				
+			}
+			if(UtilValidate.isNotEmpty(prodQtyMap.get("packets"))){
+				packets = (BigDecimal)prodQtyMap.get("packets");
+	        }
 			
 			BigDecimal purchaseBasicPrice = BigDecimal.ZERO;
 			BigDecimal purchaseBasicAmount = BigDecimal.ZERO;
@@ -6791,7 +6825,12 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 				if(UtilValidate.isNotEmpty(checkCForm)){
 					item.setOrderItemAttribute("checkCForm",checkCForm);
 				}
-				
+				if(UtilValidate.isNotEmpty(packaging)){
+					item.setOrderItemAttribute("packQuantity",packaging.toString());
+				}
+				if(UtilValidate.isNotEmpty(packets)){
+					item.setOrderItemAttribute("packets",packets.toString());
+		        }
 				/*if(quota.compareTo(BigDecimal.ZERO)>0){
 					
 					// Have to get these details from schemes. Temporarily hard coding it.
@@ -6900,6 +6939,12 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 				productQtyMap.put("quotaAvbl", quotaAvbl);
 				productQtyMap.put("assessableAdjustmentAmount", assessableAdjustmentAmount);
 				productQtyMap.put("assessableAmtPerUnit", assessableAdjustmentAmount.divide(quantity));
+				if(UtilValidate.isNotEmpty(packaging)){
+					productQtyMap.put("packaging", packaging);				
+				}
+				if(UtilValidate.isNotEmpty(packets)){
+					productQtyMap.put("packets", packets);				
+				}
 				directIndentProductList.add(productQtyMap);
 			  }	
 			itemIndex=itemIndex-1;
@@ -7150,6 +7195,8 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 				BigDecimal prdPrice=BigDecimal.ZERO;
 				BigDecimal quotaAvbl = BigDecimal.ZERO;
 				BigDecimal assessableAmtPerUnit = BigDecimal.ZERO;
+				BigDecimal packaging1 = BigDecimal.ZERO;
+				BigDecimal packets1 = BigDecimal.ZERO;
 				
 				String Uom="";
 				String specification="";
@@ -7190,7 +7237,13 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 				if(UtilValidate.isNotEmpty(prodItemMap.get("quotaAvbl"))){
 					quotaAvbl = (BigDecimal)prodItemMap.get("quotaAvbl");
 				}
+				if(UtilValidate.isNotEmpty(prodItemMap.get("packaging"))){
+					packaging1 = (BigDecimal)prodItemMap.get("packaging");
+				}
 				
+				if(UtilValidate.isNotEmpty(prodItemMap.get("packets"))){
+					packets1 = (BigDecimal)prodItemMap.get("packets");
+				}
 				//Debug.log("quotaAvbl ==================="+quotaAvbl);
 				
 				BigDecimal assessableAmount = prdPrice.add(assessableAmtPerUnit);
@@ -7349,6 +7402,8 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 				orderItemDetail.put("remarks",specification);
 				orderItemDetail.put("quotaQuantity",quotaQuantity);
 				orderItemDetail.put("quantity",Kgquantity);
+				orderItemDetail.put("packQuantity",packaging1);
+				orderItemDetail.put("packets",packets1);
 				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
 	
 				try{
