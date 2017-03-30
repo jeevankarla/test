@@ -5157,6 +5157,7 @@ public class DepotSalesServices{
 			//cart.setShipmentId(shipmentId);
 			cart.setEstimatedDeliveryDate(effectiveDate);
 			cart.setOrderDate(effectiveDate);
+			cart.setpurposeTypeId("BRANCH_SALES");
 			cart.setUserLogin(userLogin, dispatcher);
 			cart.setOrderAttribute("ON_BEHALF_OF",onBeHalfOf);
 			
@@ -5804,7 +5805,7 @@ public class DepotSalesServices{
 		
 		GenericValue orderHeader = null;
 		//update PurposeType
-		try{
+		/*try{
 			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			
 			//Debug.log("orderHeader =====purposeTypeId========"+orderHeader);
@@ -5814,7 +5815,7 @@ public class DepotSalesServices{
 		}catch (Exception e) {
 			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 			  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
-  	 	}
+  	 	}*/
 		
 		 List<GenericValue> orderItemValue = FastList.newInstance();
 		 try{
@@ -6258,7 +6259,7 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 		
 		String supplierPartyId = (String) context.get("supplierPartyId");
 		String purposeTypeId = (String) context.get("purposeTypeId");
-		//Debug.log("supplierPartyId ============="+supplierPartyId);
+	    Debug.log("purposeTypeId ============="+purposeTypeId);
 	  	List<Map> orderAdjChargesList = (List) context.get("orderAdjChargesList");
 	  	BigDecimal manualQuota= (BigDecimal)context.get("manualQuota");
 	  	String currencyUomId = "INR";
@@ -6461,6 +6462,12 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 	        
 	        cart.setProductStoreId(productStoreId);
 			cart.setChannelType(salesChannel);
+			
+			if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DC_DEPOT_SALES"))
+				cart.setPurposeTypeId("DC_DEPOT_SALES");
+			else
+				cart.setPurposeTypeId("DEPOT_SALES");
+			
 			//cart.setOrderId(orderId);
 			//cart.setBillToCustomerPartyId("GCMMF");
 			cart.setBillToCustomerPartyId(partyId);
@@ -7141,10 +7148,10 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 		
 		GenericValue orderHeader = null;
 		//update PurposeType
-		try{
+		/*try{
 			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 			
-			//Debug.log("orderHeader =====purposeTypeId========"+orderHeader);
+			Debug.log("orderHeader =====purposeTypeId========"+orderHeader);
 			
 			if(UtilValidate.isNotEmpty(purposeTypeId) && purposeTypeId.equals("DC_DEPOT_SALES"))
 				orderHeader.set("purposeTypeId", "DC_DEPOT_SALES");
@@ -7154,7 +7161,7 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 		}catch (Exception e) {
 			  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 			  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
-  	 	}
+  	 	}*/
 		
 		 List<GenericValue> orderItemValue = FastList.newInstance();
 		 try{
@@ -7815,6 +7822,8 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 		//cart.setShipmentId(shipmentId);
 		cart.setEstimatedDeliveryDate(effectiveDate);
 		cart.setOrderDate(effectiveDate);
+		cart.setPurposeTypeId("DC_SALES");
+		
 		cart.setUserLogin(userLogin, dispatcher);
 		cart.setOrderAttribute("ON_BEHALF_OF",onBeHalfOf);
 		
@@ -8489,7 +8498,7 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 	
 	GenericValue orderHeader = null;
 	//update PurposeType
-	try{
+	/*try{
 		orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 		
 		//Debug.log("orderHeader =====purposeTypeId========"+orderHeader);
@@ -8499,7 +8508,7 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 	}catch (Exception e) {
 		  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 		  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
-	 	}
+	 	}*/
 	
 	 List<GenericValue> orderItemValue = FastList.newInstance();
 	 try{

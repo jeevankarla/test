@@ -219,6 +219,8 @@
 				
 				var inputPackaging = jQuery("<input>").attr("type", "hidden").attr("name", "Packaging_o_" + rowCount).val(Packaging);
 			    var inputpackets = jQuery("<input>").attr("type", "hidden").attr("name", "packets_o_" + rowCount).val(packets);
+			    
+			    var purposeTypeId = jQuery("<input>").attr("type", "hidden").attr("name", "purposetypeId").val("DC_DEPOT_SALES");
                 
                 jQuery(formId).append(jQuery(inputPackaging));
                 jQuery(formId).append(jQuery(inputpackets)); 
@@ -241,6 +243,8 @@
 				jQuery(formId).append(jQuery(inputUsedQuota));
 				jQuery(formId).append(jQuery(inputChangeTenPercentage));
 				jQuery(formId).append(jQuery(inputChangeTenPercentageAmout));
+				jQuery(formId).append(jQuery(purposeTypeId));
+				
 				
 				<#if changeFlag?exists && changeFlag != "AdhocSaleNew">
 					var batchNum = jQuery("<input>").attr("type", "hidden").attr("name", "batchNo_o_" + rowCount).val(batchNo);
@@ -486,6 +490,7 @@
 			var saleTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "saleTaxType").val($("#saleTaxType").val());
 			var purchaseTaxType = jQuery("<input>").attr("type", "hidden").attr("name", "purchaseTaxType").val($("#purchaseTaxType").val());
 			
+			
 			<#if orderId?exists>
 				var order = '${orderId?if_exists}';
 				var extOrder = jQuery("<input>").attr("type", "hidden").attr("name", "orderId").val(order);		
@@ -519,6 +524,7 @@
 			jQuery(formId).append(jQuery(saleTitleTransferEnum));
 			jQuery(formId).append(jQuery(saleTaxType));
 			jQuery(formId).append(jQuery(purchaseTaxType));
+			jQuery(formId).append(jQuery(purposeTypeId));
 			
 		</#if>
 		
