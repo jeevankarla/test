@@ -104,6 +104,7 @@
 				<set field="parameters.changeFlag" value="PurchaseOrder" />
 				<set field="purchaseTypeFlag" from-field="parameters.purchaseTypeFlag" />
 				<set field="parameters.partyStatusId" value="PARTY_ENABLED" />
+				<set field="parameters.screenFlag" value="DyesIndent" />
 				<!-- <script location="component://byproducts/webapp/byproducts/WEB-INF/actions/facility/enablePartyAutoComplete.groovy"/> -->
 				<script
 					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/enableDepotPartyAutoCompleteDC.groovy" />
