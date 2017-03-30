@@ -449,7 +449,7 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 				remarksDetails=EntityUtil.getFirst(remarksDetails);
 				remarks=remarksDetails.attrValue;
 			}
-			packetQuantityDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packetQuantity"));
+			packetQuantityDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packQuantity"));
 			if(UtilValidate.isNotEmpty(packetQuantityDetails)){
 				packetQuantityDetails=EntityUtil.getFirst(packetQuantityDetails);
 				packetQuantity=packetQuantityDetails.attrValue;
