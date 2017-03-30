@@ -5157,7 +5157,7 @@ public class DepotSalesServices{
 			//cart.setShipmentId(shipmentId);
 			cart.setEstimatedDeliveryDate(effectiveDate);
 			cart.setOrderDate(effectiveDate);
-			cart.setpurposeTypeId("BRANCH_SALES");
+			cart.setPurposeTypeId("BRANCH_SALES");
 			cart.setUserLogin(userLogin, dispatcher);
 			cart.setOrderAttribute("ON_BEHALF_OF",onBeHalfOf);
 			
