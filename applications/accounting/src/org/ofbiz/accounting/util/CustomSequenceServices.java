@@ -302,7 +302,12 @@ public class CustomSequenceServices {
 				       			GenericValue partyROs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdFrom), false);
 	                            String roSequnce = partyROs.getString("externalId");
 				   				//orderHeaderSequence.put("orderNo", orderId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yyyy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"));
-								orderHeaderSequence.put("productCategoryId", "Y");
+								
+	                            if(purposeTypeId.equals("BRANCH_SALES") || purposeTypeId.equals("BRANCH_PURCHASE") || purposeTypeId.equals("DEPOT_SALES") || purposeTypeId.equals("DEPOT_PURCHASE"))
+	                            orderHeaderSequence.put("productCategoryId", "Y");
+	                            else
+	                            orderHeaderSequence.put("productCategoryId", "DC");	
+	                            
 								delegator.setNextSubSeqId(orderHeaderSequence, "sequenceId", 6, 1);
 								orderHeaderSequence.put("indentTypeId",indentTypeId);
 					            delegator.create(orderHeaderSequence);
