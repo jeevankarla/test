@@ -8967,6 +8967,12 @@ public class DepotPurchaseServices{
 			cart.setOrderName(orderName);
 			//cart.setOrderDate(effectiveDate);
 			cart.setOrderDate(orderDate);
+			
+			if(UtilValidate.isNotEmpty(dyesChemicals) && dyesChemicals.equals("dyesChemicals"))
+			cart.setPurposeTypeId("DC_PURCHASE");
+			else
+			cart.setPurposeTypeId("BRANCH_PURCHASE");
+			
 			cart.setUserLogin(userLogin, dispatcher);
 			
 			//set attributes here
@@ -9458,7 +9464,7 @@ public class DepotPurchaseServices{
 				}
 				
 				//update PurposeType
-				try{
+			/*	try{
 					GenericValue orderHeaderPurpose = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
 					if(UtilValidate.isNotEmpty(dyesChemicals) && dyesChemicals.equals("dyesChemicals"))
 					orderHeaderPurpose.set("purposeTypeId", "DC_PURCHASE");
@@ -9469,7 +9475,7 @@ public class DepotPurchaseServices{
 				}catch (Exception e) {
 					  Debug.logError(e, "Error While Updating purposeTypeId for Order ", module);
 					  return ServiceUtil.returnError("Error While Updating purposeTypeId for Order : "+orderId);
-		  	 	}
+		  	 	}*/
 		    
 			}catch(Exception e){
 				try {
