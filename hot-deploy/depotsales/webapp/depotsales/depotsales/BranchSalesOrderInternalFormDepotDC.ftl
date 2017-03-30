@@ -79,7 +79,7 @@
 	
 </style>			
 	
-<#include "EditUDPPriceDepotTest.ftl"/>		
+<#include "EditUDPPriceDepotTestDepot.ftl"/>		
 			
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/firebugx.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/slickgrid/lib/jquery-1.4.3.min.js</@ofbizContentUrl>"></script>
@@ -189,12 +189,15 @@
 			var checkCForm = data[rowCount]["checkCForm"];
 			var usedQuota = data[rowCount]["usedQuota"];
 			
+			var Packaging = data[rowCount]["Packaging"];
+			var packets = data[rowCount]["packets"];
+			
 			$("#orderTaxType").val(applicableTaxType);
 			
 			<#if changeFlag?exists && changeFlag != "EditDepotSales">
 			 if(qty>0){
 			</#if>
-	 		if (!isNaN(prodId)) {	 		
+	 		if ((prodId)) {	 		
 				var inputProd = jQuery("<input>").attr("type", "hidden").attr("name", "productId_o_" + rowCount).val(prodId);
 				var inputBaleQty = jQuery("<input>").attr("type", "hidden").attr("name", "baleQuantity_o_" + rowCount).val(balqty);
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
@@ -213,6 +216,13 @@
 				
 				var inputChangeTenPercentage = jQuery("<input>").attr("type", "hidden").attr("name", "changeTenPercentage_o_" + rowCount).val(changeTenPercentage);
 				var inputChangeTenPercentageAmout = jQuery("<input>").attr("type", "hidden").attr("name", "changeTenPercentageAmout_o_" + rowCount).val(changeTenPercentageAmout);
+				
+				var inputPackaging = jQuery("<input>").attr("type", "hidden").attr("name", "Packaging_o_" + rowCount).val(Packaging);
+			    var inputpackets = jQuery("<input>").attr("type", "hidden").attr("name", "packets_o_" + rowCount).val(packets);
+                
+                jQuery(formId).append(jQuery(inputPackaging));
+                jQuery(formId).append(jQuery(inputpackets)); 
+				
 				
 				jQuery(formId).append(jQuery(inputRemarks));
 				jQuery(formId).append(jQuery(inputProd));				
@@ -648,11 +658,16 @@
 			<#-- {id:"bookedQuantity", name:"Booked Quantity", field:"bookedQuantity", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor}, -->
 			{id:"availableQuantity", name:"Available Quantity", field:"availableQuantity", width:110, minWidth:110, sortable:false,cssClass:"readOnlyColumnClass" ,focusable :false,cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
 			{id:"baleQuantity", name:"Qty(Nos)", field:"baleQuantity", width:50, minWidth:50, sortable:false, editor:FloatCellEditor},
-			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs,Bale,Half-Bale,Bundle"},
+			{id:"cottonUom", name:"${uiLabelMap.cottonUom}", field:"cottonUom", width:50, minWidth:50, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "KGs"},
+			<#--
 			{id:"bundleWeight", name:"${uiLabelMap.BundleWtKgs}", field:"bundleWeight", width:110, minWidth:110, sortable:false,focusable :false,cssClass:"readOnlyColumnClass" , editor:FloatCellEditor},
 			{id:"unitPrice", name:"${uiLabelMap.UnitPrice} (Bundle)", field:"unitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter,cssClass:"readOnlyColumnClass" ,focusable :false,  align:"right", editor:FloatCellEditor},
+			-->
+			{id:"package", name:"Packaging(KGS)", field:"Packaging", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			{id:"packets", name:"packets", field:"packets", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
+			
 			{id:"quantity", name:"Wt.(Kgs)", field:"quantity", width:60, minWidth:60, sortable:false,focusable :false,cssClass:"readOnlyColumnClass" , editor:FloatCellEditor},
-			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice} (KGs)", field:"KgunitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right",cssClass:"readOnlyColumnClass" ,focusable :false, editor:FloatCellEditor},
+			{id:"KgunitPrice", name:"${uiLabelMap.UnitPrice} (KGs)", field:"KgunitPrice", width:110, minWidth:110, sortable:false, formatter: rateFormatter, align:"right", editor:FloatCellEditor},
 			<#--{id:"schemeApplicability", name:"10% Scheme", field:"schemeApplicability", width:150, minWidth:150, cssClass:"cell-title",editor: SelectCellEditor, sortable:false, options: "Applicable,Not-Applicable"},-->
 			{id:"amount", name:"Amt.(Rs)", field:"amount", width:130, minWidth:130, sortable:false, formatter: rateFormatter,editor:FloatCellEditor,focusable :false,cssClass:"readOnlyColumnClass" },	
 			{id:"taxAmt", name:"Tax", field:"taxAmt", width:75, minWidth:75, sortable:false, formatter: rateFormatter, align:"right", cssClass:"readOnlyColumnClass" , focusable :false},
@@ -865,21 +880,36 @@
 			  	
 			  	if(quantity > availableQuantity){
 			
-			alert("Quantity is greater than stock available...!!");
+			   alert("Quantity is greater than stock available...!!");
 			
 			  data[args.row]["baleQuantity"] = "";
 			  data[args.row]["quantity"] = "";
+			}else{
+			
+			
+			if(!isNaN(data[args.row]['Packaging']) && data[args.row]['Packaging']!=0){
+			
+			var Packaging = data[args.row]['Packaging'];
+		    var quantity = data[args.row]['quantity'];
+		    data[args.row]['packets'] = quantity/Packaging;
+			}
 			}
 			  	
 			}
 			else if(args.cell == 5){
+		    
 			  	data[args.row]["KgunitPrice"] = kgUnitPrice;
 			  	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
 			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
 			}
 			else if(args.cell == 6){
-			  	baleQty=calculateKgs(quantity,uom,bundleWeight);
-			  	data[args.row]["baleQuantity"]=baleQty;
+			
+			  var Packaging = data[args.row]['Packaging'];
+		    var quantity = data[args.row]['quantity'];
+		    data[args.row]['packets'] = quantity/Packaging;
+			
+			  //	baleQty=calculateKgs(quantity,uom,bundleWeight);
+			  	//data[args.row]["baleQuantity"]=baleQty;
 			  	data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
 			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
 			}
@@ -911,6 +941,12 @@
 				kgprice=amt/quantity;
 				data[args.row]["KgunitPrice"] = kgprice;
 				data[args.row]["unitPrice"] = upb;
+			}
+			else if(args.cell == 9){
+			
+				data[args.row]["amount"] = Math.round(quantity*kgUnitPrice);
+			  	data[args.row]["totPayable"] = Math.round(quantity*kgUnitPrice);
+			
 			}
 			if(args.cell != 1){
 				addServiceCharge(args.row);
@@ -1614,6 +1650,12 @@
 		 }
 		 if(isNaN(row["SERVICE_CHARGE_AMT"])){
 			row["SERVICE_CHARGE_AMT"] = 0;
+		 }
+		  if(isNaN(row["Packaging"])){
+			row["Packaging"] = 0;
+		 }
+		  if(isNaN(row["packets"])){
+			row["packets"] = 0;
 		 }
 	 }
 </script>			

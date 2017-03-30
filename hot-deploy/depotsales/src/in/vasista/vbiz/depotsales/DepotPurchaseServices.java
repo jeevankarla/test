@@ -9195,7 +9195,7 @@ public class DepotPurchaseServices{
 						item.setOrderItemAttribute("remarks",remarks);
 						
 						if(UtilValidate.isNotEmpty(packing))
-						item.setOrderItemAttribute("packetQuantity",packing.toString());
+						item.setOrderItemAttribute("packQuantity",packing.toString());
 						
 						if(UtilValidate.isNotEmpty(packets))
 						item.setOrderItemAttribute("packets",packets.toString());
