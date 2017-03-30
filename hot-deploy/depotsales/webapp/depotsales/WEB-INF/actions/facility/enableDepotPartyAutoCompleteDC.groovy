@@ -125,7 +125,7 @@ if(productStoreIds.size() == 1){
 	parameters.productStoreId = productStoreIds.get(0);
 }
 productStoreIds.each{ productStoreId ->
-	if(productStoreId == "Tirupur" || productStoreId == "PANIPAT" ){
+	//if(productStoreId == "Tirupur" || productStoreId == "PANIPAT" ){
 	JSONArray brcpartyJSON = new JSONArray();
 	customersList=[];
 	JSONObject newbranchObj = new JSONObject();
@@ -144,7 +144,7 @@ productStoreIds.each{ productStoreId ->
 		branchJSON.add(newbranchObj);
 	}
 		
-	}
+	//}
 	/*customersList = in.vasista.vbiz.depotsales.DepotSalesHelperServices.getBranchCustomers(dctx , UtilMisc.toMap("productStoreId",productStoreId,"userLogin", userLogin));
 	customersList.each{eachParty ->
 		JSONObject newPartyObj = new JSONObject();
@@ -189,6 +189,9 @@ context.partyIdsListkkkk=partyIdsList;
 
 JSONArray supplierJSON = new JSONArray();
 JSONObject supplierIdJson = new JSONObject();
+
+
+Debug.log("parameters.screenFlag================="+parameters.screenFlag);
 
 if(parameters.screenFlag == "ChemicalIndent" || parameters.screenFlag == "DyesIndent"){
 	Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("roleTypeId", "DYS_CMLS_SUPPLIER")],EntityOperator.AND);

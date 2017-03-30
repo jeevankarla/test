@@ -843,7 +843,7 @@
 		      		
 		      		source: function( request, response ) {
 	        			$.ajax({
-	          					url: "LookupBranchCustomers",
+	          					url: "LookupBranchCustomersDyes",
 	          					dataType: "html",
 	          					data: {
 	            					ajaxLookup: "Y",
