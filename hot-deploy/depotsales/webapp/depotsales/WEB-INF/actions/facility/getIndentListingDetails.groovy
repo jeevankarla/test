@@ -518,6 +518,18 @@ orderHeader.each{ eachHeader ->
 	
 	productStoreId=eachHeader.productStoreId;
 	
+	indentDate = String.valueOf(eachHeader.orderDate).substring(0,10);
+	
+	
+	indentDate = indentDate.split("-");
+	
+	year = Integer.parseInt(indentDate[0]);
+	month = Integer.parseInt(indentDate[1]);
+	
+	boolean showAmend = true;
+	if(year == 2017 &&  month > 3){
+		showAmend = false;
+	}
 	
 	tempData.put("supplierPartyId", supplierPartyId);
 	tempData.put("totalIndents", totalIndents);
@@ -527,6 +539,7 @@ orderHeader.each{ eachHeader ->
 	tempData.put("orderId", eachHeader.orderId);
 	tempData.put("orderDate", String.valueOf(eachHeader.orderDate).substring(0,10));
 	tempData.put("statusId", eachHeader.statusId);
+	tempData.put("showAmend", showAmend);
 	
 
 	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
