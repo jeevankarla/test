@@ -2986,13 +2986,14 @@
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/dateFindConvert.groovy"/>
 <!--             <set field="parameters.glReconciliationId" value="${glReconciliationId}"/>instead of Form we are setting in Screen  -->
                <!--  <set field="parameters.finAccountId" value="${parameters.finAccountId}"/> -->
+                <set field="parameters.reconcileReportFlag" value="reconcile" />
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
                  <set field="fromTransactionDate" value="${parameters.fromDateReport}"/>
                   <set field="thruTransactionDate" value="${parameters.thruDateReport}"/>
-                 <set field="glReconciliationId" value="${glReconciliationId}" default-value="${parameters.glReconciliationId}"/>
+                 <!-- <set field="glReconciliationId" value="${glReconciliationId}"/> -->
                  <set field="parameters.noConditionFind" value="Y"/>                       
-                <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
+                <service service-name="getReqFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
                 <set field="searchedNumberOfRecords" type="Integer" from-field="finAccountTransListAndTotals.searchedNumberOfRecords"/>
                 <set field="grandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.grandTotal"/>
@@ -3003,13 +3004,17 @@
                 <set field="createdApprovedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.createdApprovedGrandTotal"/>
                 <set field="totalCreatedApprovedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalCreatedApprovedTransactions"/>
                  <set field="finAccountId" from-field="parameters.finAccountId"/> 
+                 <set field="parameters.isPosted" value="Y" />
                 <entity-one entity-name="FinAccount"  value-field="finAccount"/>
                 <set field="glReconciliationId" from-field="parameters.glReconciliationId"/> 
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
-                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/>
+                <set field="glFiscalTypeId" default-value="ACTUAL" />
+                <set field="organizationPartyId" value="Company" />
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/finaccounttrans/FindFinAccountTrans.groovy"/> 
+                <script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TransactionTotalsNew.groovy" />
+                <script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />              
             </actions>
 			<widgets>
-			<label></label>
 				<platform-specific> 
 				  <xsl-fo><html-template location="component://accounting/webapp/accounting/finaccounttrans/ReconcilationStatement.fo.ftl"/></xsl-fo> 
                 </platform-specific>
