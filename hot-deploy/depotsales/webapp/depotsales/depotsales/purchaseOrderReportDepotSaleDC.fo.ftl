@@ -381,20 +381,7 @@ under the License.
 	        		 				</#if>
 	        		 			</#if>
 	        		 		</fo:table-cell>
-        		 			<fo:table-cell >
-	        		 			<fo:block text-align="left" font-size="11pt" ><fo:inline  text-decoration="underline" >Delivery Destination:</fo:inline></fo:block>
-			        		 	<#if OrderItemShipGroup?has_content>
-			        		 		<#list OrderItemShipGroup as eachList>
-						                 <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${eachList.get("city")?if_exists}(Quantity : ${eachList.get("quantity")?if_exists} )</fo:block>
-						            </#list>
-			        		 	<#else>
-			        		 	  <#if allDetailsMap.get("DstAddr")?has_content>
-			        		 	   		<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${allDetailsMap.get("DstAddr")?if_exists}</fo:block>
-			        		 	 <#else>
-			        		 			<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
-			        		 	 </#if>
-		        		 	  </#if>
-	        		 		</fo:table-cell>
+        		 			
 	        		 	
 	        		</fo:table-body>
 	                    
@@ -432,9 +419,20 @@ under the License.
 					   </fo:table>-->
 					</fo:block>
 				   </fo:table-cell >
-				   <fo:table-cell border-style="solid">
-						<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
-					</fo:table-cell>
+				   <fo:table-cell border-style="solid">			
+	        		 			<fo:block text-align="left" font-size="11pt" ><fo:inline  text-decoration="underline" >Delivery Destination:</fo:inline></fo:block>
+			        		 	<#if OrderItemShipGroup?has_content>
+			        		 		<#list OrderItemShipGroup as eachList>
+						                 <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${eachList.get("city")?if_exists}(Quantity : ${eachList.get("quantity")?if_exists} )</fo:block>
+						            </#list>
+			        		 	<#else>
+			        		 	  <#if allDetailsMap.get("DstAddr")?has_content>
+			        		 	   		<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${allDetailsMap.get("DstAddr")?if_exists}</fo:block>
+			        		 	 <#else>
+			        		 			<fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
+			        		 	 </#if>
+		        		 	  </#if>
+	        		 		</fo:table-cell>			
 			</fo:table-row>							  			 
 	      </fo:table-body>
 	    </fo:table>
