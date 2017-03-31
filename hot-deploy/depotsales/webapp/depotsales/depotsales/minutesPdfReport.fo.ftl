@@ -64,7 +64,7 @@ under the License.
 			   </fo:block>	
                 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt">--------------------------------------------------------------------------------------------- </fo:block>
         		<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">Proposal No : ${orderId}                                                    Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:block>
-        		<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+        		<#--<fo:block linefeed-treatment="preserve">&#xA;</fo:block>-->
              	<fo:block  text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">Minutes of Purchase and Sales Committee meeting held on :<#if heldOnDate?has_content> ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(heldOnDate, "dd-MMM-yyyy")?if_exists}</#if></fo:block>
              	<fo:block  text-align="left" font-size="10pt" white-space-collapse="false">The committee recommended/approved purchse of following items(s) as per the rates mention</fo:block>
              	<fo:block  text-align="left" font-size="10pt" font-style="bold">against each to be procured from M/S : <fo:inline font-weight="bold"><#if supplierPartyId?has_content>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierPartyId, false)} [${SupplierCity?if_exists}]<#else>&#160;</#if></fo:inline></fo:block>
@@ -165,7 +165,7 @@ under the License.
 					</fo:table>
 				</fo:block>
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
-				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<#--<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>-->
 				<#assign purchaeTot =0>
                 <#assign salesTot =0>  
 	             <fo:block>
@@ -336,7 +336,7 @@ under the License.
 				
 		        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    TOTAL VALUE (RS) : &#160;${(toTunitPrice+grandToT)?if_exists?string("##0.00")}</fo:block> 
 				
-				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
+				<#--<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>-->
 				<fo:block font-weight="bold" font-size="10pt">Summary</fo:block>
 				<fo:block>a) Actual Purchase Value (Rs): ${purchaeTot?string("#0.00")} </fo:block>
 				<fo:block>b) Total Sale Value     (Rs): ${toTunitPrice?string("#0.00")} </fo:block>
