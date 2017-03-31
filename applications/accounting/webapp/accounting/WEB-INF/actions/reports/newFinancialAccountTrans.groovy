@@ -77,8 +77,13 @@ if (organizationPartyId) {
 	finAccountCustomTimePeriodId = null;
 	effectiveFromDate = null;
 	effectiveThruDate = null;
-	effectiveFromDateStr = parameters.fromDate;
-	effectiveThruDateStr = parameters.thruDate;
+	if(parameters.reconcileReportFlag == "reconcile"){
+		effectiveFromDateStr = parameters.thruDateReport;
+		effectiveThruDateStr = parameters.thruDate;
+	  }else{
+		effectiveFromDateStr = parameters.fromDate;
+		effectiveThruDateStr = parameters.thruDate;
+	  }
 	
 	if (UtilValidate.isEmpty(effectiveFromDateStr)) {
 		effectiveFromDate = UtilDateTime.nowTimestamp();

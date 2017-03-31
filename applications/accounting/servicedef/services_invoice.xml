@@ -249,6 +249,7 @@ under the License.
         <attribute name="vatAmount" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="cstAmount" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="tdsAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="taxableAmt" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="serviceTaxAmount" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="bedAmount" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="vatType" type="String" mode="IN" optional="true"/>
@@ -276,6 +277,7 @@ under the License.
         <attribute name="tdsAmount" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="serviceTaxAmount" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="bedAmount" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="taxableAmt" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="vatType" type="String" mode="IN" optional="true"/>
         <attribute name="cstType" type="String" mode="IN" optional="true"/>
          <attribute name="tdsType" type="String" mode="IN" optional="true"/>

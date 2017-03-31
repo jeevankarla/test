@@ -1682,4 +1682,126 @@ under the License.
         <if-empty field="newEntity.datetimePerformed"><now-timestamp field="newEntity.datetimePerformed"/></if-empty>
         <create-value value-field="newEntity"/>
     </simple-method>
+    
+    <simple-method method-name="getReqFinAccountTransListAndTotals" short-description="Retrieve Required Financial Account Transaction List and Totals">
+     <entity-condition entity-name="FinAccountTrans" list="finAccountTransactions">
+       <condition-list combine="and">
+        	<condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
+            <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromTransactionDate" ignore-if-empty="true"/>
+            <condition-expr field-name="transactionDate" operator="less-equals" from-field="parameters.thruTransactionDate" ignore-if-empty="true"/>
+        </condition-list> 
+       <order-by field-name="transactionDate"/>
+     </entity-condition>
+     <set field="grandTotal" type="BigDecimal" value="0"/>
+        <set field="createdGrandTotal" type="BigDecimal" value="0"/>
+        <set field="totalCreatedTransactions" type="Long" value="0"/>
+        <set field="approvedGrandTotal" type="BigDecimal" value="0"/>
+        <set field="totalApprovedTransactions" type="Long" value="0"/>
+        <set field="createdApprovedGrandTotal" type="BigDecimal" value="0"/>
+        <set field="glReconciliationApprovedGrandTotal" type="BigDecimal" value="0"/>
+        <iterate list="finAccountTransactions" entry="finAccountTransaction">
+            <if-compare field="finAccountTransaction.finAccountTransTypeId" operator="equals" value="WITHDRAWAL">
+                <if-compare field="finAccountTransaction.statusId" operator="equals" value="FINACT_TRNS_CREATED">
+                    <set field="totalCreatedTransactions" value="${totalCreatedTransactions + 1}" type="Long"/>
+                    <set field="createdGrandTotal" value="${createdGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
+                    <set field="createdApprovedGrandTotal" value="${createdApprovedGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
+                </if-compare>
+                <if-compare field="finAccountTransaction.statusId" operator="equals" value="FINACT_TRNS_APPROVED">
+                    <set field="totalApprovedTransactions" value="${totalApprovedTransactions + 1}" type="Long"/>
+                    <set field="approvedGrandTotal" value="${approvedGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
+                    <set field="createdApprovedGrandTotal" value="${createdApprovedGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
+                    <if-compare-field field="parameters.glReconciliationId" operator="equals" to-field="finAccountTransaction.glReconciliationId">
+                        <set field="glReconciliationApprovedGrandTotal" value="${glReconciliationApprovedGrandTotal - finAccountTransaction.amount}" type="BigDecimal"/>
+                    </if-compare-field>
+                </if-compare>
+            <else>
+                <if-compare field="finAccountTransaction.statusId" operator="equals" value="FINACT_TRNS_CREATED">
+                    <set field="totalCreatedTransactions" value="${totalCreatedTransactions + 1}" type="Long"/>
+                    <set field="createdGrandTotal" value="${createdGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
+                    <set field="createdApprovedGrandTotal" value="${createdApprovedGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
+                </if-compare>
+                <if-compare field="finAccountTransaction.statusId" operator="equals" value="FINACT_TRNS_APPROVED">
+                    <set field="totalApprovedTransactions" value="${totalApprovedTransactions + 1}" type="Long"/>
+                    <set field="approvedGrandTotal" value="${approvedGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
+                    <set field="createdApprovedGrandTotal" value="${createdApprovedGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
+                    <if-compare-field field="parameters.glReconciliationId" operator="equals" to-field="finAccountTransaction.glReconciliationId">
+                        <set field="glReconciliationApprovedGrandTotal" value="${glReconciliationApprovedGrandTotal + finAccountTransaction.amount}" type="BigDecimal"/>
+                    </if-compare-field>
+                </if-compare>
+            </else>
+            </if-compare>
+        </iterate>
+        <if-compare field="parameters.glReconciliationId" operator="equals" value="_NA_">
+        	
+        	<set field="reconciliationDayEnd" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(parameters.thruTransactionDate)}" type="Timestamp"/>
+     
+        	<set field="transactionDayEnd" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(parameters.thruTransactionDate)}" type="Timestamp"/>
+        	
+            <set field="isConditionalStatusId" value="${parameters.statusId == null @or parameters.statusId != 'FINACT_TRNS_CANCELED'}" type="Boolean"/>
+            <if-compare field="isConditionalStatusId" operator="equals" value="true" type="Boolean">
+                <set field="conditionalStatusId" value="FINACT_TRNS_CANCELED"/>
+            </if-compare>
+            <entity-condition entity-name="FinAccountTrans" list="finAccountTransList">
+                <condition-list combine="and">
+                    <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
+                    <condition-expr field-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="statusId" operator="not-equals" from-field="conditionalStatusId" ignore-if-empty="true"/>
+                    <condition-list combine="or">
+                       <condition-expr field-name="statusId" operator="equals" from-field="parameters.statusId" ignore-if-empty="true"/>
+                       <condition-expr field-name="realisationDate" operator="greater" from-field="reconciliationDayEnd" ignore-if-empty="true"/>
+                    </condition-list>
+                    <!-- <condition-expr field-name="glReconciliationId" operator="equals" from-field="nullField"/> -->
+                    <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromTransactionDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="less-equals" from-field="transactionDayEnd" ignore-if-empty="true"/>
+                    <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
+                </condition-list>
+                <order-by field-name="transactionDate"/>
+            </entity-condition>
+        <else>
+            <entity-condition entity-name="FinAccountTrans" list="finAccountTransList">
+                <condition-list combine="and">
+                    <condition-expr field-name="finAccountId" from-field="parameters.finAccountId"/>
+                    <condition-expr field-name="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId" ignore-if-empty="true"/>
+                    <!-- <condition-expr field-name="statusId" from-field="parameters.statusId" ignore-if-empty="true"/> -->
+                    <condition-expr field-name="glReconciliationId" from-field="parameters.glReconciliationId" ignore-if-empty="true"/>
+                    <condition-expr field-name="paymentId" from-field="parameters.paymentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="finAccountTransId" from-field="parameters.finAccountTransId" ignore-if-empty="true"/>
+                    <condition-list combine="or">
+                       <condition-expr field-name="statusId" operator="equals" from-field="parameters.statusId" ignore-if-empty="true"/>
+                       <condition-expr field-name="realisationDate" operator="greater" from-field="reconciliationDayEnd" ignore-if-empty="true"/>
+                    </condition-list>
+                    <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromTransactionDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="less-equals" from-field="parameters.thruTransactionDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="entryDate" operator="greater-equals" from-field="parameters.fromEntryDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="entryDate" operator="less-equals" from-field="parameters.thruEntryDate" ignore-if-empty="true"/>
+                </condition-list>
+                <order-by field-name="transactionDate"/>
+            </entity-condition>
+        </else>
+        </if-compare>
+        <iterate list="finAccountTransList" entry="finAccountTrans">
+            <if-compare field="finAccountTrans.finAccountTransTypeId" operator="equals" value="WITHDRAWAL">
+                <set field="grandTotal" value="${grandTotal - finAccountTrans.amount}" type="BigDecimal"/>
+            <else>
+                <set field="grandTotal" value="${grandTotal + finAccountTrans.amount}" type="BigDecimal"/>
+            </else>
+            </if-compare>
+        </iterate>
+        <call-object-method obj-field="finAccountTransList" method-name="size" ret-field="searchedNumberOfRecords"/>
+        <set field="totalCreatedApprovedTransactions" value="${totalCreatedTransactions + totalApprovedTransactions}" type="Long"/>
+        <field-to-result field="finAccountTransList"/>
+        <field-to-result field="searchedNumberOfRecords"/>
+        <field-to-result field="grandTotal"/>
+        <field-to-result field="createdGrandTotal"/>
+        <field-to-result field="totalCreatedTransactions"/>
+        <field-to-result field="approvedGrandTotal"/>
+        <field-to-result field="totalApprovedTransactions"/>
+        <field-to-result field="createdApprovedGrandTotal"/>
+        <field-to-result field="totalCreatedApprovedTransactions"/>
+        <if-not-empty field="parameters.openingBalance">
+            <set field="glReconciliationApprovedGrandTotal" type="BigDecimal" value="${glReconciliationApprovedGrandTotal + parameters.openingBalance}"/>
+        </if-not-empty>
+        <field-to-result field="glReconciliationApprovedGrandTotal"/>
+    </simple-method>
 </simple-methods>
