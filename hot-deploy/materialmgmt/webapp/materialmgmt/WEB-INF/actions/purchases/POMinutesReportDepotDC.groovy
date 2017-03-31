@@ -274,8 +274,8 @@ context.scheme = scheme;
 				double quotaQuantity = 0;
 				double baleQuantity = 0;
 				double bundleUnitPrice = 0;
-				double packQuantity=0;
-				double packets=0;
+				packetQuantity=0;
+				packets=0;
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
 				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
@@ -335,7 +335,29 @@ context.scheme = scheme;
 				  tempMap.put("remarks", "");
 				  }
 				  
-				  if(OrderItemDetail[0]){
+				  if(UtilValidate.isNotEmpty(eachItem.orderId)){
+					  conditionList=[];
+					  conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
+					  conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+					  //conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+					  condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+					  orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+				  
+					  packetQuantityDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packQuantity"));
+					  if(UtilValidate.isNotEmpty(packetQuantityDetails)){
+						  packetQuantityDetails=EntityUtil.getFirst(packetQuantityDetails);
+						  packetQuantity=packetQuantityDetails.attrValue;
+					  }
+					  packetsDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packets"));
+					  if(UtilValidate.isNotEmpty(packetsDetails)){
+						  packetsDetails=EntityUtil.getFirst(packetsDetails);
+						  packets=packetsDetails.attrValue;
+					  }
+					  
+				  }
+				  tempMap.put("packQuantity", packetQuantity);
+				  tempMap.put("packets",packets);
+				  /*if(OrderItemDetail[0]){
 					  
 					 if(OrderItemDetail[0].packQuantity){
 					  tempMap.put("packQuantity", OrderItemDetail[0].packQuantity);
@@ -350,7 +372,7 @@ context.scheme = scheme;
 					  tempMap.put("packets",packets);
 					  }
 									   
-				  }
+				  }*/
 			  if(scheme != "General"){
 					  if(quantity > quotaQuantity)
 					  {

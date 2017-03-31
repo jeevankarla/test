@@ -3275,8 +3275,8 @@ public class MaterialPurchaseServices {
 				
 					item = cart.findCartItem(itemIndx);
 					item.setOrderItemAttribute("remarks",remarks);
-					item.setOrderItemAttribute("packetQuantity",packaging.toString());
-					item.setOrderItemAttribute("packet",packet.toString());
+					item.setOrderItemAttribute("packQuantity",packaging.toString());
+					item.setOrderItemAttribute("packets",packet.toString());
 					item.setListPrice(unitListPrice);
 					item.setTaxDetails(taxList);
 					count++;
