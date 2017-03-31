@@ -651,6 +651,7 @@
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/EditFinaccount.groovy"/>
             </actions>
             <widgets>
