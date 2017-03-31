@@ -717,7 +717,8 @@ under the License.
         <field name="transactionDate"><display/></field>
         <field name="paymentId"><display/></field>
         <field name="partyId"><display/></field>
-        <field name="openingBalance"><display/></field>
+        <!-- <field name="openingBalance"><display/></field> -->
+        <field name="openingBalanceTot"><display/></field>
         <field name="debitAmount"><display/></field>
         <field name="creditAmount"><display/></field>
         <field name="closingBalance"><display/></field>

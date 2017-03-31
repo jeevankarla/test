@@ -467,6 +467,7 @@ if (organizationPartyId) {
 							dayWiseTotMap = [:];
 							dayWiseTotMap["paymentId"] = "DAY TOTAL";
 							dayWiseTotMap["openingBalance"] = dayTotalOB;
+							dayWiseTotMap["openingBalanceTot"] = dayTotalOB;
 							dayWiseTotMap["debitAmount"] = dayTotalDebit;
 							dayWiseTotMap["creditAmount"] = dayTotalCredit;
 							dayWiseTotMap["closingBalance"] = dayTotalCB;
@@ -553,6 +554,7 @@ if (organizationPartyId) {
 						dayWiseTotMap = [:];
 						dayWiseTotMap["paymentId"] = "DAY TOTAL";
 						dayWiseTotMap["openingBalance"] = dayTotalOB;
+						dayWiseTotMap["openingBalanceTot"] = dayTotalOB;
 						dayWiseTotMap["debitAmount"] = dayTotalDebit;
 						dayWiseTotMap["creditAmount"] = dayTotalCredit;
 						dayWiseTotMap["closingBalance"] = dayTotalCB;
