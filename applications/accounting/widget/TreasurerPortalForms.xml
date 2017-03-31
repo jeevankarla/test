@@ -2266,13 +2266,13 @@ under the License.
 		</field> -->
 		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;PURCHASE_INVOICE&quot;)"
 			position="3">
-			<drop-down allow-empty="false" no-current-selected-key="INVOICE_READY">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_IN_PROCESS">
 				<entity-options description="${description}"
 					entity-name="StatusItem">
 					<entity-constraint name="statusTypeId" operator="equals"
 						value="INVOICE_STATUS" />
-						<entity-constraint name="statusId" operator="NOT-IN" 
-						value="INVOICE_SENT,INVOICE_IN_PROCESS"/>
+						<entity-constraint name="statusId" operator="not-equals" 
+						value="INVOICE_SENT"/>
 				</entity-options>
 			</drop-down>
 		</field>
@@ -2317,13 +2317,13 @@ under the License.
 		</field> -->
 		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;SALES_INVOICE&quot;)"
 			position="3">
-			<drop-down allow-empty="false" no-current-selected-key="INVOICE_READY">
+			<drop-down allow-empty="false" no-current-selected-key="INVOICE_IN_PROCESS">
 				<entity-options description="${description}"
 					entity-name="StatusItem">
 					<entity-constraint name="statusTypeId" operator="equals"
 						value="INVOICE_STATUS" />
-						<entity-constraint name="statusId" operator="NOT-IN" 
-						value="INVOICE_RECEIVED,INVOICE_IN_PROCESS"/>
+						<entity-constraint name="statusId" operator="not-equals" 
+						value="INVOICE_RECEIVED"/>
 				</entity-options>
 			</drop-down>
 		</field>
