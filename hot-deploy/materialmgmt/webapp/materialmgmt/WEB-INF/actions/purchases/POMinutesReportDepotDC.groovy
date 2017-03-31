@@ -276,6 +276,7 @@ context.scheme = scheme;
 				double bundleUnitPrice = 0;
 				packetQuantity=0;
 				packets=0;
+				remarks="";
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
 				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
@@ -324,7 +325,7 @@ context.scheme = scheme;
 				if(eachItem.quantity)
 				  quantity = Double.valueOf(eachItem.quantity);
 				
-				  if(OrderItemDetail[0]){
+				  /*if(OrderItemDetail[0]){
 					  
 					 if(OrderItemDetail[0].remarks)
 					  tempMap.put("remarks", OrderItemDetail[0].remarks);
@@ -333,7 +334,7 @@ context.scheme = scheme;
 				  
 				  }else{
 				  tempMap.put("remarks", "");
-				  }
+				  }*/
 				  
 				  if(UtilValidate.isNotEmpty(eachItem.orderId)){
 					  conditionList=[];
@@ -342,7 +343,11 @@ context.scheme = scheme;
 					  //conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
 					  condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 					  orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
-				  
+					  remarksDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "remarks"));
+					  if(UtilValidate.isNotEmpty(remarksDetails)){
+						  remarksDetails=EntityUtil.getFirst(remarksDetails);
+						  remarks=remarksDetails.attrValue;
+					  }
 					  packetQuantityDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packQuantity"));
 					  if(UtilValidate.isNotEmpty(packetQuantityDetails)){
 						  packetQuantityDetails=EntityUtil.getFirst(packetQuantityDetails);
@@ -355,6 +360,7 @@ context.scheme = scheme;
 					  }
 					  
 				  }
+				  tempMap.put("remarks",remarks);
 				  tempMap.put("packQuantity", packetQuantity);
 				  tempMap.put("packets",packets);
 				  /*if(OrderItemDetail[0]){

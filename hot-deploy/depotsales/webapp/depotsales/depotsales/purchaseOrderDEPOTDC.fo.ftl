@@ -149,13 +149,13 @@ under the License.
             <fo:table text-align="center" border-style="solid">
             <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="100pt"/>
+       	    <fo:table-column column-width="70pt"/>
        	    <fo:table-column column-width="80pt"/>
-       	    <fo:table-column column-width="65pt"/>
-       	    <fo:table-column column-width="60pt"/>
+       	    <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="60pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="70pt"/>
+            <#--<fo:table-column column-width="70pt"/>-->
             <fo:table-column column-width="80pt"/>
                <fo:table-body text-align="center">
                <fo:table-row>
@@ -184,10 +184,10 @@ under the License.
                			<fo:block text-align="right" font-size="10pt">QUANTITY</fo:block>
                			<fo:block text-align="right" font-size="10pt">(Nos)</fo:block>
                		</fo:table-cell>
-               		<fo:table-cell >
-               			<fo:block text-align="right" font-size="10pt">BUNDLE</fo:block>
+               		<#--<fo:table-cell >
+               		<fo:block text-align="right" font-size="10pt">BUNDLE</fo:block>
                			<fo:block text-align="right" font-size="10pt">WEIGHT</fo:block>
-               		</fo:table-cell>
+               		</fo:table-cell>-->
                		<fo:table-cell >
                			<fo:block text-align="right" font-size="10pt">AMOUNT</fo:block>
                			<fo:block text-align="right" font-size="10pt">(Rs)</fo:block>
@@ -202,13 +202,13 @@ under the License.
             <fo:table text-align="center" >
             <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="100pt"/>
+       	    <fo:table-column column-width="70pt"/>
        	    <fo:table-column column-width="80pt"/>
-       	    <fo:table-column column-width="65pt"/>
-       	    <fo:table-column column-width="60pt"/>
+       	    <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="60pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="70pt"/>
+            <#--<fo:table-column column-width="70pt"/>-->
             <fo:table-column column-width="80pt"/>
                <fo:table-body text-align="center">
                   <#assign sNo=1>
@@ -233,9 +233,9 @@ under the License.
   			           <fo:table-cell>
   			           		<fo:block text-align="right"  font-size="10pt">${orderListItem.get("numQuantity")?if_exists}(${orderListItem.get("Uom")?if_exists})</fo:block>
   			           </fo:table-cell>
-  			           <fo:table-cell>
+  			           <#--<fo:table-cell>
   			           		<fo:block text-align="right"  font-size="10pt">${orderListItem.get("bundleWeight")?if_exists}</fo:block>
-  			           </fo:table-cell>     
+  			           </fo:table-cell>-->     
   				       <fo:table-cell  ><fo:block text-align="right"  font-size="10pt" >${orderListItem.get("amount")?if_exists?string("##0.00")}</fo:block></fo:table-cell>     
   				     </fo:table-row>
   				    	<#assign sNo=sNo+1>
