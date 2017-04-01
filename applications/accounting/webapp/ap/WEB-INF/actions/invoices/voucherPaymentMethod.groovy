@@ -95,6 +95,9 @@ paymentMethods = [];
 paymentMethods = delegator.findList("PaymentMethodAndType", cond, null, null, null, false);
 context.paymentMethods = paymentMethods;
 partyId=""
+if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
+	partyId = parameters.ownerPartyId 
+}
 context.partyId = partyId;
 
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
@@ -358,7 +361,4 @@ arScreenTitle = uiLabelMap.AccountingCreateNewBankSalesInvoice;
 prefPaymentMethodTypeId=arVoucherType;
 context.arScreenTitle=arScreenTitle;
 
-if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
-	partyId = parameters.ownerPartyId 
-}
-context.partyId = partyId;
+
