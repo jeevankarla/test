@@ -362,26 +362,6 @@ under the License.
                        			</fo:table-cell>
                        		</#if>
                      </fo:table-row>
-                     <fo:table-row>	
-                            <#--<#if createdByUserLogin?has_content>
-                     		<fo:table-cell>
-                            		<fo:block  text-align="left"  keep-together="always">Created By:${createdByUserLogin?if_exists}</fo:block>  
-                       		</fo:table-cell>
-                       		<#else>
-                       			<fo:table-cell>
-                            		<fo:block  text-align="left"  ></fo:block>  
-                       			</fo:table-cell>
-                       		</#if>-->
-                     		<#if lastModifiedByUserLogin?has_content>
-                    		<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" >Posted By:${lastModifiedByUserLogin?if_exists}</fo:block>  
-                       		</fo:table-cell>
-                       		<#else>
-                       			<fo:table-cell>
-                            		<fo:block  text-align="left"  ></fo:block>  
-                       			</fo:table-cell>
-                       		</#if>
-                     </fo:table-row>
                      
                      <fo:table-row>	
                    			<fo:table-cell>
@@ -504,66 +484,12 @@ under the License.
                             		<fo:block text-align="right" font-weight="bold" white-space-collapse="false"></fo:block>  
                        			</fo:table-cell>
             				</fo:table-row>
-               				<fo:table-row>
-								 <fo:table-cell number-columns-spanned="5">
-			  						<fo:block text-align="left"  white-space-collapse="false" font-size="12pt">Amount in Words : RUPEES ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(crTotal?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()} ONLY  </fo:block>	
-			  					 </fo:table-cell>
-				       		</fo:table-row>
 		  					</#if>
-		  					<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       		</fo:table-row>
-				       		<#if invoiceDetails?has_content>
-				       		<fo:table-row>
-								<fo:table-cell number-columns-spanned="4">
-				            		<fo:block linefeed-treatment="preserve"><#if invoiceDetails.description?has_content>Narration : ${invoiceDetails.description?if_exists}</#if></fo:block>
-				       			</fo:table-cell>
-				       		</fo:table-row>
-				       		</#if>
-				       		<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       		</fo:table-row>
-				       		<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       		</fo:table-row>
+		  					
 				       		</fo:table-body>
 		                </fo:table>
 		               </fo:block>
-				       		<fo:block>
-			                 	<fo:table>
-			                    <fo:table-column column-width="25%"/>
-			                    <fo:table-column column-width="25%"/>
-			                    <fo:table-column column-width="25%"/>
-			                    <fo:table-column column-width="25%"/>
-			                    <fo:table-body>
-			                    		<fo:table-row>
-			               					<fo:table-cell number-columns-spanned="2">   						
-										 	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-											</fo:table-cell>
-					  					</fo:table-row>
-									  	<fo:table-row>
-			               					<fo:table-cell>
-			                    				<fo:block text-align="center">Prepared By</fo:block>
-			               					</fo:table-cell>
-			               					<fo:table-cell >
-			                    				<fo:block text-align="center">Checked By</fo:block>
-			               					</fo:table-cell>
-			               					<fo:table-cell>
-			                    				<fo:block text-align="center">Finance Incharge</fo:block>
-			               					</fo:table-cell>
-			               					<fo:table-cell >
-			                    				<fo:block text-align="center" keep-together="always">RO Incharge</fo:block>
-			               					</fo:table-cell>
-					  					</fo:table-row>
-					              </fo:table-body>
-		                	</fo:table>
-		               </fo:block>
+				       		
 		                 
 		              <#if entryList?has_content> 
 		              <#list entryList as payAccountingTransEntries>
@@ -596,7 +522,7 @@ under the License.
          	             <#assign lastModifiedByUserLogin = payAccountingTransEntries.lastModifiedByUserLogin?if_exists>
          	             
          	             <fo:block>
-		               <fo:block> &#160;</fo:block>
+		               
 		               <fo:block> &#180;</fo:block>
 		               <fo:block>---------------------------------------------------------------------------------------------</fo:block>
 		               <fo:block> &#160;</fo:block>
@@ -908,26 +834,7 @@ under the License.
                        			</fo:table-cell>
                        		</#if>
                      </fo:table-row>
-                     <fo:table-row>	
-                            <#--<#if createdByUserLogin?has_content>
-                     		<fo:table-cell>
-                            		<fo:block  text-align="left"  keep-together="always">Created By:${createdByUserLogin?if_exists}</fo:block>  
-                       		</fo:table-cell>
-                       		<#else>
-                       			<fo:table-cell>
-                            		<fo:block  text-align="left"  ></fo:block>  
-                       			</fo:table-cell>
-                       		</#if>-->
-                     		<#if lastModifiedByUserLogin?has_content>
-                    		<fo:table-cell>
-                            		<fo:block  keep-together="always" text-align="left" >Posted By:${lastModifiedByUserLogin?if_exists}</fo:block>  
-                       		</fo:table-cell>
-                       		<#else>
-                       			<fo:table-cell>
-                            		<fo:block  text-align="left"  ></fo:block>  
-                       			</fo:table-cell>
-                       		</#if>
-                     </fo:table-row>
+                     
                      
                      <fo:table-row>	
                    			<fo:table-cell>
@@ -1051,44 +958,28 @@ under the License.
                             		<fo:block text-align="right" font-weight="bold" white-space-collapse="false"></fo:block>  
                        			</fo:table-cell>
             				</fo:table-row>
-               				<fo:table-row>
-								 <fo:table-cell number-columns-spanned="5">
-			  						<fo:block text-align="left"  white-space-collapse="false" font-size="12pt">Amount in Words : RUPEES ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(crTotal?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()} ONLY  </fo:block>	
-			  					 </fo:table-cell>
-				       		</fo:table-row>
+               			
 		  					</#if>
-		  					<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       		</fo:table-row>
-				       		<#if invoiceDetails?has_content>
-				       		<fo:table-row>
-								<fo:table-cell number-columns-spanned="4">
-				            		<fo:block linefeed-treatment="preserve"><#if invoiceDetails.description?has_content>Narration : ${invoiceDetails.description?if_exists}</#if></fo:block>
-				       			</fo:table-cell>
-				       		</fo:table-row>
-				       		</#if>
-				       		<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       		</fo:table-row>
-				       		<fo:table-row>
-								<fo:table-cell>
-				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-				       			</fo:table-cell>
-				       		</fo:table-row>
 				       		</fo:table-body>
 		                </fo:table>
 		               </fo:block>
-				       		<fo:block>
+				       		
+         	             </#list>
+         	           </#if>
+         	           <fo:block>
 			                 	<fo:table>
 			                    <fo:table-column column-width="25%"/>
 			                    <fo:table-column column-width="25%"/>
 			                    <fo:table-column column-width="25%"/>
 			                    <fo:table-column column-width="25%"/>
+			                     <fo:table-column column-width="25%"/>
+			                    
 			                    <fo:table-body>
+			                            	<fo:table-row>
+								 <fo:table-cell number-columns-spanned="5">
+			  						<fo:block text-align="left"  white-space-collapse="false" font-size="12pt">Amount in Words : RUPEES ${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(crTotal?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()} ONLY  </fo:block>	
+			  					 </fo:table-cell>
+				       		</fo:table-row>
 			                    		<fo:table-row>
 			               					<fo:table-cell number-columns-spanned="2">   						
 										 	    <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
@@ -1111,8 +1002,6 @@ under the License.
 					              </fo:table-body>
 		                	</fo:table>
 		               </fo:block>
-         	             </#list>
-         	           </#if>
 					</fo:flow>
 					</fo:page-sequence>
 			  <#else>
