@@ -389,11 +389,10 @@ function datepick()
            <td>Miller Bill Number</td>
           <td>${uiLabelMap.AccountingFromParty}</td> 
           <td>${uiLabelMap.AccountingToParty}</td>
-          <td>${uiLabelMap.AccountingAmount}</td>
           <td>Invoice Amount</td>
-          <td>Payable Amount</td>
+          <td>Paid Amount</td>
           <td>Outstanding Amount</td>
-          <td>select</td>
+          <td>Pay</td>
           <td>${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>
       </thead>
@@ -433,9 +432,6 @@ function datepick()
               <input type = "hidden" name = "partyIdName" id = "partyIdName" value = "${partyName}">
               <input type = "hidden" name = "voucherTypeId" id = "voucherTypeId" value = "${invoice.prefPaymentMethodTypeId?if_exists}">
               <input type="hidden" name="organizationPartyId" value="${defaultOrganizationPartyId}"/>
-              
-              <td>
-                            </td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)?if_exists} [${(invoice.partyIdFrom)?if_exists}]</a></td>
               <td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)?if_exists} [${(invoice.partyId)?if_exists}]</a></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
