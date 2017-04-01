@@ -252,9 +252,9 @@ public class InvoiceServices {
  			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, billFromVendorPartyId));
  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
  	        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
- 			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp())));
+ 			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(invoiceDate)));
 			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
-			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()))));
+			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(invoiceDate))));
 			    EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
 			try{
 				List<GenericValue> orgsListS = delegator.findList("PartyRelationship", condition, null, UtilMisc.toList("partyIdFrom"), null, false);
@@ -5764,7 +5764,17 @@ public class InvoiceServices {
 	                //Debug.log("indentTypeId============="+indentTypeId);
 	       			GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
 	                boSequnce = partyBOs.getString("externalId");
-	       			List<GenericValue> partyRelations = delegator.findList("PartyRelationship", EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId), null, null, null, false);
+	                
+	                List conditionList = FastList.newInstance();
+	     			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+	     			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
+	     	        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	     			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(invDate)));
+	    			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+	    			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(invDate))));
+	    			    EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
+	                
+	       			List<GenericValue> partyRelations = delegator.findList("PartyRelationship", condition, null, null, null, false);
 	       		    String partyIdFrom = EntityUtil.getFirst(partyRelations).getString("partyIdFrom");
 	    			GenericValue partyROs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdFrom), false);
 	                roSequnce = partyROs.getString("externalId");
