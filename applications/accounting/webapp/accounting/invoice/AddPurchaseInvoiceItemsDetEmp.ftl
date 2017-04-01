@@ -479,7 +479,7 @@ under the License.
 				          <td><input id="amount" class="input-medium" name="amount" type="text" size="12"/>
 				          <input id="invoiceId" name="invoiceId" type="hidden" value="${invoice.invoiceId}" size="12"/>
 				           <input id="purposeTypeId" name="purposeTypeId" type="hidden" value="${invoice.purposeTypeId}" size="12"/>
-				          <input id="paymentMethodId" name="paymentMethodId" type="hidden" value="DEBITNOTE" size="12"/>
+				          <input id="paymentMethodId" name="paymentMethodId" type="hidden" value="ADJUSTMENT" size="12"/>
 				          <input id="paymentTypeId" name="paymentTypeId" type="hidden" value="AGNSTINV_PAYOUT" size="12"/>
 				          <input id="invoicePartyIdFrom" name="invoicePartyIdFrom" type="hidden" value="${invoice.partyIdFrom}" size="12"/>
 				          <input id="invoicePartyIdTo" name="invoicePartyIdTo" type="hidden" value="${invoice.partyId}" size="12"/>
