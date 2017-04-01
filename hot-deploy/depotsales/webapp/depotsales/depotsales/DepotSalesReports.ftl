@@ -538,7 +538,13 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span>
 			 </td>
 				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="billWisePurchaseReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>-->	
-				<td width="10%"></td> 
+				<td width="10%"><span class='h3'>Type</br>
+				 <select name="purposeType" id="purposeType">
+				 		<option value=''></option>
+						<option value='YARN_SALE'>Branch Sales</option>
+						<option value='DEPOT_YARN_SALE'>Depot Sales</option>
+				  </select>    								
+			  </span></td>	
 				<td width="10%"></td> 
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('billWisePurchaseReport', '<@ofbizUrl>billWisePurchaseReport.csv</@ofbizUrl>');" class="buttontext"/></td>         			
 				<td width="10%"></td> 

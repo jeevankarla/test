@@ -31,6 +31,7 @@ DateMap = [:];
 partyfromDate=parameters.billReportfromDate;
 partythruDate=parameters.billReportthruDate;
 branchId = parameters.branchId;
+purposeType = parameters.purposeType;
 //productCategory=parameters.productCategory;
 //partyId=parameters.partyId;
 
@@ -38,7 +39,6 @@ DateMap.put("partyfromDate", partyfromDate);
 DateMap.put("partythruDate", partythruDate);
 DateList.add(DateMap);
 context.DateList=DateList;
- 
 branchName = "";
 if(branchId){
 	branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
@@ -171,7 +171,13 @@ condList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN,bra
 	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
 }*/
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE"]));
+if(purposeType){
+	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS,purposeType));
+}
+else{
+	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE"]));
+}
+
 //cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 //fieldsToSelect = ["invoiceId"] as Set;
 invoice = delegator.findList("Invoice", EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false);
