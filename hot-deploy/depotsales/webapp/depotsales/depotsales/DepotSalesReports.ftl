@@ -881,7 +881,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				 <td width="15%"><span class='h3'>Role Type
 							    <select name="customerType" id="customerType">
 							          <option value="YARN">YARN</option>
-							          <option value="DYESANDCHEM">DYESANDCHEM</option>
+							          <option value="DYESANDCHEM">DYES AND CHEM</option>
 							    </select>    								
 					  	 </span></td>
 				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="CustomerDetails" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
@@ -948,7 +948,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="15%"><span class='h3'>Role Type
 							    <select name="customerType" id="customerType">
 							          <option value="YARN">YARN</option>
-							          <option value="DYESANDCHEM">DYESANDCHEM</option>
+							          <option value="DYESANDCHEM">DYES AND CHEM</option>
 							    </select>    								
 					  	 </span></td>
       			<td width="10%"></td>
@@ -964,7 +964,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="15%"><span class='h3'>Role Type
 							    <select name="customerType" id="customerType">
 							          <option value="YARN">YARN</option>
-							          <option value="DYESANDCHEM">DYESANDCHEM</option>
+							          <option value="DYESANDCHEM">DYES AND CHEM</option>
 							    </select>    								
 					  	 </span></td>
 			    <td width="10%"></td>
