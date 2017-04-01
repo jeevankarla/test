@@ -23,7 +23,8 @@
 	import org.ofbiz.entity.model.DynamicViewEntity
 	import org.ofbiz.entity.model.ModelKeyMap;
 	
-	
+	customerType = parameters.customerType;
+	context.customerType=customerType;
 	geoList = delegator.findList("Geo", null ,UtilMisc.toSet("geoId","geoName"),null,null,false);
 	geoNameMap = [:];
 	for(geo in geoList){
@@ -32,7 +33,14 @@
 	
 	
 	condList = [];
-	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.IN,UtilMisc.toList("SUPPLIER","UNEMPALED_SUPPLIER")));
+	if(customerType=="YARN"){
+		//condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.IN,UtilMisc.toList("SUPPLIER","UNEMPALED_SUPPLIER")));
+		condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS,"UNEMPALED_SUPPLIER"));
+	}
+	else{
+		
+		condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS,"DYS_CMLS_SUPPLIER"));
+	}
 	//fieldToSelect = UtilMisc.toSet("partyId", "groupName", "paAddress1", "paAddress2", "paPostalCode", "paCountryGeoId", "paStateProvinceGeoId", "tnContactNumber");
 	List supplierPartyDetails = delegator.findList("PartyRoleAndContactMechDetail",EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
 	

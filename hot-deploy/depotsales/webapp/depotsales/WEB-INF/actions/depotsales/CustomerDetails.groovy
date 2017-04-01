@@ -26,6 +26,8 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 
 branchId = parameters.branchId;
 partyId = parameters.partyId;
+customerType = parameters.customerType;
+context.customerType=customerType;
 //passbookNumber = parameters.passbookNumber;
 //partyId = parameters.partyId;
 //partyClassification = parameters.partyClassification;
@@ -40,7 +42,6 @@ double totalIndents = 0;
 
 //JSONArray weaverDetailsList = new JSONArray();
 List CustomerDetails = FastList.newInstance();
-
 //checking Is it RO or not
 branchList = [];
 List condList = [];
@@ -59,12 +60,16 @@ if(UtilValidate.isEmpty(partyId)){
 	{
 		branchList.add(branchId);
 	}
-	
 	partyList = [];
 	condListba = [];
 	condListba.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
 	condListba.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-	condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+	if(customerType=="YARN"){
+		condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+	}
+	else{
+		condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "DYS_CMLS_CUSTOMER"));
+	}
 	condListb = EntityCondition.makeCondition(condListba, EntityOperator.AND);
 	partyIdsList = delegator.findList("PartyRelationship", condListb, UtilMisc.toSet("partyIdTo"), null, null, false);
 	partyClassification = parameters.partyClassification;
@@ -73,7 +78,6 @@ if(UtilValidate.isEmpty(partyId)){
 		partyIdsList = EntityUtil.filterByCondition(partyIdsList,EntityCondition.makeCondition("partyIdTo",EntityOperator.IN,partyClassificationIdList));
 	}
 	branchpartyIdsList = EntityUtil.getFieldListFromEntityList(partyIdsList, "partyIdTo", true);
-	
 	if(branchpartyIdsList || branchId)
 	{
 		condList.add(EntityCondition.makeCondition("partyId" ,EntityOperator.IN, branchpartyIdsList));
@@ -90,8 +94,12 @@ else{
 //branchpartyIdsList = EntityUtil.getFieldListFromEntityListIterator(partyIdsList, "partyIdTo", true);
 	
 
-	
+if(customerType=="YARN"){
 condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+}
+else{
+	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "DYS_CMLS_CUSTOMER"));
+}
 condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));
 
 
@@ -131,7 +139,12 @@ resultList.each{ partyList ->
 			conditionList.clear();
 			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 			conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+			if(customerType=="YARN"){
+				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+			}
+			else{
+				conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "DYS_CMLS_CUSTOMER"));
+			}
 			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
 			conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()),
 			EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null)],EntityOperator.OR));
