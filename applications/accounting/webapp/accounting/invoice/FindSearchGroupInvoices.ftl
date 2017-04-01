@@ -109,6 +109,7 @@
     <tr>
 	    <td class="label">&nbsp;</td>
 	    <td colspan="4">
+	    	<input type="hidden" name="partyId" value="${partyId}">
 			<input type="submit" class="smallSubmit" name="submitButton" value="Find">
 	    </td>
     </tr>
