@@ -308,6 +308,9 @@
 					<field-map field-name="mainAction" value="VIEW" />
 				</service>
 				<set field="hasAcctgAtxViewPermission" from-field="permResult.hasPermission" />
+				<entity-condition entity-name="PartyAcctgPrefAndGroup" list="intOrgList">
+	                <order-by field-name="groupName"/>
+	            </entity-condition>
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonPartyAccountingTransactionDecorator"
@@ -323,6 +326,9 @@
 									<include-form name="FindAcctgTransEntries"
 										location="component://accounting/widget/GlForms.xml" />
 								</screenlet>
+								<platform-specific>
+					                         <html><html-template location="component://accounting/webapp/accounting/invoice/fetchBoForRo.ftl"/></html>
+					                 </platform-specific>
 								<section>
 									<condition>
 										<and>

@@ -241,11 +241,24 @@ under the License.
                </entity-options>
             </drop-down>
         </field>
-        <field name="costCenterId">
-        	<drop-down  allow-empty="true">
-               <entity-options description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]" entity-name="PartyClassification" key-field-name="partyId">
-                	<entity-constraint name="partyClassificationGroupId" operator="in" value="REGIONAL_OFFICE,BRANCH_OFFICE,COMPANY"/>
-                </entity-options>
+        <field name="RO" id-name="organizationPartyId" parameter-name="partyIdFrom" event="onchange" action="javascript:getBOsForRO();" >
+            <!-- <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+              <entity-options entity-name="PartyRelationshipAndDetail" key-field-name="partyId" description="${groupName}" filter-by-date="false">
+                   <entity-constraint name="partyIdFrom" operator="equals" value="Company"/>
+                   <entity-constraint name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+                   <entity-constraint name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+                   <entity-constraint name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
+                   <entity-order-by field-name="groupName"/>
+               </entity-options>
+            </drop-down> -->
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="intOrgList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
+        </field>
+        <field name="costCenterId" id-name="costCenterId" parameter-name="costCenterId" required-field="true">
+            <drop-down allow-empty="false" no-current-selected-key="${costCenterId}">
+				<list-options key-name="partyIdTo" list-name="orderList" description="${groupName}"/>
+                <list-options key-name="partyIdTo" list-name="getROList" description="${groupName}"/>  
             </drop-down>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
