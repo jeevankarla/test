@@ -94,7 +94,8 @@ cond = EntityCondition.makeCondition(paymentCondList, EntityOperator.AND);
 paymentMethods = [];
 paymentMethods = delegator.findList("PaymentMethodAndType", cond, null, null, null, false);
 context.paymentMethods = paymentMethods;
-
+partyId=""
+context.partyId = partyId;
 
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
 if(UtilValidate.isEmpty(parameters.noConditionFind)){
@@ -356,3 +357,8 @@ arScreenTitle = uiLabelMap.AccountingCreateNewBankSalesInvoice;
 }
 prefPaymentMethodTypeId=arVoucherType;
 context.arScreenTitle=arScreenTitle;
+
+if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
+	partyId = parameters.ownerPartyId 
+}
+context.partyId = partyId;
