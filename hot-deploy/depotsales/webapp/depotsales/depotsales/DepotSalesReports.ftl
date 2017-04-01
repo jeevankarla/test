@@ -872,6 +872,12 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<tr class="alternate-row">
 			<form id="CustomerDetails" name="CustomerDetails" method="post" action="<@ofbizUrl>CustomerDetails.csv</@ofbizUrl>" target="_blank">	
 				<td width="30%">New Customer Masters</td>
+				 <td width="15%"><span class='h3'>Role Type
+							    <select name="customerType" id="customerType">
+							          <option value="YARN">YARN</option>
+							          <option value="DYESANDCHEM">DYESANDCHEM</option>
+							    </select>    								
+					  	 </span></td>
 				<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="CustomerDetails" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
       			<td width="15%"><span class='h3'>Branch
 							    <select name="branchId" id="branchId">
@@ -888,7 +894,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 							          <option value='${partyClassification.partyClassificationGroupId?if_exists}'>${partyClassification.description?if_exists}</option>
 							        </#list> 
 							    </select>    								
-					  	 </span></td>	  	 
+					  	 </span></td>  	 
       			<td width="10%"></td>
       			<td width="10%"></td>
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('CustomerDetails', '<@ofbizUrl>CustomerDetails.csv</@ofbizUrl>');" class="buttontext"/></td>         			
@@ -933,8 +939,13 @@ function makeDatePicker3(fromDateId ,thruDateId){
       	<tr class="alternate-row">
 			<form id="supplierMasters" name="supplierMasters" method="post" action="<@ofbizUrl>SupplierMasters.csv</@ofbizUrl>" target="_blank">	
 				<td width="30%">Supplier Masters</td>        
-				<td width="10%"></td>
-      			<td></td>
+				<td width="15%"><span class='h3'>Role Type
+							    <select name="customerType" id="customerType">
+							          <option value="YARN">YARN</option>
+							          <option value="DYESANDCHEM">DYESANDCHEM</option>
+							    </select>    								
+					  	 </span></td>
+      			<td width="10%"></td>
       			<td width="10%"></td>
 				<td width="10%">
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('supplierMasters', '<@ofbizUrl>SupplierMasters.pdf</@ofbizUrl>');" class="buttontext"/></td>
@@ -944,7 +955,12 @@ function makeDatePicker3(fromDateId ,thruDateId){
           <tr class="alternate-row">
 			<form id="productMasters" name="productMasters" method="post" action="<@ofbizUrl>ProductMasters.csv</@ofbizUrl>" target="_blank">	
 				<td width="30%">Product Masters</td>
-				<td width="10%"></td>
+				<td width="15%"><span class='h3'>Role Type
+							    <select name="customerType" id="customerType">
+							          <option value="YARN">YARN</option>
+							          <option value="DYESANDCHEM">DYESANDCHEM</option>
+							    </select>    								
+					  	 </span></td>
 			    <td width="10%"></td>
       			<td></td>
       			<td width="10%"></td>

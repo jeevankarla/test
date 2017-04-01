@@ -2869,7 +2869,7 @@
     </form>
 	
 	<form name="ProductMastersCSV" type="list" list-name="listIt" view-size="99999">
-		<field name="parentCategory" title="Yarn Type"><display/></field>
+		<!-- <field name="parentCategory" title="Yarn Type"><display/></field> -->
         <field name="productId" title="Product Id"><display/></field>
         <field name="name" title="Name"><display/></field>
         <field name="categoryName" title="Category"><display /></field>

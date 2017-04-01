@@ -19,10 +19,16 @@
 	import org.ofbiz.service.GenericServiceException;
 	import org.ofbiz.service.ServiceUtil;
 	import org.ofbiz.party.contact.ContactHelper;
-	
+	customerType = parameters.customerType;
+	context.customerType=customerType;
 	condList = [];
-	condList.add(EntityCondition.makeCondition("productCategoryTypeId" ,EntityOperator.IN, ["SYNTHETIC","NATURAL_FIBERS"]));
-	List prodCategoryIds = delegator.findList("ProductCategory", null,null,null,null,false);
+	if(customerType=="YARN"){
+		condList.add(EntityCondition.makeCondition("productCategoryTypeId" ,EntityOperator.IN, ["SYNTHETIC","NATURAL_FIBERS"]));
+	}
+	else{
+		condList.add(EntityCondition.makeCondition("productCategoryTypeId" ,EntityOperator.IN, ["DYES_CHEMICALS","DC_SALE"]));
+		}
+	List prodCategoryIds = delegator.findList("ProductCategory", EntityCondition.makeCondition(condList, EntityOperator.AND),null,null,null,false);
 	
 	condList = [];
 	condList.add(EntityCondition.makeCondition("primaryParentCategoryId" ,EntityOperator.IN, EntityUtil.getFieldListFromEntityList(prodCategoryIds, "productCategoryId", true)));
