@@ -1263,9 +1263,6 @@
 	
 	function updateServiceChargeAmounts(){
 		var serviceChargePercent = 2;
-		
-		alert(serviceChargePercent);
-		
 		if(serviceChargePercent != 'undefined' && serviceChargePercent != null){
 			for (i = 0; i < data.length; i++) {
 				var basicAmt = data[i]["amount"];

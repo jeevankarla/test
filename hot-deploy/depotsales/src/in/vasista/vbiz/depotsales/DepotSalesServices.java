@@ -10742,7 +10742,7 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
         	List conditionList = FastList.newInstance();
   			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
   			conditionList.add(EntityCondition.makeCondition("partyRelationshipTypeId", EntityOperator.IN,UtilMisc.toList( "GROUP_ROLLUP","BRANCH_CUSTOMER")));
-  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, UtilMisc.toList("EMPANELLED_CUSTOMER", "BRANCH_EMPLOYEE") ));
+  			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, UtilMisc.toList("EMPANELLED_CUSTOMER", "BRANCH_EMPLOYEE","DYS_CMLS_CUSTOMER") ));
   	        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
   	        
   			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimeStamp));
