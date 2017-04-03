@@ -982,6 +982,7 @@
 				updatePayableAmount(args.row);
 				updateTotalIndentAmount();
 				updateCurrentQuota(args.row);
+				if($("#schemeCategory").val() == "General")
 				updateServiceChargeAmounts();
 			} 
 	 	});
