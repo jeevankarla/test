@@ -49,4 +49,3 @@ finAccountTypelist.each{ eachfinAcc ->
 }
 context.finAccountTypeJSON=finAccountTypeJSON;
 
-Debug.log("finAccountTypeJSON=============="+finAccountTypeJSON);
