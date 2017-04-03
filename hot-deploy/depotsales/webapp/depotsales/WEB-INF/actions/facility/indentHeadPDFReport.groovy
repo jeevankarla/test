@@ -219,7 +219,7 @@ OrderHeader = delegator.findList("OrderHeader",EntityCondition.makeCondition("or
 salesAndPurchaseList = [];
 
 
-stylesMap=[:];
+/*stylesMap=[:];
 stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD");
 if(branchName){	
 	stylesMap.put("mainHeader2", "Sales and Purchase Report for "+ branchName);
@@ -299,7 +299,7 @@ headingMap.put("freight","Freight Amount");
 headingMap.put("shipmentId","Shipment Id");
 headingMap.put("actualSaleInvoiceId","Internal Sales Invoice Id");
 headingMap.put("actualPurInvoiceId","Internal Purchase Invoice Id");
-salesAndPurchaseList.add(headingMap);
+salesAndPurchaseList.add(headingMap);*/
 
 purchaseWiseDetails = [];
 if(invoice){
@@ -2359,7 +2359,7 @@ if(invoice){
 
 					//tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].quantity*POInvoiceItemList[0].amount);
 
-					tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].itemValue);
+					/*tempMap.put("poInvoiceBasicAmt", POInvoiceItemList[0].itemValue);*/
 					
 					
 					double purInvoiceNetAmt = 0;
@@ -2390,10 +2390,10 @@ if(invoice){
 				   
 				   
 				   
-				   if(!purchaseWiseDetails.contains(poOrderId))
+				  /* if(!purchaseWiseDetails.contains(poOrderId))
 				   tempMap.put("purTax", purTax);
 				   else
-				   tempMap.put("purTax", "");
+				   tempMap.put("purTax", "");*/
 				   
 				   purInvoiceNetAmt = purInvoiceNetAmt+purTax;
 				   
@@ -2420,12 +2420,12 @@ if(invoice){
 						   }
 					   }
 					   
-					   if(dontRepeat.size() == 1 && !purchaseWiseDetails.contains(poOrderId))
+					  /* if(dontRepeat.size() == 1 && !purchaseWiseDetails.contains(poOrderId))
 					   tempMap.put("allAdjPur", allAdjPur);
 					   else
-					   tempMap.put("allAdjPur", "");
+					   tempMap.put("allAdjPur", "");*/
 					   
-					   if(dontRepeat.size() == 1)
+					   /*if(dontRepeat.size() == 1)
 					   purInvoiceNetAmt = purInvoiceNetAmt+allAdjPur;
 					   
 					   if(isKunnur == "INT6")
@@ -2446,7 +2446,7 @@ if(invoice){
 					   if(!purchaseWiseDetails.contains(poOrderId))
 					   tempMap.put("purchaseQuantity", POInvoiceItemList[0].quantity);
 					   else
-					   tempMap.put("purchaseQuantity", "");
+					   tempMap.put("purchaseQuantity", "");*/
 					   
 					
 					   purchaseWiseDetails.add(primaryOrderId);
