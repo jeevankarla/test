@@ -54,6 +54,7 @@
         <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
         <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="changeReason" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
     </service> 
     
      <service name="cancelPOStatusDC" engine="java" auth="true"
@@ -70,6 +71,7 @@
         <attribute name="needsInventoryIssuance" type="String" mode="OUT" optional="true"/>
         <attribute name="grandTotal" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="changeReason" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
     </service> 
    <service name="emailRequirement" engine="java" location="in.vasista.vbiz.purchase.MaterialRequestServices" invoke="emailRequirement">
         <description>Requirement Interface</description>

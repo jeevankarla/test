@@ -2220,6 +2220,7 @@ public class OrderServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId");
         String statusId = (String) context.get("statusId");
+        String comments = (String) context.get("comments");
         Map<String, Object> successResult = ServiceUtil.returnSuccess();
         Locale locale = (Locale) context.get("locale");
 
@@ -2288,7 +2289,7 @@ public class OrderServices {
 
             // update the current status
             orderHeader.set("statusId", statusId);
-
+            orderHeader.set("comments", comments);
             // now create a status change
             GenericValue orderStatus = delegator.makeValue("OrderStatus");
             orderStatus.put("orderStatusId", delegator.getNextSeqId("OrderStatus"));
