@@ -500,6 +500,9 @@ reportType:byAccount -->
 					<field-map field-name="acctgTransEntrySeqId"
 						from-field="parameters.editAcctgTransEntrySeqId" />
 				</entity-one>
+				<entity-condition entity-name="PartyAcctgPrefAndGroup" list="intOrgList">
+	                <order-by field-name="groupName"/>
+	            </entity-condition>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/organizationGLForJournalVocher.groovy"/>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
 				<entity-and entity-name="AcctgTransEntry" list="acctgTransEntries">
