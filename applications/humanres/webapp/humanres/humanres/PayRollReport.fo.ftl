@@ -436,19 +436,24 @@ under the License.
                    <fo:table-row border-style="solid">
                    		<fo:table-cell border-style="solid">
                    			
-                   			<fo:block font-weight="bold" white-space-collapse="false" keep-together="always">&#160;Total Earnings :                                       <#if totalEarnings?has_content>
+                   			<fo:block font-weight="bold" white-space-collapse="false" keep-together="always" text-align="right">&#160;Total Earnings :                                <#if totalEarnings?has_content>
                    			<#assign total = totalEarnings?if_exists />
-                   			<@ofbizCurrency amount=total?string("#0") /></#if>&#160;&#160;</fo:block>
+                   			<#-- <@ofbizCurrency amount=total?string("#0") /></#if>&#160;&#160;</fo:block> -->
+                   			${total?if_exists?string('#0.00')}</#if>&#160;</fo:block>
                    		</fo:table-cell>
                    		<fo:table-cell>
-                   			<fo:block font-weight="bold" white-space-collapse="false" keep-together="always">&#160;Total Deductions :                                                         <#if totalDeductions?has_content><#assign totalamount = ((-1)*totalDeductions)?if_exists /><@ofbizCurrency amount=totalamount?string("#0")/></#if>&#160;&#160;</fo:block>
+                   			<#if totalDeductions?has_content>
+                   		  				<#assign totalamount = ((-1)*totalDeductions)?if_exists />
+                   								<fo:block font-weight="bold" white-space-collapse="false" text-align="right" keep-together="always">&#160;Total Deductions :                                                ${totalamount?if_exists?string('#0.00')}&#160;</fo:block>
+                   								</#if>
+                   			<#-- <fo:block font-weight="bold" white-space-collapse="false" keep-together="always">&#160;Total Deductions :                                                         <#if totalDeductions?has_content><#assign totalamount = ((-1)*totalDeductions)?if_exists /><@ofbizCurrency amount=totalamount?string("#0")/></#if>&#160;&#160;</fo:block> -->
                    		</fo:table-cell>
                    </fo:table-row>
                    <#assign netAmt= total-totalamount>
                 	<fo:table-row>
                    		<fo:table-cell>                   			
                    			<fo:block font-weight="bold">&#160;Net Pay   :
-                            	<@ofbizCurrency amount=netAmt?string("#0")/>
+                            	Rs. ${netAmt?if_exists?string('#0.00')}
                           	</fo:block>                       
                    			<fo:block white-space-collapse="false" keep-together="always">&#160;(In Words: RUPEES ${(Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(netAmt?string("#0")), "%rupees-and-paise", locale).replace("rupees","")).toUpperCase()}ONLY)</fo:block>
                    			 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>  

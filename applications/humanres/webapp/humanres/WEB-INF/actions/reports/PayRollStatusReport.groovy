@@ -27,7 +27,7 @@ import org.ofbiz.base.util.UtilNumber;
 import in.vasista.vbiz.humanres.PayrollService;
 import org.ofbiz.party.party.PartyHelper;
 import in.vasista.vbiz.humanres.HumanresService;
-
+import java.sql.Date;
 JSONArray headItemsJson = new JSONArray();
 JSONObject newObj = new JSONObject();
 statusId = "";
@@ -43,3 +43,5 @@ if (UtilValidate.isNotEmpty(parameters.periodBillingId)) {
 context.put("statusId", statusId);
 request.setAttribute("headItemsJson", headItemsJson);
 request.setAttribute("statusId", statusId);
+java.sql.Date approvecheckDate = java.sql.Date.valueOf( "2017-03-31" );
+context.approvecheckDate = approvecheckDate;
