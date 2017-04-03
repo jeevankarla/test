@@ -138,7 +138,7 @@ if(UtilValidate.isNotEmpty(invoiceItems)){
 			tempMap2.put("taxAmount", invoiceAdjstmt.itemValue);
 			tempList.add(tempMap2);
 		}
-		purchaseInvoiceAdjustmtsMap.put(invoiceItem.productId, tempList);
+		purchaseInvoiceAdjustmtsMap.put(invoiceItem.invoiceItemSeqId, tempList);
 		purchaseInvoiceItemList.add(tempMap);
 	}
 }
