@@ -79,7 +79,51 @@ under the License.
 		
 	}
 	
-  	  	
+  	 function getBOsForRO() {
+		var ro = $('#organizationPartyId :selected').val();
+		var dataJson = {"roId": ro};
+		jQuery.ajax({
+                url: 'getBOsForRO',
+                type: 'POST',
+                data: dataJson,
+                dataType: 'json',
+               success: function(result){
+					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+					    alert("Error in order Items");
+					}else{
+						var tempId = $("#costCenterId").val();
+						var orderList = result["orderList"];
+						var getROList = result["getROList"];
+						var tableElement = "";
+						//tableElement +="<option value=''></option>";
+						
+						 $.each(getROList, function(key, item){
+						 			if(item['partyIdTo'] == tempId){
+						 				tableElement +="<option selected value='"+item['partyIdTo']+"'>"+item['groupName']+"</option>";
+						 			}
+						 			else{
+						 				tableElement +="<option value='"+item['partyIdTo']+"'>"+item['groupName']+"</option>";
+						 			}
+		       	  				    
+		       	  				 });
+						 $.each(orderList, function(key, item){
+						 			if(item['partyIdTo'] == tempId){	
+						 				tableElement +="<option selected value='"+item['partyIdTo']+"'>"+item['groupName']+"</option>";
+						 			}
+						 			else{
+						 				tableElement +="<option value='"+item['partyIdTo']+"'>"+item['groupName']+"</option>";
+						 			}
+		       	  				 });
+		       	  				 if(tableElement.length > 0)
+		       	  			     $('#costCenterId').empty().append(tableElement);
+		       	  			     else
+		       	  			     $('#costCenterId').empty();	
+						
+               		}
+               	}							
+		});
+	}
+	 	
 	function removeAcctTransEntry(acctgTransId, organizationPartyId,acctgTransEntrySeqId) {
 	var acctgTransId=jQuery('input[name=acctgTransId]').val();
 	var transactionDate=jQuery('input[name=transactionDate]').val();
@@ -236,7 +280,8 @@ under the License.
     var glAccountName = ${StringUtil.wrapString(glAccountName)!'[]'};
 
 	$(document).ready(function(){
-	    $("#glAccountId").autocomplete({ source: glAccountType }).keydown(function(e){});	
+	    $("#glAccountId").autocomplete({ source: glAccountType }).keydown(function(e){});
+	    getBOsForRO();	
 	});
 
     var AccountName;
@@ -326,6 +371,17 @@ under the License.
 					      	<@htmlTemplate.lookupField  formName="ListAcctgTransEntriesNew" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
 			            </#if></td>
 			             <#--> <td><@htmlTemplate.lookupField value="${productId?if_exists}" formName="ListAcctgTransEntriesNew" name="productId" id="productId" fieldFormName="LookupProduct"/></td>-->
+			               
+			                <td>
+								<select name="organizationPartyId" id="organizationPartyId" onblur='javascript:getBOsForRO();'>									
+									<#list intOrgList as intOrg>
+						         	<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, intOrg.partyId?if_exists, false)>
+						            <option value='${intOrg.partyId}'>
+						        	    ${partyName?if_exists}
+						            </option>
+						         	</#list>							
+								</select>
+							</td>
 			               <td>
 								<select name="costCenterId" id="costCenterId">									
 									<#list partyClsGrpList as partyClsGrp>
