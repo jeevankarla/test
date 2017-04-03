@@ -24,6 +24,10 @@ JSONObject finAccountTypeJSON = new JSONObject();
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, finAccountTypelist.finAccountTypeId));
 //conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS,"Company"));
+
+if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
+	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+}
 conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS,"Company"));
 List finAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 
@@ -45,3 +49,4 @@ finAccountTypelist.each{ eachfinAcc ->
 }
 context.finAccountTypeJSON=finAccountTypeJSON;
 
+Debug.log("finAccountTypeJSON=============="+finAccountTypeJSON);
