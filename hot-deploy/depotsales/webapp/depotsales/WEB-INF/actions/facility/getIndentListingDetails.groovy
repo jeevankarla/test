@@ -32,14 +32,8 @@ Map boothsPaymentsDetail = [:];
 
 partyId = userLogin.get("partyId");
 
-//debug.log("partyId=============="+partyId);
-
 
 resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
-
-
-////debug.log("resultCtx=============="+resultCtx);
-
 
 Map formatMap = [:];
 List formatList = [];
@@ -89,14 +83,7 @@ branchList = formatList1;
 }
 
 
-//branchId = parameters.partyIdFrom;
-
 salesChannelEnumId = parameters.salesChannel;
-
-
-//Debug.log("salesChannelEnumId=========="+salesChannelEnumId);
-//Debug.log("branchList=========="+branchList);
-
 
 uniqueOrderId = parameters.uniqueOrderId;
 
