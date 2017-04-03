@@ -665,7 +665,7 @@
         		<parameter param-name="partyId" value="${partyId}"/>
             </hyperlink>
         </field> -->
-        <field use-when="statusId.equals(&quot;GENERATED&quot;)" name="approve" widget-style="buttontext cancel">
+       <field use-when="statusId.equals(&quot;GENERATED&quot;) &amp;&amp;thruDate.after(approvecheckDate)" name="approve" widget-style="buttontext cancel">
 			<hyperlink target="setPayrollPeriodBillingStatus" description="approve">
 	        	<parameter param-name="periodBillingId" from-field="periodBillingId"/>
 	        	<parameter param-name="statusId" value="APPROVED"/>
