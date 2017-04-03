@@ -412,7 +412,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	
 	if(itemOrderId){
 	orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId), null, null, null, false);
-	OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
+	OrderHeaderList = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false);
 	if(UtilValidate.isNotEmpty(OrderHeaderList))
 	tallyRefNo = OrderHeaderList.get("tallyRefNo");
 	
@@ -1396,9 +1396,9 @@ GenericValue OrderHeaderList=null;
 
 //Debug.log("orderId===============3232============="+orderId);
 
-if(orderId){
+if(itemOrderId){
 orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId), null, null, null, false);
-OrderHeaderList = delegator.findOne("OrderHeader",[orderId : orderId] , false);
+OrderHeaderList = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false);
 if(UtilValidate.isNotEmpty(OrderHeaderList))
 tallyRefNo = OrderHeaderList.get("tallyRefNo");
 
