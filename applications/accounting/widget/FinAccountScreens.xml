@@ -238,6 +238,7 @@ under the License.
 	                <select-field field-name="description"/>
 	                <order-by field-name="description"/>
                 </entity-condition>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 <script location="component://accounting/webapp/ar/WEB-INF/actions/finTypeFinaccounts.groovy"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
