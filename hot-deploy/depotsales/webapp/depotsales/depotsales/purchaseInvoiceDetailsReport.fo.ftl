@@ -106,7 +106,7 @@ under the License.
 	                <#assign totalValue=0>
 		            <#list purchaseInvoiceItemList as eachItem>	
 					<#assign subTotalValue=0>
-		            <#assign itemAdjustments=purchaseInvoiceAdjustmtsMap.get(eachItem.productId)>
+		            <#assign itemAdjustments=purchaseInvoiceAdjustmtsMap.get(eachItem.invoiceItemSeqId)>
 					<fo:table-row>
 	                    <fo:table-cell border-style="solid">
 			            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false">${eachItem.get("productId")?if_exists}</fo:block>
