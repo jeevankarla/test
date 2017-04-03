@@ -3332,7 +3332,7 @@ public class ByProductServices {
 				  		  TransactionUtil.rollback();
 				  		  return "error";
 		  			  }
-		  			  
+
 		  			  Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", "PMNT_SENT"));
 		  			  if (ServiceUtil.isError(pmntResults)) {
 		  				  Debug.logError("Problems in service setPaymentStatus", module);
@@ -7415,7 +7415,9 @@ public class ByProductServices {
 		  	 try {
 		  		 GenericValue paymentMethod = delegator.findOne("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
 		  		  String paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
-		  		  
+		  		  if(UtilValidate.isEmpty(finAccountId)|| "undefined".equals(finAccountId)){
+		  			  finAccountId=(String) paymentMethod.get("finAccountId");
+		  		  }
 		  		beganTransaction = TransactionUtil.begin(72000);
 			  	for (int i = 0; i < rowCount; i++){
 		  		  
@@ -7502,8 +7504,8 @@ public class ByProductServices {
 			  	        GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
 			  	        paymentAttribute.put("attrValue",inFavourOf);
 			  	        paymentAttribute.create();
-			  	        
-			  	      Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", "PMNT_SENT"));
+			  	      
+			  	      Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", "PMNT_SENT","depositReceiptFlag","Y","finAccountId",finAccountId));
 		  			  if (ServiceUtil.isError(pmntResults)) {
 		  				  Debug.logError("Problems in service setPaymentStatus", module);
 				  		  request.setAttribute("_ERROR_MESSAGE_", "Error in service setPaymentStatus");
