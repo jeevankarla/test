@@ -5262,6 +5262,7 @@ public class MaterialPurchaseServices {
         
 		String statusId = (String) context.get("statusId");
 		String orderId = (String) context.get("orderId");
+		String comments = (String) context.get("comments");
 		String changeReason = (String) context.get("changeReason");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
@@ -5288,6 +5289,7 @@ public class MaterialPurchaseServices {
 			Map statusCtx = FastMap.newInstance();
 			statusCtx.put("statusId", statusId);
 			statusCtx.put("orderId", orderId);
+			statusCtx.put("comments", comments);
 			statusCtx.put("userLogin", userLogin);
 			Map resultCtx = OrderServices.setOrderStatus(ctx, statusCtx);
 			if (ServiceUtil.isError(resultCtx)) {
@@ -5518,6 +5520,7 @@ public class MaterialPurchaseServices {
         
 		String statusId = (String) context.get("statusId");
 		String orderId = (String) context.get("orderId");
+		String comments = (String) context.get("comments");
 		String changeReason = (String) context.get("changeReason");
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map result = ServiceUtil.returnSuccess();
@@ -5544,6 +5547,7 @@ public class MaterialPurchaseServices {
 			Map statusCtx = FastMap.newInstance();
 			statusCtx.put("statusId", statusId);
 			statusCtx.put("orderId", orderId);
+			statusCtx.put("comments", comments);
 			statusCtx.put("userLogin", userLogin);
 			Map resultCtx = OrderServices.setOrderStatus(ctx, statusCtx);
 			if (ServiceUtil.isError(resultCtx)) {

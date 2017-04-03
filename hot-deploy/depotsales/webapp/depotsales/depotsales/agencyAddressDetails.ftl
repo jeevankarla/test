@@ -107,6 +107,27 @@ function showAgencyAddress(orderId){
     Alert(message, title);
 };
 
+function confirmOrderCancel(orderId) {
+        var msg = "You want to cancel this order "+orderId+" ?";
+    	var agree = confirm(msg);
+    	if (agree) {
+        	showCancelOrderQtip(orderId);
+    	}
+    	return false;
+	};	
+function showCancelOrderQtip(orderId){
+		var orderId = orderId;
+     	var message = "";
+            message += "<html><head></head><body><form id='CancelOrder' method='post' action='CancelOrder' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+      		message += "<tr class='h2'><td align='left' class='h5' width='60%'>Order Id:</td><td align='left'  width='90%'>"+orderId+"</td></tr>";
+  			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Comments:</td><td align='left' width='60%'>"	
+  			message += "<input type='hidden' id='ordId' name='orderId' value='"+orderId+"' >"
+  			message += "<input class='h4' type='text' id='comments' name='comments' required /><input class='h4' type='hidden' id='statusId' name='statusId' value='ORDER_CANCELLED' /></td></tr>";
+ 		    message += "<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' onclick='return submitForm();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='cancel' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>";
+		    message +=	"</table></form></body></html>";		    
+		var title = "Reason for cancel";
+    	Alert(message, title);
+};
 
 </script>
 

@@ -1018,12 +1018,9 @@
         <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
         <!-- <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field> -->
+        
         <field name="cancelOrder" widget-style="buttontext" use-when="(shipmentDone.equals(&quot;N&quot;) &amp;&amp; !statusId.equals(&quot;ORDER_CANCELLED&quot;))" >
-            <hyperlink target="CancelOrder" description="Cancel Order" confirmation-message="Are you sure to Cancel Order..?">
-                 <parameter param-name="orderId"/>
-                <parameter param-name="statusId" value="ORDER_CANCELLED" />
-                <parameter param-name="setItemStatus" value="Y" />
-                <parameter param-name="roleTypeId"/>
+            <hyperlink description="Cancel Order" target="javascript:confirmOrderCancel('${orderId}');" target-window="_blank" target-type="plain">
             </hyperlink>
         </field> 
         <!-- <field use-when="(flag == &quot;N&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" > -->
@@ -1138,12 +1135,9 @@
         <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_COMPLETED&quot;)" ><display description="Order Completed" /></field>
         <field name="Order Status" widget-style="buttontext" use-when="statusId.equals(&quot;ORDER_CANCELLED&quot;)" ><display description="Order Cancelled" /></field>
         <!-- <field name="SuspendedOrder" use-when="statusId.equals(&quot;ORDER_SUSPENDED&quot;)" ><display description="Order Suspended" /></field> -->
+        
         <field name="cancelOrder" widget-style="buttontext" use-when="(shipmentDone.equals(&quot;N&quot;) &amp;&amp; !statusId.equals(&quot;ORDER_CANCELLED&quot;))" >
-            <hyperlink target="CancelOrderDC" description="Cancel Order" confirmation-message="Are you sure to Cancel Order..?">
-                 <parameter param-name="orderId"/>
-                <parameter param-name="statusId" value="ORDER_CANCELLED" />
-                <parameter param-name="setItemStatus" value="Y" />
-                <parameter param-name="roleTypeId"/>
+            <hyperlink description="Cancel Order" target="javascript:confirmOrderCancel('${orderId}');" target-window="_blank" target-type="plain">
             </hyperlink>
         </field> 
         <!-- <field use-when="(flag == &quot;N&quot;)&amp;&amp;((&quot;${statusId}&quot;!=&quot;ORDER_CANCELLED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_COMPLETED&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;ORDER_CREATED&quot;))"  name="raiseGRN" title="Raise GRN" widget-style="buttontext" > -->
