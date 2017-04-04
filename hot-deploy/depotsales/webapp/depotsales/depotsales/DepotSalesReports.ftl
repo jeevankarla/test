@@ -59,7 +59,8 @@ $(document).ready(function(){
 	    makeDatePicker1("billWisePurchaseReportFrom","billWisePurchaseReportThru");
 	    makeDatePicker1("IndentRegisterFromDate","IndentRegisterThruDate");
 	    makeDatePicker1("IndentRegisterEntryFromDate","IndentRegisterEntryThruDate");
-	     makeDatePicker1("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
+	    makeDatePicker1("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
+	    makeDatePicker1("TaxReportFRO","TaxReportTHRU");
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 function makeDatePicker3(fromDateId ,thruDateId){
@@ -976,6 +977,35 @@ function makeDatePicker3(fromDateId ,thruDateId){
           </tr>
           
 		</#if>
+      
+      <#if ReportsType?has_content &&  ReportsType=="TAX_REPORTS">
+			 <tr class="alternate-row">
+      	   <form id="TaxReport" name="TaxReport" method="post" action="<@ofbizUrl>taxReport.pdf</@ofbizUrl>" target="_blank">        
+             <td width="10%">Tax Report</td>
+             <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="TaxReportFRO" readonly  name="partyfromDate"/></br>
+      		 To</br><input  type="text" size="15pt" id="TaxReportTHRU" readonly  name="partythruDate"/></td>
+                      <td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+				 	<option value=""></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>
+			   <td width="15%"><span class='h3'>Tax Type</br>
+				 <select name="taxType" id="taxType">
+					<option value="CST_PUR">CST</option>
+				    <option value="VAT_PUR">VAT</option>
+				  </select> 
+			  </span></td> 
+			  <#--<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="TaxReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>-->	
+             <td width="10%"></td>
+             <#--<td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>-->
+           </form>
+        </tr> 
+      </#if>
+      
+      
       
           <#--<tr class="alternate-row">
 			<form id="regularIceCreamSaleReport" name="regularIceCreamSaleReport" method="post" action="<@ofbizUrl>DepotSalesBookReport.pdf</@ofbizUrl>" target="_blank">	
