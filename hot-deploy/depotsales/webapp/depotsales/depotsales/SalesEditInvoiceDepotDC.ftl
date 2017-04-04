@@ -9,6 +9,7 @@ $(document).ready(function(){
 			dateFormat:'d MM, yy',
 			changeMonth: true,
 			numberOfMonths: 1,
+			minDate: new Date(${milliseconds?if_exists}),
 			onSelect: function( selectedDate ) {
 				$( "#effectiveDate" ).datepicker("option", selectedDate);
 			}
@@ -93,28 +94,28 @@ input[type=button]:hover {
 	          						<input type="hidden" name="isFormSubmitted"  value="YES" />
 							        <input type="hidden" id="invoiceId" name="invoiceId"  value="${invoiceId}" />
 	         						<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Invoice Date :</div></td>
-							        <#if invoDate?exists && invoDate?has_content>  
-								  	 	<#--<input type="hidden" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>-->  
+							        <#if effectiveDate?exists && effectiveDate?has_content>  
+								  	 	<input type="hidden" name="effectiveDate" id="effectiveDate" value="${effectiveDate}"/>  
 							          	<td valign='middle'>
-	            							<#--<div class='tabletext h3'>${invoDate}</div>-->
-	            							<input type="text" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>
-	          							</td>     
+							            	<div class='tabletext h4'><font color="green">${effectiveDate}         
+							            	</div>
+							          	</td>       
 							       	<#else> 
 							          	<td valign='middle'><font color="green">          
-							           		<input class='h4' type="text" name="effectiveDate" id="effectiveDate" value="${defaultEffectiveDate}"/>           		
+							           		<input class='h4' type="text" name="effectiveDate" id="effectiveDate" value="${invoDate}"/>           		
 							           	</td>
 							       	</#if>
 							       	
 							       	<td><br/></td>
 							       	<td align='left' valign='middle' nowrap="nowrap"><div class='h4'>Shipment Date:</div></td>
 									<#if shipmentDate?exists && shipmentDate?has_content>  
-					  	  				<input type="hidden" name="estimatedShipDate" id="estimatedShipDate" value="${shipmentDate?if_exists}"/>  
-						          		<td valign='middle'>
-						            		<div class='tabletext h4'><font color="green">
-						            			${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipmentDate, "dd MMMM, yyyy")?if_exists}
-						            		</div>
-						          		</td>
-				          			</#if>
+							  	  		<input type="hidden" name="shipmentDate" id="shipmentDate" value="${shipmentDate?if_exists}"/>  
+						          		<td valign='middle'><font color="green">
+	            							<div class='tabletext h4'>${shipmentDate?if_exists}</div> 
+	              						</td>
+	              						<#else> 
+	              						    <td></td>       
+	          						</#if>
 	        				   </tr>
 	        				   
 	        				   

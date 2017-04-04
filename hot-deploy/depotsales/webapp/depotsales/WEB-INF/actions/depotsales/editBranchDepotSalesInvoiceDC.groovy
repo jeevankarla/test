@@ -123,6 +123,20 @@ if(invoiceId){
 	context.customerGeoId = customerGeoId;
 	context.branchGeoId = branchGeoId;
 	
+	conditionList=[];
+	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	Shipmentlist = delegator.findList("Shipment", cond, null, null, null, false);
+	if(Shipmentlist){
+		shiplist=EntityUtil.getFirst(Shipmentlist);
+			supplierInvoiceDate=shiplist.supplierInvoiceDate;
+			milliseconds=(shiplist.supplierInvoiceDate).getTime();
+	}
+	SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+	shipmentDate = sdf.format(supplierInvoiceDate);
+	context.shipmentDate=shipmentDate;
+	context.milliseconds=milliseconds;
+	
 orderAttr = delegator.findList("InvoiceAttribute", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
 	
 	saleTaxType = null;
