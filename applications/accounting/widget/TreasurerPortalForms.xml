@@ -800,7 +800,7 @@ under the License.
         </actions>
         <!-- <auto-fields-service service-name="createFinAccountTrans"/> -->
        <!--  <field name="finAccountId"><hidden/></field>     -->
-        <field name="finAccountId" title="From Financial Account" >
+        <field name="finAccountId" title="From Bank Account" >
             <drop-down allow-empty="true">
             	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
             </drop-down>
@@ -822,14 +822,8 @@ under the License.
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field> 
         <field name="amount" required-field="true" use-when="&quot;${entryType}&quot;!=&quot;Payment&quot;"><text/></field>
         <field name="amount" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;"><text/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
-            <drop-down>
-                <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" value="FINACT_TRNS_STATUS"/>
-                </entity-options>
-            </drop-down>
-        </field>
-         <field name="segmentId"  title="Segment Id">
+         <field name="statusId"   ><hidden value="FINACT_TRNS_CREATED"/></field>    
+         <field name="segmentId"  title="Segment Id" required-field="true">
             <drop-down allow-empty="false">
             <option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
