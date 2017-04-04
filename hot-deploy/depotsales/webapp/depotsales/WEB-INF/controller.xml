@@ -3080,6 +3080,10 @@
      <request-map uri="depotReimburcentSummaryReport.pdf">
          <security auth="true" https="true"/>
          <response name="success" type="view" value="depotReimburcentSummaryReportPDF"/>
+    </request-map>
+    <request-map uri="taxReport.pdf">
+         <security auth="true" https="true"/>
+         <response name="success" type="view" value="taxReportPDF"/>
     </request-map> 
       <request-map uri="StateWiseSchemeWiseSalesConsolidated.pdf">
          <security auth="true" https="true"/>
@@ -3300,6 +3304,8 @@
 	 <view-map name="indentAnalyticsCsv" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#indentAnalyticsCSV" content-type="text/csv"/>
 	<!--  <view-map name="indentSupplyAnalyticsCsv" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#indentSupplyAnalyticsCsv" content-type="text/csv"/>  -->
 	<view-map name="depotReimburcentSummaryReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReimbursement.xml#depotReimburcentSummaryReportPDF" content-type="application/pdf"/>
+	<view-map name="taxReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#taxReportPDF" content-type="application/pdf"/>
+	
 	<view-map name="StateWiseSchemeWiseSalesConsolidatedPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReimbursement.xml#StateWiseSchemeWiseSalesConsolidatedPDF" content-type="application/pdf"/>
 	<view-map name="StateWiseSchemeWiseSalesConsolidatedCSV" type="screencsv" page="component://depotsales/widget/DepotSalesScreens.xml#StateWiseSchemeWiseSalesConsolidatedCSV" content-type="text/csv"/>
 	<view-map name="depotReimburcentReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReimbursement.xml#depotReimburcentReportPDF" content-type="application/pdf"/>

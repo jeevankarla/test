@@ -2341,8 +2341,11 @@
         		<parameter param-name="ReportsType" value="MASTER_REPORTS"/>
         	</link>
         </menu-item>
-        
-        
+        <menu-item name="TAX_REPORTS" title="Tax Reports">
+        	<link target="DepotSalesReports">
+        		<parameter param-name="ReportsType" value="TAX_REPORTS"/>
+        	</link>
+        </menu-item>      
       </menu>
 	
 	<menu name="FindCfcPortalTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
