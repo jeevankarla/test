@@ -158,12 +158,13 @@ under the License.
        					 		<fo:table-cell><fo:block>Total</fo:block></fo:table-cell>       					 		
        					 		<fo:table-cell><fo:block text-align="right"><#if totalEarnings?has_content>
                    					<#assign total = totalEarnings?if_exists />
-                   			<@ofbizCurrency amount=total?string("#0") /></#if></fo:block></fo:table-cell>  
+                   				Rs. ${total?if_exists?string("#0")}</#if></fo:block></fo:table-cell>  
        					 		<fo:table-cell><fo:block></fo:block></fo:table-cell>
        					 		<fo:table-cell><fo:block text-align="right"> <#if totalDeductions?has_content>
                    					<#assign totalAmt = totalDeductions?if_exists />
                    					<#assign totalAmt=(totalAmt*-1)>
-                   			<@ofbizCurrency amount=totalAmt?string("#0") /></#if></fo:block></fo:table-cell>       					 		
+                   					
+                   			Rs. ${totalAmt?if_exists?string("#0")}</#if></fo:block></fo:table-cell>       					 		
        					 	</fo:table-row>
        					 	<fo:table-row>
        					 		<fo:table-cell>
@@ -176,13 +177,13 @@ under the License.
            		<#assign netAmt= totalEarnings+totalDeductions>
            		<#if (parameters.netPayglCode?exists && parameters.netPayglCode == "Yes")>
            			<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">09101    NET SALARY  :  <#if totalEarnings?has_content><#assign net = netAmt?if_exists />
-                   			<@ofbizCurrency amount=net?string("#0") /></#if></fo:block>
+                   			Rs. ${net?if_exists?string("#0")}</#if></fo:block>
                  <#elseif (parameters.netPayglCode?exists && parameters.netPayglCode == "No")>
                  	<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">        NET SALARY  :  <#if totalEarnings?has_content><#assign net = netAmt?if_exists />
-                   			<@ofbizCurrency amount=net?string("#0") /></#if></fo:block>
+                   			Rs. ${net?if_exists?string("#0")}</#if></fo:block>
                  <#else>  
                  	<fo:block keep-together="always" white-space-collapse="false" font-weight="bold">        NET SALARY  :  <#if totalEarnings?has_content><#assign net = netAmt?if_exists />
-                   			<@ofbizCurrency amount=net?string("#0") /></#if></fo:block>			
+                   			Rs. ${net?if_exists?string("#0")}</#if></fo:block>			
                  </#if>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
          		<fo:block linefeed-treatment="preserve"> &#xA;</fo:block>
