@@ -10,6 +10,7 @@ import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import org.ofbiz.base.util.UtilMisc;
  
 List roleTypeAttr=delegator.findList("RoleTypeAttr",EntityCondition.makeCondition("attrName",EntityOperator.EQUALS,"ACCOUNTING_ROLE"),null,null,null,false);
 roleTypeAttrList=[];
@@ -77,7 +78,8 @@ if(isFormSubmitted && "Y"==isFormSubmitted){
 	}
 	
 	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	paymentGroupList = delegator.findList("PaymentGroup", condition , null, null, null, false);
+	List<String> orderBy = UtilMisc.toList("-paymentDate");
+	paymentGroupList = delegator.findList("PaymentGroup", condition , null, orderBy, null, false);
 	
 	
 	
