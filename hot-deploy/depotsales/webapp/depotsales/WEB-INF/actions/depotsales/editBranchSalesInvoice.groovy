@@ -47,6 +47,20 @@
 		branchPartyId = invoiceList.get("costCenterId");
 		context.branchPartyId = branchPartyId;
 		
+		conditionList=[];
+			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+			cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			Shipmentlist = delegator.findList("Shipment", cond, null, null, null, false);
+			if(Shipmentlist){
+				shiplist=EntityUtil.getFirst(Shipmentlist);
+				supplierInvoiceDate=shiplist.supplierInvoiceDate;
+				milliseconds=(shiplist.supplierInvoiceDate).getTime();
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+			shipmentDate = sdf.format(supplierInvoiceDate);
+			context.shipmentDate=shipmentDate;
+			context.milliseconds=milliseconds;
+		
 		//////Debug.log("invoDate================"+invoDate);
 		invoDate = "";
 		if(invoiceList.get("invoiceDate")){
