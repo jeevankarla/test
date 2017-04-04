@@ -810,14 +810,14 @@ under the License.
         <field name="finAccountTransTypeId" use-when="finAccountTransTypeId==null" action="javascript:setPaymentType();" event="onChange"> 
             <drop-down no-current-selected-key="WITHDRAWAL">
                 <entity-options description="${description}" entity-name="FinAccountTransType">  
-                	<entity-constraint name="finAccountTransTypeId" operator="not-equals" value="ADJUSTMENT"/>              	
+                	<entity-constraint name="finAccountTransTypeId" operator="not-in" value="ADJUSTMENT,DEPOSIT"/>              	
                     <entity-order-by field-name="-description"/>
                 </entity-options>
             </drop-down>
         </field>
        <!--  <field name="partyId"><lookup target-form-name="LookupPartyName"/></field> -->
         <field name="transactionDate"> <date-time/> </field>
-        <field name="entryDate"><date-time/></field>
+        <!--  <field name="entryDate"><date-time/></field>  -->
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="RECEIPT"/></field>
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field> 
         <field name="amount" required-field="true" use-when="&quot;${entryType}&quot;!=&quot;Payment&quot;"><text/></field>
