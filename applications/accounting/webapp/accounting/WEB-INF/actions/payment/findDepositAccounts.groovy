@@ -74,6 +74,10 @@ if ("Y".equals(parameters.noConditionFind)) {
 	if (parameters.fromPartyId) {
 		   exprListForParameters.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.fromPartyId));
 	   }
+	
+	if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
+		exprListForParameters.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, parameters.ownerPartyId));
+	}
 	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
 	List<String> orderBy = UtilMisc.toList("-fromDate");				
 	finAccountList = delegator.findList("FinAccount", paramCond, null, orderBy, null, false);
@@ -112,7 +116,7 @@ if ("Y".equals(parameters.noConditionFind)) {
 condList = [];
 condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, ["BANK_ACCOUNT","CASH","TAX_CREDIT"]));
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
-if(UtilValidate.isNotEmpty(parameters.ownerPartyId) && parameters.ownerPartyId!=null){
+if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
 	condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, parameters.ownerPartyId));
 }
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
