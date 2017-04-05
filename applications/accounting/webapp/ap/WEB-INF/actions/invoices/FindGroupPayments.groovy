@@ -77,6 +77,14 @@ if(isFormSubmitted && "Y"==isFormSubmitted){
 		}
 	}
 	
+	
+	if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
+		finAccountList = delegator.findList("FinAccount", EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, parameters.ownerPartyId), UtilMisc.toSet("finAccountId"), null, null, false);
+		finAccountIdList = EntityUtil.getFieldListFromEntityList(finAccountList,"finAccountId", true);
+		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.IN, finAccountIdList));
+	}
+	
+	
 	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	List<String> orderBy = UtilMisc.toList("-paymentDate");
 	paymentGroupList = delegator.findList("PaymentGroup", condition , null, orderBy, null, false);

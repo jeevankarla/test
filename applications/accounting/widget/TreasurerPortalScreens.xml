@@ -5691,6 +5691,7 @@
 	           <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
 	           <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
 	           <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/> -->
+	           <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/FindGroupPayments.groovy"/>
                 
                <set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
