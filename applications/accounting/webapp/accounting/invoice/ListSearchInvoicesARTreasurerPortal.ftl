@@ -400,7 +400,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
           <td>Receipt</td> 
-          <td>Voucher</td>
+           <td>Commercial Voucher</td> 
           <td>Cheque</td> 
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>
@@ -456,7 +456,9 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 <#else>
                 	<td align="center"></td>
               </#if>
-              <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>invoiceVoucher?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Voucher</a></td>
+               <td>
+					<a class="buttontext" target='_blank' href="<@ofbizUrl>DepotpurchaseInvoiceReport.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a>
+				</td>
               <#if invoice.parentTypeId?has_content>
               <td><#if invoice.parentTypeId == "PURCHASE_INVOICE"><a class="buttontext" target="_BLANK" href="<@ofbizUrl>printChecks.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Cheque</a></#if></td>
               <#else>
