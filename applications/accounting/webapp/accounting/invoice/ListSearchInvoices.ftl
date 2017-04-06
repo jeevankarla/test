@@ -414,6 +414,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.FormFieldTitle_invoiceTypeId}</td>
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
           <td>Due Date</td>
+          <td>Reference Number</td>
           <td>supplierInvoiceId</td>
           <td>${uiLabelMap.CommonStatus}</td>
           <td>${uiLabelMap.CommonDescription}</td>
@@ -443,6 +444,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               </td>
               <td>${(invoice.invoiceDate)?if_exists}</td>
               <td>${(invoice.dueDate)?if_exists}</td>
+               <td>${(invoice.referenceNumber)?if_exists}</td>
 			  <td>
 			  <#if invoice.shipmentId?has_content>
 				<#assign Shipment = delegator.findOne("Shipment", {"shipmentId" : invoice.shipmentId}, true) />
