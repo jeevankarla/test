@@ -65,7 +65,7 @@ under the License.
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid">
           							<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Net Payment Sal</fo:block>
+         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Net Payment</fo:block>
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid">
           							<fo:block font-size="4pt">&#160;</fo:block>

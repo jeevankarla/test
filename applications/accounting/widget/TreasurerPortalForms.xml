@@ -3151,6 +3151,7 @@ under the License.
         <field name="PDF" widget-style="buttontext" >
             <hyperlink target="printBankReport.pdf" description="Bank Report" target-window="_blank">
                	  <parameter param-name="paymentGroupId" />
+               	  <parameter param-name="paymentRefNum" />
             </hyperlink>
         </field>
         <field name="Print Voucher" widget-style="buttontext" >
