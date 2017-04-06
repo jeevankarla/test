@@ -3121,7 +3121,7 @@ under the License.
         <field name="paymentMethodTypeId" ><display-entity entity-name="PaymentMethodType" key-field-name="paymentMethodTypeId" description="${description}"/></field>
         <field name="paymentDate" ><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
         <field name="paymentRefNum" title="Cheque No."><display/></field>
-        <field name="issuingAuthority"><display/></field>
+       <!--  <field name="issuingAuthority"><display/></field> -->
         <field name="amount" ><display/></field>
         
         <field name="viewDetails" widget-style="buttontext" >

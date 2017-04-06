@@ -465,7 +465,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="facilityId" title="Route/Booth Id" tooltip="Booth Id is mandatory field for Recovery"><text></text></field>
+        <!-- <field position="1" name="facilityId" title="Route/Booth Id" tooltip="Booth Id is mandatory field for Recovery"><text></text></field> -->
         <field position="1" name="roleTypeId" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;invoiceTypeId&quot;).equals(&quot;PURCHASE_INVOICE&quot;)">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="RoleType">
