@@ -391,6 +391,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.AccountingInvoiceDate}</td>
           <td>Due Date</td>
           <td>${uiLabelMap.CommonStatus}</td>
+           <td>Reference Number</td>
           <td>${uiLabelMap.CommonDescription}</td>
           <td>Reason For Cancellation</td>
           <td>${uiLabelMap.AccountingVendorParty}</td>
@@ -422,6 +423,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                 <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : invoice.statusId}, true) />
                 ${statusItem.description?default(invoice.statusId)}
               </td>
+               <td>${(invoice.referenceNumber)?if_exists}</td>
               <td>${(invoice.description)?if_exists}</td>
 			  <td>${(invoice.cancelComments)?if_exists}</td>
               <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)?if_exists/>

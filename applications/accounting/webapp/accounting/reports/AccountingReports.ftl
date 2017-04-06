@@ -582,7 +582,7 @@ function setOrgPartyId() {
 								</form>
 				</tr>
 								
-				<tr class="alternate-row">
+				<#-- <tr class="alternate-row">
 				   	<form id="FORM27A" name="FORM 27A" method="post" action="<@ofbizUrl>FORM27A.pdf</@ofbizUrl>" target="_blank">
 									<td width="19%">FORM 27 A<input  type="hidden"  value="FORM27APDF"   name="reportTypeFlag"/></td>
 									<td width="15%"></td>
@@ -591,7 +591,7 @@ function setOrgPartyId() {
 	 			  					<td width="5%"></td>
 									<td width="15%"><input type="submit" value="FORM 27A.PDF" class="buttontext"></td>
 						</form>
-					</tr>	
+					</tr>	-->
 					<tr class="alternate-row">
 				<form id="EmployeeAdvancesAndSubSchedule" name="EmployeeAdvancesAndSubSchedule" method="post" action="<@ofbizUrl>EmployeeAdvancesAndSubScheduleReport.pdf</@ofbizUrl>" target="_blank">	
 					<td width="30%"> Employee Advances And Sub Schedule</td>
