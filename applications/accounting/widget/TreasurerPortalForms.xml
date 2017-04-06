@@ -2624,7 +2624,7 @@ under the License.
             </drop-down>
         </field> -->
         <field name="paymentMethodTypeId">
-            <drop-down allow-empty="false" no-current-selected-key="CASH_PAYOUT">
+            <drop-down allow-empty="true">
                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>        
@@ -2747,7 +2747,7 @@ under the License.
             </drop-down>
         </field> -->
         <field name="paymentMethodTypeId">
-            <drop-down allow-empty="false" no-current-selected-key="CASH_PAYIN">
+            <drop-down allow-empty="true" >
                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>        
