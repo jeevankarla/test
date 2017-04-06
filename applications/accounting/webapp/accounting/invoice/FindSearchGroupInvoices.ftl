@@ -85,28 +85,6 @@
 	    </td>
     </tr>
     <tr>
-	    <td class="label"><span id="FindApGroupInvoices_roleTypeId_title">Role Type Id</span></td>
-	    <td>
-			<span class="ui-widget">
-				<select name="roleTypeId" id="FindApGroupInvoices_roleTypeId" size="1">
-					<option value="">&nbsp;</option>
-					<#list roleTypeAttrList as eachRoleType>
-						<option value="${eachRoleType.roleTypeId}">${eachRoleType.description}</option>
-					</#list>
-				</select>
-			</span>
-    	</td>
-    </tr>
-    <tr>
-	    <td class="label"><span id="FindApGroupInvoices_dueDate_title">Due Date</span></td>
-	    <td>
-			<span class="view-calendar">
-			<input id="dueDate_fld0_value" type="text" name="dueDate_fld0_value" size="25" maxlength="30">
-			<select name="dueDate_fld0_op" class="selectBox"><option value="equals" selected="selected">Equals</option><option value="sameDay">Same Day</option><option value="greaterThanFromDayStart">Greater Than From Day Start</option><option value="greaterThan">Greater Than</option></select><input id="dueDate_fld1_value" type="text" name="dueDate_fld1_value" size="25" maxlength="30">  
-			<select name="dueDate_fld1_op" class="selectBox"><option value="opLessThan">Less Than</option><option value="upToDay">Up To Day</option><option value="upThruDay">Up Thru Day</option><option value="empty">Is Empty</option></select></span>
-	    </td>
-    </tr>
-    <tr>
 	    <td class="label">&nbsp;</td>
 	    <td colspan="4">
 	    	<input type="hidden" name="partyId" value="${partyId}">
