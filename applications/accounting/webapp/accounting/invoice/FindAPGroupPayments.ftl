@@ -30,27 +30,7 @@ $(document).ready(function(){
              <input class='h2' type="text" size="17" name="paymentDate" id="paymentDate" readonly/>          
           </td>
         </tr>
-        <tr>
-          <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Issuing Authority:</div></td>
-          <td>&nbsp;</td>
-          <td valign='middle'>          
-             <select name="finAccountId" id="finAccountId">
-	             <option value=""></option>   			     			
-	                <#list finAccountList as finAccount>    
-	      					<option  value="${finAccount.finAccountId}" >${finAccount.finAccountName}</option>
-	      			</#list>            
-			</select>            
-          </td>
-        </tr>
-        <tr>
-          <td>&nbsp;</td>
-          <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>To Party:</div></td>
-          <td>&nbsp;</td>
-         <td><@htmlTemplate.lookupField size="10" maxlength="22" formName="findAPGroupPayments" size="12"  name="partyIdTo" id="partyIdTo" fieldFormName="LookupPartyName"/></td>
-        </tr>      
-        
-        <tr>
+       
           <td>&nbsp;</td>
           <td align='left' valign='middle' nowrap="nowrap"><div class='h3'>Role Type:</div></td>
           <td>&nbsp;</td>
