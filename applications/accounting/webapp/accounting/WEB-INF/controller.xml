@@ -2826,6 +2826,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindTreasurerPayments"/>
     </request-map>
+    <request-map uri="FindTreasurerReceipts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindTreasurerReceipts"/>
+    </request-map>
     <request-map uri="findTreasurerPayments">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindTreasurerPayments"/>
@@ -4837,6 +4841,7 @@ under the License.
    
    <!-- Treasurer payment search views -->
    <view-map name="FindTreasurerPayments" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindTreasurerPayments"/>
+   <view-map name="FindTreasurerReceipts" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindTreasurerReceipts"/>
    <view-map name="PartyFinHistory" type="screen" page="component://accounting/widget/ap/InvoiceScreens.xml#PartyFinHistory"/>
    
    <!--================= Advances ==================== -->
