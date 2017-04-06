@@ -225,7 +225,9 @@ public class InvoiceWorker {
      public static BigDecimal getInvoiceTotal(GenericValue invoice) {
         return getInvoiceTotal(invoice, Boolean.TRUE);
     }
-
+     public static BigDecimal getInvoiceTotalValue(GenericValue invoice) {
+         return getInvoiceTotalValue(invoice, Boolean.TRUE);
+     }
      /**
       *
       * Return the total amount of the invoice (including tax) using the the invoice GenericValue as input.
@@ -261,7 +263,33 @@ public class InvoiceWorker {
         }
         return invoiceTotal;
     }
+     
+     public static BigDecimal getInvoiceTotalValue(GenericValue invoice, Boolean actualCurrency) {
+         BigDecimal invoiceTotal = ZERO;
+         BigDecimal invoiceTaxTotal = ZERO;
+         invoiceTaxTotal = InvoiceWorker.getInvoiceTaxTotal(invoice);
 
+         List<GenericValue> invoiceItems = null;
+         try {
+             invoiceItems = invoice.getRelated("InvoiceItem");
+             invoiceItems = EntityUtil.filterByAnd(
+                     invoiceItems, UtilMisc.toList(
+                             EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, getTaxableInvoiceItemTypeIds(invoice.getDelegator()))
+                     )); 
+         } catch (GenericEntityException e) {
+             Debug.logError(e, "Trouble getting InvoiceItem list", module);
+         }
+         if (invoiceItems != null) {
+             for (GenericValue invoiceItem : invoiceItems) {
+                 invoiceTotal = invoiceTotal.add(invoiceItem.getBigDecimal("itemValue"));
+             }
+         }
+         invoiceTotal = invoiceTotal.add(invoiceTaxTotal).setScale(decimals, rounding);
+         if (UtilValidate.isNotEmpty(invoiceTotal) && !actualCurrency) {
+             invoiceTotal = invoiceTotal.multiply(getInvoiceCurrencyConversionRate(invoice)).setScale(decimals,rounding);
+         }
+         return invoiceTotal;
+     }
     /**
      * Method to obtain the bill to party for an invoice. Note that invoice.partyId is the bill to party.
      * @param invoice GenericValue object of the Invoice
