@@ -88,7 +88,7 @@ bankAdvPayrollMap= context.get("BankAdvicePayRollMap");
 		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS ,parameters.finAccountId));
 	}
   EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-  companyBankAccountList= delegator.findList("FinAccount",condition,null,null,null,false);
+  companyBankAccountList= delegator.findList("EmpFinAccount",condition,null,null,null,false);
   Map bankWiseEmplDetailsMap=FastMap.newInstance();
 Map CanaraBankMap=FastMap.newInstance();  
 AllPartyList = [];
@@ -114,7 +114,7 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 			conList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
 		}
 		EntityCondition cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
-		finAccountRoleList=delegator.findList("FinAccountRole",cond, null,null, null, false);
+		finAccountRoleList=delegator.findList("EmpFinAccountRole",cond, null,null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
 			AllPartyList.addAll(partyIds);

@@ -233,7 +233,7 @@ under the License.
                     <field-map field-name="mainAction" value="EMPLOYEE_VIEW"/>
                 </service>
                 <set field="hasEmployeeViewPermission" from-field="permResult.hasPermission"/> 
-                <entity-and list="EditAccountDetails" entity-name="FinAccount">
+                <entity-and list="EditAccountDetails" entity-name="EmpFinAccount">
 					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
 				</entity-and>   
 				<set field="finAccountId" from-field="EditAccountDetails[0].finAccountId"/>
@@ -241,7 +241,7 @@ under the License.
 				<set field="finAccountName" from-field="EditAccountDetails[0].finAccountName"/>
 				<set field="finAccountBranch" from-field="EditAccountDetails[0].finAccountBranch"/>
 				<set field="ifscCode" from-field="EditAccountDetails[0].ifscCode"/>
- 				<entity-and list="finAccountList" entity-name="FinAccountRole" >
+ 				<entity-and list="finAccountList" entity-name="EmpFinAccountRole" >
 					<field-map field-name="partyId" from-field="parameters.partyId" />
 					<field-map field-name="roleTypeId"  value="EMPLOYEE"  />
 					<field-map field-name="thruDate" value=" "/>
@@ -1115,9 +1115,9 @@ under the License.
 					<field-map field-name="ownerPartyId" from-field="parameters.partyId" />
 				</entity-and> -->
 				<set field="layoutSettings.javaScripts[]" value="/partymgr/js/emplLeaveDate.js" global="true"/>
-				<entity-condition list="EditAccountDetailsList" entity-name="FinAccount">
+				<entity-condition list="EditAccountDetailsList" entity-name="EmpFinAccount">
 					<condition-list combine="and">
-						<condition-expr field-name="finAccountTypeId"  operator="equals" value="BANK_ACCOUNT"/>
+						<condition-expr field-name="finAccountTypeId"  operator="equals" value="SALARY_ACCOUNT"/>
 						<condition-expr field-name="ownerPartyId"  operator="equals" from-field="parameters.partyId" />
 					</condition-list>
 				</entity-condition>

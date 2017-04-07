@@ -55,12 +55,12 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 			EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
 			EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccId));
 			  EntityCondition cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
-		finAccountRoleList=delegator.findList("FinAccountRole",cond, null,null, null, false);
+		finAccountRoleList=delegator.findList("EmpFinAccountRole",cond, null,null, null, false);
 		
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			finAccdetails=EntityUtil.getFirst(finAccountRoleList);
 			finAccountId=finAccdetails.get("finAccountId");
-			finAccountDetail = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+			finAccountDetail = delegator.findOne("EmpFinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
 			finAcccountCode= finAccountDetail.get("finAccountCode");
 		}
 		List conditionList=[];
@@ -68,7 +68,7 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 			conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, empEntry.getKey()));
 		}
 		condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-		bankDetails= delegator.findList("FinAccount", condition, UtilMisc.toSet("finAccountName"), null, null, false );
+		bankDetails= delegator.findList("EmpFinAccount", condition, UtilMisc.toSet("finAccountName"), null, null, false );
 		if(UtilValidate.isNotEmpty(bankDetails)){
 			details=EntityUtil.getFirst(bankDetails);
 			bankName=details.get("finAccountName");

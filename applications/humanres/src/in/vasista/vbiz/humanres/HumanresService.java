@@ -1289,15 +1289,15 @@ public class HumanresService {
 	    	  List conditionList = FastList.newInstance();
 	    	  conditionList.add(EntityCondition.makeCondition("finAccountId",EntityOperator.EQUALS,partyId));
 	    	  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	    	  List<GenericValue> finAccountList = delegator.findList("FinAccount", condition, null, null, null, false);
+	    	  List<GenericValue> finAccountList = delegator.findList("EmpFinAccount", condition, null, null, null, false);
 	    		  if(UtilValidate.isEmpty(finAccountList)){
-						GenericValue newEntity = delegator.makeValue("FinAccount");
+						GenericValue newEntity = delegator.makeValue("EmpFinAccount");
 						newEntity.set("finAccountId", partyId);
 						newEntity.set("finAccountCode", finAccountCode);
 						newEntity.set("finAccountName", finAccountName);
 						newEntity.set("organizationPartyId", "Company");
 						newEntity.set("ownerPartyId", partyId);
-						newEntity.set("finAccountTypeId", "BANK_ACCOUNT");
+						newEntity.set("finAccountTypeId", "SALARY_ACCOUNT");
 						newEntity.set("statusId", "FNACT_ACTIVE");
 						if(UtilValidate.isNotEmpty(finAccountBranch)){
 							newEntity.set("finAccountBranch", finAccountBranch);
@@ -1327,7 +1327,7 @@ public class HumanresService {
 						finAccount.store();
 					}
 	    		  if(UtilValidate.isNotEmpty(finAccountId) && UtilValidate.isNotEmpty(date)){
-	    			  Map resultMap=updateDisbursmentBank(dctx,UtilMisc.toMap("userLogin",userLogin,"disbursmentBank",finAccountId,"partyId",partyId,"date",date));
+	    			  Map resultMap=empUpdateDisbursmentBank(dctx,UtilMisc.toMap("userLogin",userLogin,"disbursmentBank",finAccountId,"partyId",partyId,"date",date));
 	    		  }
 	      }catch(GenericEntityException e){
 				Debug.logError("Error while creating new FinAccount"+e.getMessage(), module);
@@ -1335,6 +1335,62 @@ public class HumanresService {
 	      result = ServiceUtil.returnSuccess("New FinAccount Created Sucessfully...!");
 	      return result;
 	    }
+	 
+	 public static Map<String, Object> empUpdateDisbursmentBank(DispatchContext dctx, Map<String, ? extends Object> context){
+		    Delegator delegator = dctx.getDelegator();
+	      LocalDispatcher dispatcher = dctx.getDispatcher();
+	      GenericValue userLogin = (GenericValue) context.get("userLogin");
+	      String partyId = (String) context.get("partyId");
+	      String finAccountId = (String)context.get("disbursmentBank");
+	      String date =  (String)context.get("date");
+	      Timestamp thruDate=null;
+	      Timestamp dateTime=null;
+	      Map result = ServiceUtil.returnSuccess();
+	      if(UtilValidate.isNotEmpty(date)){
+	    	  SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	    	  try{
+	    		  dateTime=new java.sql.Timestamp(sdf.parse(date+" 00:00:00").getTime());
+	    		  thruDate=UtilDateTime.addDaysToTimestamp(UtilDateTime.toTimestamp(dateTime), -1);
+	    	  }catch (ParseException e) {
+					Debug.logError(e, "Cannot parse date string: "+ date, module);
+				} catch (NullPointerException e) {
+					Debug.logError(e, "Cannot parse date string: "	+ date, module);
+				}
+	      }
+	      try{
+	    	  
+	    	  List conditionList = FastList.newInstance();
+	    	  conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,partyId));
+	    	  conditionList.add(EntityCondition.makeCondition("thruDate",EntityOperator.EQUALS,null));
+	    	  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+	    	  List<GenericValue> finAccountRoleList = delegator.findList("EmpFinAccountRole", condition, null, null, null, false);
+	    	  if(UtilValidate.isNotEmpty(finAccountRoleList)){
+	    		  GenericValue finAccountRole = EntityUtil.getFirst(finAccountRoleList); 
+	    		  if(!finAccountId.equals(finAccountRole.getString("finAccountId"))){
+	    		  	finAccountRole.set("thruDate",thruDate);
+	    		  	finAccountRole.store();
+	    		  GenericValue newEntity = delegator.makeValue("EmpFinAccountRole");
+	    		  	newEntity.set("roleTypeId","EMPLOYEE");
+	    		  	newEntity.set("finAccountId",finAccountId);
+	    		  	newEntity.set("partyId",partyId);
+	    		  	newEntity.set("fromDate",dateTime);
+	    		  	newEntity.create();
+	    		  }	
+	    	  }else{
+	    		  GenericValue newEntity = delegator.makeValue("EmpFinAccountRole");
+		  		  	newEntity.set("roleTypeId","EMPLOYEE");
+		  		  	newEntity.set("finAccountId",finAccountId);
+		  		  	newEntity.set("partyId",partyId);
+		  		  	newEntity.set("fromDate",dateTime);
+		  		  	newEntity.create();
+	    	  }
+	      }catch(GenericEntityException e){
+				Debug.logError("Error while creating new FinAccount"+e.getMessage(), module);
+			}
+	      result = ServiceUtil.returnSuccess("Success");
+	      return result;
+	    }
+	 
 	    public static Map<String, Object> updateDisbursmentBank(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();
 	      LocalDispatcher dispatcher = dctx.getDispatcher();

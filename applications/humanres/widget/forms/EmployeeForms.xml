@@ -1423,7 +1423,7 @@
 		<field name="ifscCode" title="Ifsc Code"><text size="10"></text></field>
 		<field name="disbursmentBank" title="Disbursment Bank" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
 		<drop-down allow-empty="false" no-current-selected-key="${disbursment}" >
-			<entity-options description="${finAccountName}" key-field-name="finAccountId" entity-name="FinAccount">
+			<entity-options description="${finAccountName}" key-field-name="finAccountId" entity-name="EmpFinAccount">
 				 <entity-constraint name="ownerPartyId" operator="equals" value="Company"/>
 				<entity-order-by field-name="finAccountName"/> 
 				

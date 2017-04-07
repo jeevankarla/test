@@ -350,9 +350,9 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			List finAccConList=FastList.newInstance();
 			finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyId));
 			finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
-			finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
+			finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"SALARY_ACCOUNT"));
 			EntityCondition finAccCond = EntityCondition.makeCondition(finAccConList, EntityOperator.AND);
-			accountDetails = delegator.findList("FinAccount", finAccCond, null, null, null, false);
+			accountDetails = delegator.findList("EmpFinAccount", finAccCond, null, null, null, false);
 			if(UtilValidate.isNotEmpty(accountDetails)){
 				accDetails = EntityUtil.getFirst(accountDetails);
 				accNo=0;
