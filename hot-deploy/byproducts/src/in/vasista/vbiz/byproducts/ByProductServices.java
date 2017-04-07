@@ -7478,6 +7478,7 @@ public class ByProductServices {
 			  	        paymentCtx.put("comments", comments);
 			  	        paymentCtx.put("invoices", UtilMisc.toList(invoiceId));
 			  	        paymentCtx.put("invoiceAmountMap", invoiceAmountMap);
+			  	        paymentCtx.put("isEnableAcctg", "Y");
 			  			try{
 			  				Map<String, Object> paymentResult = dispatcher.runSync("createPaymentAndApplicationForInvoices", paymentCtx);
 			  	  	        if (ServiceUtil.isError(paymentResult)) {
@@ -7504,7 +7505,7 @@ public class ByProductServices {
 			  	        GenericValue paymentAttribute = delegator.makeValue("PaymentAttribute", UtilMisc.toMap("paymentId", paymentId, "attrName", "INFAVOUR_OF"));
 			  	        paymentAttribute.put("attrValue",inFavourOf);
 			  	        paymentAttribute.create();
-			  	      
+
 			  	      Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", paymentId, "statusId", "PMNT_SENT","depositReceiptFlag","Y","finAccountId",finAccountId));
 		  			  if (ServiceUtil.isError(pmntResults)) {
 		  				  Debug.logError("Problems in service setPaymentStatus", module);
@@ -7515,20 +7516,20 @@ public class ByProductServices {
 		  			}
 			  	}
 			  	
-			  	 if (!paymentMethodTypeId.contains("CASH")) { //have to call other than cash paymentMethodType
+			  	 /*if (!paymentMethodTypeId.contains("CASH")) { //have to call other than cash paymentMethodType
 				  	  Map finDepositCtx = FastMap.newInstance();
 				  	  finDepositCtx.put("userLogin", userLogin);
 				  	  finDepositCtx.put("paymentIds", paymentIds);
 				  	  finDepositCtx.put("finAccountId", finAccountId);
 				  	  finDepositCtx.put("transactionDate", paymentDate);
-				  	 /*  Map resultDepositMap = dispatcher.runSync("depositWithdrawPayments", finDepositCtx);
+				  	   Map resultDepositMap = dispatcher.runSync("depositWithdrawPayments", finDepositCtx);
 				  	 if(ServiceUtil.isError(resultDepositMap)){
 				  		  Debug.logError("Problems in service depositWithdrawPayments", module);
 				  		  request.setAttribute("_ERROR_MESSAGE_", "Error in service depositWithdrawPayments");
 				  		  TransactionUtil.rollback();
 				  		  return "error";
-				  	  }*/
-			  	  }
+				  	  }
+			  	  }*/
 			  	 
 			  	 if(UtilValidate.isNotEmpty(paymentIds)){
 			  		  Map serviceCtx = FastMap.newInstance();
