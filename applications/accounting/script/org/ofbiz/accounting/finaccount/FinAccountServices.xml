@@ -768,6 +768,9 @@ under the License.
 				 <set field="postFinAccountTransToGlMap.paymentId" from-field="payment.paymentId"/>					
                 <set field="postFinAccountTransToGlMap.finAccountTransId" from-field="finAccountTransId"/>
                 <set field="postFinAccountTransToGlMap.glAccountId" from-field="paymentMethodTypeGlAccount.glAccountId"/>
+               <if-not-empty field="payment.overrideGlAccountId">
+                	<set field="postFinAccountTransToGlMap.glAccountId" from-field="payment.overrideGlAccountId"/>                	
+                </if-not-empty>                
                <!-- Deposite AccountTrans disabled  -->
                 <!-- <call-service service-name="postFinAccountTransToGl" in-map-name="postFinAccountTransToGlMap"/> --> 
                 <clear-field field="postFinAccountTransToGlMap"/>
@@ -789,6 +792,9 @@ under the License.
 						<select-field field-name="glAccountId"/>				
 					</entity-one>
 					<set field="createFinAccountTransMap.glAccountId" from-field="paymentMethodTypeGlAccount.glAccountId" />
+					<if-not-empty field="payment.overrideGlAccountId">
+						<set field="createFinAccountTransMap.glAccountId" from-field="payment.overrideGlAccountId" />
+					</if-not-empty>					
                 <else>
                     <if-compare field="isDisbursement" operator="equals" value="true" type="Boolean">
                         <set field="createFinAccountTransMap.finAccountTransTypeId" value="WITHDRAWAL"/>
@@ -797,6 +803,9 @@ under the License.
                 			<select-field field-name="glAccountId"/>
                 		</entity-one>
                 		<set field="createFinAccountTransMap.glAccountId" from-field="paymentMethod.glAccountId"/>
+                		<if-not-empty field="payment.overrideGlAccountId">
+							<set field="createFinAccountTransMap.glAccountId" from-field="payment.overrideGlAccountId" />							
+						</if-not-empty>
                 		<if>
                 			<condition>
                 				<or>

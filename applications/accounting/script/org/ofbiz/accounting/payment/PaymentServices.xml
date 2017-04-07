@@ -43,6 +43,7 @@ under the License.
         <check-errors/>
 		<log level="info" message="these are parameters in payment++++++>${parameters}"></log>
         <make-value entity-name="Payment" value-field="payment"/>
+        <set field="payment.overrideGlAccountId" from-field="parameters.overrideGlAccountId"/>         
         <if-empty field="parameters.paymentId">
             <sequenced-id sequence-name="Payment" field="payment.paymentId"/>
             <else>
@@ -1158,6 +1159,7 @@ under the License.
     	    	<field-map field-name=""/>
     	    	<select-field field-name="paymentMethodId"/>
     	    	<select-field field-name="paymentMethodTypeId"/>
+    	    	<select-field field-name="pmntMethodPrefix"/>
     	    </entity-and>    
     	<field-to-result field="paymentMethodList"/>      
    </simple-method>

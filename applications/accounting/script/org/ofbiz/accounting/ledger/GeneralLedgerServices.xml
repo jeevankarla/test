@@ -1965,6 +1965,9 @@ under the License.
 	         <set field="debitEntry.origCurrencyUomId" from-field="origCurrencyUomId"/>
 	          <set field="debitEntry.costCenterId" from-field="payment.partyIdTo"/>
 	         <set field="debitEntry.organizationPartyId" from-field="organizationPartyId"/>
+	         <if-not-empty field="payment.overrideGlAccountId">
+	         	 <set field="debitEntry.glAccountId" from-field="payment.overrideGlAccountId"/>
+	         </if-not-empty>
 	         <set field="acctgTransEntries[]" from-field="debitEntry" type="Object"/>
 	
 	         <entity-one entity-name="PaymentGlAccountTypeMap" value-field="paymentGlAccountTypeMap">
@@ -2388,6 +2391,9 @@ under the License.
             <set field="creditEntry.organizationPartyId" from-field="payment.partyIdFrom"/>
             <set field="creditEntry.partyId" from-field="payment.partyIdTo"/>
             <set field="creditEntry.costCenterId" from-field="payment.partyIdFrom"/>
+            <if-not-empty field="payment.overrideGlAccountId">
+            	<set field="creditEntry.glAccountId" from-field="payment.overrideGlAccountId"/>
+            </if-not-empty>
             <set field="creditEntry.roleTypeId" value="BILL_FROM_VENDOR"/>
             <set field="acctgTransEntries[]" from-field="creditEntry" type="Object"/>
             <!-- This is now delegated to the createAcctgTransAndEntriesForPaymentApplication calls at the bottom of this service
