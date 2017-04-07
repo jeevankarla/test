@@ -26,7 +26,7 @@ under the License.
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
-      <#if bankTypeList?has_content> 	    
+      <#if finalMap?has_content> 	    
         ${setRequestAttribute("OUTPUT_FILENAME", "SbiOrOthr.pdf")}
         <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">		
         <fo:static-content flow-name="xsl-region-before">
@@ -43,6 +43,7 @@ under the License.
             	 </fo:static-content>
             	 <fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">
             	<fo:block border-style="solid" space-before="2in" >
+            	<#assign totSal = 0>
 		 		<fo:table>
 		 			<fo:table-column column-width="10%"/>
 		 			<fo:table-column column-width="15%"/>
@@ -84,39 +85,46 @@ under the License.
          							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Bank Name</fo:block>
           						</fo:table-cell>
 							</fo:table-row>
-							<#list bankTypeList as eachDet>
-  							<#if eachDet?has_content>
+							<#assign finalMapList = finalMap.entrySet()>
+		            <#list finalMapList as eachh>
+		             <#assign party =eachh.getKey()>
+		             <#assign partyDet =eachh.getValue()>
+						<#list partyDet as eachhdet>
+						
 							 <fo:table-row >
              						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
              						 	<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachDet.empId?has_content>${eachDet.empId?if_exists} </#if></fo:block>
+             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if party?has_content>${party?if_exists} </#if></fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
              						 	<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="">&#160;<#if eachDet.empName?has_content>${eachDet.empName?if_exists} </#if></fo:block>
+             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="">&#160;<#if eachhdet.empName?has_content>${eachhdet.get("empName")?if_exists} </#if></fo:block>
+              						</fo:table-cell>
+              						<#assign totSal = totSal + eachhdet.netSal>
+              						<fo:table-cell border-style="solid">
+              							<fo:block font-size="4pt">&#160;</fo:block>
+             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachhdet.netSal?has_content>${eachhdet.get("netSal")?if_exists} </#if></fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachDet.netSal?has_content>${eachDet.get("netSal")?if_exists?string("#0.00")}</#if>&#160;</fo:block>
+             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachhdet.accntNo?has_content>${eachhdet.get("accntNo")?if_exists}</#if>&#160;</fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachDet.accntNo?has_content>${eachDet.get("accntNo")?if_exists}</#if>&#160;</fo:block>
+             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachhdet.ifscCode?has_content>${eachhdet.get("ifscCode")?if_exists}</#if>&#160;&#160;</fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachDet.ifscCode?has_content>${eachDet.get("ifscCode")?if_exists}</#if>&#160;&#160;</fo:block>
+             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="">&#160;<#if eachhdet.branchName?has_content>${eachhdet.get("branchName")?if_exists}</#if>&#160;</fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="">&#160;<#if eachDet.branchName?has_content>${eachDet.get("branchName")?if_exists}</#if>&#160;</fo:block>
-              						</fo:table-cell>
-              						<fo:table-cell border-style="solid">
-              							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachDet.bankName?has_content>${eachDet.get("bankName")?if_exists}</#if></fo:block>
+             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachhdet.bankName?has_content>${eachhdet.get("bankName")?if_exists}</#if></fo:block>
               						</fo:table-cell>
   								</fo:table-row>
-  								</#if>
+  								
+  								
+  								</#list>
   								</#list>
   								
   								<fo:table-row >
@@ -131,7 +139,7 @@ under the License.
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">${totnetSal?if_exists?string("#0.00")}</fo:block>
+             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">${totSal?if_exists?string("#0.00")}</fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>

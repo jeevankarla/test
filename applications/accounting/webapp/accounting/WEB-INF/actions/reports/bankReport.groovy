@@ -84,7 +84,8 @@
  context.put("paymentRefNum",paymentRefNum);
  
  partyPaymentGroupMap = [:];
- bankTypeList =[];
+ 
+ finalMap = [:];
  String bankTypeFlag ="SBI";
  String empTypeFlag = "";
  String bankFlag = "";
@@ -118,37 +119,46 @@
 				 employeeIdList.add(employeeId);
 			 }
 		 }
+		
 		 paymentConditionList = [];
 		 paymentConditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN , paymentIds));
 		 //paymentConditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, employeeIdList));
 		 paymentCond = EntityCondition.makeCondition(paymentConditionList, EntityOperator.AND);
 		 
-		 paymentDetList = delegator.findList("Payment",paymentCond ,null, null, null, false );
-	 
+		 paymentDetList = delegator.findList("Payment",paymentCond ,null, null, null, true);
+		 employeeIds = EntityUtil.getFieldListFromEntityList(paymentDetList, "partyIdTo", true);
+		
+		 for(int e = 0; e < employeeIds.size(); e++){
+			 eachEmp = employeeIds.get(e);
+			 bankTypeList =[];
 		 if(!UtilValidate.isEmpty(paymentDetList)){
-			 partyIdTos = EntityUtil.getFieldListFromEntityList(paymentDetList, "partyIdTo", true);
-			 //groupPaymentList = EntityUtil.filterByAnd(acctgTransAndEntries, [EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentGroupIds)]);
-			 
 			 List conditionList = [];
-			 
-			 if (!UtilValidate.isEmpty(partyIdTos)) {
-				 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, partyIdTos));
-			 }
-			 //conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "BANK_ACCOUNT"));
+			 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, eachEmp));
 			 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
 			 paramCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			 
 			 List<String> orderBy = UtilMisc.toList("-fromDate");
 			 finAccountDet = delegator.findList("FinAccount", paramCond, null, orderBy, null, false);
 			 totnetSal=0;
-			 for(int z = 0; z < paymentDetList.size(); z++){
+			
+			 
+			 paymentConditionList1 = [];
+			 paymentConditionList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN , paymentIds));
+			 paymentConditionList1.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, eachEmp));
+			 paymentCond1 = EntityCondition.makeCondition(paymentConditionList1, EntityOperator.AND);
+			 
+			 paymentDetList1 = delegator.findList("Payment",paymentCond1 ,null, null, null, false );
+			 amount = 0;
+			 for(int z = 0; z < paymentDetList1.size(); z++){
+				 
 				 tempMap = [:];
-				 paymentDet = paymentDetList.get(z);
+				 
+				 paymentDet = paymentDetList1.get(z);
 				 
 				 partyIdTo = paymentDet.partyIdTo;
 				 txnDate = paymentDet.transactionDate;
 				 paymentDate = paymentDet.paymentDate;
-				 amount = paymentDet.amount;
+				 amount = amount + paymentDet.amount;
 				 totnetSal+=amount;
 				 partyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdTo, false);
 				 
@@ -163,7 +173,6 @@
 				 tempMap.put("totnetSal",totnetSal);
 				 tempMap.put("empty","");
 				 EmplPositionDetails = delegator.findList("EmplPosition", EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdTo), null, null, null, false);
-				 
 				 if(!UtilValidate.isEmpty(EmplPositionDetails)){
 					 EmplPositionDetailsFirst = EntityUtil.getFirst(EmplPositionDetails);
 					 emplPositionTypeId = EmplPositionDetailsFirst.get("emplPositionTypeId");
@@ -235,11 +244,19 @@
 					 }
 				 }
 				 
-				 bankTypeList.add(tempMap);
 			 }
+			 bankTypeList.add(tempMap);
+			
+			
 		 }
+		 finalMap.put(eachEmp, bankTypeList);
+		
+		 
+		 }
+		 
 	 }
  }
+ context.finalMap = finalMap;
  context.put("paymentDate",paymentDate);
  context.totnetSal=totnetSal;
  context.bankTypeFlag = bankTypeFlag;
