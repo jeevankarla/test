@@ -1493,6 +1493,7 @@ under the License.
         </field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>       
         <field name="amount" position="1" required-field="true"><text/></field>
+        <field name="overrideGlAccountId" position="2" title="Override GL"><lookup target-form-name="LookupGlAccount"/></field>
         <field name="tallyRefNo" position="1" title="Tally Reference No"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
@@ -1735,6 +1736,7 @@ under the License.
         </field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>          
         <field name="amount" position="1" required-field="true"><text/></field>
+        <field name="overrideGlAccountId" position="2" title="Override GL"><lookup target-form-name="LookupGlAccount"/></field>
         <field name="tallyRefNo" position="1" title="Tally Reference No"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
         <field name="chequeInFavour" position="2"><text size="50"/></field>
