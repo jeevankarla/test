@@ -4503,7 +4503,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 	        	
 	        	 BigDecimal adjustmentValue = invoiceGrandTotal.subtract(invoiceItemsTotal);
 	        	 
-	        	 if(UtilValidate.isNotEmpty(adjustmentValue)){
+	        	 if(UtilValidate.isNotEmpty(adjustmentValue) && !(adjustmentValue.equals(BigDecimal.ZERO))){
 	 			try{
 	 				
 					Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
