@@ -105,7 +105,7 @@ partyList = [];
 condListba = [];
 condListba.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
 condListba.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "EMPANELLED_CUSTOMER"));
+condListba.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.IN, ["EMPANELLED_CUSTOMER","DYS_CMLS_CUSTOMER"]));
 condListb = EntityCondition.makeCondition(condListba, EntityOperator.AND);
 
 partyIdsList = delegator.find("PartyRelationship", condListb, null, UtilMisc.toSet("partyIdTo"), null, null);
