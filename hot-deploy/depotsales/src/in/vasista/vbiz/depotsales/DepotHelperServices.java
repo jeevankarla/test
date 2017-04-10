@@ -4397,5 +4397,158 @@ public static Map<String, Object> populateInvoiceItemsWithAdjustment(DispatchCon
 	}
 
 
+public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String itemType = (String) context.get("itemType");
+		String decimals = (String) context.get("decimals");
+		String roundType = (String) context.get("roundType");
+		String places = (String) context.get("places");
+		
+		String invoiceId = (String) context.get("invoiceId");
+		
+		String ro = (String) context.get("ro");
+		
+		Locale locale = (Locale) context.get("locale");
+		
+		List<GenericValue> shipmentList = null;
+		List<GenericValue> PartyRelationship = null;
+		List<GenericValue> Invoice = null;
+		List branchList =  FastList.newInstance();
+		
+		
+		
+		List conditionList = FastList.newInstance();
+		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro));
+		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+		
+		try{
+		PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
+
+	     branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+		}catch(GenericEntityException e){
+		Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+	}
+		
+		 try{
+			conditionList.clear();
+		    if(UtilValidate.isNotEmpty(branchList))	
+		    	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
+		   if(UtilValidate.isNotEmpty(invoiceId))	
+		    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+			 
+		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, false);
+			
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive Shipment ", module);
+		}
+		 
+		  
+		if(UtilValidate.isNotEmpty(Invoice)){
+			
+        for(GenericValue eachInvoice : Invoice){
+				
+        	String eacinvoiceId = eachInvoice.getString("invoiceId");
+        	
+        	
+        	List<GenericValue> InvoiceItem = null;
+        	
+        	conditionList.clear();
+        	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eacinvoiceId));
+        	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
+        	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
+        	 try{
+        	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+        	 
+        	 }catch(GenericEntityException e){
+ 				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+ 			}
+        	 
+        	 if(UtilValidate.isNotEmpty(InvoiceItem)){
+        	 
+        		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
+        		 
+        		 BigDecimal invoiceItemsTotal = BigDecimal.ZERO;
+        		 
+	        	for(GenericValue eachInvoiceItem : InvoiceItem){
+	        	
+	        		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
+	        		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
+	        		BigDecimal itemValue = eachInvoiceItem.getBigDecimal("itemValue");
+	        		
+	        		BigDecimal invoiceItemsValue = quantity.multiply(amount);
+	        		
+					if(UtilValidate.isEmpty(itemValue)){
+					 itemValue = quantity.multiply(amount);
+					 BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
+					 
+					 itemValue = roundedAmount;
+					 
+					 eachInvoiceItem.set("itemValue",roundedAmount);
+					try{
+					eachInvoiceItem.store();
+					}catch(GenericEntityException e){
+						Debug.logError(e, "Failed to Populate InvoiceItem ", module);
+					}
+                  }
+					invoiceGrandTotal = invoiceGrandTotal.add(itemValue);
+					invoiceItemsTotal = invoiceItemsTotal.add(invoiceItemsValue);
+	        		
+	        	}
+	        	
+	        	 BigDecimal adjustmentValue = invoiceGrandTotal.subtract(invoiceItemsTotal);
+	        	 
+	        	 if(UtilValidate.isNotEmpty(adjustmentValue) && !(adjustmentValue.equals(BigDecimal.ZERO))){
+	 			try{
+	 				
+					Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
+		
+		        	createInvoiceItemContext.put("invoiceId",eacinvoiceId);
+		            createInvoiceItemContext.put("invoiceItemTypeId", "ROUNDING_ADJUSTMENT");
+		            //createInvoiceItemContext.put("parentInvoiceId", eachInvoiceId);
+		           // createInvoiceItemContext.put("parentInvoiceItemSeqId", invoiceItemSeqId);
+		            createInvoiceItemContext.put("quantity", BigDecimal.ONE);
+			            createInvoiceItemContext.put("amount", adjustmentValue);
+			           // createInvoiceItemContext.put("sourcePercentage", sourcePercentage);
+			            createInvoiceItemContext.put("userLogin", userLogin);
+						try{
+			            	Map<String, Object> createInvoiceItemResult = dispatcher.runSync("createInvoiceItem", createInvoiceItemContext);
+			            	
+			            	/*if(ServiceUtil.isError(createInvoiceItemResult)){
+			            		Debug.logError(e.toString(), module);
+			        			return ServiceUtil.returnError(e.toString());
+			          		}*/
+			            } catch (Exception e) {
+			            	/*Debug.logError(e.toString(), module);
+			    			return ServiceUtil.returnError(e.toString());*/
+			    		}
+				}catch(Exception e){
+				Debug.logError(e, "Failed to retrive Shipment ", module);
+			}
+			
+	        	
+        	 }
+        	 
+        	
+        	 }
+        	 
+        	 
+			}
+			
+		}
+		 
+		
+	  result = ServiceUtil.returnSuccess("Rounding Requirements Has been successfully Updated");
+     
+     return result;
+	}
+
+
+
   	
 }

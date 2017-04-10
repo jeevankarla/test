@@ -898,5 +898,11 @@
              <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="populateInvoiceAdjustment" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="populateInvoiceAdjustment" transaction-timeout="6000000">
+        <description>Creating populate Invoice Adjustment</description>
+         <attribute name="ro" type="String" mode="IN" optional="false"/>
+         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+   </service>
+    
 </services>
 
