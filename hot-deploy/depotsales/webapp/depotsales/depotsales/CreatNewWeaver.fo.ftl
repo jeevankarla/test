@@ -346,7 +346,7 @@ function datepick()	{
 					      </tr>
 	           			 <tr>
 						    <td class="label"><b> Classification :</b></td>
-						     <input  type="hidden"  name="roleTypeId" id="roleTypeId" value="EMPANELLED_CUSTOMER" />
+						     <#--<input  type="hidden"  name="roleTypeId" id="roleTypeId" value="EMPANELLED_CUSTOMER" />-->
 						    
 						   <td>
 						    <select name="partyClassificationTypeId" id="partyClassificationTypeId" onchange="setFeilds()">
@@ -374,6 +374,16 @@ function datepick()	{
         		 			<input class="h3" type="text"  class="text" size="18" maxlength="100" name="groupName" id="groupName" />
 				       </td>
 				        </tr>
+				        <tr>	            
+						
+						    <td class="label"><b> Role Type Id</b></td>
+						   <td>
+						    <select name="roleTypeId" id="roleTypeId">
+				              <option value="EMPANELLED_CUSTOMER">EMPANELLED CUSTOMER</option>
+				              <option value="DYS_CMLS_CUSTOMER">DC CUSTOMER</option>
+				            </select>
+				            <td>
+						</tr>
 				         <tr>
 						    <td width="20%" id="genderlabel"><b>Gender :</b></td>
 	    					 <td><input type="radio" id="gender" name="gender" value="M">Male</input> <input type="radio" id="gender" name="gender" value="F" >Female</input></td>
