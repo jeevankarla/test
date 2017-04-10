@@ -4411,7 +4411,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		
 		String ro = (String) context.get("ro");
 		
-		String invoiceTypeId = (String) context.get("ro");
+		String invoiceTypeId = (String) context.get("invoiceTypeId");
 		
 		Locale locale = (Locale) context.get("locale");
 		
