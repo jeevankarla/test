@@ -4411,6 +4411,8 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		
 		String ro = (String) context.get("ro");
 		
+		String invoiceTypeId = (String) context.get("ro");
+		
 		Locale locale = (Locale) context.get("locale");
 		
 		List<GenericValue> shipmentList = null;
@@ -4435,10 +4437,10 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		 try{
 			conditionList.clear();
 		    if(UtilValidate.isNotEmpty(branchList))	
-		    	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
+		    	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
 		   if(UtilValidate.isNotEmpty(invoiceId))	
 		    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId));
 		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
 			 
