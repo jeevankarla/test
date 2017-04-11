@@ -233,13 +233,37 @@ under the License.
     	<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
     		<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;</fo:block>
               	<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
-       		 	
+       		 	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
+                    	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">BANK RECONCILIATION STATEMENT   AS ON ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MMM-yyyy HH:mm:ss")} </fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>
+                    	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">Name of the Financial Account : ${finAccount.finAccountName?if_exists}</fo:block>
+                    	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block>  
+                    	<fo:block text-align="center"  font-family="Courier,monospace"  white-space-collapse="false">&#160;   </fo:block>                            
        		 	<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
 				<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-				<fo:block font-size="10pt" text-align="center">---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-       		 <fo:block font-size="12pt" text-align="center">
-            	"No Orders Found".
-       		 </fo:block>
+       		 <fo:block text-align="center"  font-family="Courier,monospace"  white-space-collapse="false">&#160;                                                         Balance As Per Books : ${finAccount.actualBalance?if_exists?string("#0.00")}</fo:block>
+       		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">______________________________________________________________________________________________________________________________________________________________________</fo:block>
+              			<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Unreconciled Deposits</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">__________________________________________________________________________________________________________________________________________________________</fo:block> 
+		        		<fo:block text-align="left"  keep-together="always" font-size="11pt" font-family="Courier,monospace"  white-space-collapse="false">Fin Account Fin Account  Payment Party  Transaction  Instrument      Amount   Payment     Payment    PaymentMethod   Reco    Status       Comments </fo:block>
+		        		<fo:block text-align="left"  keep-together="always" font-size="11pt" font-family="Courier,monospace"  white-space-collapse="false">&#160;Trans Id   TransType                       Date      No                         Id         Type       Type      				Date </fo:block>  
+		        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">__________________________________________________________________________________________________________________________________________________________</fo:block>		        
+       		             <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				         <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+       		            <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                                  Total   :   0.00</fo:block>
+       		 <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				 <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">__________________________________________________________________________________________________________________________________________________________________</fo:block>
+        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">Unreconciled Withdrawals</fo:block> 
+        		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false">___________________________________________________________________________________________________________________________________________________________________</fo:block>
+       		 <fo:block text-align="left"  keep-together="always" font-size="11pt" font-family="Courier,monospace"  white-space-collapse="false">Fin Account Fin Account  Payment Party  Transaction  Instrument      Amount   Payment     Payment    PaymentMethod   Reco    Status       Comments </fo:block>
+		        		<fo:block text-align="left"  keep-together="always" font-size="11pt" font-family="Courier,monospace"  white-space-collapse="false">&#160;Trans Id   TransType                       Date      No                         Id         Type       Type      				Date </fo:block>  
+       		 	 <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">__________________________________________________________________________________________________________________________________________________________________</fo:block>
+       		 <fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+				 <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;                                                  Total   :   0.00</fo:block>
+       		 <fo:block text-align="center"  keep-together="always"  white-space-collapse="false">&#160;                                                         Available Balance As Per Bank :<#if finAccount.actualBalance?exists> ${finAccount.actualBalance?if_exists?string("#0.00")} <#else>     </#if>         &#160;&#160;&#160;&#160;</fo:block>
+       		 
     	</fo:flow>
     	</#if>
 	</fo:page-sequence>	
