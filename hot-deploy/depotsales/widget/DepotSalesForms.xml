@@ -4533,7 +4533,7 @@
                <list-options key-name="payToPartyId" list-name="formatList" description="${productStoreName}"/>
             </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomers" target-parameter="partyIdFrom"/></field> 
+        <field name="partyId" title="${uiLabelMap.Customer}" position="2"><lookup target-form-name="LookupBranchCustomersDyes" target-parameter="partyIdFrom"/></field> 
         <field name="scheme" title="Scheme" position="3">
 	        	<drop-down allow-empty="true">
 	        		<option key="MGPS_10Pecent" description="MGPS+10 % Scheme"/>
