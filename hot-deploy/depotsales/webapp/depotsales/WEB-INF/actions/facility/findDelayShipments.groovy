@@ -255,6 +255,7 @@ if("Y".equals(isFormSubmitted)){
 							  if(orderHeaderSequence!=null){
 								   orderseq=EntityUtil.getFirst(orderHeaderSequence).get("orderNo")
 							  }
+							  newObj.put("PoId",eachList.orderId)
 							  newObj.put("orderId",orderseq)
 							  dateStr=UtilDateTime.toDateString(eachList.orderDate,"dd/MM/yyyy");
 							  //statusDatetime=UtilDateTime.addDaysToTimestamp(statusDatetime,diffDays);
@@ -279,6 +280,7 @@ if("Y".equals(isFormSubmitted)){
 						 if(orderHeaderSequence!=null && orderHeaderSequence.size()>0){
 							 orderseq=EntityUtil.getFirst(orderHeaderSequence).get("orderNo")
 						 }
+						 newObj.put("PoId",eachList.orderId)
 						 newObj.put("orderId",orderseq)
 						dateStr=UtilDateTime.toDateString(statusDatetime,"dd/MM/yyyy");
 						newObj.put("orderDate",dateStr)
