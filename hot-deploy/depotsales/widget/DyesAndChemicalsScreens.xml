@@ -2937,5 +2937,25 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="purchaseInvoiceDetailsPDFReportDC">
+        <section>
+            <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+			    <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="titleProperty" value="AccountingInvoice"/>
+				
+                <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/purchaseInvoiceDetailsReportDC.groovy"/>
+            </actions>
+            <widgets>
+				<platform-specific> 
+				  <xsl-fo><html-template location="component://depotsales/webapp/depotsales/depotsales/purchaseInvoiceDetailsReportDC.fo.ftl" /></xsl-fo> 
+                </platform-specific>
+			</widgets>
+        </section>
+    </screen>
 
 </screens>

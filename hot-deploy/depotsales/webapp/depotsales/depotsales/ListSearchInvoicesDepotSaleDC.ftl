@@ -545,7 +545,7 @@
 	               <#--<td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>processSalesInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Rise Sales Invoice</a></td>-->
 	               
 	               <#if invoice.statusId != "INVOICE_CANCELLED"><td><a class="buttontext" target='_blank' href="<@ofbizUrl>purchaseInvoiceEditDC?invoiceId=${invoice.invoiceId}&amp;partyId=${invoice.partyId}&amp;partyName=${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)}</@ofbizUrl>">Edit Invoice</a></td>
-	                <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>purchaseInvoiceDetails.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>
+	                <td><a class="buttontext" target="_BLANK" href="<@ofbizUrl>purchaseInvoiceDetailsDC.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a></td>
 	                  <#else>
 	 		   	          <td></td>
 	               </#if>
