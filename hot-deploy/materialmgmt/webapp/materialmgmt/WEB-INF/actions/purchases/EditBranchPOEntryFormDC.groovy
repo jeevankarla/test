@@ -499,7 +499,7 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 	////Debug.log("orderitemdetails================="+orderItemDetails)
 	
 	adjCondList = [];
-	adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "ADDITIONAL_CHARGES"));
+	adjCondList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]));
 	orderAdjustmentTypeList = delegator.findList("OrderAdjustmentType",EntityCondition.makeCondition(adjCondList, EntityOperator.AND), UtilMisc.toSet("orderAdjustmentTypeId", "description"), null, null, false);
 	orderAdjustmentTypeIdsList = EntityUtil.getFieldListFromEntityList(orderAdjustmentTypeList, "orderAdjustmentTypeId", true);
 	
@@ -517,11 +517,11 @@ if(orderHeader && orderHeader.statusId != "ORDER_COMPLETED"){
 		
 		resultCtx = dispatcher.runSync("getRemainingOrderItems",UtilMisc.toMap("userLogin",userLogin, "orderId", eachItem.orderId,"orderItemSeqId",eachItem.orderItemSeqId));
 		
-		Debug.log("resultCtx =================="+resultCtx);
+		//Debug.log("resultCtx =================="+resultCtx);
 		
 		usedQuantity = resultCtx.usedQuantity;
 		
-		Debug.log("usedQuantity =================="+usedQuantity);
+		//Debug.log("usedQuantity =================="+usedQuantity);
 		
 		if(usedQuantity == 0){
 		
