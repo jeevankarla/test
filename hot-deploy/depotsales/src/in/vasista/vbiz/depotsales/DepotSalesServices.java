@@ -4312,7 +4312,7 @@ public class DepotSalesServices{
 							String taxAmt = (String) paramMap.get(orderAdjustmentType+ "_AMT" + thisSuffix);
 							if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
 								
-								if(orderAdjustmentType.equals("OTHER_DISCOUNT"))
+								if(orderAdjustmentType.equals("PRICE_DISCOUNT"))
 								adjTypeMap.put("amount",new BigDecimal(taxAmt).negate());
 								else
 								adjTypeMap.put("amount",new BigDecimal(taxAmt));
