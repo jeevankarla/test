@@ -60,10 +60,11 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 		if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			finAccdetails=EntityUtil.getFirst(finAccountRoleList);
 			finAccountId=finAccdetails.get("finAccountId");
-			finAccountDetail = delegator.findOne("EmpFinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
-			finAcccountCode= finAccountDetail.get("finAccountCode");
+			//finAccountDetail = delegator.findOne("EmpFinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+			finAcccountCode= finAccdetails.get("finAccountCode");
+			bankName=finAccdetails.get("finAccountName");
 		}
-		List conditionList=[];
+		/*List conditionList=[];
 		if(UtilValidate.isNotEmpty(empEntry.getKey())){
 			conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, empEntry.getKey()));
 		}
@@ -72,7 +73,7 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 		if(UtilValidate.isNotEmpty(bankDetails)){
 			details=EntityUtil.getFirst(bankDetails);
 			bankName=details.get("finAccountName");
-		}
+		}*/
 		
 		emplIds.each{ emplId->
 			finalMap=[:];

@@ -1297,7 +1297,7 @@ public class HumanresService {
 						newEntity.set("finAccountName", finAccountName);
 						newEntity.set("organizationPartyId", "Company");
 						newEntity.set("ownerPartyId", partyId);
-						newEntity.set("finAccountTypeId", "SALARY_ACCOUNT");
+						newEntity.set("finAccountTypeId", "BANK_ACCOUNT");
 						newEntity.set("statusId", "FNACT_ACTIVE");
 						if(UtilValidate.isNotEmpty(finAccountBranch)){
 							newEntity.set("finAccountBranch", finAccountBranch);
@@ -1327,7 +1327,7 @@ public class HumanresService {
 						finAccount.store();
 					}
 	    		  if(UtilValidate.isNotEmpty(finAccountId) && UtilValidate.isNotEmpty(date)){
-	    			  Map resultMap=empUpdateDisbursmentBank(dctx,UtilMisc.toMap("userLogin",userLogin,"disbursmentBank",finAccountId,"partyId",partyId,"date",date));
+	    			  Map resultMap=updateDisbursmentBank(dctx,UtilMisc.toMap("userLogin",userLogin,"disbursmentBank",finAccountId,"partyId",partyId,"date",date));
 	    		  }
 	      }catch(GenericEntityException e){
 				Debug.logError("Error while creating new FinAccount"+e.getMessage(), module);
@@ -1336,13 +1336,17 @@ public class HumanresService {
 	      return result;
 	    }
 	 
-	 public static Map<String, Object> empUpdateDisbursmentBank(DispatchContext dctx, Map<String, ? extends Object> context){
+	 public static Map<String, Object> updateEmployeeFinancialAccountRole(DispatchContext dctx, Map<String, ? extends Object> context){
 		    Delegator delegator = dctx.getDelegator();
 	      LocalDispatcher dispatcher = dctx.getDispatcher();
 	      GenericValue userLogin = (GenericValue) context.get("userLogin");
 	      String partyId = (String) context.get("partyId");
 	      String finAccountId = (String)context.get("disbursmentBank");
 	      String date =  (String)context.get("date");
+	      String finAccountCode = (String)context.get("finAccountCode");
+	      String finAccountName = (String)context.get("finAccountName");
+	      String finAccountBranch = (String)context.get("finAccountBranch");
+	      String ifscCode = (String)context.get("ifscCode");
 	      Timestamp thruDate=null;
 	      Timestamp dateTime=null;
 	      Map result = ServiceUtil.returnSuccess();
@@ -1366,7 +1370,6 @@ public class HumanresService {
 	    	  List<GenericValue> finAccountRoleList = delegator.findList("EmpFinAccountRole", condition, null, null, null, false);
 	    	  if(UtilValidate.isNotEmpty(finAccountRoleList)){
 	    		  GenericValue finAccountRole = EntityUtil.getFirst(finAccountRoleList); 
-	    		  if(!finAccountId.equals(finAccountRole.getString("finAccountId"))){
 	    		  	finAccountRole.set("thruDate",thruDate);
 	    		  	finAccountRole.store();
 	    		  GenericValue newEntity = delegator.makeValue("EmpFinAccountRole");
@@ -1374,20 +1377,44 @@ public class HumanresService {
 	    		  	newEntity.set("finAccountId",finAccountId);
 	    		  	newEntity.set("partyId",partyId);
 	    		  	newEntity.set("fromDate",dateTime);
+	    		  	if(UtilValidate.isNotEmpty(finAccountCode)){
+	    		  		newEntity.set("finAccountCode", finAccountCode);
+	    		  	}
+	    		  	if(UtilValidate.isNotEmpty(finAccountName)){
+	    		  		newEntity.set("finAccountName", finAccountName);
+	    		  	}
+	    		  	if(UtilValidate.isNotEmpty(finAccountBranch)){
+	    		  		newEntity.set("finAccountBranch", finAccountBranch);
+	    		  	}
+	    		  	if(UtilValidate.isNotEmpty(ifscCode)){
+	    		  		newEntity.set("ifscCode", ifscCode);
+	    		  	}
 	    		  	newEntity.create();
-	    		  }	
+	    		  
 	    	  }else{
 	    		  GenericValue newEntity = delegator.makeValue("EmpFinAccountRole");
 		  		  	newEntity.set("roleTypeId","EMPLOYEE");
 		  		  	newEntity.set("finAccountId",finAccountId);
 		  		  	newEntity.set("partyId",partyId);
 		  		  	newEntity.set("fromDate",dateTime);
+		  		  if(UtilValidate.isNotEmpty(finAccountCode)){
+	    		  		newEntity.set("finAccountCode", finAccountCode);
+	    		  	}
+	    		  	if(UtilValidate.isNotEmpty(finAccountName)){
+	    		  		newEntity.set("finAccountName", finAccountName);
+	    		  	}
+	    		  	if(UtilValidate.isNotEmpty(finAccountBranch)){
+	    		  		newEntity.set("finAccountBranch", finAccountBranch);
+	    		  	}
+	    		  	if(UtilValidate.isNotEmpty(ifscCode)){
+	    		  		newEntity.set("ifscCode", ifscCode);
+	    		  	}
 		  		  	newEntity.create();
 	    	  }
 	      }catch(GenericEntityException e){
 				Debug.logError("Error while creating new FinAccount"+e.getMessage(), module);
 			}
-	      result = ServiceUtil.returnSuccess("Success");
+	      result = ServiceUtil.returnSuccess("New FinAccount Created Sucessfully...!");
 	      return result;
 	    }
 	 
@@ -1442,7 +1469,7 @@ public class HumanresService {
 	      }catch(GenericEntityException e){
 				Debug.logError("Error while creating new FinAccount"+e.getMessage(), module);
 			}
-	      result = ServiceUtil.returnSuccess("Success");
+	      result = ServiceUtil.returnSuccess("New FinAccount Created Sucessfully...!");
 	      return result;
 	    }
 	    

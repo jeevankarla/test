@@ -637,6 +637,7 @@
 		<field name="finAccountName" type="name"></field>
 		<field name="finAccountCode" type="long-varchar" encrypt="true"></field>
 		<field name="finAccountBranch" type="name"></field>
+		<field name="ifscCode" type="long-varchar" encrypt="true"></field>
 		<prim-key field="finAccountId" />
 		<prim-key field="partyId" />
 		<prim-key field="roleTypeId" />
@@ -809,24 +810,6 @@
 		</relation>
 	</entity>
 	<entity entity-name="FinAccountType" package-name="org.ofbiz.accounting.finaccount"
-		default-resource-name="AccountingEntityLabels" title="Financial Account Type Entity">
-		<field name="finAccountTypeId" type="id-ne"></field>
-		<field name="parentTypeId" type="id-ne"></field>
-		<field name="replenishEnumId" type="id-ne"></field>
-		<field name="isRefundable" type="indicator"></field>
-		<field name="hasTable" type="indicator"></field>
-		<field name="description" type="description"></field>
-		<prim-key field="finAccountTypeId" />
-		<relation type="one" fk-name="FINACCT_TYPE_PAR" title="Parent"
-			rel-entity-name="FinAccountType">
-			<key-map field-name="parentTypeId" rel-field-name="finAccountTypeId" />
-		</relation>
-		<relation type="one" fk-name="FINACCT_TYPE_RENUM" title="Replenish"
-			rel-entity-name="Enumeration">
-			<key-map field-name="replenishEnumId" rel-field-name="enumId" />
-		</relation>
-	</entity>
-	<entity entity-name="EmpFinAccountType" package-name="org.ofbiz.accounting.finaccount"
 		default-resource-name="AccountingEntityLabels" title="Financial Account Type Entity">
 		<field name="finAccountTypeId" type="id-ne"></field>
 		<field name="parentTypeId" type="id-ne"></field>

@@ -83,11 +83,10 @@ if(UtilValidate.isNotEmpty(bonusEmplIdsList)){
 		finAccountCode = "";
 		employeePFBonusMap = [:];
 		List finAccConList=FastList.newInstance();
-		finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,employeeId));
-		finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
-		finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
+		finAccConList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,employeeId));
+		finAccConList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS ,"EMPLOYEE"));
 		EntityCondition finAccCond = EntityCondition.makeCondition(finAccConList, EntityOperator.AND);
-		List<GenericValue> finAccountDetailsList = delegator.findList("FinAccount", finAccCond, null, null, null, false);
+		List<GenericValue> finAccountDetailsList = delegator.findList("EmpFinAccountRole", finAccCond, null, null, null, false);
 		if(UtilValidate.isNotEmpty(finAccountDetailsList)){
 			GenericValue finAccountList = EntityUtil.getFirst(finAccountDetailsList);
 			finAccountCode = finAccountList.get("finAccountCode");

@@ -34,7 +34,7 @@ populateChildren(company, employeeList);
 
 conditionList=[];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
-conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"SALARY_ACCOUNT"));
+conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
 finAccCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 companyAccList = delegator.findList("EmpFinAccount", finAccCond, null, null, null, false);
 context.put("companyAccList",companyAccList);

@@ -82,7 +82,8 @@ if(UtilValidate.isNotEmpty(parameters.partyIdFrom)){
 fromDate= context.getAt("timePeriodStart");
 thruDate= context.getAt("timePeriodEnd");
 bankAdvPayrollMap= context.get("BankAdvicePayRollMap");
-	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,parameters.partyIdFrom));
+	conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
+	conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
 	if(UtilValidate.isNotEmpty(parameters.finAccountId) && (!"All".equals(parameters.finAccountId))){
 		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS ,parameters.finAccountId));
