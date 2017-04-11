@@ -299,7 +299,7 @@ if(roID){
 			  mgpsAmt = mgpsAmt+eachItem.itemValue;
 			  }
 			  
-			  if(eachItem.invoiceItemTypeId !="VAT_SALE" && eachItem.invoiceItemTypeId !="TEN_PERCENT_SUBSIDY" && eachItem.invoiceItemTypeId !="INV_FPROD_ITEM"){
+			  if(eachItem.invoiceItemTypeId !="VAT_SALE" && eachItem.invoiceItemTypeId !="TEN_PERCENT_SUBSIDY" && eachItem.invoiceItemTypeId !="INV_FPROD_ITEM" && eachItem.invoiceItemTypeId !="PRICE_DISCOUNT"){
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
 			  }
 			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
@@ -730,7 +730,8 @@ if(roID){
 					  
 			 itemOrderId  = OrderItemBilling[0].orderId;
 			 orderItemSeqId  = OrderItemBilling[0].orderItemSeqId;
-			 
+			 packQuantity=0;
+			 packets=0;
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,itemOrderId));
 			 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
@@ -741,6 +742,22 @@ if(roID){
 			 remarks = "";
 			 if(OrderItemDetail)
 			 remarks = OrderItemDetail[0].get("remarks");
+			 if(OrderItemDetail[0]){
+				 
+				if(OrderItemDetail[0].packQuantity){
+				 tempMap.put("packQuantity", OrderItemDetail[0].packQuantity);
+				}
+				else{
+				 tempMap.put("packQuantity",packQuantity);
+				}
+				 if(OrderItemDetail[0].packQuantity){
+				 tempMap.put("packets", OrderItemDetail[0].packets);
+				 }
+				 else{
+				 tempMap.put("packets",packets);
+				 }
+								  
+			 }
 			 
 		/*	 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));

@@ -88,6 +88,8 @@ under the License.
 	<fo:table-column column-width="5%"/>
 	<fo:table-column column-width="17%"/>
 	<fo:table-column column-width="10%"/>
+	<fo:table-column column-width="7%"/>
+	<fo:table-column column-width="7%"/>
 	<fo:table-column column-width="8%"/>
 	<fo:table-column column-width="15%"/>
 	<fo:table-column column-width="10%"/>
@@ -117,6 +119,14 @@ under the License.
 				<fo:block text-align="center"    font-size="10pt" >Total Qty</fo:block>
 				<fo:block text-align="center"     font-size="10pt" >(Kgs)</fo:block>
 				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Size</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">No</fo:block>
+				</fo:table-cell>
 				<#if scheme == "MGPS_10Pecent">
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="10pt" >10%</fo:block>
@@ -143,6 +153,8 @@ under the License.
 		   
 		     <#assign sr = 1>
 		     <#assign totQuantity = 0>
+		     <#assign totPackingSizekgs = 0>
+			  <#assign totPackets= 0>
 		      <#assign totSchemeQty = 0>
 		      <#assign totAmount = 0>
 		      <#assign tempScheamQty = 0>
@@ -219,6 +231,7 @@ under the License.
 				
                 <#assign totServiceCharge = 0>
 				 <#assign serviceCharge = 0>
+				 
                  <#if invoiceItemLevelAdjustments?has_content>		
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
@@ -259,6 +272,14 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >${invoiceDetail.get("mgpsQty")}</fo:block>
 				</fo:table-cell>
 				</#if>
+				<#assign totPackingSizekgs=totPackingSizekgs+invoiceDetail.get("packQuantity")>
+				<fo:table-cell border-style="solid">
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${invoiceDetail.get("packQuantity")?if_exists} </fo:block>
+				</fo:table-cell>
+				<#assign totPackets=totPackets+invoiceDetail.get("packets")>
+				<fo:table-cell border-style="solid">
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${invoiceDetail.get("packets")?if_exists} </fo:block>
+				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 					
 			    <#if kanAndKalRo?has_content> 
@@ -323,7 +344,12 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" >${totQuantity} </fo:block>
-				
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackingSizekgs} </fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackets} </fo:block>
 				</fo:table-cell>
 				<#if scheme == "MGPS_10Pecent">
 				<fo:table-cell border-style="solid">
