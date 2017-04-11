@@ -4074,6 +4074,7 @@
          <field name="unitPrice" title="UNIT PRICE"><display/></field>
      </form> 
       <form name="DelayShipmentReportCSVHeader" type="list" view-size="99999">
+         <field name="PoId" title="_"><display/></field>
          <field name="orderId" title="_"><display/></field>
          <field name="orderDate" title="_"><display/></field>
          <field name="ordQty" title="_"><display/></field>
@@ -4085,7 +4086,8 @@
      </form> 
      
       <form name="DelayShipmentReportCSV" type="list" list-name="dataList" view-size="99999">
-         <field name="orderId" title="ORDER ID"><display/></field>
+       	 <field name="PoId" title="PO ID"><display/></field>
+         <field name="orderId" title="PO SEQ ID"><display/></field>
          <field name="orderDate" title="ORDER DATE"><display/></field>
          <field name="ordQty" title=" ORDER QTY(Kgs) "><display/></field>
          <field name="supplierName" title="SUPPLIER NAME"><display/></field> 
