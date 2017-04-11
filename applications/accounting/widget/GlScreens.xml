@@ -495,6 +495,11 @@ reportType:byAccount -->
 				</service>
 				<set field="hasAcctgAtxEditPermission" from-field="permResult.hasPermission" />
 				<entity-one entity-name="AcctgTrans" value-field="acctgTrans" />
+				
+				<entity-condition list="acctransDetails" entity-name="AcctgTransRole">
+        	<condition-expr field-name="acctgTransId" from-field="acctgTrans.acctgTransId"/>
+        	<condition-expr field-name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+        </entity-condition>	
 				<entity-one entity-name="AcctgTransEntry" value-field="acctgTransEntry">
 					<field-map field-name="acctgTransId" />
 					<field-map field-name="acctgTransEntrySeqId"
@@ -503,8 +508,25 @@ reportType:byAccount -->
 				<entity-condition entity-name="PartyAcctgPrefAndGroup" list="intOrgList">
 	                <order-by field-name="groupName"/>
 	            </entity-condition>
+	           
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchesListOfRO">
+					<field-map field-name="partyIdFrom" from-field="acctransDetails[1].partyId" />
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="BRANCH_CUSTOMER"/>
+				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchListOfRO">
+					<field-map field-name="partyIdTo" from-field="acctransDetails[1].partyId" />
+					<field-map field-name="partyIdFrom" value="Company"/>
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="GROUP_ROLLUP"/>
+				</entity-and>
+				
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/organizationGLForJournalVocher.groovy"/>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/fetchBoForRo.groovy" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 				<entity-and entity-name="AcctgTransEntry" list="acctgTransEntries">
 					<field-map field-name="acctgTransId" />
 					<order-by field-name="acctgTransEntrySeqId" />
@@ -517,6 +539,7 @@ reportType:byAccount -->
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonPartyAccountingTransactionDecorator" location="${parameters.partyGlDecoratorLocation}">
+				
 					<decorator-section name="body">
 						<section>
 							<condition>

@@ -734,7 +734,6 @@ under the License.
                 <sub-hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/>
             </lookup>
         </field>
-        <field name="organizationPartyId" map-name="parameter"><hidden/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.AccountingTransactionType}">
            <hidden value="JOURNAL"/>
         </field>
@@ -747,6 +746,11 @@ under the License.
             <lookup target-form-name="LookupPayment" size="20" maxlength="20">
                 <sub-hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/>
             </lookup>
+        </field>
+         <field position="1" name="organizationPartyId" id-name="organizationPartyId" parameter-name="organizationPartyId" >
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="intOrgList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
         </field>
         <field name="createdByUserLogin"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>

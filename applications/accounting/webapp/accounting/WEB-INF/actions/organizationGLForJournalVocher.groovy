@@ -59,3 +59,18 @@ glAccounts.each{eachItem ->
 }
 context.glAccountJSON = glAccountJSON;
 context.glAccountDescriptionJSON = glAccountDescriptionJSON;
+
+
+acctgTransId = parameters.acctgTransId;
+tempCostCenterId="";
+acctgTransconditionList = [];
+acctgTransconditionList.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransId));
+acctgTransconditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
+acctgTranscond = EntityCondition.makeCondition(acctgTransconditionList, EntityOperator.AND);
+acctgTrans = EntityUtil.getFirst(delegator.findList("AcctgTransRole", acctgTranscond, null, null, null, false));
+if(UtilValidate.isNotEmpty(acctgTrans)){
+	tempCostCenterId = acctgTrans.partyId;
+}
+context.tempCostCenterId=tempCostCenterId;
+
+

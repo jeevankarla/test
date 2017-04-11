@@ -79,51 +79,6 @@ under the License.
 		
 	}
 	
-  	 function getBOsForRO() {
-		var ro = $('#organizationPartyId :selected').val();
-		var dataJson = {"roId": ro};
-		jQuery.ajax({
-                url: 'getBOsForRO',
-                type: 'POST',
-                data: dataJson,
-                dataType: 'json',
-               success: function(result){
-					if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
-					    alert("Error in order Items");
-					}else{
-						var tempId = $("#costCenterId").val();
-						var orderList = result["orderList"];
-						var getROList = result["getROList"];
-						var tableElement = "";
-						//tableElement +="<option value=''></option>";
-						
-						 $.each(getROList, function(key, item){
-						 			if(item['partyIdTo'] == tempId){
-						 				tableElement +="<option selected value='"+item['partyIdTo']+"'>"+item['groupName']+"</option>";
-						 			}
-						 			else{
-						 				tableElement +="<option value='"+item['partyIdTo']+"'>"+item['groupName']+"</option>";
-						 			}
-		       	  				    
-		       	  				 });
-						 $.each(orderList, function(key, item){
-						 			if(item['partyIdTo'] == tempId){	
-						 				tableElement +="<option selected value='"+item['partyIdTo']+"'>"+item['groupName']+"</option>";
-						 			}
-						 			else{
-						 				tableElement +="<option value='"+item['partyIdTo']+"'>"+item['groupName']+"</option>";
-						 			}
-		       	  				 });
-		       	  				 if(tableElement.length > 0)
-		       	  			     $('#costCenterId').empty().append(tableElement);
-		       	  			     else
-		       	  			     $('#costCenterId').empty();	
-						
-               		}
-               	}							
-		});
-	}
-	 	
 	function removeAcctTransEntry(acctgTransId, organizationPartyId,acctgTransEntrySeqId) {
 	var acctgTransId=jQuery('input[name=acctgTransId]').val();
 	var transactionDate=jQuery('input[name=transactionDate]').val();
@@ -212,7 +167,7 @@ under the License.
 		var description=jQuery('input[name=description1]').val();
 		var origCurrencyUomId=jQuery('input[name=origCurrencyUomId]').val();
 		var partyId=$("#3_lookupId_partyId").val();
-		var costCenterId = $('#costCenterId').val()  
+		var costCenterId = $('#costCenterId1').val();
 		var purposeTypeId = $('#purposeTypeId :selected').val();
 		
 		
@@ -372,26 +327,37 @@ under the License.
 			            </#if></td>
 			             <#--> <td><@htmlTemplate.lookupField value="${productId?if_exists}" formName="ListAcctgTransEntriesNew" name="productId" id="productId" fieldFormName="LookupProduct"/></td>-->
 			               
-			                <td>
-								<select name="organizationPartyId" id="organizationPartyId" onblur='javascript:getBOsForRO();'>									
-									<#list intOrgList as intOrg>
-						         	<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, intOrg.partyId?if_exists, false)>
-						            <option value='${intOrg.partyId}'>
-						        	    ${partyName?if_exists}
-						            </option>
-						         	</#list>							
-								</select>
-							</td>
-			               <td>
-								<select name="costCenterId" id="costCenterId">									
-									<#list partyClsGrpList as partyClsGrp>
-						         	<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyClsGrp.partyId?if_exists, false)>
-						            <option value='${partyClsGrp.partyId}'>
-						        	    ${partyName?if_exists}
-						            </option>
-						         	</#list>							
-								</select>
-							</td>
+			              
+			             
+						   <td>
+				          <select name="costCenterId" id="costCenterId1">
+				          	   <#list branchListOfRO as roWiseBranch>
+					          	   <#if roWiseBranch.partyIdTo=="${tempCostCenterId}">
+					          	   		<option selected value='${roWiseBranch.partyIdTo}'>
+							        	    ${roWiseBranch.groupName?if_exists}
+							            </option>
+					          	   <#else>
+							            <option value='${roWiseBranch.partyIdTo}'>
+							        	    ${roWiseBranch.groupName?if_exists}
+							            </option>
+							        </#if>
+						        </#list>
+						        <#list branchesListOfRO as roWiseBranches>
+						           <#if roWiseBranches.partyIdTo=="${tempCostCenterId}">
+					          	   	    <option selected value='${roWiseBranches.partyIdTo}'>
+							        	    ${roWiseBranches.groupName?if_exists}
+							            </option>
+				          	   
+					          	   <#else>
+							            <option value='${roWiseBranches.partyIdTo}'>
+							        	    ${roWiseBranches.groupName?if_exists}
+							            </option>
+							        </#if>
+						            
+						        </#list>
+							 </select>   
+				          </td>
+							
 							
 			               <td>							
 							  <select name="purposeTypeId" id="purposeTypeId">
