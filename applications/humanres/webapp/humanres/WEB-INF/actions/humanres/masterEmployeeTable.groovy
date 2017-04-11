@@ -208,7 +208,7 @@ def populateChildren(org, employeeList) {
 		finAccountId="";
 		finAccountName="";
 		finAccountName="";
-		finAccountIds =delegator.findByAnd("FinAccount",[ownerPartyId:employment.partyId]);
+		finAccountIds =delegator.findByAnd("EmpFinAccountRole",[partyId:employment.partyId]);
 		if(UtilValidate.isNotEmpty(finAccountIds)){
 			finAccountCode=finAccountIds.get(0).finAccountCode;
 			finAccountName=finAccountIds.get(0).finAccountName;

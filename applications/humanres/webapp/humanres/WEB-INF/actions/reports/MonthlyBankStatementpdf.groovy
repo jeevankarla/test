@@ -110,7 +110,7 @@ if(UtilValidate.isNotEmpty(parameters.finAccountId) && (!"All".equals(parameters
 	conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS ,parameters.finAccountId));
 }
 EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-companyBankAccountList= delegator.findList("FinAccount",condition,null,null,null,false);
+companyBankAccountList= delegator.findList("EmpFinAccount",condition,null,null,null,false);
 Map bankWiseEmplDetailsMap=FastMap.newInstance();
 
 if(UtilValidate.isNotEmpty(companyBankAccountList)){
@@ -125,21 +125,15 @@ if(UtilValidate.isNotEmpty(companyBankAccountList)){
 			EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, timePeriodStart)),
 			EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
 			EntityCondition cond = EntityCondition.makeCondition(conList, EntityOperator.AND);
-			finAccountRoleList=delegator.findList("FinAccountRole",cond, null,null, null, false);
+			finAccountRoleList=delegator.findList("EmpFinAccountRole",cond, null,null, null, false);
 			if(UtilValidate.isNotEmpty(finAccountRoleList)){
 			partyIds = EntityUtil.getFieldListFromEntityList(finAccountRoleList, "partyId", true);
+			partiesFinAccList = UtilMisc.sortMaps(finAccountRoleList, UtilMisc.toList("finAccountCode"));
 			if(UtilValidate.isNotEmpty(partyIds)){
-				List finAccConList=FastList.newInstance();
-				 finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN ,partyIds));
-				 finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
-				 finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
-				 EntityCondition finAccCond = EntityCondition.makeCondition(finAccConList, EntityOperator.AND);
-				List<GenericValue> finAccountDetailsList = delegator.findList("FinAccount", finAccCond, null, null, null, false);
-				partiesFinAccList = UtilMisc.sortMaps(finAccountDetailsList, UtilMisc.toList("finAccountCode"));
 				
 				if(UtilValidate.isNotEmpty(partiesFinAccList)){
 					partiesFinAccList.each{ partyFin->
-						employee = partyFin.get("ownerPartyId");
+						employee = partyFin.get("partyId");
 						if(UtilValidate.isNotEmpty(periodBillingList)){
 							periodBillDetails = EntityUtil.getFirst(periodBillingList);
 							periodBillingIds = EntityUtil.getFieldListFromEntityList(periodBillingList, "periodBillingId", true);

@@ -347,29 +347,24 @@ if(UtilValidate.isNotEmpty(periodBillingList)){
 			netAmount=totEarnings+totDeductions;
 			bankAdviceDetailsMap.put("totEarnings",totEarnings);
 			bankAdviceDetailsMap.put("totDeductions",totDeductions);
-			List finAccConList=FastList.newInstance();
-			finAccConList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyId));
-			finAccConList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
-			finAccConList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
-			EntityCondition finAccCond = EntityCondition.makeCondition(finAccConList, EntityOperator.AND);
-			accountDetails = delegator.findList("FinAccount", finAccCond, null, null, null, false);
-			if(UtilValidate.isNotEmpty(accountDetails)){
-				accDetails = EntityUtil.getFirst(accountDetails);
-				accNo=0;
-				ifscCode="";
-				finAccountBranch="";
-				finAccountName="";
-				if(UtilValidate.isNotEmpty(accDetails))	{
-					accNo = accDetails.get("finAccountCode");	
-					ifscCode = accDetails.get("ifscCode");
-					finAccountBranch = accDetails.get("finAccountBranch");
-					finAccountName = accDetails.get("finAccountName");
-				}		
-				bankAdviceDetailsMap.put("acNo",accNo);
-				bankAdviceDetailsMap.put("ifscCode",ifscCode);
-				bankAdviceDetailsMap.put("finAccountBranch",finAccountBranch);
-				bankAdviceDetailsMap.put("finAccountName",finAccountName);
-			}
+				List conListBank=FastList.newInstance();
+				conListBank=UtilMisc.toList(
+				EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "EMPLOYEE"),
+				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS ,partyId),
+				EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(timePeriodEnd)),
+				EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(timePeriodStart))));
+				EntityCondition condBank = EntityCondition.makeCondition(conListBank, EntityOperator.AND);
+				bankFinAccountRoleList = delegator.findList("EmpFinAccountRole",condBank, null,null, null, false);
+				if(UtilValidate.isNotEmpty(bankFinAccountRoleList)){
+					bankFinAccountRole = EntityUtil.getFirst(bankFinAccountRoleList);
+					if(UtilValidate.isNotEmpty(bankFinAccountRole)){
+						bankAdviceDetailsMap.put("acNo", bankFinAccountRole.get("finAccountCode"));
+						bankAdviceDetailsMap.put("ifscCode",bankFinAccountRole.get("ifscCode"));
+						bankAdviceDetailsMap.put("finAccountBranch",bankFinAccountRole.get("finAccountBranch"));
+						bankAdviceDetailsMap.put("finAccountName",bankFinAccountRole.get("finAccountName"));
+					}
+				}
+				
 			if(UtilValidate.isNotEmpty(partyDetails.employeeId)){
 				bankAdviceDetailsMap.put("emplNo",partyDetails.get("employeeId"));
 			}else{

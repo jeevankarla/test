@@ -37,7 +37,7 @@ under the License.
  <#assign temp=0>
   <fo:page-sequence master-reference="main">
   	<fo:static-content flow-name="xsl-region-before">
-  		<#assign finAccDetails = delegator.findOne("FinAccount", {"finAccountId" : companyBankDetails.getKey()}, true)>
+  		<#assign finAccDetails = delegator.findOne("EmpFinAccount", {"finAccountId" : companyBankDetails.getKey()}, true)>
   		<#assign nowDate=Static["org.ofbiz.base.util.UtilDateTime"].getDayStart(nowTimestamp, timeZone,locale)>
   		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
         <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>      

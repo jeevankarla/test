@@ -36,7 +36,7 @@ conditionList=[];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,"Company"));
 conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,"BANK_ACCOUNT"));
 finAccCond = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-companyAccList = delegator.findList("FinAccount", finAccCond, null, null, null, false);
+companyAccList = delegator.findList("EmpFinAccount", finAccCond, null, null, null, false);
 context.put("companyAccList",companyAccList);
 
 nowTimeStamp = UtilDateTime.nowTimestamp();

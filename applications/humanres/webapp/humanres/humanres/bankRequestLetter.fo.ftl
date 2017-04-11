@@ -36,7 +36,7 @@ under the License.
  		<#assign netAmt = 0>
  		<fo:page-sequence master-reference="main">
   	<fo:static-content flow-name="xsl-region-before">
-  		<#assign finAccDetails = delegator.findOne("FinAccount", {"finAccountId" : companyBankDetails.getKey()}, true)>
+  		<#assign finAccDetails = delegator.findOne("EmpFinAccount", {"finAccountId" : companyBankDetails.getKey()}, true)>
 		<fo:block text-align="center" font-size="14pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
         <fo:block text-align="center" font-size="14pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;(A GOVT. OF INDIA ENTERPRISE)</fo:block> 
         <fo:block text-align="center" font-size="14pt" keep-together="always"  white-space-collapse="false" font-weight="bold" font-family="Helvetica">&#160;BANK STATEMENT FOR OFFICERS AND STAFF</fo:block>
