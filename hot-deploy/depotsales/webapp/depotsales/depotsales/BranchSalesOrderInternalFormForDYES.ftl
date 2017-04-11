@@ -299,7 +299,7 @@
 				orderAdjustmentsList.push("PRICE_DISCOUNT");
 				
 				
-				
+			   	
 				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
 				jQuery(formId).append(jQuery(orderAdjustmentItem));	
 				if(orderAdjustmentsList != undefined){

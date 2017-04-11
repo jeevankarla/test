@@ -8497,7 +8497,7 @@ public class DepotPurchaseServices{
 									}else if(orderAdjustmentType.equals("PRICE_DISCOUNT")){
 										adjTypeMap.put("amount",new BigDecimal(taxAmt).negate());
 									}
-								}
+								}  
 								if (paramMap.containsKey(orderAdjustmentType+ "_INC_BASIC" + thisSuffix)) {
 									String isAssessableValue = (String) paramMap.get(orderAdjustmentType+ "_INC_BASIC" + thisSuffix);
 									if(UtilValidate.isNotEmpty(isAssessableValue) && !(isAssessableValue.equals("NaN"))){
