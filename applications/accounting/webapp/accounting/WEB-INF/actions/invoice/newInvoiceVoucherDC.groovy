@@ -57,6 +57,8 @@ if(roID){
 	context.partyId = partyId;
 	invoiceDate = invoiceList.get("invoiceDate");
 	context.invoiceDate = invoiceDate;
+	DueDate = UtilDateTime.addDaysToTimestamp(invoiceDate,+30);
+	context.DueDate = DueDate;
 	shipmentId = invoiceList.get("shipmentId");
 	partyIdFrom = invoiceList.costCenterId;
 	context.partyIdFrom = partyIdFrom;
