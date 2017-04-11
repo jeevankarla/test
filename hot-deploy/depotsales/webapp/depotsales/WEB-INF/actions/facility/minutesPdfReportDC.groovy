@@ -565,7 +565,7 @@ context.Scheam =Scheam;
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, parameters.orderId));
 			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			OrderItem = delegator.findList("OrderItem", condExpr, null, null, null, false);
-
+			double priceDiscountAmount=0;
 			for (eachItem in OrderItem) {
 				
 				
@@ -636,7 +636,15 @@ context.Scheam =Scheam;
 							 }
 						}
 						 
+						 if(eachAdjust.orderAdjustmentTypeId == "PRICE_DISCOUNT"){
+							 if(eachAdjust.amount){
+								 priceDiscountAmount=priceDiscountAmount+eachAdjust.amount;
+								 //sourcePercentage = eachAdjust.sourcePercentage;
+							   }
+							 
+						 }
 					}
+					 
 					 
 				 }
 					 
@@ -645,7 +653,7 @@ context.Scheam =Scheam;
 					 
 				 }
 				
-				 
+				 //Debug.log("priceDiscountAmount=======@@@@@========"+priceDiscountAmount);
 				 
 				for (eachOrderItem in OrderItemDetail) {
 					quotaQuantity = quotaQuantity+Double.valueOf(eachOrderItem.quotaQuantity);
@@ -746,7 +754,7 @@ context.Scheam =Scheam;
 				  
 				  OrderItems.add(tempMap);
 			}
-			
+			context.priceDiscountAmount = priceDiscountAmount;
 			//Debug.log("OrderItems================="+OrderItems);
 			
 						
@@ -813,7 +821,7 @@ context.Scheam =Scheam;
 	context.remarkMap=remarkMap;
 	context.orderedHindiItemList = orderedHindiItemList;
 	context.typeBasedMap = typeBasedMap;
-	
+	Debug.log("OrderItemList================="+OrderItemList);
 	/*contextMap = UtilMisc.toMap("translateList", orderedHindiItemList);
 	dayWiseEntriesLidast = (ByProductNetworkServices.icu4JTrans(dctx, contextMap)).getAt("translateList");
 	

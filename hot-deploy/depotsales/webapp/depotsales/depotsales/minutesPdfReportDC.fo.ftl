@@ -378,13 +378,15 @@ under the License.
 		           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                     ${typeBaseList.getKey()?if_exists} as ${eaValue.getKey()} % : &#160;${eaValue.getValue()?if_exists}  </fo:block>
 		            </#list>
 		        </#list>
-				
-		        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    TOTAL VALUE (RS) : &#160;${(toTunitPrice+grandToT)?if_exists?string("##0.00")}</fo:block> 
+		        <#if priceDiscountAmount!=0>
+				  <fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt"> TOTAL PRICE DISCOUNT (RS) : ${(priceDiscountAmount)?if_exists?string("##0.00")}</fo:block> 
+		       </#if>
+		        <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;    TOTAL VALUE (RS) : &#160;${(toTunitPrice+grandToT+priceDiscountAmount)?if_exists?string("##0.00")}</fo:block> 
 				
 				<fo:block>&#160;&#160;&#160;&#160;&#160;</fo:block>
 				<fo:block font-weight="bold" font-size="10pt">Summary</fo:block>
-				<fo:block>a) Actual Purchase Value (Rs): ${purchaeTot?string("#0.00")} </fo:block>
-				<fo:block>b) Total Sale Value     (Rs): ${toTunitPrice?string("#0.00")} </fo:block>
+				<fo:block>a) Actual Purchase Value (Rs): ${(purchaeTot+priceDiscountAmount)?string("#0.00")} </fo:block>
+				<fo:block>b) Total Sale Value     (Rs): ${(toTunitPrice+priceDiscountAmount)?string("#0.00")} </fo:block>
 				<#--<fo:block>c) Difference of the Sale</fo:block>
 				<#assign paymentBill=purchaeTot-toTunitPrice>
 				<fo:block> &#160;&#160; Value &amp; actual payment made to Mill: ${paymentBill?string("#0.00")}</fo:block>
@@ -411,11 +413,11 @@ under the License.
 	                                <#--<fo:block>3. One total financial outflow in this transaction is Rs.</fo:block>-->
 	                                <#assign outSandAmt=0>
 	                                <#if paymentAmt<toTunitPrice>
-	                                    <#assign outSandAmt=toTunitPrice-paymentAmt>
+	                                    <#assign outSandAmt=toTunitPrice+priceDiscountAmount-paymentAmt>
 	                                </#if>
 	                                <fo:block>3. Total outstanding of M/S ${partyName} is Rs <fo:inline font-weight="bold">${outSandAmt?string("#0.00")} </fo:inline></fo:block>
 	                                <fo:block>4. Payment dues with interest from the party M/S: <fo:inline font-weight="bold">${partyName}</fo:inline>  as on  <fo:inline font-weight="bold">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(orderDate, "dd-MMM-yyyy")?if_exists}</fo:inline> is Rs.${outSandAmt?string("#0.00")} </fo:block>
-	                                <fo:block>5. Payment to the Mill to be paid Cheque/Demand Draft for Rs.<fo:inline font-weight="bold">${toTunitPrice?string("#0.00")} </fo:inline> after receipt of Mill invoice/LR</fo:block>
+	                                <fo:block>5. Payment to the Mill to be paid Cheque/Demand Draft for Rs.<fo:inline font-weight="bold">${(toTunitPrice+priceDiscountAmount)?string("#0.00")} </fo:inline> after receipt of Mill invoice/LR</fo:block>
 	                                <fo:block>6. No. of Days credit extended by Mills to NHDC from date of despatch ........</fo:block>
 	                                <fo:block>7. No. of Days credit extended by NHDC to Agency from date of despatch </fo:block>
 	                                <fo:block>8. Any other specific information ...................</fo:block>
@@ -434,7 +436,7 @@ under the License.
 	                                <fo:block>10. Supply should be completed as mentioned above from the date of receipt of purchase order.</fo:block>
 	                                <fo:block>11. Puchase Order number and date must appear on all your invoices / correspondences. </fo:block>
 	                                <fo:block font-weight="bold">12. For having accepted the purchase order and terms &amp; conditions contained therein you have to return the second copy of the this purchse Order duly your seal &amp; signature immediately after receipt of the same.</fo:block>
-					          </fo:table-cell>-->     
+					          </fo:table-cell>-->    
 	                     </fo:table-row>
 					</fo:table-body>
 			   </fo:table>
