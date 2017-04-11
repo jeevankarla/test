@@ -296,7 +296,7 @@
 				orderAdjustmentsList.push("INSURANCE_CHGS");
 				orderAdjustmentsList.push("OTHER_CHARGES");
 				orderAdjustmentsList.push("PACKING_FORWARDIG");
-				orderAdjustmentsList.push("OTHER_DISCOUNT");
+				orderAdjustmentsList.push("PRICE_DISCOUNT");
 				
 				
 				
