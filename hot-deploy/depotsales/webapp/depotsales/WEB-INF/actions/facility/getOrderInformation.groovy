@@ -77,8 +77,12 @@ for (eachItem in orderItems) {
 		if("direct".equals(orderType)){
 		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
 		}
-			conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_EQUAL, "TEN_PERCENT_SUBSIDY"));
-		otherChargesList = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+			conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.NOT_IN, ["TEN_PERCENT_SUBSIDY","PRICE_DISCOUNT"]));
+			otherChargesList = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+			
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, "PRICE_DISCOUNT"));
+			otherChargesList1 = EntityUtil.filterByCondition(orderAdjustments, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 		
 		
 		conditionList.clear();
@@ -103,6 +107,14 @@ for (eachItem in orderItems) {
 				otherCharges += eachAdj.get("amount");
 			}
 		}
+		
+		for(int i=0; i<otherChargesList1.size(); i++){
+			eachAdjs = otherChargesList1.get(i);
+			if(UtilValidate.isNotEmpty(eachAdjs.get("amount"))){
+				adjustmentAmount += eachAdjs.get("amount");
+			}
+		}
+		
 	}
 	
 	quotaAvbl=eachItem.quotaQuantity;
