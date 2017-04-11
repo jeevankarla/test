@@ -1287,6 +1287,28 @@ under the License.
         </section>
     </screen>
     
+    <screen name="newInvoiceVoucherDC">
+        <section>
+            <actions>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+			    <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+				<set field="titleProperty" value="AccountingInvoice"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/newInvoiceVoucherDC.groovy"/>
+            </actions>
+            <widgets>
+               <section>
+					<widgets>
+						<platform-specific>
+                			<html><html-template location="component://accounting/webapp/accounting/invoice/newInvoiceVoucherDC.fo.ftl"/></html>
+	            		</platform-specific>
+					</widgets>
+				</section>
+            </widgets>
+        </section>
+    </screen>
     
      <screen name="newInvoiceDEPOTVoucher">
         <section>

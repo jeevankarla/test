@@ -431,14 +431,14 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 	}
 	function submitForm(){
 		cancelForm(); 		 
-		jQuery('#newInvoiceVoucher').submit();
+		jQuery('#newInvoiceVoucherDC').submit();
 	}
 	
 	function showDocTypeQtip(invoiceId){
 	  var action;
      var message = "";
 
-                message += "<html><head></head><body><form id='newInvoiceVoucher' target='_blank'  name='newInvoiceVoucher' method='post' action='newInvoiceVoucher' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
+                message += "<html><head></head><body><form id='newInvoiceVoucherDC' target='_blank'  name='newInvoiceVoucherDC' method='post' action='newInvoiceVoucherDC' onsubmit='return disableGenerateButton();'><table cellspacing=10 cellpadding=10 width=400>";
       			message += "<tr class='h2'><td align='left' class='h5' width='60%'><font size=45%></font><input type='radio' id='docType' name='docType' value='Original'>Original </td><td align='left'  width='90%'><input type='radio' id='docType' name='docType' value='Duplicate'>Duplicate</td></tr>";
      		    message += "<tr class='h3'><td align='center'><span align='right'><input type='hidden' name='invoiceId' value="+invoiceId+" ><input type='button' value='Submit' class='newtab' onclick='return submitForm();'/></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='cancel' onclick='return cancelForm();' class='smallSubmit'>cancel</button></span></td></tr>";
 			    message +=	"</table></form></body></html>";
