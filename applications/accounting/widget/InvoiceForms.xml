@@ -110,7 +110,7 @@ under the License.
     <form name="invoiceHeader" type="single" title="Invoice header information" default-map-name="invoice"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
-            <set field="total" value="${bsh:return(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotalValue(invoice).setScale(2,BigDecimal.ROUND_HALF_UP));}"/>
+            <set field="total" value="${bsh:return(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice));}"/>
             <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
                 <field-map field-name="partyId" from-field="invoice.partyIdFrom"/>
                 <field-map field-name="compareDate" from-field="invoice.invoiceDate"/>
@@ -154,15 +154,12 @@ under the License.
 
     <form name="invoiceItems" list-name="invoiceItems" target="" title="" type="list" separate-columns="true" paginate-target="invoiceOverview"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <!-- <row-actions>
+        <row-actions>
             <set field="total" value="${bsh:
                 import java.math.BigDecimal;
                 if(quantity==null) quantity = BigDecimal.ONE;
                 if(amount==null) amount = BigDecimal.ZERO;
                 return (quantity.multiply(amount));}"/>
-        </row-actions> -->
-        <row-actions>
-            <set field="total" value="${itemValue}"/>
         </row-actions>
         <auto-fields-entity entity-name="InvoiceItem" default-field-type="display"/>
         <field name="invoiceId"><hidden/></field>
