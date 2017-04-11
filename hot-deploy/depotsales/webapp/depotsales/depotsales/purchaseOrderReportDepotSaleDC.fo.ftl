@@ -133,7 +133,7 @@ under the License.
 						<fo:table-cell><fo:block text-align="left" font-size="11pt">Dear Sir,</fo:block></fo:table-cell>
                       </fo:table-row>
                       <fo:table-row>
-						<fo:table-cell><fo:block text-align="left" font-size="11pt">Please supply the following items as per the terms and conditions overleaf. All goods should be consigned to self and booked to NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. FREIGHT TO PAY basis unless otherwise specified.</fo:block></fo:table-cell>
+						<fo:table-cell><fo:block text-align="left" font-size="11pt">Please supply the following items as per the terms and conditions overleaf. All goods should be consigned to self and booked to NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. F.O.R /Fright to pay basis unless otherwise specified.</fo:block></fo:table-cell>
                       </fo:table-row>
 	               </fo:table-body>
 	           </fo:table>
