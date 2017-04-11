@@ -4311,7 +4311,12 @@ public class DepotSalesServices{
 						if (paramMap.containsKey(orderAdjustmentType+ "_AMT" + thisSuffix)) {
 							String taxAmt = (String) paramMap.get(orderAdjustmentType+ "_AMT" + thisSuffix);
 							if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
+								
+								if(orderAdjustmentType.equals("OTHER_DISCOUNT"))
+								adjTypeMap.put("amount",new BigDecimal(taxAmt).negate());
+								else
 								adjTypeMap.put("amount",new BigDecimal(taxAmt));
+								
 							}
 						}
 						if (paramMap.containsKey(orderAdjustmentType+ "_INC_BASIC" + thisSuffix)) {
@@ -8227,7 +8232,6 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 			
 			// Adjustment Handling
 			
-			//Debug.log("orderAdjustmentList =====12223========"+orderAdjustmentList);
 			for(int i=0; i<orderAdjustmentList.size(); i++){
 				Map adjMap = (Map) orderAdjustmentList.get(i);
 				
@@ -8236,12 +8240,15 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 	 				item.addAdjustment(orderAdjustment);
 					
 	 				totalPrice=totalPrice.add((BigDecimal) adjMap.get("amount"));
+				}else if(adjMap.get("orderAdjustmentTypeId").equals("OTHER_DISCOUNT")){
+					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", adjMap);
+	 				item.addAdjustment(orderAdjustment);
+	 				totalPrice=totalPrice.add((BigDecimal) adjMap.get("amount"));
 				}
 			}
 			
 			// Service Charge
 			
-			//Debug.log("serviceChargeAmt =====12223========"+serviceChargeAmt);
 			if(serviceChargeAmt.compareTo(BigDecimal.ZERO)>0){
 				GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
 		                UtilMisc.toMap("orderAdjustmentTypeId", "SERVICE_CHARGE", "amount", serviceChargeAmt, "sourcePercentage", serviceCharge,

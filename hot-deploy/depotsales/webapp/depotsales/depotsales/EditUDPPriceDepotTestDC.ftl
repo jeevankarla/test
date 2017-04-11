@@ -292,6 +292,8 @@ input[type=button]:hover {
 				orderAdjustmentsList.push("INSURANCE_CHGS");
 				orderAdjustmentsList.push("OTHER_CHARGES");
 				orderAdjustmentsList.push("PACKING_FORWARDIG");
+				orderAdjustmentsList.push("OTHER_DISCOUNT");
+				
 				
 				dataRow["orderAdjustmentsList"] = orderAdjustmentsList;
 			
@@ -388,6 +390,8 @@ input[type=button]:hover {
 			  
 			  });
 			  
+			 
+			  
 			 var schemeCategory = $("#schemeCategory").val();
 			 
 			 if(schemeCategory == "General"){
@@ -461,7 +465,7 @@ input[type=button]:hover {
 			  
 			  
 		
-			  //alert("saleTaxList=================="+saleTaxList);
+			  //alert("saleTaxList=================="+JSON.stringify(taxList1));
 			  
 			  dataRow["allAdjustments"] = allAdjustments;
 			  
