@@ -63,7 +63,7 @@ under the License.
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
-				<fo:block text-align="left" font-weight="bold" font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>
+				<#--<fo:block text-align="left" font-weight="bold" font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>-->
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
@@ -102,8 +102,7 @@ under the License.
 				<fo:block text-align="center"    font-size="10pt" >S.No</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid" number-columns-spanned="3">
-				<fo:block text-align="center"     font-size="10pt" >Description of Goods with count</fo:block>
-				<fo:block text-align="center"    font-size="10pt" >/denier etc</fo:block>
+				<fo:block text-align="center"     font-size="10pt" >Description of Products</fo:block>
 				</fo:table-cell>
 				<#--><fo:table-cell border-style="solid">
 				<fo:block text-align="center"     font-size="10pt" >Bale/</fo:block>
@@ -132,7 +131,7 @@ under the License.
 				</#if>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Rate/</fo:block>
-				 <fo:block text-align="center"    font-size="10pt" >Kg/bundle</fo:block>
+				 <fo:block text-align="center"    font-size="10pt" >Kg</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
@@ -429,7 +428,7 @@ under the License.
 				<fo:table-cell number-columns-spanned="2" >
          			 <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
 	   	          <#--  <#if scheme != "General"> --> 
-	                <fo:block text-align="left"    font-size="10pt" >Purchase Value (RS):<#if purInvoiceTOt?has_content>${purInvoiceTOt?string("#0.00")}</#if></fo:block>
+	                <#--<fo:block text-align="left"    font-size="10pt" >Purchase Value (RS):<#if purInvoiceTOt?has_content>${purInvoiceTOt?string("#0.00")}</#if></fo:block>-->
 	   			<#--	</#if>-->
 	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   
 	        </fo:table-cell>
@@ -530,7 +529,7 @@ under the License.
 						</fo:table-cell>
 						
 						<fo:table-cell  border-style-right="hidden">
-						<fo:block text-align="left" keep-together="always"   font-size="10pt" >Due Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</fo:block>
+						<fo:block text-align="left" keep-together="always"   font-size="10pt" >Due Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(DueDate, "dd-MMM-yyyy")}</fo:block>
 						</fo:table-cell>
 						
 				  </fo:table-row>
@@ -573,14 +572,25 @@ under the License.
 		       	</fo:table>
 	       </fo:block>
       	
-              <fo:block text-align="left" font-weight="bold"    font-size="10pt" >TERMS &amp; CONDITIONS:</fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * All payment  should be made by crossed cheque/draft in favour of 'National Handloom Development Corp Ltd'.</fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"    font-size="10pt" >* INTEREST will be charged  ____________per annum on overdue Amount.</fo:block>
+              
+			   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * All payment  should be made by RTGS/NEFT in favour of 'National Handloom Development Corp Ltd'.</fo:block>
+			   <fo:block text-align="left" white-space-collapse="false"    font-size="10pt" >* INTEREST will be charged  ____________per annum on overdue Amount.</fo:block> 
 			   
-			   
-			    <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * In case of any dispute,the case will be referred to an arbitrator mutually agreed upon </fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" >&#160; whose will be final and binding E.&amp;.O.E</fo:block>
-	       	   <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
+			   <#-- <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * In case of any dispute,the case will be referred to an arbitrator mutually agreed upon </fo:block>
+			   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" >&#160; whose will be final and binding E.&amp;.O.E</fo:block>-->
+				<fo:block text-align="left" font-weight="bold"    font-size="10pt" >TERMS &amp; CONDITIONS:</fo:block>
+	       	  <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 1. Rates indicated are subjects to change without notice and the rates applicable will be the one ruling at the time deivery.</fo:block>
+	       	  <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 2. Freight, Octroi and other charges if any will be extra and has to be borne by the buyer.</fo:block>
+	       	   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 3. Packing charges for small packings are charged extra.</fo:block>
+	       	   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 4. Supplies are subject to availability.</fo:block>
+	       	   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 5. The weight recorded in our invoice shall be final and will be binding on buyer.</fo:block>
+	       	   <fo:block text-align="center"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
+	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;RTGS/NEFT Detail:</fo:block>
+	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
+	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;A/C No. 240010200012865</fo:block>
+	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;IFSC Code No: UTIB0000240</fo:block>
+	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;AXIS BANK LTD.</fo:block>
+	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;G.T ROAD PANIPAT-132 103</fo:block>
       			
       		 <fo:block page-break-after="always"></fo:block>  
       		 
