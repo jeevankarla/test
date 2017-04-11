@@ -8240,7 +8240,7 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 	 				item.addAdjustment(orderAdjustment);
 					
 	 				totalPrice=totalPrice.add((BigDecimal) adjMap.get("amount"));
-				}else if(adjMap.get("orderAdjustmentTypeId").equals("OTHER_DISCOUNT")){
+				}else if(adjMap.get("orderAdjustmentTypeId").equals("PRICE_DISCOUNT")){
 					GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", adjMap);
 	 				item.addAdjustment(orderAdjustment);
 	 				totalPrice=totalPrice.add((BigDecimal) adjMap.get("amount"));
