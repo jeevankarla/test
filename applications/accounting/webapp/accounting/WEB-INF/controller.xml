@@ -2986,6 +2986,11 @@ under the License.
         <response name="success" type="view" value="newInvoiceVoucher"/>
     </request-map>
     
+    <request-map uri="newInvoiceVoucherDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newInvoiceVoucherDC"/>
+    </request-map>
+    
     <request-map uri="newInvoiceDEPOTVoucher">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newInvoiceDEPOTVoucher"/>
@@ -4800,6 +4805,7 @@ under the License.
     <view-map name="DebitNote" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#DebitNote" content-type="application/pdf"/>
     <view-map name="invoiceVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#invoiceVoucher" content-type="application/pdf"/>
     <view-map name="newInvoiceVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceVoucher" content-type="application/pdf"/>
+    <view-map name="newInvoiceVoucherDC" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceVoucherDC" content-type="application/pdf"/>
     <view-map name="newInvoiceDEPOTVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceDEPOTVoucher" content-type="application/pdf"/>
     <view-map name="employeesFinOpeningBalPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#employeesFinOpeningBalPDF" content-type="application/pdf"/>
    
