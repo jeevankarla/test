@@ -151,6 +151,12 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field> -->
+        <field name="createNewContra" title="Transaction" widget-style="buttontext">
+        	<hyperlink target="EditFinAccountTrans" description=" Create Transaction" target-window="_BLANK"  also-hidden="false">
+	            <parameter param-name="finAccountId" from-field="finAccountId"/>                           			
+	            <parameter param-name="entryType" value="Contra"/>
+            </hyperlink>
+        </field> 
 		<field name="statement" title="Reconciliation Statement" widget-style="buttontext">
             <hyperlink target="recStatemetn.pdf" description="Statement" target-window="_BLANK"  also-hidden="false">
                 <parameter param-name="finAccountId"/>
@@ -158,6 +164,7 @@ under the License.
 				<parameter param-name="subTabItem" value="FinAccountTransForReconsile" />
             </hyperlink>
         </field> 
+        
     </form>
     
     <form name="ListNonBankAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"

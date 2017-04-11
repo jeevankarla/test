@@ -46,7 +46,6 @@ branchId = parameters.branchId;
 branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 branchName = branch.get("groupName");
 DateMap.put("branchName", branchName);
-
 branchList = [];
 
 condListb = [];
@@ -303,7 +302,11 @@ salesAndPurchaseList.add(headingMap);*/
 
 purchaseWiseDetails = [];
 if(invoice){
-
+tempTotMap=[:];
+totInvoiceAmt=0;
+totNetInvoiceAmt=0;
+totPoInvoiceAmt=0;
+totPurInvoiceNetAmt=0;
 	for (eachInvoice in invoice) {
 
 		
@@ -941,7 +944,7 @@ if(invoice){
 				tempMap.put("invoiceAmount", eachItem.itemValue+taxAmtkannur);
 			    else
 				tempMap.put("invoiceAmount", eachItem.itemValue);
-				
+				totInvoiceAmt=totInvoiceAmt+tempMap["invoiceAmount"];
 				////Debug.log("taxAmt======================"+taxAmt);
 				////Debug.log("allAdjWitOutTEN======================"+allAdjWitOutTEN);
 
@@ -1260,10 +1263,10 @@ if(invoice){
 						tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue+purTaxAmtkannur);
 						else
 						tempMap.put("poInvoiceAmt", POInvoiceItemList[0].itemValue);
-						
+						totPoInvoiceAmt=totPoInvoiceAmt+tempMap["poInvoiceAmt"];
 						
 						tempMap.put("purInvoiceNetAmt", purInvoiceNetAmt);
-					
+						totPurInvoiceNetAmt=totPurInvoiceNetAmt+tempMap["purInvoiceNetAmt"];
 					
 					
 				}
@@ -1439,7 +1442,7 @@ if(invoice){
 
 
 				tempMap.put("invoiceNetAmt", invoiceNetAmt);
-
+				totNetInvoiceAmt=totNetInvoiceAmt+tempMap["invoiceNetAmt"];
 
 				salesAndPurchaseList.add(tempMap);
 
@@ -2100,7 +2103,7 @@ if(invoice){
 				tempMap.put("invoiceAmount", eachItem.itemValue+taxAmtkannur);
 			   else
 				tempMap.put("invoiceAmount", eachItem.itemValue);
-
+				totInvoiceAmt=totInvoiceAmt+tempMap["invoiceAmount"];
 				////Debug.log("taxAmt======================"+taxAmt);
 				////Debug.log("allAdjWitOutTEN======================"+allAdjWitOutTEN);
 
@@ -2618,7 +2621,7 @@ if(invoice){
 
 
 				tempMap.put("invoiceNetAmt", invoiceNetAmt);
-
+				totNetInvoiceAmt=totNetInvoiceAmt+tempMap["invoiceNetAmt"];
 
 				salesAndPurchaseList.add(tempMap);
 
@@ -2628,6 +2631,13 @@ if(invoice){
 	}
 }
 
+
+tempTotMap.put("invoiceId", "TOTAL");
+tempTotMap.put("invoiceAmount", totInvoiceAmt);
+tempTotMap.put("invoiceNetAmt",totNetInvoiceAmt );
+tempTotMap.put("poInvoiceAmt", totPoInvoiceAmt);
+tempTotMap.put("purInvoiceNetAmt", totPurInvoiceNetAmt);
+salesAndPurchaseList.add(tempTotMap);
 //////Debug.log("salesAndPurchaseList=================="+salesAndPurchaseList);
 
 context.salesAndPurchaseList = salesAndPurchaseList;
