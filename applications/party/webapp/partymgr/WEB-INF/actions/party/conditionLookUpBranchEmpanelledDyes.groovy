@@ -147,7 +147,7 @@ if(parameters.ajaxLookup == 'Y'){
 		
 	*/}
 	
-	conditionFields.partyIdentificationTypeId=["PSB_NUMER","REGISTRATION_NUMBER"];
+	//conditionFields.partyIdentificationTypeId=["PSB_NUMER","REGISTRATION_NUMBER"];
 	if(roleTypeId)
 	conditionFields.roleTypeId=roleTypeId;
 	if(partyIdFrom)
