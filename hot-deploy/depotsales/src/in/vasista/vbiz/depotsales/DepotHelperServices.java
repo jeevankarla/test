@@ -4456,7 +4456,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
         for(GenericValue eachInvoice : Invoice){
 				
         	String eacinvoiceId = eachInvoice.getString("invoiceId");
-        	
+        	String costCenterId = eachInvoice.getString("costCenterId");
         	
         	List<GenericValue> InvoiceItem = null;
         	
@@ -4470,6 +4470,8 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
         	 }catch(GenericEntityException e){
  				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
  			}
+        	 
+        	 
         	 
         	 if(UtilValidate.isNotEmpty(InvoiceItem)){
         	 
@@ -4503,7 +4505,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 	        		
 	        	}
 	        	
-	        	 BigDecimal adjustmentValue = invoiceGrandTotal.subtract(invoiceItemsTotal);
+	        	 BigDecimal adjustmentValue = invoiceGrandTotal.subtract(invoiceItemsTotal.setScale(2, rounding));
 	        	 
 	        	 if(UtilValidate.isNotEmpty(adjustmentValue) && !(adjustmentValue.equals(BigDecimal.ZERO))){
 	 			try{
@@ -4512,7 +4514,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		
 		        	createInvoiceItemContext.put("invoiceId",eacinvoiceId);
 		            createInvoiceItemContext.put("invoiceItemTypeId", "ROUNDING_ADJUSTMENT");
-		            //createInvoiceItemContext.put("parentInvoiceId", eachInvoiceId);
+		            createInvoiceItemContext.put("costCenterId", costCenterId);
 		           // createInvoiceItemContext.put("parentInvoiceItemSeqId", invoiceItemSeqId);
 		            createInvoiceItemContext.put("quantity", BigDecimal.ONE);
 			            createInvoiceItemContext.put("amount", adjustmentValue);
