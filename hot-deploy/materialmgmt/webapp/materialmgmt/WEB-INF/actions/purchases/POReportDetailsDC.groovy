@@ -444,7 +444,7 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 					}
 				}
 			}*/
-			remarksDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+			remarksDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "remarks"));
 			if(UtilValidate.isNotEmpty(remarksDetails)){
 				remarksDetails=EntityUtil.getFirst(remarksDetails);
 				remarks=remarksDetails.attrValue;
