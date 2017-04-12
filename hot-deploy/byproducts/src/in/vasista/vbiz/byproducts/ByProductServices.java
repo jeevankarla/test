@@ -7616,7 +7616,6 @@ public class ByProductServices {
 		  	  String comments = "";
 		  	  String paymentGroupTypeId = "";
 		  	  String issuingAuthority = "";
-		  	  Debug.log("paramMap============"+paramMap);
 		  	inFavourOf = (String) paramMap.get("partyIdName");
 		  	paymentMethodId = (String) paramMap.get("paymentMethodId");
 		  	finAccountId = (String) paramMap.get("finAccountId");
@@ -7700,9 +7699,7 @@ public class ByProductServices {
 		  		  serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
 		  		  serviceCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
 		  		  serviceCtx.put("userLogin", userLogin);
-		  	  	Debug.log("serviceCtx======================="+serviceCtx);
 		  		  Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", serviceCtx);
-		  		Debug.log("resultCtx======================="+resultCtx);
 		  		  if(ServiceUtil.isError(resultCtx)){
 		    			Debug.logError("Error while creating payment group: " + ServiceUtil.getErrorMessage(resultCtx), module);
 		    			request.setAttribute("_ERROR_MESSAGE_", "Error while creating payment group"+ ServiceUtil.getErrorMessage(resultCtx));
