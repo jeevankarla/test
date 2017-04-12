@@ -265,13 +265,21 @@
 						<tr>	            
 						
 						    <td class="label"><b> Role Type Id</b></td>
-						   <td>
+						    <td>
+						    <select name="roleTypeId" id="roleTypeId">
+				              <option value="EMPANELLED_SUPPLIER">EMPANELLED SUPPLIER</option>
+				              <option value="UNEMPALED_SUPPLIER">UNEMPALED SUPPLIER</option>
+				              <option value="DYS_CMLS_SUPPLIER">DC SUPPLIER</option>
+				            </select>
+				            <td>
+						   <#--<td>
+						   
 						    <select name="roleTypeId" id="roleTypeId"  onchange="javascript:vendorValidation();" >
 				              <#list roleTypes as roleType>
 	                            <option value="${roleType.roleTypeId}" <#if "${roleType.roleTypeId}" == roleTypeId?if_exists>selected="selected"</#if>>${roleType.description}</option>
 	                          </#list>
 				            </select>
-				            <td>
+				            <td>-->
 						</tr>
 					<#-- 	<tr>
 				        <td class="label"><b>Pan Number</b></td>

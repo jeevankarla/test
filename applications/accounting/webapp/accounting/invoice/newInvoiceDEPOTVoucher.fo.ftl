@@ -89,6 +89,8 @@ under the License.
 	<fo:table-column column-width="5%"/>
 	<fo:table-column column-width="17%"/>
 	<fo:table-column column-width="10%"/>
+	<fo:table-column column-width="7%"/>
+	<fo:table-column column-width="7%"/>
 	<#if scheme == "MGPS_10Pecent">
 	<fo:table-column column-width="8%"/>
 	</#if>
@@ -129,6 +131,14 @@ under the License.
 				<fo:block text-align="center"     font-size="10pt" >Qty(Kgs)</fo:block>
 				</fo:table-cell>
 				</#if>
+				<fo:table-cell border-style="solid">
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Size</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">No</fo:block>
+				</fo:table-cell>
 				<#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="10pt" >MGPS</fo:block>
@@ -149,6 +159,8 @@ under the License.
 		   
 		     <#assign sr = 1>
 		     <#assign totQuantity = 0>
+		      <#assign totPackingSizekgs = 0>
+			  <#assign totPackets= 0>
 		      <#assign totSchemeQty = 0>
 		      <#assign totAmount = 0>
 		      <#assign tempScheamQty = 0>
@@ -172,7 +184,7 @@ under the License.
 				<#assign tempScheamQty = tempScheamQty+invoiceDetail.get("schemeQty")>
 					
 				
-                 <#if invoiceItemLevelAdjustments?has_content && !kanAndKalRo?has_content>		
+                 <#if invoiceItemLevelAdjustments?has_content>		
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -213,7 +225,7 @@ under the License.
 				
                 <#assign totServiceCharge = 0>
 				 <#assign serviceCharge = 0>
-                 <#if invoiceItemLevelAdjustments?has_content && !kanAndKalRo?has_content >		
+                 <#if invoiceItemLevelAdjustments?has_content >		
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -253,7 +265,14 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >${invoiceDetail.get("mgpsQty")?string("#0.000")}</fo:block>
 				</fo:table-cell>
 				</#if>
-				
+				<#assign totPackingSizekgs=totPackingSizekgs+invoiceDetail.get("packQuantity")>
+				<fo:table-cell border-style="solid">
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${invoiceDetail.get("packQuantity")?if_exists} </fo:block>
+				</fo:table-cell>
+				<#assign totPackets=totPackets+invoiceDetail.get("packets")>
+				<fo:table-cell border-style="solid">
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${invoiceDetail.get("packets")?if_exists} </fo:block>
+				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 					<#if kanAndKalRo?has_content> 
 						<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("unitPriceIncTax")?has_content>${invoiceDetail.get("unitPriceIncTax")?if_exists?string("#0.00")}<#else>${0.00}</#if></fo:block>
@@ -268,14 +287,14 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >${(invoiceDetail.get("ToTamount"))?string("#0.00")}</fo:block>
 				
                  
-				 <#if invoiceItemLevelAdjustments?has_content   && !kanAndKalRo?has_content>		
+				 <#if invoiceItemLevelAdjustments?has_content>		
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
 				        <#list eachOne.getValue() as each> 
 				        <#if each.invoiceItemTypeId != "TEN_PERCENT_SUBSIDY">
 		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				         <#--<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>-->
 				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue}</fo:block>
 				         </#if>
 				        </#list>
@@ -301,8 +320,14 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" >${totQuantity?string("#0.000")} </fo:block>
-				
 				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackingSizekgs} </fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackets} </fo:block>
+				</fo:table-cell>
+				
 				<#if scheme == "MGPS_10Pecent">
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"  font-size="10pt" >${totSchemeQty?string("#0.000")}</fo:block>
@@ -360,15 +385,16 @@ under the License.
 			</fo:table-row>
 
              <#assign remainingAdjustMents = 0>
-			<#if !kanAndKalRo?has_content>
+		
             <#list invoiceRemainigAdjItemList as eachList>
 			<fo:table-row white-space-collapse="false">
 			 <fo:table-cell >
 				<fo:block text-align="left"    font-size="10pt" ></fo:block>
 				</fo:table-cell>
+				
 				<fo:table-cell >
 				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
-				<fo:block text-align="left"    font-size="10pt" ><#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if></fo:block>
+				<fo:block text-align="right"    font-size="10pt" ><#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if></fo:block>
 				</#if>
 				</fo:table-cell>
 				<fo:table-cell >
@@ -384,7 +410,7 @@ under the License.
 				</fo:table-cell>
 			</fo:table-row>
 			</#list>
-		</#if>
+		
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell number-columns-spanned="2" >
          			 <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
@@ -438,11 +464,9 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				<#assign finalTOtal = (grandTotal+mgpsAndTotalDeductions)>
 				<#assign finalTOtal = (finalTOtal+remainingAdjustMents)>
-				<#if !kanAndKalRo?has_content>
+			
 					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")}</fo:block>
-				<#else>
-					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((grandTotal+totTaxAmount2)+mgpsAmt)?string("#0.00")}</fo:block>
-				</#if>
+				
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				</fo:table-cell>
 			</fo:table-row>

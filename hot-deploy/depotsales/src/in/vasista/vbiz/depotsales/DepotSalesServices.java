@@ -3292,6 +3292,12 @@ public class DepotSalesServices{
 							String taxAmt = (String) paramMap.get(orderAdjustmentType+ "_AMT" + thisSuffix);
 							if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
 								adjTypeMap.put("amount",new BigDecimal(taxAmt));
+								if(orderAdjustmentType.equals("PRICE_DISCOUNT")){
+									adjTypeMap.put("amount",new BigDecimal(taxAmt).negate());
+								}
+								else{
+									adjTypeMap.put("amount",new BigDecimal(taxAmt));
+								} 
 							}
 						}
 						if (paramMap.containsKey(orderAdjustmentType+ "_INC_BASIC" + thisSuffix)) {
@@ -6889,6 +6895,12 @@ public static Map<String, Object> processBranchSalesOrderDepot(DispatchContext d
 					Map adjMap = (Map) orderAdjustmentList.get(i);
 					
 					if(  ((BigDecimal) adjMap.get("amount")).compareTo(BigDecimal.ZERO)>0){
+						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", adjMap);
+		 				item.addAdjustment(orderAdjustment);
+						
+		 				totalPrice=totalPrice.add((BigDecimal) adjMap.get("amount"));
+					}
+					else if(adjMap.get("orderAdjustmentTypeId").equals("PRICE_DISCOUNT")){
 						GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment", adjMap);
 		 				item.addAdjustment(orderAdjustment);
 						
