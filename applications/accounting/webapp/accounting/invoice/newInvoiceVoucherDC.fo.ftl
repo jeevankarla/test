@@ -198,7 +198,7 @@ under the License.
 				       </#if>
 				  </#list>
 				 </#if>
-				  <#if invoiceItemLevelAdjustments?has_content?has_content>	
+				  <#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -309,7 +309,7 @@ under the License.
 				  </#list>
 				 </#if>
 				 
-				  <#if invoiceItemLevelAdjustments?has_content>	
+				  <#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -364,8 +364,8 @@ under the License.
 				<fo:table-cell border-style="solid">
 				<#assign finalGrndToal=0>
 				<#if kanAndKalRo?has_content>
-					<#assign finalGrndToal=grandTotal+totTaxAmount>
-		   			<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
+					<#assign finalGrndToal=totAmount+totTaxAmount>
+		   			<fo:block text-align="center"  font-size="10pt" >${(totAmount+totTaxAmount)?string("#0.00")}</fo:block>
 				<#else>
 					<#assign finalGrndToal=grandTotal+totTaxAmount2>
 					<fo:block text-align="center"  font-size="10pt" >${(totAmount+totTaxAmount2)?string("#0.00")}</fo:block>
@@ -417,10 +417,9 @@ under the License.
 		
             <#list invoiceRemainigAdjItemList as eachList>
             
-            <#if eachList.invoiceItemTypeId == "ENTRY_TAX">
-            <#assign entryTax = entryTax+eachList.itemValue>
-            </#if>
+            <#if eachList.invoiceItemTypeId != "PRICE_DISCOUNT">
             
+            <#assign remainingAdjustMents = remainingAdjustMents+eachList.itemValue>
 			<fo:table-row white-space-collapse="false">
 				
 			    <fo:table-cell >
@@ -430,20 +429,16 @@ under the License.
 				
 				</fo:table-cell>
 				<fo:table-cell >
-				 <#if eachList.invoiceItemTypeId != "INVOICE_ITM_ADJ">
-				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.itemValue)>
-				</#if>
 				
 			<#--	<#if eachList.invoiceItemTypeId == "ENTRY_TAX">
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				<#else>
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>-->
-				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
 				<fo:block text-align="right"    font-size="10pt" > <#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if> :<#if eachList.itemValue?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
-				</#if>
 				</fo:table-cell>
 			</fo:table-row>
+			</#if>
 			</#list>
 		  
 			<fo:table-row white-space-collapse="false">
@@ -455,7 +450,7 @@ under the License.
 	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   
 	        </fo:table-cell>
 	        <fo:table-cell  >
-						<fo:block text-align="right" font-size="10pt">Sale Value(RS):${((grandTotal+totTaxAmount+remainingAdjustMents)-entryTax)?string("#0.00")?if_exists}</fo:block>
+						<fo:block text-align="right" font-size="10pt">Sale Value(RS):${(finalGrndToal+remainingAdjustMents)?string("#0.00")?if_exists}</fo:block>
 						
                 
                 <#if !kanAndKalRo?has_content && serchar?has_content>
@@ -507,7 +502,7 @@ under the License.
 				<#assign finalTOtal = (grandTotal+mgpsAndTotalDeductions)>
 				<#assign finalTOtal = (finalTOtal+remainingAdjustMents)>
 				
-					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")}</fo:block>
+					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((finalGrndToal)+remainingAdjustMents)?string("#0.00")}</fo:block>
 				
   				
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
