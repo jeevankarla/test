@@ -117,13 +117,10 @@ invoiceItemDetails = delegator.findList("InvoiceItem", condition, null, null, nu
 
 invoiceItems = EntityUtil.filterByCondition(invoiceItemDetails, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
 invoiceAdjustments = EntityUtil.filterByCondition(invoiceItemDetails, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
-packetQuantity="";
-packets="";
 if(UtilValidate.isNotEmpty(invoiceItems)){
 	for(invoiceItem in invoiceItems){
 		tempMap=[:];
 		tempList=[];
-		
 		orderItembill = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId), null, null, null, false);
 		orderDetails=EntityUtil.getFirst(orderItembill);
 		if(UtilValidate.isNotEmpty(orderDetails)){
@@ -146,16 +143,13 @@ if(UtilValidate.isNotEmpty(invoiceItems)){
 			packetsDetails=EntityUtil.getFirst(packetsDetails);
 			packets=packetsDetails.attrValue;
 		}
-		
 		tempMap.put("productId", invoiceItem.productId);
 		productDetails = delegator.findOne("Product",[productId : invoiceItem.productId] , false);
 		tempMap.put("productName", productDetails.productName);
 		tempMap.put("invoiceItemSeqId", invoiceItem.invoiceItemSeqId);
 		tempMap.put("quantity", invoiceItem.quantity);
-		tempMap.put("unitPrice", invoiceItem.unitPrice);
-		tempMap.put("packetQuantity", packetQuantity);
-		tempMap.put("packets", packets);
-		tempMap.put("amount", invoiceItem.itemValue);
+		tempMap.put("unitPrice", invoiceItem.amount);
+		tempMap.put("amount", invoiceItem.amount*invoiceItem.quantity);
 		invoiceitemAdjustments = EntityUtil.filterByCondition(invoiceAdjustments, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, invoiceItem.invoiceItemSeqId));
 		for(invoiceAdjstmt in invoiceitemAdjustments){
 			tempMap2=[:];
@@ -163,10 +157,10 @@ if(UtilValidate.isNotEmpty(invoiceItems)){
 			tempMap2.put("taxTerm", invoiceAdjstmt.invoiceItemTypeId);
 			tempMap2.put("parentInvoiceItemSeqId", invoiceAdjstmt.parentInvoiceItemSeqId);
 			tempMap2.put("taxPer", invoiceAdjstmt.sourcePercentage);
-			tempMap2.put("taxAmount", invoiceAdjstmt.itemValue);
+			tempMap2.put("taxAmount", invoiceAdjstmt.amount);
 			tempList.add(tempMap2);
 		}
-		purchaseInvoiceAdjustmtsMap.put(invoiceItem.invoiceItemSeqId, tempList);
+		purchaseInvoiceAdjustmtsMap.put(invoiceItem.productId, tempList);
 		purchaseInvoiceItemList.add(tempMap);
 	}
 }

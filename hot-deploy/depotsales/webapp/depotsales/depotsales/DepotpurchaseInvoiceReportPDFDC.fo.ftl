@@ -114,7 +114,7 @@ under the License.
 	                <#assign totalValue=0>
 		            <#list purchaseInvoiceItemList as eachItem>	
 					<#assign subTotalValue=0>
-		            <#assign itemAdjustments=purchaseInvoiceAdjustmtsMap.get(eachItem.invoiceItemSeqId)>
+		            <#assign itemAdjustments=purchaseInvoiceAdjustmtsMap.get(eachItem.productId)>
 					<fo:table-row>
 	                    <fo:table-cell border-style="solid">
 			            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false">${eachItem.get("productId")?if_exists}</fo:block>
@@ -298,7 +298,7 @@ under the License.
 		            		</fo:block>  
 			            </fo:table-cell>
 					</fo:table-row>
-					<#--<fo:table-row>
+					<fo:table-row>
 			             <fo:table-cell  number-columns-spanned="5">
 			            	<fo:block   text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">TERMS CONDITIONS:</fo:block>
 			            	<fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * All payment  should be made by crossed cheque/draft in favour of 'National Handloom Development Corp Ltd'.</fo:block>
@@ -306,7 +306,7 @@ under the License.
 			            	<fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * In case of any dispute,the case will be referred to an arbitrator mutually agreed upon </fo:block>
 			            	<fo:block text-align="left" white-space-collapse="false"   font-size="10pt" >&#160; whose will be final and binding E.&amp;.O.E</fo:block>  
 			            </fo:table-cell>
-					</fo:table-row>-->
+					</fo:table-row>
 					
 				</fo:table-body>
 			</fo:table>	

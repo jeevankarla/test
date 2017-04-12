@@ -3034,6 +3034,10 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotpurchaseInvoiceReportPDF"/>
     </request-map>
+    <request-map uri="DepotpurchaseInvoiceReportDC.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DepotpurchaseInvoiceReportPDFDC"/>
+    </request-map>
      <request-map uri="reimbursmentInvoice.pdf">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="reimbursmentInvoicePDF"/>
@@ -3645,6 +3649,7 @@
      <view-map name="purchaseInvoiceDetailsPDFReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#purchaseInvoiceDetailsPDFReport" content-type="application/pdf"/>
      <view-map name="purchaseInvoiceDetailsPDFReportDC" type="screenfop" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#purchaseInvoiceDetailsPDFReportDC" content-type="application/pdf"/>
      <view-map name="DepotpurchaseInvoiceReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotpurchaseInvoiceReportPDF" content-type="application/pdf"/>
+     <view-map name="DepotpurchaseInvoiceReportPDFDC" type="screenfop" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#DepotpurchaseInvoiceReportPDFDC" content-type="application/pdf"/>
      <view-map name="reimbursmentInvoicePDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#reimbursmentInvoicePDF" content-type="application/pdf"/>
      <view-map name="indentOverViewReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#indentOverViewReport" content-type="application/pdf"/>
      <view-map name="FindSupplierDispatchs" type="screen" page="component://depotsales/widget/DepotOperationScreens.xml#FindSupplierDispatchs"/>
