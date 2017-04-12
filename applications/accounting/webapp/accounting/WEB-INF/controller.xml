@@ -3983,6 +3983,20 @@ under the License.
         <response name="error" type="request-redirect-noparam" value="apGroupPayment"/>
     </request-map>
     
+    
+    <request-map uri="makeSingleGroupInvoicePayments">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="in.vasista.vbiz.byproducts.ByProductServices"  invoke="makeSingleGroupInvoicePayments" global-transaction="true"/>
+     	<response name="success" type="request-redirect-noparam" value="apSingleGroupPayment"/>
+        <response name="error" type="request-redirect-noparam" value="apSingleGroupPayment"/>
+    </request-map>
+    
+     <request-map uri="findAPSingleGroupPayment">
+           <security https="true" auth="true"/>
+            <response name="success" type="view" value="FindAPSingleGroupPayment"/>
+            <response name="error" type="view" value="FindAPSingleGroupPayment"/>
+    </request-map>
+    
     <request-map uri="makeCPFFinAccTrans">
      	<security https="true" auth="true"/>
      	<event type="java"  path="org.ofbiz.accounting.finaccount.FinAccountServices"  invoke="makeCPFFinAccTrans" global-transaction="true"/>
@@ -4357,6 +4371,12 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DepotpurchaseInvoiceReportPDF"/>
     </request-map>
+    <request-map uri="apSingleGroupPayment">
+       <security https="true" auth="true"/>
+        <response name="success" type="view" value="apSingleGroupPayment"/>
+        <response name="error" type="view" value="apSingleGroupPayment"/>
+    </request-map>
+    
 
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
@@ -4967,5 +4987,7 @@ under the License.
     <view-map name="BankReportCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BankReportCSV" content-type="text/csv" encoding="none"/>
   	<view-map name="BankReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#BankReportPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="DepotpurchaseInvoiceReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#DepotpurchaseInvoiceReportPDF" content-type="application/pdf"/>
+    <view-map name="apSingleGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#APSingleGroupPaymentProcessing"/> 
+     <view-map name="FindAPSingleGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindAPSingleGroupPayment"/>
    <!-- end of view mappings -->
 </site-conf>

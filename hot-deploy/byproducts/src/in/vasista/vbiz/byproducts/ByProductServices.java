@@ -7583,4 +7583,165 @@ public class ByProductServices {
          request.setAttribute("_EVENT_MESSAGE_", "Payment successfully done for selected invoices ..!");
          return "success"; 
 	}
+	
+	 public static String makeSingleGroupInvoicePayments(HttpServletRequest request, HttpServletResponse response) {
+			Delegator delegator = (Delegator) request.getAttribute("delegator");
+		  	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+		  	  Locale locale = UtilHttp.getLocale(request);
+		  	  Map<String, Object> result = ServiceUtil.returnSuccess();
+		  	  HttpSession session = request.getSession();
+		  	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+		      Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+		      Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
+		  	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+		  	  BigDecimal totalAmount = BigDecimal.ZERO;
+		  	  List paymentIds = FastList.newInstance();
+		  	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+		  	  if (rowCount < 1) {
+		  		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+				  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+		  		  return "error";
+		  	  }
+		  	  String paymentId = "";
+		  	  String inFavourOf = "";
+		  	  String paymentMethodId = "";
+		  	  String paymentType = "";
+		  	  String finAccountId = "";
+		  	  String instrumentDateStr = "";
+		  	  String paymentDateStr = "";
+		  	  String paymentRefNum = "";
+		  	  String invoiceId = "";
+		  	  String partyIdTo = "";
+		  	  String partyIdFrom = "";
+		  	  String comments = "";
+		  	  String paymentGroupTypeId = "";
+		  	  String issuingAuthority = "";
+		  	inFavourOf = (String) paramMap.get("partyIdName");
+		  	paymentMethodId = (String) paramMap.get("paymentMethodId");
+		  	finAccountId = (String) paramMap.get("finAccountId");
+		  	instrumentDateStr = (String) paramMap.get("instrumentDate");
+		  	paymentDateStr = (String) paramMap.get("paymentDate");
+		  	String payAmountStr=(String) paramMap.get("payAmount");
+		  	paymentRefNum = (String) paramMap.get("paymentRefNum");
+		  	comments = (String) paramMap.get("comments");
+		  	paymentGroupTypeId = (String) paramMap.get("paymentGroupTypeId");
+		  	issuingAuthority = (String) paramMap.get("issuingAuthority");
+		  	inFavourOf = (String)request.getParameter("inFavor");
+		  	  
+		  	Timestamp paymentDate=null;
+		  	 if (UtilValidate.isNotEmpty(paymentDateStr)) { 
+	          	 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");             
+	               try {
+	            	   paymentDate = new java.sql.Timestamp(sdf.parse(paymentDateStr).getTime());
+	               } catch (ParseException e) {
+	                   Debug.logError(e, "Cannot parse date string: " + paymentDateStr, module);
+	               } 
+	          }
+		  	 
+		  	Timestamp instrumentDate=UtilDateTime.nowTimestamp();
+		  	
+		  	
+		  	for (int i = 0; i < rowCount; i++){
+		  		  
+			  	  Map paymentMap = FastMap.newInstance();
+		  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+		  		  
+		  		  BigDecimal amount = BigDecimal.ZERO;
+		  		  String amountStr = "";
+		  		  
+		  		  if (paramMap.containsKey("paymentId" + thisSuffix)) {
+		  			paymentId = (String) paramMap.get("paymentId"+thisSuffix);
+		  			paymentIds.add(paymentId);
+		  		  }
+		  		 /* if (paramMap.containsKey("partyId" + thisSuffix)) {
+		  			partyIdFrom = (String) paramMap.get("partyId"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("fromPartyId" + thisSuffix)) {
+		  			partyIdTo = (String) paramMap.get("fromPartyId"+thisSuffix);
+		  		  }
+		  		  if (paramMap.containsKey("amount" + thisSuffix)) {
+		  			amountStr = (String) paramMap.get("amount"+thisSuffix);
+		  		  }*/
+			  	}
+		  	BigDecimal payAmount=BigDecimal.ZERO;
+		  	if(UtilValidate.isNotEmpty(payAmountStr)){
+				  try {
+					  payAmount = new BigDecimal(payAmountStr);
+		  		  } catch (Exception e) {
+		  			  Debug.logError(e, "Problems parsing amount string: " + payAmountStr, module);
+		  			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + payAmountStr);
+		  			  return "error";
+		  		  }
+			  }
+		  	String paymentGroupId=null;
+		  
+		  	try {
+		  		
+		  	
+		     if(UtilValidate.isNotEmpty(paymentIds)){
+		  		  Map serviceCtx = FastMap.newInstance();
+		  		  serviceCtx.put("paymentIds", paymentIds);
+		  		  serviceCtx.put("paymentMethodId", paymentMethodId);
+		  		  serviceCtx.put("paymentMethodTypeId", "CHEQUE_PAYIN");
+		  		  serviceCtx.put("instrumentDate", instrumentDate);
+		  		  serviceCtx.put("paymentDate", paymentDate);
+		  		  serviceCtx.put("paymentRefNum", paymentRefNum);
+		  		  serviceCtx.put("issuingAuthority", issuingAuthority);
+		  		  serviceCtx.put("inFavor", inFavourOf);
+		  		  serviceCtx.put("statusId", "PAYGRP_CREATED");
+		  		  if(UtilValidate.isNotEmpty(finAccountId)){
+		  			serviceCtx.put("finAccountId", finAccountId);
+		  		  }
+		  		  serviceCtx.put("amount", payAmount);
+		  		  serviceCtx.put("paymentGroupTypeId", "SINGLE_PAYMENT");
+		  		  serviceCtx.put("createdDate", UtilDateTime.nowTimestamp());
+		  		  serviceCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+		  		  serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+		  		  serviceCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+		  		  serviceCtx.put("userLogin", userLogin);
+		  		  Map resultCtx = dispatcher.runSync("createPaymentGroupAndMember", serviceCtx);
+		  		  if(ServiceUtil.isError(resultCtx)){
+		    			Debug.logError("Error while creating payment group: " + ServiceUtil.getErrorMessage(resultCtx), module);
+		    			request.setAttribute("_ERROR_MESSAGE_", "Error while creating payment group"+ ServiceUtil.getErrorMessage(resultCtx));
+			  			TransactionUtil.rollback();
+			  			return "error";
+		  		  }
+		  		  paymentGroupId = (String)resultCtx.get("paymentGroupId");
+			  	  	
+		  	  }
+			if(UtilValidate.isNotEmpty(paymentIds)){
+				
+				for(int i=0;i<paymentIds.size();i++){
+					String eachPaymentId = (String)paymentIds.get(i);
+				  	 Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", eachPaymentId, "statusId", "PMNT_SENT"));
+				  	/*  Map finDepositCtx = FastMap.newInstance();
+				  	   finDepositCtx.put("userLogin", userLogin);
+				  	  finDepositCtx.put("paymentIds", UtilMisc.toList(eachPaymentId));
+				  	  finDepositCtx.put("finAccountId", finAccountId);
+				  	  finDepositCtx.put("transactionDate", paymentDate);
+				  	  Map resultDepositMap = dispatcher.runSync("depositWithdrawPayments", finDepositCtx);
+				  	 
+				  	if(ServiceUtil.isError(resultDepositMap)){
+				  		  Debug.logError("Problems in service depositWithdrawPayments", module);
+				  		  request.setAttribute("_ERROR_MESSAGE_", "Error in service depositWithdrawPayments");
+				  		  TransactionUtil.rollback();
+				  		  return "error";
+				  	  }*/
+				  	 
+				}
+			}
+		  	}catch (Exception e1) {
+				  Debug.logError(e1, "Problems createPaymentGroupAndMember ", module);
+				  request.setAttribute("_ERROR_MESSAGE_", "Problems creating createPaymentGroupAndMember ");
+				  return "error";
+			  }
+		  	
+		  	
+		  	
+			  	 
+		  	 		 result = ServiceUtil.returnSuccess("Payment successfully done for selected PaymentIds for GroupId"+paymentGroupId);
+	       request.setAttribute("_EVENT_MESSAGE_", "Payment successfully done for selected PaymentIds for GroupId"+paymentGroupId);
+	       return "success"; 
+		}
+	   
 }
