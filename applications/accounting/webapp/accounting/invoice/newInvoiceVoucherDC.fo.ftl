@@ -198,15 +198,13 @@ under the License.
 				       </#if>
 				  </#list>
 				 </#if>
-				  <#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
+				  <#if invoiceItemLevelAdjustments?has_content?has_content>	
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
 				        <#list eachOne.getValue() as each>  
-				        <#if each.invoiceItemTypeId == "VAT_SALE">
 				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 				        <fo:block text-align="left"  font-weight="bold"   font-size="10pt" ><#if each.description?has_content>${each.description?if_exists}<#else>${each.invoiceItemTypeId?if_exists}</#if><#if each.percentage?has_content>(${each.percentage?if_exists?string("#0.00")}%)</#if></fo:block>
-				       </#if>
 				        </#list>
 				       </#if>
 				  </#list>
@@ -316,12 +314,10 @@ under the License.
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
 				        <#list eachOne.getValue() as each> 
-				        <#if each.invoiceItemTypeId == "VAT_SALE">
 		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
 				          <#assign adjamt=adjamt+each.itemValue> 
-				         </#if>
 				        </#list>
 				       </#if>
 				  </#list>
@@ -443,7 +439,7 @@ under the License.
 				<#else>
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>-->
-				<#if eachList.invoiceItemTypeId != "ENTRY_TAX" && !kanAndKalRo?has_content>
+				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
 				<fo:block text-align="right"    font-size="10pt" > <#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if> :<#if eachList.itemValue?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>
 				</fo:table-cell>
@@ -459,11 +455,8 @@ under the License.
 	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   
 	        </fo:table-cell>
 	        <fo:table-cell  >
-				<#if !kanAndKalRo?has_content>
 						<fo:block text-align="right" font-size="10pt">Sale Value(RS):${((grandTotal+totTaxAmount+remainingAdjustMents)-entryTax)?string("#0.00")?if_exists}</fo:block>
-					<#else>
-						<fo:block text-align="right"    font-size="10pt" >Sale Value(RS):${((totAmount+totTaxAmount2)-entryTax)?string("#0.00")?if_exists}</fo:block>
-				</#if>		
+						
                 
                 <#if !kanAndKalRo?has_content && serchar?has_content>
                	 	<fo:block text-align="left"    font-size="10pt" >Service Charge: ${serchar?if_exists}</fo:block>
@@ -513,11 +506,9 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				<#assign finalTOtal = (grandTotal+mgpsAndTotalDeductions)>
 				<#assign finalTOtal = (finalTOtal+remainingAdjustMents)>
-				<#if !kanAndKalRo?has_content>
+				
 					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")}</fo:block>
-				<#else>
-					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((totAmount+totTaxAmount2)+mgpsAmt)?string("#0.00")}</fo:block>
-				</#if>
+				
   				
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				</fo:table-cell>

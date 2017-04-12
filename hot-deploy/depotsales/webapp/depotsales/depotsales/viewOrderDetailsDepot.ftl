@@ -810,6 +810,42 @@ function showPaymentEntryForIndentPortalPayment(orderId, partyId,partyName,grand
 		
 	};
 	
+	 function showOrderInformationDC(partyName) {
+		var message = "";
+		var title = "";
+		
+		
+		$("#viewClicked").val("YES");
+		
+		if(orderData != undefined){
+			var orderAmt = 0;
+			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>" ;
+			
+			var orderType = orderData[0].orderType;
+			
+			if(orderType == "onbehalfof")
+			message += "<thead><td align='center' class='h3'>Customer Name</td><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Remarks</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td><td align='center' class='h3'> Amount</td><td align='center' class='h3'> Quota Qty</td><td align='center' class='h3'> Discount</td><td align='center' class='h3'> Other Chgs</td><td align='center' class='h3'> Payable</td>";
+			else
+			message += "<thead><td align='center' class='h3'> Product Id</td><td align='center' class='h3'> Product Name</td><td align='center' class='h3'> Remarks</td><td align='center' class='h3'> Quantity</td><td align='center' class='h3'> Unit Price</td><td align='center' class='h3'> Amount</td><td align='center' class='h3'> Quota Qty</td><td align='center' class='h3'> Discount</td><td align='center' class='h3'> Other Chgs</td><td align='center' class='h3'> Payable</td>";
+			
+			
+			for (i = 0; i < orderData.length; ++i) {
+			
+			    if(orderType == "onbehalfof")
+			  	message += "<tr><td align='center' class='h4'>" + orderData[i].passNo + "</td><td align='center' class='h4'>" + orderData[i].partyName + "</td><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='left' class='h4'>" + orderData[i].remarks + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td><td align='center' class='h4'>"+ orderData[i].itemAmt +"</td><td align='center' class='h4'>"+ Math.round(orderData[i].quotaAvbl) +"</td><td align='center' class='h4'>"+ orderData[i].adjustmentAmount +"</td><td align='center' class='h4'>"+ orderData[i].otherCharges +"</td><td align='center' class='h4'>"+ orderData[i].payableAmt +"</td>";
+			  	else
+			  	message += "<tr><td align='center' class='h4'>" + orderData[i].passNo + "</td><td align='center' class='h4'>" + orderData[i].productId + "</td><td align='left' class='h4'>" + orderData[i].prductName + "</td><td align='left' class='h4'>" + orderData[i].remarks + "</td><td align='center' class='h4'>"+ orderData[i].quantity +"</td><td align='center' class='h4'>"+ orderData[i].unitPrice +"</td><td align='center' class='h4'>"+ orderData[i].itemAmt +"</td><td align='center' class='h4'>"+ Math.round(orderData[i].quotaAvbl) +"</td><td align='center' class='h4'>"+ orderData[i].adjustmentAmount +"</td><td align='center' class='h4'>"+ orderData[i].otherCharges +"</td><td align='center' class='h4'>"+ orderData[i].payableAmt +"</td>";
+			  	
+			  	orderAmt = orderAmt+orderData[i].payableAmt;
+			}
+			message += "<tr class='h3'><td></td><td></td><td class='h3' align='left'><span align='center'><button onclick='return cancelForm();'>Close</button></span></td><td></td></tr>";
+			title = "<center>Order : " + orderId + "  <br>Party Name : " +partyName+ "<br /> <center>Supplier Name : " + orderData[0].supplierpartyName + "<center><br>Total Order Value = "+ orderAmt +" ";
+			message += "</table>";
+			Alert(message, title);
+		}
+		
+	};
+	
     function fetchPOInformation(purcahseOrderId) {
     	purcahseOrderId = purcahseOrderId;
     	var dataJson = {"purcahseOrderId": JSON.stringify(purcahseOrderId)};

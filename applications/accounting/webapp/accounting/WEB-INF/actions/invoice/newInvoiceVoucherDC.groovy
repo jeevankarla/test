@@ -299,7 +299,7 @@ if(roID){
 			  mgpsAmt = mgpsAmt+eachItem.itemValue;
 			  }
 			  
-			  if(eachItem.invoiceItemTypeId !="VAT_SALE" && eachItem.invoiceItemTypeId !="TEN_PERCENT_SUBSIDY" && eachItem.invoiceItemTypeId !="INV_FPROD_ITEM" && eachItem.invoiceItemTypeId !="PRICE_DISCOUNT"){
+			  if(eachItem.invoiceItemTypeId !="VAT_SALE" && eachItem.invoiceItemTypeId !="VAT_SURCHARGE" && eachItem.invoiceItemTypeId !="TEN_PERCENT_SUBSIDY" && eachItem.invoiceItemTypeId !="INV_FPROD_ITEM" && eachItem.invoiceItemTypeId !="PRICE_DISCOUNT"){
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
 			  }
 			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
@@ -349,6 +349,8 @@ if(roID){
 	context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 	
 	context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemListConsolidate;
+	
+	Debug.log("invoiceRemainigAdjItemListConsolidate================"+invoiceRemainigAdjItemListConsolidate);
 	
 	context.totTaxAmount = totTaxAmount;
 	context.totTaxAmount2 = totTaxAmount2;
