@@ -4444,7 +4444,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
 			 
-		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, false);
+		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","costCenterId"), null, null, false);
 			
 		}catch(GenericEntityException e){
 			Debug.logError(e, "Failed to retrive Shipment ", module);
