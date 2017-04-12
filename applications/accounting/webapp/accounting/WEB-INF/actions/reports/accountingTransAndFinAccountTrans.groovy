@@ -155,7 +155,7 @@ if(UtilValidate.isNotEmpty(acctgTransId)){
 }
 finAccntTransSequence = "";
 if(UtilValidate.isNotEmpty(finAccntTransSequenceEntry)){
-	finAccntTransSequence = finAccntTransSequenceEntry.transSequenceNo;
+	finAccntTransSequence = finAccntTransSequenceEntry.transSequenceId;
 }
 context.finAccntTransSequence = finAccntTransSequence;
 context.put("accountingTransEntries",accountingTransEntries);
