@@ -1488,7 +1488,7 @@ under the License.
     	<field name="EMPLOYEE" title="*"><display></display></field>
     	<field name="OTHER" title="*"><display></display></field>
     </form>
-    <form name="SBIBankCSV" type="list" list-name="bankTypeList" odd-row-style="alternate-row" default-table-style="basic-table " separate-columns="true"  header-row-style="header-row-2" >
+    <form name="SBIBankCSV" type="list" list-name="bankTypeListCSV" odd-row-style="alternate-row" default-table-style="basic-table " separate-columns="true"  header-row-style="header-row-2" >
         <!-- <field name="paymentGroupId" ><display/></field> -->
         <field name="empId" title="EMP_CD"><display/></field>
         <field name="empName" title="EMP_NM"><display/></field>
