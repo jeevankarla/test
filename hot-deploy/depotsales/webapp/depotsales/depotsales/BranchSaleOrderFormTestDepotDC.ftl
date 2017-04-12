@@ -988,7 +988,7 @@ function fillPartyQuota(partyId){
 	<#else>
 		<#include "BranchSalesOrderInternalFormDepotDC.ftl"/>
 	</#if>
-	<#include "EditUDPPriceDepotTestDepot.ftl"/>
+	<#include "EditUDPPriceDepotTestDC.ftl"/>
 	<div class="top" id="exp_outer">
 		<div class="full"  style="margin: auto; position: relative;">
 			<div class="lefthalf" id="chld1">
@@ -1570,7 +1570,12 @@ function fillPartyQuota(partyId){
 					      				<table width="100%" border="1" border-style="solid">
 						               
 						               		<tr>
-						               			<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
+						               			<#if parameters.panNo?exists && parameters.panNo?has_content> 
+						               				<td keep-together="always"><font color="green"><b>Pan Number: </font></td><td><font color="blue"><b>${parameters.panNo}</b></font></td>
+						               			<#else>
+								       				<td keep-together="always"><font color="green"><b>Pan Number: </font></td><td> <label  align="left" id="panNo" style="color: blue"></label></td>
+								       			</#if>
+						               			<#--<#if parameters.psbNo?exists && parameters.psbNo?has_content> 
 						               				<td keep-together="always"><font color="green"><b>PassBook: </font></td><td><font color="blue"><b>${parameters.psbNo}</b></font></td>
 						               			<#else>
 								       				<td keep-together="always"><font color="green"><b>PassBook: </font></td><td> <label  align="left" id="psbNo" style="color: blue"></label></td>
@@ -1586,11 +1591,11 @@ function fillPartyQuota(partyId){
 								       				<td><font color="green"><b>partyType: </font></td><td><font color="blue"><b> ${parameters.partyType?if_exists}</b></font></td>
 								       			<#else>
 								       				<td><font color="green"><b>partyType: </font></td><td><font color="blue"><label  align="left" id="partyType" style="color: blue"></label></font></td>
-								       			</#if>
+								       			</#if>-->
 						               		</tr>
 						               
 						               
-							       			<tr>
+							       			<#--<tr>
 								       			<#if parameters.Depo?exists && parameters.Depo?has_content> 
 								       				<td><font color="green"><b>${uiLabelMap.Depot}: </font></td><td><font color="blue"><b> ${parameters.Depo}</b></font></td>
 								       			<#else>
@@ -1602,7 +1607,7 @@ function fillPartyQuota(partyId){
 								       				<td ><font color="green"><b>DOA: </font></td><td><font color="blue"><label  align="left" id="DAO" style="color: blue"></label></font></td>
 								       			</#if>
 							       				<td><font color="green"><b>Total Looms: </font></td><td><font color="blue"><label  align="left" id="totLooms" style="color: blue"></label></font></td>
-							       			</tr>
+							       			</tr>-->
 							       			
 							       			<#--<#if parameters.postalCode?exists && parameters.postalCode?has_content> 
 							       			<tr>
@@ -1637,12 +1642,12 @@ function fillPartyQuota(partyId){
 				       	</tr>
 				       	-->		
 				     		</table>
-				     	<hr class="style18"></hr>
+				     	<#--<hr class="style18"></hr>
 				     	<table width="100%" id="loomTypes" class="loomTypes" border="10%" cellspacing="1" cellpadding="2">
 		       				<tr align="left">
 		       				</tr>
 		       			</table>
-		       			<hr class="style18"></hr>
+		       			<hr class="style18"></hr>-->
 			       	</form>
 				
 				</div>     

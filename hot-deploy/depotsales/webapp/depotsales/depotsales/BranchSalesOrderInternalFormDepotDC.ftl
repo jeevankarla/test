@@ -294,7 +294,7 @@
 				orderAdjustmentsList.push("INSURANCE_CHGS");
 				orderAdjustmentsList.push("OTHER_CHARGES");
 				orderAdjustmentsList.push("PACKING_FORWARDIG");
-				
+				orderAdjustmentsList.push("PRICE_DISCOUNT");
 				
 				
 				var orderAdjustmentItem = jQuery("<input>").attr("type", "hidden").attr("name", "orderAdjustmentsList_o_" + rowCount).val(orderAdjustmentsList);
