@@ -288,7 +288,7 @@ under the License.
 				         </#if>
 				        </#list>
 				       </#if>
-				  </#list>
+				  </#list>  
 				 </#if>
 				 
 				  <#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
