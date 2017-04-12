@@ -211,7 +211,7 @@ under the License.
 			<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
 			<fo:block text-align="left" font-size="12pt" white-space-collapse="false">Enclosure to Cheque No. ${paymentRefNum?if_exists}&#160;Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentDate, "dd/MM/yyyy")}</fo:block>
 			<fo:block text-align="left" font-size="12pt" white-space-collapse="false">Drawn on for transfer through RTGS/NEFT.</fo:block>
-			<fo:block text-align="left" font-size="12pt" white-space-collapse="false">For Rs. ${totnetSal?if_exists?string("#0.00")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
+			<fo:block text-align="left" font-size="12pt" white-space-collapse="false">For Rs. ${totSal?if_exists?string("#0.00")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
 		 </fo:flow>
 		</fo:page-sequence>
 	<#else>
