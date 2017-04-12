@@ -2373,6 +2373,14 @@
              	<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
+		<menu-item name="apSingleGroupPayment" title="Single Payment">
+			     <condition>
+					<or>
+					    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+	            	</or>            
+	            </condition>
+				<link target="apSingleGroupPayment"></link>
+			</menu-item>
 		<menu-item name="treasurerPayments" title="Search Payments">
 		     <condition>
 				<or>
