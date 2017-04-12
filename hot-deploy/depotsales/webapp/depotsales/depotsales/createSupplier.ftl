@@ -273,6 +273,7 @@
 				            </select>
 				            <td>
 						   <#--<td>
+						   
 						    <select name="roleTypeId" id="roleTypeId"  onchange="javascript:vendorValidation();" >
 				              <#list roleTypes as roleType>
 	                            <option value="${roleType.roleTypeId}" <#if "${roleType.roleTypeId}" == roleTypeId?if_exists>selected="selected"</#if>>${roleType.description}</option>

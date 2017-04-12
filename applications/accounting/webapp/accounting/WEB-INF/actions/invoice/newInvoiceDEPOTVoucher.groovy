@@ -400,7 +400,7 @@ if(roID){
 	context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 	
 	context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
-	//Debug.log("invoiceRemainigAdjItemList====@@@@@@@======="+invoiceRemainigAdjItemList);
+	//Debug.log("invoiceRemainigAdjItemList====@@@@@@@======="+invoiceRemainigAdjItemList);		
 	context.totTaxAmount = totTaxAmount;
 	context.totTaxAmount2 = totTaxAmount2;
 	context.mgpsAmt = mgpsAmt;
@@ -2099,4 +2099,3 @@ context.finalAddresList = finalAddresList;
 
 }
 
-	

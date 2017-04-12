@@ -574,7 +574,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 	indentDetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 	indentDate = indentDetails[0].get("orderDate");
 	
-	//externalOrderId = indentDetails[0].get("externalId");
+	externalOrderId = indentDetails[0].get("externalId");
 	PODetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 	poDate = PODetails[0].get("orderDate");
 	
@@ -640,7 +640,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 	context.destination = destination;
 	context.soceity = soceity;
 	context.onbehalf = onbehalf;
-	//context.externalOrderId = externalOrderId;
+	context.externalOrderId = externalOrderId;
 	
 	
 	
@@ -1663,8 +1663,7 @@ OrderHeader = delegator.findList("OrderHeader", cond, UtilMisc.toSet("orderId","
 
 indentDetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 indentDate = indentDetails[0].get("orderDate");
-
-//externalOrderId = indentDetails[0].get("externalId");
+externalOrderId = indentDetails[0].get("externalId");
 PODetails = EntityUtil.filterByCondition(OrderHeader, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 poDate = PODetails[0].get("orderDate");
 
@@ -1735,8 +1734,7 @@ context.supplier = supplier;
 context.destination = destination;
 context.soceity = soceity;
 context.onbehalf = onbehalf;
-//context.externalOrderId = externalOrderId;
-
+context.externalOrderId = externalOrderId;
 
 
 //if(onbehalf == true){
@@ -2239,4 +2237,3 @@ context.finalAddresList = finalAddresList;
 
 }
 
-	

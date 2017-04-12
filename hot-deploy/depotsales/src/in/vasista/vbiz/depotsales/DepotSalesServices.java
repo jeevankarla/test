@@ -3297,7 +3297,7 @@ public class DepotSalesServices{
 								}
 								else{
 									adjTypeMap.put("amount",new BigDecimal(taxAmt));
-								}
+								} 
 							}
 						}
 						if (paramMap.containsKey(orderAdjustmentType+ "_INC_BASIC" + thisSuffix)) {
