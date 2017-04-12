@@ -46,12 +46,12 @@ under the License.
             	<#assign totSal = 0>
 		 		<fo:table>
 		 			<fo:table-column column-width="10%"/>
-		 			<fo:table-column column-width="15%"/>
+		 			<fo:table-column column-width="20%"/>
 					<fo:table-column column-width="20%"/>
 					<fo:table-column column-width="15%"/>
-					<fo:table-column column-width="9%"/>
-					<fo:table-column column-width="15%"/>
-					<fo:table-column column-width="16%"/>
+					<fo:table-column column-width="12%"/>
+					<fo:table-column column-width="32%"/>
+					
 					
 					
 						<fo:table-body>
@@ -75,10 +75,6 @@ under the License.
           						<fo:table-cell border-right-style="solid">
           							<fo:block font-size="4pt">&#160;</fo:block>
          							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Ifsc Code</fo:block>
-          						</fo:table-cell>
-          						<fo:table-cell border-right-style="solid">
-          							<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Branch Name</fo:block>
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid">
           							<fo:block font-size="4pt">&#160;</fo:block>
@@ -112,10 +108,6 @@ under the License.
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
              							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachhdet.ifscCode?has_content>${eachhdet.get("ifscCode")?if_exists}</#if>&#160;&#160;</fo:block>
-              						</fo:table-cell>
-              						<fo:table-cell border-style="solid">
-              							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="">&#160;<#if eachhdet.branchName?has_content>${eachhdet.get("branchName")?if_exists}</#if>&#160;</fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
@@ -166,12 +158,11 @@ under the License.
         	<fo:table>
 		 			
 					<fo:table-column column-width="10%"/>
-		 			<fo:table-column column-width="15%"/>
+		 			<fo:table-column column-width="20%"/>
 					<fo:table-column column-width="20%"/>
 					<fo:table-column column-width="15%"/>
-					<fo:table-column column-width="9%"/>
-					<fo:table-column column-width="15%"/>
-					<fo:table-column column-width="16%"/>
+					<fo:table-column column-width="12%"/>
+					<fo:table-column column-width="32%"/>
 					
 					
 						<fo:table-body>
@@ -195,10 +186,6 @@ under the License.
               						<fo:table-cell>
               							<fo:block font-size="4pt">&#160;</fo:block>
              							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together=""></fo:block>
-              						</fo:table-cell>
-              						<fo:table-cell>
-              							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="center" white-space-collapse="false"  font-size="14pt" keep-together="always"></fo:block>
               						</fo:table-cell>
   								</fo:table-row>
   							

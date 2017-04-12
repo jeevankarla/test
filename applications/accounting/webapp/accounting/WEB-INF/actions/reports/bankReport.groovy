@@ -98,7 +98,7 @@
 	 String accPin = "";
 	 
 	 if(paymentGroup && UtilValidate.isNotEmpty(paymentGroup.finAccountId)){
-		 finAccDetails = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", paymentGroup.finAccountId), false);
+		 finAccDetails = delegator.findOne("BankAccount", UtilMisc.toMap("bankAccountId", paymentGroup.finAccountId), false);
 		 if(finAccDetails && !UtilValidate.isEmpty(finAccDetails.finAccountPin)){
 			 accPin = finAccDetails.finAccountPin;
 		 }
@@ -208,11 +208,11 @@
 			 }
 			 List conditionList = [];
 			 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, eachEmp));
-			 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
-			 paramCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			 /*conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "FNACT_ACTIVE"));
+*/			 paramCond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			 
 			 List<String> orderBy = UtilMisc.toList("-fromDate");
-			 finAccountDet = delegator.findList("FinAccount", paramCond, null, orderBy, null, false);
+			 finAccountDet = delegator.findList("BankAccount", paramCond, null, orderBy, null, false);
 			 totnetSal=0;
 			
 			 
@@ -282,13 +282,13 @@
 					 
 					 ownerPartyFinAccList = EntityUtil.filterByCondition(finAccountDet, EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyIdTo));
 					 if(ownerPartyFinAccList){
-						 bankName = EntityUtil.getFirst(ownerPartyFinAccList).finAccountName;
-						 finAccountId = EntityUtil.getFirst(ownerPartyFinAccList).finAccountId;
+						 bankName = EntityUtil.getFirst(ownerPartyFinAccList).bankAccountName;
+						 finAccountId = EntityUtil.getFirst(ownerPartyFinAccList).bankAccountId;
 						 
-						 accntNo = EntityUtil.getFirst(ownerPartyFinAccList).finAccountCode;
-						 branchName = EntityUtil.getFirst(ownerPartyFinAccList).finAccountBranch;
+						 accntNo = EntityUtil.getFirst(ownerPartyFinAccList).bankAccountCode;
+					/*	 branchName = EntityUtil.getFirst(ownerPartyFinAccList).finAccountBranch;*/
 						 ifscCode = EntityUtil.getFirst(ownerPartyFinAccList).ifscCode;
-						 bCode = EntityUtil.getFirst(ownerPartyFinAccList).bCode;
+						 bCode = EntityUtil.getFirst(ownerPartyFinAccList).branchCode;
 						 //finAccountPin = ifscCode.substring(0, 3).toUpperCase();
 						 finAccountPin="";
 						 if(UtilValidate.isNotEmpty(EntityUtil.getFirst(ownerPartyFinAccList).finAccountPin)){
@@ -306,7 +306,7 @@
 						 tempMap.put("bankName",bankName);
 						 tempMap.put("accntNo",accntNo);
 						 tempMap.put("ifscCode",ifscCode);
-						 tempMap.put("branchName",branchName);
+						/* tempMap.put("branchName",branchName);*/
 						 tempMap.put("branchCode",bCode);
 						 tempMap.put("DrCr","C");
 						 tempMap.put("txnType","1");
