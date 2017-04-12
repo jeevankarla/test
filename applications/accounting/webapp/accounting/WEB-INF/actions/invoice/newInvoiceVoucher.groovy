@@ -1265,9 +1265,13 @@ invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondit
 invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY")));
 invoiceItemLevelAdjustments = [:];
 adjmntsTot=0;
+if(invoiceRemainigAdjItemList){
 for(invoiceRemainigAdjItem in invoiceRemainigAdjItemList)
 {
+	if(invoiceRemainigAdjItem.invoiceItemTypeId != "ENTRY_TAX")
 	adjmntsTot=adjmntsTot+invoiceRemainigAdjItem.itemValue;
+}
+
 }
 
 double totTaxAmount = 0;
