@@ -299,7 +299,7 @@ if(roID){
 			  mgpsAmt = mgpsAmt+eachItem.itemValue;
 			  }
 			  
-			  if(eachItem.invoiceItemTypeId == "SERVICE_CHARGE"){
+			  if(eachItem.invoiceItemTypeId == "INVOICE_ITM_ADJ"){
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
 			  }
 			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
