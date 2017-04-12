@@ -87,6 +87,7 @@
  partyPaymentGroupMap = [:];
  
  finalMap = [:];
+ bankTypeListCSV=[];
  String bankTypeFlag ="SBI";
  String empTypeFlag = "";
  String bankFlag = "";
@@ -320,7 +321,7 @@
 				 
 			 }
 			 bankTypeList.add(tempMap);
-			
+			 bankTypeListCSV.add(tempMap);
 			
 		 }
 		 finalMap.put(eachEmp, bankTypeList);
@@ -335,4 +336,5 @@
  context.totnetSal=totnetSal;
  context.bankTypeFlag = bankTypeFlag;
  context.bankTypeList = bankTypeList;
+ context.bankTypeListCSV = bankTypeListCSV;
  
