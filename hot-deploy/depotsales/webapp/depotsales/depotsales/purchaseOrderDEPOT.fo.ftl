@@ -153,12 +153,14 @@ under the License.
             <fo:table text-align="center" border-style="solid">
             <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="140pt"/>
-       	    <fo:table-column column-width="100pt"/>
-       	    <fo:table-column column-width="65pt"/>
+       	    <fo:table-column column-width="70pt"/>
+       	    <fo:table-column column-width="60pt"/>
             <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="50pt"/>
             <fo:table-column column-width="60pt"/>
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="90pt"/>
                <fo:table-body text-align="center">
                <fo:table-row>
                		<fo:table-cell ><fo:block text-align="center"  font-size="10pt" >SNO</fo:block></fo:table-cell>
@@ -167,6 +169,14 @@ under the License.
                		<fo:table-cell >
                			<fo:block text-align="center" font-size="10pt">QUANTITY</fo:block>
                			<fo:block text-align="center" font-size="10pt">(Kgs)</fo:block>
+               		</fo:table-cell>
+               		<fo:table-cell >
+               			<fo:block text-align="center" font-size="10pt">PACKING</fo:block>
+               			<fo:block text-align="center" font-size="10pt">SIZE</fo:block>
+               		</fo:table-cell>
+               		<fo:table-cell >
+               			<fo:block text-align="center" font-size="10pt">PACKING</fo:block>
+               			<fo:block text-align="center" font-size="10pt">NO</fo:block>
                		</fo:table-cell>
                		<fo:table-cell >
                			<fo:block text-align="center" font-size="10pt">BASIC RATE</fo:block>
@@ -194,12 +204,14 @@ under the License.
             <fo:table text-align="center" >
             <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="140pt"/>
-       	    <fo:table-column column-width="100pt"/>
-       	    <fo:table-column column-width="65pt"/>
+       	    <fo:table-column column-width="70pt"/>
+       	    <fo:table-column column-width="60pt"/>
             <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="50pt"/>
             <fo:table-column column-width="60pt"/>
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="90pt"/>
                <fo:table-body text-align="center">
                   <#assign sNo=1>
 	              <#list orderDetailsList as orderListItem>
@@ -213,7 +225,9 @@ under the License.
   				       <fo:table-cell  >
   				      	 	<fo:block text-align="center"  font-size="10pt">${orderListItem.get("quantity")?if_exists?string("##0.000")}</fo:block>
 							<fo:block text-align="center"  font-size="9pt"><#if orderListItem.get("Unit")?has_content &&  orderListItem.get("Unit")!="KGs">${orderListItem.get("baleqty")?if_exists?string("##0.000")}(${orderListItem.get("Unit")?if_exists})<#else></#if></fo:block>
-						</fo:table-cell>     
+						</fo:table-cell>
+						<fo:table-cell  ><fo:block text-align="center"  font-size="10pt">${orderListItem.get("packetQuantity")?if_exists}</fo:block></fo:table-cell>     
+						<fo:table-cell  ><fo:block text-align="center"  font-size="10pt">${orderListItem.get("packets")?if_exists}</fo:block></fo:table-cell>     
   			           <fo:table-cell  >
   			           		<fo:block text-align="center"   font-size="10pt" >${orderListItem.get("unitPrice")?if_exists?string("##0.00")}</fo:block>
 							<fo:block text-align="center"  font-size="9pt"><#if orderListItem.get("bundleUnitListPrice")?has_content &&  orderListItem.get("Unit")!="KGs">${orderListItem.get("bundleUnitListPrice")?if_exists?string("##0.00")}(Bundle)<#else></#if></fo:block>

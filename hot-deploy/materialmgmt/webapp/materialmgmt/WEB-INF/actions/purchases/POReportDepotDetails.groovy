@@ -389,11 +389,31 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		remarks = "";
 		if(OrderItemDetail)
 		remarks = OrderItemDetail.remarks;
-		
+		packQuantity="";
+		packets="";
+		if(UtilValidate.isNotEmpty(orderitems.orderId)){
+			conditionList=[];
+			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderitems.orderId));
+			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderitems.orderItemSeqId));
+			//conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "REMARKS"));
+			condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+			packetQuantityDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packQuantity"));
+			if(UtilValidate.isNotEmpty(packetQuantityDetails)){
+				packetQuantityDetails=EntityUtil.getFirst(packetQuantityDetails);
+				packQuantity=packetQuantityDetails.attrValue;
+			}
+			packetsDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packets"));
+			if(UtilValidate.isNotEmpty(packetsDetails)){
+				packetsDetails=EntityUtil.getFirst(packetsDetails);
+				packets=packetsDetails.attrValue;
+			}
+		}
 		orderDetailsMap["remarks"]=remarks;
 		orderDetailsMap["quantity"]=orderitems.quantity;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
-		
+		orderDetailsMap["packetQuantity"]=packQuantity;
+		orderDetailsMap["packets"]=packets;
 		orderDetailsMap["numQuantity"]=OrderItemDetail.baleQuantity;
 		orderDetailsMap["bundleWeight"]=OrderItemDetail.bundleWeight;
 		orderDetailsMap["Uom"]=OrderItemDetail.Uom;
