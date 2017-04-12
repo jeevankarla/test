@@ -117,16 +117,44 @@ invoiceItemDetails = delegator.findList("InvoiceItem", condition, null, null, nu
 
 invoiceItems = EntityUtil.filterByCondition(invoiceItemDetails, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
 invoiceAdjustments = EntityUtil.filterByCondition(invoiceItemDetails, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+packetQuantity="";
+packets="";
 if(UtilValidate.isNotEmpty(invoiceItems)){
 	for(invoiceItem in invoiceItems){
 		tempMap=[:];
 		tempList=[];
+		
+		orderItembill = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId), null, null, null, false);
+		orderDetails=EntityUtil.getFirst(orderItembill);
+		if(UtilValidate.isNotEmpty(orderDetails)){
+			orderId=orderDetails.orderId;
+			orderItemSeqId=orderDetails.orderItemSeqId;
+		}
+		conditionList=[];
+		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderDetails.orderId));
+		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderDetails.orderItemSeqId));
+		condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		orderItemAttr = delegator.findList("OrderItemAttribute", condExpr, null, null, null, false);
+		
+		packetQuantityDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packQuantity"));
+		if(UtilValidate.isNotEmpty(packetQuantityDetails)){
+			packetQuantityDetails=EntityUtil.getFirst(packetQuantityDetails);
+			packetQuantity=packetQuantityDetails.attrValue;
+		}
+		packetsDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packets"));
+		if(UtilValidate.isNotEmpty(packetsDetails)){
+			packetsDetails=EntityUtil.getFirst(packetsDetails);
+			packets=packetsDetails.attrValue;
+		}
+		
 		tempMap.put("productId", invoiceItem.productId);
 		productDetails = delegator.findOne("Product",[productId : invoiceItem.productId] , false);
 		tempMap.put("productName", productDetails.productName);
 		tempMap.put("invoiceItemSeqId", invoiceItem.invoiceItemSeqId);
 		tempMap.put("quantity", invoiceItem.quantity);
 		tempMap.put("unitPrice", invoiceItem.unitPrice);
+		tempMap.put("packetQuantity", packetQuantity);
+		tempMap.put("packets", packets);
 		tempMap.put("amount", invoiceItem.itemValue);
 		invoiceitemAdjustments = EntityUtil.filterByCondition(invoiceAdjustments, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, invoiceItem.invoiceItemSeqId));
 		for(invoiceAdjstmt in invoiceitemAdjustments){

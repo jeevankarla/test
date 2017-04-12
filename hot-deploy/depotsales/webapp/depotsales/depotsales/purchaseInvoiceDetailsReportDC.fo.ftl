@@ -80,7 +80,9 @@ under the License.
 		<fo:block>     
     		<fo:table>
     			<fo:table-column column-width="10%"/>
-                <fo:table-column column-width="40%"/>
+                <fo:table-column column-width="20%"/>
+                <fo:table-column column-width="10%"/>
+                <fo:table-column column-width="15%"/>
                 <fo:table-column column-width="15%"/>
                 <fo:table-column column-width="15%"/>
                 <fo:table-column column-width="20%"/>
@@ -97,6 +99,12 @@ under the License.
 			            </fo:table-cell>
 			            <fo:table-cell border-style="solid">
 			            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Unit Price</fo:block>  
+			            </fo:table-cell>
+			            <fo:table-cell border-style="solid">
+			            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Packing Size</fo:block>  
+			            </fo:table-cell>
+			            <fo:table-cell border-style="solid">
+			            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Packing No</fo:block>  
 			            </fo:table-cell>
 			            <fo:table-cell border-style="solid">
 			            	<fo:block  text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">Amount</fo:block>  
@@ -143,6 +151,12 @@ under the License.
 			            </fo:table-cell>
 			              <fo:table-cell border-style="solid">
 			            	<fo:block   text-align="left" font-size="12pt"  white-space-collapse="false">${eachItem.get("unitPrice")?if_exists}</fo:block>  
+			            </fo:table-cell>
+			            <fo:table-cell border-style="solid">
+			            	<fo:block   text-align="left" font-size="12pt"  white-space-collapse="false" >${eachItem.get("packetQuantity")?if_exists}</fo:block>  
+			            </fo:table-cell>
+			            <fo:table-cell border-style="solid">
+			            	<fo:block   text-align="left" font-size="12pt"  white-space-collapse="false" >${eachItem.get("packets")?if_exists}</fo:block>  
 			            </fo:table-cell>
 			              <fo:table-cell border-style="solid">
 			              	<#assign subTotalValue=eachItem.get("amount")>
