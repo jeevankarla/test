@@ -309,7 +309,7 @@ under the License.
 				  </#list>
 				 </#if>
 				 
-				  <#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
+				  <#if invoiceItemLevelAdjustments?has_content>	
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -363,7 +363,7 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<#assign finalGrndToal=0>
-				<#if !kanAndKalRo?has_content>
+				<#if kanAndKalRo?has_content>
 					<#assign finalGrndToal=grandTotal+totTaxAmount>
 		   			<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
 				<#else>
