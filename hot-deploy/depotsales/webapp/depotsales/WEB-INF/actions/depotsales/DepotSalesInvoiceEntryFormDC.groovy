@@ -1352,18 +1352,18 @@ if(shipments){
 					itemAdditionalChgs = EntityUtil.filterByCondition(orderAdjustmentsList, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
 				}
 				
-				 Debug.log("itemAdditionalChgs ============="+itemAdditionalChgs);
+				 //Debug.log("itemAdditionalChgs ============="+itemAdditionalChgs);
 				
 				
 				
 				if(UtilValidate.isNotEmpty(itemAdditionalChgs)){
 					itemOrdAdj = EntityUtil.filterByCondition(itemAdditionalChgs, EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, invItemTypeId));
 					
-					Debug.log("itemOrdAdj ============="+itemOrdAdj);
+					//Debug.log("itemOrdAdj ============="+itemOrdAdj);
 					
 					
 					if(itemOrdAdj)
-					////Debug.log("itemOrdAdj ============="+itemOrdAdj[0].invItemTypeId);
+					//////Debug.log("itemOrdAdj ============="+itemOrdAdj[0].invItemTypeId);
 					
 					
 					if(UtilValidate.isNotEmpty(itemOrdAdj)){
@@ -1390,7 +1390,7 @@ if(shipments){
 						
 						// Update adjustments for item
 						
-						Debug.log("invItemTypeId======================="+invItemTypeId);
+						//Debug.log("invItemTypeId======================="+invItemTypeId);
 						newObj.put(invItemTypeId + "_PUR", adjItem.sourcePercentage);
 						newObj.put(invItemTypeId + "_PUR_AMT", itemValue);
 						
@@ -1423,20 +1423,21 @@ if(shipments){
 						 newItemAdjObj.put("adjValue", 0);
 						 newItemAdjObj.put("percentage", 0);
 						 newItemAdjObj.put("uomId", "INR");
+		 
+							conditionList = [];
+							conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
+							conditionList.add(EntityCondition.makeCondition("orderAdjustmentTypeId", EntityOperator.EQUALS, invItemTypeId));
+							itemAdditionalChgs = [];
+							if(UtilValidate.isNotEmpty(orderAdjustmentsList)){
+								itemAdditionalChgs = EntityUtil.filterByCondition(orderAdjustmentsList, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+							}						 
 						 
-						 conditionList = [];
-						 conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
-						 itemAdditionalChgs = [];
-						/* if(UtilValidate.isNotEmpty(invoiceAdjItemList)){
-							 itemAdditionalChgs = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
-						 }*/
-						 
-						 
+							//Debug.log("itemAdditionalChgs ============="+itemAdditionalChgs);
 						 if(UtilValidate.isNotEmpty(itemAdditionalChgs)){
 							 itemOrdAdj = EntityUtil.filterByCondition(itemAdditionalChgs, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, invItemTypeId));
 							 
-							 if(UtilValidate.isNotEmpty(itemOrdAdj)){
-								 adjItem = EntityUtil.getFirst(itemOrdAdj);
+							 if(UtilValidate.isNotEmpty(itemAdditionalChgs)){
+								 adjItem = EntityUtil.getFirst(itemAdditionalChgs);
 								 
 								 itemValue = adjItem.amount //(adjItem.amount/origQty)*qty;
 								 
