@@ -65,9 +65,11 @@ if(UtilValidate.isNotEmpty(paymentGroupId)){
 				tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS , paymentId)  , null, null, null, false );
 				tempprintPaymentsList.each{paymentRecipt->
 					invDts = delegator.findList("PaymentAndApplication",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS , paymentId)  , null, null, null, false );
-					invoiceId = invDts[0].invoiceId;
 					tempprintPaymentMap=[:];
-					tempprintPaymentMap.put("invoiceId",invoiceId);
+					if(UtilValidate.isNotEmpty(invDts)){
+						invoiceId = invDts[0].invoiceId;
+						tempprintPaymentMap.put("invoiceId",invoiceId);
+					}
 					tempprintPaymentMap.putAll(paymentRecipt);
 					totalAmount=paymentRecipt.amount;
 					amountwords=UtilNumber.formatRuleBasedAmount(totalAmount,"%rupees-and-paise", locale).toUpperCase();
