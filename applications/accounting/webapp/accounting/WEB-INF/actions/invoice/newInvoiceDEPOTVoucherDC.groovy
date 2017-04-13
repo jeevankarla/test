@@ -716,7 +716,9 @@ if(roID){
 			 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 			 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
-			 
+			 remarks = "";
+			 if(OrderItemDetail)
+			 remarks = OrderItemDetail[0].get("remarks");
 			 if(OrderItemDetail[0]){
 				 
 				if(OrderItemDetail[0].packQuantity){
@@ -756,7 +758,7 @@ if(roID){
 			}
 			 
 			 tempMap.put("unit", unit);
-			 
+			 tempMap.put("remarks", remarks);
 			 
 				if(baleQty)
 				tempMap.put("baleQty",baleQty);

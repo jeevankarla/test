@@ -147,7 +147,7 @@ under the License.
 				</#if>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Rate/</fo:block>
-				 <fo:block text-align="center"    font-size="10pt" >Kg/bundle</fo:block>
+				 <fo:block text-align="center"    font-size="10pt" >Kg</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
@@ -177,7 +177,7 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >${sr}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid" number-columns-spanned="3">
-				<fo:block text-align="left"  font-size="10pt" >${invoiceDetail.get("prodDescription")}</fo:block>
+				<fo:block text-align="left"  font-size="10pt" >${invoiceDetail.get("prodDescription")}&#160;<#if invoiceDetail.get("remarks")?has_content>(${invoiceDetail.get("remarks")})</#if></fo:block>
 				
 				<#assign tempTotAmount = tempTotAmount+(invoiceDetail.get("schemeQty")*invoiceDetail.get("amount"))>
 				
@@ -220,7 +220,7 @@ under the License.
 				<#assign totQuantity = totQuantity+invoiceDetail.get("quantity")>
 				</#if>
 				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists?string("#0.000")}<#else>&#160;</#if></fo:block>
-				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}(${invoiceDetail.get("unit")?if_exists})<#else>&#160;</#if></fo:block>
+				<#--<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}(${invoiceDetail.get("unit")?if_exists})<#else>&#160;</#if></fo:block>-->
 				
 				
                 <#assign totServiceCharge = 0>
