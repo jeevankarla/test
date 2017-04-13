@@ -30,7 +30,6 @@ import org.ofbiz.service.ServiceUtil;
 
 
 
-
 invoiceId = parameters.invoiceId;
 billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
 if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
