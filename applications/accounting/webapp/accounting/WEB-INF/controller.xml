@@ -2995,6 +2995,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newInvoiceDEPOTVoucher"/>
     </request-map>
+    <request-map uri="newInvoiceDEPOTVoucherDC">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newInvoiceDEPOTVoucherDC"/>
+    </request-map>
     
      <request-map uri="paymentVoucher">
         <security https="true" auth="true"/>
@@ -4827,6 +4831,7 @@ under the License.
     <view-map name="newInvoiceVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceVoucher" content-type="application/pdf"/>
     <view-map name="newInvoiceVoucherDC" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceVoucherDC" content-type="application/pdf"/>
     <view-map name="newInvoiceDEPOTVoucher" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceDEPOTVoucher" content-type="application/pdf"/>
+    <view-map name="newInvoiceDEPOTVoucherDC" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#newInvoiceDEPOTVoucherDC" content-type="application/pdf"/>
     <view-map name="employeesFinOpeningBalPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#employeesFinOpeningBalPDF" content-type="application/pdf"/>
    
    
