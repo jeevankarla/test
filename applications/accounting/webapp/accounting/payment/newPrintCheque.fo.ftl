@@ -42,7 +42,6 @@ under the License.
 <#else>
 <#--  Axis Bank -->
 
-<#if finAccountId?exists>
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -877,5 +876,4 @@ under the License.
 		</#if>
 		</fo:root>
 </#escape>
-</#if>
 </#if>

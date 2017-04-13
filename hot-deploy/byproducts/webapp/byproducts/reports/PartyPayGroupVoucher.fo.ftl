@@ -90,11 +90,13 @@ under the License.
 	        						 </fo:table-cell>
 	        					</fo:table-row>
 	        				<#if (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>
-	        					<#assign finAccountDetails = delegator.findOne("FinAccount", {"finAccountId" : paymentGroupDetails.finAccountId}, true)?if_exists/>
 	        					<fo:table-row> 
-	        						 <fo:table-cell>
-	        						 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if finAccountDetails?has_content>&#160;CHEQUE BANK DETAILS:${finAccountDetails.finAccountName?if_exists}</#if></fo:block>
-	        						 </fo:table-cell>
+	        						<#if paymentGroupDetails.finAccountId?has_content>
+	        							<#assign finAccountDetails = delegator.findOne("FinAccount", {"finAccountId" : paymentGroupDetails.finAccountId}, true)?if_exists/>
+		        						 <fo:table-cell>
+		        						 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if finAccountDetails?has_content>&#160;CHEQUE BANK DETAILS:${finAccountDetails.finAccountName?if_exists}</#if></fo:block>
+		        						 </fo:table-cell>
+	        						</#if>
 	        						 <fo:table-cell>
 	        						 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
 	        						 </fo:table-cell>
