@@ -38,7 +38,7 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 	while(empIter.hasNext()){
 		Map.Entry empEntry = empIter.next();
 		emplIds=empEntry.getValue();
-		List conditionList=[];
+		/*List conditionList=[];
 		if(UtilValidate.isNotEmpty(empEntry.getKey())){
 			conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, empEntry.getKey()));
 		}
@@ -47,7 +47,7 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 		if(UtilValidate.isNotEmpty(bankDetails)){
 			details=EntityUtil.getFirst(bankDetails);
 			bankName=details.get("finAccountName");
-		}
+		}*/
 		emplIds.each{ emplId->
 			finalMap=[:];
 			name="";
@@ -60,6 +60,7 @@ if(UtilValidate.isNotEmpty(bankWiseEmplDetailsMap)){
 				ifscCode=BankAdvicePayRollMap.get(emplId).get("ifscCode");
 				branchName=BankAdvicePayRollMap.get(emplId).get("finAccountBranch");
 				placeOfPosting=BankAdvicePayRollMap.get(emplId).get("placeOfPosting");
+				bankName=BankAdvicePayRollMap.get(emplId).get("finAccountName");
 				finalMap.put("bankName",bankName);
 				finalMap.put("emplId",emplId);
 				finalMap.put("name",name);
@@ -81,7 +82,7 @@ if(UtilValidate.isNotEmpty(CanaraBankMap)){
 	while(empIter.hasNext()){
 		Map.Entry empEntry = empIter.next();
 		emplIds=empEntry.getValue();
-		List conditionList=[];
+		/*List conditionList=[];
 		if(UtilValidate.isNotEmpty(empEntry.getKey())){
 			conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, empEntry.getKey()));
 		}
@@ -90,7 +91,7 @@ if(UtilValidate.isNotEmpty(CanaraBankMap)){
 		if(UtilValidate.isNotEmpty(bankDetails)){
 			details=EntityUtil.getFirst(bankDetails);
 			bankName=details.get("finAccountName");
-		}
+		}*/
 		emplIds.each{ emplId->
 			finalMap=[:];
 			name="";
@@ -103,6 +104,7 @@ if(UtilValidate.isNotEmpty(CanaraBankMap)){
 				ifscCode=BankAdvicePayRollMap.get(emplId).get("ifscCode");
 				branchName=BankAdvicePayRollMap.get(emplId).get("finAccountBranch");
 				placeOfPosting=BankAdvicePayRollMap.get(emplId).get("placeOfPosting");
+				bankName=BankAdvicePayRollMap.get(emplId).get("finAccountName");
 				finalMap.put("bankName",bankName);
 				finalMap.put("emplId",emplId);
 				finalMap.put("name",name);
