@@ -226,7 +226,7 @@ function drawRow(rowData) {
     
     var partyName = "'" + rowData.partyName + "'";
     var orderParam = '\'' + rowData.orderId + '\'';
-    var orderCustomMethod = "javascript:fetchOrderInformationDC("+ orderParam + ","+partyName+")";
+    var orderCustomMethod = "javascript:fetchOrderInformation("+ orderParam + ","+partyName+")";
     var viewButton ='<input type=button name="viewOrder" id=viewOrder value="view Order" onclick="'+orderCustomMethod+'">';
     
     row.append($("<td align=center>" +  viewButton  +"</td>"));
@@ -305,7 +305,7 @@ function drawRow(rowData) {
 
 
 </script>
-<#include "viewOrderDetailsDepot.ftl"/>
+<#include "viewOrderDetailsDepotDC.ftl"/>
  
  
  <div id = "firstDiv" style="border-width: 2px; padding-top: 20px;   border-radius: 10px; border-style: solid; border-color: grey; ">
