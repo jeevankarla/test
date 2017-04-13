@@ -39,7 +39,7 @@ under the License.
            <fo:block text-align="left"    font-size="10pt" >T.I.N No     : ${allDetailsMap.get("tinNumber")?if_exists}</fo:block>
            <fo:block text-align="left"  white-space-collapse="false"  font-size="10pt" >C.S.T No : ${allDetailsMap.get("cstNumber")?if_exists}                                                     C.I.N No : ${allDetailsMap.get("cinNumber")?if_exists} </fo:block>
            <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">SALE INVOICE <#if parameters.docType?has_content><#if parameters.docType=="Original">(Original Copy)<#else> (Duplicate Copy)</#if><#else> (Original Copy)</#if> </fo:block>
-           <fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if><#if scheme != "General"><#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></#if></fo:block> 
+           <#--<fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if><#if scheme != "General"><#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></#if></fo:block> -->
            <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED.</fo:block>
    		   <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">${BOAddress?if_exists}</fo:block>
            <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">E-MAIL:${BOEmail?if_exists}</fo:block>
@@ -61,7 +61,7 @@ under the License.
 				<fo:table-cell >
 				<fo:block text-align="left"  font-weight="bold"  font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, soceity, true)}</fo:block>
 				<#list finalAddresList as eachDetail>
-				<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
+				<fo:block text-align="left"   font-weight="bold" font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
 				<#--<fo:block text-align="left" font-weight="bold" font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>-->
 				</fo:table-cell>
@@ -75,7 +75,7 @@ under the License.
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if indentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(indentDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if poDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(poDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="right"     font-size="10pt" >Tally Sale No : ${tallyRefNo?if_exists}</fo:block>
+				<#--<fo:block text-align="right"     font-size="10pt" >Tally Sale No : ${tallyRefNo?if_exists}</fo:block>-->
 				</fo:table-cell>
 			</fo:table-row>
 		</fo:table-body>
@@ -585,25 +585,28 @@ under the License.
 	       </fo:block>
       	
               
-			   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * All payment  should be made by RTGS/NEFT in favour of 'National Handloom Development Corp Ltd'.</fo:block>
-			   <fo:block text-align="left" white-space-collapse="false"    font-size="10pt" >* INTEREST will be charged  ____________per annum on overdue Amount.</fo:block> 
+			   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * All payment  should be made by RTGS/NEFT/CHECK/DRAFT in favour of 'National Handloom Development Corp Ltd'.</fo:block>
+			   <fo:block text-align="left" white-space-collapse="false"    font-size="10pt" >* INTEREST will be charged  @___________ % per annum on overdue Amount.</fo:block> 
 			   
 			   <#-- <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * In case of any dispute,the case will be referred to an arbitrator mutually agreed upon </fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" >&#160; whose will be final and binding E.&amp;.O.E</fo:block>-->
 				<fo:block text-align="left" font-weight="bold"    font-size="10pt" >TERMS &amp; CONDITIONS:</fo:block>
-	       	  <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 1. Rates indicated are subjects to change without notice and the rates applicable will be the one ruling at the time deivery.</fo:block>
+	       	  <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 1. Rates indicated are subjects to change without notice and the rates applicable will be the one ruling at the time of delivery.</fo:block>
 	       	  <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 2. Freight, Octroi and other charges if any will be extra and has to be borne by the buyer.</fo:block>
 	       	   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 3. Packing charges for small packings are charged extra.</fo:block>
 	       	   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 4. Supplies are subject to availability.</fo:block>
 	       	   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 5. The weight recorded in our invoice shall be final and will be binding on buyer.</fo:block>
 	       	   <fo:block text-align="center"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
+	       	   <#if roIDForAdd?has_content && roIDForAdd=="INT2">
 	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;RTGS/NEFT Detail:</fo:block>
 	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
-	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;A/C No. 240010200012865</fo:block>
-	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;IFSC Code No: UTIB0000240</fo:block>
 	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;AXIS BANK LTD.</fo:block>
-	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;G.T ROAD PANIPAT-132 103</fo:block>
-      			
+	       	    <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;G.T ROAD PANIPAT-132 103</fo:block>
+	       	    <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;A/C No. 240010200012865</fo:block>
+	       	   <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;IFSC Code No: UTIB0000240</fo:block>
+	       	  
+	       	   
+      		   </#if>
       		 <fo:block page-break-after="always"></fo:block>  
       		 
       		

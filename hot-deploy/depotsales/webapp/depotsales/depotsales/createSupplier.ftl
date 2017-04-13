@@ -447,7 +447,7 @@
 			          				</td>
 							        </tr>
 							         <tr>
-			                        <td class="label" id="ADHLABEL"><FONT COLOR="red">*</font><b>Aadhar Number :</b></td>
+			                        <td class="label" id="ADHLABEL"><FONT COLOR="red"></font><b>Aadhar Number :</b></td>
 							        <td>
 			        		 			<input class="h3" type="text" size="18" maxlength="100" name="USER_ADHNUMBER" id="USER_ADHNUMBER"  />
 			          				</td>

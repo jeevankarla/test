@@ -48,7 +48,9 @@ partyId = invoiceList.get("partyId");
 partyIdFrom=invoiceList.get("costCenterId");
 branchRo = delegator.findList("PartyRelationship",EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS , partyIdFrom)  , UtilMisc.toSet("partyIdFrom"), null, null, false );
 roID = EntityUtil.getFirst(branchRo);
+roIDForAdd=roID.partyIdFrom;
 context.partyIdFrom=partyIdFrom;
+context.roIDForAdd=roIDForAdd;
 if(roID){
 	kanAndKalRo="yes";
 	context.kanAndKalRo=kanAndKalRo;
