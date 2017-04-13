@@ -20,6 +20,12 @@ function setPaymentMethodTypeFields() {
 		var paymentMethod = allPaymentMethods[i];
 		if(jQuery("[name='paymentMethodId']").val() == paymentMethod['paymentMethodId']) {
 			var str=paymentMethod['paymentMethodTypeId'];
+			var prefix=paymentMethod['pmntMethodPrefix'];			
+			if(prefix){
+				jQuery("input[name='overrideGlAccountId']").parent().parent().parent().show();
+			}else{
+				jQuery("input[name='overrideGlAccountId']").parent().parent().parent().hide();
+			}
 		if((str.search(/(CASH)+/g) >= 0) ||(str.search(/(CREDITNOTE)+/g) >= 0)|| (str.search(/(DEBITNOTE)+/g) >= 0) ){
 		
 		jQuery("input[name='paymentRefNum']").parent().parent().hide();

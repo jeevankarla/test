@@ -17,9 +17,13 @@ function datepick2()
 	
 }
 function paymentFieldsOnchange(){
-	var str=jQuery("select[name='paymentMethodTypeId']").val();	
+	var str=jQuery("select[name='paymentMethodTypeId']").val();		
 	if((str.search(/(CASH)+/g) >= 0) ||(str.search(/(CREDITNOTE)+/g) >= 0)||(str.search(/(DEBITNOTE)+/g) >= 0)){
-		
+		if((str.search(/(CREDITNOTE)+/g) >= 0)||(str.search(/(DEBITNOTE)+/g) >= 0)){
+			jQuery("input[name='overrideGlAccountId']").parent().parent().parent().show();
+		}else{
+			jQuery("input[name='overrideGlAccountId']").parent().parent().parent().hide();
+		}
 		jQuery("input[name='paymentRefNum']").parent().parent().hide();
 		jQuery("input[name='effectiveDate']").parent().parent().hide();
 		jQuery("input[name='issuingAuthority']").parent().parent().hide();

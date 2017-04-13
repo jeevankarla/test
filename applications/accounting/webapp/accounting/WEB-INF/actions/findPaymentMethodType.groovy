@@ -46,7 +46,5 @@ List formatList = [];
 		formatMap.put("payToPartyId",eachList.get("payToPartyId"));
 		formatList.addAll(formatMap);
 		
-	}
-	Debug.log("formatList============="+formatList);
-	
+	}	
 context.formatList = formatList;
