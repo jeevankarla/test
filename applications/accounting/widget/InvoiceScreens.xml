@@ -796,6 +796,32 @@
 					list="PayrolGroup">
 					<condition-expr field-name="parentTypeId" value="PAYROL" />
 				</entity-condition>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchesListOfRO">
+					<field-map field-name="partyIdFrom" from-field="invoice.partyId" />
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="BRANCH_CUSTOMER"/>
+				</entity-and>
+				<entity-and entity-name="PartyRelationshipAndDetail" list="branchListOfRO">
+					<field-map field-name="partyIdTo" from-field="invoice.partyId" />
+					<field-map field-name="partyIdFrom" value="Company"/>
+					<field-map field-name="roleTypeIdFrom" value="PARENT_ORGANIZATION"/>
+					<field-map field-name="roleTypeIdTo" value="ORGANIZATION_UNIT"/>
+					<field-map field-name="partyRelationshipTypeId" value="GROUP_ROLLUP"/>
+				</entity-and>
+				 <entity-condition list="intrOrgList" entity-name="PartyRelationshipAndDetail">
+               		<condition-list combine="and">
+              		<condition-expr field-name="partyIdFrom" operator="equals" value="Company"/>
+               		<condition-expr field-name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
+               		<condition-expr field-name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
+               		<condition-expr field-name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
+               		<condition-expr field-name="partyTypeId" operator="equals" value="PARTY_GROUP"/>
+               	 	</condition-list>
+               	 	<order-by field-name="groupName"/>	
+               </entity-condition>
+				 <entity-condition entity-name="PartyAcctgPrefAndGroup" list="intOrgList">
+	                <order-by field-name="groupName"/>
+	            </entity-condition>
 				<entity-condition entity-name="InvoiceItemType"
 					list="PayrolList"></entity-condition>
 				<service service-name="acctgInvoicePermissionCheck"
@@ -809,6 +835,8 @@
 				</service>
 				<set field="hasApInvoiceEditPermission" from-field="permResult.hasPermission" />
 				<set field="localDispatcherName" value="${parameters.localDispatcherName}" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/fetchBoForRo.groovy" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonInvoiceDecorator"
@@ -852,6 +880,9 @@
 										<widgets>
 											<include-form name="EditInvoiceItem"
 												location="component://accounting/widget/InvoiceForms.xml" />
+												<platform-specific>
+					                         <html><html-template location="component://accounting/webapp/accounting/invoice/fetchBoForRo.ftl"/></html>
+					                 </platform-specific>
 										</widgets>
 									</section>
 								</screenlet>
