@@ -411,6 +411,7 @@
 				orderAdjustmentsList.push("INSURANCE_CHGS");
 				orderAdjustmentsList.push("OTHER_CHARGES");
 				orderAdjustmentsList.push("PACKING_FORWARDIG");
+				orderAdjustmentsList.push("PRICE_DISCOUNT");
 				
 				//orderAdjustmentsList = data[rowCount]["purOrderAdjustmentTypeList"];
 				data[rowCount]["itemAdjustments"] = orderAdjustmentsList;				

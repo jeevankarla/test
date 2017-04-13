@@ -311,6 +311,11 @@
 			    allAdjustments.push(tempMap);
 			  });
 			  
+			    var tempMap = {};
+			        tempMap['orderAdjustmentTypeId'] = 'PRICE_DISCOUNT';
+			    allAdjustments.push(tempMap);
+			  
+			  
 			  /*
 			    $.each(discOrderAdjustmentsList, function(key, item){
 			        var tempMap = {};
