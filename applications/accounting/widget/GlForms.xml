@@ -747,7 +747,7 @@ under the License.
                 <sub-hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/>
             </lookup>
         </field>
-         <field position="1" name="organizationPartyId" id-name="organizationPartyId" parameter-name="organizationPartyId" >
+         <field position="1" name="organization Party" id-name="organizationPartyId" parameter-name="organizationPartyId" >
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
 				<list-options key-name="partyId" list-name="intOrgList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
 			</drop-down>
