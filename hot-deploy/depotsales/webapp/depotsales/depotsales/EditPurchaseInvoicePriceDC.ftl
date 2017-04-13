@@ -456,7 +456,7 @@
 		
 						  // alert("totalAmt=======loop======"+totalAmt);
 						  
-						  if(orderAdjustment.orderAdjustmentTypeId == "VAT" || orderAdjustment.orderAdjustmentTypeId == "CST" || orderAdjustment.orderAdjustmentTypeId == "VAT_SURCHARGE" || orderAdjustment.orderAdjustmentTypeId == "CST_SURCHARGE"){
+						  if(orderAdjustment.orderAdjustmentTypeId == "VAT" || orderAdjustment.orderAdjustmentTypeId == "CST" || orderAdjustment.orderAdjustmentTypeId == "VAT_SURCHARGE" || orderAdjustment.orderAdjustmentTypeId == "CST_SURCHARGE" || orderAdjustment.orderAdjustmentTypeId == "PRICE_DISCOUNT"){
 						
 							message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
@@ -571,7 +571,7 @@
 	
 	if(addAdjType != "")
 	
-	  if(addAdjType == "VAT" || addAdjType == "VAT_SURCHARGE" || addAdjType == "CST" || addAdjType == "CST_SURCHARGE"  || addAdjType == "ENTRY_TAX")
+	  if(addAdjType == "VAT" || addAdjType == "VAT_SURCHARGE" || addAdjType == "CST" || addAdjType == "CST_SURCHARGE"  || addAdjType == "ENTRY_TAX" || addAdjType == "PRICE_DISCOUNT")
 	 $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'" readonly /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
      else
      $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
