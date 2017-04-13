@@ -19,7 +19,6 @@
     cursor: pointer;
 }
 </style>
-
 <script type="application/javascript">
 
 	var transactionTypeTaxMap = ${StringUtil.wrapString(transactionTypeTaxMap)!'[]'};
@@ -233,7 +232,6 @@
 		
 	}
 	
-
 	
 	function showItemAdjustmentsAndTaxes(gridRow, index) {
 			rowIndex = index;
@@ -256,7 +254,6 @@
 			
 			var orderAdjustmentsList = dataRow["itemAdjustments"];
 			var discOrderAdjustmentsList = dataRow["discItemAdjustments"];
-			
 			
 			var incBaseAmt = 0;
 			if(dataRow["incBaseAmt"]){
@@ -307,8 +304,24 @@
 			var defaultTaxMap = dataRow["defaultTaxMap"];
 			var taxValueMap = dataRow["taxValueMap"];
 			
-			var purchaseTitleTransferEnumId = $("#purchaseTitleTransferEnumId").val();
-			var saleTaxList = transactionTypeTaxMap[purchaseTitleTransferEnumId];
+			var saleTitleTransferEnumId = $("#saleTitleTransferEnumId").val();
+			var saleTaxList = transactionTypeTaxMap[saleTitleTransferEnumId];
+			
+			
+			var serviceCharge = 0;
+			if(dataRow["SERVICE_CHARGE"]){
+				serviceCharge = dataRow["SERVICE_CHARGE"];
+			}
+			
+			var serviceChargeAmt = 0;
+			if(dataRow["SERVICE_CHARGE_AMT"]){
+				serviceChargeAmt = dataRow["SERVICE_CHARGE_AMT"];
+			}
+			
+			var tenPercentSubsidy = 0;
+			if(dataRow["tenPercent"]){
+				tenPercentSubsidy = dataRow["tenPercent"];
+			}
 			
 			var totalPayableValue = 0;
 			if(dataRow["totPayable"]){
@@ -329,8 +342,6 @@
 			  
 			  });
 			  
-			  
-			  
 			    $.each(discOrderAdjustmentsList, function(key, item){
 			  
 			        
@@ -342,13 +353,13 @@
 			  
 			  });
 			  
-			
+			  
 			  
 			  
 			  var taxList1 = dataRow["taxList1"];
 			  
 			  
-			     $.each(taxList1, function(key, item){
+			   $.each(taxList1, function(key, item){
 					
 					if(saleTaxList == item+"_SALE"){
 					var tempMap = {};			        
@@ -360,11 +371,19 @@
 			        tempMap['orderAdjustmentTypeId'] = item+"_SURCHARGE";
 			        allAdjustments.push(tempMap);
 			        }
+			        if(item == 'TEN_PERCENT_SUBSIDY'){
+					var tempMap = {};			        
+			        tempMap['orderAdjustmentTypeId'] = item;
+			        allAdjustments.push(tempMap);
+			        }
+			        if(item == 'SERVICE_CHARGE'){
+					var tempMap = {};			        
+			        tempMap['orderAdjustmentTypeId'] = item;
+			        allAdjustments.push(tempMap);
+			        }
 			  
 			  });
 			  
-			  
-			
 			  
 			  dataRow["allAdjustments"] = allAdjustments;
 			
@@ -381,6 +400,10 @@
   				 });
 			
 			
+			   if(dataRow['SERVICE_CHARGE_PUR_AMT'])
+				serviceChargeAmt = dataRow['SERVICE_CHARGE_PUR_AMT'];
+				if(dataRow['SERVICE_CHARGE_PUR'])
+				serviceCharge = dataRow['SERVICE_CHARGE_PUR'];
 			
 			var message = "";
 			var title = "";
@@ -399,12 +422,36 @@
 															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
-															"<td align='left'>Purchase Value: </td>"+
+															"<td align='left'>Sale Value: </td>"+
 															"<td><input type='text' style='width: 100px;' name='saleAmount' id='saleAmount' value='"+saleAmount+"' readOnly/>"+
+							 								
+														"</tr>"+
 														
+														"<tr>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>Service Charge<input type='hidden' id = 'serviceChargeIN' value='"+serviceCharge+"'> <span id='serviceCharge'>"+serviceCharge+"%</span>: </td>"+
+							                                "<td><input type='text' style='width: 100px;' name='serviceChargeAmt' id='serviceChargeAmt' value='"+serviceChargeAmt+"' readOnly/>"+
 														"</tr>";
 														
-														message += 	"<tr>"+
+													message += 	"<tr>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
+															"<td align='left'>10% Subsidy Amount: </td>"+
+							                                "<td><input type='text' style='width: 100px;' name='tenPercentSubsidy' id='tenPercentSubsidy' value='"+tenPercentSubsidy+"' readOnly/>"+
+														"</tr>";
+														
+												  message += 	"<tr>"+
 															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
@@ -414,7 +461,9 @@
 															"<td align='left'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>"+
 															"<td align='left'>Total Payable Value: </td>"+
 							                                "<td><input type='text' style='width: 100px;' name='totalPayableValue' id='totalPayableValue' value='"+totalPayableValue+"' readOnly/>"+
-														"</tr>"; 
+														"</tr>";   
+														
+														
 														
 										message += "</table>"+
 									"</td>"+
@@ -427,9 +476,7 @@
 				if(dataRow){
 			
 			message += "<h1 align='center'><font color='blue'>Adjustments And Taxes</font></h1>";
-			message += "<table cellspacing=10 cellpadding=10 width='800'  id='indentAdjustmentTable' class='myTable'>" ;
-
-           
+			message += "<table cellspacing=10 cellpadding=10 width='800'   id='indentAdjustmentTable' class='myTable'>" ;
 			
 			for(var i=0;i<allAdjustments.length;i++){
 						var orderAdjustment = allAdjustments[i];
@@ -454,32 +501,36 @@
 						
 						if(orderAdjAmt != 0){
 		
-						  // alert("totalAmt=======loop======"+totalAmt);
-						  
-						  if(orderAdjustment.orderAdjustmentTypeId == "VAT" || orderAdjustment.orderAdjustmentTypeId == "CST" || orderAdjustment.orderAdjustmentTypeId == "VAT_SURCHARGE" || orderAdjustment.orderAdjustmentTypeId == "CST_SURCHARGE" || orderAdjustment.orderAdjustmentTypeId == "PRICE_DISCOUNT"){
-						
+						  if(orderAdjustment.orderAdjustmentTypeId == "VAT" || orderAdjustment.orderAdjustmentTypeId == "CST" || orderAdjustment.orderAdjustmentTypeId == "VAT_SURCHARGE" || orderAdjustment.orderAdjustmentTypeId == "CST_SURCHARGE" || orderAdjustment.orderAdjustmentTypeId == "ENTRY_TAX" || orderAdjustment.orderAdjustmentTypeId == "PRICE_DISCOUNT"){
 							message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
-										"<td><input type='number' max='100' step='.5' maxlength='10' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
+										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
 										"<td align='left'> Amt: </td>"+
 										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' readonly /></td>"+
-										"<td align='left'> Remove: </td>"+
-										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete' onclick='javascript:removeAdjustment();'></td>";
+									 	"<td align='left'> Remove: </td>"+
+										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete'  onclick='javascript:removeAdjustment();'></td>";
 									"</tr>";
-									
-							}
-							else{
-							    message += "<tr>"+
+						    }
+						     else if(orderAdjustment.orderAdjustmentTypeId == "SERVICE_CHARGE" || orderAdjustment.orderAdjustmentTypeId == "TEN_PERCENT_SUBSIDY" ){
+						      message += "<tr>"+
 										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
-										"<td><input type='number' max='100' step='.5' maxlength='10' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
+										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
+										"<td align='left'> Amt: </td>"+
+										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' readonly/></td>";
+									"</tr>";
+						    
+						    }	
+						    else{
+						        message += "<tr>"+
+										"<td align='left'><font color='blue'>"+orderAdjustment.orderAdjustmentTypeId+": </font></td>"+
+										"<td><input type='number' max='100' step='.5' maxlength='4' style='width: 50px;'  width='50px' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR' value='"+orderAdjPercent+"' onblur='javascript:updateAmountByPercentage(this,"+totalAmt+");'/></td>"+
 										"<td align='left'> Amt: </td>"+
 										"<td><input type='text' style='width: 100px;' name='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' id='"+orderAdjustment.orderAdjustmentTypeId+"_PUR_AMT' value='"+orderAdjAmt+"' onblur='javascript:updatePercentageByAmount(this,"+totalAmt+");'></td>"+
 									 	"<td align='left'> Remove: </td>"+
 										"<td><input type='button' style='width: 100px;' name='remove' id='Remove' value='Remove' class='delete'  onclick='javascript:removeAdjustment();'></td>";
 									"</tr>";
-							
-							
-							}		
+						    }
+						    						    		
 						
 						}
 						
@@ -498,19 +549,18 @@
 						message += "<tr class='h3'><td align='left'><input type='button' class='button1' style='solid blue'; max='30' name='vamsi' id='vamsi' value='Add Adjustment' onclick='javascript:MakeAdjTable("+totalAmt+");' /></tr>";
 			message += "</table>";
 				
+			
 				
 		
-			message += "<hr class='style18'></hr>";
-			<#--
+			<#--message += "<hr class='style18'></hr>";
+			
 			message += "<table cellspacing=10 cellpadding=10 id='salesDiscountsAndChgs' >" ;
-				message += "<tr>"+
-							"<td align='left'>Purchase Value: </td>"+
+			<#--	message += "<tr>"+
+							"<td align='left'>Sale Value: </td>"+
 							"<td><input type='text' style='width: 100px;' name='saleAmount' id='saleAmount' value='"+saleAmount+"' readOnly/>"+
 						"</tr>";
-			
-			
 				message += "<tr>"+
-							"<td align='left'>Service Charge <span id='serviceCharge'>"+serviceCharge+"%</span>: </td>"+
+							"<td align='left'>Service Charge<input type='hidden' id = 'serviceChargeIN' value='"+serviceCharge+"'> <span id='serviceCharge'>"+serviceCharge+"%</span>: </td>"+
 							"<td><input type='text' style='width: 100px;' name='serviceChargeAmt' id='serviceChargeAmt' value='"+serviceChargeAmt+"' readOnly/>"+
 						"</tr>";
 				
@@ -518,19 +568,17 @@
 							"<td align='left'>10% Subsidy Amount: </td>"+
 							"<td><input type='text' style='width: 100px;' name='tenPercentSubsidy' id='tenPercentSubsidy' value='"+tenPercentSubsidy+"' readOnly/>"+
 						"</tr>";
-						
 				message += "<tr>"+
 							"<td align='left'>Total Payable Value: </td>"+
 							"<td><input type='text' style='width: 100px;' name='totalPayableValue' id='totalPayableValue' value='"+totalPayableValue+"' readOnly/>"+
 						"</tr>";
 			
-			message += "</table>";				
+			message += "</table>";		-->		
 			
 			
 				message += "<hr class='style18'></hr>";
-				-->
 			
-			message += "<tr><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td><button value='Add Price' onclick='return addDataToGridTest();' class='button1'>Add Price</button></td></tr>";
+			message += "<tr><td>&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td><td><button  value='Add Price' onclick='return addDataToGridTest();' class='button1'>Add Price </button></td></tr>";
 			
 			title = "<h2><center>User Defined Price <center></h2><br /><center>"+ productName +"</center> ";
 			
@@ -546,7 +594,6 @@
 	
 	var addAdjType = $("#addAdjList").val();
 	
-	
 	var addFlag = "Y";
 	
 	$("#indentAdjustmentTable tr :input:visible").each(function () {
@@ -557,24 +604,29 @@
 	
 	
 	if(addFlag == "Y"){
-	
 	var removeRow = "javascript:removeAdjustment()";
 	
 	var totalAmtparam = '\'' + totalAmt + '\'';
     var updateAmountByPercentage = "javascript:updateAmountByPercentage(this,"+ totalAmtparam +")";
+    
+    var updatePercentageByAmount = "javascript:updatePercentageByAmount(this,"+ totalAmtparam +")";
 	
-	  var updatePercentageByAmount = "javascript:updatePercentageByAmount(this,"+ totalAmtparam +")";
+	
 	
 	var adjIdPer=addAdjType+"_PUR";
 	
 	var adjIdAmt=addAdjType+"_PUR_AMT";
 	
-	if(addAdjType != "")
+	 if(addAdjType != ""){
+	 
+	    if(addAdjType == "VAT" || addAdjType == "VAT_SURCHARGE" || addAdjType == "CST" || addAdjType == "CST_SURCHARGE" || addAdjType == "ENTRY_TAX" || addAdjType == "PRICE_DISCOUNT" )
+	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
+	    else if(addAdjType == "TEN_PERCENT_SUBSIDY" || addAdjType == "SERVICE_CHARGE")
+	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'" readonly/></td></tr>');
+	    else
+	    $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
+	}
 	
-	  if(addAdjType == "VAT" || addAdjType == "VAT_SURCHARGE" || addAdjType == "CST" || addAdjType == "CST_SURCHARGE"  || addAdjType == "ENTRY_TAX" || addAdjType == "PRICE_DISCOUNT")
-	 $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'" readonly /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
-     else
-     $(".myTable").append('<tr class="item"><td><font color="blue">'+addAdjType+'</font></td><td><input type="number" max="100" step=".5" maxlength="10" style="width: 50px;"  width="50px"  id="'+adjIdPer+'" name="'+adjIdPer+'" onblur="'+updateAmountByPercentage+'"   /></td><td>Amt:</td><td><input type="text" max="100"  step=".5" maxlength="10" style="width: 100px;"  width="100px" id="'+adjIdAmt+'"  onblur="'+updatePercentageByAmount+'" /></td><td>Remove</td><td><input type="button" style="width: 100px;" name="remove" class="delete" id="Remove" value="Remove" onclick="'+removeRow+'"></td></tr>');
 	
 	}else{
 	
@@ -584,8 +636,6 @@
 	}
 	
 	function removeAdjustment(){
-	
-	
 	
 	  $("#indentAdjustmentTable tr :input:visible").each(function () {
 		    var id = this.id;
@@ -608,14 +658,13 @@
             });
 	
 	
-	     $('#indentAdjustmentTable tr').click(function () {
+	  $('#indentAdjustmentTable tr').click(function () {
              $(".delete").live('click', function(event) {
 	          $(this).parent().parent().remove();
 	        adjustBasePriceNew();
            });
-           
-            });
-	
+              
+          });
 	}
 	
 	
@@ -660,16 +709,16 @@
   	    
   	     $.each(allAdjustments, function(key, item){
   	          if(resultMap[item['orderAdjustmentTypeId']] == "Y")
-			  $('#addAdjGivenList').append($('<li>').html( "<font color='green'><input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();' checked><font size='100' color='green'>"+item['orderAdjustmentTypeId']+"/>"));
+			  $('#addAdjGivenList').append($('<li>').html( "<font color='black'><input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();' checked><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
   		      else
-  		      $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='green'>"+item['orderAdjustmentTypeId']+"/>"));
+  		      $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
   	     });
   	    
 	 
 	 }else{
 	 
 	  $.each(allAdjustments, function(key, item){
-	   $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='green'>"+item['orderAdjustmentTypeId']+"</option>"));
+	   $('#addAdjGivenList').append($('<li>').html( "<input type='checkbox' id='"+item['orderAdjustmentTypeId']+"' value='"+item['orderAdjustmentTypeId']+"' class='checkedList' onclick='javascript:checkedAdjList();'><font size='100' color='black'>"+item['orderAdjustmentTypeId']+"</option>"));
 	  });
 	 }
 	}
@@ -702,6 +751,17 @@
 	 	var taxPercItemId = taxPercentItem.id;
 	 	
 	 	
+	 	if(taxPercentItem.id == "TEN_PERCENT_SUBSIDY_PUR"){
+	 	  var tenPer =  $("#TEN_PERCENT_SUBSIDY_PUR").val();
+	 	  if(tenPer != 10){
+	 	  $("#TEN_PERCENT_SUBSIDY_PUR").val(10);
+	 	   percentage = 10;
+	 	  }
+	 	}
+	 	  
+	 	
+	 	
+	 	
 	 	var taxValueItemId = taxPercentItem.id + "_AMT";
 	 	if(percentage != 'undefined' && percentage != null && percentage.length){
 	 	
@@ -711,6 +771,7 @@
 	 	       if(taxPercItemId == "VAT_SURCHARGE_PUR" || taxPercItemId == "CST_SURCHARGE_PUR")
 	 	       var totalAmt = getReleventAmt(taxPercItemId);
 	 	
+	 	// alert("totalAmt==============="+totalAmt);
 	 	
 	 		var taxValue = (percentage) * (totalAmt/100) ;
 	 		$('#'+taxValueItemId).val(taxValue);
@@ -720,6 +781,7 @@
 	 	
 	 	adjustBasePriceNew();
 	}	
+	
 	
 	
 	
@@ -733,6 +795,12 @@
 	 	}
 	 	updateAmountByPercentage(taxAmountItem,totalAmt);
 	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -752,7 +820,11 @@
 		    //===============Service Charge=================
 		    if(id == "SERVICE_CHARGE_PUR"){
 		      var adjPercentage = $('#'+id).val();
+		      dataRow[id] = adjPercentage;
 		      $("#serviceCharge").html(adjPercentage);
+		      
+		      $("#serviceChargeIN").val(adjPercentage);
+		      
 		    } 
 		    
 		    if(id == "SERVICE_CHARGE_PUR_AMT"){
@@ -763,7 +835,7 @@
 			    }
 			    
 			    
-			    //alert("adjValue================"+adjValue);
+			   // alert("adjValue================"+adjValue);
 		    
 		      $("#serviceChargeAmt").val(adjValue);
 		     
@@ -821,7 +893,7 @@
 			    }
 		    }
 		    
-		   // alert("adjValue========222===="+adjValue);
+		    //alert("adjValue========222===="+adjValue);
 		    
 		     totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(adjValue);
 		    
@@ -829,7 +901,7 @@
 		    }//end
 		   
 		     
-		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "ROUNDING_OFF_PUR_AMT") {
+		    if(id == "OTHER_DISCOUNT_PUR_AMT" || id == "PRICE_DISCOUNT_PUR_AMT" || id == "QTY_DISCOUNT_PUR_AMT" || id == "ROUNDING_OFF_PUR_AMT" ) {
 		    
 		    
 		       if(id != 'undefined' && id != null && id.length){
@@ -844,7 +916,6 @@
 			    }
 		    }
 		    
-		    
 		     totaladjValueTaxForEntry = totaladjValueTaxForEntry - parseFloat(adjValue);
 		    
 		    }  
@@ -854,14 +925,23 @@
 		})
 	
 	
+	var serviceChargeAmt1 = $("#serviceChargeAmt").val();
 	
-	$("#saleAmount").val(totaladjValueTaxForEntry+parseFloat(basicAmount));
+	
+	//alert("basicAmount============="+basicAmount);
+	
 	
 	var saleValue = totaladjValueTaxForEntry+parseFloat(basicAmount);
 	
-	 
+		//alert("saleValue============="+saleValue);
+	
+	
+	 $("#saleAmount").val(saleValue);
+	
+	  var tenPercentSubsidy = $("#tenPercentSubsidy").val();
 	  
-	  var totalPayableValue = saleValue;
+	  
+	  var totalPayableValue = saleValue + parseFloat(tenPercentSubsidy) + parseFloat(serviceChargeAmt1);
 	
 	  $("#totalPayableValue").val(totalPayableValue);
 	
@@ -891,6 +971,7 @@
 	 var totalAmt = parseFloat(totalAmt);
 	 
 	
+	   // alert("totalAmt=============="+totalAmt);
 	 
 	    
 	 var adjType = $("#addAdjList").val();
@@ -917,6 +998,7 @@
 		    
 		    id = id+"_PUR_AMT";
 		    
+		   // alert("id==================="+id);
 		    
 		    if(id == "CST_PUR_AMT" || id == "VAT_PUR_AMT" || id == "ENTRY_TAX_PUR_AMT" || id == "CST_SURCHARGE_PUR_AMT" || id == "VAT_SURCHARGE_PUR_AMT" || id == "SERVICE_CHARGE_PUR_AMT")  {
 		    
@@ -931,6 +1013,19 @@
 			    	dataRow[id] = adjPercentage;
 			    }
 		    }
+		    
+		     if(id == "SERVICE_CHARGE_PUR_AMT"){
+		    
+		    var serviceChargeAmt = $("#serviceChargeAmt").val();
+		    
+		    totalAmt = totalAmt + parseFloat(serviceChargeAmt);
+		    
+		    }else{
+		    
+		     totalAmt = totalAmt + parseFloat(adjValue);
+		     
+		     }
+		    
 		    
 		    
 		   }//end
@@ -968,7 +1063,21 @@
 			    	dataRow[id] = adjPercentage;
 			    }
 		    }
+		    
+		    
+		     if(id == "TEN_PERCENT_SUBSIDY_PUR_AMT"){
+		    
+		    var tenPercentSubsidy = $("#tenPercentSubsidy").val();
+		    
+		    totalAmt = totalAmt - parseFloat(tenPercentSubsidy);
+		    
+		    }else{
+		    
 		     totalAmt = totalAmt - parseFloat(adjValue);
+		     
+		     }
+		    
+		     
 		    
 		    
 		    }  
@@ -984,16 +1093,6 @@
 	  return totalAmt;
 	
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -1023,6 +1122,8 @@
 		var baseAmount = $("#baseAmount").val();
 		var saleBaseAmt = $("#saleBaseAmt").val();
 		var saleAmount = $("#saleAmount").val();
+		
+		var serviceChargePer = $("#serviceChargeIN").val();
 				
 		$("#indentAdjustmentTable tr :input:visible").each(function () {
 		    var id = this.id;
@@ -1077,6 +1178,8 @@
 		
 		dataRow["SERVICE_CHARGE_PUR_AMT"] = serviceChargeAmt;
 		dataRow["SERVICE_CHARGE_AMT"] = serviceChargeAmt;
+		dataRow["SERVICE_CHARGE_PUR"] = serviceChargePer;
+		
 		dataRow["OTH_CHARGES_AMT"] = totAdj;
 		dataRow["DISCOUNT_AMT"] = totDis;
 		dataRow["tenPercent"] = tenPercentSubsidy;		
