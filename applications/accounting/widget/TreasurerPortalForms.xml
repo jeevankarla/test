@@ -721,7 +721,7 @@ under the License.
              <parameter param-name="reportTypeFlag" value="contraCheque"/>
             </hyperlink>
         </field> 
-        <field name="cancel" widget-style="buttontext" event="onclick" action="" use-when="&quot;${statusId}&quot;==&quot;FINACT_TRNS_CREATED&quot;">
+        <field name="cancel" widget-style="buttontext" event="onclick" action="" use-when="(&quot;${statusId}&quot;==&quot;FINACT_TRNS_CREATED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;CANCEL&quot;, &quot;_FINTRNS&quot;, session)))}">
             <hyperlink  target-type="plain" description="cancel" target="javascript:cancelDepositContra('${finAccountTransId}');"></hyperlink>
         </field> 
     </form>
