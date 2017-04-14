@@ -377,12 +377,12 @@ function drawRow(rowData) {
     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
     	</#if>
     }
-    if(buutonName = "Account"){
+    if(buutonName == "Account"){
     	<#if security.hasPermission("ACCOUNTS_HEAD_APPROVE", session)>
     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
     	</#if>
     }
-    if(buutonName = "Regional"){
+    if(buutonName == "Regional"){
     	<#if security.hasPermission("REGIONAL_HEAD_APPROVE", session)>
     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
     	</#if>
