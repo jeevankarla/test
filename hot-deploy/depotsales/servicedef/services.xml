@@ -903,6 +903,8 @@
          <attribute name="ro" type="String" mode="IN" optional="false"/>
          <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
          <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
+         <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
+         <attribute mode="IN" name="thruDate" optional="true" type="Timestamp"/>
    </service>
     
 </services>

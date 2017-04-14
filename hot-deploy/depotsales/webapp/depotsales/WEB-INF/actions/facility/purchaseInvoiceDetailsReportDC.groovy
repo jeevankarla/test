@@ -124,13 +124,19 @@ if(UtilValidate.isNotEmpty(invoiceItems)){
 		tempMap=[:];
 		tempList=[];
 		
-		orderItembill = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId), null, null, null, false);
+		
+		conditionList=[];
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItem.invoiceItemSeqId));
+		condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		
+		orderItembill = delegator.findList("OrderItemBilling", condExpr, null, null, null, false);
 		orderDetails=EntityUtil.getFirst(orderItembill);
 		if(UtilValidate.isNotEmpty(orderDetails)){
 			orderId=orderDetails.orderId;
 			orderItemSeqId=orderDetails.orderItemSeqId;
 		}
-		conditionList=[];
+		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderDetails.orderId));
 		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderDetails.orderItemSeqId));
 		condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -159,7 +165,13 @@ if(UtilValidate.isNotEmpty(invoiceItems)){
 		
 		invoiceAdj = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]),null, null, null, false);
 		invoiceItemTypes= EntityUtil.getFieldListFromEntityList(invoiceAdj,"invoiceItemTypeId", true);
-		invItmAdjWithoutTaxes = EntityUtil.filterByCondition(invoiceAdjustments, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,invoiceItemTypes));
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, invoiceItemTypes));
+		conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, invoiceItem.invoiceItemSeqId));
+		condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		
+		invItmAdjWithoutTaxes = EntityUtil.filterByCondition(invoiceAdjustments, condExpr);
 		for(eachAdjstmt in invItmAdjWithoutTaxes){
 			tempMap2=[:];
 			tempMap2.put("productId", eachAdjstmt.productId);
@@ -169,7 +181,13 @@ if(UtilValidate.isNotEmpty(invoiceItems)){
 			tempMap2.put("taxAmount", eachAdjstmt.itemValue);
 			tempList.add(tempMap2);
 		}
-		invoiceitemAdjustments = EntityUtil.filterByCondition(invoiceAdjustments, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, invoiceItemTypes));
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, invoiceItemTypes));
+		conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, invoiceItem.invoiceItemSeqId));
+		condExpr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+
+		invoiceitemAdjustments = EntityUtil.filterByCondition(invoiceAdjustments, condExpr);
 		
 		for(invoiceAdjstmt in invoiceitemAdjustments){
 			tempMap2=[:];
