@@ -115,10 +115,13 @@ if(roID){
 	
 	
 	deliveryChallanDate = "";
-	
+	deliveryChallanNumber="";
 	
 	if(shipmentList.get("deliveryChallanDate"))
 	 deliveryChallanDate = shipmentList.get("deliveryChallanDate");
+	 
+	 if(shipmentList.get("deliveryChallanNumber"))
+	 deliveryChallanNumber = shipmentList.get("deliveryChallanNumber");
 	
 	 lrNumber = "";
 	 if(shipmentList.get("lrNumber"))
@@ -146,6 +149,7 @@ if(roID){
 	}
 	
 	context.deliveryChallanDate = deliveryChallanDate;
+	context.deliveryChallanNumber = deliveryChallanNumber;
 	orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId)  , UtilMisc.toSet("orderNo"), null, null, false );
 	
 	
@@ -225,7 +229,7 @@ if(roID){
 	double totTaxAmount2 = 0;
 	double mgpsAmt = 0;
 	
-	
+	isItVatOrCst="";
 	int i=0;
 	for (eachList in invoiceItemList) {
 		
@@ -247,6 +251,9 @@ if(roID){
 			 
 			   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
 			  tempMap = [:];
+				  if(UtilValidate.isEmpty(isItVatOrCst)){
+					  isItVatOrCst=eachItem.invoiceItemTypeId;
+				  }
 			  
 			  invoiceForPercentage = delegator.findOne("Invoice",[invoiceId : eachItem.invoiceId] , false);
 			  
@@ -333,6 +340,10 @@ if(roID){
 		i++;
 		
 	}
+	
+	
+	context.isItVatOrCst=isItVatOrCst;
+	//Debug.log("isItVatOrCst====@@@@@========="+isItVatOrCst);
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
@@ -352,7 +363,7 @@ if(roID){
 	
 	context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemListConsolidate;
 	
-	Debug.log("invoiceRemainigAdjItemListConsolidate================"+invoiceRemainigAdjItemListConsolidate);
+	//Debug.log("invoiceRemainigAdjItemListConsolidate================"+invoiceRemainigAdjItemListConsolidate);
 	
 	context.totTaxAmount = totTaxAmount;
 	context.totTaxAmount2 = totTaxAmount2;
@@ -2262,4 +2273,6 @@ context.finalAddresList = finalAddresList;
 
 }
 
-	
+//Debug.log("invoiceRemainigAdjItemListConsolidate================"+invoiceRemainigAdjItemListConsolidate);
+
+//Debug.log("finalDetails================"+finalDetails);
