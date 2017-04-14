@@ -4409,6 +4409,10 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		
 		String invoiceId = (String) context.get("invoiceId");
 		
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		
+		
 		String ro = (String) context.get("ro");
 		
 		String invoiceTypeId = (String) context.get("invoiceTypeId");
@@ -4440,6 +4444,8 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		    	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
 		   if(UtilValidate.isNotEmpty(invoiceId))	
 		    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		   conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		   conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId));
 		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
@@ -4457,6 +4463,20 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 				
         	String eacinvoiceId = eachInvoice.getString("invoiceId");
         	String costCenterId = eachInvoice.getString("costCenterId");
+        	
+        	
+        	conditionList.clear();
+ 			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eacinvoiceId));
+ 			conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "ROUNDING_ADJUSTMENT"));
+ 			List<GenericValue> invoiceItemList =null;
+ 			try{
+ 				invoiceItemList = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+ 				if(UtilValidate.isNotEmpty(invoiceItemList)){
+ 					delegator.removeAll(invoiceItemList);
+ 				}
+ 			} catch (Exception e) {
+ 	   		  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+ 			}
         	
         	List<GenericValue> InvoiceItem = null;
         	
