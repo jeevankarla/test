@@ -51,6 +51,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.network.LmsServices;
 import in.vasista.vbiz.byproducts.TransporterServices;
 import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.service.GenericServiceException;
 
 printPaymentsList = [];
 partyPaymentMap = [:];
@@ -64,6 +65,80 @@ if(UtilValidate.isNotEmpty(paymentGroupId)){
 			if(UtilValidate.isNotEmpty(paymentId)){
 				tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS , paymentId)  , null, null, null, false );
 				tempprintPaymentsList.each{paymentRecipt->
+					
+					partyIdFromList=EntityUtil.getFirst(tempprintPaymentsList);
+					branchId = partyIdFromList.partyIdFrom;
+					branchIdForAdd="";
+					branchList = [];
+					condListb = [];
+					if(branchId){
+					condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+					condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+					condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+					
+					PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+					
+					branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+					if(!branchList){
+						condListb2 = [];
+						//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
+						condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+						condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+						condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+						cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+						
+						PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+						if(PartyRelationship1){
+						branchDetails = EntityUtil.getFirst(PartyRelationship1);
+						branchIdForAdd=branchDetails.partyIdFrom;
+						}
+					}
+					else{
+						if(branchId){
+						branchIdForAdd=branchId;
+						}
+					}
+					if(!branchList)
+					branchList.add(branchId);
+					}
+					
+					branchBasedWeaversList = [];
+					condListb1 = [];
+					if(branchId){
+					condListb1.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+					condListb1.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+					condListb = EntityCondition.makeCondition(condListb1, EntityOperator.AND);
+					
+					PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+					branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+					
+					if(!branchBasedWeaversList)
+					branchBasedWeaversList.add(branchId);
+					}
+					BOAddress="";
+					if(branchIdForAdd){
+					branchContextForADD=[:];
+					branchContextForADD.put("branchId",branchIdForAdd);
+					try{
+						resultCtx = dispatcher.runSync("getBoHeader", branchContextForADD);
+						if(ServiceUtil.isError(resultCtx)){
+							Debug.logError("Problem in BO Header ", module);
+							return ServiceUtil.returnError("Problem in fetching financial year ");
+						}
+						if(resultCtx.get("boHeaderMap")){
+							boHeaderMap=resultCtx.get("boHeaderMap");
+							
+							if(boHeaderMap.get("header0")){
+								BOAddress=boHeaderMap.get("header0");
+							}
+						}
+					}catch(GenericServiceException ee){
+						Debug.logError(ee, module);
+						return ServiceUtil.returnError(ee.getMessage());
+					}
+					context.BOAddress=BOAddress;
+					}
+					
 					invDts = delegator.findList("PaymentAndApplication",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS , paymentId)  , null, null, null, false );
 					tempprintPaymentMap=[:];
 					if(UtilValidate.isNotEmpty(invDts)){
