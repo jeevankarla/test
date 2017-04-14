@@ -85,17 +85,24 @@ under the License.
         <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
          <fo:block>     
     <fo:table width="100%" align="right" table-layout="fixed" font-size="10pt"> 
-	<fo:table-column column-width="5%"/>
-	<fo:table-column column-width="17%"/>
-	<fo:table-column column-width="10%"/>
-	<fo:table-column column-width="7%"/>
-	<fo:table-column column-width="7%"/>
+	<fo:table-column column-width="4%"/>
 	<fo:table-column column-width="8%"/>
-	<fo:table-column column-width="15%"/>
-	<fo:table-column column-width="10%"/>
-	<fo:table-column column-width="10%"/>
+	<fo:table-column column-width="8%"/>
+	<#if scheme == "MGPS_10Pecent">
+	<fo:table-column column-width="7%"/>
+	</#if>
+	<#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
+	<fo:table-column column-width="7%"/>
+	</#if>
+	<fo:table-column column-width="8%"/>
+	<fo:table-column column-width="8%"/>
+	<fo:table-column column-width="7%"/>
+	<fo:table-column column-width="7%"/>
 	<fo:table-column column-width="12%"/>
 	<fo:table-column column-width="15%"/>
+	<fo:table-column column-width="8%"/>
+	<fo:table-column column-width="8%"/>
+	<fo:table-column column-width="8%"/>
 
 
 		<fo:table-body>
@@ -119,14 +126,6 @@ under the License.
 				<fo:block text-align="center"    font-size="10pt" >Total Qty</fo:block>
 				<fo:block text-align="center"     font-size="10pt" >(Kgs)</fo:block>
 				</fo:table-cell>
-				<fo:table-cell border-style="solid">
-				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
-				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Size</fo:block>
-				</fo:table-cell>
-				<fo:table-cell border-style="solid">
-				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
-				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">No</fo:block>
-				</fo:table-cell>
 				<#if scheme == "MGPS_10Pecent">
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="center"    font-size="10pt" >10%</fo:block>
@@ -140,6 +139,14 @@ under the License.
 				</fo:table-cell>
 				</#if>
 				<fo:table-cell border-style="solid">
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Size</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">Packing</fo:block>
+				<fo:block   text-align="center" font-size="11pt" white-space-collapse="false">No</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Rate/</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >Kg</fo:block>
 				</fo:table-cell>
@@ -147,10 +154,31 @@ under the License.
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >(Rs)</fo:block>
 				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<#if isItVatOrCst?has_content && isItVatOrCst=="VAT_SALE">
+				 <fo:block text-align="center"    font-size="10pt" >VAT</fo:block>
+				 <#elseif isItVatOrCst?has_content && isItVatOrCst=="CST_SALE">
+				 <fo:block text-align="center"    font-size="10pt" >CST</fo:block>
+				 <#else>
+				 <fo:block text-align="center"    font-size="10pt" >CST/VAT</fo:block>
+				 </#if>
+				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<#if isItVatOrCst?has_content && isItVatOrCst=="VAT_SALE">
+				 <fo:block text-align="center"    font-size="10pt" >VAT</fo:block>
+				 <#elseif isItVatOrCst?has_content && isItVatOrCst=="CST_SALE">
+				 <fo:block text-align="center"    font-size="10pt" >CST</fo:block>
+				 <#else>
+				 <fo:block text-align="center"    font-size="10pt" >CST/VAT</fo:block>
+				 </#if>
+				 <fo:block text-align="center"    font-size="10pt" >Surcharge</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				 <fo:block text-align="center"    font-size="10pt" >Total</fo:block>
+				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
+				</fo:table-cell>
 			</fo:table-row>
-			
-			 
-		   
 		     <#assign sr = 1>
 		     <#assign totQuantity = 0>
 		     <#assign totPackingSizekgs = 0>
@@ -161,6 +189,8 @@ under the License.
 		      <#assign tempTotAmount = 0>
 		      <#assign mgpsAndTotalDeductions = 0>
 		      <#assign TotalmgpsQty=0>
+		      <#assign totVatOrCstAmt= 0>
+		      <#assign totVatOrCstSur = 0>
 		      
 		      <#assign i = 0>
 		       <#assign adjamt = 0>
@@ -203,8 +233,8 @@ under the License.
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
 				        <#list eachOne.getValue() as each>  
-				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				        <fo:block text-align="left"  font-weight="bold"   font-size="10pt" ><#if each.description?has_content>${each.description?if_exists}<#else>${each.invoiceItemTypeId?if_exists}</#if><#if each.percentage?has_content>(${each.percentage?if_exists?string("#0.00")}%)</#if></fo:block>
+				        <#--><fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				        <fo:block text-align="left"  font-weight="bold"   font-size="10pt" ><#if each.description?has_content>${each.description?if_exists}<#else>${each.invoiceItemTypeId?if_exists}</#if><#if each.percentage?has_content>(${each.percentage?if_exists?string("#0.00")}%)</#if></fo:block>-->
 				        </#list>
 				       </#if>
 				  </#list>
@@ -289,11 +319,11 @@ under the License.
 				<fo:table-cell border-style="solid">
 				<#if invoiceDetail.get("ToTamount")?has_content>
 				<#assign totAmount = totAmount+(invoiceDetail.get("ToTamount"))>
-				</#if>
+				<#assign totWithoutTax=invoiceDetail.get("ToTamount")>	
 				<fo:block text-align="center"  font-size="10pt" >${(invoiceDetail.get("ToTamount"))?string("#0.00")}</fo:block>
-				
+				</#if>
                  
-				 <#if invoiceItemLevelAdjustments?has_content  && !kanAndKalRo?has_content>		
+				 <#--<#if invoiceItemLevelAdjustments?has_content  && !kanAndKalRo?has_content>		
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
 				       <#if eachOne.getKey() == i>				       
@@ -307,26 +337,68 @@ under the License.
 				        </#list>
 				       </#if>
 				  </#list>
-				 </#if>
+				 </#if>-->
 				 
-				  <#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
+				  
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<#assign cstOrVat=0>
+				<#assign cstOrVatSur=0>	
+				<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
-				       <#if eachOne.getKey() == i>				       
-				        <#list eachOne.getValue() as each> 
-		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				       <#if eachOne.getKey() == i>	
+				      		       
+				        <#list eachOne.getValue() as each>
+				    
+				        <#if (each.invoiceItemTypeId =="CST_SALE") || (each.invoiceItemTypeId=="VAT_SALE")>	
+						 <#assign totVatOrCstAmt=totVatOrCstAmt+(each.itemValue)>
+						 <#assign cstOrVat=each.itemValue>	
+						<fo:block text-align="right"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
+						
+						</#if>
+						
+						
+					
+		                <#--<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
+				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>-->
 				          <#assign adjamt=adjamt+each.itemValue> 
 				        </#list>
 				       </#if>
 				  </#list>
 				 </#if>
+				 </fo:table-cell>
+				 <fo:table-cell border-style="solid">
+				<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
+                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
+				   <#list alladjustList as eachOne>
+				       <#if eachOne.getKey() == i>				       
+				        <#list eachOne.getValue() as each>
+				        
+						  
+						<#if (each.invoiceItemTypeId =="CST_SURCHARGE") || (each.invoiceItemTypeId=="VAT_SURCHARGE")>
+						<#assign totVatOrCstSur =totVatOrCstSur+(each.itemValue)>
+						<#assign cstOrVatSur=each.itemValue>
+						<fo:block text-align="right"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
+						</#if>
+					
+		                <#--<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>-->
+				          <#assign adjamt=adjamt+each.itemValue> 
+				        </#list>
+				       </#if>
+				  </#list>
+				 </#if>
+				 </fo:table-cell>
+				 <fo:table-cell border-style="solid">
+					<fo:block text-align="right"  font-size="10pt" >${totWithoutTax+cstOrVat+cstOrVatSur}</fo:block>
 				</fo:table-cell>
 				</fo:table-row>
 
-    
-              <#assign i = i+1>
+    			<#assign i = i+1>
+              
 		      <#assign sr = sr+1> 
 		   
 		   </#list> 
@@ -342,10 +414,12 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >${totQuantity} </fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackingSizekgs} </fo:block>
+				<#--<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackingSizekgs} </fo:block>-->
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false"></fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackets} </fo:block>
+				<#--<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${totPackets} </fo:block>-->
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false"></fo:block>
 				</fo:table-cell>
 				<#if scheme == "MGPS_10Pecent">
 				<fo:table-cell border-style="solid">
@@ -365,11 +439,20 @@ under the License.
 				<#assign finalGrndToal=0>
 				<#if kanAndKalRo?has_content>
 					<#assign finalGrndToal=totAmount+totTaxAmount>
-		   			<fo:block text-align="center"  font-size="10pt" >${(totAmount+totTaxAmount)?string("#0.00")}</fo:block>
+		   			<fo:block text-align="center"  font-size="10pt" >${(totAmount)?string("#0.00")}</fo:block>
 				<#else>
 					<#assign finalGrndToal=grandTotal+totTaxAmount2>
-					<fo:block text-align="center"  font-size="10pt" >${(totAmount+totTaxAmount2)?string("#0.00")}</fo:block>
+					<fo:block text-align="center"  font-size="10pt" >${(totAmount)?string("#0.00")}</fo:block>
 	            </#if>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block text-align="right"  font-size="10pt" >${totVatOrCstAmt}</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block text-align="right"  font-size="10pt" >${totVatOrCstSur}</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block text-align="right"  font-size="10pt" >${(totAmount+totVatOrCstAmt+totVatOrCstSur)}</fo:block>
 				</fo:table-cell>
 								
 				</fo:table-row>
@@ -447,7 +530,9 @@ under the License.
 	   	          <#--  <#if scheme != "General"> --> 
 	                <#--<fo:block text-align="left"    font-size="10pt" >Purchase Value (RS):<#if purInvoiceTOt?has_content>${purInvoiceTOt?string("#0.00")}</#if></fo:block>-->
 	   			<#--	</#if>-->
-	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   
+	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	
+	   				 <fo:block text-align="left"    font-size="10pt" >Delivery Challan Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(deliveryChallanDate, "dd-MMM-yyyy")} </fo:block>
+	        		 <fo:block text-align="left"    font-size="10pt" >Delivery Challan No : ${deliveryChallanNumber?if_exists}</fo:block>
 	        </fo:table-cell>
 	        <fo:table-cell  >
 						<fo:block text-align="right" font-size="10pt">Sale Value(RS):${(finalGrndToal+remainingAdjustMents)?string("#0.00")?if_exists}</fo:block>
