@@ -1601,5 +1601,71 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 			 result = ServiceUtil.returnSuccess("Transaction Completed successfully...!");
 			 request.setAttribute("_EVENT_MESSAGE_", "Transaction Completed successfully...!");
 		     return "success"; 
-	  	 }      
+	  	 }  
+
+public static Map<String, Object> cancelContraTransactions(DispatchContext ctx, Map<String, ? extends Object> context){
+  	Delegator delegator = ctx.getDelegator();
+  	GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	LocalDispatcher dispatcher = ctx.getDispatcher();
+  	String chequeReturns = (String)context.get("chequeBounce");
+  	String finAccountTransId = (String)context.get("finAccountTransId");
+  	String returnDateStr = (String)context.get("returnDate");
+  	Map<String, Object> result =  FastMap.newInstance();
+  	Map<String, Object> inMap = FastMap.newInstance();
+  	Map<String, Object> createInvoiceResult = FastMap.newInstance();
+	inMap.put("userLogin", userLogin);
+	SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy");
+  	  	Timestamp cancelDate = null;
+  	  	boolean isNonRouteMrktingChqReturn = Boolean.FALSE;// always excluding if externally not set
+		if(UtilValidate.isNotEmpty(returnDateStr)){
+	  	  		try {
+	  	  		cancelDate = new java.sql.Timestamp(sdf.parse(returnDateStr).getTime());
+	  	  		} catch (ParseException e) {
+	  	  			Debug.logError(e, "Cannot parse date string: " + returnDateStr, module);
+	  	  		} catch (NullPointerException e) {
+	  	  			Debug.logError(e, "Cannot parse date string: " + returnDateStr, module);
+	  	  		}
+	  	  	}
+  	  	else{
+  	  		cancelDate = UtilDateTime.nowTimestamp();
+  	  	}
+	try{
+		GenericValue finAccountTrans = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", finAccountTransId), false);
+		String finAccntTransStatus=(String)finAccountTrans.get("statusId");
+		GenericValue finAccountTrnsAttr = delegator.findOne("FinAccountTransAttribute", UtilMisc.toMap("finAccountTransId", finAccountTransId,"attrName","FATR_CONTRA"), false);
+		GenericValue finAccountTrnsAttb=null;
+		String finAccntTransAttrbStatus=null;
+		if(UtilValidate.isNotEmpty(finAccountTrnsAttr)){
+			String finAccntAttrbTransId=(String)finAccountTrnsAttr.get("attrValue");
+			finAccountTrnsAttb = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", finAccntAttrbTransId), false);
+			finAccntTransAttrbStatus=(String)finAccountTrnsAttb.get("statusId");
+		}
+		if((UtilValidate.isNotEmpty(finAccntTransStatus)&&("FINACT_TRNS_CREATED".equals(finAccntTransStatus)))){
+			
+				Map finAccountTransMap = UtilMisc.toMap("statusId","FINACT_TRNS_CANCELED");
+		            finAccountTransMap.put("userLogin", userLogin);
+		           	finAccountTransMap.put("finAccountTransId", finAccountTransId);
+		           	finAccountTransMap.put("cancelDate",cancelDate);
+		           	finAccountTransMap.put("chequeReturns",chequeReturns);
+		           	Map finAccountTransMapResult=dispatcher.runSync("setFinAccountTransStatus", finAccountTransMap);
+	               if (ServiceUtil.isError(finAccountTransMapResult)){
+	     		  		String errMsg =  ServiceUtil.getErrorMessage(finAccountTransMapResult);
+	     		  		Debug.logError(errMsg , module);
+	     		  	    return ServiceUtil.returnError("setFinAccountTransStatus  having Problem for" + finAccountTransId);    
+	     		  	}		               
+	              
+	           	result = ServiceUtil.returnSuccess("FinAccountTrans Successfully cancelled");
+	       		result.put("finAccountTransId",finAccountTransId);				
+			
+		}else{
+    		return ServiceUtil.returnError("you can not  cancel the finAccountTransId which is in approved status");
+		}
+		
+	}catch(Exception e){
+		Debug.logError("Unable to cancel the finAccountTransId"+e, module);
+		return ServiceUtil.returnError("Unable to cancel the finAccountTransId");
+	}		
+  	return result;
+}
+
 }

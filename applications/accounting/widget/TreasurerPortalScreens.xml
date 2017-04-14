@@ -1792,6 +1792,9 @@
 								<screenlet title="Find Contra Entries">				
 									<include-form name="FindContraEntries" location="component://accounting/widget/TreasurerPortalForms.xml"/>
 								</screenlet>
+								<platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/cancelContra.ftl"/></html>
+                                </platform-specific>
 								<container>
 									<link target="BankContraEntry.csv" text="Export As CSV" style="buttontext create">
 									<parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
@@ -1811,6 +1814,7 @@
             </widgets>
         </section>
     </screen>
+    
  <screen name="InterUnitContraEntry">
         <section>
              <actions>

@@ -857,12 +857,15 @@ under the License.
                 <check-errors/>
             <else>
                 <set field="finAccountTrans.statusId" from-field="parameters.statusId"/>
+                <set field="finAccountTrans.cancelDate" from-field="parameters.cancelDate"/>
+                <set field="finAccountTrans.chequeReturns" from-field="parameters.chequeReturns"/>
                 <store-value value-field="finAccountTrans"/>
             </else>
             </if-empty>
+            <field-to-result field="parameters.cancelDate" result-name="cancelDate"/>
+            <field-to-result field="parameters.chequeReturns" result-name="chequeReturns"/>
         </if-compare-field>
     </simple-method>
-
 	<simple-method method-name="updatePaymentOnFinAccTransStatusSetToCancel"
 		short-description="remove field finAccountTransId from Payment entity.">
 		<entity-one entity-name="FinAccountTrans" value-field="finAccountTrans" />
@@ -876,6 +879,7 @@ under the License.
 				<field-to-list field="payment" list="payments" />
 			</else>
 		</if-empty>
+		<if-not-empty field="payments">
 		<iterate list="payments" entry="payment">
 			<set field="updatePaymentMap.paymentId" from-field="payment.paymentId" />
 			<clear-field field="updatePaymentMap.finAccountTransId" />
@@ -926,6 +930,83 @@ under the License.
 			<call-service service-name="updatePayment" in-map-name="updatePaymentMap" />
 			<clear-field field="updatePaymentMap" />
 		</iterate>
+		<else>		
+				<entity-one entity-name="FinAccountTrans" value-field="finAcctTransDetails">
+		            <field-map field-name="finAccountTransId" value="finAccountTrans.finAccountTransId"/>
+		        </entity-one>	
+		         <if-compare operator="equals" value="FINACT_TRNS_APPROVED" field="finAcctTransDetails.statusId">
+			        <add-error><fail-message message="You can not cancel finaccountTrans which is in Approved status"/></add-error>
+			        <check-errors></check-errors>
+			    </if-compare> 
+				<entity-and list="acctransListFin" entity-name="AcctgTrans">
+					<field-map field-name="finAccountTransId" from-field="finAccountTrans.finAccountTransId" />				
+				</entity-and>
+				<iterate entry="acctransFin" list="acctransListFin">
+					<set field="acctransIds[+0]" from-field="acctransFin.acctgTransId"/>			
+				</iterate>	
+			   <if-not-empty field="acctransIds">	
+					<entity-condition list="relatedAcctgTransToFinAcctrans" entity-name="AcctgTransAttribute">
+						<condition-list>			
+							<condition-expr field-name="attrValue" from-field="payment.paymentId" />
+							<condition-expr field-name="attrName" value="FIN_CREATED_ACCTG_TRANS_ID" />
+							<condition-expr field-name="acctgTransId" operator="in" from-field="acctransIds" />
+						</condition-list>				
+					</entity-condition>
+					<iterate entry="relatedAcctgTransToFinAcctran" list="relatedAcctgTransToFinAcctrans">
+						<set field="copyAcctgTransCtx.fromAcctgTransId" from-field="relatedAcctgTransToFinAcctran.acctgTransId" />
+						<set field="copyAcctgTransCtx.revert" value="Y" />
+						<call-service service-name="copyAcctgTransAndEntries"
+							in-map-name="copyAcctgTransCtx">
+							<result-to-field field="postAcctgTransMap.acctgTransId"
+								result-name="acctgTransId" />
+						</call-service>
+						 <now-timestamp field="nowTimestamp"/>
+				        <set field="dayStart" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}" type="Timestamp"/>
+				        <set field="paymentDateStart" value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(payment.paymentDate)}" type="Timestamp"/>
+						<if-compare-field operator="equals" field="dayStart" to-field="paymentDateStart" type="Timestamp">
+							<call-service service-name="postAcctgTrans"
+							in-map-name="postAcctgTransMap" />
+						</if-compare-field>
+						<make-value value-field="acctgTransAttribute"
+							entity-name="AcctgTransAttribute" />
+						<set field="acctgTransAttribute.acctgTransId" from-field="relatedAcctgTransToFinAcctran.acctgTransId" />
+						<set field="acctgTransAttribute.attrName" value="REVERTED_ACCTG_TRANS_ID" />
+						<set field="acctgTransAttribute.attrValue" from-field="postAcctgTransMap.acctgTransId" />
+						<create-value value-field="acctgTransAttribute" />
+						<set field="acctgTransAttribute.acctgTransId" from-field="postAcctgTransMap.acctgTransId" />
+						<set field="acctgTransAttribute.attrName" value="PRE_REVERTED_ACCTG_TRANS_ID" />
+						<set field="acctgTransAttribute.attrValue" from-field="relatedAcctgTransToFinAcctran.acctgTransId" />
+						<create-value value-field="acctgTransAttribute" />
+						<clear-field field="acctgTransAttribute" />
+						<clear-field field="copyAcctgTransCtx" />
+					</iterate>	
+				</if-not-empty>
+				<entity-one value-field="finAccTrnsAtbr" entity-name="FinAccountTransAttribute">
+					<field-map field-name="finAccountTransId" from-field="finAccountTrans.finAccountTransId"/>
+					<field-map field-name="attrName" value="FATR_CONTRA"/>
+				</entity-one>				
+				<if-not-empty field="finAccTrnsAtbr">									
+			        <entity-one entity-name="UserLogin" value-field="userLogin">
+			            <field-map field-name="userLoginId" value="system"/>
+			        </entity-one>
+			        <entity-one entity-name="FinAccountTrans" value-field="finAcctAttrbTrans">
+			            <field-map field-name="finAccountTransId" value="${finAccTrnsAtbr.attrValue}"/>
+			        </entity-one>
+			        <if-compare operator="equals" value="FINACT_TRNS_APPROVED" field="finAcctAttrbTrans.statusId">
+				        <add-error><fail-message message="You can not cancel finaccountTrans which is in Approved status"/></add-error>
+				        <check-errors></check-errors>
+				    </if-compare>    
+			        <if-compare operator="equals" value="FINACT_TRNS_CREATED" field="finAcctAttrbTrans.statusId">
+				        <set field="setFinAccountTransStatusMap.finAccountTransId" value="${finAccTrnsAtbr.attrValue}"/>
+				        <set field="setFinAccountTransStatusMap.statusId" value="FINACT_TRNS_CANCELED"/>
+				        <set field="setFinAccountTransStatusMap.cancelDate" value="${parameters.cancelDate}" type="Timestamp"/>
+				        <set field="setFinAccountTransStatusMap.chequeReturns" value="${parameters.chequeReturns}" type="String"/>
+				        <set field="setFinAccountTransStatusMap.userLogin" from-field="userLogin"/>
+				        <call-service service-name="setFinAccountTransStatus" in-map-name="setFinAccountTransStatusMap"/>
+				    </if-compare>    
+				</if-not-empty>				
+		</else>
+		</if-not-empty>
 	</simple-method>
     <simple-method method-name="expirePaymentAssociationsOnFinAccountTransCancel" short-description="expire payment associations with paymentGroup on finAccountTrans cancel">
         <entity-one entity-name="FinAccountTrans" value-field="finAccountTrans"/>

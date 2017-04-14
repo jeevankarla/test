@@ -4380,6 +4380,12 @@ under the License.
         <response name="success" type="view" value="apSingleGroupPayment"/>
         <response name="error" type="view" value="apSingleGroupPayment"/>
     </request-map>
+     <request-map uri="cancelContraTrans">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelContraTransactions"/>
+        <response name="success" type="view" value="BankContraEntry" />
+        <response name="error" type="view" value="BankContraEntry"/>
+    </request-map>
     
 
     

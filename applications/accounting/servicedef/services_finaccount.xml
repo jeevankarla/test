@@ -248,6 +248,8 @@ under the License.
         	<permission-service service-name="acctgInvoicePermissionCheck" main-action="PAYMENTSTATUS_CANCEL"/>
        </required-permissions>
         <attribute name="finAccountTransId" type="String" mode="IN" optional="true"/>
+         <attribute name="cancelDate" type="Timestamp" mode="INOUT" optional="true"/>
+        <attribute name="chequeReturns" type="String" mode="INOUT" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
     </service>
@@ -327,6 +329,8 @@ under the License.
         	<permission-service service-name="acctgInvoicePermissionCheck" main-action="PAYMENTSTATUS_CANCEL"/>
         </required-permissions>	
         <attribute name="finAccountTransId" type="String" mode="IN" optional="true"/>
+         <attribute name="cancelDate" type="Timestamp" mode="INOUT" optional="true"/>
+        <attribute name="chequeReturns" type="String" mode="INOUT" optional="true"/>
     </service>
     <!-- these services use the product store's fin account settings -->
     <service name="createFinAccountForStore" engine="java" default-entity-name="FinAccount"
@@ -783,4 +787,10 @@ under the License.
        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
        <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
+     <service name="cancelContraTransactions" engine="java" location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="cancelContraTransactions" auth="true">
+        <description>cancel Deposit Account.</description>
+		<attribute name="finAccountTransId" mode="INOUT" optional="false" type="String"/>
+		<attribute name="chequeBounce" type="String" mode="IN" optional="false"/>
+        <attribute name="returnDate" type="String" mode="IN" optional="true"/>
+    </service>    
 </services>
