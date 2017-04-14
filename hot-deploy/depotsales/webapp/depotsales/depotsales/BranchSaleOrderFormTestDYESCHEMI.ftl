@@ -251,7 +251,7 @@
 			if(indententryinit.schemeCategory.value.length > 0){
 	  			if ($('#schemeCategory').val() == "General"){
 	  				$("#editServChgButton").show();
-	  				$('#serviceChargePercent').val(2);
+	  				$('#serviceChargePercent').val(0);
 	  				var scPerc = $('#serviceChargePercent').val();
 	  				$("#serviceCharge").html("<b>"+scPerc+"% Service Charge is applicable</b>");
 	  			}
