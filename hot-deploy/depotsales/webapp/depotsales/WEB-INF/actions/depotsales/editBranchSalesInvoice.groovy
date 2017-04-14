@@ -295,13 +295,18 @@
 						actualTaxValue = 0;
 						if(UtilValidate.isNotEmpty(taxItemList)){
 							taxValue = (EntityUtil.getFirst(taxItemList)).get("amount");
+							
+							if((EntityUtil.getFirst(taxItemList)).get("sourcePercentage"))
 							taxPercent = (taxValue*100)/(eachItem.amount*eachItem.quantity);
+							else
+							taxPercent = (EntityUtil.getFirst(taxItemList)).get("sourcePercentage");
+							
 							//taxValue = (actualTaxValue/origQty)*qty;
 						}
 						
 						taxItem = taxItem.replace("SALE", "PUR");
 						
-						Debug.log("taxItem ============="+taxItem);
+						//Debug.log("taxItem ============="+taxItem);
 						
 						
 						newObj.put(taxItem, taxPercent);
@@ -328,6 +333,13 @@
 									//surTaxPercent = (EntityUtil.getFirst(surItemList)).get("sourcePercentage");
 									surTaxValue = (EntityUtil.getFirst(surItemList)).get("amount");
 									surTaxPercent = (surTaxValue*100)/(taxValue);
+									
+									if((EntityUtil.getFirst(surItemList)).get("sourcePercentage"))
+									surTaxPercent = (EntityUtil.getFirst(surItemList)).get("sourcePercentage");
+									else
+									surTaxPercent = (surTaxValue*100)/(taxValue);
+									
+									
 								}
 								newObj.put(surchargeItem+"_PUR", surTaxPercent);
 								newObj.put(surchargeItem+"_PUR_AMT", surTaxValue);
