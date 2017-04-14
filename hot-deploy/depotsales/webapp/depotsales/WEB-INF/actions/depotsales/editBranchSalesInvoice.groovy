@@ -297,9 +297,10 @@
 							taxValue = (EntityUtil.getFirst(taxItemList)).get("amount");
 							
 							if((EntityUtil.getFirst(taxItemList)).get("sourcePercentage"))
-							taxPercent = (taxValue*100)/(eachItem.amount*eachItem.quantity);
-							else
 							taxPercent = (EntityUtil.getFirst(taxItemList)).get("sourcePercentage");
+							else
+							taxPercent = (taxValue*100)/(eachItem.amount*eachItem.quantity);
+							
 							
 							//taxValue = (actualTaxValue/origQty)*qty;
 						}
