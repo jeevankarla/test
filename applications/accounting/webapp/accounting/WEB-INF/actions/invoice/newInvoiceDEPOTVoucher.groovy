@@ -46,8 +46,8 @@ branchRo = delegator.findList("PartyRelationship",EntityCondition.makeCondition(
 roID = EntityUtil.getFirst(branchRo);
 
 context.partyId = partyId;
-//if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
-if(roID){
+if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
+	
 	kanAndKalRo="yes";
 	context.kanAndKalRo=kanAndKalRo;
 	tallySalesNo = invoiceList.get("referenceNumber");
@@ -377,8 +377,7 @@ if(roID){
 			  mgpsAmt = mgpsAmt+eachItem.itemValue;
 			  }
 			  
-			  //if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"  || eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
-			  if(eachItem.invoiceItemTypeId=="INVOICE_ITM_ADJ"){
+			  if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"  || eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
 				  if(eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"){
 					  totTaxAmount2=totTaxAmount2+(eachItem.itemValue);
@@ -399,7 +398,6 @@ if(roID){
 	context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 	
 	context.invoiceRemainigAdjItemList = invoiceRemainigAdjItemList;
-	//Debug.log("invoiceRemainigAdjItemList====@@@@@@@======="+invoiceRemainigAdjItemList);		
 	context.totTaxAmount = totTaxAmount;
 	context.totTaxAmount2 = totTaxAmount2;
 	context.mgpsAmt = mgpsAmt;
@@ -708,30 +706,14 @@ if(roID){
 					  
 			 itemOrderId  = OrderItemBilling[0].orderId;
 			 orderItemSeqId  = OrderItemBilling[0].orderItemSeqId;
-			 packQuantity=0;
-			 packets=0;
+			 
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS,itemOrderId));
 			 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 			 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
 			 
-			 if(OrderItemDetail[0]){
-				 
-				if(OrderItemDetail[0].packQuantity){
-				 tempMap.put("packQuantity", OrderItemDetail[0].packQuantity);
-				}
-				else{
-				 tempMap.put("packQuantity",packQuantity);
-				}
-				 if(OrderItemDetail[0].packQuantity){
-				 tempMap.put("packets", OrderItemDetail[0].packets);
-				 }
-				 else{
-				 tempMap.put("packets",packets);
-				 }
-								  
-			 }
+			 
 			 quantity = quantity+eachInvoiceList.quantity;
 			 amount = eachInvoiceList.amount;
 			
@@ -2098,3 +2080,4 @@ context.finalAddresList = finalAddresList;
 
 }
 
+	
