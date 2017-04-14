@@ -366,9 +366,27 @@ function drawRow(rowData) {
     // var dataJson = {"orderId":orderId,"statusId":statusMap[statusId],"partyId":partyId};
     
    // if(buutonName == "Commercial")
-    var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
+    //var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
    // else
    // var approveButton ='<input type=button name="approveOrder" id=approveOrder value='+buutonName+'Head onclick="'+orderCustomMethod+'">';
+    //row.append($("<td>" +  approveButton  +"</td>"));
+    
+    var approveButton = "";
+    if(buutonName == "Commercial"){
+    	<#if security.hasPermission("COMMERCIAL_HEAD_APPROVE", session)>
+    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
+    	</#if>
+    }
+    if(buutonName = "Account"){
+    	<#if security.hasPermission("ACCOUNTS_HEAD_APPROVE", session)>
+    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
+    	</#if>
+    }
+    if(buutonName = "Regional"){
+    	<#if security.hasPermission("REGIONAL_HEAD_APPROVE", session)>
+    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
+    	</#if>
+    }
     row.append($("<td>" +  approveButton  +"</td>"));
    }
    else if(rowData.statusId == "ORDER_PENDING"){
@@ -395,7 +413,7 @@ function drawRow(rowData) {
 	  }else{
        row.append($("<td></td>")); 
     }
-    
+    var approveButton = "";
     if ((rowData.orderTotal) <= (rowData.paidAmt) && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N")){
     
         if (((rowData.orderTotal)>= 0) && ((rowData.orderTotal)<= 200000))
@@ -403,29 +421,31 @@ function drawRow(rowData) {
 	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
 	   // var approveButton ='<input type=button name="boapprove" id=boapprove value="BO Approve" onclick="'+orderCustomMethod+'">';
 	    
-	     var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >BO Approve</a>';
-	    
+	    <#if security.hasPermission("BO_HEAD_APPROVE", session)>
+	     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >BO Approve</a>';
+	    </#if>
 	    
 	    row.append($("<td>" +  approveButton  +"</td>"));
 	    }else if (((rowData.orderTotal)>200000) && ((rowData.orderTotal)<= 5000000)){
 	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
 	    //var approveButton ='<input type=button name="boapprove" id=boapprove value="RO Approve" onclick="'+orderCustomMethod+'">';
-	    
-	    var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >RO Approve</a>';
-	    
+	    <#if security.hasPermission("RO_HEAD_APPROVE", session)>
+	    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >RO Approve</a>';
+	    </#if>
 	    row.append($("<td>" +  approveButton  +"</td>"));
 	    }else if (((rowData.orderTotal)>5000000) && ((rowData.orderTotal)<= 10000000)){
 	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
 	   // var approveButton ='<input type=button name="boapprove" id=boapprove value="HO Approve" onclick="'+orderCustomMethod+'">';
-	    
-	    var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >HO Approve</a>';
-	    
+	    <#if security.hasPermission("HO_APPROVE", session)>
+	    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >HO Approve</a>';
+	    </#if>
 	    row.append($("<td>" +  approveButton  +"</td>"));
 	    }else{
 	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
 	    //var approveButton ='<input type=button name="boapprove" id=boapprove value="MD Approve" onclick="'+orderCustomMethod+'">';
-	    
-	    var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >MD Approve</a>';
+	    <#if security.hasPermission("MD_APPROVE", session)>
+	    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >MD Approve</a>';
+	    </#if>
 	    row.append($("<td>" +  approveButton  +"</td>"));
 	    }
     }else if(rowData.statusId == "ORDER_APPROVED"){
@@ -436,30 +456,31 @@ function drawRow(rowData) {
 	      
 	    var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
 	    //var approveButton ='<input type=button name="boapprove" id=boapprove value="BO Credit Approve" onclick="'+orderCustomMethod+'">';
-	    
-	    var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >BO Credit Approve</a>';
-	    
+	    <#if security.hasPermission("BO_HEAD_APPROVE", session)>
+	    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >BO Credit Approve</a>';
+	    </#if>
 	    row.append($("<td>" +  approveButton  +"</td>")); 
 	     
 	     }else if (((rowData.orderTotal)>200000) && ((rowData.orderTotal)<= 5000000)){
 	      var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
 	     // var approveButton ='<input type=button name="boapprove" id=boapprove value="RO Credit Approve" onclick="'+orderCustomMethod+'">';
-	     
-	     var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >RO Credit Approve</a>';
-	      
+	     <#if security.hasPermission("RO_HEAD_APPROVE", session)>
+	     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >RO Credit Approve</a>';
+	     </#if> 
 	      row.append($("<td>" +  approveButton  +"</td>"));
 	     } else if (((rowData.orderTotal)>5000000) && ((rowData.orderTotal)<= 10000000)){
 	      var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
 	      //var approveButton ='<input type=button name="boapprove" id=boapprove value="HO Credit Approve" onclick="'+orderCustomMethod+'">';
-	      
-	      var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >HO Credit Approve</a>';
-	      
+	      <#if security.hasPermission("HO_APPROVE", session)>
+	      	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >HO Credit Approve</a>';
+	      </#if>
 	      row.append($("<td>" +  approveButton  +"</td>"));
 	     }else{
 	      var orderCustomMethod = "javascript:forApprove("+ orderParam + ","+statusId+","+partyId+")";
 	     // var approveButton ='<input type=button name="boapprove" id=boapprove value="MD Credit Approve" onclick="'+orderCustomMethod+'">';
-	      
-	      var approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >MD Credit Approve</a>';
+	      <#if security.hasPermission("MD_APPROVE", session)>
+	      	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >MD Credit Approve</a>';
+	      </#if>
 	      row.append($("<td>" +  approveButton  +"</td>"));
 	     }
 	  }else if(rowData.statusId == "ORDER_CANCELLED"){
