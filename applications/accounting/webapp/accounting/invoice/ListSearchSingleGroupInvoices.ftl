@@ -304,30 +304,12 @@ function datepick()
   	<div>
 	<table width="100%">
     		<tr>
-    			<td><span class="label">Payment Method:</span><select class='h3' name="paymentMethodId" id="paymentMethodId"><#list paymentMethods as eachMethod><option value="${eachMethod.paymentMethodId?if_exists}">${eachMethod.description?if_exists}</option></#list></select></td>
+    			<td><span class="label">Payment Method:</span><select class='h3' name="paymentMethodId" id="paymentMethodId" style="width:50%"><#list paymentMethods as eachMethod><option value="${eachMethod.paymentMethodId?if_exists}">${eachMethod.description?if_exists}</option></#list></select></td>
     			<td><span class="label">Cheque No :</span><input class='h3' type='text' id='paymentRefNum' name='paymentRefNum'/></td>
     			<td><span class="label"> Cheque Date :</span><input class='h3' type='text' id='instrumentDate' name='instrumentDate' value='${defaultEffectiveDate?if_exists}' onmouseover='datepick()'/></td>
     			<td><span class="label">Cheque in Favor (<font color='red'>*</font>):</span><input class='h3' type='text' value = "YOUR GOODSELVES" id='inFavor' name='inFavor'/></td>	
     		</tr>
     		<tr>
-    			<td><span class="label"> Issuing Authority:</span>
-    				<input class='h3' type='text' id='issuingAuthority' name='issuingAuthority'/>
-    			</td>
-    			<td><span class="label">Fin Account</span>
-    				<select name="finAccountId" id="finAccountId" style="width:50%">
-    				<option value=""></option>
-    				<#if finAccountList?has_content>
-    				<#list finAccountList as eachFinAccount>
-    					<option value="${eachFinAccount.finAccountId}">${eachFinAccount.finAccountName?if_exists}[${eachFinAccount.finAccountId?if_exists}]</option>	
-    				</#list>
-    				</#if>
-    				<!--<#if finAccountList?has_content>
-    				<#list finAccountList as eachFinAccount>
-    					<option value="${eachFinAccount.finAccountId}">${eachFinAccount.finAccountName}[${eachFinAccount.finAccountId}]</option>	
-    				</#list>
-    				</#if>-->
-    				</select>
-    			</td>
     			<input type="hidden" name="paymentGroupTypeId" id="paymentGroupTypeId" value="${roleTypeId?if_exists}">
     			<td><span class="label"> Amount:</span><input class='h3' type='text' id='payAmount' name='payAmount' readonly/></td>
     			<td><span class="label"> Payment Date (<font color='red'>*</font>):</span><input class='h3' type='text' id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td>
