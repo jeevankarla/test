@@ -252,6 +252,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker("invAppFromDate","invAppThruDate");
 	    makeDatePicker4("PartyLedgerFromDate","PartyLedgerThruDate");
 		makeDatePicker4("PartyLedgerCreditorFromDate","PartyLedgerCreditorThruDate");
+		makeDatePicker4("ChequeBouncingFromDate","ChequeBouncingThruDate");
 		makeDatePicker4("PartyWiseLedgerFromDate","PartyWiseLedgerThruDate");
 		makeDatePicker4("PartyWiseLedgerInterFromDate","PartyWiseLedgerInterThruDate");
 		makeDatePicker4("EMPLoanCrdtAdvFromDate","EMPLoanCrdtAdvThruDate");
@@ -753,6 +754,15 @@ function setOrgPartyId() {
 					   <td width="5%">   </td>
 					  <td width="10%" align="right"><input type="submit" value="PDF" onClick="javascript:appendParams('PartyLedgerCreditors', '<@ofbizUrl>PartyLedgerCreditorsReport.pdf</@ofbizUrl>');" class="buttontext"/> </td>
 					  <td width="5%" align="left"><input type="submit" value="CSV" onClick="javascript:appendParams('PartyLedgerCreditors', '<@ofbizUrl>PartyLedgerCreditorsReport.csv</@ofbizUrl>');" class="buttontext"/></td>
+				</form>
+              </tr>
+              <tr class="alternate-row">
+				<form id="ChequeBouncingDetails" name="ChequeBouncingDetails" method="post" action="<@ofbizUrl>printChequeBouncingDetails.pdf</@ofbizUrl>" target="_blank">	
+					<td width="30%">Cheque Bouncing Details</td>
+					<td width="10%">From<input  type="text" size="18pt" id="ChequeBouncingFromDate" readonly  name="fromDate"/></td>
+				    <td width="10%">To<input  type="text" size="18pt" id="ChequeBouncingThruDate" readonly  name="thruDate"/></td>
+  					 <td width="5%">   </td>
+					  <td width="10%" align=""><input type="submit" value="PDF" onClick="javascript:appendParams('ChequeBouncingDetails', '<@ofbizUrl>printChequeBouncingDetails.pdf</@ofbizUrl>');" class="buttontext"/> </td>
 				</form>
               </tr>
               <#--
