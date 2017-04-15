@@ -4365,6 +4365,12 @@ under the License.
        <response name="success" type="view" value="PrintBankAccountDetails"/>
        <response name="error" type="view" value="BankAccountDetail"/>    
     </request-map>
+    <request-map uri="printChequeBouncingDetails.pdf">
+       <security https="true" auth="true"/>
+       <!-- <event type="groovy" path="component://accounting/webapp/accounting/WEB-INF/actions/"  invoke="BankAccountDetail.groovy"/> -->
+       <response name="success" type="view" value="PrintChequeBouncingDetails"/>
+       <response name="error" type="view" value="ChequeBouncingDetails"/>    
+    </request-map>
     <request-map uri="getBOsForRO">
        <security https="true" auth="true"/>
        <event type="groovy" path="component://accounting/webapp/accounting/WEB-INF/actions/invoice/"  invoke="fetchBoForRo.groovy"/>
@@ -4982,6 +4988,7 @@ under the License.
    <view-map name="implGrantReportPDF" type="screenfop" page="component://accounting/widget/PaymentScreens.xml#implGrantReportPDF" content-type="application/pdf" encoding="none"/>
    <view-map name="BankAccountDetail" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BankAccountDetail"/>
    <view-map name="PrintBankAccountDetails" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintBankAccountDetails" content-type="application/pdf" encoding="none"/>
+   <view-map name="PrintChequeBouncingDetails" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintChequeBouncingDetailsPdf" content-type="application/pdf" encoding="none"/>
    
    
    <view-map name="manufacturingAccntReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#manufacturingAccntReportPDF" content-type="application/pdf" encoding="none"/>
