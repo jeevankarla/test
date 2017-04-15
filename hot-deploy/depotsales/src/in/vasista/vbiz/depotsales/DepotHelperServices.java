@@ -4413,7 +4413,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		Timestamp thruDate = (Timestamp) context.get("thruDate");
 		
 		
-		String ro = (String) context.get("ro");
+		String ro = (String) context.get("bo");
 		
 		String invoiceTypeId = (String) context.get("invoiceTypeId");
 		
@@ -4441,14 +4441,16 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		 try{
 			conditionList.clear();
 		    if(UtilValidate.isNotEmpty(branchList))	
-		    	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
+		    	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, ro));
 		   if(UtilValidate.isNotEmpty(invoiceId))	
-		    conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-		   conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-		   conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		  /* if(UtilValidate.isNotEmpty(fromDate))
+			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+		   if(UtilValidate.isNotEmpty(thruDate))
+			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));*/
 			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId));
-		        conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-		        conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+			conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
 			 
 		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","costCenterId"), null, null, false);
 			
