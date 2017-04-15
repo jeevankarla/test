@@ -4440,7 +4440,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		
 		 try{
 			conditionList.clear();
-		    if(UtilValidate.isNotEmpty(branchList))	
+		    if(UtilValidate.isNotEmpty(ro))	
 		    	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, ro));
 		   if(UtilValidate.isNotEmpty(invoiceId))	
 			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
