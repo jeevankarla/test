@@ -115,6 +115,17 @@ context.customTimePeriodValue = customTimePeriodValue;
 //-----------------------------------------
 sectionCode = parameters.sectionCode;
 //----------------------
+finalList=[];
+sectionList=[];
+if(sectionCode == "ALL"){
+	sectionList.add("TDS_194C");
+	sectionList.add("TDS_194H");
+	sectionList.add("TDS_194J");
+	sectionList.add("TDS_194I");
+}else{
+	sectionList.add(parameters.sectionCode);
+}
+finalList.addAll(sectionList);
 
 panNo = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", "Company", "partyIdentificationTypeId", "PAN_NUMBER"), false);
 if(panNo){
@@ -223,7 +234,7 @@ invoiceStatusList.each{ invoices ->
 			amountTotal = 0;
 			invoiceItemTypeId = invoiceItem.get("invoiceItemTypeId");
 			temp = invoiceItemTypeId;
-		if(invoiceItemTypeId.equals("TDS_INT") || invoiceItemTypeId.equals("TDS_234E") || invoiceItemTypeId.equals("TDS_PENAL") || invoiceItemTypeId.equals(sectionCode))
+		if(invoiceItemTypeId.equals("TDS_INT") || invoiceItemTypeId.equals("TDS_234E") || invoiceItemTypeId.equals("TDS_PENAL") || invoiceItemTypeId.contains(finalList))
 			{
 			if(invoiceItemTypeId.equals("TDS_INT"))
 			{
@@ -238,7 +249,7 @@ invoiceStatusList.each{ invoices ->
 			{
 				tempMap["penalty"] = (Integer)invoiceItem.get("amount");
 			}
-			else if(invoiceItemTypeId.equals(sectionCode))
+			else if(invoiceItemTypeId.contains(finalList))
 			{
 				tempMap["tax"] = (Integer)invoiceItem.get("amount");
 			}
@@ -251,7 +262,7 @@ amountTotal = amountTotal + tempMap["tax"] + tempMap["penalty"] + tempMap["fee"]
 tempMap["total"] =  amountTotal;
 			}
 		}
-		if(temp.equals("TDS_INT") || temp.equals("TDS_234E") || temp.equals("TDS_PENAL") || temp.equals(sectionCode))
+		if(temp.equals("TDS_INT") || temp.equals("TDS_234E") || temp.equals("TDS_PENAL") || temp.contains(finalList))
 		{
 		listTaxPaidNew.add(tempMap);
 		}
@@ -303,8 +314,8 @@ if(!segmentId.equals("All") && !segmentId.equals("YARN_SALE"))
 if(segmentId.equals("YARN_SALE"))
 	conditionList.add(EntityCondition.makeCondition("purposeTypeId" , EntityOperator.IN, UtilMisc.toList("YARN_SALE", "DEPOT_YARN_SALE")));
 
-conditionList.add(EntityCondition.makeCondition("taxAuthPartyId", EntityOperator.EQUALS, "TAX1"));
-conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, sectionCode));
+//conditionList.add(EntityCondition.makeCondition("taxAuthPartyId", EntityOperator.EQUALS, "TAX1"));
+conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, finalList));
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.BETWEEN,UtilMisc.toList(monthBeginNew,monthEndNew)));
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.NOT_EQUAL, "Company"));

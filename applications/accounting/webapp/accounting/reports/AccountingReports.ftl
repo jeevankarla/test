@@ -564,6 +564,8 @@ function setOrgPartyId() {
 									<td width="15%">From <input type='text' size="18pt" id='fromMonth' name='fromMonth' onmouseover='monthPickerTDS()' class="monthPickerTDS"</td>
 			      		 			<td width="15%">To <input type='text' size="18pt" id='thruMonth' name='thruMonth' onmouseover='monthPickerTDS()' class="monthPickerTDS"</td>
 			      		 			<td width="15%">Section Code:<select name="sectionCode" id="sectionCode">
+			      		 			<option value=""></option>
+			      		 			<option value="ALL">ALL</option>
 			      		 			<option value="TDS_194C">TDS_194C</option>
 			      		 			<option value="TDS_194H">TDS_194H</option>
 			      		 			<option value="TDS_194J">TDS_194J</option>
