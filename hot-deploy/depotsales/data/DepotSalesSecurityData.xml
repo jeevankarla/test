@@ -192,6 +192,43 @@
 <SecurityGroup description="Mobile Supplier" groupId="MOB_SUPPLIER"/>
 <SecurityPermission description="Mobile Supplier dashboard permission." permissionId="MOB_SUPLR_DB_VIEW"/>
 <SecurityGroupPermission groupId="MOB_SUPPLIER" permissionId="MOB_SUPLR_DB_VIEW"/>
-   
+ 
+ 
+<!-- PO Approval Permissions -->
+<SecurityPermission description="Commercial Head" permissionId="COMMERCIAL_HEAD_APPROVE"/>
+<SecurityGroup description="Commercial Head" groupId="COMMERCIAL_HEAD"/>
+<SecurityGroupPermission groupId="COMMERCIAL_HEAD"  permissionId="COMMERCIAL_HEAD_APPROVE"/>
+<SecurityGroupPermission groupId="FULLADMIN" permissionId="COMMERCIAL_HEAD_APPROVE"/>
+
+<SecurityPermission description="Accounts Head" permissionId="ACCOUNTS_HEAD_APPROVE"/>
+<SecurityGroup description="Accounts Head" groupId="ACCOUNTS_HEAD"/>
+<SecurityGroupPermission groupId="ACCOUNTS_HEAD"  permissionId="ACCOUNTS_HEAD_APPROVE"/>
+<SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTS_HEAD_APPROVE"/>
+
+
+<SecurityPermission description="Regional Head" permissionId="REGIONAL_HEAD_APPROVE"/>
+<SecurityGroup description="Regional Head" groupId="REGIONAL_HEAD"/>
+<SecurityGroupPermission groupId="REGIONAL_HEAD"  permissionId="REGIONAL_HEAD_APPROVE"/>
+<SecurityGroupPermission groupId="FULLADMIN" permissionId="REGIONAL_HEAD_APPROVE"/>   
+
+<SecurityPermission description="BO Head" permissionId="BO_HEAD_APPROVE"/>
+<SecurityGroup description="BO Head" groupId="BO_HEAD"/>
+<SecurityGroupPermission groupId="BO_HEAD"  permissionId="BO_HEAD_APPROVE"/>
+<SecurityGroupPermission groupId="FULLADMIN" permissionId="BO_HEAD_APPROVE"/> 
+
+<SecurityPermission description="RO Head" permissionId="RO_HEAD_APPROVE"/>
+<SecurityGroup description="RO Head" groupId="RO_HEAD"/>
+<SecurityGroupPermission groupId="RO_HEAD"  permissionId="RO_HEAD_APPROVE"/>
+<SecurityGroupPermission groupId="FULLADMIN" permissionId="RO_HEAD_APPROVE"/> 
+
+<SecurityPermission description="HO Head" permissionId="HO_APPROVE"/>
+<SecurityGroup description="HO Head" groupId="HO_HEAD"/>
+<SecurityGroupPermission groupId="HO_HEAD"  permissionId="HO_APPROVE"/>
+<SecurityGroupPermission groupId="FULLADMIN" permissionId="HO_APPROVE"/>
+
+<SecurityPermission description="MD " permissionId="MD_APPROVE"/>
+<SecurityGroup description="MD Approve" groupId="MD_APPROVE"/>
+<SecurityGroupPermission groupId="MD_APPROVE"  permissionId="MD_APPROVE"/> 
+<SecurityGroupPermission groupId="FULLADMIN" permissionId="MD_APPROVE"/>  
 	
 </entity-engine-xml>
