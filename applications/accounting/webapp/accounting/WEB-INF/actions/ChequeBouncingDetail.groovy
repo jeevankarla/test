@@ -15,8 +15,8 @@ fromDate = parameters.fromDate;
 thruDate = parameters.thruDate;
 context.fromDate=fromDate;
 context.thruDate=thruDate;
+printChequeBouncingDetailList = [];
 if(UtilValidate.isNotEmpty(fromDate)&&UtilValidate.isNotEmpty(thruDate)){
-	printChequeBouncingDetailList = [];
 	def sdf = new SimpleDateFormat("yyyy, MMM dd");
 	Timestamp fromdate1=null;
 	Timestamp thrudate1=null;
@@ -67,5 +67,5 @@ if(UtilValidate.isNotEmpty(fromDate)&&UtilValidate.isNotEmpty(thruDate)){
 	}
 	}
 //	Debug.log("printChequeBouncingDetailList======"+printChequeBouncingDetailList);
-context.printChequeBouncingDetailList = printChequeBouncingDetailList;
 }
+context.printChequeBouncingDetailList = printChequeBouncingDetailList;
