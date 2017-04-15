@@ -205,12 +205,6 @@
 <SecurityGroupPermission groupId="ACCOUNTS_HEAD"  permissionId="ACCOUNTS_HEAD_APPROVE"/>
 <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTS_HEAD_APPROVE"/>
 
-
-<SecurityPermission description="Regional Head" permissionId="REGIONAL_HEAD_APPROVE"/>
-<SecurityGroup description="Regional Head" groupId="REGIONAL_HEAD"/>
-<SecurityGroupPermission groupId="REGIONAL_HEAD"  permissionId="REGIONAL_HEAD_APPROVE"/>
-<SecurityGroupPermission groupId="FULLADMIN" permissionId="REGIONAL_HEAD_APPROVE"/>   
-
 <SecurityPermission description="BO Head" permissionId="BO_HEAD_APPROVE"/>
 <SecurityGroup description="BO Head" groupId="BO_HEAD"/>
 <SecurityGroupPermission groupId="BO_HEAD"  permissionId="BO_HEAD_APPROVE"/>
