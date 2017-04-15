@@ -8493,9 +8493,10 @@ public class DepotPurchaseServices{
 								if (paramMap.containsKey(orderAdjustmentType+ "_AMT" + thisSuffix)) {
 									String taxAmt = (String) paramMap.get(orderAdjustmentType+ "_AMT" + thisSuffix);
 									if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
-										adjTypeMap.put("amount",new BigDecimal(taxAmt));
-									}else if(orderAdjustmentType.equals("PRICE_DISCOUNT")){
-										adjTypeMap.put("amount",new BigDecimal(taxAmt).negate());
+										if(orderAdjustmentType.equals("PRICE_DISCOUNT"))
+											adjTypeMap.put("amount",new BigDecimal(taxAmt).negate());
+										else
+											adjTypeMap.put("amount",new BigDecimal(taxAmt));
 									}
 								}  
 								if (paramMap.containsKey(orderAdjustmentType+ "_INC_BASIC" + thisSuffix)) {
