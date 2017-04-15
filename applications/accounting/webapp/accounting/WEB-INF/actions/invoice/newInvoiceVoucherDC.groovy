@@ -249,7 +249,7 @@ if(roID){
 		 for (eachItem in invoiceInnerAdjItemList) {
 			
 			 
-			   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
+			   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE" || eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
 			  tempMap = [:];
 				  if(UtilValidate.isEmpty(isItVatOrCst)){
 					  isItVatOrCst=eachItem.invoiceItemTypeId;

@@ -69,7 +69,7 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Indent No :${indentNo?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC PO No     :${poNumber?if_exists}</fo:block>
-				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;User Agency Indent No/Date  :${externalOrderId?if_exists}</fo:block>
+				<#--<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;User Agency Indent No/Date  :${externalOrderId?if_exists}</fo:block>-->
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
@@ -87,7 +87,7 @@ under the License.
     <fo:table width="100%" align="right" table-layout="fixed" font-size="10pt"> 
 	<fo:table-column column-width="4%"/>
 	<fo:table-column column-width="8%"/>
-	<fo:table-column column-width="8%"/>
+	<fo:table-column column-width="9%"/>
 	<#if scheme == "MGPS_10Pecent">
 	<fo:table-column column-width="7%"/>
 	</#if>
@@ -95,11 +95,12 @@ under the License.
 	<fo:table-column column-width="7%"/>
 	</#if>
 	<fo:table-column column-width="8%"/>
+	<fo:table-column column-width="7%"/>
+	<fo:table-column column-width="7%"/>
+	<fo:table-column column-width="7%"/>
 	<fo:table-column column-width="8%"/>
-	<fo:table-column column-width="7%"/>
-	<fo:table-column column-width="7%"/>
-	<fo:table-column column-width="12%"/>
-	<fo:table-column column-width="15%"/>
+	<fo:table-column column-width="11%"/>
+	<fo:table-column column-width="8%"/>
 	<fo:table-column column-width="8%"/>
 	<fo:table-column column-width="8%"/>
 	<fo:table-column column-width="8%"/>
@@ -173,6 +174,12 @@ under the License.
 				 <fo:block text-align="center"    font-size="10pt" >CST/VAT</fo:block>
 				 </#if>
 				 <fo:block text-align="center"    font-size="10pt" >Surcharge</fo:block>
+				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				 <fo:block text-align="center"    font-size="10pt" >Excise</fo:block>
+				 <fo:block text-align="center"    font-size="10pt" >Duty</fo:block>
+				  <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Total</fo:block>
@@ -191,7 +198,7 @@ under the License.
 		      <#assign TotalmgpsQty=0>
 		      <#assign totVatOrCstAmt= 0>
 		      <#assign totVatOrCstSur = 0>
-		      
+		       <#assign totExciseDuty = 0>
 		      <#assign i = 0>
 		       <#assign adjamt = 0>
 		    <#list finalDetails as invoiceDetail>
@@ -392,9 +399,38 @@ under the License.
 				  </#list>
 				 </#if>
 				 </fo:table-cell>
+				 
 				 <fo:table-cell border-style="solid">
-					<fo:block text-align="right"  font-size="10pt" >${totWithoutTax+cstOrVat+cstOrVatSur}</fo:block>
+				<#assign exciseAmt=0>	
+				<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
+                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
+				   <#list alladjustList as eachOne>
+				       <#if eachOne.getKey() == i>	
+				      		       
+				        <#list eachOne.getValue() as each>
+				    
+				        <#if (each.invoiceItemTypeId =="EXCISE_DUTY")>	
+						 <#assign totExciseDuty=totExciseDuty+(each.itemValue)>
+						 <#assign exciseAmt=each.itemValue>	
+						<fo:block text-align="right"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
+						
+						</#if>
+						
+						
+					
+		                <#--<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>-->
+				          
+				        </#list>
+				       </#if>
+				  </#list>
+				 </#if>
 				</fo:table-cell>
+				 <fo:table-cell border-style="solid">
+					<fo:block text-align="right"  font-size="10pt" >${totWithoutTax+cstOrVat+cstOrVatSur+exciseAmt}</fo:block>
+				</fo:table-cell>
+				
 				</fo:table-row>
 
     			<#assign i = i+1>
@@ -452,7 +488,10 @@ under the License.
 				<fo:block text-align="right"  font-size="10pt" >${totVatOrCstSur}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="right"  font-size="10pt" >${(totAmount+totVatOrCstAmt+totVatOrCstSur)}</fo:block>
+				<fo:block text-align="right"  font-size="10pt" >${totExciseDuty}</fo:block>
+				</fo:table-cell>
+				<fo:table-cell border-style="solid">
+				<fo:block text-align="right"  font-size="10pt" >${(totAmount+totVatOrCstAmt+totVatOrCstSur+totExciseDuty)}</fo:block>
 				</fo:table-cell>
 								
 				</fo:table-row>
@@ -500,7 +539,7 @@ under the License.
 		
             <#list invoiceRemainigAdjItemList as eachList>
             
-            <#if eachList.invoiceItemTypeId != "PRICE_DISCOUNT">
+            <#if eachList.invoiceItemTypeId != "PRICE_DISCOUNT" && eachList.invoiceItemTypeId != "EXCISE_DUTY">
             
             <#assign remainingAdjustMents = remainingAdjustMents+eachList.itemValue>
 			<fo:table-row white-space-collapse="false">
