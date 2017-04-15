@@ -387,7 +387,7 @@ function drawRow(rowData) {
     	</#if>
     }
     if(buutonName == "Regional"){
-    	<#if security.hasPermission("REGIONAL_HEAD_APPROVE", session)>
+    	<#if security.hasPermission("RO_HEAD_APPROVE", session)>
     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
     	<#else>
     	approveButton = 'Regional Head Approval Pending';
