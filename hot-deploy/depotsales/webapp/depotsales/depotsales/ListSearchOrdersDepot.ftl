@@ -375,16 +375,22 @@ function drawRow(rowData) {
     if(buutonName == "Commercial"){
     	<#if security.hasPermission("COMMERCIAL_HEAD_APPROVE", session)>
     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
+    	<#else>
+    	approveButton = 'Commercial Head Approval Pending';
     	</#if>
     }
     if(buutonName == "Account"){
     	<#if security.hasPermission("ACCOUNTS_HEAD_APPROVE", session)>
     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
+    	<#else>
+    	approveButton = 'Accounts Head Approval Pending';
     	</#if>
     }
     if(buutonName == "Regional"){
     	<#if security.hasPermission("REGIONAL_HEAD_APPROVE", session)>
     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >'+buutonName+'Head</a>';
+    	<#else>
+    	approveButton = 'Regional Head Approval Pending';
     	</#if>
     }
     row.append($("<td>" +  approveButton  +"</td>"));
@@ -423,6 +429,8 @@ function drawRow(rowData) {
 	    
 	    <#if security.hasPermission("BO_HEAD_APPROVE", session)>
 	     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >BO Approve</a>';
+	    <#else>
+	    	approveButton = 'BO Approval Pending';
 	    </#if>
 	    
 	    row.append($("<td>" +  approveButton  +"</td>"));
@@ -431,6 +439,8 @@ function drawRow(rowData) {
 	    //var approveButton ='<input type=button name="boapprove" id=boapprove value="RO Approve" onclick="'+orderCustomMethod+'">';
 	    <#if security.hasPermission("RO_HEAD_APPROVE", session)>
 	    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >RO Approve</a>';
+	    <#else>
+	    	approveButton = 'RO Approval Pending';
 	    </#if>
 	    row.append($("<td>" +  approveButton  +"</td>"));
 	    }else if (((rowData.orderTotal)>5000000) && ((rowData.orderTotal)<= 10000000)){
@@ -438,6 +448,8 @@ function drawRow(rowData) {
 	   // var approveButton ='<input type=button name="boapprove" id=boapprove value="HO Approve" onclick="'+orderCustomMethod+'">';
 	    <#if security.hasPermission("HO_APPROVE", session)>
 	    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >HO Approve</a>';
+	    <#else>
+	    	approveButton = 'HO Approval Pending';
 	    </#if>
 	    row.append($("<td>" +  approveButton  +"</td>"));
 	    }else{
@@ -445,6 +457,8 @@ function drawRow(rowData) {
 	    //var approveButton ='<input type=button name="boapprove" id=boapprove value="MD Approve" onclick="'+orderCustomMethod+'">';
 	    <#if security.hasPermission("MD_APPROVE", session)>
 	    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >MD Approve</a>';
+	    <#else>
+	    	approveButton = 'MD Approval Pending';
 	    </#if>
 	    row.append($("<td>" +  approveButton  +"</td>"));
 	    }
@@ -458,6 +472,8 @@ function drawRow(rowData) {
 	    //var approveButton ='<input type=button name="boapprove" id=boapprove value="BO Credit Approve" onclick="'+orderCustomMethod+'">';
 	    <#if security.hasPermission("BO_HEAD_APPROVE", session)>
 	    	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >BO Credit Approve</a>';
+	    <#else>
+	    	approveButton = 'BO Approval Pending';
 	    </#if>
 	    row.append($("<td>" +  approveButton  +"</td>")); 
 	     
@@ -466,6 +482,8 @@ function drawRow(rowData) {
 	     // var approveButton ='<input type=button name="boapprove" id=boapprove value="RO Credit Approve" onclick="'+orderCustomMethod+'">';
 	     <#if security.hasPermission("RO_HEAD_APPROVE", session)>
 	     	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >RO Credit Approve</a>';
+	     <#else>
+	    	approveButton = 'RO Approval Pending';
 	     </#if> 
 	      row.append($("<td>" +  approveButton  +"</td>"));
 	     } else if (((rowData.orderTotal)>5000000) && ((rowData.orderTotal)<= 10000000)){
@@ -473,6 +491,8 @@ function drawRow(rowData) {
 	      //var approveButton ='<input type=button name="boapprove" id=boapprove value="HO Credit Approve" onclick="'+orderCustomMethod+'">';
 	      <#if security.hasPermission("HO_APPROVE", session)>
 	      	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >HO Credit Approve</a>';
+	      <#else>
+	    	approveButton = 'HO Approval Pending';
 	      </#if>
 	      row.append($("<td>" +  approveButton  +"</td>"));
 	     }else{
@@ -480,6 +500,8 @@ function drawRow(rowData) {
 	     // var approveButton ='<input type=button name="boapprove" id=boapprove value="MD Credit Approve" onclick="'+orderCustomMethod+'">';
 	      <#if security.hasPermission("MD_APPROVE", session)>
 	      	approveButton = '<a class="buttontext" href="<@ofbizUrl>approveOrderreload?orderId='+rowData.orderId+'&&statusId='+statusMap[rowData.statusId]+'&&partyId='+rowData.partyId+'</@ofbizUrl>" >MD Credit Approve</a>';
+	      <#else>
+	    	approveButton = 'MD Approval Pending';
 	      </#if>
 	      row.append($("<td>" +  approveButton  +"</td>"));
 	     }
