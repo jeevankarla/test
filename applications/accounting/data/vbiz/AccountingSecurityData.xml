@@ -219,6 +219,10 @@ under the License.
     <SecurityGroup description="'GLRECONCILATION CANCEL(ACCTG)' GlReconciliationId Cancel Special Permission " groupId="GLREC_CANCELADMIN"/>    
     <SecurityGroupPermission groupId="GLREC_CANCELADMIN" permissionId="GLREC_CANCELADMIN"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="GLREC_CANCELADMIN"/>
+    
+     <!-- Contra CANCEL  permissions -->
+    <SecurityPermission description="Permission to view cancel button for FinaccountTrans" permissionId="CANCEL_FINTRNS"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="CANCEL_FINTRNS"/>
    
      
 </entity-engine-xml>

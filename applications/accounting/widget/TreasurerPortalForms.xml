@@ -573,7 +573,7 @@ under the License.
      <!-- create NewTreasurer Simple Deposit for Contra -->
      
      
-     <form name="FindContraEntries" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+     <form name="FindContraEntries" type="single"  header-row-style="header-row" target = "BankContraEntry" default-table-style="basic-table" >
     	<field name="hideSearch"><hidden value="Y" /></field>
 		<field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
     	<field name="finAccountId" title="From Financial Account" >
@@ -585,7 +585,7 @@ under the License.
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down> -->
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
             	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
             </drop-down>
         </field>
@@ -593,8 +593,7 @@ under the License.
         <field name="amount" ><text ></text></field>
         <field name="contraRefNum" title="Instrument Number"><text></text></field>
         <field name="finAccountTransTypeId">
-        	<drop-down no-current-selected-key="ALL">
-        		<option key="ALL" description="ALL"/>
+        	<drop-down allow-empty="false">
         		<option key="WITHDRAWAL" description="WITHDRAWAL"/>
         		<option key="DEPOSIT" description="DEPOSIT"/>
         	</drop-down>
