@@ -638,7 +638,7 @@
 		EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId)));
 	OrderAssocList = delegator.findList("OrderAssoc", EntityCondition.makeCondition(condsList,EntityOperator.AND), null, null, null, false);
 	orderAssoc=EntityUtil.getFirst(OrderAssocList);
-	if(UtilValidate.isNotEmpty(invoiceIds)){
+	if(UtilValidate.isNotEmpty(invoiceIds) && UtilValidate.isNotEmpty(orderAssoc)){
 		shipmentReceipts = delegator.findList("ShipmentReceipt", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderAssoc.orderId), null, null, null, false);
 		context.shipmentReceipts=shipmentReceipts;
 	}
