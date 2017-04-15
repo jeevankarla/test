@@ -100,7 +100,7 @@ under the License.
 			                 <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%rupees-and-paise", locale).toUpperCase()>
 							</#if>
 			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  ONLY</fo:block>
 			                   </fo:table-cell>
 			                   <fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -209,7 +209,7 @@ under the License.
 							<fo:table-row>
 			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
 			                   <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  ONLY</fo:block>
 			                   </fo:table-cell>
 				       			<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -323,7 +323,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       		  </fo:table-cell>
 			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">${StringUtil.wrapString(amountWords?default(""))}  ONLY</fo:block>
 			                   </fo:table-cell>
 				       			<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -419,7 +419,7 @@ under the License.
 							<fo:table-row>
 			                  <#assign amountWords = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(amount, "%indRupees-and-paiseRupees", locale)>
 			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  ONLY</fo:block>
 			                   </fo:table-cell>
 			                   <fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -525,7 +525,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">${StringUtil.wrapString(amountWords?default(""))}  ONLY</fo:block>
 			                   </fo:table-cell>
 			                   <fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -627,7 +627,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       			</fo:table-cell>
 			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  ONLY</fo:block>
 			                   </fo:table-cell>
 				       			<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -731,7 +731,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       		  </fo:table-cell>
 			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;${StringUtil.wrapString(amountWords?default(""))}  ONLY</fo:block>
 			                   </fo:table-cell>
 				       			<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
@@ -834,7 +834,7 @@ under the License.
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 				       		  </fo:table-cell>
 			                  <fo:table-cell>
-			                        	<fo:block keep-together="always" font-size="12pt">${StringUtil.wrapString(amountWords?default(""))}  Only</fo:block>
+			                        	<fo:block keep-together="always" font-size="12pt">${StringUtil.wrapString(amountWords?default(""))}  ONLY</fo:block>
 			                   </fo:table-cell>
 				       			<fo:table-cell>
 				            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
