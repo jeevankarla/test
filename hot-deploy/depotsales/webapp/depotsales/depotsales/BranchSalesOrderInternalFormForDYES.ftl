@@ -1519,6 +1519,9 @@
 		 if(isNaN(row["Packaging"])){
 			row["Packaging"] = 0;
 		 }
+		 if(isNaN(row["packets"])){
+			row["packets"] = 0;
+		 }
 		 if(isNaN(row["amount"])){
 			row["amount"] = 0;
 		 }

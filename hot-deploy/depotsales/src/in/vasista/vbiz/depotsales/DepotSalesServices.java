@@ -4522,13 +4522,14 @@ public class DepotSalesServices{
 					if (UtilValidate.isNotEmpty(purchaseBasicAmountStr)) {
 						purchaseBasicAmount = new BigDecimal(purchaseBasicAmountStr);
 					}
-					if (UtilValidate.isNotEmpty(packagingStr)) {
+					if (UtilValidate.isNotEmpty(packagingStr) && !(packagingStr.equals("NaN"))) {
 						packaging = new BigDecimal(packagingStr);
 					}
-					if (UtilValidate.isNotEmpty(packetsStr)) {
+					//Debug.log("packaging====111111111=============="+packaging);
+					if (UtilValidate.isNotEmpty(packetsStr) && !(packetsStr.equals("NaN"))) {
 						packets = new BigDecimal(packetsStr);
 					}
-					
+					//Debug.log("packets====111111111=============="+packets);
 					/*if (UtilValidate.isNotEmpty(cstPriceStr)) {
 						cstPrice = new BigDecimal(cstPriceStr);
 					}
@@ -7981,6 +7982,10 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 		if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
 			remarks = (String)prodQtyMap.get("remarks");
 		}
+		else{
+			remarks="";
+		}
+		//Debug.log("remarks====222222222======@@@@@@@@@========"+remarks);
 		if(UtilValidate.isNotEmpty(prodQtyMap.get("baleQuantity"))){
 			baleQuantity = (BigDecimal)prodQtyMap.get("baleQuantity");
 		}
