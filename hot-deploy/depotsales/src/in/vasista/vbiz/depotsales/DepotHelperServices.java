@@ -4423,7 +4423,8 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		
 		List<GenericValue> shipmentList = null;
 		List<GenericValue> PartyRelationship = null;
-		List<GenericValue> Invoice = null;
+		//List<GenericValue> Invoice = null;
+		 EntityListIterator Invoice = null;
 		List branchList =  FastList.newInstance();
 		
 		List conditionList = FastList.newInstance();
@@ -4457,16 +4458,18 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
 			 
-		     Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","costCenterId"), null, null, false);
+		     //Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","costCenterId"), null, null, false);
 			
-		}catch(GenericEntityException e){
+		
+		     Invoice = delegator.find("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null,  UtilMisc.toSet("invoiceId","invoiceTypeId","partyIdFrom","partyId","costCenterId"), null, null);
+		 
+		 }catch(GenericEntityException e){
 			Debug.logError(e, "Failed to retrive Shipment ", module);
 		}
 		 
-		  
-		if(UtilValidate.isNotEmpty(Invoice)){
-			
-        for(GenericValue eachInvoice : Invoice){
+	  if (Invoice != null) {
+            GenericValue eachInvoice = null;
+            while ((eachInvoice = Invoice.next()) != null) {
 				
         	String eacinvoiceId = eachInvoice.getString("invoiceId");
         	String costCenterId = eachInvoice.getString("costCenterId");
