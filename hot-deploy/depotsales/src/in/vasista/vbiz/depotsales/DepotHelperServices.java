@@ -4415,6 +4415,8 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		
 		String ro = (String) context.get("ro");
 		
+		String bo = (String) context.get("bo");
+		
 		String invoiceTypeId = (String) context.get("invoiceTypeId");
 		
 		Locale locale = (Locale) context.get("locale");
@@ -4425,18 +4427,22 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		List branchList =  FastList.newInstance();
 		
 		
+		if(UtilValidate.isEmpty(bo)){
+			List conditionList = FastList.newInstance();
+			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro));
+			conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+			
+			try{
+			PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
+			
+			 branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+			}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive PartyRelationship ", module);
+			}
 		
-		List conditionList = FastList.newInstance();
-		conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro));
-		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
-		
-		try{
-		PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
-
-	     branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-		}catch(GenericEntityException e){
-		Debug.logError(e, "Failed to retrive PartyRelationship ", module);
-	}
+		}else{
+			branchList.add(bo);
+		}
 		
 		 try{
 			conditionList.clear();
