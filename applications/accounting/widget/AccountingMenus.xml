@@ -4273,8 +4273,7 @@
 					</or>
 				</and>
 			</condition>
-			<link target="javascript:getDescription('${catflag}')" url-mode="plain" link-type="hidden-form"
-				confirmation-message="You want to cancel this invoice number ${invoice.invoiceId}?">
+			<link target="SetARInvoiceStatus">
 				<parameter param-name="subTabButtonValue" from-field="tabButtonItem5" />
 				<parameter param-name="invoiceId" from-field="invoice.invoiceId" />
 				<parameter param-name="statusId" value="INVOICE_CANCELLED" />
