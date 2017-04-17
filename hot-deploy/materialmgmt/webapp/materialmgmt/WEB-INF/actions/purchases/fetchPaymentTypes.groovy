@@ -40,14 +40,12 @@ JSONArray orderList =new JSONArray();
 
 organizationId = parameters.organizationId;
 
-Debug.log("organizationId================"+organizationId);
 
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, organizationId));
-conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, ["CHEQUE_PAYOUT","CASH_PAYOUT"]));
+conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, ["CHEQUE_PAYOUT","CASH_PAYOUT","DEBITNOTE"]));
 List paymentMethodsList = delegator.findList("PaymentMethod", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 
-Debug.log("paymentMethodsList================"+paymentMethodsList);
 /*
 JSONObject tempMap = new JSONObject();
 
