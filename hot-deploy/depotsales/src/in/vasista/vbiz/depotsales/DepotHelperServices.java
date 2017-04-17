@@ -4426,9 +4426,8 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		List<GenericValue> Invoice = null;
 		List branchList =  FastList.newInstance();
 		
-		
+		List conditionList = FastList.newInstance();
 		if(UtilValidate.isEmpty(bo)){
-			List conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, ro));
 			conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
 			
