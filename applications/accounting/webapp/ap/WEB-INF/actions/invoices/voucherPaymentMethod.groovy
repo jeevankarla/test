@@ -135,6 +135,7 @@ actionName="createVoucherPayment";
 
 //AP PaymentTypes
 condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("DISBURSEMENT","TAX_PAYMENT")));
+condList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, "AGNSTINV_PAYOUT"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 apPaymentTypes = delegator.findList("PaymentType", cond, null, ["description"], null, false);
 
@@ -155,7 +156,8 @@ condList.clear();
 if(UtilValidate.isNotEmpty(parameters.paymentMethodSearchFlag)){
 	condList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.LIKE, "%SALES_PAYIN%"));
 }
-condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, UtilMisc.toList("RECEIPT")));
+condList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, "AGNSTINV_PAYIN"));
+condList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "RECEIPT"));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 arPaymentTypes = delegator.findList("PaymentType", cond, null, ["description"], null, false);
 paymentTypes=[];
