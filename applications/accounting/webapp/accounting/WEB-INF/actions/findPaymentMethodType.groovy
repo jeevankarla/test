@@ -29,6 +29,7 @@ import org.ofbiz.base.util.UtilMisc;
 if(UtilValidate.isNotEmpty(parameters.findPaymentMethodType)){
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_LIKE, "%_PAYOUT%"));
+	conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "DEBITNOTE"));
 	conditionList.add(EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "MONEY"));
 	List paymentMethodTypeList = delegator.findList("PaymentMethodType", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 	context.paymentMethodTypeList=paymentMethodTypeList;
