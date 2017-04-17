@@ -900,7 +900,7 @@
     
     <service name="populateInvoiceAdjustment" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="populateInvoiceAdjustment" transaction-timeout="6000000000000">
         <description>Creating populate Invoice Adjustment</description>
-         <attribute name="bo" type="String" mode="IN" optional="false"/>
+         <attribute name="ro" type="String" mode="IN" optional="false"/>
          <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
          <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
    </service>

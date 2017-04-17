@@ -4413,7 +4413,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		Timestamp thruDate = (Timestamp) context.get("thruDate");
 		
 		
-		String ro = (String) context.get("bo");
+		String ro = (String) context.get("ro");
 		
 		String invoiceTypeId = (String) context.get("invoiceTypeId");
 		
@@ -4440,8 +4440,8 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		
 		 try{
 			conditionList.clear();
-		    if(UtilValidate.isNotEmpty(ro))	
-		    	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, ro));
+		    if(UtilValidate.isNotEmpty(branchList))	
+		    	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
 		   if(UtilValidate.isNotEmpty(invoiceId))	
 			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 		  /* if(UtilValidate.isNotEmpty(fromDate))
