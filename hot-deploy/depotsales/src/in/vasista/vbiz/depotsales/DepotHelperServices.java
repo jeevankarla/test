@@ -4508,7 +4508,7 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 	        		BigDecimal itemValue = eachInvoiceItem.getBigDecimal("itemValue");
 	        		
 	        		BigDecimal invoiceItemsValue = quantity.multiply(amount);
-	        		invoiceItemsValue = invoiceItemsValue.setScale(2, BigDecimal.ROUND_HALF_UP)
+	        		invoiceItemsValue = invoiceItemsValue.setScale(2, BigDecimal.ROUND_HALF_UP);
 	        		
 					if(UtilValidate.isEmpty(itemValue)){
 					 itemValue = quantity.multiply(amount);
