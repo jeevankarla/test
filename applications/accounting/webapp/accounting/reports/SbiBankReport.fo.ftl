@@ -21,9 +21,9 @@ under the License.
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
             <fo:simple-page-master master-name="main" page-height="12in" page-width="14in"  margin-left=".3in" margin-right=".05in" margin-top=".3in" margin-bottom="0.5in">
-                <fo:region-body margin-top="1.5in"/>
+                <fo:region-body margin-top="2.5in"/>
                 <fo:region-before extent="1in"/>
-                <fo:region-after extent="1in"/>
+                <fo:region-after extent="1.5in"/>
             </fo:simple-page-master>
         </fo:layout-master-set>
       <#if finalMap?has_content> 	    
@@ -34,11 +34,21 @@ under the License.
         <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-		        		
+		        	 <#assign paymentGroupList = delegator.findOne("PaymentGroup", {"paymentGroupId" : paymentGroupId}, true) />	
+		        	 <#assign paymentGroupName = delegator.findOne("FinAccount", {"finAccountId" : paymentGroupList.finAccountId}, true) />	
 		        	<fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportHeader.description?if_exists}</fo:block>
 		        	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${BOAddress?if_exists}</fo:block>
 		        	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;</fo:block>
-                    <fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;&#160;&#160;&#160;BANK REPORT</fo:block>
+		        	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;BANK REPORT for ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentGroupList.paymentDate?if_exists, "dd-MMM-yy ")}</fo:block>
+		        	<fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;To&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
+		        	<fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;The Chief Manager</fo:block>
+		        	<#if paymentGroupName?has_content>
+                    <fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;${paymentGroupName.finAccountName?if_exists} A/C:${paymentGroupName.finAccountCode?if_exists}</fo:block>
+                    <#else>
+                     <fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;</fo:block>
+                    </#if>
+                    <fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;Please Send The following RTGS/NEFT Payments A/c</fo:block>
+                    <fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;</fo:block>
                     <#--<fo:block text-align="left"  keep-together="always"  font-family="Courier,monospace" font-weight="bold" white-space-collapse="false"> UserLogin:<#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>               &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Print Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd/MM/yy HH:mm:ss")}</fo:block>-->
             	 </fo:static-content>
             	 <fo:flow flow-name="xsl-region-body"  font-family="Courier,monospace">
@@ -58,15 +68,15 @@ under the License.
          					 <fo:table-row>
          						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
          						 	<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Party ID</fo:block>
+         							<fo:block text-align="center" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Sl No</fo:block>
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
          						 	<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Party Name </fo:block>
+         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Supplier Name </fo:block>
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid">
           							<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Net Payment</fo:block>
+         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Bank Name</fo:block>
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid">
           							<fo:block font-size="4pt">&#160;</fo:block>
@@ -78,9 +88,10 @@ under the License.
           						</fo:table-cell>
           						<fo:table-cell border-right-style="solid">
           							<fo:block font-size="4pt">&#160;</fo:block>
-         							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Bank Name</fo:block>
+         							<fo:block text-align="center" white-space-collapse="false"  font-size="11pt" keep-together="always" font-family="Verdana">&#160;Amount</fo:block>
           						</fo:table-cell>
 							</fo:table-row>
+							<#assign sl=1>
 							<#assign finalMapList = finalMap.entrySet()>
 		            <#list finalMapList as eachh>
 		             <#assign party =eachh.getKey()>
@@ -90,7 +101,7 @@ under the License.
 							 <fo:table-row >
              						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
              						 	<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if party?has_content>${party?if_exists} </#if></fo:block>
+             							<fo:block text-align="center" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if sl?has_content>${sl?if_exists} </#if></fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-right-style="solid" border-bottom-style="solid">
              						 	<fo:block font-size="4pt">&#160;</fo:block>
@@ -99,7 +110,7 @@ under the License.
               						<#assign totSal = totSal + eachhdet.netSal>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachhdet.netSal?has_content>${eachhdet.get("netSal")?if_exists} </#if></fo:block>
+             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160; <#if eachhdet.bankName?has_content>${eachhdet.get("bankName")?if_exists}</#if></fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
@@ -111,11 +122,11 @@ under the License.
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachhdet.bankName?has_content>${eachhdet.get("bankName")?if_exists}</#if></fo:block>
+             							<fo:block text-align="center" white-space-collapse="false"  font-size="11pt" keep-together="always">&#160;<#if eachhdet.netSal?has_content>${eachhdet.get("netSal")?if_exists?string("#0.00")}</#if></fo:block>
               						</fo:table-cell>
   								</fo:table-row>
   								
-  								
+  								<#assign sl= sl +1>
   								</#list>
   								</#list>
   								
@@ -131,10 +142,6 @@ under the License.
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always">${totSal?if_exists?string("#0.00")}</fo:block>
-              						</fo:table-cell>
-              						<fo:table-cell border-style="solid">
-              							<fo:block font-size="4pt">&#160;</fo:block>
              							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always"></fo:block>
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
@@ -143,7 +150,11 @@ under the License.
               						</fo:table-cell>
               						<fo:table-cell border-style="solid">
               							<fo:block font-size="4pt">&#160;</fo:block>
-             							<fo:block text-align="left" white-space-collapse="false"  font-size="11pt" keep-together=""></fo:block>
+             							<fo:block text-align="right" white-space-collapse="false"  font-size="11pt" keep-together="always"></fo:block>
+              						</fo:table-cell>
+              						<fo:table-cell border-style="solid">
+              							<fo:block font-size="4pt">&#160;</fo:block>
+             							<fo:block text-align="center" white-space-collapse="false"  font-size="11pt" keep-together="">${totSal?if_exists?string("#0.00")}</fo:block>
               						</fo:table-cell>
   								</fo:table-row>
   							
