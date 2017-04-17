@@ -1733,7 +1733,7 @@ under the License.
         <field name="paymentRefNum" position="1" title="${uiLabelMap.paymentRefNum}"><text/></field>
         <field name="paymentDate" position="2" title="${uiLabelMap.effectiveDate}"><date-time type="timestamp"></date-time></field>
         <field name="transactionDate" position="1" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
-        <field name="paymentPurposeType" position="2" title="Payment PurposeType"><text/>
+        <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
 	           	<drop-down allow-empty="true">
 	                  <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
 	                      <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE,COMMON"/>
