@@ -7606,7 +7606,7 @@ public class OrderServices {
                paymentParams.put("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
                paymentParams.put("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
                paymentParams.put("amount", amount);
-               paymentParams.put("statusId", "PMNT_RECEIVED");
+               paymentParams.put("statusId", "PMNT_NOT_PAID");
                paymentParams.put("paymentDate", eventDate);
                paymentParams.put("instrumentDate", instrumentDate);
                paymentParams.put("partyIdFrom", paymentFromId);
