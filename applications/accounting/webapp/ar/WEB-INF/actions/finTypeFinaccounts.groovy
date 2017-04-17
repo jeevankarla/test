@@ -30,6 +30,7 @@ if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
 }
 conditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS,"Company"));
 List finAccountsList = delegator.findList("FinAccount", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+context.finAccountsList= finAccountsList;
 
 finAccountTypeMap=[:];
 finAccountTypelist.each{ eachfinAcc ->
