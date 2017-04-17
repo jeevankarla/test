@@ -80,6 +80,17 @@ under the License.
         <filter-name>ContextFilter</filter-name>
             <url-pattern>/*</url-pattern>
     </filter-mapping>
+ 	<filter>
+        <filter-name>ExcelConversionFilter</filter-name>
+        <display-name>ExcelConversionFilter</display-name>
+        <filter-class>org.ofbiz.webtools.ExcelConversionFilter</filter-class>
+        <init-param><param-name>defaultLocaleString</param-name><param-value>en_US</param-value></init-param>
+        <init-param><param-name>redirectUrl</param-name><param-value>/control/main</param-value></init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>ExcelConversionFilter</filter-name>
+        <url-pattern>*.xls</url-pattern>
+    </filter-mapping>
 
     <listener><listener-class>org.ofbiz.webapp.control.ControlEventListener</listener-class></listener>
     <listener><listener-class>org.ofbiz.webapp.control.LoginEventListener</listener-class></listener>

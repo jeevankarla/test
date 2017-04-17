@@ -3152,7 +3152,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="CSV" widget-style="buttontext" >
-            <hyperlink target="printBankReport.csv" description="Bank Report" target-window="_blank">
+            <hyperlink target="printBankReport.xls" description="Bank CSV" target-window="_blank">
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field>
