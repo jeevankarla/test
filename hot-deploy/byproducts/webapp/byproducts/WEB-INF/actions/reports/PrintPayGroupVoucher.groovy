@@ -144,6 +144,20 @@ if(UtilValidate.isNotEmpty(paymentGroupId)){
 					if(UtilValidate.isNotEmpty(invDts)){
 						invoiceId = invDts[0].invoiceId;
 						tempprintPaymentMap.put("invoiceId",invoiceId);
+						invShipment = delegator.findList("Invoice",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , null, null, null, false );
+						shipmentId = "";
+						if(UtilValidate.isNotEmpty(invShipment)){
+							shipmentId = invShipment[0].shipmentId;
+						}
+						shipmentList = delegator.findList("Shipment",EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS , shipmentId)  , null, null, null, false );
+						millernumber = "";
+						millerDate = "";
+						if(UtilValidate.isNotEmpty(shipmentList)){
+							millernumber = shipmentList[0].supplierInvoiceId;
+							millerDate = shipmentList[0].supplierInvoiceDate;
+						}
+						tempprintPaymentMap.put("millernumber",millernumber);
+						tempprintPaymentMap.put("millerDate",millerDate);
 					}
 					tempprintPaymentMap.putAll(paymentRecipt);
 					totalAmount=paymentRecipt.amount;
