@@ -399,8 +399,8 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		remarks = "";
 		packQuantity="";
 		packets="";
-		if(OrderItemDetail)
-		remarks = OrderItemDetail.remarks;
+		//if(OrderItemDetail)
+		//remarks = OrderItemDetail.remarks;
 		if(UtilValidate.isNotEmpty(orderitems.orderId)){
 			conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderitems.orderId));
@@ -417,6 +417,11 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 			if(UtilValidate.isNotEmpty(packetsDetails)){
 				packetsDetails=EntityUtil.getFirst(packetsDetails);
 				packets=packetsDetails.attrValue;
+			}
+			remarksDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "remarks"));
+			if(UtilValidate.isNotEmpty(remarksDetails)){
+				remarksDetails=EntityUtil.getFirst(remarksDetails);
+				remarks=remarksDetails.attrValue;
 			}
 		}
 		/*if(OrderItemDetail)

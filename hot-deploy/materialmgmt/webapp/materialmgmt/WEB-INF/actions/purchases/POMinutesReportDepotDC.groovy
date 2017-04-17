@@ -274,8 +274,8 @@ context.scheme = scheme;
 				double quotaQuantity = 0;
 				double baleQuantity = 0;
 				double bundleUnitPrice = 0;
-				packetQuantity=0;
-				packets=0;
+				double packetQuantity=0;
+				double packets=0;
 				remarks="";
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, eachItem.orderId));
@@ -351,12 +351,12 @@ context.scheme = scheme;
 					  packetQuantityDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packQuantity"));
 					  if(UtilValidate.isNotEmpty(packetQuantityDetails)){
 						  packetQuantityDetails=EntityUtil.getFirst(packetQuantityDetails);
-						  packetQuantity=packetQuantityDetails.attrValue;
+						  packetQuantity=Double.valueOf(packetQuantityDetails.attrValue);
 					  }
 					  packetsDetails = EntityUtil.filterByCondition(orderItemAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "packets"));
 					  if(UtilValidate.isNotEmpty(packetsDetails)){
 						  packetsDetails=EntityUtil.getFirst(packetsDetails);
-						  packets=packetsDetails.attrValue;
+						  packets=Double.valueOf(packetsDetails.attrValue);
 					  }
 					  
 				  }
