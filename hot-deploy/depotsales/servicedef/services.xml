@@ -902,6 +902,8 @@
         <description>Creating populate Invoice Adjustment</description>
          <attribute name="ro" type="String" mode="IN" optional="false"/>
          <attribute name="bo" type="String" mode="IN" optional="true"/>
+         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
          <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
          <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
    </service>

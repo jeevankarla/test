@@ -4409,8 +4409,8 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		
 		String invoiceId = (String) context.get("invoiceId");
 		
-		Timestamp fromDate = (Timestamp) context.get("fromDate");
-		Timestamp thruDate = (Timestamp) context.get("thruDate");
+		 String fromDateStr = (String) context.get("fromDate");
+		 String thruDateStr = (String) context.get("thruDate");
 		
 		
 		String ro = (String) context.get("ro");
@@ -4420,6 +4420,21 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		String invoiceTypeId = (String) context.get("invoiceTypeId");
 		
 		Locale locale = (Locale) context.get("locale");
+		
+		Timestamp fromDate=null;
+	    Timestamp thruDate = null;
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    int count=0;
+	    if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
+	    	try {
+	    		fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+	    		thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+	    	} catch (ParseException e) {
+	    		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	    	} catch (NullPointerException e) {
+	    		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	    	}
+	  }
 		
 		List<GenericValue> shipmentList = null;
 		List<GenericValue> PartyRelationship = null;
@@ -4450,11 +4465,13 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 		    	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN, branchList));
 		   if(UtilValidate.isNotEmpty(invoiceId))	
 			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
-		  /* if(UtilValidate.isNotEmpty(fromDate))
-			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
-		   if(UtilValidate.isNotEmpty(thruDate))
-			conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));*/
-			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId));
+		   
+		   if(UtilValidate.isNotEmpty(fromDate) && UtilValidate.isNotEmpty(thruDate)){
+			   conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
+			   conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
+			}
+		   
+		    conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId));
 			conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
 			 
