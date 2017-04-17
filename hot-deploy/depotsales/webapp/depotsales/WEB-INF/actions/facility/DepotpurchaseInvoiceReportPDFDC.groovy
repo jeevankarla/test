@@ -121,12 +121,19 @@ if(UtilValidate.isNotEmpty(invoiceItems)){
 	for(invoiceItem in invoiceItems){
 		tempMap=[:];
 		tempList=[];
-		orderItembill = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId), null, null, null, false);
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItem.invoiceItemSeqId));
+		condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+		orderItembill = delegator.findList("OrderItemBilling", condition, null, null, null, false);
+		//orderItembill = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceItem.invoiceId), null, null, null, false);
 		orderDetails=EntityUtil.getFirst(orderItembill);
 		if(UtilValidate.isNotEmpty(orderDetails)){
 			orderId=orderDetails.orderId;
 			orderItemSeqId=orderDetails.orderItemSeqId;
 		}
+		packetQuantity=0;
+		packets=0;
 		conditionList=[];
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderDetails.orderId));
 		conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderDetails.orderItemSeqId));
@@ -149,6 +156,8 @@ if(UtilValidate.isNotEmpty(invoiceItems)){
 		tempMap.put("invoiceItemSeqId", invoiceItem.invoiceItemSeqId);
 		tempMap.put("quantity", invoiceItem.quantity);
 		tempMap.put("unitPrice", invoiceItem.amount);
+		tempMap.put("packetQuantity", packetQuantity);
+		tempMap.put("packets", packets);
 		tempMap.put("amount", invoiceItem.amount*invoiceItem.quantity);
 		invoiceitemAdjustments = EntityUtil.filterByCondition(invoiceAdjustments, EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS, invoiceItem.invoiceItemSeqId));
 		for(invoiceAdjstmt in invoiceitemAdjustments){

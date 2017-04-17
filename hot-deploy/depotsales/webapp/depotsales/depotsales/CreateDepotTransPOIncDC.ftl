@@ -180,6 +180,12 @@
 		 if(isNaN(row["SERVICE_CHARGE_AMT"])){
 			row["SERVICE_CHARGE_AMT"] = 0;
 		 }
+		 if(isNaN(row["Packaging"])){
+			row["Packaging"] = 0;
+		 }
+		 if(isNaN(row["Packets"])){
+			row["packets"] = 0;
+		 }
 	 }
 	function calculatePOValue(){
 		var isIncTax = $('#incTax').is(':checked');

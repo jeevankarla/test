@@ -9051,7 +9051,9 @@ public class DepotPurchaseServices{
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("remarks"))){
 						remarks = (String)prodQtyMap.get("remarks");
 					}
-					
+					else{
+						remarks="";
+					}
 					if(UtilValidate.isNotEmpty(prodQtyMap.get("quantity"))){
 						quantity = (BigDecimal)prodQtyMap.get("quantity");
 					}
