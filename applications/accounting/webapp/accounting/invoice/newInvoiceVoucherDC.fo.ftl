@@ -155,32 +155,35 @@ under the License.
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >(Rs)</fo:block>
 				</fo:table-cell>
+				
+				<#if isItVatOrCst?has_content>
 				<fo:table-cell border-style="solid">
 				<#if isItVatOrCst?has_content && isItVatOrCst=="VAT_SALE">
 				 <fo:block text-align="center"    font-size="10pt" >VAT</fo:block>
 				 <#elseif isItVatOrCst?has_content && isItVatOrCst=="CST_SALE">
 				 <fo:block text-align="center"    font-size="10pt" >CST</fo:block>
-				 <#else>
-				 <fo:block text-align="center"    font-size="10pt" >CST/VAT</fo:block>
 				 </#if>
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
 				</fo:table-cell>
+				</#if>
+				<#if isVatSurOrCstSur?has_content>
 				<fo:table-cell border-style="solid">
 				<#if isItVatOrCst?has_content && isItVatOrCst=="VAT_SALE">
 				 <fo:block text-align="center"    font-size="10pt" >VAT</fo:block>
 				 <#elseif isItVatOrCst?has_content && isItVatOrCst=="CST_SALE">
 				 <fo:block text-align="center"    font-size="10pt" >CST</fo:block>
-				 <#else>
-				 <fo:block text-align="center"    font-size="10pt" >CST/VAT</fo:block>
 				 </#if>
 				 <fo:block text-align="center"    font-size="10pt" >Surcharge</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
 				</fo:table-cell>
+				 </#if>
+				<#if isExciseDuty?has_content>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Excise</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >Duty</fo:block>
 				  <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
 				</fo:table-cell>
+				</#if>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Total</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
@@ -348,60 +351,66 @@ under the License.
 				 
 				  
 				</fo:table-cell>
-				<fo:table-cell border-style="solid">
 				<#assign cstOrVat=0>
 				<#assign cstOrVatSur=0>	
-				<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
-                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
-				   <#list alladjustList as eachOne>
-				       <#if eachOne.getKey() == i>	
-				      		       
-				        <#list eachOne.getValue() as each>
-				    
-				        <#if (each.invoiceItemTypeId =="CST_SALE") || (each.invoiceItemTypeId=="VAT_SALE")>	
-						 <#assign totVatOrCstAmt=totVatOrCstAmt+(each.itemValue)>
-						 <#assign cstOrVat=each.itemValue>	
-						<fo:block text-align="right"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
-						
-						</#if>
-						
-						
+				<#if isItVatOrCst?has_content>
+					<fo:table-cell border-style="solid">
 					
-		                <#--<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>-->
-				          <#assign adjamt=adjamt+each.itemValue> 
-				        </#list>
-				       </#if>
-				  </#list>
+					<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
+	                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
+					   <#list alladjustList as eachOne>
+					       <#if eachOne.getKey() == i>	
+					      		       
+					        <#list eachOne.getValue() as each>
+					    
+					        <#if (each.invoiceItemTypeId =="CST_SALE") || (each.invoiceItemTypeId=="VAT_SALE")>	
+							 <#assign totVatOrCstAmt=totVatOrCstAmt+(each.itemValue)>
+							 <#assign cstOrVat=each.itemValue>	
+							<fo:block text-align="right"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
+							
+							</#if>
+							
+							
+						
+			                <#--<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+					         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+					         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>-->
+					          <#assign adjamt=adjamt+each.itemValue> 
+					        </#list>
+					       </#if>
+					  </#list>
+					 </#if>
+					 </fo:table-cell>
+				  </#if>
+				 <#if isVatSurOrCstSur?has_content>
+					 <fo:table-cell border-style="solid">
+						<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
+	                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
+					   <#list alladjustList as eachOne>
+					       <#if eachOne.getKey() == i>				       
+					        <#list eachOne.getValue() as each>
+					        
+							  
+							<#if (each.invoiceItemTypeId =="CST_SURCHARGE") || (each.invoiceItemTypeId=="VAT_SURCHARGE")>
+							<#assign totVatOrCstSur =totVatOrCstSur+(each.itemValue)>
+							<#assign cstOrVatSur=each.itemValue>
+							<fo:block text-align="right"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
+							</#if>
+						
+			                <#--<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+					         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+					         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>-->
+					          <#assign adjamt=adjamt+each.itemValue> 
+					        </#list>
+					       </#if>
+					  </#list>
+					 </#if>
+					 </fo:table-cell>
 				 </#if>
-				 </fo:table-cell>
+				 <#assign exciseAmt=0>
+				<#if isExciseDuty?has_content>
 				 <fo:table-cell border-style="solid">
-				<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
-                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
-				   <#list alladjustList as eachOne>
-				       <#if eachOne.getKey() == i>				       
-				        <#list eachOne.getValue() as each>
-				        
-						  
-						<#if (each.invoiceItemTypeId =="CST_SURCHARGE") || (each.invoiceItemTypeId=="VAT_SURCHARGE")>
-						<#assign totVatOrCstSur =totVatOrCstSur+(each.itemValue)>
-						<#assign cstOrVatSur=each.itemValue>
-						<fo:block text-align="right"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
-						</#if>
 					
-		                <#--<fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
-				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>-->
-				          <#assign adjamt=adjamt+each.itemValue> 
-				        </#list>
-				       </#if>
-				  </#list>
-				 </#if>
-				 </fo:table-cell>
-				 
-				 <fo:table-cell border-style="solid">
-				<#assign exciseAmt=0>	
 				<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
                    <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
 				   <#list alladjustList as eachOne>
@@ -426,7 +435,9 @@ under the License.
 				       </#if>
 				  </#list>
 				 </#if>
+				  
 				</fo:table-cell>
+				</#if>
 				 <fo:table-cell border-style="solid">
 					<fo:block text-align="right"  font-size="10pt" >${totWithoutTax+cstOrVat+cstOrVatSur+exciseAmt}</fo:block>
 				</fo:table-cell>
@@ -481,15 +492,21 @@ under the License.
 					<fo:block text-align="center"  font-size="10pt" >${(totAmount)?string("#0.00")}</fo:block>
 	            </#if>
 				</fo:table-cell>
+				<#if isItVatOrCst?has_content>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="right"  font-size="10pt" >${totVatOrCstAmt}</fo:block>
 				</fo:table-cell>
+				</#if>
+				<#if isVatSurOrCstSur?has_content>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="right"  font-size="10pt" >${totVatOrCstSur}</fo:block>
 				</fo:table-cell>
+				</#if>
+				<#if isExciseDuty?has_content>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="right"  font-size="10pt" >${totExciseDuty}</fo:block>
 				</fo:table-cell>
+				</#if>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="right"  font-size="10pt" >${(totAmount+totVatOrCstAmt+totVatOrCstSur+totExciseDuty)}</fo:block>
 				</fo:table-cell>
