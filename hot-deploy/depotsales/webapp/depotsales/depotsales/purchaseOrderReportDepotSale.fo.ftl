@@ -86,7 +86,7 @@ under the License.
    				           <fo:table-cell  ><fo:block text-align="left"  font-size="11pt"  >&#160;</fo:block></fo:table-cell>       		
                        </fo:table-row>
                        <fo:table-row>
-                       <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always">PO Id:  ${allDetailsMap.get("orderId")?if_exists}</fo:block></fo:table-cell>       			
+                       <fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always" font-weight="bold">PO Id:  ${allDetailsMap.get("orderId")?if_exists}</fo:block></fo:table-cell>       			
                        </fo:table-row>
                        <fo:table-row>
                        		<fo:table-cell  ><fo:block text-align="left" font-size="11pt"  keep-together="always"></fo:block></fo:table-cell>       			
