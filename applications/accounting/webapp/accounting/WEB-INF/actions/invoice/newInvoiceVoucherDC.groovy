@@ -230,6 +230,8 @@ if(roID){
 	double mgpsAmt = 0;
 	
 	isItVatOrCst="";
+	isExciseDuty="";
+	isVatSurOrCstSur="";
 	int i=0;
 	for (eachList in invoiceItemList) {
 		
@@ -249,12 +251,17 @@ if(roID){
 		 for (eachItem in invoiceInnerAdjItemList) {
 			
 			 
-			   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE" || eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
+			   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
 			  tempMap = [:];
-				  if(UtilValidate.isEmpty(isItVatOrCst)){
+				  if(UtilValidate.isEmpty(isItVatOrCst) && (eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE")){
 					  isItVatOrCst=eachItem.invoiceItemTypeId;
 				  }
-			  
+				  if(eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
+					  isExciseDuty=eachItem.invoiceItemTypeId;
+				  }
+				  if(UtilValidate.isEmpty(isVatSurOrCstSur) && (eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE")){
+					  isVatSurOrCstSur=eachItem.invoiceItemTypeId;
+				  }
 			  invoiceForPercentage = delegator.findOne("Invoice",[invoiceId : eachItem.invoiceId] , false);
 			  
 			  tempMap.put("invoiceId", eachItem.invoiceId);
@@ -308,7 +315,7 @@ if(roID){
 			  mgpsAmt = mgpsAmt+eachItem.itemValue;
 			  }
 			  
-			  if(eachItem.invoiceItemTypeId == "INVOICE_ITM_ADJ" || eachItem.invoiceItemTypeId == "PRICE_DISCOUNT"){
+			  if(eachItem.invoiceItemTypeId == "INVOICE_ITM_ADJ" || eachItem.invoiceItemTypeId == "PRICE_DISCOUNT" || eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
 			  }
 			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
@@ -343,7 +350,8 @@ if(roID){
 	
 	
 	context.isItVatOrCst=isItVatOrCst;
-	//Debug.log("isItVatOrCst====@@@@@========="+isItVatOrCst);
+	context.isExciseDuty=isExciseDuty;
+	context.isVatSurOrCstSur=isVatSurOrCstSur;
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INVOICE_ITM_ADJ"));
