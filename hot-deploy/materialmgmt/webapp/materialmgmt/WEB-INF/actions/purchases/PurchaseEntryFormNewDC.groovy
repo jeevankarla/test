@@ -101,7 +101,7 @@ dctx = dispatcher.getDispatchContext();
 
 
 conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.IN,["DYES","CHEMICALS"]));
+conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId", EntityOperator.IN,["DYES","CHEMICALS","AUXILIARIES"]));
 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 	
 productIdsList = EntityUtil.getFieldListFromEntityList(delegator.findList("ProductCategoryAndMember",condition, UtilMisc.toSet("productId"), null, null, false), "productId", true);
