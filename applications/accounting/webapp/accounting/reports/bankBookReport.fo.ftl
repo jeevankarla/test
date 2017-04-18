@@ -455,6 +455,87 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
 			       			</fo:table-cell>
 						</fo:table-row>
+						
+						 <#if !dayFinAccountTransList?has_content>					 	
+						<fo:table-row>
+						
+							<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			
+                         
+                                   <fo:table-cell>  
+                                    <fo:block text-align="right" font-size="12pt" keep-together="always" font-weight = "bold"> 
+                                        Opening Balance:
+                                    </fo:block>
+	                      </fo:table-cell>
+                          <fo:table-cell>
+	                                    <fo:block text-align="right" font-size="12pt" keep-together="always" font-weight = "bold"> 
+	                                      	<#if openingBalance?has_content>${(openingBalance)?string("##0.00")}<#else>0.00</#if>
+	                                    </fo:block>
+	                                </fo:table-cell>
+	                                </fo:table-row>
+	                     
+	                     <fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+						<fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row><fo:table-row>
+							<fo:table-cell>
+			            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>  
+			       			</fo:table-cell>
+						</fo:table-row>
+	                     
+	                      <fo:table-row>
+						
+							<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			<fo:table-cell>
+			       			</fo:table-cell>
+			       			
+                         
+                                  <fo:table-cell>
+                           <fo:block text-align="right" font-size="12pt" keep-together="always" font-weight = "bold"> 
+                                        Closing Balance:
+                                    </fo:block>
+	                      </fo:table-cell>
+                          <fo:table-cell>
+	                                    <fo:block text-align="right" font-size="12pt" keep-together="always" font-weight = "bold"> 
+	                                      	<#if openingBalance?has_content>${(openingBalance)?string("##0.00")}<#else>0.00</#if>
+	                                    </fo:block>
+	                                  </fo:table-cell>
+	                                </fo:table-row>
+	                                
+	                                
+	                     </#if>               
+						
 						<fo:table-row font-weight = "bold">
 			       			<fo:table-cell>
 			            		<fo:block  keep-together="always">&#160;&#160;PROCESSOR</fo:block>  

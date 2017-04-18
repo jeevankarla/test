@@ -205,6 +205,49 @@ postedTotals.each{ eachTotal ->
 }
 context.openingBalance=openingBalance;
 //Debug.log("openingBalance=============****"+openingBalance);
+
+
+if (UtilValidate.isEmpty(allPostedTransactionTotals) ){
+	condtionList = [];
+	condtionList.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId));
+	obCond = EntityCondition.makeCondition(condtionList, EntityOperator.AND);
+	List obTransTotals = EntityUtil.filterByCondition(allPostedOpeningTransactionTotals, obCond);
+	accountTempMap = [:];
+	accountTempMap.put("openingD", BigDecimal.ZERO);
+	accountTempMap.put("openingC", BigDecimal.ZERO);
+	accountTempMap.put("D", BigDecimal.ZERO);
+	accountTempMap.put("C", BigDecimal.ZERO);
+	accountTempMap.put("balance", BigDecimal.ZERO);
+	
+	GenericValue glAccount = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", glAccountId), true);
+		if (glAccount) {
+			boolean isDebitAccount = UtilAccounting.isDebitAccount(glAccount);
+			// Get the opening balances at the end of the last closed time period
+			if (UtilAccounting.isAssetAccount(glAccount) || UtilAccounting.isLiabilityAccount(glAccount) || UtilAccounting.isEquityAccount(glAccount)) {
+				if (lastClosedTimePeriod) {
+					List timePeriodAndExprs = FastList.newInstance();
+					timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+					timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId));
+					timePeriodAndExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, lastClosedTimePeriod.customTimePeriodId));
+					lastTimePeriodHistory = EntityUtil.getFirst(delegator.findList("GlAccountAndHistory", EntityCondition.makeCondition(timePeriodAndExprs, EntityOperator.AND), null, null, null, false));
+					if (lastTimePeriodHistory) {
+						openingBalance = lastTimePeriodHistory.getBigDecimal("endingBalance");
+					}
+				}
+			}
+		}
+	
+	if (obTransTotals) {
+		obTransTotals.each { transactionTotal ->
+			UtilMisc.addToBigDecimalInMap(accountTempMap, "opening" + transactionTotal.debitCreditFlag, transactionTotal.amount);
+		}
+		//postedTempTotalsMap = accountTempMap.asList();
+		bal=accountTempMap.openingD-accountTempMap.openingC;
+		openingBalance=openingBalance+bal;
+	}
+}
+context.openingBalance=openingBalance;
+
 // Posted grand total for Debits
 andExprs = FastList.newInstance();
 andExprs.add(EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, "D"));
