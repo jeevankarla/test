@@ -4622,6 +4622,8 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
 	
 		
 	String shipmentId = "";
+	
+	String purchaseInvoice = "";
 		
 	try{
 		
@@ -4634,6 +4636,7 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
 	}catch(GenericEntityException e){
 		Debug.logError(e, "Failed to Populate Invoice ", module);
 	}
+	
 	
 	
 		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
@@ -4681,6 +4684,48 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
          } catch (GenericEntityException e) {
         	 Debug.logError(e, "Failed to Populate Invoice ", module);
          }	
+		 
+		 
+		 
+		    String purInvoiceId = "";
+		    conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+			List<GenericValue> InvoiceRoleList1 =null;
+			try{
+				InvoiceRoleList1 = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				if(UtilValidate.isNotEmpty(InvoiceRoleList1)){
+					GenericValue InvoiceRole = EntityUtil.getFirst(InvoiceRoleList1);
+			  		 purInvoiceId = InvoiceRole.getString("invoiceId");
+				}
+			} catch (Exception e) {
+			  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+			} 
+		 
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purInvoiceId));
+			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SHIP_TO_CUSTOMER")));
+			List<GenericValue> InvoiceRoleList22 =null;
+			try{
+				InvoiceRoleList22 = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				if(UtilValidate.isNotEmpty(InvoiceRoleList22)){
+					delegator.removeAll(InvoiceRoleList22);
+				}
+			} catch (Exception e) {
+			  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+			} 
+		
+			
+			 try{
+	        	 GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
+	        	 billToCustomerRole.set("invoiceId", purInvoiceId);
+	        	 billToCustomerRole.set("partyId", partyId);
+	        	 billToCustomerRole.set("roleTypeId", "SHIP_TO_CUSTOMER");
+	             delegator.createOrStore(billToCustomerRole);
+	         } catch (GenericEntityException e) {
+	        	 Debug.logError(e, "Failed to Populate Invoice ", module);
+	         }	
+			 
 		 
 		 
 		 try{
@@ -4759,6 +4804,47 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
         } catch (GenericEntityException e) {
        	 Debug.logError(e, "Failed to Populate Invoice ", module);
         }	
+		 
+		 
+		 Map resultCtx = null;
+		 try{
+             resultCtx = dispatcher.runSync("getAssociateOrder",UtilMisc.toMap("userLogin",userLogin, "orderId", SaleOrderId));
+		 }catch (Exception e) {
+          	 Debug.logError(e, "Failed to Populate Invoice ", module);
+           } 
+		 
+		 String purOrder = "";
+		 if(UtilValidate.isNotEmpty(resultCtx)){
+			 
+			 purOrder = (String)resultCtx.get("orderId");
+			 
+		 }
+		 
+		 
+		 conditionList.clear();
+	  		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, purOrder));
+			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SHIP_TO_CUSTOMER")));
+			List<GenericValue> OrderRoleList1 =null;
+			try{
+				OrderRoleList1 = delegator.findList("OrderRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				if(UtilValidate.isNotEmpty(OrderRoleList)){
+					delegator.removeAll(OrderRoleList);
+				}
+			} catch (Exception e) {
+			  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+			} 
+		 
+			
+			
+			 try{
+		       	 GenericValue billToCustomerRole = delegator.makeValue("OrderRole");
+		       	 billToCustomerRole.set("orderId", purOrder);
+		       	 billToCustomerRole.set("partyId", partyId);
+		       	 billToCustomerRole.set("roleTypeId", "SHIP_TO_CUSTOMER");
+		            delegator.createOrStore(billToCustomerRole);
+		        } catch (GenericEntityException e) {
+		       	 Debug.logError(e, "Failed to Populate Invoice ", module);
+		        }	
 		 
 		 
 		 String orderType = "";
@@ -4870,6 +4956,49 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
         	 Debug.logError(e, "Failed to Populate Invoice ", module);
          }	
 		 
+		 
+		 
+		  String invoiceIdSale = "";
+		    conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+			conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+			List<GenericValue> InvoiceRoleList33 =null;
+			try{
+				InvoiceRoleList33 = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				if(UtilValidate.isNotEmpty(InvoiceRoleList33)){
+					GenericValue InvoiceRole33 = EntityUtil.getFirst(InvoiceRoleList33);
+					invoiceIdSale = InvoiceRole33.getString("invoiceId");
+				}
+			} catch (Exception e) {
+			  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+			} 
+		 
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdSale));
+			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER")));
+			List<GenericValue> InvoiceRoleList88 =null;
+			try{
+				InvoiceRoleList88 = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				if(UtilValidate.isNotEmpty(InvoiceRoleList88)){
+					delegator.removeAll(InvoiceRoleList88);
+				}
+			} catch (Exception e) {
+			  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+			} 
+		
+			
+			 try{
+	        	 GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
+	        	 billToCustomerRole.set("invoiceId", invoiceIdSale);
+	        	 billToCustomerRole.set("partyId", partyId);
+	        	 billToCustomerRole.set("roleTypeId", "SUPPLIER");
+	             delegator.createOrStore(billToCustomerRole);
+	         } catch (GenericEntityException e) {
+	        	 Debug.logError(e, "Failed to Populate Invoice ", module);
+	         }	
+			 
+		 
+		 
 		
 		 try{
 				
@@ -4950,6 +5079,45 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
        	 Debug.logError(e, "Failed to Populate Invoice ", module);
         }	
 
+		 Map resultCtx = null;
+		 try{
+             resultCtx = dispatcher.runSync("getAssociateOrder",UtilMisc.toMap("userLogin",userLogin, "orderId", purchaseOrderId));
+		 }catch (Exception e) {
+          	 Debug.logError(e, "Failed to Populate Invoice ", module);
+           } 
+        
+		 String saleOrder = "";
+		 if(UtilValidate.isNotEmpty(resultCtx)){
+			 
+			 saleOrder = (String)resultCtx.get("orderId");
+			 
+		 }
+		 
+		 
+		 conditionList.clear();
+	  		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, saleOrder));
+			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("SUPPLIER")));
+			List<GenericValue> OrderRoleList2 =null;
+			try{
+				OrderRoleList2 = delegator.findList("OrderRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+				if(UtilValidate.isNotEmpty(OrderRoleList)){
+					delegator.removeAll(OrderRoleList);
+				}
+			} catch (Exception e) {
+			  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+			} 
+		 
+			
+			
+			 try{
+		       	 GenericValue billToCustomerRole = delegator.makeValue("OrderRole");
+		       	 billToCustomerRole.set("orderId", saleOrder);
+		       	 billToCustomerRole.set("partyId", partyId);
+		       	 billToCustomerRole.set("roleTypeId", "SUPPLIER");
+		            delegator.createOrStore(billToCustomerRole);
+		        } catch (GenericEntityException e) {
+		       	 Debug.logError(e, "Failed to Populate Invoice ", module);
+		        }	
 		
 		
 		
