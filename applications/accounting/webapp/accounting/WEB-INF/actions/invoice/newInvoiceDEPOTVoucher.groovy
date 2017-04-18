@@ -46,8 +46,8 @@ branchRo = delegator.findList("PartyRelationship",EntityCondition.makeCondition(
 roID = EntityUtil.getFirst(branchRo);
 
 context.partyId = partyId;
-//if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
-if(roID){
+if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
+//if(roID){
 	kanAndKalRo="yes";
 	context.kanAndKalRo=kanAndKalRo;
 	tallySalesNo = invoiceList.get("referenceNumber");
@@ -284,6 +284,7 @@ if(roID){
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
 	
@@ -1298,6 +1299,7 @@ context.estimatedShipDate = estimatedShipDate;
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
 

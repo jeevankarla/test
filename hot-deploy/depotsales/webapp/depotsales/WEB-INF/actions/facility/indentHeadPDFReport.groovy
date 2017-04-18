@@ -63,8 +63,6 @@ if(!branchList)
 	branchList.add(branchId);
 	
 	////Debug.log("branchId=================="+branchId);
-	
-	
 	//========================checking is it kannur Ro=====================
 	
 	isKunnur = "";
@@ -197,6 +195,7 @@ condList.clear();
 
 condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, actualInvoiceIds));
 condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
+condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, null));
 condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -705,7 +704,7 @@ totPurInvoiceNetAmt=0;
 			condList.clear();
 			condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
 			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
-
+			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 			invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
 			InvoiceItemAdjustment = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
@@ -736,7 +735,7 @@ totPurInvoiceNetAmt=0;
 			condList.clear();
 			condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
 			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_FPROD_ITEM", "TEN_PERCENT_SUBSIDY", "VAT_PUR", "CST_PUR", "CST_SALE", "VAT_SALE", "CESS_SALE", "CESS_PUR", "VAT_SURCHARGE", "CST_SURCHARGE", "TEN_PER_CHARGES", "TEN_PER_DISCOUNT", "ENTRY_TAX","ROUNDING_ADJUSTMENT"]));
-
+			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 			invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
 			InvoiceRemainItemAdjustment = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
@@ -919,7 +918,8 @@ totPurInvoiceNetAmt=0;
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, eachItem.invoiceId));
 				conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
-				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","ENTRY_TAX")));
+				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
+				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","ENTRY_TAX","ROUNDING_ADJUSTMENT")));
 
 				cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
@@ -1155,6 +1155,7 @@ totPurInvoiceNetAmt=0;
 				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
 				conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, poInvoiceItemSeqId));
 				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, null));
+				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 				//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 				cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				POInvoiceItemList = delegator.findList("InvoiceItem", cond, null, null, null, false);
@@ -1205,6 +1206,7 @@ totPurInvoiceNetAmt=0;
 					conditionList.clear();
 					conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, poInvoiceId));
 					conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,poInvoiceItemSeqId));
+					conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 					conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
 					cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 					invoiceVatCstListPO = delegator.findList("InvoiceItem", cond, null, null, null, false);
@@ -1237,6 +1239,7 @@ totPurInvoiceNetAmt=0;
 						
 						condList.clear();
 						condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
+						condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 						condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_RAWPROD_ITEM", "TEN_PERCENT_SUBSIDY", "VAT_PUR", "CST_PUR", "CST_SALE", "VAT_SALE", "CESS_SALE", "CESS_PUR", "VAT_SURCHARGE", "CST_SURCHARGE", "TEN_PER_CHARGES", "TEN_PER_DISCOUNT", "ENTRY_TAX"]));
 						
 						invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
@@ -1853,7 +1856,9 @@ totPurInvoiceNetAmt=0;
 
 			condList.clear();
 			condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
+			
 			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
+			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 
 			invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
@@ -1885,7 +1890,8 @@ totPurInvoiceNetAmt=0;
 			condList.clear();
 			condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoice.invoiceId));
 			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_FPROD_ITEM", "TEN_PERCENT_SUBSIDY", "VAT_PUR", "CST_PUR", "CST_SALE", "VAT_SALE", "CESS_SALE", "CESS_PUR", "VAT_SURHARGE", "TEN_PER_CHARGES", "TEN_PER_DISCOUNT", "ENTRY_TAX","ROUNDING_ADJUSTMENT"]));
-
+			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
+			
 			invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
 			InvoiceRemainItemAdjustment = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
@@ -2077,7 +2083,8 @@ totPurInvoiceNetAmt=0;
 				conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
 				//conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
 				//conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"INVOICE_ITM_ADJ"));
-				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","ENTRY_TAX")));
+				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
+				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","ENTRY_TAX","ROUNDING_ADJUSTMENT")));
 
 				cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				invoiceVatCstList = EntityUtil.filterByCondition(InvoiceItemAdjustment, cond);
@@ -2316,6 +2323,8 @@ totPurInvoiceNetAmt=0;
 				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
 				conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, "00001"));
 				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, null));
+				conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
+				
 				//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
 				cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				POInvoiceItemList = delegator.findList("InvoiceItem", cond, null, null, null, false);
@@ -2373,6 +2382,7 @@ totPurInvoiceNetAmt=0;
 				   conditionList.clear();
 				   conditionList.add(EntityCondition.makeCondition("parentInvoiceId", EntityOperator.EQUALS, poInvoiceId));
 				   conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,poInvoiceItemSeqId));
+				   conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 				   conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,UtilMisc.toList("VAT_PUR","CST_PUR","CST_SURCHARGE","VAT_SURCHARGE")));
 				   cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 				   invoiceVatCstListPO = delegator.findList("InvoiceItem", cond, null, null, null, false);
@@ -2410,7 +2420,7 @@ totPurInvoiceNetAmt=0;
 					   condList.clear();
 					   condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, poInvoiceId));
 					   condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN, ["INV_RAWPROD_ITEM", "TEN_PERCENT_SUBSIDY", "VAT_PUR", "CST_PUR", "CST_SALE", "VAT_SALE", "CESS_SALE", "CESS_PUR", "VAT_SURCHARGE", "CST_SURCHARGE", "TEN_PER_CHARGES", "TEN_PER_DISCOUNT", "ENTRY_TAX"]));
-					   
+					   condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 					   invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 					   
 					   InvoiceRemainItemAdjustmentPO = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);

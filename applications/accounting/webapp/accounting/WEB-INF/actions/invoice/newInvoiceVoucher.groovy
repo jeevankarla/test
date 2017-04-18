@@ -89,6 +89,19 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 	passNo = PartyIdentificationList[0].get("idValue");
 	}
 	
+	
+	regNo = "";
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+	conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "REGISTRATION_NUMBER"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
+	if(PartyIdentificationList){
+	regNo = PartyIdentificationList[0].get("idValue");
+	}
+	
+	context.regNo = regNo;
+	
 	poNumber = "";
 	orderId  = "";
 	shipmentDate = "";
@@ -166,13 +179,14 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 	conditionList = [];
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
 	
 	invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
 	invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
 	
-	invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY")));
+	invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY","ROUNDING_ADJUSTMENT")));
 	
 	
 	
@@ -381,6 +395,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 	 conditionList.clear();
 	 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purInvoiceId));
 	 //conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+	 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 	 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	 purChaseInvoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
 	 
@@ -1108,6 +1123,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 					if(PartyIdentificationList){
 					passNo = PartyIdentificationList[0].get("idValue");
 					}
+					
 				   
 				   tempMap.put("partyId", partyId);
 				   
@@ -1181,6 +1197,16 @@ if(PartyIdentificationList){
 passNo = PartyIdentificationList[0].get("idValue");
 }
 
+regNo = "";
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "REGISTRATION_NUMBER"));
+cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
+if(PartyIdentificationList){
+regNo = PartyIdentificationList[0].get("idValue");
+}
+
 poNumber = "";
 orderId  = "";
 shipmentDate = "";
@@ -1250,19 +1276,21 @@ context.lrNumber = lrNumber;
 context.carrierName = carrierName;
 context.estimatedShipCost = estimatedShipCost;
 context.passNo = passNo;
+context.regNo = regNo;
 context.estimatedShipDate = estimatedShipDate;
 
 
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 invoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
 
 invoiceItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
 invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_FPROD_ITEM"));
 
-invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY")));
+invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY","ROUNDING_ADJUSTMENT")));
 invoiceItemLevelAdjustments = [:];
 adjmntsTot=0;
 if(invoiceRemainigAdjItemList){
@@ -1466,6 +1494,7 @@ if(shipmentListForPOInvoiceId){
  conditionList.clear();
  conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, purInvoiceId));
  //conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
+ conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
  purChaseInvoiceItemLists = delegator.findList("InvoiceItem", cond, null, null, null, false);
  
