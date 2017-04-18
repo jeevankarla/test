@@ -585,7 +585,7 @@ under the License.
                     <entity-order-by field-name="finAccountName"/>
                 </entity-options>
             </drop-down> -->
-            <drop-down allow-empty="true">
+            <drop-down allow-empty="false">
             	<list-options key-name="finAccountId" list-name="finAccountIdList" description="${finAccountName}"/>
             </drop-down>
         </field>
