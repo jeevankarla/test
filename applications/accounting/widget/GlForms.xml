@@ -282,8 +282,9 @@ under the License.
     </form>
     <form name="ListFindAcctgTransEntriesByAccount" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+      
         <actions>
-            <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransEntryList">
+            <!-- <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransEntryList">
                 <condition-list>
                     <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
                     <condition-expr field-name="glAccountId" operator="equals" from-field="parameters.glAccountId" ignore-if-empty="true"/>
@@ -291,7 +292,7 @@ under the License.
                     <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="glJournalId" operator="equals" from-field="parameters.glJournalId" ignore-if-empty="true"/>
                     <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
-                    <condition-expr field-name="costCenterId" operator="equals" from-field="parameters.costCenterId" ignore-if-empty="true"/>
+                    <condition-expr field-name="costCenterId" operator="in" value="${costCenterList}" ignore-if-empty="true"/>
                     <condition-expr field-name="purposeTypeId" operator="equals" from-field="parameters.purposeTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
                     <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId" ignore-if-empty="true"/>
@@ -306,7 +307,7 @@ under the License.
                 </condition-list>
                 <order-by field-name="glAccountId"/>
                 <order-by field-name="-transactionDate"/>
-            </entity-condition>
+            </entity-condition> -->
         </actions>
         <row-actions>
             <set field="showPosition1" value="${bsh:String prev=(String)previousItem.get(&quot;glAccountId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(glAccountId)));}" type="Boolean"/>
@@ -375,7 +376,9 @@ under the License.
     </form>
     <form name="ListFindAcctgTransEntriesByDate" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <actions>
+        
+        <!-- <actions>
+        	<script	location="component://accounting/webapp/accounting/WEB-INF/actions/getAllCostCenterIds.groovy" />
             <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransEntryList">
                 <condition-list>
                     <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
@@ -396,7 +399,7 @@ under the License.
                 </condition-list>
                 <order-by field-name="-transactionDate"/>
             </entity-condition>
-        </actions>
+        </actions> -->
 
         <field name="transactionDate"><display/></field>
         <field name="acctgTransId" widget-style="buttontext">
