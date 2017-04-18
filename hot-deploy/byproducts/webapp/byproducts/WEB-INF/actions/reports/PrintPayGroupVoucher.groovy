@@ -143,7 +143,9 @@ if(UtilValidate.isNotEmpty(paymentGroupId)){
 					tempprintPaymentMap=[:];
 					if(UtilValidate.isNotEmpty(invDts)){
 						invoiceId = invDts[0].invoiceId;
+						statusId = invDts[0].statusId;
 						tempprintPaymentMap.put("invoiceId",invoiceId);
+						tempprintPaymentMap.put("statusId",statusId);
 						invShipment = delegator.findOne("Invoice", [invoiceId :  invoiceId], false);
 						shipmentId = "";
 						if(UtilValidate.isNotEmpty(invShipment)){
