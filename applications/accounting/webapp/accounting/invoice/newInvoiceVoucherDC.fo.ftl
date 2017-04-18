@@ -177,13 +177,13 @@ under the License.
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
 				</fo:table-cell>
 				 </#if>
-				<#if isExciseDuty?has_content>
+				<#--<#if isExciseDuty?has_content>
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Excise</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >Duty</fo:block>
 				  <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
 				</fo:table-cell>
-				</#if>
+				</#if>-->
 				<fo:table-cell border-style="solid">
 				 <fo:block text-align="center"    font-size="10pt" >Total</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
@@ -408,7 +408,7 @@ under the License.
 					 </fo:table-cell>
 				 </#if>
 				 <#assign exciseAmt=0>
-				<#if isExciseDuty?has_content>
+				<#--<#if isExciseDuty?has_content>
 				 <fo:table-cell border-style="solid">
 					
 				<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
@@ -431,15 +431,15 @@ under the License.
 				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
 				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>-->
 				          
-				        </#list>
+				        <#--</#list>
 				       </#if>
 				  </#list>
 				 </#if>
 				  
 				</fo:table-cell>
-				</#if>
+				</#if>-->
 				 <fo:table-cell border-style="solid">
-					<fo:block text-align="right"  font-size="10pt" >${totWithoutTax+cstOrVat+cstOrVatSur+exciseAmt}</fo:block>
+					<fo:block text-align="right"  font-size="10pt" >${totWithoutTax+cstOrVat+cstOrVatSur}</fo:block>
 				</fo:table-cell>
 				
 				</fo:table-row>
@@ -502,13 +502,13 @@ under the License.
 				<fo:block text-align="right"  font-size="10pt" >${totVatOrCstSur}</fo:block>
 				</fo:table-cell>
 				</#if>
-				<#if isExciseDuty?has_content>
+				<#--<#if isExciseDuty?has_content>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="right"  font-size="10pt" >${totExciseDuty}</fo:block>
 				</fo:table-cell>
-				</#if>
+				</#if>-->
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="right"  font-size="10pt" >${(totAmount+totVatOrCstAmt+totVatOrCstSur+totExciseDuty)}</fo:block>
+				<fo:block text-align="right"  font-size="10pt" >${(totAmount+totVatOrCstAmt+totVatOrCstSur)}</fo:block>
 				</fo:table-cell>
 								
 				</fo:table-row>

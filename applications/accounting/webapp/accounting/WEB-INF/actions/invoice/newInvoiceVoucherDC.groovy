@@ -251,7 +251,7 @@ if(roID){
 		 for (eachItem in invoiceInnerAdjItemList) {
 			
 			 
-			   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE" || eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
+			   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
 			  tempMap = [:];
 				  if(UtilValidate.isEmpty(isItVatOrCst) && (eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE")){
 					  isItVatOrCst=eachItem.invoiceItemTypeId;
@@ -315,7 +315,7 @@ if(roID){
 			  mgpsAmt = mgpsAmt+eachItem.itemValue;
 			  }
 			  
-			  if(eachItem.invoiceItemTypeId == "INVOICE_ITM_ADJ" || eachItem.invoiceItemTypeId == "PRICE_DISCOUNT"){
+			  if(eachItem.invoiceItemTypeId == "INVOICE_ITM_ADJ" || eachItem.invoiceItemTypeId == "PRICE_DISCOUNT" || eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
 			  }
 			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
