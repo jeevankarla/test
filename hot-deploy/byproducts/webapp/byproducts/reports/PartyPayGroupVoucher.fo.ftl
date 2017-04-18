@@ -109,13 +109,14 @@ under the License.
 		        		  </#if>
 		        		  <fo:table-row>
 		        						<fo:table-cell>
-		        		                    <fo:table  table-layout="fixed" width="68%" space-before="0.2in">
+		        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
 				    								 <fo:table-column column-width="6.5%"/>
 				    								 <fo:table-column column-width="15.5%"/>
 				    								 <fo:table-column column-width="20%"/>
-				    								  <fo:table-column column-width="20%"/>
+				    								  <fo:table-column column-width="18%"/>
+				    								   <fo:table-column column-width="22%"/>
 				    								   <fo:table-column column-width="20%"/>
-				   									 <fo:table-column column-width="50%"/>
+				   									 <fo:table-column column-width="40%"/>
 				   									 <fo:table-column column-width="15.5%"/>
 				   									 <fo:table-column column-width="24.5%"/>	
 				   									 <fo:table-body>
@@ -131,6 +132,10 @@ under the License.
 		        							  		  <fo:table-cell border-style="solid">
 		        							  		  		<fo:block text-align="center" font-size="10pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
 		        											<fo:block text-align="center" font-size="10pt" white-space-collapse="false" keep-together="always" font-weight="bold">Invoice Id</fo:block>
+		        							  		  </fo:table-cell>
+		        							  		   <fo:table-cell border-style="solid">
+		        							  		  		<fo:block text-align="center" font-size="10pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
+		        											<fo:block text-align="center" font-size="10pt" white-space-collapse="false" keep-together="always" font-weight="bold">Status</fo:block>
 		        							  		  </fo:table-cell>
 		        							  		    <fo:table-cell border-style="solid">
 		        							  		  		<fo:block text-align="center" font-size="10pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
@@ -163,13 +168,14 @@ under the License.
 						        	
 						        	 <fo:table-row>
 		        						<fo:table-cell>
-	        		                    <fo:table  table-layout="fixed" width="68%" space-before="0.2in">
+	        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
 			    								 <fo:table-column column-width="6.5%"/>
 			    								 <fo:table-column column-width="15.5%"/>
 			    								 <fo:table-column column-width="20%"/>
-			    								  <fo:table-column column-width="20%"/>
+			    								  <fo:table-column column-width="18%"/>
+			    								  <fo:table-column column-width="22%"/>
 			    								   <fo:table-column column-width="20%"/>
-			   									 <fo:table-column column-width="50%"/>
+			   									 <fo:table-column column-width="40%"/>
 			   									 <fo:table-column column-width="15.5%"/>
 			   									 <fo:table-column column-width="24.5%"/>	
 			   									 <fo:table-body>
@@ -195,6 +201,9 @@ under the License.
 	        											<fo:block text-align="center" font-size="10pt" white-space-collapse="false" keep-together="always">${eachPayment.invoiceId?if_exists}</fo:block>
 	        							  		  </fo:table-cell>
 	        							  		   <fo:table-cell border-style="solid">
+	        											<fo:block text-align="center" font-size="10pt" white-space-collapse="false" keep-together="always">${eachPayment.statusId?if_exists}</fo:block>
+	        							  		  </fo:table-cell>
+	        							  		   <fo:table-cell border-style="solid">
 	        											<fo:block text-align="center" font-size="10pt" white-space-collapse="false" >${eachPayment.millernumber?if_exists}</fo:block>
 	        							  		  </fo:table-cell>
 	        							  		   <fo:table-cell border-style="solid">
@@ -218,6 +227,9 @@ under the License.
 	        											<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
 	        							  		  </fo:table-cell>
 	        							  		  <fo:table-cell border-bottom-style="solid">
+	        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
+	        							  		  </fo:table-cell>
+	        							  		   <fo:table-cell border-bottom-style="solid">
 	        											<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always"></fo:block>
 	        							  		  </fo:table-cell>
 	        							  		  <fo:table-cell border-bottom-style="solid" >
