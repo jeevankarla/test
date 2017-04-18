@@ -1160,7 +1160,7 @@ under the License.
         </field>
         <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
-        <field name="segmentId" title="Payment PurposeType">
+        <field name="segmentId" title="Payment PurposeType" required-field="true">
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
@@ -1224,7 +1224,7 @@ under the License.
         </field>
         <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
-        <field name="segmentId" title="Payment PurposeType">
+        <field name="segmentId" title="Payment PurposeType" required-field="true">
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
@@ -1294,7 +1294,7 @@ under the License.
                 </entity-options>
             </drop-down>
          </field> -->
-         <field name="segmentId" title="Payment PurposeType">
+         <field name="segmentId" title="Payment PurposeType" required-field="true"> 
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
