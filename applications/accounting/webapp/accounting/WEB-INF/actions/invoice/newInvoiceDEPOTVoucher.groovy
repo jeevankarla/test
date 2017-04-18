@@ -47,7 +47,7 @@ roID = EntityUtil.getFirst(branchRo);
 
 context.partyId = partyId;
 if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
-//if(roID){
+	
 	kanAndKalRo="yes";
 	context.kanAndKalRo=kanAndKalRo;
 	tallySalesNo = invoiceList.get("referenceNumber");
