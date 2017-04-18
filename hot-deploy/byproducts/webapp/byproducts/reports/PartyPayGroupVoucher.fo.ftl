@@ -29,14 +29,19 @@ under the License.
        <#if partyMap?has_content>      
 		        <fo:page-sequence master-reference="main" font-size="10pt">	
 		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-			        	<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
-			        	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-						<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-	        			<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportHeader.description?if_exists}</fo:block>
-						<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${BOAddress?if_exists}</fo:block>
-						<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">PARTY WISE GROUP PAYMENT VOUCHER</fo:block>		        	
-            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-            		<fo:block>
+		        		
+		        	</fo:static-content>
+		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
+		        	<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
+		        	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+        			<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportHeader.description?if_exists}</fo:block>
+					<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${BOAddress?if_exists}</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">PARTY WISE GROUP PAYMENT VOUCHER</fo:block>
+		        	
+		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="50%"/>
         			<fo:table-column column-width="25%"/>
@@ -105,9 +110,7 @@ under the License.
 		        		</fo:table-body>
                 		</fo:table>
                		</fo:block>
-		        	</fo:static-content>
 		        	
-		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
 		        	<#assign partyMap = partyMap.entrySet()>
 	                <#list partyMap as eachParty>
 		        	
@@ -118,31 +121,6 @@ under the License.
         			<fo:table-column column-width="25%"/>
         			<fo:table-column column-width="25%"/>
 	                    <fo:table-body>
-						<fo:table-row>
-						<fo:table-cell>
-        						 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; </fo:block>
-        				</fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
-						<fo:table-cell>
-        						 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-        				</fo:table-cell>
-        				</fo:table-row>
-        				<fo:table-row>
-        				<fo:table-cell>
-        						 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-        				</fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
-						<fo:table-cell>
-        						 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; </fo:block>
-        				</fo:table-cell>
-						</fo:table-row>
-						<fo:table-row>
-						<fo:table-cell>
-        						 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-        				</fo:table-cell>
-        				</fo:table-row>	
 		        		  <fo:table-row>
 		        						<fo:table-cell>
 		        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
@@ -156,11 +134,6 @@ under the License.
 				   									 <fo:table-column column-width="15.5%"/>
 				   									 <fo:table-column column-width="24.5%"/>	
 				   									 <fo:table-body>
-				   									 <fo:table-row>
-														<fo:table-cell>
-								        						 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160; </fo:block>
-								        				</fo:table-cell>
-													</fo:table-row>
 				   									 <fo:table-row>
 				   									 <fo:table-cell border-style="solid">
 		        											<fo:block text-align="left" font-size="10pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
