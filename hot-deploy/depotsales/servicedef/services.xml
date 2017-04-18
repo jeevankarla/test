@@ -907,6 +907,13 @@
          <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
          <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
    </service>
+   
+   <service name="changePartyForTransaction" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="changePartyForTransaction" transaction-timeout="6000000000000000">
+        <description>Creating populate Invoice Adjustment</description>
+         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+         <attribute name="partyId" type="String" mode="IN" optional="false"/>
+         <attribute name="partyRole" type="String" mode="IN" optional="true"/>
+   </service>
     
 </services>
 

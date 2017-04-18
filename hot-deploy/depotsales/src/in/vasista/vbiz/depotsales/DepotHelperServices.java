@@ -4602,5 +4602,368 @@ public static Map<String, Object> populateInvoiceAdjustment(DispatchContext dctx
 
 
 
+public static Map<String, Object> changePartyForTransaction(DispatchContext dctx, Map context) {
+	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+	LocalDispatcher dispatcher = dctx.getDispatcher();
+	Map<String, Object> result = ServiceUtil.returnSuccess();
+	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	String itemType = (String) context.get("itemType");
+	
+	String invoiceId = (String) context.get("invoiceId");
+	
+	String partyId = (String) context.get("partyId");
+	
+	String partyRole = (String) context.get("partyRole");
+	
+	List conditionList = FastList.newInstance(); 
+	
+	
+	if(partyRole.equals("BILL_TO_CUSTOMER")){
+	
+		
+	String shipmentId = "";
+		
+	try{
+		
+		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
+		
+		shipmentId = InvoiceHeader.getString("shipmentId");
+		
+	InvoiceHeader.set("partyId",partyId);
+	InvoiceHeader.store();
+	}catch(GenericEntityException e){
+		Debug.logError(e, "Failed to Populate Invoice ", module);
+	}
+	
+	
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_TO_CUSTOMER","PLACING_CUSTOMER","SHIP_TO_CUSTOMER")));
+		List<GenericValue> InvoiceRoleList =null;
+		try{
+			InvoiceRoleList = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(InvoiceRoleList)){
+				delegator.removeAll(InvoiceRoleList);
+			}
+		} catch (Exception e) {
+		  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+		} 
+		
+		
+		 try{
+        	 GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
+        	 billToCustomerRole.set("invoiceId", invoiceId);
+        	 billToCustomerRole.set("partyId", partyId);
+        	 billToCustomerRole.set("roleTypeId", "BILL_TO_CUSTOMER");
+             delegator.createOrStore(billToCustomerRole);
+         } catch (GenericEntityException e) {
+        	 Debug.logError(e, "Failed to Populate Invoice ", module);
+         }	
+		 
+		 
+		 try{
+        	 GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
+        	 billToCustomerRole.set("invoiceId", invoiceId);
+        	 billToCustomerRole.set("partyId", partyId);
+        	 billToCustomerRole.set("roleTypeId", "PLACING_CUSTOMER");
+             delegator.createOrStore(billToCustomerRole);
+         } catch (GenericEntityException e) {
+        	 Debug.logError(e, "Failed to Populate Invoice ", module);
+         }	
+		 
+		 
+		 
+		 try{
+        	 GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
+        	 billToCustomerRole.set("invoiceId", invoiceId);
+        	 billToCustomerRole.set("partyId", partyId);
+        	 billToCustomerRole.set("roleTypeId", "SHIP_TO_CUSTOMER");
+             delegator.createOrStore(billToCustomerRole);
+         } catch (GenericEntityException e) {
+        	 Debug.logError(e, "Failed to Populate Invoice ", module);
+         }	
+		 
+		 
+		 try{
+				
+			 GenericValue Shipment = delegator.findOne("Shipment",UtilMisc.toMap("shipmentId",shipmentId),false);	
+				
+				
+			 Shipment.set("partyIdTo",partyId);
+			 Shipment.store();
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to Populate Invoice ", module);
+			}
+		 
+		 
+		 conditionList.clear();
+  		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+  		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+  		//conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderIteSeq));
+  		List<GenericValue> OrderItemBillingAndInvoiceAndInvoiceItem =null;
+  		try{
+  			OrderItemBillingAndInvoiceAndInvoiceItem = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  	      
+  		} catch (Exception e) {
+     		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+  		}
+  		
+  		
+  		GenericValue OrderItemBillingAndInvoice = EntityUtil.getFirst(OrderItemBillingAndInvoiceAndInvoiceItem);
+  		String SaleOrderId = OrderItemBillingAndInvoice.getString("orderId");
+
+  		conditionList.clear();
+  		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, SaleOrderId));
+		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_TO_CUSTOMER","PLACING_CUSTOMER","SHIP_TO_CUSTOMER")));
+		List<GenericValue> OrderRoleList =null;
+		try{
+			OrderRoleList = delegator.findList("OrderRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(OrderRoleList)){
+				delegator.removeAll(OrderRoleList);
+			}
+		} catch (Exception e) {
+		  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+		} 
+		
+  		
+		
+
+		 try{
+       	 GenericValue billToCustomerRole = delegator.makeValue("OrderRole");
+       	 billToCustomerRole.set("orderId", SaleOrderId);
+       	 billToCustomerRole.set("partyId", partyId);
+       	 billToCustomerRole.set("roleTypeId", "BILL_TO_CUSTOMER");
+            delegator.createOrStore(billToCustomerRole);
+        } catch (GenericEntityException e) {
+       	 Debug.logError(e, "Failed to Populate Invoice ", module);
+        }	
+		 
+		 
+		 try{
+       	 GenericValue billToCustomerRole = delegator.makeValue("OrderRole");
+       	 billToCustomerRole.set("orderId", SaleOrderId);
+       	 billToCustomerRole.set("partyId", partyId);
+       	 billToCustomerRole.set("roleTypeId", "PLACING_CUSTOMER");
+            delegator.createOrStore(billToCustomerRole);
+        } catch (GenericEntityException e) {
+       	 Debug.logError(e, "Failed to Populate Invoice ", module);
+        }	
+		 
+		 
+		 
+		 try{
+       	 GenericValue billToCustomerRole = delegator.makeValue("OrderRole");
+       	 billToCustomerRole.set("orderId", SaleOrderId);
+       	 billToCustomerRole.set("partyId", partyId);
+       	 billToCustomerRole.set("roleTypeId", "SHIP_TO_CUSTOMER");
+            delegator.createOrStore(billToCustomerRole);
+        } catch (GenericEntityException e) {
+       	 Debug.logError(e, "Failed to Populate Invoice ", module);
+        }	
+		 
+		 
+		 String orderType = "";
+  		try{
+	     		List<GenericValue> orderAttr = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, SaleOrderId), null, null, null, false);
+				
+				List<GenericValue> scheamList = EntityUtil.filterByCondition(orderAttr, EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+				
+				if(UtilValidate.isNotEmpty(scheamList)){
+					GenericValue orderScheme = EntityUtil.getFirst(scheamList);
+					orderType = (String) orderScheme.get("attrValue");
+				}
+  		 }catch(Exception e){
+				 Debug.logError("problem While Fetching OrderAttribute : "+e, module);
+			 } 
+		
+  		
+  		
+  		if(orderType.equals("N")){
+  			
+  			conditionList.clear();
+  			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, SaleOrderId));
+  			List<GenericValue> OrderItemDetail =null;
+  			try{
+  				OrderItemDetail = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  				if(UtilValidate.isNotEmpty(OrderItemDetail)){
+  					
+  					for(GenericValue eachOrderItemDetail : OrderItemDetail){
+				 try{
+					eachOrderItemDetail.set("partyId", partyId);
+			            delegator.createOrStore(eachOrderItemDetail);
+			        } catch (GenericEntityException e) {
+			       	 Debug.logError(e, "Failed to Populate Invoice ", module);
+			        }	
+  						
+  					}
+  					
+  					
+  				}
+  			} catch (Exception e) {
+  			  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+  			} 
+  			
+  			
+  		}
+		 
+		
+	}else if(partyRole.equals("SUPPLIER")){
+		
+		
+		String shipmentId = "";
+		
+		try{
+			
+			GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
+			
+			shipmentId = InvoiceHeader.getString("shipmentId");
+			
+		InvoiceHeader.set("partyIdFrom",partyId);
+		InvoiceHeader.store();
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to Populate Invoice ", module);
+		}
+		
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_FROM_VENDOR","SHIP_FROM_VENDOR","SUPPLIER_AGENT")));
+		List<GenericValue> InvoiceRoleList =null;
+		try{
+			InvoiceRoleList = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(InvoiceRoleList)){
+				delegator.removeAll(InvoiceRoleList);
+			}
+		} catch (Exception e) {
+		  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+		} 
+		
+		
+		 try{
+        	 GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
+        	 billToCustomerRole.set("invoiceId", invoiceId);
+        	 billToCustomerRole.set("partyId", partyId);
+        	 billToCustomerRole.set("roleTypeId", "BILL_FROM_VENDOR");
+             delegator.createOrStore(billToCustomerRole);
+         } catch (GenericEntityException e) {
+        	 Debug.logError(e, "Failed to Populate Invoice ", module);
+         }	
+		 
+		 
+		 try{
+        	 GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
+        	 billToCustomerRole.set("invoiceId", invoiceId);
+        	 billToCustomerRole.set("partyId", partyId);
+        	 billToCustomerRole.set("roleTypeId", "SHIP_FROM_VENDOR");
+             delegator.createOrStore(billToCustomerRole);
+         } catch (GenericEntityException e) {
+        	 Debug.logError(e, "Failed to Populate Invoice ", module);
+         }	
+		 
+		 
+		 try{
+        	 GenericValue billToCustomerRole = delegator.makeValue("InvoiceRole");
+        	 billToCustomerRole.set("invoiceId", invoiceId);
+        	 billToCustomerRole.set("partyId", partyId);
+        	 billToCustomerRole.set("roleTypeId", "SUPPLIER_AGENT");
+             delegator.createOrStore(billToCustomerRole);
+         } catch (GenericEntityException e) {
+        	 Debug.logError(e, "Failed to Populate Invoice ", module);
+         }	
+		 
+		
+		 try{
+				
+			 GenericValue Shipment = delegator.findOne("Shipment",UtilMisc.toMap("shipmentId",shipmentId),false);	
+				
+				
+			 Shipment.set("partyIdFrom",partyId);
+			 Shipment.store();
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to Populate Invoice ", module);
+			}
+		 
+		 
+		 conditionList.clear();
+  		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+  		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+  		//conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderIteSeq));
+  		List<GenericValue> OrderItemBillingAndInvoiceAndInvoiceItem =null;
+  		try{
+  			OrderItemBillingAndInvoiceAndInvoiceItem = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  	      
+  		} catch (Exception e) {
+     		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+  		}
+  		
+  		
+  		GenericValue OrderItemBillingAndInvoice = EntityUtil.getFirst(OrderItemBillingAndInvoiceAndInvoiceItem);
+  		String purchaseOrderId = OrderItemBillingAndInvoice.getString("orderId");
+
+		
+  		
+  		conditionList.clear();
+  		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, purchaseOrderId));
+		conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, UtilMisc.toList("BILL_FROM_VENDOR","SHIP_FROM_VENDOR","SUPPLIER_AGENT")));
+		List<GenericValue> OrderRoleList =null;
+		try{
+			OrderRoleList = delegator.findList("OrderRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+			if(UtilValidate.isNotEmpty(OrderRoleList)){
+				delegator.removeAll(OrderRoleList);
+			}
+		} catch (Exception e) {
+		  	Debug.logError(e, "Error in fetching InvoiceItem ", module);
+		} 
+		
+  		
+		
+
+		 try{
+       	 GenericValue billToCustomerRole = delegator.makeValue("OrderRole");
+       	 billToCustomerRole.set("orderId", purchaseOrderId);
+       	 billToCustomerRole.set("partyId", partyId);
+       	 billToCustomerRole.set("roleTypeId", "BILL_FROM_VENDOR");
+            delegator.createOrStore(billToCustomerRole);
+        } catch (GenericEntityException e) {
+       	 Debug.logError(e, "Failed to Populate Invoice ", module);
+        }	
+		 
+		 
+		 try{
+       	 GenericValue billToCustomerRole = delegator.makeValue("OrderRole");
+       	 billToCustomerRole.set("orderId", purchaseOrderId);
+       	 billToCustomerRole.set("partyId", partyId);
+       	 billToCustomerRole.set("roleTypeId", "SHIP_FROM_VENDOR");
+            delegator.createOrStore(billToCustomerRole);
+        } catch (GenericEntityException e) {
+       	 Debug.logError(e, "Failed to Populate Invoice ", module);
+        }	
+		 
+		 
+		 
+		 try{
+       	 GenericValue billToCustomerRole = delegator.makeValue("OrderRole");
+       	 billToCustomerRole.set("orderId", purchaseOrderId);
+       	 billToCustomerRole.set("partyId", partyId);
+       	 billToCustomerRole.set("roleTypeId", "SUPPLIER_AGENT");
+            delegator.createOrStore(billToCustomerRole);
+        } catch (GenericEntityException e) {
+       	 Debug.logError(e, "Failed to Populate Invoice ", module);
+        }	
+
+		
+		
+		
+	}
+		
+		
+		
+	 
+	
+  result = ServiceUtil.returnSuccess("Party Changed Has been successfully Updated");
+ 
+ return result;
+}
+
+
   	
 }
