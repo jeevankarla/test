@@ -42,7 +42,7 @@ if(invoiceId){
 	
 	invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 	partyId = invoiceList.get("partyId");
-	shipmentId = invoiceList.get("shipmentId");
+	//shipmentId = invoiceList.get("shipmentId");
 	
 	branchPartyId = invoiceList.get("costCenterId");
 	context.branchPartyId = branchPartyId;
@@ -64,6 +64,24 @@ if(invoiceId){
 
 	orderId = orderItemBillings.orderId;
 	context.orderId = orderId;
+	conditionList = [];
+	conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId));
+	conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	OrderItemAttribute = delegator.findList("OrderItemAttribute",  cond,null, null, null, false );
+	
+	inventoryItemId = "";
+	if(OrderItemAttribute){
+		inventoryItemId = EntityUtil.getFirst(OrderItemAttribute).attrValue;
+	}
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId));
+	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	ShipmentReceipt = delegator.findList("ShipmentReceipt",  cond,null, null, null, false );
+	if(ShipmentReceipt){
+		shipmentId = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
+	}
 	
 	if(orderId){
 		orderAttrForPo = delegator.findList("OrderAttribute", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), null, null, null, false);

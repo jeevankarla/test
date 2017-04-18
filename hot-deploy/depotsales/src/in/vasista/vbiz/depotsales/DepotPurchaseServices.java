@@ -11266,10 +11266,14 @@ public class DepotPurchaseServices{
 							}
 							
 						}
+						
 						if (paramMap.containsKey(taxType+ "_AMT" + thisSuffix)) {
 							String taxAmt = (String) paramMap.get(taxType+ "_AMT" + thisSuffix);
 							if(UtilValidate.isNotEmpty(taxAmt) && !(taxAmt.equals("NaN"))){
 								taxRateMap.put("amount",new BigDecimal(taxAmt));
+								
+								if(taxType.equals("SERVICE_CHARGE"))
+									taxRateMap.put("description","Service Charge");
 							}
 						}
 						
@@ -11748,7 +11752,7 @@ public class DepotPurchaseServices{
 	    
 	  //============================================Service Charge===============================
 	    
-	    if(UtilValidate.isNotEmpty(SERVICE_CHARGEBigDecimal) && SERVICE_CHARGEBigDecimal.compareTo(BigDecimal.ZERO)>0){
+/*	    if(UtilValidate.isNotEmpty(SERVICE_CHARGEBigDecimal) && SERVICE_CHARGEBigDecimal.compareTo(BigDecimal.ZERO)>0){
     	Map<String, Object> createInvoiceItemContext = FastMap.newInstance();
 	    
 	    createInvoiceItemContext.put("invoiceId",invoiceId);
@@ -11824,7 +11828,7 @@ public class DepotPurchaseServices{
     	 
     	 
         
-	    }
+	    }*/
 	    
 	  //============================================Rounding Off===============================
 	    

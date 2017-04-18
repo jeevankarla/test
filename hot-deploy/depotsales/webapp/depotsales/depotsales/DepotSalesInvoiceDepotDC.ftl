@@ -73,7 +73,7 @@ input[type=button]:hover {
 
 <#assign changeRowTitle = "Changes">                
 
-<#include "DepotSalesInvoiceDepotInc.ftl"/>
+<#include "DepotSalesInvoiceDepotIncDC.ftl"/>
 <#include "EditSaleInvoicePrice.ftl"/>
 
 <div class="full">
