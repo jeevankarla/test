@@ -161,6 +161,12 @@ if(UtilValidate.isNotEmpty(paymentGroupId)){
 						tempprintPaymentMap.put("millernumber",millernumber);
 						tempprintPaymentMap.put("millerDate",millerDate);
 					}
+					partyaddress = "";
+					partyAddressDet = delegator.findList("PartyAndPostalAddress",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , paymentRecipt.partyIdTo)  , null, null, null, false );
+					if(UtilValidate.isNotEmpty(partyAddressDet)){
+						partyaddress = partyAddressDet[0].address1;
+					}
+					tempprintPaymentMap.put("partyaddress",partyaddress);
 					tempprintPaymentMap.putAll(paymentRecipt);
 					totalAmount=paymentRecipt.amount;
 					amountwords=UtilNumber.formatRuleBasedAmount(totalAmount,"%rupees-and-paise", locale).toUpperCase();

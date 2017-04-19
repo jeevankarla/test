@@ -106,6 +106,26 @@ under the License.
         						 	
 	        					<#assign finalMapList = partyMap.entrySet()>
         						<#list finalMapList as eachh>
+        						<#assign sno=0>
+        						<#assign totalAmount = 0>
+						        	<#assign party =eachh.getKey()>
+					             <#assign printPaymentsList =eachh.getValue()>
+					             
+        						  <#list printPaymentsList as paymentListReport>
+        						  <#assign sno=sno+1>
+        						  <#assign  partyName="">
+        						  <#assign  partyId="">
+        						  <#if paymentListReport.partyIdTo?exists>
+			            			  <#assign partyId = paymentListReport.partyIdTo>
+			            		  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)> 
+			            		  </#if>
+			            		  <fo:table-row> 
+        						<fo:table-cell>
+        						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Party Name:  ${partyName?if_exists}</fo:block>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Address: ${paymentListReport.partyaddress?if_exists} </fo:block>
+        						</fo:table-cell>
+        						</fo:table-row> 
 		        					<fo:table-row>
 		        						<fo:table-cell>
 		        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
@@ -155,20 +175,7 @@ under the License.
 				   		                    </fo:table>
 		        						</fo:table-cell>
 						        	</fo:table-row>
-						        	<#assign sno=0>
-        						<#assign totalAmount = 0>
-						        	<#assign party =eachh.getKey()>
-					             <#assign printPaymentsList =eachh.getValue()>
-					             
-        						  <#list printPaymentsList as paymentListReport>
-        						  <#assign sno=sno+1>
-        						  <#assign  partyName="">
-        						  <#assign  partyId="">
-        						  <#if paymentListReport.partyIdTo?exists>
-			            			  <#assign partyId = paymentListReport.partyIdTo>
-			            		  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)> 
-			            		  </#if>
-        						
+						        	
 						        	<fo:table-row>
 		        						<fo:table-cell>
 	        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
