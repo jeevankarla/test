@@ -27,7 +27,7 @@ under the License.
             </fo:simple-page-master>
         </fo:layout-master-set>
          ${setRequestAttribute("OUTPUT_FILENAME", "paymentVoucher.pdf")}
-       <#if printPaymentsList?has_content>      
+        <#if partyMap?has_content>      
 		        <fo:page-sequence master-reference="main" font-size="10pt">	
 		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 		        		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
@@ -103,23 +103,9 @@ under the License.
 	        						 </#if>
 	        					 </#if>
 		        				</#if>
-        						<#assign sno=0>
-        						<#assign totalAmount = 0>
-        						  <#list printPaymentsList as paymentListReport>
-        						  <#assign sno=sno+1>
-        						  <#assign  partyName="">
-        						  <#assign  partyId="">
-        						  <#if paymentListReport.partyIdTo?exists>
-			            			  <#assign partyId = paymentListReport.partyIdTo>
-			            		  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)> 
-			            		  </#if>
-        						     						 
-        						 	<fo:table-row>
-		        						<fo:table-cell>
-		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PAYMENT ID:${paymentListReport.paymentId?if_exists}</fo:block>
-		        						</fo:table-cell>
-	        						</fo:table-row>
+        						 	
+	        					<#assign finalMapList = partyMap.entrySet()>
+        						<#list finalMapList as eachh>
 		        					<fo:table-row>
 		        						<fo:table-cell>
 		        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
@@ -169,6 +155,20 @@ under the License.
 				   		                    </fo:table>
 		        						</fo:table-cell>
 						        	</fo:table-row>
+						        	<#assign sno=0>
+        						<#assign totalAmount = 0>
+						        	<#assign party =eachh.getKey()>
+					             <#assign printPaymentsList =eachh.getValue()>
+					             
+        						  <#list printPaymentsList as paymentListReport>
+        						  <#assign sno=sno+1>
+        						  <#assign  partyName="">
+        						  <#assign  partyId="">
+        						  <#if paymentListReport.partyIdTo?exists>
+			            			  <#assign partyId = paymentListReport.partyIdTo>
+			            		  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)> 
+			            		  </#if>
+        						
 						        	<fo:table-row>
 		        						<fo:table-cell>
 	        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
@@ -210,6 +210,17 @@ under the License.
 	        						</fo:table-cell> 
 	        					</fo:table-row>
 							</#list>
+							<fo:table-row>
+        						<fo:table-cell>
+        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+        						</fo:table-cell>
+        						<fo:table-cell>
+        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+        						</fo:table-cell>
+        							<fo:table-cell>
+        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160; Total = &#160;&#160;<@ofbizCurrency amount=totalAmount isoCode=currencyUomId/></fo:block>
+        						</fo:table-cell>
+    						</fo:table-row>
 								 	<#assign cheqFav = "">
 								 <#if (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>
 									 <fo:table-row>
@@ -219,73 +230,44 @@ under the License.
 		        						</fo:table-cell>
 	        						</fo:table-row>
         						</#if>
+        						<fo:table-row>
+        							<fo:table-cell>
+		        						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        					</fo:table-cell>
+		        				</fo:table-row>
+        						<fo:table-row>
+        							<fo:table-cell>
+		        						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        					</fo:table-cell>
+        						</fo:table-row>
+        						<fo:table-row>
+        								<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        								<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Signature of Recipient</fo:block>
+		        						</fo:table-cell>
+	        					</fo:table-row>
         							<fo:table-row>
 									<fo:table-cell>
+										<fo:block></fo:block>
+										<fo:block></fo:block>
 					            		<fo:block>-------------------------------------------------------------------------------------------------------------------</fo:block>
 					       			</fo:table-cell>
 								 </fo:table-row>
-							<fo:table-row>
-        						<fo:table-cell>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
-        						</fo:table-cell>
-        							<fo:table-cell>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Grand Total = &#160;&#160;&#160;&#160;&#160;&#160;&#160;<@ofbizCurrency amount=totalAmount isoCode=currencyUomId/></fo:block>
-        						</fo:table-cell>
-    						</fo:table-row>
-							<fo:table-row>
-        						<fo:table-cell>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PROCD.&#160;&#160;&#160;&#160;&#160;&#160;D.Mgr(Finance)/Mgr(Finance)/GM(Finance)</fo:block>
-        						</fo:table-cell>
-        							<fo:table-cell>
-        							 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160;</fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Pre Audit.&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Director</fo:block>
-        						</fo:table-cell>
-    						</fo:table-row>
-    						<fo:table-row>
+								 <fo:table-row>
 									<fo:table-cell>
-					            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+					            		<fo:block page-break-after="always"></fo:block>
 					       			</fo:table-cell>
-								</fo:table-row>
-								<fo:table-row>
-									<fo:table-cell>
-					            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       			</fo:table-cell>
-								</fo:table-row>
-								<fo:table-row>
-									<fo:table-cell>
-					            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       			</fo:table-cell>
-								</fo:table-row>
-        					<fo:table-row>
-								<fo:table-cell>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160;</fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-								</fo:table-cell>
-								<fo:table-cell>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160;</fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-								</fo:table-cell>
-								<fo:table-cell border-style = "solid">
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160;</fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Signature of Recipient</fo:block>
-								</fo:table-cell>
-    						</fo:table-row>
+								 </fo:table-row>
+						</#list>
 	                    </fo:table-body>
                 	</fo:table>
-               </fo:block> 		
+               </fo:block> 
 			</fo:flow>
 		</fo:page-sequence>
 	<#else>
