@@ -4781,7 +4781,6 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
        	 billToCustomerRole.set("orderId", SaleOrderId);
        	 billToCustomerRole.set("partyId", partyId);
        	 billToCustomerRole.set("roleTypeId", "BILL_TO_CUSTOMER");
-       	 billToCustomerRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
             delegator.createOrStore(billToCustomerRole);
         } catch (GenericEntityException e) {
        	 Debug.logError(e, "Failed to Populate Invoice ", module);
@@ -4793,7 +4792,6 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
        	 billToCustomerRole.set("orderId", SaleOrderId);
        	 billToCustomerRole.set("partyId", partyId);
        	 billToCustomerRole.set("roleTypeId", "PLACING_CUSTOMER");
-       	 billToCustomerRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
             delegator.createOrStore(billToCustomerRole);
         } catch (GenericEntityException e) {
        	 Debug.logError(e, "Failed to Populate Invoice ", module);
@@ -4806,7 +4804,6 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
        	 billToCustomerRole.set("orderId", SaleOrderId);
        	 billToCustomerRole.set("partyId", partyId);
        	 billToCustomerRole.set("roleTypeId", "SHIP_TO_CUSTOMER");
-       	 billToCustomerRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
             delegator.createOrStore(billToCustomerRole);
         } catch (GenericEntityException e) {
        	 Debug.logError(e, "Failed to Populate Invoice ", module);
@@ -5003,7 +5000,6 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
 	        	 billToCustomerRole.set("invoiceId", invoiceIdSale);
 	        	 billToCustomerRole.set("partyId", partyId);
 	        	 billToCustomerRole.set("roleTypeId", "SUPPLIER");
-	        	 billToCustomerRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
 	             delegator.createOrStore(billToCustomerRole);
 	         } catch (GenericEntityException e) {
 	        	 Debug.logError(e, "Failed to Populate Invoice ", module);
@@ -5063,7 +5059,6 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
        	 billToCustomerRole.set("orderId", purchaseOrderId);
        	 billToCustomerRole.set("partyId", partyId);
        	 billToCustomerRole.set("roleTypeId", "BILL_FROM_VENDOR");
-         billToCustomerRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
             delegator.createOrStore(billToCustomerRole);
         } catch (GenericEntityException e) {
        	 Debug.logError(e, "Failed to Populate Invoice ", module);
@@ -5075,7 +5070,6 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
        	 billToCustomerRole.set("orderId", purchaseOrderId);
        	 billToCustomerRole.set("partyId", partyId);
        	 billToCustomerRole.set("roleTypeId", "SHIP_FROM_VENDOR");
-       	billToCustomerRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
             delegator.createOrStore(billToCustomerRole);
         } catch (GenericEntityException e) {
        	 Debug.logError(e, "Failed to Populate Invoice ", module);
@@ -5088,7 +5082,6 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
        	 billToCustomerRole.set("orderId", purchaseOrderId);
        	 billToCustomerRole.set("partyId", partyId);
        	 billToCustomerRole.set("roleTypeId", "SUPPLIER_AGENT");
-       	billToCustomerRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
             delegator.createOrStore(billToCustomerRole);
         } catch (GenericEntityException e) {
        	 Debug.logError(e, "Failed to Populate Invoice ", module);
@@ -5129,7 +5122,6 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
 		       	 billToCustomerRole.set("orderId", saleOrder);
 		       	 billToCustomerRole.set("partyId", partyId);
 		       	 billToCustomerRole.set("roleTypeId", "SUPPLIER");
-		       	billToCustomerRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
 		            delegator.createOrStore(billToCustomerRole);
 		        } catch (GenericEntityException e) {
 		       	 Debug.logError(e, "Failed to Populate Invoice ", module);
