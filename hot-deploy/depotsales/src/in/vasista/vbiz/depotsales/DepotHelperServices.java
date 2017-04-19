@@ -17,12 +17,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.HashMap;
-import java.util.Calendar;
-import java.util.TreeMap;
 import java.util.*;
 
 import org.ofbiz.order.order.OrderChangeHelper;
@@ -5354,6 +5348,138 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
  
  return result;
 }
+
+
+
+
+public static Map<String, Object> populateInvoiceItemPrice(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String itemType = (String) context.get("itemType");
+		String decimals = (String) context.get("decimals");
+		String roundType = (String) context.get("roundType");
+		String places = (String) context.get("places");
+		
+		String invoiceId = (String) context.get("invoiceId");
+		
+		 String fromDateStr = (String) context.get("fromDate");
+		 String thruDateStr = (String) context.get("thruDate");
+		
+		
+		String ro = (String) context.get("ro");
+		
+		String bo = (String) context.get("bo");
+		
+		String invoiceTypeId = (String) context.get("invoiceTypeId");
+		
+		Locale locale = (Locale) context.get("locale");
+		
+		Timestamp fromDate=null;
+	    Timestamp thruDate = null;
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    int count=0;
+	    if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
+	    	try {
+	    		fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
+	    		thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
+	    	} catch (ParseException e) {
+	    		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	    	} catch (NullPointerException e) {
+	    		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
+	    	}
+	  }
+		
+		List<GenericValue> shipmentList = null;
+		List<GenericValue> PartyRelationship = null;
+		//List<GenericValue> Invoice = null;
+		 EntityListIterator Invoice = null;
+		List branchList =  FastList.newInstance();
+		
+		List conditionList = FastList.newInstance();
+		
+		String invoiceItemType = "";
+		
+		try{
+		  GenericValue invoiceValue = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", invoiceId), false);
+		  invoiceItemType = invoiceValue.getString("invoiceTypeId");
+		}catch (GenericEntityException e) {
+	      Debug.logError(e, "Failed to Populate Invoice ", module);
+	     }
+		
+		
+  		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+  		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+  		//conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderIteSeq));
+  		List<GenericValue> OrderItemBillingAndInvoiceAndInvoiceItem =null;
+  		try{
+  			OrderItemBillingAndInvoiceAndInvoiceItem = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+  	      
+  		} catch (Exception e) {
+     		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+  		}
+  		
+  		GenericValue OrderItemBillingAndInvoice = EntityUtil.getFirst(OrderItemBillingAndInvoiceAndInvoiceItem);
+  		String SaleOrderId = OrderItemBillingAndInvoice.getString("orderId");
+  		
+  		BigDecimal unitPrice = BigDecimal.ZERO;
+  		try{
+    	List<GenericValue> extOrderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, SaleOrderId), null, null, null, false);
+    	GenericValue extOrderItem = EntityUtil.getFirst(extOrderItems);
+  		 unitPrice = extOrderItem.getBigDecimal("unitPrice");
+  		} catch (Exception e) {
+   		  Debug.logError(e, "Error in fetching InvoiceItem ", module);
+		}
+    	
+  		List<GenericValue> InvoiceItem = null;	
+		
+  		conditionList.clear();
+   	 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+   	 try{
+   	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+    	 
+   	  
+	   	 try{
+	   		 
+	        GenericValue InvoiceItemList = EntityUtil.getFirst(InvoiceItem);
+	   		 
+	      	InvoiceItemList.set("unitPrice",unitPrice);
+	      	InvoiceItemList.store();
+			}catch(GenericEntityException e){
+				Debug.logError(e, "Failed to Populate Invoice ", module);
+			}
+   	   
+   	 }catch(GenericEntityException e){
+				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+		 }
+		
+
+     Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
+     
+     populateRoundingAdjustment.put("invoiceId", invoiceId);
+     populateRoundingAdjustment.put("invoiceTypeId", invoiceItemType);
+     populateRoundingAdjustment.put("userLogin", userLogin);
+
+     // store the invoice first
+     Map<String, Object> populateRoundingAdjustmentResult = FastMap.newInstance();
+   
+     try{
+    	 populateRoundingAdjustmentResult = dispatcher.runSync("populateInvoiceAdjustmentCore", populateRoundingAdjustment);
+		        if(ServiceUtil.isError(populateRoundingAdjustmentResult)){
+					Debug.logError("Unable to populate Invoice Adjustment: " + ServiceUtil.getErrorMessage(result), module);
+				}
+     } catch (Exception e) {
+				Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
+			}
+   	
+		
+	  result = ServiceUtil.returnSuccess("Price Updation Has been successfully Updated");
+     
+     return result;
+	}
+
+
 
 
   	

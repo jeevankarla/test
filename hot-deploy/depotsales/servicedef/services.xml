@@ -924,6 +924,11 @@
          <attribute name="partyId" type="String" mode="IN" optional="false"/>
          <attribute name="partyRole" type="String" mode="IN" optional="true"/>
    </service>
+   
+    <service name="populateInvoiceItemPrice" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="populateInvoiceItemPrice" transaction-timeout="6000000000000000">
+        <description>Creating populate Invoice Adjustment</description>
+         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+   </service>
     
 </services>
 
