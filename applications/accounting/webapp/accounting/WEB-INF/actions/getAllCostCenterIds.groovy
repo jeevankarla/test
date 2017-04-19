@@ -49,7 +49,7 @@ if(UtilValidate.isNotEmpty(costCenter)&&UtilValidate.isEmpty(thruDateStr)){
 	context.errorMessage = "Thru Date Should not be empty";
 	return "error";
 }
-SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-DD hh:mm:ss");
+SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 Timestamp fromDateTs = null;
 if(fromDateStr){
 	try {
@@ -135,6 +135,7 @@ if(UtilValidate.isNotEmpty(parameters.thruDate)){
 	condList1.add(EntityCondition.makeCondition("transactionDate" , EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
 }
 EntityCondition testCond = EntityCondition.makeCondition(condList1);
+Debug.log("testCond============"+testCond);
 Set fieldToSelect =UtilMisc.toSet("glAccountId","acctgTransId","acctgTransEntrySeqId","transactionDate","acctgTransTypeId","glFiscalTypeId");
 fieldToSelect.add("invoiceId");
 fieldToSelect.add("paymentId");
