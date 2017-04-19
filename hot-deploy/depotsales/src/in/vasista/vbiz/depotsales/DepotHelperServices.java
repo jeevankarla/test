@@ -5435,7 +5435,8 @@ public static Map<String, Object> populateInvoiceItemPrice(DispatchContext dctx,
   		List<GenericValue> InvoiceItem = null;	
 		
   		conditionList.clear();
-   	 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+   	   conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+   	   conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
    	 try{
    	   InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
     	 
