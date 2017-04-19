@@ -4845,7 +4845,6 @@ public static Map<String, Object> changePartyForTransaction(DispatchContext dctx
 		       	 billToCustomerRole.set("orderId", purOrder);
 		       	 billToCustomerRole.set("partyId", partyId);
 		       	 billToCustomerRole.set("roleTypeId", "SHIP_TO_CUSTOMER");
-		         billToCustomerRole.set("datetimePerformed", UtilDateTime.nowTimestamp());
 		            delegator.createOrStore(billToCustomerRole);
 		        } catch (GenericEntityException e) {
 		       	 Debug.logError(e, "Failed to Populate Invoice ", module);
