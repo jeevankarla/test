@@ -19,8 +19,8 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".1in">
-                <fo:region-body margin-top="0.3in"/>
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".3in">
+                <fo:region-body margin-top="0.9in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -29,18 +29,21 @@ under the License.
        <#if partyMap?has_content>      
 		        <fo:page-sequence master-reference="main" font-size="10pt">	
 		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-		        		
+			        	<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
+			        	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+						<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+	        			<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportHeader.description?if_exists}</fo:block>
+						<fo:block text-align="center" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;${BOAddress?if_exists}</fo:block>
+						<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">PARTY WISE GROUP PAYMENT VOUCHER</fo:block>
 		        	</fo:static-content>
 		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
-		        	<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
-		        	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-					<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-        			<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportHeader.description?if_exists}</fo:block>
-					<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${BOAddress?if_exists}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">PARTY WISE GROUP PAYMENT VOUCHER</fo:block>
+		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		        	
-		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        	<#assign partyMap = partyMap.entrySet()>
+	                <#list partyMap as eachParty>
+		        	
 		        	<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="50%"/>
@@ -110,10 +113,7 @@ under the License.
 		        		</fo:table-body>
                 		</fo:table>
                		</fo:block>
-		        	
-		        	<#assign partyMap = partyMap.entrySet()>
-	                <#list partyMap as eachParty>
-		        	
+               		
             		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
             		<fo:block>
                  	<fo:table>
@@ -196,8 +196,9 @@ under the License.
 			   									 <#assign sno=0>
 						           <#assign partyDts = eachParty.getValue()>
 						           <#assign totalAmount = 0>
-	                                <#list partyDts as eachPayment>
-	                                <#assign sno=sno+1>
+	                                
+	                               <#list partyDts as eachPayment>
+	                                  <#assign sno=sno+1>
 	                                  <#assign  partyName="">
         						      <#assign  partyId="">
         						      <#if eachPayment.partyIdTo?exists>
@@ -266,11 +267,72 @@ under the License.
 	        											<fo:block text-align="right" font-size="12pt" line-height="10pt"  white-space-collapse="false" font-weight="bold" keep-together="always">${totalAmount?if_exists?string("##0.00")}</fo:block>
 	        							  		  </fo:table-cell>
 			   									 </fo:table-row>
-			   									 <fo:table-row>
-									                <fo:table-cell>
-					            		                <fo:block>-------------------------------------------------------------------------------------------------------------------</fo:block>
-					       			               </fo:table-cell>
-								                </fo:table-row>
+			   									<fo:table-row>
+        							<fo:table-cell>
+		        						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        					</fo:table-cell>
+		        				</fo:table-row>
+        						<fo:table-row>
+        							<fo:table-cell>
+		        						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        					</fo:table-cell>
+        						</fo:table-row>
+        						<fo:table-row>
+        							<fo:table-cell>
+		        						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        					</fo:table-cell>
+        						</fo:table-row>
+        						<fo:table-row>
+        							<fo:table-cell>
+		        						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        					</fo:table-cell>
+        						</fo:table-row>
+        						<fo:table-row>
+        							<fo:table-cell>
+		        						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        					</fo:table-cell>
+        						</fo:table-row>
+        						<fo:table-row>
+        								<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">  </fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+		        						</fo:table-cell>
+		        						<fo:table-cell>
+		        								<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> Authorized Signature</fo:block>
+		        						</fo:table-cell>
+	        					</fo:table-row>
+        							<fo:table-row>
+									<fo:table-cell>
+										<fo:block></fo:block>
+										<fo:block></fo:block>
+					            		<fo:block>-------------------------------------------------------------------------------------------------------------------</fo:block>
+					       			</fo:table-cell>
+								 </fo:table-row>
+								 <fo:table-row>
+									<fo:table-cell>
+					            		<fo:block page-break-after="always"></fo:block>
+					       			</fo:table-cell>
+								 </fo:table-row>
 			   									 </fo:table-body>
 			   		                    </fo:table>
 	        						</fo:table-cell> 
@@ -279,61 +341,6 @@ under the License.
                 	</fo:table>
                </fo:block>
               </#list> 	
-              <fo:table>
-		              <fo:table-body>
-		              <fo:table-row>
-        						<fo:table-cell>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;&#160;Prepared By&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Checked By</fo:block>
-        						</fo:table-cell>
-        							<fo:table-cell>
-        							 	<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160;</fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Approved By</fo:block>
-        						</fo:table-cell>
-    						</fo:table-row>
-    						<fo:table-row>
-									<fo:table-cell>
-					            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       			</fo:table-cell>
-								</fo:table-row>
-								<fo:table-row>
-									<fo:table-cell>
-					            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       			</fo:table-cell>
-								</fo:table-row>
-								<fo:table-row>
-									<fo:table-cell>
-					            		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
-					       			</fo:table-cell>
-								</fo:table-row>
-        					<fo:table-row>
-								<fo:table-cell>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160;</fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-								</fo:table-cell>
-								<fo:table-cell>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160;</fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;</fo:block>
-								</fo:table-cell>
-								<fo:table-cell border-style = "solid">
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160;</fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-									<fo:block text-align="center" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Signature of Recipient</fo:block>
-								</fo:table-cell>
-    						</fo:table-row>
-				   		</fo:table-body>
-                	</fo:table>	
 			</fo:flow>
 		</fo:page-sequence>
 	<#else>
