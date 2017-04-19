@@ -908,6 +908,16 @@
          <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
    </service>
    
+     <service name="populateInvoiceAdjustmentCore" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="populateInvoiceAdjustmentCore" transaction-timeout="6000000000000000">
+        <description>Creating populate Invoice Adjustment</description>
+         <attribute name="ro" type="String" mode="IN" optional="true"/>
+         <attribute name="bo" type="String" mode="IN" optional="true"/>
+         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
+         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+         <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
+   </service>
+   
    <service name="changePartyForTransaction" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="changePartyForTransaction" transaction-timeout="6000000000000000">
         <description>Creating populate Invoice Adjustment</description>
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>

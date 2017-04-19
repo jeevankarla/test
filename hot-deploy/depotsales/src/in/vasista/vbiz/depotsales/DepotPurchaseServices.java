@@ -664,6 +664,33 @@ public class DepotPurchaseServices{
 		}
 		
 		String invoiceId =  (String)result.get("invoiceId");
+		
+		
+         Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
+         
+         populateRoundingAdjustment.put("invoiceId", invoiceId);
+         populateRoundingAdjustment.put("invoiceTypeId", "PURCHASE_INVOICE");
+         populateRoundingAdjustment.put("userLogin", userLogin);
+
+         // store the invoice first
+         Map<String, Object> populateRoundingAdjustmentResult = FastMap.newInstance();
+       
+         try{
+        	 populateRoundingAdjustmentResult = dispatcher.runSync("populateInvoiceAdjustmentCore", populateRoundingAdjustment);
+		        if(ServiceUtil.isError(populateRoundingAdjustmentResult)){
+					Debug.logError("Unable to populate Invoice Adjustment: " + ServiceUtil.getErrorMessage(result), module);
+					request.setAttribute("_ERROR_MESSAGE_", "Unable to populate Invoice Adjustment  For party :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+					return "error";
+				}
+         } catch (Exception e) {
+				Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems while calling populate Invoice Adjustment : " + invoiceId);
+				return "error";
+			}
+		
+		
+		
+		
 		/*if(UtilValidate.isNotEmpty(invoiceId)){
 			GenericValue Shipment = null;
 			GenericValue invoice = null;
@@ -1681,6 +1708,28 @@ public class DepotPurchaseServices{
 
 	    }
 	    
+	    
+	    Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
+        
+        populateRoundingAdjustment.put("invoiceId", invoiceId);
+        populateRoundingAdjustment.put("invoiceTypeId", "SALES_INVOICE");
+        populateRoundingAdjustment.put("userLogin", userLogin);
+
+        // store the invoice first
+        Map<String, Object> populateRoundingAdjustmentResult = FastMap.newInstance();
+      
+        try{
+       	 populateRoundingAdjustmentResult = dispatcher.runSync("populateInvoiceAdjustmentCore", populateRoundingAdjustment);
+		        if(ServiceUtil.isError(populateRoundingAdjustmentResult)){
+					Debug.logError("Unable to populate Invoice Adjustment: " + ServiceUtil.getErrorMessage(result), module);
+					request.setAttribute("_ERROR_MESSAGE_", "Unable to populate Invoice Adjustment  For party :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+					return "error";
+				}
+        } catch (Exception e) {
+				Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems while calling populate Invoice Adjustment : " + invoiceId);
+				return "error";
+			}
 	    
 	  //============================================Service Charge===============================
 	    
@@ -2814,7 +2863,28 @@ public class DepotPurchaseServices{
 	    }
 		
 	    
-	 
+       Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
+        
+        populateRoundingAdjustment.put("invoiceId", invoiceId);
+        populateRoundingAdjustment.put("invoiceTypeId", "SALES_INVOICE");
+        populateRoundingAdjustment.put("userLogin", userLogin);
+
+        // store the invoice first
+        Map<String, Object> populateRoundingAdjustmentResult = FastMap.newInstance();
+      
+        try{
+       	 populateRoundingAdjustmentResult = dispatcher.runSync("populateInvoiceAdjustmentCore", populateRoundingAdjustment);
+		        if(ServiceUtil.isError(populateRoundingAdjustmentResult)){
+					Debug.logError("Unable to populate Invoice Adjustment: " + ServiceUtil.getErrorMessage(result), module);
+					request.setAttribute("_ERROR_MESSAGE_", "Unable to populate Invoice Adjustment  For party :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+					return "error";
+				}
+        } catch (Exception e) {
+				Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems while calling populate Invoice Adjustment : " + invoiceId);
+				return "error";
+			}
+
 
 	    
 	    
@@ -3935,7 +4005,30 @@ public class DepotPurchaseServices{
 		//==============update in Purchase=====================
 		
 		
+        Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
+        
+        populateRoundingAdjustment.put("invoiceId", invoiceId);
+        populateRoundingAdjustment.put("invoiceTypeId", "SALES_INVOICE");
+        populateRoundingAdjustment.put("userLogin", userLogin);
+
+        // store the invoice first
+        Map<String, Object> populateRoundingAdjustmentResult = FastMap.newInstance();
+      
+        try{
+       	 populateRoundingAdjustmentResult = dispatcher.runSync("populateInvoiceAdjustmentCore", populateRoundingAdjustment);
+		        if(ServiceUtil.isError(populateRoundingAdjustmentResult)){
+					Debug.logError("Unable to populate Invoice Adjustment: " + ServiceUtil.getErrorMessage(result), module);
+					request.setAttribute("_ERROR_MESSAGE_", "Unable to populate Invoice Adjustment  For party :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+					return "error";
+				}
+        } catch (Exception e) {
+				Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
+				request.setAttribute("_ERROR_MESSAGE_", "Problems while calling populate Invoice Adjustment : " + invoiceId);
+				return "error";
+			}
+
 		
+	    
 		
   //============================================Rounding Off===============================
 	    
@@ -4795,11 +4888,28 @@ public class DepotPurchaseServices{
 	    }
 		
 	    
-	 
+				Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
+			
+			populateRoundingAdjustment.put("invoiceId", invoiceId);
+			populateRoundingAdjustment.put("invoiceTypeId", "PURCHASE_INVOICE");
+			populateRoundingAdjustment.put("userLogin", userLogin);
+			
+			// store the invoice first
+			    Map<String, Object> populateRoundingAdjustmentResult = FastMap.newInstance();
+			  
+		    try{
+			   	 populateRoundingAdjustmentResult = dispatcher.runSync("populateInvoiceAdjustmentCore", populateRoundingAdjustment);
+				if(ServiceUtil.isError(populateRoundingAdjustmentResult)){
+					Debug.logError("Unable to populate Invoice Adjustment: " + ServiceUtil.getErrorMessage(result), module);
+				request.setAttribute("_ERROR_MESSAGE_", "Unable to populate Invoice Adjustment  For party :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+				   return "error";
+				}
+			} catch (Exception e) {
+					Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
+			request.setAttribute("_ERROR_MESSAGE_", "Problems while calling populate Invoice Adjustment : " + invoiceId);
+			return "error";
+			}
 
-	    
-	    
-	    
 	    
 	    
 	/*	if(UtilValidate.isNotEmpty(invoiceAdjChargesList)){
@@ -5937,6 +6047,29 @@ public class DepotPurchaseServices{
     		}
         	
     	 }
+    	 
+    	 Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
+         
+         populateRoundingAdjustment.put("invoiceId", invoiceId);
+         populateRoundingAdjustment.put("invoiceTypeId", "PURCHASE_INVOICE");
+         populateRoundingAdjustment.put("userLogin", userLogin);
+
+         // store the invoice first
+         Map<String, Object> populateRoundingAdjustmentResult = FastMap.newInstance();
+       
+         try{
+        	 populateRoundingAdjustmentResult = dispatcher.runSync("populateInvoiceAdjustmentCore", populateRoundingAdjustment);
+ 		        if(ServiceUtil.isError(populateRoundingAdjustmentResult)){
+ 					Debug.logError("Unable to populate Invoice Adjustment: " + ServiceUtil.getErrorMessage(result), module);
+ 					request.setAttribute("_ERROR_MESSAGE_", "Unable to populate Invoice Adjustment  For party :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+ 					return "error";
+ 				}
+         } catch (Exception e) {
+ 				Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
+ 				request.setAttribute("_ERROR_MESSAGE_", "Problems while calling populate Invoice Adjustment : " + invoiceId);
+ 				return "error";
+ 			}
+
 		
     	 
     	//============================================Rounding Off===============================
@@ -10594,6 +10727,30 @@ public class DepotPurchaseServices{
   		         }
   			}*/
 
+  			 Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
+  	        
+  	        populateRoundingAdjustment.put("invoiceId", invoiceId);
+  	        populateRoundingAdjustment.put("invoiceTypeId", "PURCHASE_INVOICE");
+  	        populateRoundingAdjustment.put("userLogin", userLogin);
+
+  	        // store the invoice first
+  	        Map<String, Object> populateRoundingAdjustmentResult = FastMap.newInstance();
+  	      
+  	        try{
+  	       	 populateRoundingAdjustmentResult = dispatcher.runSync("populateInvoiceAdjustmentCore", populateRoundingAdjustment);
+  			        if(ServiceUtil.isError(populateRoundingAdjustmentResult)){
+  						Debug.logError("Unable to populate Invoice Adjustment: " + ServiceUtil.getErrorMessage(result), module);
+  						request.setAttribute("_ERROR_MESSAGE_", "Unable to populate Invoice Adjustment  For party :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+  						return "error";
+  					}
+  	        } catch (Exception e) {
+  					Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
+  					request.setAttribute("_ERROR_MESSAGE_", "Problems while calling populate Invoice Adjustment : " + invoiceId);
+  					return "error";
+  				}
+
+  			
+  			
   			//============================================Rounding Off===============================
   			  List<GenericValue> InvoiceItem = null;
   		    	
@@ -11696,6 +11853,32 @@ public class DepotPurchaseServices{
 		}*/
 		
 		String invoiceId =  (String)result.get("invoiceId");
+		
+		 Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
+	        
+	        populateRoundingAdjustment.put("invoiceId", invoiceId);
+	        populateRoundingAdjustment.put("invoiceTypeId", "SALES_INVOICE");
+	        populateRoundingAdjustment.put("userLogin", userLogin);
+
+	        // store the invoice first
+	        Map<String, Object> populateRoundingAdjustmentResult = FastMap.newInstance();
+	      
+	        try{
+	       	 populateRoundingAdjustmentResult = dispatcher.runSync("populateInvoiceAdjustmentCore", populateRoundingAdjustment);
+			        if(ServiceUtil.isError(populateRoundingAdjustmentResult)){
+						Debug.logError("Unable to populate Invoice Adjustment: " + ServiceUtil.getErrorMessage(result), module);
+						request.setAttribute("_ERROR_MESSAGE_", "Unable to populate Invoice Adjustment  For party :" + invoiceId+"....! "+ServiceUtil.getErrorMessage(result));
+						return "error";
+					}
+	        } catch (Exception e) {
+					Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
+					request.setAttribute("_ERROR_MESSAGE_", "Problems while calling populate Invoice Adjustment : " + invoiceId);
+					return "error";
+				}
+
+		
+		
+		
 		
 		// Invoice Attributes (Taxes)
 		Map<String, Object> createInvAttribute = UtilMisc.toMap(
