@@ -20,8 +20,8 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".1in">
-                <fo:region-body margin-top="0.3in"/>
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-top=".3in">
+                <fo:region-body margin-top="0.9in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
             </fo:simple-page-master>
@@ -31,21 +31,28 @@ under the License.
 		        <fo:page-sequence master-reference="main" font-size="10pt">	
 		        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 		        		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
-		        	</fo:static-content>	        	
-		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
 		        	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
                     <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
         			<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportHeader.description?if_exists}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">GROUP PAYMENT VOUCHER</fo:block>
             		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        	</fo:static-content>	        	
+		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
+		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
             		<fo:block>
                  	<fo:table>
                     <fo:table-column column-width="50%"/>
         			<fo:table-column column-width="25%"/>
         			<fo:table-column column-width="25%"/>
 	                    <fo:table-body>
-	                    		<#assign paymentGroupDetails = {}>
+	        					<#assign finalMapList = partyMap.entrySet()>
+        						<#list finalMapList as eachh>
+        						
+        						<#assign paymentGroupDetails = {}>
         						 	<#if paymentGroupId?has_content>
 								    	<#assign paymentGroupDetails = delegator.findOne("PaymentGroup", {"paymentGroupId" : paymentGroupId}, true)?if_exists/>
 								   </#if>
@@ -53,6 +60,14 @@ under the License.
 								   <#if paymentGroupDetails.paymentGroupTypeId?has_content>
 								    	<#assign paymentGroupTypeDetails = delegator.findOne("PaymentGroupType", {"paymentGroupTypeId" : paymentGroupDetails.paymentGroupTypeId}, true)?if_exists/>
 								   </#if>
+								   <fo:table-row> 
+								   <fo:table-cell>
+        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+        						 	</fo:table-cell>
+        						 	<fo:table-cell>
+        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
+        						 	</fo:table-cell>
+        						 	</fo:table-row> 
 								   <fo:table-row> 
         						 	<fo:table-cell>
         						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;<#if paymentGroupTypeDetails.description?has_content>PAYMENT GROUP TYPE:${paymentGroupTypeDetails.description?if_exists}</#if></fo:block>
@@ -103,27 +118,19 @@ under the License.
 	        						 </#if>
 	        					 </#if>
 		        				</#if>
-        						 	
-	        					<#assign finalMapList = partyMap.entrySet()>
-        						<#list finalMapList as eachh>
-        						<#assign sno=0>
-        						<#assign totalAmount = 0>
-						        	<#assign party =eachh.getKey()>
-					             <#assign printPaymentsList =eachh.getValue()>
-					             
-        						  <#list printPaymentsList as paymentListReport>
-        						  <#assign sno=sno+1>
-        						  <#assign  partyName="">
-        						  <#assign  partyId="">
-        						  <#if paymentListReport.partyIdTo?exists>
-			            			  <#assign partyId = paymentListReport.partyIdTo>
-			            		  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)> 
-			            		  </#if>
-			            		  <fo:table-row> 
+		        				
+        						<#assign  partyAddress="">
+        						<#assign partyId =eachh.getKey()>
+        						<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+        						
+        						  <#assign partyaddr=delegator.findByAnd("PartyAndPostalAddress", {"partyId" : partyId})/>
+        						
+        						<fo:table-row>         		  
         						<fo:table-cell>
         						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
 		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Party Name:  ${partyName?if_exists}</fo:block>
-		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Address: ${paymentListReport.partyaddress?if_exists} </fo:block>
+        										<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Address: ${partyaddr[0].address1?if_exists} </fo:block>
+		        								
         						</fo:table-cell>
         						</fo:table-row> 
 		        					<fo:table-row>
@@ -175,7 +182,19 @@ under the License.
 				   		                    </fo:table>
 		        						</fo:table-cell>
 						        	</fo:table-row>
-						        	
+						        	<#assign sno=0>
+        							<#assign totalAmount = 0>
+						        	<#assign party =eachh.getKey()>
+					            	<#assign printPaymentsList =eachh.getValue()>
+					             
+        						  <#list printPaymentsList as paymentListReport>
+        						  <#assign sno=sno+1>
+        						  <#assign  partyName="">
+        						  <#assign  partyId="">
+        						  <#if paymentListReport.partyIdTo?exists>
+			            			  <#assign partyId = paymentListReport.partyIdTo>
+			            		  	  <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)> 
+			            		  </#if>
 						        	<fo:table-row>
 		        						<fo:table-cell>
 	        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
@@ -256,7 +275,7 @@ under the License.
 		        						</fo:table-cell>
 		        						<fo:table-cell>
 		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
-		        								<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Signature of Recipient</fo:block>
+		        								<fo:block text-align="right" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">Authorized Signature</fo:block>
 		        						</fo:table-cell>
 	        					</fo:table-row>
         							<fo:table-row>
