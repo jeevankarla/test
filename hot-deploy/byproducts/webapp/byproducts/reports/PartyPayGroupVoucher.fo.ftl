@@ -121,6 +121,20 @@ under the License.
         			<fo:table-column column-width="25%"/>
         			<fo:table-column column-width="25%"/>
 	                    <fo:table-body>
+	                    <#assign  partyAddress="">
+        						<#assign partyId =eachParty.getKey()>
+        						<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+        						
+        						  <#assign partyaddr=delegator.findByAnd("PartyAndPostalAddress", {"partyId" : partyId})/>
+        						
+        						<fo:table-row>         		  
+        						<fo:table-cell>
+        						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
+		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Party Name:  ${partyName?if_exists}</fo:block>
+        										<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Address: ${partyaddr[0].address1?if_exists} </fo:block>
+		        								
+        						</fo:table-cell>
+        						</fo:table-row>
 		        		  <fo:table-row>
 		        						<fo:table-cell>
 		        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
