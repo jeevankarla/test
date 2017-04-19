@@ -54,7 +54,7 @@ under the License.
 	<fo:table-column column-width="40%"/>
 	<fo:table-column column-width="25%"/>
 
-     
+        
 
 		<fo:table-body>
 			<fo:table-row white-space-collapse="false">
