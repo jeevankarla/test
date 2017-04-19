@@ -2206,10 +2206,10 @@
 									</condition>
 									<widgets>
 										<screenlet title="${uiLabelMap.AccountingInvoiceHeader}">
-											<link target="editInvoice" text="${uiLabelMap.CommonUpdate}"
+											<!-- <link target="editInvoice" text="${uiLabelMap.CommonUpdate}"
 												style="buttontext">
 												<parameter param-name="invoiceId" />
-											</link>
+											</link> -->
 											<include-form name="invoiceHeader"
 												location="component://accounting/widget/InvoiceForms.xml" />
 										</screenlet>
@@ -2231,10 +2231,10 @@
 											<screenlet
 												title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
 												navigation-form-name="ListInvoiceApplications">
-												<link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
+												<!-- <link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}"
 													style="buttontext">
 													<parameter param-name="invoiceId" />
-												</link>
+												</link> -->
 												<include-form name="ListInvoiceApplications"
 													location="component://accounting/widget/InvoiceForms.xml" />
 											</screenlet>
@@ -2250,10 +2250,10 @@
 										<container style="clear" />
 										<screenlet title="${uiLabelMap.AccountingInvoiceItems}"
 											navigation-form-name="invoiceItems">
-											<link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
+											<!-- <link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}"
 												style="buttontext">
 												<parameter param-name="invoiceId" />
-											</link>
+											</link> -->
 											<include-form name="invoiceItems"
 												location="component://accounting/widget/InvoiceForms.xml" />
 										</screenlet>

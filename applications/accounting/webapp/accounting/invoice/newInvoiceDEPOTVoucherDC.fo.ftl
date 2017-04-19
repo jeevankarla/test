@@ -347,8 +347,8 @@ under the License.
 					<#assign finalGrndToal=grandTotal+totTaxAmount>
 		   			<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
 				<#else>
-					<#assign finalGrndToal=grandTotal+totTaxAmount2>
-					<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount2)?string("#0.00")}</fo:block>
+					<#assign finalGrndToal=totAmount+totTaxAmount2>
+					<fo:block text-align="center"  font-size="10pt" >${(totAmount+totTaxAmount2)?string("#0.00")}</fo:block>
 	            </#if>
 				</fo:table-cell>
 								
@@ -358,11 +358,11 @@ under the License.
 	</fo:table>
 	
 	</fo:block>
-	   <#if !kanAndKalRo?has_content>
+	   <#--<#if !kanAndKalRo?has_content>
 		<fo:block text-align="left" font-weight="bold"  font-size="12pt" >Subsid allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
 	  <#else>
 		<fo:block text-align="left" font-weight="bold"  font-size="12pt" >Subsid allowed @ 10% on :${tempScheamQty?if_exists} Kgs on Rs.${(grandTotal+totTaxAmount2)?string("#0.00")}</fo:block>
-	   </#if>
+	   </#if>-->
 	
 	<fo:block text-align="left" font-weight="bold"  font-size="10pt" ><#if C2E2Form?has_content><#if C2E2Form == "NO_E2_FORM">Transaction with out E2 form<#elseif C2E2Form == "E2_FORM">Transaction with E2 form<#elseif C2E2Form == "CST_NOCFORM">Transaction with out C form<#elseif C2E2Form == "CST_CFORM">AGAINST C FORM</#if></#if></fo:block>
 	<fo:block text-align="left"    font-size="10pt" >&#160;</fo:block>
@@ -380,31 +380,33 @@ under the License.
 		<fo:table-body>
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell >
-				<fo:block text-align="left"    font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}                   OTHER CHARGES</fo:block>
+				<fo:block text-align="left"    font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplier, true)}                   </fo:block>
 				</fo:table-cell>
 			</fo:table-row>
-
+			
              <#assign remainingAdjustMents = 0>
 		
             <#list invoiceRemainigAdjItemList as eachList>
 			<fo:table-row white-space-collapse="false">
+			<#if eachList.invoiceItemTypeId != "ENTRY_TAX" && eachList.invoiceItemTypeId != "INVOICE_ITM_ADJ" && eachList.invoiceItemTypeId != "PRICE_DISCOUNT">
 			 <fo:table-cell >
-				<fo:block text-align="left"    font-size="10pt" ></fo:block>
+				<fo:block text-align="left"    font-size="10pt" >OTHER CHARGES</fo:block>
 				</fo:table-cell>
-				
+				</#if>
 				<fo:table-cell >
-				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
+				<#if eachList.invoiceItemTypeId != "ENTRY_TAX" && eachList.invoiceItemTypeId != "INVOICE_ITM_ADJ" && eachList.invoiceItemTypeId != "PRICE_DISCOUNT">
+				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.itemValue)>
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if></fo:block>
 				</#if>
 				</fo:table-cell>
 				<fo:table-cell >
-				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.itemValue)>
+				
 			<#--	<#if eachList.invoiceItemTypeId == "ENTRY_TAX">
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				<#else>
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>-->
-				<#if eachList.invoiceItemTypeId != "ENTRY_TAX">
+				<#if eachList.invoiceItemTypeId != "ENTRY_TAX" && eachList.invoiceItemTypeId != "INVOICE_ITM_ADJ" && eachList.invoiceItemTypeId != "PRICE_DISCOUNT">
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>
 				</fo:table-cell>
@@ -462,7 +464,7 @@ under the License.
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
-				<#assign finalTOtal = (grandTotal+mgpsAndTotalDeductions)>
+				<#assign finalTOtal = (totAmount+mgpsAndTotalDeductions)>
 				<#assign finalTOtal = (finalTOtal+remainingAdjustMents)>
 			
 					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")}</fo:block>
