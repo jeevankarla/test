@@ -66,13 +66,13 @@ under the License.
 				<#--<fo:block text-align="left" font-weight="bold" font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>-->
 				</fo:table-cell>
 				<fo:table-cell >
-				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
+				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false" font-weight="bold">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Indent No :${indentNo?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC PO No     :${poNumber?if_exists}</fo:block>
 				<#--<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;User Agency Indent No/Date  :${externalOrderId?if_exists}</fo:block>-->
 				</fo:table-cell>
 				<fo:table-cell >
-				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
+				<fo:block text-align="right"     font-size="10pt" font-weight="bold">DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if indentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(indentDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if poDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(poDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<#--<fo:block text-align="right"     font-size="10pt" >Tally Sale No : ${tallyRefNo?if_exists}</fo:block>-->
@@ -663,7 +663,7 @@ under the License.
 				<fo:table-body>
 					<fo:table-row white-space-collapse="false">
 						<fo:table-cell number-columns-spanned="2" >
-						<fo:block text-align="left" font-weight="bold"   font-size="10pt" >${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()} RUPEES ONLY.</fo:block>
+						<fo:block text-align="left" font-weight="bold"   font-size="10pt" >${Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(Static["java.lang.Double"].parseDouble(((finalGrndToal)+remainingAdjustMents)?string("#0.00")), "%indRupees-and-paiseRupees", locale).toUpperCase()} RUPEES ONLY.</fo:block>
 						</fo:table-cell>
 						
 					</fo:table-row>
