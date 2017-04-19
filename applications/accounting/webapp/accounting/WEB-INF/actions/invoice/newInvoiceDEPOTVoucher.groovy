@@ -185,10 +185,11 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	
 	passNo = "";
 	tinNo="";
+	regNo="";
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 	//conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
-	conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.IN, ["PSB_NUMER","TIN_NUMBER"]));
+	conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.IN, ["PSB_NUMER","TIN_NUMBER","REGISTRATION_NUMBER"]));
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
 	/*if(PartyIdentificationList){
@@ -201,6 +202,9 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			}
 			else if(eachIdentification.partyIdentificationTypeId=="TIN_NUMBER"){
 				tinNo=eachIdentification.get("idValue");
+			}
+			else if(eachIdentification.partyIdentificationTypeId=="REGISTRATION_NUMBER"){
+				regNo=eachIdentification.get("idValue");
 			}
 		}
 	}
@@ -290,6 +294,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	context.estimatedShipCost = estimatedShipCost;
 	context.passNo = passNo;
 	context.tinNo = tinNo;
+	context.regNo=regNo;
 	context.estimatedShipDate = estimatedShipDate;
 	
 	
@@ -1194,10 +1199,11 @@ context.isDepot = isDepot;
 
 passNo = "";
 tinNo="";
+regNo="";
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 //conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
-conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.IN, ["PSB_NUMER","TIN_NUMBER"]));
+conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.IN, ["PSB_NUMER","TIN_NUMBER","REGISTRATION_NUMBER"]));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
 /*if(PartyIdentificationList){
@@ -1210,6 +1216,9 @@ if(PartyIdentificationList){
 		}
 		else if(eachIdentification.partyIdentificationTypeId=="TIN_NUMBER"){
 			tinNo=eachIdentification.get("idValue");
+		}
+		else if(eachIdentification.partyIdentificationTypeId=="REGISTRATION_NUMBER"){
+			regNo=eachIdentification.get("idValue");
 		}
 	}
 }
@@ -1299,6 +1308,7 @@ context.carrierName = carrierName;
 context.estimatedShipCost = estimatedShipCost;
 context.passNo = passNo;
 context.tinNo = tinNo;
+context.regNo=regNo;
 context.estimatedShipDate = estimatedShipDate;
 
 

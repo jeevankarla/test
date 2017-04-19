@@ -59,7 +59,7 @@ under the License.
 		<fo:table-body>
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell >
-				<fo:block text-align="left"  font-weight="bold"  font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, soceity, true)}</fo:block>
+				<fo:block text-align="left"  font-weight="bold"  font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, soceity, true)} <#if regNo?has_content>[${regNo?if_exists}] </#if></fo:block>
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
