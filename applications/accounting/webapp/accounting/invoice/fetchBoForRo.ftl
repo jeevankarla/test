@@ -21,8 +21,8 @@ function getBOsForRO() {
 						var orderList = result["orderList"];
 						var getROList = result["getROList"];
 						var tableElement = "";
-						tableElement +="<option value=''></option>";
-						tableElement +="<option value='All'>"+"All"+"</option>";						
+						//tableElement +="<option value=''></option>";
+						//tableElement +="<option value='All'>"+"All"+"</option>";						
 						 $.each(getROList, function(key, item){
 						 			if(item['partyIdTo'] == tempId){
 						 				tableElement +="<option selected value='"+item['partyIdTo']+"'>"+item['groupName']+"</option>";

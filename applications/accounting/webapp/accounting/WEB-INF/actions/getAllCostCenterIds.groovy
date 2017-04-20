@@ -92,50 +92,54 @@ parameters.costCenterList=costCenterList;
 context.costCenterList=costCenterList;
 
 condList1=[];
-if(UtilValidate.isNotEmpty(organizationPartyId)){
+/*if(organizationPartyId){
 	condList1.add(EntityCondition.makeCondition("organizationPartyId" , EntityOperator.EQUALS,"Company"));
-}
-if(UtilValidate.isNotEmpty(parameters.glAccountId)){
+}*/
+if(parameters.glAccountId){
 	condList1.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,parameters.glAccountId));
 }
-if(UtilValidate.isNotEmpty(parameters.glFiscalTypeId)){
+if(parameters.glFiscalTypeId){
 	condList1.add(EntityCondition.makeCondition("glFiscalTypeId" , EntityOperator.EQUALS,parameters.glFiscalTypeId));
 }
-if(UtilValidate.isNotEmpty(parameters.paymentId)){
+if(parameters.paymentId){
 	condList1.add(EntityCondition.makeCondition("paymentId" , EntityOperator.EQUALS,parameters.paymentId));
 }
-if(UtilValidate.isNotEmpty(parameters.isPosted)){
+if(parameters.isPosted){
 	condList1.add(EntityCondition.makeCondition("isPosted" , EntityOperator.EQUALS,parameters.isPosted));
 }
-if(UtilValidate.isNotEmpty(costCenterList)){
+if(costCenterList){
 	condList1.add(EntityCondition.makeCondition("costCenterId" , EntityOperator.IN,costCenterList));
 }
-if(UtilValidate.isNotEmpty(parameters.partyId)){
+if(parameters.partyId){
 	condList1.add(EntityCondition.makeCondition("partyId" , EntityOperator.EQUALS,parameters.partyId));
 }
-if(UtilValidate.isNotEmpty(parameters.invoiceId)){
+if(parameters.invoiceId){
 	condList1.add(EntityCondition.makeCondition("invoiceId" , EntityOperator.EQUALS,parameters.invoiceId));
 }
-if(UtilValidate.isNotEmpty(parameters.productId)){
+if(parameters.productId){
 	condList1.add(EntityCondition.makeCondition("productId" , EntityOperator.EQUALS,parameters.productId));
 }
-if(UtilValidate.isNotEmpty(parameters.acctgTransId)){
+if(parameters.acctgTransId){
 	condList1.add(EntityCondition.makeCondition("acctgTransId" , EntityOperator.EQUALS,parameters.acctgTransId));
 }
-if(UtilValidate.isNotEmpty(parameters.workEffortId)){
+if(parameters.workEffortId){
 	condList1.add(EntityCondition.makeCondition("workEffortId" , EntityOperator.EQUALS,parameters.workEffortId));
 }
-if(UtilValidate.isNotEmpty(parameters.shipmentId)){
+if(parameters.shipmentId){
 	condList1.add(EntityCondition.makeCondition("shipmentId" , EntityOperator.EQUALS,parameters.shipmentId));
 }
-if(UtilValidate.isNotEmpty(parameters.fromDate)){
-	condList1.add(EntityCondition.makeCondition("transactionDate" , EntityOperator.GREATER_THAN_EQUAL_TO,fromDate));
+if(fromDate){
+		condList1.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 }
-if(UtilValidate.isNotEmpty(parameters.thruDate)){
-	condList1.add(EntityCondition.makeCondition("transactionDate" , EntityOperator.LESS_THAN_EQUAL_TO,thruDate));
+if(thruDate){
+	condList1.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 }
+
+EntityCondition testCond = EntityCondition.makeCondition(condList1,EntityOperator.AND);
+
 EntityCondition testCond = EntityCondition.makeCondition(condList1);
 Debug.log("testCond============"+testCond);
+
 Set fieldToSelect =UtilMisc.toSet("glAccountId","acctgTransId","acctgTransEntrySeqId","transactionDate","acctgTransTypeId","glFiscalTypeId");
 fieldToSelect.add("invoiceId");
 fieldToSelect.add("paymentId");
@@ -150,4 +154,5 @@ fieldToSelect.add("debitCreditFlag");
 fieldToSelect.add("amount");
 fieldToSelect.add("transDescription");
 List acctgTransEntryList = delegator.findList("AcctgTransAndEntries", testCond, fieldToSelect, null, null, false);
+Debug.log("acctgTransEntryList==========="+acctgTransEntryList.size());
 context.acctgTransEntryList=acctgTransEntryList;
