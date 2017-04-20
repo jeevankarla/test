@@ -114,8 +114,7 @@ conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 invoiceItemDetails = delegator.findList("InvoiceItem", condition, null, null, null, false);
-
-invoiceItems = EntityUtil.filterByCondition(invoiceItemDetails, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_RAWPROD_ITEM"));
+invoiceItems = EntityUtil.filterByCondition(invoiceItemDetails, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, ["INV_RAWPROD_ITEM","INV_FPROD_ITEM"]));
 invoiceAdjustments = EntityUtil.filterByCondition(invoiceItemDetails, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "INV_RAWPROD_ITEM"));
 if(UtilValidate.isNotEmpty(invoiceItems)){
 	for(invoiceItem in invoiceItems){
@@ -142,6 +141,7 @@ if(UtilValidate.isNotEmpty(invoiceItems)){
 		purchaseInvoiceItemList.add(tempMap);
 	}
 }
+context.invoiceItemDetails=invoiceItemDetails;
 context.purchaseInvoiceAdjustmtsMap=purchaseInvoiceAdjustmtsMap
 context.purchaseInvoiceItemList=purchaseInvoiceItemList;
 

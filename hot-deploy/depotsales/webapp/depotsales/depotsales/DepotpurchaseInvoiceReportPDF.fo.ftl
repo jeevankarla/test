@@ -28,10 +28,18 @@ under the License.
 
     <fo:page-sequence master-reference="main">
     <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-    	<fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">PURCHASE INVOICE</fo:block>
+	    <#if invoiceItemDetails?has_content>
+			<#assign invoiceItemTypeId=invoiceItemDetails[0].invoiceItemTypeId?if_exists>
+	    </#if>
+	    <#if invoiceItemTypeId == "INV_RAWPROD_ITEM">
+	    	<fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">PURCHASE INVOICE</fo:block>
+	    </#if>
+	   <#if invoiceItemTypeId == "INV_FPROD_ITEM">
+	    	<fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">SALES INVOICE</fo:block>
+	    </#if> 	
     	<fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED.</fo:block>
     	<fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">${BOAddress?if_exists}</fo:block>
-        <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">E-MAIL:${BOEmail?if_exists}</fo:block>
+        <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">${BOEmail?if_exists}</fo:block>
     </fo:static-content>
     <fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
     <#if purchasePartyDetailsMap?has_content>
