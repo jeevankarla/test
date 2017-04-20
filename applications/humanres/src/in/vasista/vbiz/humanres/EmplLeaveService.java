@@ -961,9 +961,9 @@ public class EmplLeaveService {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		try {
 			if(UtilValidate.isNotEmpty(leaveTypeId)){
-				if(maxFullDayHours<120 || (maxHalfDayHours!=0 && maxHalfDayHours<120)){
+				/*if(maxFullDayHours<120 || (maxHalfDayHours!=0 && maxHalfDayHours<120)){
 					return ServiceUtil.returnError("You have to apply minimum 5 days for leave type : Earned Leave"); 
-				}
+				}*/
 			}
 		}catch(Exception e){
 			Debug.logError("Error while getting valid rules for leave type"+e.getMessage(), module);
