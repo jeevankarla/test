@@ -7676,7 +7676,11 @@ public class ByProductServices {
 		  	String paymentGroupId=null;
 		  
 		  	try {
-		  		
+		  		 GenericValue paymentMethod = delegator.findOne("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId), false);
+		  		  String paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
+		  		 if(UtilValidate.isEmpty(finAccountId)|| "undefined".equals(finAccountId)){
+		  			  finAccountId=(String) paymentMethod.get("finAccountId");
+		  		  }
 		  	
 		     if(UtilValidate.isNotEmpty(paymentIds)){
 		  		  Map serviceCtx = FastMap.newInstance();
@@ -7713,8 +7717,12 @@ public class ByProductServices {
 				
 				for(int i=0;i<paymentIds.size();i++){
 					String eachPaymentId = (String)paymentIds.get(i);
-				  	 Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", eachPaymentId, "statusId", "PMNT_SENT"));
-				  	/*  Map finDepositCtx = FastMap.newInstance();
+					
+					GenericValue payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", eachPaymentId), false);
+					payment.set("paymentMethodId", paymentMethodId);
+		            payment.store();
+				  	 Map<String, Object> pmntResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", eachPaymentId, "statusId", "PMNT_SENT","finAccountId",finAccountId,"depositReceiptFlag","Y"));
+				  	 /*  Map finDepositCtx = FastMap.newInstance();
 				  	   finDepositCtx.put("userLogin", userLogin);
 				  	  finDepositCtx.put("paymentIds", UtilMisc.toList(eachPaymentId));
 				  	  finDepositCtx.put("finAccountId", finAccountId);
