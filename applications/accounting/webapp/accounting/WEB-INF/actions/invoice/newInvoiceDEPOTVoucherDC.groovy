@@ -850,18 +850,19 @@ if(roID){
 			  }
 			  
 			  
-			  if(scheme == "General"){
+			  /*if(scheme == "General"){
 				  
 				  sourcePercentage = (serviceAmt/(quantity*amount))*100;
 				  double perAmt = (eachInvoiceList.amount*sourcePercentage)/100;
 				  
 				  tempMap.put("amount",(eachInvoiceList.amount+perAmt));
-				  }else{
+				  }else{*/
 				  tempMap.put("amount", eachInvoiceList.amount);
-			   }
-				  
+			   //}
+				  //Debug.log("amount=====##########============"+tempMap["amount"]);
 			   tempMap.put("unitPriceIncTax", invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId)+tempMap.get("amount"));
-			  tempMap.put("ToTamount", Math.round(tempMap.get("quantity")*tempMap.get("unitPriceIncTax")));
+			  //Debug.log("unitPriceIncTax=========##########222222====="+tempMap["unitPriceIncTax"]);
+			    tempMap.put("ToTamount", Math.round(tempMap.get("quantity")*tempMap.get("unitPriceIncTax")));
 			  grandTotal = grandTotal+(quantity*amount)+serviceAmt;
 			  
 			 /* double mgpsQty = 0;
@@ -1530,7 +1531,7 @@ if(UtilValidate.isNotEmpty(partyIdentification)){
 
 context.allDetailsMap= allDetailsMap;
 
-grandTotal = "";
+/*grandTotal = "";
 if(OrderHeaderList)
 grandTotal = OrderHeaderList.get("grandTotal");
 
@@ -1538,7 +1539,7 @@ grandTotal = OrderHeaderList.get("grandTotal");
 ////////////Debug.log("grandTotal================="+grandTotal);
 
 
-context.grandTotal = grandTotal;
+context.grandTotal = grandTotal;*/
 
 actualOrderId = orderId;
 destination = "";

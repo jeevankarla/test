@@ -232,17 +232,18 @@ function drawRow(rowData) {
     row.append($("<td align=center>" +  viewButton  +"</td>"));
    
    //For indent Payment
-   
+   /*
    if(rowData.orderTotal != rowData.paidAmt)
    {
     var partyName = "'" + rowData.partyName + "'";
     var methodParam = '\'' + rowData.orderId + '\',\'' + rowData.partyId+'\','+partyName+','+rowData.orderTotal+','+rowData.balance;
     var customMethod = "javascript:showPaymentEntryForIndentPayment("+ methodParam + ")";
-    <#--var inputbox ='<input type=button name="Payment" id=Payment value="Indent Payment" onclick="'+customMethod+'">';
-    row.append($("<td align=center>" +  inputbox  +"</td>"));-->
+    var inputbox ='<input type=button name="Payment" id=Payment value="Indent Payment" onclick="'+customMethod+'">';
+    row.append($("<td align=center>" +  inputbox  +"</td>"));
     }else{
-    //row.append($("<td></td>"));
+    row.append($("<td></td>"));
     }
+    */
     
     if(rowData.orderTotal != rowData.balance)
     {

@@ -134,8 +134,12 @@ if(fromDate){
 if(thruDate){
 	condList1.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 }
-Debug.log("condList1==========="+condList1);
+
 EntityCondition testCond = EntityCondition.makeCondition(condList1,EntityOperator.AND);
+
+EntityCondition testCond = EntityCondition.makeCondition(condList1);
+Debug.log("testCond============"+testCond);
+
 Set fieldToSelect =UtilMisc.toSet("glAccountId","acctgTransId","acctgTransEntrySeqId","transactionDate","acctgTransTypeId","glFiscalTypeId");
 fieldToSelect.add("invoiceId");
 fieldToSelect.add("paymentId");

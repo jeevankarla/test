@@ -1310,7 +1310,7 @@ under the License.
         <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
-        <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+        <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="EmployeelookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
         <field name="transactionDate" title="Adv Date"> <date-time/> </field>
         <!-- <field name="contraFinAccountId"  title="From Account">

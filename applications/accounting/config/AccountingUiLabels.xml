@@ -3068,7 +3068,7 @@
         <value xml:lang="hi_IN">वित्तीय खाता भूमिका ${finAccount.finAccountName} [${finAccountId}] के लिए सम्पादित करे</value>
     </property>
     <property key="AccountingEditFinAccountTransactionFor">
-        <value xml:lang="en">Edit Financial Account ${entryType} Transaction For ${finAccount.finAccountName} [${finAccountId}]</value>
+        <value xml:lang="en">Edit Financial Account Transaction For ${finAccount.finAccountName} [${finAccountId}]</value>
         <value xml:lang="hi_IN">लेनदेन वित्तीय खाते ${finAccount.finAccountName} [${finAccountId}] के लिए सम्पादित करे</value>
     </property>
     <property key="AccountingEditGiftCard">
