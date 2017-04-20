@@ -5445,7 +5445,7 @@ public static Map<String, Object> populateInvoiceItemPrice(DispatchContext dctx,
 	   		 
 	        GenericValue InvoiceItemList = EntityUtil.getFirst(InvoiceItem);
 	   		 
-	      	InvoiceItemList.set("unitPrice",unitPrice);
+	      	InvoiceItemList.set("amount",unitPrice);
 	      	InvoiceItemList.store();
 			}catch(GenericEntityException e){
 				Debug.logError(e, "Failed to Populate Invoice ", module);
