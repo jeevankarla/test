@@ -31,7 +31,6 @@ partythruDate=parameters.partythruDate;
 partyId=parameters.partyId;
 state=parameters.state;
 context.taxType=taxType;
-
 SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
 Timestamp fromDate;
 Timestamp thruDate;
@@ -46,10 +45,11 @@ context.DateList=DateList;
 result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",state,"userLogin",userLogin));
 stateBranchsList=result.get("stateBranchsList");
 branchList=[];
-for(eachBranch in stateBranchsList){
-	branchList.add(eachBranch.partyId);
+if(stateBranchsList){
+	for(eachBranch in stateBranchsList){
+		branchList.add(eachBranch.partyId);
+	}
 }
-
 /*branchName = "";
 if(branchId){
 	branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
@@ -90,10 +90,6 @@ if(!branchList){
 	if(branchId)
 	branchList.add(branchId);
 }*/
-
-
-
-//Debug.log("branchList=====#######========="+branchList);
 daystart = null;
 dayend = null;
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
@@ -160,37 +156,35 @@ if(branchIdForAdd){
 	}
 finalMap=[:];
 conditionList = [];
-conditionList.add(EntityCondition.makeCondition("componentType", EntityOperator.IN,["BED_PUR","CST_PUR","VAT_PUR"]));
+conditionList.add(EntityCondition.makeCondition("componentType", EntityOperator.IN,["EXCISE_DUTY","CST_PUR","VAT_PUR","ENTRY_TAX"]));
 condListb = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 taxPurList = delegator.findList("OrderTaxTypeComponentMap", condListb,null, null, null, false);
-//Debug.log("taxPurList======#########========"+taxPurList);
 
-//Debug.log("taxPercentageList======#########========"+taxPercentageList.componentRate);*/
-if(taxType=="VAT_PUR"){
+if(taxType=="VAT_SALE"){
 	taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"VAT_PUR"));
 	taxPercentageList=taxPercentageList.componentRate;
 	//taxPercentageList=["4","5","5.5","14.5"];
 }
-else if(taxType=="CST_PUR"){
+else if(taxType=="CST_SALE"){
 	taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"CST_PUR"));
 	taxPercentageList=taxPercentageList.componentRate;
 	//taxPercentageList=["2","12.5"];
 }
 else if(taxType=="EXCISE_DUTY"){
-	//taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"BED_PUR"));
-	taxPercentageList=["12.5"];
+	taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"EXCISE_DUTY"));
+	taxPercentageList=taxPercentageList.componentRate;
+	//taxPercentageList=["12.5"];
+	//Debug.log("taxPercentageList=========="+taxPercentageList);
 }
 else if(taxType=="ENTRY_TAX"){
-	taxPercentageList=["1"];
+	taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"ENTRY_TAX"));
+	taxPercentageList=taxPercentageList.componentRate;
+	//taxPercentageList=["1"];
 }
-
 if(branchList){
-	
 	for(eachTaxPer in taxPercentageList){
 		branchWiseMap=[:];
 		for(eachBranch in branchList){
-		
-		
 			invioceItemsList=[];
 			findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
 			condList = [];
@@ -198,7 +192,7 @@ if(branchList){
 				condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
 				condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
 			}
-			condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "PURCHASE_INVOICE"));
+			condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 			/*if(branchList){
 				condList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN,branchList));
 			}*/
@@ -216,12 +210,13 @@ if(branchList){
 			else{
 				condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE","DIES_AND_CHEM_SALE","DEPOT_DIES_CHEM_SALE"]));
 			}
-			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,["INV_RAWPROD_ITEM",taxType]));
+			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,["INV_FPROD_ITEM",taxType]));
 			cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-			fieldsToSelect = ["invoiceId","invoiceTypeId","partyIdFrom","invoiceItemTypeId","itemValue","sourcePercentage","shipmentId","invoiceDate","parentInvoiceItemSeqId"] as Set;
+			//Debug.log("cond=========#########======="+cond);
+			fieldsToSelect = ["invoiceId","invoiceTypeId","partyId","invoiceItemTypeId","itemValue","sourcePercentage","shipmentId","invoiceDate","parentInvoiceItemSeqId","purposeTypeId"] as Set;
 			invoiceIterator = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, findOpts);
 			//invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
-			partyIdFrom="";
+			partyId="";
 			invItemsList=[];
 			while (eachInvoice = invoiceIterator.next()) {
 				invoiceValue=0;
@@ -241,12 +236,13 @@ if(branchList){
 				for(eachInvoiceItem in invoiceItems){
 					invoiceDetailMap=[:];
 					invoiceId=eachInvoiceItem.invoiceId;
+					//Debug.log("eachInvoiceItem============="+eachInvoiceItem);
 					invoiceDetailMap.put("invoiceId", eachInvoiceItem.invoiceId);
 					if(UtilValidate.isNotEmpty(eachInvoiceItem)){
-						partyIdFrom = eachInvoiceItem.partyIdFrom;
-						if(partyIdFrom){
+						partyId = eachInvoiceItem.partyId;
+						if(partyId){
 							conditionList.clear();
-							conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom));
+							conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 							conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
 							cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 							PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
@@ -256,28 +252,58 @@ if(branchList){
 							}
 						}
 						
-						invoiceDetailMap.put("partyIdFrom", partyIdFrom);
+						invoiceDetailMap.put("partyId", partyId);
 					}
-					partyIdFromName="";
-					if(partyIdFrom){
-						partyIdFromName = PartyHelper.getPartyName(delegator, partyIdFrom, false);
+					partyIdName="";
+					if(partyId){
+						partyIdName = PartyHelper.getPartyName(delegator, partyId, false);
 					}
-					invoiceDetailMap.put("partyIdFromName", partyIdFromName);
+					invoiceDetailMap.put("partyIdName", partyIdName);
 					if(eachInvoiceItem.invoiceDate){
 						invoiceDate=UtilDateTime.toDateString(eachInvoiceItem.invoiceDate, "dd/MM/yyyy");
 						invoiceDetailMap.put("invoiceDate", invoiceDate);
 					}
-					if(eachInvoiceItem.shipmentId){
-						shipmentId=eachInvoiceItem.shipmentId;
-						shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
-					}
-					supplierInvoiceId="";
-					if(shipmentList){
-						if(shipmentList.supplierInvoiceId){
-							supplierInvoiceId=shipmentList.supplierInvoiceId;	
+					
+					if((eachInvoiceItem.purposeTypeId=="DEPOT_YARN_SALE") || (eachInvoiceItem.purposeTypeId=="DEPOT_DIES_CHEM_SALE")){
+						orderItemBillings = delegator.findList("OrderItemBilling", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
+						orderItemBillings = EntityUtil.getFirst(orderItemBillings);
+					
+						orderId = orderItemBillings.orderId;
+						context.orderId = orderId;
+						
+						conditionList = [];
+						conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , orderId));
+						conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS , "ORDRITEM_INVENTORY_ID"));
+						cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+						OrderItemAttribute = delegator.findList("OrderItemAttribute",  cond,null, null, null, false );
+						
+						inventoryItemId = "";
+						if(OrderItemAttribute){
+							inventoryItemId = EntityUtil.getFirst(OrderItemAttribute).attrValue;
+						}
+						
+						conditionList.clear();
+						conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId));
+						cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+						ShipmentReceipt = delegator.findList("ShipmentReceipt",  cond,null, null, null, false );
+						
+						if(ShipmentReceipt){
+							shipmentId = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
 						}
 					}
-						invoiceDetailMap.put("supplierInvId", supplierInvoiceId);
+					else if(((eachInvoiceItem.purposeTypeId=="YARN_SALE") || (eachInvoiceItem.purposeTypeId=="DIES_AND_CHEM_SALE")) && eachInvoiceItem.shipmentId){
+						shipmentId=eachInvoiceItem.shipmentId;
+					}
+					if(shipmentId){
+						shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+					}
+					buyerInvoiceId="";
+					if(shipmentList){
+						if(shipmentList.supplierInvoiceId){
+							buyerInvoiceId=shipmentList.supplierInvoiceId;
+						}
+					}
+						invoiceDetailMap.put("buyerInvId", buyerInvoiceId);
 					
 					if(eachInvoiceItem.productId){
 						productId=eachInvoiceItem.productId;
@@ -305,7 +331,7 @@ if(branchList){
 						SURCHARGE=invItemsWithCstSur.itemValue;
 						taxSurChgPer=invItemsWithCstSur.sourcePercentage;
 					}
-					else if(UtilValidate.isNotEmpty(invItemsWithVatSur)){		
+					else if(UtilValidate.isNotEmpty(invItemsWithVatSur)){
 						SURCHARGE=invItemsWithVatSur.itemValue;
 						taxSurChgPer=invItemsWithVatSur.sourcePercentage;
 					}
@@ -325,16 +351,16 @@ if(branchList){
 			if(invItemsList){
 				branchWiseMap.put(eachBranch, invItemsList);
 			}
-		}
-		if(branchWiseMap){
-			finalMap.put(eachTaxPer, branchWiseMap);
-		}
+	   }
+			if(branchWiseMap){
+				finalMap.put(eachTaxPer, branchWiseMap);
+			}
 	}
 	invoiceIterator.close();
 }
 
-context.finalMap=finalMap;
 
+context.finalMap=finalMap;
 
 
 

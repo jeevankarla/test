@@ -200,7 +200,7 @@ under the License.
 	        <#list typeOFListValues as eaValue>
 	         <#assign grandToT = grandToT+eaValue.getValue()>
 	         <#if eaValue.getValue()!=0>
-           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"> &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                                          ${typeBaseList.getKey()?if_exists} as ${eaValue.getKey()} % : &#160;${eaValue.getValue()?if_exists}  </fo:block>
+           <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="10pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;                                             ${typeBaseList.getKey()?if_exists} as ${eaValue.getKey()} % :${eaValue.getValue()?if_exists}  </fo:block>
             </#if>
             </#list>
         </#list>

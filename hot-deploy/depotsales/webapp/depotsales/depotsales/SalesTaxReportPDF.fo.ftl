@@ -38,7 +38,7 @@ under the License.
                 <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
 				<fo:block  keep-together="always" text-align="center"  font-weight="bold"   font-size="12pt" white-space-collapse="false">${reportHeader.description?if_exists} </fo:block>
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOAddress?if_exists}</fo:block>
-        		<fo:block text-align="center" font-size="12pt" font-weight="bold" >PURCHASE Tax REPORT</fo:block>
+        		<fo:block text-align="center" font-size="12pt" font-weight="bold" >SALES TAX REPORT</fo:block>
 				<fo:block text-align="center" font-size="12pt" font-weight="bold" >FOR THE PERIOD ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(daystart, "dd/MM/yyyy")?if_exists} To:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(dayend, "dd/MM/yyyy")?if_exists} </fo:block>
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                 <fo:block text-align="right"    font-size="9pt" >Page - <fo:page-number/></fo:block>
@@ -67,13 +67,13 @@ under the License.
 					            	<fo:block  text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">S.No</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Seller</fo:block>
+					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Buyer</fo:block>
 					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Taxpayer</fo:block>
 					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Identification</fo:block>
 					            	<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Number</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Name of Seller</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Name of Buyer</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice No</fo:block>
@@ -87,19 +87,19 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">code</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Purchase</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Sale</fo:block>
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Value</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Rate of</fo:block>
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Tax</fo:block>
 					            </fo:table-cell>
-					            <#if taxType=="VAT_PUR">
+					            <#if taxType=="VAT_SALE">
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Vat Amount</fo:block>
 					            </fo:table-cell>
 					             </#if>
-					             <#if taxType=="CST_PUR">
+					             <#if taxType=="CST_SALE">
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Cst Amount</fo:block>
 					            </fo:table-cell>
@@ -126,7 +126,7 @@ under the License.
 								<#assign totVal = 0>
 								<#assign totTaxVal = 0>
 								<#assign totTaxSurcharge = 0>
-								<#assign totPurVal = 0>
+								<#assign totSalVal = 0>
 								<#assign finalMapEntryList = finalMap.entrySet()>
 								<#list finalMapEntryList as finalMapEntry>
 								<#assign  taxCharge= finalMapEntry.getKey()>
@@ -136,7 +136,7 @@ under the License.
 								<#assign  invList= Entry.getKey()>
 								<#assign invoiceWiseList = Entry.getValue()>
 								<#list invoiceWiseList as eachEntry>
-								<#assign sr = sr+1> 
+								<#assign sr = sr+1>
 								
 							   <fo:table-row>
 								
@@ -147,10 +147,10 @@ under the License.
 					            	<fo:block  text-align="center" font-size="9pt" white-space-collapse="false">${eachEntry.get("partyTinNo")?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${eachEntry.get("partyIdFromName")?if_exists}</fo:block>
+					            	<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${eachEntry.get("partyIdName")?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${eachEntry.get("supplierInvId")?if_exists}</fo:block>
+					            	<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${eachEntry.get("buyerInvId")?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${eachEntry.get("invoiceDate")?if_exists}</fo:block>
@@ -158,7 +158,7 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${eachEntry.get("productId")?if_exists}</fo:block>
 					            </fo:table-cell>
-					            <#assign totPurVal = totPurVal+eachEntry.get("baseValue")?if_exists>
+					            <#assign totSalVal = totSalVal+eachEntry.get("baseValue")?if_exists>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${eachEntry.get("baseValue")?if_exists}</fo:block>
 					            </fo:table-cell>
@@ -211,7 +211,7 @@ under the License.
 					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false" font-weight="bold"></fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false" font-weight="bold">${totPurVal}</fo:block>
+					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false" font-weight="bold">${totSalVal}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false" font-weight="bold"></fo:block>
@@ -223,7 +223,7 @@ under the License.
 					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false" font-weight="bold">${totVal?if_exists}</fo:block>
 					            </fo:table-cell>
 					             
-							</fo:table-row>
+							</fo:table-row> 
 						</fo:table-body>
 					</fo:table>
 				</fo:block>
