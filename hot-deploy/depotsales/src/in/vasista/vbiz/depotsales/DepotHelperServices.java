@@ -5745,7 +5745,7 @@ public static Map<String, Object> getPriceDifferenceInvoices(DispatchContext dct
         		
     				BigDecimal unitPrice = OrderItemList.getBigDecimal("unitPrice");
         		
-    				if(amount.doubleValue() != unitPrice.doubleValue()){
+    				if(amount.intValue() != unitPrice.intValue()){
     					
     					invoiceList.add(eacinvoiceId);
     					
