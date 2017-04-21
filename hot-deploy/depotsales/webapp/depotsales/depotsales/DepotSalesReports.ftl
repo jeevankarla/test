@@ -61,6 +61,7 @@ $(document).ready(function(){
 	    makeDatePicker1("IndentRegisterEntryFromDate","IndentRegisterEntryThruDate");
 	    makeDatePicker1("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
 	    makeDatePicker1("TaxReportFRO","TaxReportTHRU");
+	    makeDatePicker1("SalesTaxReportFRO","SalesTaxReportTHRU");  
 		$('#ui-datepicker-div').css('clip', 'auto');		
 	});
 function makeDatePicker3(fromDateId ,thruDateId){
@@ -981,28 +982,87 @@ function makeDatePicker3(fromDateId ,thruDateId){
       <#if ReportsType?has_content &&  ReportsType=="TAX_REPORTS">
 			 <tr class="alternate-row">
       	   <form id="TaxReport" name="TaxReport" method="post" action="<@ofbizUrl>taxReport.pdf</@ofbizUrl>" target="_blank">        
-             <td width="10%">Tax Report</td>
+             <td width="10%">Purchase Tax Report</td>
              <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="TaxReportFRO" readonly  name="partyfromDate"/></br>
       		 To</br><input  type="text" size="15pt" id="TaxReportTHRU" readonly  name="partythruDate"/></td>
-                      <td width="15%"><span class='h3'>Branch
+                      <#--<td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId">
 				 	<option value=""></option>
 				     <#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
 				  </select>    								
+			  </span></td>-->
+			  <td width="15%"><span class='h3'>State</br>
+				 <select name="state" id="state">
+				     <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					 </#list> 
+				  </select> 
+			  </span></td>
+			  <td width="15%"><span class='h3'>Purpose Type</br>
+				 <select name="purposeTypeId" id="purposeTypeId">
+				 <option value="ALL">All</option>
+					<option value="YARN_SALE">Yarn</option>
+				    <option value="DIES_AND_CHEM_SALE">Dyes and Chemicals</option>
+				  </select> 
 			  </span></td>
 			   <td width="15%"><span class='h3'>Tax Type</br>
 				 <select name="taxType" id="taxType">
 					<option value="CST_PUR">CST</option>
 				    <option value="VAT_PUR">VAT</option>
+				    <option value="EXCISE_DUTY">Excise Duty</option>
+				    <option value="ENTRY_TAX">Entry Tax</option>
 				  </select> 
 			  </span></td> 
 			  <#--<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="TaxReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>-->	
              <td width="10%"></td>
-             <#--<td width="10%"><input type="submit" value="PDF" class="buttontext"/></td>-->
+             <#--<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('TaxReport', '<@ofbizUrl>taxReport.pdf</@ofbizUrl>');" class="buttontext"/>-->
            </form>
         </tr> 
+        
+        <tr class="alternate-row">
+      	   <form id="SalesTaxReport" name="SalesTaxReport" method="post" action="<@ofbizUrl>SalesTaxReport.pdf</@ofbizUrl>" target="_blank">        
+             <td width="10%">Sales Tax Report</td>
+             <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="SalesTaxReportFRO" readonly  name="partyfromDate"/></br>
+      		 To</br><input  type="text" size="15pt" id="SalesTaxReportTHRU" readonly  name="partythruDate"/></td>
+                      <#--<td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+				 	<option value=""></option>
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>-->
+			  <td width="15%"><span class='h3'>State</br>
+				 <select name="state" id="state">
+				     <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					 </#list> 
+				  </select> 
+			  </span></td>
+			  <td width="15%"><span class='h3'>Purpose Type</br>
+				 <select name="purposeTypeId" id="purposeTypeId">
+				 <option value="ALL">All</option>
+					<option value="YARN_SALE">Yarn</option>
+				    <option value="DIES_AND_CHEM_SALE">Dyes and Chemicals</option>
+				  </select> 
+			  </span></td>
+			   <td width="15%"><span class='h3'>Tax Type</br>
+				 <select name="taxType" id="taxType">
+					<option value="CST_SALE">CST</option>
+				    <option value="VAT_SALE">VAT</option>
+				    <option value="EXCISE_DUTY">Excise Duty</option>
+				    <option value="ENTRY_TAX">Entry Tax</option>
+				  </select> 
+			  </span></td> 
+			  <#--<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="TaxReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>-->	
+             <td width="10%"></td>
+             <#--<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('SalesTaxReport', '<@ofbizUrl>SalesTaxReport.pdf</@ofbizUrl>');" class="buttontext"/>-->
+           </form>
+        </tr> 
+      
+      
       </#if>
       
       
