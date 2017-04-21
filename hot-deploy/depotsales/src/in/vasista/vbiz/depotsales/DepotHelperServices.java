@@ -5745,12 +5745,16 @@ public static Map<String, Object> getPriceDifferenceInvoices(DispatchContext dct
         		
     				BigDecimal unitPrice = OrderItemList.getBigDecimal("unitPrice");
         		
-    				
+    				if(amount.doubleValue() != unitPrice.doubleValue()){
+    					
+    					invoiceList.add(eacinvoiceId);
+    					
+    				}
         		
         		
         	}
         	
-        	invoiceList.add(eacinvoiceId);
+        	
     	
     	 }
     	 
