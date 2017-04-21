@@ -6514,7 +6514,8 @@
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/> -->
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/BankAccountDetail.groovy"/>
             </actions>
@@ -6546,6 +6547,8 @@
     <screen name="PrintBankAccountDetails">
 		<section>
 			<actions>
+			     <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/BankAccountDetail.groovy"/>
             </actions>
 			<widgets>
@@ -6558,6 +6561,8 @@
 	<screen name="PrintChequeBouncingDetailsPdf">
 		<section>
 			<actions>
+				 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/ChequeBouncingDetail.groovy"/>
             </actions>
 			<widgets>

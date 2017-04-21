@@ -21,18 +21,25 @@ finAccountName = parameters.finAccountName
 finAccountTypeId = parameters.finAccountTypeId;
 ownerPartyId = parameters.ownerPartyId;
 
+Timestamp datee;
+def sdf = new SimpleDateFormat("yyyy-MM-dd");
+try {
+	if (UtilValidate.isNotEmpty(date)) {
+		datee = new java.sql.Timestamp(sdf.parse(date).getTime());
+	}
+} catch (ParseException e) {
+	Debug.logError(e, "Cannot parse date string: " + e, "");
+context.errorMessage = "Cannot parse date string: " + e;
+	return;
+}
+Debug.log("ownerpartyId====="+ownerPartyId);
+roId= parameters.roId;
+Debug.log("roid====="+roId);
+context.roId=roId;
+context.ownerPartyId=ownerPartyId;
+context.date=datee;
 if("Y".equals(parameters.noConditionFind)){
 	bankAccountDetailList = [];
-	def sdf = new SimpleDateFormat("yyyy-MM-dd");
-	try {
-		if (UtilValidate.isNotEmpty(date)) {
-			date = new java.sql.Timestamp(sdf.parse(date).getTime());
-		}
-	} catch (ParseException e) {
-		Debug.logError(e, "Cannot parse date string: " + e, "");
-	context.errorMessage = "Cannot parse date string: " + e;
-		return;
-	}
 	conditionList = [];
 	if(finAccountId){
 		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.LIKE, "%"+finAccountId+"%"));
@@ -50,9 +57,10 @@ if("Y".equals(parameters.noConditionFind)){
 	//EntityCondition.makeCondition("finAccountId", EntityOperator.IN, finAccountIdList
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.IN, finAccountIdList));
-	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, date));
+	conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO, datee));
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	List<String> orderBy = UtilMisc.toList("-realisationDate");
+//	Debug.log("as on datecond ===="+cond);
 	finAccountTransList = delegator.findList("FinAccountTrans", cond, null, orderBy, null, false);
 	
 	for(GenericValue finAccountEntry : finAccountList){
@@ -101,7 +109,7 @@ if("Y".equals(parameters.printBankAccountDetails)){
 	printBankAccountDetailList = [];
 	finAccountNameSplit = "";
 	remarks = "";
-	
+//	Debug.log("parameters====="+parameters);
 	Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 	int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
 	if (rowCount < 1) {
