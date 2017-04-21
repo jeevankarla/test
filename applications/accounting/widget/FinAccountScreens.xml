@@ -611,10 +611,9 @@ under the License.
                     			<if-compare operator="equals" value="true" field="hasFinTxEditPermission"/>
                     		</condition>
                     		<widgets>
-                        		<link target="EditFinAccountTrans" text="${uiLabelMap.AccountingFinAccountTransationsAdjustment}" style="buttontext">
-                           			<parameter param-name="finAccountId" from-field="finAccountId"/>
-                           			<parameter param-name="finAccountTransTypeId" value="ADJUSTMENT"/>
-                           			<parameter param-name="entryType" value="Adjustment"/>                           			
+                        		<link target="EditFinAccountTrans" text="Create New FinAccount Trans" style="buttontext">
+                           			<parameter param-name="finAccountId" from-field="finAccountId"/>                           			
+                           			<parameter param-name="entryType" value="Other"/>                           			
                         		</link>
                         		<!-- <link target="EditFinAccountTrans" text="${uiLabelMap.AccountingFinAccountTransationsPayment}" style="buttontext">
                            			<parameter param-name="finAccountId" from-field="finAccountId"/>
