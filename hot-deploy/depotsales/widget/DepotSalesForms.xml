@@ -1172,7 +1172,7 @@
         		<option key="General" description="General Scheme"/>
         	</drop-down>
         </field>
-        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <field name="invoiceId"><text-find ignore-case="true" default-option="equals"/></field>
         <field name="invoiceSequence"><text-find ignore-case="true"/></field>
         <field name="facilityId" title="Facility Id"><text-find ignore-case="true"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
