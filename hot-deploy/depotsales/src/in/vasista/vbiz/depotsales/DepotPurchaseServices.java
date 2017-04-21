@@ -12857,8 +12857,6 @@ public class DepotPurchaseServices{
 			
 			List<GenericValue> OrderItem =null;
 			List<GenericValue> OrderItemDetail =null;
-			
-			String purPoseTypeId = null;
 			try {
 			
 			conList1.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS ,orderId));
@@ -12866,17 +12864,13 @@ public class DepotPurchaseServices{
 		    EntityCondition cond1=EntityCondition.makeCondition(conList1,EntityOperator.AND);
 			OrderItem = delegator.findList("OrderItem", cond1, null, null, null, false);
 			
-			 GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", orderId), false);
-			
-			 purPoseTypeId = OrderHeader.getString("purposeTypeId");
-			 
 			}catch(Exception e1){
       	    Debug.log("Problem in sending OrderItem");
 	        }
 			
 			GenericValue OrderItem1 = EntityUtil.getFirst(OrderItem);
 			
-			if(purPoseTypeId.equals("BRANCH_SALES")){
+			
 			if(UtilValidate.isNotEmpty(givenQuantity)){
 			
 				
@@ -13205,7 +13199,6 @@ public class DepotPurchaseServices{
 							}
 						
 						}
-			}
 			}
 			return result;
 	    
