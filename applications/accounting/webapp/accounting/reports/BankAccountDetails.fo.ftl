@@ -21,9 +21,9 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-			<fo:simple-page-master master-name="main" page-height="11.69in" page-width="8.27in"  margin-bottom=".1in" margin-left="0.5in" margin-right=".3in">
-		        <fo:region-body margin-top="0.8in"/>
-		        <fo:region-before extent="1in"/>
+			<fo:simple-page-master master-name="main" page-height="11.69in" page-width="8.27in"  margin-bottom=".1in" margin-left="0.3in" margin-right=".5in" margin-top=".3in">
+		        <fo:region-body margin-top="1in"/>
+		        <fo:region-before extent="2.5in"/>
 		        <fo:region-after extent="1in"/>        
 		    </fo:simple-page-master>   
 		</fo:layout-master-set>
@@ -40,27 +40,34 @@ under the License.
        <#if printBankAccountDetailList?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-	        		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-                    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-				    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+	        	    <#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+	        		<#if roId?has_content>
+	        		<#assign roHeader = roId+"_HEADER">
+              	 	<#assign roSubheader = roId+"_HEADER01">
+	        		<#assign roreportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
+				    
+				    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roSubheader}, true)>
+				   <#--  <#else>
+				    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>-->
+				    </#if>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
+				    <fo:block   text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${roreportHeader.description?if_exists} </fo:block>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}                             </fo:block>	
         			  
                 	
-                	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size = "12pt" font-family="Arial">BANK ACCOUNT DETAILS</fo:block>
+                	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size = "12pt" font-family="Arial">BANK ACCOUNT DETAILS as on Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(date, "dd/MM/yyyy")}</fo:block>
           		<#-->	<fo:block text-align="center" keep-together="always"  white-space-collapse="false" font-family="Arial" font-size = "10pt"> From ${fromDate} - ${thruDate} </fo:block> -->
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
 	        	<fo:table font-family="Arial">
-		                    <fo:table-column column-width="5%"/>
-		                    <fo:table-column column-width="25%"/>
-		                    <fo:table-column column-width="20%"/>
-		                    <fo:table-column column-width="5%"/>
-		                    <fo:table-column column-width="15%"/>
-		                    <fo:table-column column-width="10%"/>
-		                    <fo:table-column column-width="10%"/>
-		                    <fo:table-column column-width="10%"/>
+		                    <fo:table-column column-width="30pt"/>
+		                    <fo:table-column column-width="155pt"/>
+		                    <fo:table-column column-width="90pt"/>
+		                    <fo:table-column column-width="35pt"/>
+		                    <fo:table-column column-width="85pt"/>
+		                    <fo:table-column column-width="50pt"/>
+		                    <fo:table-column column-width="40pt"/>
+		                    <fo:table-column column-width="70pt"/>
 		                    
 		                    <fo:table-header>
 								<fo:table-row>
@@ -74,10 +81,10 @@ under the License.
 							            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Bank A/c No</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Opr/ In Opr</fo:block>  
+							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Opr/ In Opr(Y/N)</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Bank Balance as per Bank Statement (as on )</fo:block>  
+							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Bank Balance (in Rs) as per Bank Statement (as on )</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
 							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Balance Confirmation is on record?</fo:block>  
@@ -96,7 +103,7 @@ under the License.
 		        <#list printBankAccountDetailList as printBankAccountDetailEntry>
 				 	<fo:table-row>
 	                    <fo:table-cell border-style="solid">
-			            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${slNo}</fo:block>  
+			            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false">${slNo}</fo:block>  
 			            </fo:table-cell>
 			             <fo:table-cell border-style="solid">
 			            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.finAccountName?if_exists}</fo:block>  
@@ -105,24 +112,24 @@ under the License.
 			            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.finAccountCode?if_exists}</fo:block>  
 			            </fo:table-cell>
 			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.isOperative?if_exists}</fo:block>  
+			            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.isOperative?if_exists}</fo:block>  
 			            </fo:table-cell>
-			            <!--  <@ofbizCurrency amount=printBankAccountDetailEntry.balance isoCode=currencyUomId/> -->
+			            <#--   <@ofbizCurrency amount=printBankAccountDetailEntry.balance isoCode=currencyUomId/> -->
 			            <#if printBankAccountDetailEntry.isNegBalance == 'Y' >
 			            	<fo:table-cell border-style="solid">
-			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=printBankAccountDetailEntry.balance isoCode=currencyUomId/> Cr</fo:block>  
+			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balance?if_exists}  Cr</fo:block>  
 			            </fo:table-cell>
 			            <#else>
 			            	<fo:table-cell border-style="solid">
-			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=printBankAccountDetailEntry.balance isoCode=currencyUomId/> Dr</fo:block>  
+			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balance?if_exists}  Dr</fo:block>  
 			            </fo:table-cell>
 			            </#if>
 			            
 			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balanceConfirmation?if_exists}</fo:block>  
+			            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balanceConfirmation?if_exists}</fo:block>  
 			            </fo:table-cell>
 			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.realisationDate?if_exists}</fo:block>  
+			            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.realisationDate?if_exists}</fo:block>  
 			            </fo:table-cell>
 			            <fo:table-cell border-style="solid">
 			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.remarks?if_exists}</fo:block>  
