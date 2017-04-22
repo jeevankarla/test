@@ -343,7 +343,8 @@
 <!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
             		</condition-list>
             	</entity-condition>
-            	  <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findDepositAccounts.groovy"/>
+            	 
+            	    <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findCustDepositAccounts.groovy"/>
             </actions>
             <widgets>
             	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
@@ -369,9 +370,15 @@
 									<parameter param-name="noConditionFind" value="Y"/>
 									</link>
 								</container> 
-								<screenlet title="List Deposit Account">				
-									 <include-form name="ListAdvDepositPaidAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
-								</screenlet>
+								<platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/CustomEmployeeAdvance.ftl"/></html>
+                                </platform-specific>
+                                <platform-specific>
+									<html>
+										<html-template
+											location="component://accounting/webapp/accounting/finaccounttrans/empAdvDisbursement.ftl"></html-template>
+									</html>
+								</platform-specific>
 							</widgets>      
 	                   	</section>
                    </decorator-section>

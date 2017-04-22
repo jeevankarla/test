@@ -1898,10 +1898,22 @@ under the License.
       <field name="custRequestTypeId" type="id"></field>
       <field name="custRequestCategoryId" type="id"></field>
       <field name="statusId" type="id"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="finstatusId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="entryTypeId" type="id"></field>
+       <field name="finAccountTypeId" type="id"></field>
+      <field name="finAccountTransTypeId" type="id"></field>
+      <field name="accParentTypeId" type="id"></field>
+      <field name="finAccountParentId" type="id"></field>
+      <field name="segmentId" type="id"></field>
+      <field name="costCenterId" type="id"></field>
+      <field name="referenceNumber" type="id"></field>
       <field name="severity" type="id"></field>
       <field name="fromPartyId" type="id"></field>
       <field name="priority" type="numeric"></field>
       <field name="custRequestDate" type="date-time">
+     
         <description>
           When the customer (or whoever) submitted the request, maybe out of OFBiz : comming by mail, email, etc.
         </description>
