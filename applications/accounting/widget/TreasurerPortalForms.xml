@@ -2719,6 +2719,11 @@ under the License.
              	<parameter param-name="paymentId"/>
             </hyperlink>
         </field>
+        <field use-when="(&quot;${paymentMethodTypeId}&quot;==&quot;CHEQUE_PAYOUT&quot;)&amp;&amp;(&quot;${statusId}&quot;!=&quot;PMNT_VOID&quot;)" name="cancel Cheque" widget-style="buttontext" >
+            <hyperlink target="javascript:cancelAccountingPayments('${paymentId}',0);" description="cancel Cheque" target-type="plain">
+             	
+            </hyperlink>
+        </field>
     </form>
     
     <form name="FindTreasurerReceipts" type="single" target="FindTreasurerReceipts"
