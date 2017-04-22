@@ -49,4 +49,7 @@ finAccountTypelist.each{ eachfinAcc ->
 	finAccountTypeJSON.put(eachfinAcc.finAccountTypeId,finAccIdsJSON);
 }
 context.finAccountTypeJSON=finAccountTypeJSON;
-
+glAccountconditionList = [];
+glAccountconditionList.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, UtilMisc.toList("EXPENSE","INCOME", "REVENUE", "SGA_EXPENSE")));
+List glAccountList = delegator.findList("GlAccount", EntityCondition.makeCondition(glAccountconditionList, EntityOperator.AND), null, null, null, false);
+context.glAccountList = glAccountList;
