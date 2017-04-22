@@ -21,7 +21,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-			<fo:simple-page-master master-name="main" page-height="11.69in" page-width="8.27in"  margin-bottom=".1in" margin-left="0.3in" margin-right=".5in" margin-top=".8in">
+			<fo:simple-page-master master-name="main" page-height="11.69in" page-width="8.27in"  margin-bottom=".1in" margin-left="0.3in" margin-right=".5in" margin-top=".3in">
 		        <fo:region-body margin-top="1in"/>
 		        <fo:region-before extent="2.5in"/>
 		        <fo:region-after extent="1in"/>        
@@ -51,7 +51,7 @@ under the License.
 				    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>-->
 				    </#if>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
-				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${roreportHeader.description?if_exists} </fo:block>
+				    <fo:block   text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${roreportHeader.description?if_exists} </fo:block>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}                             </fo:block>	
         			  
                 	
