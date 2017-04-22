@@ -197,5 +197,5 @@ function cancelForm(){
     </table>
   </form>
 <#else>
-  <h3>No Loans Found...</h3>
+  <h3>No Records Found...</h3>
 </#if>
