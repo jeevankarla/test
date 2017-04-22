@@ -163,6 +163,7 @@ under the License.
             <exclude field-name="performedByPartyId"/>
         </auto-attributes>
         <attribute name="glAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
    		<attribute name="segmentId" type="String" mode="IN" optional="true"/>
     </service>
      <service name="createFinAccountTransIdForInv" engine="simple" default-entity-name="FinAccountTrans"
@@ -186,6 +187,7 @@ under the License.
             <exclude field-name="performedByPartyId"/>
         </auto-attributes>
         <attribute name="glAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
         <attribute name="segmentId" type="String" mode="IN" optional="true"/>
         <attribute name="entryType" type="String" mode="IN" optional="true"/>
         <attribute name="contraFinAccountId" type="String" mode="IN" optional="true"/>

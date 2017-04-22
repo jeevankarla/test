@@ -296,6 +296,7 @@ under the License.
 			<set field="createFinAccountTransMap.paymentId" from-field="parameters.paymentId"/>
 			<set field="createFinAccountTransMap.statusId" from-field="parameters.statusId"/>				
 			<set field="createFinAccountTransMap.glReconciliationId" from-field="parameters.glReconciliationId"/>
+			<set field="createFinAccountTransMap.invoiceId" from-field="parameters.invoiceId"/>
 			<call-service service-name="createFinAccountTrans" in-map-name="createFinAccountTransMap">
 				<result-to-result result-name="finAccountTransId"/>
 			</call-service>

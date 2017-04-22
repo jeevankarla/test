@@ -196,8 +196,8 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="finAccountCode" title ="Head Office Code"><display/></field>
-        <field name="finAccPrefix" title ="Head Office Prefix"><display/></field>
+        <field name="finAccountCode" title ="Head Office Code"><display/><hidden/></field>
+        <field name="finAccPrefix" title ="Head Office Prefix"><display/><hidden/></field>
       <!--   <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field> -->
        <!--  <field name="organizationPartyId">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
@@ -214,6 +214,18 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field> -->
+         <field name="createNewContra" title="Fund Transfers" widget-style="buttontext">
+        	<hyperlink target="EditFinAccountTrans" description="Fund Transfers" target-window="_BLANK"  also-hidden="false">
+	            <parameter param-name="finAccountId" from-field="finAccountId"/>                           			
+	            <parameter param-name="entryType" value="Contra"/>
+            </hyperlink>
+        </field> 
+         <field name="createNewOther" title="Other adjustment" widget-style="buttontext">
+        	<hyperlink target="EditFinAccountTrans" description="Other Adjustment" target-window="_BLANK"  also-hidden="false">
+	            <parameter param-name="finAccountId" from-field="finAccountId"/>                           			
+	            <parameter param-name="entryType" value="Other"/>
+            </hyperlink>
+        </field> 
     </form> 
     <form name="ListSchemeAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
