@@ -76,15 +76,15 @@ under the License.
 	//endof qtip;
 
    function togglecustRequestId(master) {
-        var loans = jQuery("#custRequestList :checkbox[name='custRequestIds']");
-        jQuery.each(loans, function() {
+        var custRequestIds = jQuery("#custRequestList :checkbox[name='custRequestIds']");
+        jQuery.each(custRequestIds, function() {
             this.checked = master.checked;
         });
     }
-    var loans = jQuery("#custRequestList :checkbox[name='loans']");
+    var custRequestIds = jQuery("#custRequestList :checkbox[name='custRequestIds']");
     // check if any checkbox is checked
     var anyChecked = false;
-    jQuery.each(loans, function() {
+    jQuery.each(custRequestIds, function() {
         if (jQuery(this).is(':checked')) {
             anyChecked = true;
             return false;
@@ -103,7 +103,7 @@ function cancelForm(){
 		  	
 	}
 	
-	function loanDisbursement(current){
+	function custRequestIdDisbursement(current){
     	jQuery(current).attr( "disabled", "disabled");
     	var index = 0;
     	var custRequestList = jQuery("#custRequestList :checkbox[name='custRequestIds']");
@@ -142,7 +142,7 @@ function cancelForm(){
 </form>
   <form name="custRequestList" id="custRequestList"  method="post" action="">
     <div align="right">
-    <input id="paymentButton" type="button"  onclick="javascript:loanDisbursement(this);" value="Make Disbursement" />
+    <input id="paymentButton" type="button"  onclick="javascript:custRequestIdDisbursement(this);" value="Make Disbursement" />
 	 </div>
     <table class="basic-table hover-bar" cellspacing="0">
       <thead>
@@ -161,7 +161,7 @@ function cancelForm(){
           <td>CustRequestDate</td>
           <td>Reason</td> 
           <#--<td>Voucher</td>-->
-          <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllLoans" name="checkAllLoans" onchange="javascript:togglecustRequestId(this);"/></td>
+          <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllcustRequestIds" name="checkAllcustRequestIds" onchange="javascript:togglecustRequestId(this);"/></td>
         </tr>
       </thead>
       <tbody>
@@ -187,7 +187,7 @@ function cancelForm(){
               <td>${(cust.custRequestDate)?if_exists}</td>
               <td>${(cust.reason)?if_exists}</td>
               
-              <td align="right"><input type="checkbox" id="custRequestId_${employeeLoan_index}" name="custRequestIds" value="${cust.custRequestId}" /></td>
+              <td align="right"><input type="checkbox" id="custRequestId_${employeecustRequestId_index}" name="custRequestIds" value="${cust.custRequestId}" /></td>
             </tr>
             </#list>
             <#-- toggle the row color -->
