@@ -1034,15 +1034,6 @@ under the License.
         <response name="error" type="view" value="EditCustomTimePeriod"/>
     </request-map>
 
-     <request-map uri="createLoanDisbursement">
-     	<security https="true" auth="true"/>
-     	<event type="java"  path="org.ofbiz.accounting.finaccount.FinAccountServices"  invoke="createLoanDisbursement" global-transaction="true"/>
-     	<response name="success" type="request-redirect" value="FindEmployeeAdv">
-        	<redirect-parameter name="custRequestId"/>
-        </response>     	
-        <response name="error" type="request-redirect" value="FindEmployeeAdv">
-        </response>
-    </request-map>
     
     <!-- =============== Fixed Asset mapping =================-->
     <request-map uri="ListFixedAssets"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssets"/></request-map>
