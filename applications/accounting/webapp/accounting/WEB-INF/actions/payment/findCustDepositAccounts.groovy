@@ -34,17 +34,51 @@
  import org.ofbiz.entity.condition.EntityOperator;
  
 
+ AccDate=parameters.AccDate;
+ Timestamp Accdate = null;
+ Timestamp AccDateStart = null;
+ Timestamp AccDateEnd = null;
+ if(UtilValidate.isNotEmpty(AccDate)){
+ if(AccDate){
+		 SimpleDateFormat sdfo = new SimpleDateFormat("dd-MM-yyyy");
+	 try {
+		 Accdate = UtilDateTime.toTimestamp(sdfo.parse(parameters.AccDate));
+			 } catch (ParseException e) {
+			 Debug.logError(e, "Cannot parse date string: " + AccDate, "");
+	 }
+ }
+ AccDateStart = UtilDateTime.getDayStart(Accdate);
+ AccDateEnd = UtilDateTime.getDayEnd(Accdate);
+ }
+ 
+ amount = "";
+ if(parameters.amount){
+ amount = parameters.amount;
+ }
+ fromDate = "";
+ 
 conditionList = [];
 if(parameters.custRequestId){
 conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, parameters.custRequestId));
 }
 conditionList.add(EntityCondition.makeCondition("finstatusId", EntityOperator.EQUALS, "CREATED"));
-if(parameters.AccDate){
-conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.EQUALS, parameters.AccDate));
+if(parameters.finAccountTypeId){
+conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, parameters.finAccountTypeId));
 }
+
+if(amount){
+
+ BigDecimal amount = new BigDecimal(amount);
+	conditionList.add(EntityCondition.makeCondition("amount", EntityOperator.EQUALS, amount));
+	}
+
+if(AccDate){
+	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO,AccDateStart));
+	conditionList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, AccDateEnd));
+}
+
 condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 custRequestList = delegator.findList("CustRequest", condition, null, null, null, true);
- 
  context.custRequestList = custRequestList;
 
  
