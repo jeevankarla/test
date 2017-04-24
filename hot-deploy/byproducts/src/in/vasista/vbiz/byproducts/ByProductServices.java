@@ -5983,7 +5983,7 @@ public class ByProductServices {
                     return ServiceUtil.returnError("Error cancelling payment of retailer ");
 				}
     			// if it is from NonRouteMakting Then return from After payment void
-    			if(isNonRouteMrktingChqReturn){
+    			/*if(isNonRouteMrktingChqReturn){
     				return result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("partyIdFrom"));
         		}
     			if(chequeReturns.equals("Y")){
@@ -5998,18 +5998,19 @@ public class ByProductServices {
     				createInvoice.put("description", "Cheque Bounce");
     				createInvoice.put("invoiceDate", cancelDate);
     				createInvoiceResult = ByProductNetworkServices.createFacilityInvoice(ctx, createInvoice);
+    				
     				if (ServiceUtil.isError(createInvoiceResult)) {
-	                	Debug.logError("Error creating invoice for the retailer"+payment.get("facilityId"), module);	
-	                    return ServiceUtil.returnError("Error creating invoice for the retailer"+payment.get("facilityId"));
+	                	Debug.logError("Error creating invoice for the retailer"+payment.get("partyIdFrom"), module);	
+	                    return ServiceUtil.returnError("Error creating invoice for the retailer"+payment.get("partyIdFrom"));
     				}
-    			}
+    			}*/
     			
     			
     		}catch(Exception e){
     			Debug.logError("Unable to cancel the payment"+e, module);
         		return ServiceUtil.returnError("Unable to cancel the payment");
     		}
-    		result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("facilityId"));
+    		result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("partyIdFrom"));
     		
           	return result;
 	    }

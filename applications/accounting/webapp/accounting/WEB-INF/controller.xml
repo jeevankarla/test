@@ -2954,6 +2954,13 @@ under the License.
         <response name="success" type="view" value="EditAgreementRoles"/>
         <response name="error" type="view" value="EditAgreementRoles"/>
     </request-map>
+    <!-- for cancelling cheque -->
+    <request-map uri="cancelPaymentForChequeReturns"> 
+     	<security https="true" auth="true"/>
+     	<event type="service" invoke="cancelPaymentForChequeReturn"/>    	
+     	<response name="success" type="view" value="FindTreasurerPayments"/>
+    	<response name="error" type="view" value="FindTreasurerPayments"/>
+    </request-map>
     <request-map uri="voidPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="voidPayment"/>

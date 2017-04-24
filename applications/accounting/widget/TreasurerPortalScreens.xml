@@ -4313,6 +4313,9 @@
                                  			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
                                     	</link>
                                     </container>
+                                    	<platform-specific>
+											<html><html-template location="component://byproducts/webapp/byproducts/byproducts/ChequeReturnsCancel.ftl"/></html>		                                     					
+                          				</platform-specific>	
                                         <include-form name="ListTreasurerPayments"  location="component://accounting/widget/TreasurerPortalForms.xml"/>
                                     </decorator-section>
                                 </decorator-screen>
