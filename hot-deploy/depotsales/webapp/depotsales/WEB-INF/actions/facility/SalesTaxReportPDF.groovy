@@ -22,19 +22,18 @@ import org.ofbiz.service.ServiceUtil;
 import java.util.Map.Entry;
 
 
-
-//branchId=parameters.branchId;
+branchId=parameters.branchIdOne;
 taxType=parameters.taxType;
 purposeTypeId=parameters.purposeTypeId;
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
 partyId=parameters.partyId;
-state=parameters.state;
+state=parameters.stateId;
+searchType=parameters.searchTypeId;
 context.taxType=taxType;
 SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
 Timestamp fromDate;
 Timestamp thruDate;
- 
 DateList=[];
 DateMap = [:];
 DateMap.put("partyfromDate", partyfromDate);
@@ -42,54 +41,78 @@ DateMap.put("partythruDate", partythruDate);
 DateList.add(DateMap);
 context.DateList=DateList;
 
-result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",state,"userLogin",userLogin));
-stateBranchsList=result.get("stateBranchsList");
-branchList=[];
-if(stateBranchsList){
-	for(eachBranch in stateBranchsList){
-		branchList.add(eachBranch.partyId);
-	}
-}
-/*branchName = "";
-if(branchId){
-	branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
-	branchName = branch.get("groupName");
-	DateMap.put("branchName", branchName);
-}
-branchList = [];
 branchIdForAdd="";
-condListb = [];
-if(branchId){
-	condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
-	condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
-	condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
-	PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
- 
-	branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-}
-if(!branchList){
-	condListb2 = [];
-	//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
-	condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
-	condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
-	condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-	cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
-	
-	PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
-	if(PartyRelationship1){
-	branchDetails = EntityUtil.getFirst(PartyRelationship1);
-	branchIdForAdd=branchDetails.partyIdFrom;
+if(searchType=="BY_STATE"){
+	if(!state){
+		conditionList=[];
+		conditionList.add(EntityCondition.makeCondition("geoId", EntityOperator.LIKE,"IN-%"));
+		conditionList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+		statesList = delegator.findList("Geo",EntityCondition.makeCondition(conditionList,EntityOperator.AND),null,null,null,false);
+		indianStates = EntityUtil.getFieldListFromEntityList(statesList, "geoId", true);
+		conditionList.clear();
+	}else{
+		conditionList=[];
+		conditionList.add(EntityCondition.makeCondition("geoId", EntityOperator.EQUALS,state));
+		conditionList.add(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS,"STATE"));
+		statesList = delegator.findList("Geo",EntityCondition.makeCondition(conditionList,EntityOperator.AND),null,null,null,false);
+		indianStates = EntityUtil.getFieldListFromEntityList(statesList, "geoId", true);
+	}
+	branchList=[];
+	for(eachState in indianStates){
+		result = dispatcher.runSync("getRegionalAndBranchOfficesByState",UtilMisc.toMap("state",eachState,"userLogin",userLogin));
+		stateBranchsList=result.get("stateBranchsList");
+		
+		for(eachBranch in stateBranchsList){
+			branchList.add(eachBranch.partyId);
+		}
 	}
 }
-else{
+else if(searchType=="BY_BO_RO"){
 	if(branchId){
-	branchIdForAdd=branchId;
+		branchIdForAdd=branchId;
+		branchName = "";
+			branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
+			branchName = branch.get("groupName");
+			DateMap.put("branchName", branchName);
+			branchList = [];
+			condListb = [];
+				condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+				condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+				condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+				PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+				branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+			if(!branchList){
+				condListb2 = [];
+				//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
+				condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+				condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+				condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+				cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+				
+				PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+				if(PartyRelationship1){
+				branchDetails = EntityUtil.getFirst(PartyRelationship1);
+				branchIdForAdd=branchDetails.partyIdFrom;
+				}
+			}
+			if(!branchList){
+				if(branchId)
+				branchList.add(branchId);
+			}
 	}
+	else{
+		List<GenericValue> partyClassificationList = null;
+		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+		if(partyClassificationList){
+			branchList=[];
+			for (eachList in partyClassificationList) {
+				partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
+				branchList.addAll(eachList.get("partyId"));
+			}
+		}
+	}
+
 }
-if(!branchList){
-	if(branchId)
-	branchList.add(branchId);
-}*/
 daystart = null;
 dayend = null;
 if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
