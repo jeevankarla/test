@@ -45,7 +45,6 @@ under the License.
 		<!-- <attribute name="depositPartyId" mode="IN" optional="false" type="String"/> -->
 		<attribute name="entryType" mode="IN" optional="true" type="String"/>
 		<attribute name="transactionDate" mode="IN" optional="true" type="Timestamp"/>
-		<attribute name="finAccountIdTo" mode="IN" optional="false" type="String"/>
 		<attribute name="acctParentTypeId" mode="IN" optional="true" type="String"/>
 		<attribute name="finAccountTransTypeId" mode="IN" optional="false" type="String"/>
 		<attribute name="amount" mode="IN" optional="false" type="BigDecimal"/>
@@ -53,7 +52,7 @@ under the License.
 		<attribute name="inFavor" mode="IN" optional="true" type="String"/>
 		<attribute name="comments" mode="IN" optional="true" type="String"/>
 		<attribute name="finAccountParentId" mode="IN" optional="true" type="String"/>
-		<attribute name="finAccountId" mode="OUT" optional="true" type="String"/>
+		<attribute name="custRequestId" mode="OUT" optional="true" type="String"/>
 		<attribute name="costCenterId" mode="IN" optional="true" type="String"/>
 		<attribute name="segmentId" mode="IN" optional="true" type="String"/>
     </service>
