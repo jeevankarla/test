@@ -368,6 +368,103 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 		}*/
 		tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.IN , paymentIds)  , null, null, null, false );
 		tempprintPaymentsList.each{paymentRecipt->
+			paymentIds=EntityUtil.getFirst(tempprintPaymentsList);
+			paymentTypeId = paymentIds.paymentTypeId;
+			condList=[];
+			condList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
+			cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+			paymentIdList = delegator.findList("PaymentType", cond,UtilMisc.toSet("paymentTypeId","parentTypeId"), null, null, false);
+			paymentIds=EntityUtil.getFirst(paymentIdList);
+				paymentTypeId = paymentIds.paymentTypeId;
+				parentTypeId = paymentIds.parentTypeId;
+			if(parentTypeId == "DISBURSEMENT" || parentTypeId == "ADVANCES_PAYOUT"){
+				condList1=[];
+				condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId));
+				condList1.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
+				cond = EntityCondition.makeCondition(condList1, EntityOperator.AND);
+				paymentIdList = delegator.findList("Payment", cond, null, null, null, false);
+				partyIdFromList=EntityUtil.getFirst(paymentIdList);
+				branchId = partyIdFromList.partyIdFrom;
+			}
+			if(parentTypeId == "RECEIPT" || parentTypeId == "ADVANCES_PAYIN"){
+				condList1=[];
+				condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId));
+				condList1.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
+				cond = EntityCondition.makeCondition(condList1, EntityOperator.AND);
+				paymentIdList = delegator.findList("Payment", cond, null, null, null, false);
+				partyIdFromList=EntityUtil.getFirst(paymentIdList);
+				branchId = partyIdFromList.partyIdTo;
+			}
+			branchIdForAdd="";
+			branchList = [];
+			condListb = [];
+			if(branchId){
+			condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+			condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+			condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+			
+			PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+			
+			branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+			if(!branchList){
+				condListb2 = [];
+				condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+				condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+				condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+				cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+				
+				PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+				if(PartyRelationship1){
+				branchDetails = EntityUtil.getFirst(PartyRelationship1);
+				branchIdForAdd=branchDetails.partyIdFrom;
+				}
+			}
+			else{
+				if(branchId){
+				branchIdForAdd=branchId;
+				}
+			}
+			if(!branchList)
+			branchList.add(branchId);
+			}
+			
+			branchBasedWeaversList = [];
+			condListb1 = [];
+			if(branchId){
+			condListb1.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+			condListb1.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+			condListb = EntityCondition.makeCondition(condListb1, EntityOperator.AND);
+			
+			PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+			branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
+			
+			if(!branchBasedWeaversList)
+			branchBasedWeaversList.add(branchId);
+			}
+			BOAddress="";
+			if(branchIdForAdd){
+			branchContextForADD=[:];
+			branchContextForADD.put("branchId",branchIdForAdd);
+			try{
+				resultCtx = dispatcher.runSync("getBoHeader", branchContextForADD);
+				if(ServiceUtil.isError(resultCtx)){
+					Debug.logError("Problem in BO Header ", module);
+					return ServiceUtil.returnError("Problem in fetching financial year ");
+				}
+				if(resultCtx.get("boHeaderMap")){
+					boHeaderMap=resultCtx.get("boHeaderMap");
+					
+					if(boHeaderMap.get("header0")){
+						BOAddress=boHeaderMap.get("header0");
+					}
+				}
+			}catch(GenericServiceException ee){
+				Debug.logError(ee, module);
+				return ServiceUtil.returnError(ee.getMessage());
+			}
+			context.BOAddress=BOAddress;
+			}
+			
 			tempprintPaymentMap=[:];
 			tempprintPaymentMap.putAll(paymentRecipt);
 			totalAmount=paymentRecipt.amount;
