@@ -793,5 +793,10 @@ under the License.
 		<attribute name="finAccountTransId" mode="INOUT" optional="false" type="String"/>
 		<attribute name="chequeBounce" type="String" mode="IN" optional="false"/>
         <attribute name="returnDate" type="String" mode="IN" optional="true"/>
-    </service>    
+    </service>
+    <service name="cancelCustRequest" engine="java" location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="cancelCustRequest">
+        <description>cancel CustRequest.</description>
+		<attribute name="custRequestId" type="String" mode="IN" optional="true"/>
+		
+    </service>   
 </services>

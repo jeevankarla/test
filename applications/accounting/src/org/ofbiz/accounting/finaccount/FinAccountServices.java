@@ -311,6 +311,7 @@ public class FinAccountServices {
              	newTransAttr.set("amount", amount);
              	newTransAttr.set("referenceNumber", contraRefNum);
              	newTransAttr.set("reason", comments);
+             	newTransAttr.set("createdByUserLogin", userLogin.get("userLoginId"));
              	delegator.createSetNextSeqId(newTransAttr); 
              	delegator.createOrStore(newTransAttr);
              	custRequestId = (String) newTransAttr.get("custRequestId");
@@ -1799,6 +1800,24 @@ public static String createEmpAdvDisbursement(HttpServletRequest request, HttpSe
     request.setAttribute("custRequestId",custRequestId);
     result.put("finAccountTransIds", finAccountTransIds);
     return "success"; 
+}
+
+public static Map<String, Object> cancelCustRequest(DispatchContext ctx, Map<String, ? extends Object> context){
+  	Delegator delegator = ctx.getDelegator();
+  	GenericValue userLogin = (GenericValue) context.get("userLogin");
+  	LocalDispatcher dispatcher = ctx.getDispatcher();
+  	String custRequestId = (String)context.get("custRequestId");
+  	Map<String, Object> result =  FastMap.newInstance();
+	try{
+		GenericValue custRequest = delegator.findOne("CustRequest", UtilMisc.toMap("custRequestId", custRequestId), false);
+		custRequest.set("finstatusId", "CANCELLED");
+		custRequest.store();
+	}catch(Exception e){
+		Debug.logError("Unable to cancel the custRequestId"+e, module);
+		return ServiceUtil.returnError("Unable to cancel the custRequestId");
+	}	
+	result = ServiceUtil.returnSuccess("CustRequest successfully cancelled ");
+  	return result;
 }
 
 }

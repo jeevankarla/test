@@ -2774,7 +2774,11 @@ under the License.
         <event type="service" invoke="createPaymentAndFinAccountTrans"/>
         <response name="success" type="view" value="PortalPaymentOverview"/>
     </request-map>
-    
+    <request-map uri="cancelRequest">
+        <event type="service" invoke="cancelCustRequest"/>
+        <response name="success" type="view" value="FindEmployeeAdv"/>
+        <response name="error" type="view" value="FindEmployeeAdv"/> 
+    </request-map>
     <request-map uri="OutgoingDepositsPaid">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="OutgoingDepositsPaid"/>
