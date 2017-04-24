@@ -402,7 +402,7 @@ under the License.
             </drop-down>
         </field>
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field>
-         <field name="invoiceId" required-field="true" use-when="&quot;${entryType}&quot;==&quot;Other&quot;">
+         <field name="invoiceId" use-when="&quot;${entryType}&quot;==&quot;Other&quot;">
             <lookup target-form-name="LookupInvoice" >
                 <sub-hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/>
             </lookup>
@@ -431,10 +431,10 @@ under the License.
             </drop-down>
         </field>      
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Other&quot;"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field>
-        <field name="glAccountId" use-when="&quot;${entryType}&quot;==&quot;Other&quot;">
+        <field name="glAccountId" use-when="&quot;${entryType}&quot;==&quot;Other&quot;" event="onclick" action="javascript:getGLAccounts();">
             <drop-down allow-empty="true">
-             <list-options key-name="glAccountId" list-name="glAccountList" description="${glAccountId} - ${description}"/> 
-            </drop-down>
+             <list-options key-name="glAccountId" list-name="glAccountList" description="${description}"/> 
+            </drop-down> 
         </field>   
         <field name="comments"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
