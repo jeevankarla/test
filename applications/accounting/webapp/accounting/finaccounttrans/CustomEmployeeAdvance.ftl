@@ -160,6 +160,7 @@ function cancelForm(){
           <td>ReferenceNumber</td>
           <td>CustRequestDate</td>
           <td>Reason</td> 
+           <td>Cancel</td>
           <#--<td>Voucher</td>-->
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllcustRequestIds" name="checkAllcustRequestIds" onchange="javascript:togglecustRequestId(this);"/></td>
         </tr>
@@ -186,7 +187,9 @@ function cancelForm(){
               <td>${(cust.referenceNumber)?if_exists}</td>
               <td>${(cust.custRequestDate)?if_exists}</td>
               <td>${(cust.reason)?if_exists}</td>
-              
+              <td>
+              <a href="<@ofbizUrl>cancelRequest?custRequestId=${cust.custRequestId?if_exists}</@ofbizUrl>">Cancel</a>
+            </td>
               <td align="right"><input type="checkbox" id="custRequestId_${employeecustRequestId_index}" name="custRequestIds" value="${cust.custRequestId}" /></td>
             </tr>
             </#list>
