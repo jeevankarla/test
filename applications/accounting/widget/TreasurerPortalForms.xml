@@ -311,6 +311,11 @@ under the License.
         <field name="custRequestId" position="1" title="CustRequestId"><text-find/></field>
         <field name="AccDate" position="2" title="Date" event="onclick" action="javascript:datepick2();" id-name ="AccDate"><text  size="12"/></field> 
         <field name="amount" position="2"><text/></field>
+        <field name="costCenterId" title="RO" position="2">
+        	<drop-down allow-empty="false">
+        		<list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
+         	</drop-down>
+        </field>
         <field name="finAccountTypeId" position="1" title="Advance Type Id">
         	<drop-down allow-empty="true">
         		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>

@@ -61,6 +61,9 @@ conditionList = [];
 if(parameters.custRequestId){
 conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.EQUALS, parameters.custRequestId));
 }
+if(parameters.costCenterId){
+	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, parameters.costCenterId));
+	}
 conditionList.add(EntityCondition.makeCondition("finstatusId", EntityOperator.EQUALS, "CREATED"));
 if(parameters.finAccountTypeId){
 conditionList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, parameters.finAccountTypeId));
