@@ -1815,7 +1815,8 @@ public static Map<String, Object> cancelCustRequest(DispatchContext ctx, Map<Str
 	}catch(Exception e){
 		Debug.logError("Unable to cancel the custRequestId"+e, module);
 		return ServiceUtil.returnError("Unable to cancel the custRequestId");
-	}		
+	}	
+	result = ServiceUtil.returnSuccess("CustRequest successfully cancelled ");
   	return result;
 }
 
