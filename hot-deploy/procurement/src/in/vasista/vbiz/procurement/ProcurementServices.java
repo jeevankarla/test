@@ -8226,7 +8226,7 @@ public static Map<String, Object> approveValidationEntries(DispatchContext dctx,
 		      String partyId = (String) context.get("partyId");
 		      String finAccountCode = (String)context.get("finAccountCode");
 		      String finAccountName = (String)context.get("finAccountName");
-		      String finAccountBranch = (String)context.get("finAccountBranch");
+		      String finAccountBranch = (String)context.get("finAccountBranch1");
 		      String ifscCode = (String)context.get("ifscCode");
 		      Map result = ServiceUtil.returnSuccess();
 		      
