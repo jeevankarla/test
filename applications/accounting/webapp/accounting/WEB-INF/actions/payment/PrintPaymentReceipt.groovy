@@ -368,32 +368,14 @@ if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque")
 		}*/
 		tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.IN , paymentIds)  , null, null, null, false );
 		tempprintPaymentsList.each{paymentRecipt->
-			paymentIds=EntityUtil.getFirst(tempprintPaymentsList);
-			paymentTypeId = paymentIds.paymentTypeId;
-			condList=[];
-			condList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
-			cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-			paymentIdList = delegator.findList("PaymentType", cond,UtilMisc.toSet("paymentTypeId","parentTypeId"), null, null, false);
-			paymentIds=EntityUtil.getFirst(paymentIdList);
-				paymentTypeId = paymentIds.paymentTypeId;
-				parentTypeId = paymentIds.parentTypeId;
+			paymentTypeId = paymentRecipt.paymentTypeId;
+			paymentDetails = delegator.findOne("PaymentType", [paymentTypeId : paymentTypeId], false);
+				parentTypeId = paymentDetails.parentTypeId;
 			if(parentTypeId == "DISBURSEMENT" || parentTypeId == "ADVANCES_PAYOUT"){
-				condList1=[];
-				condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId));
-				condList1.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
-				cond = EntityCondition.makeCondition(condList1, EntityOperator.AND);
-				paymentIdList = delegator.findList("Payment", cond, null, null, null, false);
-				partyIdFromList=EntityUtil.getFirst(paymentIdList);
-				branchId = partyIdFromList.partyIdFrom;
+				branchId = paymentRecipt.partyIdFrom;
 			}
 			if(parentTypeId == "RECEIPT" || parentTypeId == "ADVANCES_PAYIN"){
-				condList1=[];
-				condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId));
-				condList1.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
-				cond = EntityCondition.makeCondition(condList1, EntityOperator.AND);
-				paymentIdList = delegator.findList("Payment", cond, null, null, null, false);
-				partyIdFromList=EntityUtil.getFirst(paymentIdList);
-				branchId = partyIdFromList.partyIdTo;
+				branchId = paymentRecipt.partyIdTo;
 			}
 			branchIdForAdd="";
 			branchList = [];
