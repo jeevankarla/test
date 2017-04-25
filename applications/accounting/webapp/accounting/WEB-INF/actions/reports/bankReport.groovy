@@ -124,6 +124,7 @@
 		
 		 paymentConditionList = [];
 		 paymentConditionList.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN , paymentIds));
+		 paymentConditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL , "PMNT_VOID"));
 		 //paymentConditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.IN, employeeIdList));
 		 paymentCond = EntityCondition.makeCondition(paymentConditionList, EntityOperator.AND);
 		 
@@ -219,6 +220,7 @@
 			 
 			 paymentConditionList1 = [];
 			 paymentConditionList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.IN , paymentIds));
+			 paymentConditionList1.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL , "PMNT_VOID"));
 			 paymentConditionList1.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, eachEmp));
 			 paymentCond1 = EntityCondition.makeCondition(paymentConditionList1, EntityOperator.AND);
 			 
