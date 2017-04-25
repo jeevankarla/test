@@ -185,19 +185,18 @@ taxPurList = delegator.findList("OrderTaxTypeComponentMap", condListb,null, null
 if(taxType=="VAT_PUR"){
 	taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"VAT_PUR"));
 	taxPercentageList=taxPercentageList.componentRate;
-	//taxPercentageList=["4","5","5.5","14.5"];
 }
 else if(taxType=="CST_PUR"){
 	taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"CST_PUR"));
 	taxPercentageList=taxPercentageList.componentRate;
-	//taxPercentageList=["2","12.5"];
 }
 else if(taxType=="EXCISE_DUTY"){
-	//taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"BED_PUR"));
-	taxPercentageList=["12.5"];
+	taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"EXCISE_DUTY"));
+	taxPercentageList=taxPercentageList.componentRate;
 }
 else if(taxType=="ENTRY_TAX"){
-	taxPercentageList=["1"];
+	taxPercentageList= EntityUtil.filterByCondition(taxPurList, EntityCondition.makeCondition("componentType", EntityOperator.EQUALS,"ENTRY_TAX"));
+	taxPercentageList=taxPercentageList.componentRate;
 }
 
 if(branchList){
@@ -346,7 +345,7 @@ if(branchList){
 			finalMap.put(eachTaxPer, branchWiseMap);
 		}
 	}
-	invoiceIterator.close();
+	
 }
 
 context.finalMap=finalMap;
