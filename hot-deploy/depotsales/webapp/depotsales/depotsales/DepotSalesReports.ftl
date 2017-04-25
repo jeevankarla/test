@@ -64,7 +64,7 @@ $(document).ready(function(){
 	    makeDatePicker1("SalesTaxReportFRO","SalesTaxReportTHRU");  
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
-		$('#branchId').hide();
+		$('#branchId3').hide();
 		$('#BranchFilterlabel').hide();	
 		
 		$('#branchIdOne').hide();
@@ -164,7 +164,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			$('#StateFilterLabel').show();
 			$('#state').show();   		
        	}else{
-       		$('#branchId').show();
+       		$('#branchId3').show();
 			$('#BranchFilterlabel').show();
 			$('#StateFilterLabel').hide();
 			$('#state').hide();       		
@@ -1026,7 +1026,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </select>  
 			  </td>
   				  <td id="BranchFilterlabel"><span class='h3'><b>Branch</b></span>
-					  <select name="branchId" id="branchId">
+					  <select name="branchId3" id="branchId3">
 					   <option value=""> </option>
 				      <#list  formatList as formatList>
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>

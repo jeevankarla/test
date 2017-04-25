@@ -23,7 +23,7 @@ import java.util.Map.Entry;
 
 
 
-branchId=parameters.branchId;
+branchId=parameters.branchId3;
 taxType=parameters.taxType;
 purposeTypeId=parameters.purposeTypeId;
 partyfromDate=parameters.partyfromDate;
