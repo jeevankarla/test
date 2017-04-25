@@ -2223,6 +2223,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmployeeAdvFinAccount"/>
     </request-map>
+    <request-map uri="FindEmplAdvance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindEmplAdvance"/>
+    </request-map>
     <request-map uri="WithdrawFromDepositAcct">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="WithdrawFromDepositAcct"/>
@@ -4557,6 +4561,7 @@ under the License.
 <!--     <view-map name="FindDepositAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositAccount"/> -->
         <view-map name="FindDepositReceivedAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositReceivedAccount"/>
         <view-map name="FindDepositPaidAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositPaidAccount"/>
+        <view-map name="FindEmplAdvance" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindEmplAdvance"/>
         <view-map name="FindEmployeeAdv" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindEmployeeAdv"/>
         <view-map name="EmployeeAdvance" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EmployeeAdvance"/>
         <view-map name="DepositTransfer" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#DepositTransfer"/>

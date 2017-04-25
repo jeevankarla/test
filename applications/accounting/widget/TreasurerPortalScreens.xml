@@ -352,6 +352,9 @@
                     	<container style="button-bar">
 	                    	<link target="EditEmployeeAdvFinAccount" text="Create Employee  Advance" style="buttontext create"/>
                     	</container>
+                    	<container style="button-bar">
+	                    	<link target="FindEmplAdvance" text="Find Employee Advance" style="buttontext create"/>
+                    	</container>
                     	<section>
 							<widgets>
 								<screenlet title="Find Advances">				
@@ -379,6 +382,78 @@
 											location="component://accounting/webapp/accounting/finaccounttrans/empAdvDisbursement.ftl"></html-template>
 									</html>
 								</platform-specific>
+							</widgets>      
+	                   	</section>
+                   </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FindEmplAdvance">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Employee Advances"/>
+                  <set field="tabButtonItem" value="FindEmployeeAdv"/>
+                 <set field="tabButtonItem2" value="FindEmployeeAdv"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="20"/>
+                <set field="noConditionFind" value="N"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentMethodType.js" global="true"/>
+                <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
+                    <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
+                </service>
+                <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                <entity-condition list="finAccountTypes" entity-name="FinAccountType">
+                	<condition-list combine="or">
+                		<condition-expr field-name="parentTypeId" operator="equals" value="EMPLOYEE_ADV"/>
+                	</condition-list>
+                </entity-condition>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                <entity-condition list="companyBanksList" entity-name="FinAccount">
+            		<condition-list combine="and">
+            			<!-- <condition-list combine="or">
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="CASH"/>
+            				<condition-expr field-name="finAccountTypeId" operator="equals" value="TAX_CREDIT"/>
+            			</condition-list> -->
+            			<condition-expr field-name="finAccountTypeId" operator="in" value="BANK_ACCOUNT,CASH,TAX_CREDIT"/>
+            			<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+<!--             			<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+            		</condition-list>
+            	</entity-condition>
+            	  <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findDepositAccounts.groovy"/>
+            </actions>
+            <widgets>
+            	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 
+              		<decorator-section name="body">
+                    	<container style="button-bar">
+	                    	<link target="EditEmployeeAdvFinAccount" text="Create Employee  Advance" style="buttontext create"/>
+                    	</container>
+                    	<container style="button-bar">
+	                    	<link target="FindEmplAdvance" text="Find Employee Advance" style="buttontext create"/>
+                    	</container>
+                    	<section>
+							<widgets>
+								<screenlet title="Find Advances">				
+									 <include-form name="FindEmplAdvance" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
+								<platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/finaccounttrans/DepositContraRefund.ftl"/></html>
+                                </platform-specific>
+                                <container style="button-bar">
+									<link target="DepositAccount.csv" text="Export As CSV" style="buttontext create">
+									<parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
+									<parameter param-name="finAccountName" from-field="parameters.finAccountName"/>
+									<parameter param-name="finAccountTypeId" from-field="parameters.finAccountTypeId"/>
+									<parameter param-name="AccDate" from-field="parameters.AccDate"/>
+									<parameter param-name="ownerPartyId" from-field="parameters.ownerPartyId"/>
+									<parameter param-name="noConditionFind" value="Y"/>
+									</link>
+								</container> 
+								<screenlet title="List Deposit Account">				
+									 <include-form name="ListAdvDepositPaidAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+								</screenlet>
 							</widgets>      
 	                   	</section>
                    </decorator-section>
