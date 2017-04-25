@@ -3200,8 +3200,8 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
        if (invoiceItr != null) {
             GenericValue invoice = null;
             while ((invoice = invoiceItr.next()) != null) {
-            String invoiceId = invoice.getString("invoiceId");
-     	    List<GenericValue> acctgTrans = delegator.findList("AcctgTrans", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceId"), null, null, false);
+            String invoiceId = invoice.getString("invoiceId");            List<GenericValue> acctgTrans = FastList.newInstance();
+     	    //List<GenericValue> acctgTrans = delegator.findList("AcctgTrans", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), UtilMisc.toSet("invoiceId"), null, null, false);
 	        statusId = invoice.getString("statusId");
 	        String oldStatusId=statusId;
 	        String invoiceTypeId = invoice.getString("invoiceTypeId");
@@ -3244,13 +3244,18 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
                return ServiceUtil.returnError(e.toString());
            } 
       }
-      if(oldStatusId.equals("INVOICE_READY")){
+      if(oldStatusId.equals("INVOICE_READY")||oldStatusId.equals("INVOICE_PAID")){
           Map InvoiceReadyCtx = FastMap.newInstance();
           if(invoiceTypeId.equals("PURCHASE_INVOICE") || invoiceTypeId.equals("MIS_INCOME_OUT") || invoiceTypeId.equals("ADMIN_OUT")){
 	            Debug.log("invoiceTypeId==========pur================"+invoiceTypeId);
 
                  InvoiceReadyCtx.put("userLogin", userLogin);
                  InvoiceReadyCtx.put("invoiceId", invoiceId);
+                 List condList1=FastList.newInstance();
+                 condList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS ,invoiceId));
+                 condList1.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.EQUALS ,"PURCHASE_INVOICE"));
+         	    EntityCondition cond1 = EntityCondition.makeCondition(condList1,EntityOperator.AND); 
+                 acctgTrans = delegator.findList("AcctgTrans", cond1, UtilMisc.toSet("invoiceId"), null, null, false);
           try{
         	  if(UtilValidate.isEmpty(acctgTrans)){
         	      Map<String, Object> InvoiceReadyResult = dispatcher.runSync("createAcctgTransForPurchaseInvoice",InvoiceReadyCtx);
@@ -3269,6 +3274,11 @@ public static Map<String, Object> creatingAcctTransForAllInvoices(DispatchContex
 
         	  InvoiceReadyCtx.put("userLogin", userLogin);
         	  InvoiceReadyCtx.put("invoiceId", invoiceId);
+        	  List condList1=FastList.newInstance();
+              condList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS ,invoiceId));
+              condList1.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.EQUALS ,"SALES_INVOICE"));
+      	    EntityCondition cond1 = EntityCondition.makeCondition(condList1,EntityOperator.AND); 
+              acctgTrans = delegator.findList("AcctgTrans", cond1, UtilMisc.toSet("invoiceId"), null, null, false);
           try{
         	  if(UtilValidate.isEmpty(acctgTrans)){
 		        	  Map<String, Object> InvoiceReadyResult = dispatcher.runSync("createAcctgTransForSalesInvoice",InvoiceReadyCtx);
@@ -3377,7 +3387,8 @@ public static Map<String, Object> creatingAcctTransForAllPayment(DispatchContext
             while ((payment = paymentItr.next()) != null) {
             String paymentId = payment.getString("paymentId");
             Debug.log("paymentId========id============="+paymentId);
-     	    List<GenericValue> acctgTrans = delegator.findList("AcctgTrans", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), UtilMisc.toSet("paymentId"), null, null, false);
+            List<GenericValue> acctgTrans = FastList.newInstance();
+     	    //List<GenericValue> acctgTrans = delegator.findList("AcctgTrans", EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId), UtilMisc.toSet("paymentId"), null, null, false);
             statusId = payment.getString("statusId");
             String oldStatusId=statusId;
             String paymentTypeId = payment.getString("paymentTypeId");
@@ -3387,8 +3398,18 @@ public static Map<String, Object> creatingAcctTransForAllPayment(DispatchContext
                  paymentStatusCtx.put("userLogin", userLogin);
                  if(UtilValidate.isNotEmpty(paymentTypeId) && (paymentTypeId.contains("PAYOUT"))){
                     paymentStatusCtx.put("statusId", "PMNT_SENT");
+                    List condList1=FastList.newInstance();
+                    condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS ,paymentId));
+                    condList1.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.EQUALS ,"OUTGOING_PAYMENT"));
+            	    EntityCondition cond1 = EntityCondition.makeCondition(condList1,EntityOperator.AND); 
+                    acctgTrans = delegator.findList("AcctgTrans", cond1, UtilMisc.toSet("paymentId"), null, null, false);
                  }else{
                     paymentStatusCtx.put("statusId", "PMNT_RECEIVED");
+                    List condList1=FastList.newInstance();
+                    condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS ,paymentId));
+                    condList1.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"INCOMING_PAYMENT"));
+            	    EntityCondition cond1 = EntityCondition.makeCondition(condList1,EntityOperator.AND); 
+                    acctgTrans = delegator.findList("AcctgTrans", cond1, UtilMisc.toSet("paymentId"), null, null, false);
                  }
                      
               Map paymentStatusResult = FastMap.newInstance();
