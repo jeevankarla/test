@@ -5818,8 +5818,15 @@ public static Map<String, Object> effectPriceDifferenceInvoices(DispatchContext 
 	List conditionList = FastList.newInstance();
 	 
   for (String eachInvoice : invoiceIdsList) {
-	
+	  
+	  
 	  invoiceId = eachInvoice.trim();
+	  
+	  GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);
+	  
+	  String purPoseTypeId = InvoiceHeader.getString("purposeTypeId");
+	  
+	  if(purPoseTypeId.equals("DEPOT_YARN_SALE")){
 	  
     List<GenericValue> InvoiceItem = null;
   	
@@ -5977,6 +5984,7 @@ public static Map<String, Object> effectPriceDifferenceInvoices(DispatchContext 
 
   }
   
+  }	  
   result = ServiceUtil.returnSuccess("Rounding Requirements Has been successfully Updated");
   
 // result.put("invoiceList",invoiceList);
