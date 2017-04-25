@@ -5840,7 +5840,7 @@ public static Map<String, Object> effectPriceDifferenceInvoices(DispatchContext 
 	 
   for (String eachInvoice : invoiceIdsList) {
 	
-	  invoiceId = eachInvoice;
+	  invoiceId = eachInvoice.trim();
 	  
     List<GenericValue> InvoiceItem = null;
   	
@@ -5977,57 +5977,6 @@ public static Map<String, Object> effectPriceDifferenceInvoices(DispatchContext 
  	 }
  	 
  	 
- 	 List<GenericValue> InvoiceItem43 = null;
-  	
-     conditionList.clear();
- 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
- 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
- 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"ROUNDING_ADJUSTMENT"));
- 	//conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL,null));
- 	 try{
- 		InvoiceItem43 = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
- 	 
- 	 }catch(GenericEntityException e){
-				Debug.logError(e, "Failed to retrive InvoiceItem ", module);
-			}
-	    
-	    
- 	 if(UtilValidate.isNotEmpty(InvoiceItem43)){
-     	 
- 		 BigDecimal invoiceGrandTotal = BigDecimal.ZERO;
- 		 
-     	for(GenericValue eachInvoiceItem : InvoiceItem43){
-     	
-     		BigDecimal quantity = eachInvoiceItem.getBigDecimal("quantity");
-     		BigDecimal amount = eachInvoiceItem.getBigDecimal("amount");
-     		BigDecimal itemValue = quantity.multiply(amount);
-     		BigDecimal roundedAmount = (itemValue.setScale(0, rounding));
-     		
-     		invoiceGrandTotal = invoiceGrandTotal.add(roundedAmount);
-     		
-     		eachInvoiceItem.set("itemValue",roundedAmount);
-     		
-     		try{
-     		eachInvoiceItem.store();
-     		}catch(GenericEntityException e){
-     			Debug.logError(e, "Failed to Populate InvoiceItem ", module);
-     		}
-     	}
-     	
-     	try{
-     		
-     		GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);	
-     		
-     	InvoiceHeader.set("invoiceGrandTotal",invoiceGrandTotal);
-     	InvoiceHeader.store();
-     	}catch(GenericEntityException e){
- 			Debug.logError(e, "Failed to Populate Invoice ", module);
- 		}
-     	
- 	 }
- 	 
-   	 
-   	 
      Map<String, Object> populateRoundingAdjustment = FastMap.newInstance();
      
      populateRoundingAdjustment.put("invoiceId", invoiceId);
