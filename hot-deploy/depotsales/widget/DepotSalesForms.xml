@@ -3724,6 +3724,8 @@
 			<field name="shipmentId" title="Shipment Id"><display/></field>
 			<field name="actualSaleInvoiceId" title="Internal Sales Invoice Id"><display/></field>
 			<field name="actualPurInvoiceId" title="Internal Purchase Invoice Id"><display/></field>
+			<field name="facilityName" title="facilityName"><display/></field>
+			
 
     </form> 
     <!-- 
@@ -4441,6 +4443,7 @@
          <field name="purTax" title="_"><display/></field>
          <field name="adj" title="_"><display/></field>
          <field name="totalItemValue" title="_"><display/></field>
+         <field name="estimatedShipCost" title="_"><display/></field>
      </form>
      
      
