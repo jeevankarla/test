@@ -1073,7 +1073,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td> 
 			  <#--<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="TaxReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>-->	
              <td width="10%"></td>
-             <#--<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('TaxReport', '<@ofbizUrl>taxReport.pdf</@ofbizUrl>');" class="buttontext"/>-->
+             <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('TaxReport', '<@ofbizUrl>taxReport.pdf</@ofbizUrl>');" class="buttontext"/>
            </form>
         </tr> 
         
@@ -1136,7 +1136,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  </span></td> 
 			  <#--<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="TaxReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>-->	
              <td width="10%"></td>
-             <#--<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('SalesTaxReport', '<@ofbizUrl>SalesTaxReport.pdf</@ofbizUrl>');" class="buttontext"/>-->
+             <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('SalesTaxReport', '<@ofbizUrl>SalesTaxReport.pdf</@ofbizUrl>');" class="buttontext"/>
            </form>
         </tr> 
       
