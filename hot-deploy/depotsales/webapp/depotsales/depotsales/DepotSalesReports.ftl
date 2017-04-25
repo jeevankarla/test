@@ -62,7 +62,13 @@ $(document).ready(function(){
 	    makeDatePicker1("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
 	    makeDatePicker1("TaxReportFRO","TaxReportTHRU");
 	    makeDatePicker1("SalesTaxReportFRO","SalesTaxReportTHRU");  
-		$('#ui-datepicker-div').css('clip', 'auto');		
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+		$('#branchId3').hide();
+		$('#BranchFilterlabel').hide();	
+		
+		$('#branchIdOne').hide();
+		$('#BranchFilter').hide();	
 	});
 function makeDatePicker3(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
@@ -150,6 +156,34 @@ function makeDatePicker3(fromDateId ,thruDateId){
 		});
 	}
 	
+	function showSearchFilteration(obj){
+       	var searchType=obj.value;
+       	if(searchType=="BY_STATE"){
+       		$('#branchId').hide();
+			$('#BranchFilterlabel').hide();
+			$('#StateFilterLabel').show();
+			$('#state').show();   		
+       	}else{
+       		$('#branchId3').show();
+			$('#BranchFilterlabel').show();
+			$('#StateFilterLabel').hide();
+			$('#state').hide();       		
+       	}
+    }	
+    function showFilteration(obj){
+       	var searchTypeId=obj.value;
+       	if(searchTypeId=="BY_STATE"){
+       		$('#branchIdOne').hide();
+			$('#BranchFilter').hide();
+			$('#StateFilter').show();
+			$('#stateId').show();   		
+       	}else{
+       		$('#branchIdOne').show();
+			$('#BranchFilter').show();
+			$('#StateFilter').hide();
+			$('#stateId').hide();       		
+       	}
+    }	
 </script>
 
 <div class="screenlet">
@@ -985,6 +1019,28 @@ function makeDatePicker3(fromDateId ,thruDateId){
              <td width="10%">Purchase Tax Report</td>
              <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="TaxReportFRO" readonly  name="partyfromDate"/></br>
       		 To</br><input  type="text" size="15pt" id="TaxReportTHRU" readonly  name="partythruDate"/></td>
+                      <td width="10%"><span class='h3'>Search Type</br></span>
+				 <select name="searchType" id="searchType" onchange="javascript:showSearchFilteration(this);">
+					<option value='BY_STATE'>By State</option>
+					<option value='BY_BO_RO'>By Branch or RO</option>
+			  </select>  
+			  </td>
+  				  <td id="BranchFilterlabel"><span class='h3'><b>Branch</b></span>
+					  <select name="branchId3" id="branchId3">
+					   <option value=""> </option>
+				      <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+					 </select>
+		  		   </td>
+  				  <td id="StateFilterLabel"><span class='h3'><b>State</b></span>
+					  <select name="state" id="state">
+					  <option value=""> </option>
+				       <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					  </#list> 
+					 </select>
+		  		   </td>
                       <#--<td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId">
 				 	<option value=""></option>
@@ -992,20 +1048,20 @@ function makeDatePicker3(fromDateId ,thruDateId){
 						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
 					 </#list> 
 				  </select>    								
-			  </span></td>-->
-			  <td width="15%"><span class='h3'>State</br>
+			  </span></br>
+			<span class='h3'>State</br>
 				 <select name="state" id="state">
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
 					 </#list> 
 				  </select> 
-			  </span></td>
+			  </span></td>-->
 			  <td width="15%"><span class='h3'>Purpose Type</br>
 				 <select name="purposeTypeId" id="purposeTypeId">
 				 <option value="ALL">All</option>
 					<option value="YARN_SALE">Yarn</option>
 				    <option value="DIES_AND_CHEM_SALE">Dyes and Chemicals</option>
-				  </select> 
+				  </select>
 			  </span></td>
 			   <td width="15%"><span class='h3'>Tax Type</br>
 				 <select name="taxType" id="taxType">
@@ -1026,6 +1082,28 @@ function makeDatePicker3(fromDateId ,thruDateId){
              <td width="10%">Sales Tax Report</td>
              <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="SalesTaxReportFRO" readonly  name="partyfromDate"/></br>
       		 To</br><input  type="text" size="15pt" id="SalesTaxReportTHRU" readonly  name="partythruDate"/></td>
+      		 <td width="10%"><span class='h3'>Search Type</br></span>
+				 <select name="searchTypeId" id="searchTypeId" onchange="javascript:showFilteration(this);">
+					<option value='BY_STATE'>By State</option>
+					<option value='BY_BO_RO'>By Branch or RO</option>
+			  </select>  
+			  </td>
+  				  <td id="BranchFilter"><span class='h3'><b>Branch</b></span>
+					  <select name="branchIdOne" id="branchIdOne">
+					   <option value=""> </option>
+				      <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+					 </select>
+		  		   </td>
+  				  <td id="StateFilter"><span class='h3'><b>State</b></span>
+					  <select name="stateId" id="stateId">
+					  <option value=""> </option>
+				       <#list  stateListJSON as stateListJSON>
+						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
+					  </#list> 
+					 </select>
+		  		   </td>
                       <#--<td width="15%"><span class='h3'>Branch
 				 <select name="branchId" id="branchId">
 				 	<option value=""></option>
@@ -1034,13 +1112,13 @@ function makeDatePicker3(fromDateId ,thruDateId){
 					 </#list> 
 				  </select>    								
 			  </span></td>-->
-			  <td width="15%"><span class='h3'>State</br>
+			  <#--<td width="15%"><span class='h3'>State</br>
 				 <select name="state" id="state">
 				     <#list  stateListJSON as stateListJSON>
 						<option value='${stateListJSON.value?if_exists}'>${stateListJSON.label?if_exists}</option>
 					 </#list> 
 				  </select> 
-			  </span></td>
+			  </span></td>-->
 			  <td width="15%"><span class='h3'>Purpose Type</br>
 				 <select name="purposeTypeId" id="purposeTypeId">
 				 <option value="ALL">All</option>
