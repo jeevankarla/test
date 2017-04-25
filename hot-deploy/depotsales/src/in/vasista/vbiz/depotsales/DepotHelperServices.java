@@ -5822,11 +5822,11 @@ public static Map<String, Object> effectPriceDifferenceInvoices(DispatchContext 
 	  
 	  invoiceId = eachInvoice.trim();
 	  
-	  GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);
+	/*  GenericValue InvoiceHeader = delegator.findOne("Invoice",UtilMisc.toMap("invoiceId",invoiceId),false);
 	  
 	  String purPoseTypeId = InvoiceHeader.getString("purposeTypeId");
-	  
-	  if(purPoseTypeId.equals("DEPOT_YARN_SALE")){
+	*/  
+	 // if(purPoseTypeId.equals("DEPOT_YARN_SALE")){
 	  
     List<GenericValue> InvoiceItem = null;
   	
@@ -5982,7 +5982,7 @@ public static Map<String, Object> effectPriceDifferenceInvoices(DispatchContext 
 			}
 	  
 
-  }
+ // }
   
   }	  
   result = ServiceUtil.returnSuccess("Rounding Requirements Has been successfully Updated");
