@@ -61,9 +61,7 @@ if(isFormSubmitted && "Y"==isFormSubmitted){
 	if(finAccountId){
 		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId));
 	}
-	if(statusId){
-		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, statusId));
-	}
+	
 	if(UtilValidate.isNotEmpty(paymentDate) && UtilValidate.isNotEmpty(paymentDateStr)){
 		conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.EQUALS, paymentDate));
 	}
@@ -84,7 +82,6 @@ if(isFormSubmitted && "Y"==isFormSubmitted){
 		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.IN, finAccountIdList));
 	}
 	
-	
 	EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	List<String> orderBy = UtilMisc.toList("-paymentDate");
 	paymentGroupList = delegator.findList("PaymentGroup", condition , null, orderBy, null, false);
@@ -103,6 +100,7 @@ if(isFormSubmitted && "Y"==isFormSubmitted){
 				tempMap["paymentRefNum"] = paymentGroup.paymentRefNum;
 				tempMap["issuingAuthority"] = paymentGroup.issuingAuthority;
 				tempMap["amount"] = paymentGroup.amount;
+				tempMap["statusId"] = paymentGroup.statusId;
 				finalList.add(tempMap);
 	}
 	
