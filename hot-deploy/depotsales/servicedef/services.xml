@@ -290,13 +290,13 @@
         <attribute name="quantity" mode="IN" type="BigDecimal" optional="false"/>
     </service>
     
-    <service name="priceOverrideService" engine="java"
+   <!--  <service name="priceOverrideService" engine="java"
             location="in.vasista.vbiz.depotsales.DepotPurchaseServices" invoke="priceOverrideService" auth="false">
         <description>sendPurchaseOrderEmailToParty  </description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="price" mode="IN" type="BigDecimal" optional="false"/>
-    </service>
+    </service> -->
     
 	<service name="getCustomerBranch" engine="java"
                 location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getCustomerBranch" auth="false">
@@ -943,6 +943,12 @@
         <description>Creating populate Invoice Adjustment</description>
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
    </service>
+   
+   <service name="effectPriceDifferenceInvoices" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="effectPriceDifferenceInvoices" transaction-timeout="6000000000000000">
+        <description>Creating populate Invoice Adjustment</description>
+         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+   </service>
+    
     
 </services>
 

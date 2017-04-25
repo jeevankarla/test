@@ -1106,8 +1106,8 @@ totPurInvoiceNetAmt=0;
 						OrderHeaderAss = delegator.findOne("OrderHeader",[orderId : eachAssoc.toOrderId] , false);
 						
 						if(OrderHeaderAss.statusId != "ORDER_CANCELLED"){
-						 poOrderId  = OrderItemAssoc[0].toOrderId;
-						 poOrderItemSeqId  = OrderItemAssoc[0].toOrderItemSeqId;
+						 poOrderId  = eachAssoc.toOrderId;
+						 poOrderItemSeqId  = eachAssoc.toOrderItemSeqId;
 						 break;
 						}
 						
@@ -1507,6 +1507,19 @@ totPurInvoiceNetAmt=0;
 				shipmentIdDe = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
 			}
 
+			
+			InventoryItemList = delegator.findOne("InventoryItem",[inventoryItemId : inventoryItemId] , false);
+			
+			facilityId = "";
+			if(InventoryItemList)
+			facilityId = InventoryItemList.get("facilityId");
+			
+			
+			FacilityList = delegator.findOne("Facility",[facilityId : facilityId] , false);
+			
+			facilityName = "";
+			if(FacilityList)
+			facilityName = FacilityList.get("facilityName");
 
 			////Debug.log("shipmentIdDe============"+shipmentIdDe);
 
@@ -2023,6 +2036,10 @@ totPurInvoiceNetAmt=0;
 				//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
 
 
+				tempMap.put("facilityId",facilityId);
+				
+				tempMap.put("facilityName",facilityName);
+				
 				//==============scheme Quantity===============
 
 
