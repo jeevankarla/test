@@ -63,7 +63,14 @@ if(UtilValidate.isNotEmpty(paymentGroupId)){
 		paymentGroupMemberList.each{ paymentGroupMember ->
 			paymentId = paymentGroupMember.paymentId;
 			if(UtilValidate.isNotEmpty(paymentId)){
-				tempprintPaymentsList = delegator.findList("Payment",EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS , paymentId)  , null, null, null, false );
+				
+				paymentcondList = [];
+				
+				paymentcondList.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId));
+				paymentcondList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+				paymentcond = EntityCondition.makeCondition(paymentcondList, EntityOperator.AND);
+				
+				tempprintPaymentsList = delegator.findList("Payment",paymentcond , null, null, null, false );
 				tempprintPaymentsList.each{paymentRecipt->
 					
 					partyIdFromList=EntityUtil.getFirst(tempprintPaymentsList);
