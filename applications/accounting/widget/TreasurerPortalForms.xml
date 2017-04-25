@@ -3168,6 +3168,7 @@ under the License.
         <field name="paymentRefNum" title="Cheque No."><display/></field>
        <!--  <field name="issuingAuthority"><display/></field> -->
         <field name="amount" ><display/></field>
+        <field name="statusId" ><display/></field>
         
         <field name="viewDetails" widget-style="buttontext" >
             <hyperlink target="javascript: paymentDetails('${paymentGroupId}');" description="View" target-type="plain">
@@ -3209,7 +3210,7 @@ under the License.
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field> 
-        <field use-when="${groovy:((security.hasEntityPermission(&quot;BATCHPAY&quot;, &quot;_CREATE&quot;, session)))}" name="cancelBatch" widget-style="buttontext">
+                <field use-when="(&quot;${statusId}&quot;!=&quot;PAYGRP_CANCELLED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;BATCHPAY&quot;, &quot;_CREATE&quot;, session)))}" name="cancelBatch" widget-style="buttontext">
             <hyperlink target="cancelAPGroupPayment" description="Cancel">
 	            <parameter param-name="paymentGroupId"/>
             </hyperlink>
