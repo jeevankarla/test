@@ -20,7 +20,7 @@ under the License.
 <#escape x as x?xml>
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
-            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right="1.2in" margin-top=".3in">
+            <fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right="1.1in" margin-top=".3in">
                 <fo:region-body margin-top="0.9in"/>
                 <fo:region-before extent="1in"/>
                 <fo:region-after extent="1in"/>
@@ -35,7 +35,7 @@ under the License.
                     <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
         			<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportHeader.description?if_exists}</fo:block>
 					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>
-					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">GROUP PAYMENT VOUCHER</fo:block>
+					<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold"> PAYMENT VOUCHER</fo:block>
             		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		        	</fo:static-content>	        	
 		        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">
@@ -65,23 +65,23 @@ under the License.
 								   <#if paymentGroupDetails.paymentGroupTypeId?has_content>
 								    	<#assign paymentGroupTypeDetails = delegator.findOne("PaymentGroupType", {"paymentGroupTypeId" : paymentGroupDetails.paymentGroupTypeId}, true)?if_exists/>
 								   </#if>
-								   <fo:table-row> 
-								   <fo:table-cell>
+							   <fo:table-row> 
+							   <fo:table-cell>
         						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
         						 	</fo:table-cell>
         						 	<fo:table-cell>
         						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
         						 	</fo:table-cell>
-        						 	</fo:table-row> 
-								   <fo:table-row> 
+        					   </fo:table-row> 
+							  <fo:table-row> 
         						 	<fo:table-cell>
-        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;<#if paymentGroupTypeDetails.description?has_content>PAYMENT GROUP TYPE:${paymentGroupTypeDetails.description?if_exists}</#if></fo:block>
+        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;<#if paymentGroupTypeDetails.description?has_content></#if></fo:block>
         						 	</fo:table-cell>
         						 	<fo:table-cell>
         						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
         						 	</fo:table-cell>
         						 	<fo:table-cell>
-        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">PAYMENT GROUP ID : ${paymentGroupId?if_exists}</fo:block>
+        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
         						 	</fo:table-cell>
 		        				</fo:table-row>
 		        				<fo:table-row> 
@@ -89,7 +89,7 @@ under the License.
         						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
         						 	</fo:table-cell>
         						 	<fo:table-cell>
-        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if paymentGroupDetails.paymentMethodTypeId?has_content && (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>CHEQUE</#if><#if paymentGroupDetails.paymentMethodTypeId?has_content && (paymentGroupDetails.paymentMethodTypeId == "CASH_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CASH_PAYOUT")>CASH</#if></fo:block>
+        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if paymentGroupDetails.paymentMethodTypeId?has_content && (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")></#if><#if paymentGroupDetails.paymentMethodTypeId?has_content && (paymentGroupDetails.paymentMethodTypeId == "CASH_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CASH_PAYOUT")>CASH</#if></fo:block>
         						 	</fo:table-cell>
         						 	<fo:table-cell>
         						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">PAYMENT DATE:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentGroupDetails.paymentDate?if_exists, "dd-MM-yyyy")}</fo:block>
@@ -109,9 +109,10 @@ under the License.
 	        						 	</fo:table-cell>
 	        						 </fo:table-row>
 	        						 <#if (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>
+	        						 <#assign facilityDetails = delegator.findOne("FinAccount", {"finAccountId" : paymentGroupDetails.finAccountId}, true)>
 	        						 <fo:table-row> 
 	        						 	<fo:table-cell>
-	        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if paymentGroupDetails?has_content>&#160;CHEQUE BANK DETAILS:${paymentGroupDetails.issuingAuthority?if_exists}</#if></fo:block>
+	        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"><#if facilityDetails?has_content>&#160;CHEQUE BANK DETAILS:${facilityDetails.finAccountName?if_exists}</#if></fo:block>
 	        						 	</fo:table-cell>
 	        						 	<fo:table-cell>
 	        						 		<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
@@ -135,14 +136,13 @@ under the License.
         						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
 		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Party Name:  ${partyName?if_exists}</fo:block>
         										<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Address: ${partyaddr[0].address1?if_exists} </fo:block>
-        										<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Dear sir, </fo:block>
-        										<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;WE ARE ENCLOSING HERE WITH OUR DEMAND DRAFT/CHEQUE/RTGS TOWARDS THE PAYMENT OF FOLLOWING BILLS:- </fo:block>
-		        								
-        						</fo:table-cell>
-        						</fo:table-row> 
+        										<fo:block text-align="left" font-size="13pt" white-space-collapse="false" font-weight="bold">&#160;Dear sir, </fo:block>
+        										<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;WE ARE ENCLOSING HERE WITH OUR DEMAND DRAFT/CHEQUE/RTGS TOWARDS THE PAYMENT OF FOLLOWING BILLS:-</fo:block>
+		        				</fo:table-cell>
+		        				</fo:table-row> 
 		        					<fo:table-row>
 		        						<fo:table-cell>
-		        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
+		        		                    <fo:table  table-layout="fixed" width="65%" space-before="0.2in">
 				    								 <fo:table-column column-width="10%"/>
 				   									 <fo:table-column column-width="40%"/>
 				   									 <fo:table-column column-width="25%"/>
@@ -204,7 +204,7 @@ under the License.
 			            		  </#if>
 						        	<fo:table-row>
 		        						<fo:table-cell>
-	        		                    <fo:table  table-layout="fixed" width="60%" space-before="0.2in">
+	        		                    <fo:table  table-layout="fixed" width="65%" space-before="0.2in">
 			    								<fo:table-column column-width="10%"/>
 				   									 <fo:table-column column-width="40%"/>
 				   									 <fo:table-column column-width="25%"/>
@@ -250,10 +250,13 @@ under the License.
         						<fo:table-cell>
         								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"></fo:block>
         						</fo:table-cell>
+        					</fo:table-row>	
+        					<fo:table-row>		
+		        				<fo:table-cell></fo:table-cell>
         							<fo:table-cell>
-        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false"   font-weight="bold">Total=&#160;<@ofbizCurrency amount=totalAmount isoCode=currencyUomId/></fo:block>
-        						</fo:table-cell>
-    						</fo:table-row>
+        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;                               Total=&#160;<@ofbizCurrency amount=totalAmount isoCode=currencyUomId/></fo:block>
+        							</fo:table-cell>
+        					</fo:table-row>
 								 	<#assign cheqFav = "">
 								 <#if (paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYIN" || paymentGroupDetails.paymentMethodTypeId == "CHEQUE_PAYOUT")>
 									 <fo:table-row>
@@ -305,8 +308,7 @@ under the License.
 	        						</fo:table-row>
         						<fo:table-row>
 									<fo:table-cell>
-									
-										<fo:block></fo:block>
+									<fo:block></fo:block>
 										<fo:block></fo:block>
 					            		<fo:block>-------------------------------------------------------------------------------------------------------------------</fo:block>
 					       			</fo:table-cell>
@@ -317,14 +319,9 @@ under the License.
 					       			</fo:table-cell>
 								 </fo:table-row>
 						</#list>
-					
 	                    </fo:table-body>
                 	</fo:table>
-                 
-                 
-                 
-                 
-               </fo:block> 
+                 </fo:block> 
 			</fo:flow>
 		</fo:page-sequence>
 	<#else>
