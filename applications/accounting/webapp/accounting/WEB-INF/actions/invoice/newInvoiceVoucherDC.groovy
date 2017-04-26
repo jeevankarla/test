@@ -230,7 +230,7 @@ if(roID){
 	double mgpsAmt = 0;
 	
 	isItVatOrCst="";
-	isExciseDuty="";
+	//isExciseDuty="";
 	isVatSurOrCstSur="";
 	int i=0;
 	for (eachList in invoiceItemList) {
@@ -256,9 +256,9 @@ if(roID){
 				  if(UtilValidate.isEmpty(isItVatOrCst) && (eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE")){
 					  isItVatOrCst=eachItem.invoiceItemTypeId;
 				  }
-				  if(eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
+				  /*if(eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
 					  isExciseDuty=eachItem.invoiceItemTypeId;
-				  }
+				  }*/
 				  if(UtilValidate.isEmpty(isVatSurOrCstSur) && (eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE")){
 					  isVatSurOrCstSur=eachItem.invoiceItemTypeId;
 				  }
@@ -315,9 +315,11 @@ if(roID){
 			  mgpsAmt = mgpsAmt+eachItem.itemValue;
 			  }
 			  
-			  if(eachItem.invoiceItemTypeId == "INVOICE_ITM_ADJ" || eachItem.invoiceItemTypeId == "PRICE_DISCOUNT" || eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
+			  //if(eachItem.invoiceItemTypeId == "INVOICE_ITM_ADJ" || eachItem.invoiceItemTypeId == "PRICE_DISCOUNT" || eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
+			  if(eachItem.invoiceItemTypeId!="CST_SALE" && eachItem.invoiceItemTypeId!="VAT_SALE" && eachItem.invoiceItemTypeId!="CST_SURCHARGE" && eachItem.invoiceItemTypeId!="VAT_SURCHARGE" && eachItem.invoiceItemTypeId!="ENTRY_TAX" && eachItem.invoiceItemTypeId!="EXCISE_DUTY"){
+				  
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
-			  }
+			 }
 			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
 				  totTaxAmount2=totTaxAmount2+(eachItem.itemValue);
 			  }
@@ -350,7 +352,7 @@ if(roID){
 	
 	
 	context.isItVatOrCst=isItVatOrCst;
-	context.isExciseDuty=isExciseDuty;
+	//context.isExciseDuty=isExciseDuty;
 	context.isVatSurOrCstSur=isVatSurOrCstSur;
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
@@ -934,10 +936,9 @@ if(roID){
 				  }else{*/
 				  tempMap.put("amount", eachInvoiceList.amount);
 			  // }
-				  Debug.log("invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId)========="+ invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId))
+				  //Debug.log("invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId)========="+ invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId))
 				  tempMap.put("unitPriceIncTax", invoiceItemLevelUnitListPrice.get(eachInvoiceList.productId)+tempMap.get("amount"));
 			 // tempMap.put("ToTamount", (quantity*amount)+serviceAmt);
-				  
 				  tempMap.put("ToTamount", Math.round(tempMap.get("quantity")*tempMap.get("unitPriceIncTax")));
 			 
 				   grandTotal = grandTotal+(eachInvoiceList.itemValue)+serviceAmt;
