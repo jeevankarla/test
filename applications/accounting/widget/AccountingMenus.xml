@@ -805,7 +805,7 @@
 					</and>
 				</and>
 			</condition>
-			<link  target="javascript:getPaymentDescription()" url-mode="plain" link-type="hidden-form">
+			<link  target="javascript:getPaymentDescription('${payment.paymentId}')" url-mode="plain" link-type="hidden-form">
 				<parameter param-name="paymentId" from-field="payment.paymentId" />
 			</link>
 		</menu-item>

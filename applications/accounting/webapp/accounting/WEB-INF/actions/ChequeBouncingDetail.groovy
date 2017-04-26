@@ -38,20 +38,23 @@ if(UtilValidate.isNotEmpty(fromDate)&&UtilValidate.isNotEmpty(thruDate)){
 	context.errorMessage = "Cannot parse date string: " + e;
 		return;
 	}
+	thruDateEnd = UtilDateTime.getDayEnd(thrudate1, timeZone, locale);
 	conditionList = [];
 	conditionList1 = [];
+	invoice=[];
+	invoiceItem=[];
 	if(fromdate1){
 		conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromdate1)));
 	}
 	if(thrudate1){
-		conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thrudate1)));
+		conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateEnd)));
 	}
 	conditionList.add(EntityCondition.makeCondition("chequeReturns", EntityOperator.EQUALS, "Y"));
 	//conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("PMNT_VOID","PMNT_NOT_PAID")));
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	//Debug.log("Condition======"+cond);
 	chequeBouncingList = delegator.findList("Payment", cond, null, null, null, false);
-	//Debug.log("result of chequeBouncingList======"+chequeBouncingList);
+//	Debug.log("result of chequeBouncingList======"+chequeBouncingList.amount);
 	if(UtilValidate.isNotEmpty(chequeBouncingList)){
 	for(Object cheuqeentry : chequeBouncingList){
 		tempMap = [:];
@@ -60,7 +63,10 @@ if(UtilValidate.isNotEmpty(fromDate)&&UtilValidate.isNotEmpty(thruDate)){
 		tempMap["chequeDate"]=cheuqeentry.paymentDate;
 		tempMap["chequeAmount"]=cheuqeentry.amount;
 		tempMap["cancelComments"] = cheuqeentry.comments;	
-		tempMap["chrges"]="";
+		cond2=EntityCondition.makeCondition("referenceNumber", EntityOperator.EQUALS, cheuqeentry.paymentId);
+		invoiceItemList=delegator.findList("InvoiceAndItem", cond2, null,null, null, false);
+		if(invoiceItemList.amount)
+		tempMap["chrges"]='YES';
 		tempMap["duescleared"]="";
 		tempMap["remarks"] = cheuqeentry.cancelComments;
 		printChequeBouncingDetailList.add(tempMap);

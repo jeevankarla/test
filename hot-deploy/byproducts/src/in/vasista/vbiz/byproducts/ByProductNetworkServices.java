@@ -4753,7 +4753,7 @@ public class ByProductNetworkServices {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Map<String, Object> serviceResults;
-		String facilityId = (String) context.get("facilityId");
+		//String facilityId = (String) context.get("facilityId");
 		BigDecimal invoiceAmount = (BigDecimal) context.get("invoiceAmount");
 		String invoiceItemTypeId = (String) context.get("invoiceItemTypeId");
 		String invoiceTypeId = (String) context.get("invoiceTypeId");
@@ -4763,9 +4763,10 @@ public class ByProductNetworkServices {
 		String referenceNumber = (String) context.get("referenceNumber");
 
 		Timestamp invoiceDate = UtilDateTime.getDayStart(invoiceDateParameter);
-		String partyIdFrom = "Company";
-		String partyId = "";
-		GenericValue facility;
+		String partyIdFrom =  (String) context.get("partyIdFrom");
+		String partyId = (String) context.get("partyId");
+		//Debug.log("ownerpartyid======="+partyId+"==="+partyIdFrom);
+		/*GenericValue facility;
 		try {
 			facility = delegator.findOne("Facility",UtilMisc.toMap("facilityId", facilityId), false);
 			if (UtilValidate.isEmpty(facility)) {
@@ -4778,19 +4779,19 @@ public class ByProductNetworkServices {
 		}
 		if (UtilValidate.isNotEmpty(facility)) {
 			partyId = facility.getString("ownerPartyId");
-		}
+		}*/
 		Map<String, Object> createInvoiceContext = FastMap.newInstance();
 		createInvoiceContext.put("partyId", partyId);
 		createInvoiceContext.put("partyIdFrom", partyIdFrom);
 		createInvoiceContext.put("invoiceDate", invoiceDate);
 		createInvoiceContext.put("dueDate", invoiceDate);
-		createInvoiceContext.put("facilityId", facilityId);
+		//createInvoiceContext.put("facilityId", facilityId);
 		createInvoiceContext.put("invoiceTypeId", invoiceTypeId);
 		createInvoiceContext.put("referenceNumber", referenceNumber);
 		createInvoiceContext.put("description", description);
 		createInvoiceContext.put("statusId", "INVOICE_IN_PROCESS");
 		createInvoiceContext.put("userLogin", userLogin);
-
+		//Debug.log("createInvoiceContext======="+createInvoiceContext);
 		String invoiceId = null;
 		try {
 			serviceResults = dispatcher.runSync("createInvoice",createInvoiceContext);
@@ -4802,6 +4803,7 @@ public class ByProductNetworkServices {
 			Debug.logError(e, e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
 		}
+		//Debug.log("invoiceId======="+invoiceId);
 		// createInvoiceItem
 		Map input = UtilMisc.toMap("userLogin", userLogin, "invoiceId",invoiceId);
 		input.put("invoiceItemTypeId", invoiceItemTypeId);
@@ -4816,7 +4818,7 @@ public class ByProductNetworkServices {
 			Debug.logError(e, e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
 		}
-
+		//Debug.log("invoiceIdserviceResults======="+serviceResults);
 		// set invoice status
 		try {
 			serviceResults = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId",	"INVOICE_APPROVED", "userLogin", userLogin));
@@ -4831,8 +4833,8 @@ public class ByProductNetworkServices {
 			Debug.logError(e, e.toString(), module);
 			return ServiceUtil.returnError(e.toString());
 		}
-
-		Map<String, Object> result = ServiceUtil.returnSuccess("Payment Cancelled and Penalty Invoice ("+ invoiceId + ") Created Sucessfully" + " for Party : "	+ facilityId);
+		Debug.log("invoiceIdsetstatusserviceResults======="+serviceResults);
+		Map<String, Object> result = ServiceUtil.returnSuccess("Payment Cancelled and Penalty Invoice ("+ invoiceId + ") Created Sucessfully" + " for Party : "	+partyId );
 		return result;
 	}
 

@@ -2958,8 +2958,8 @@ under the License.
     <request-map uri="cancelPaymentForChequeReturns"> 
      	<security https="true" auth="true"/>
      	<event type="service" invoke="cancelPaymentForChequeReturn"/>    	
-     	<response name="success" type="view" value="FindTreasurerPayments"/>
-    	<response name="error" type="view" value="FindTreasurerPayments"/>
+     	<response name="success" type="view" value="paymentOverview"/>
+    	<response name="error" type="view" value="paymentOverview"/>
     </request-map>
     <request-map uri="voidPayment">
         <security https="true" auth="true"/>
@@ -4377,7 +4377,7 @@ under the License.
        <security https="true" auth="true"/>
        <!-- <event type="groovy" path="component://accounting/webapp/accounting/WEB-INF/actions/"  invoke="BankAccountDetail.groovy"/> -->
        <response name="success" type="view" value="PrintChequeBouncingDetails"/>
-       <response name="error" type="view" value="ChequeBouncingDetails"/>    
+       <response name="error" type="view" value="PrintChequeBouncingDetails"/>    
     </request-map>
     <request-map uri="getBOsForRO">
        <security https="true" auth="true"/>
