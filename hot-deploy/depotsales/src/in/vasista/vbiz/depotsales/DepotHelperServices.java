@@ -5383,40 +5383,27 @@ public static Map<String, Object> populateInvoiceItemPrice(DispatchContext dctx,
 		String roundType = (String) context.get("roundType");
 		String places = (String) context.get("places");
 		
-		String invoiceId = (String) context.get("invoiceId");
-		
-		 String fromDateStr = (String) context.get("fromDate");
-		 String thruDateStr = (String) context.get("thruDate");
+		String invoiceIdgiven = (String) context.get("invoiceId");
 		
 		
-		String ro = (String) context.get("ro");
+		invoiceIdgiven = invoiceIdgiven.trim();
 		
-		String bo = (String) context.get("bo");
+		String invoiceArray[] = invoiceIdgiven.split(",");
 		
-		String invoiceTypeId = (String) context.get("invoiceTypeId");
+		List<String> invoiceIdsList = Arrays.asList(invoiceArray);
 		
 		Locale locale = (Locale) context.get("locale");
 		
-		Timestamp fromDate=null;
-	    Timestamp thruDate = null;
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	    int count=0;
-	    if(UtilValidate.isNotEmpty(fromDateStr) && UtilValidate.isNotEmpty(thruDateStr)){
-	    	try {
-	    		fromDate = new java.sql.Timestamp(sdf.parse(fromDateStr).getTime());
-	    		thruDate = new java.sql.Timestamp(sdf.parse(thruDateStr).getTime());
-	    	} catch (ParseException e) {
-	    		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
-	    	} catch (NullPointerException e) {
-	    		Debug.logError(e, "Cannot parse date string: " + fromDateStr, module);
-	    	}
-	  }
 		
 		List<GenericValue> shipmentList = null;
 		List<GenericValue> PartyRelationship = null;
 		//List<GenericValue> Invoice = null;
 		 EntityListIterator Invoice = null;
 		List branchList =  FastList.newInstance();
+		
+		
+		 
+   for (String invoiceId : invoiceIdsList) {
 		
 		List conditionList = FastList.newInstance();
 		
@@ -5597,7 +5584,10 @@ public static Map<String, Object> populateInvoiceItemPrice(DispatchContext dctx,
 				Debug.logError(e, "Problems while calling populate Invoice Adjustment : " + invoiceId, module);
 			}
    	
-		
+	
+		  }
+     
+     
 	  result = ServiceUtil.returnSuccess("Price Updation Has been successfully Updated");
      
      return result;
@@ -5683,7 +5673,7 @@ public static Map<String, Object> getPriceDifferenceInvoices(DispatchContext dct
 	   
 	    conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, invoiceTypeId));
 		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-		conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("YARN_SALE","DEPOT_YARN_SALE")));
+		conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,UtilMisc.toList("DEPOT_YARN_SALE")));
 		 
 	     //Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","costCenterId"), null, null, false);
 		

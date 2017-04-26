@@ -944,10 +944,10 @@
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
    </service>
    
-   <service name="effectPriceDifferenceInvoices" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="effectPriceDifferenceInvoices" transaction-timeout="6000000000000000">
+   <!-- <service name="effectPriceDifferenceInvoices" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="effectPriceDifferenceInvoices" transaction-timeout="6000000000000000">
         <description>Creating populate Invoice Adjustment</description>
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
-   </service>
+   </service> -->
     
     
 </services>
