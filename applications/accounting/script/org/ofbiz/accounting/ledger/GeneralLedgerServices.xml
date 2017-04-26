@@ -2041,13 +2041,21 @@ under the License.
 	         <field-to-result field="acctgTransId" result-name="acctgTransId"/> 
 	         <!-- Now create accounting transactions for the payment applications -->
 	         <get-related value-field="payment" relation-name="PaymentApplication" list="paymentApplications"/>
-	         <iterate list="paymentApplications" entry="paymentApplication">
-	             <set field="createAcctgTransAndEntriesForPaymentApplicationInMap.paymentApplicationId" from-field="paymentApplication.paymentApplicationId"/>
-	             <call-service service-name="createAcctgTransAndEntriesForPaymentApplication" in-map-name="createAcctgTransAndEntriesForPaymentApplicationInMap">
-	                 <result-to-field result-name="acctgTransId"/>
-	             </call-service>
-	             <log level="info" message="Accounting transaction ${acctgTransId} created for payment application ${paymentApplication.paymentApplicationId}"/>                 
-	         </iterate>
+	          <entity-condition list="paymentAcctgTrans" entity-name="AcctgTrans">
+             	<condition-list combine="and">
+             		<condition-expr field-name="paymentId" value="${payment.paymentId}"/>
+             		<condition-expr field-name="acctgTransTypeId" value="PAYMENT_APPL"/>
+             	</condition-list>
+             </entity-condition> 
+            <if-empty field="paymentAcctgTrans">    
+		         <iterate list="paymentApplications" entry="paymentApplication">
+		             <set field="createAcctgTransAndEntriesForPaymentApplicationInMap.paymentApplicationId" from-field="paymentApplication.paymentApplicationId"/>
+		             <call-service service-name="createAcctgTransAndEntriesForPaymentApplication" in-map-name="createAcctgTransAndEntriesForPaymentApplicationInMap">
+		                 <result-to-field result-name="acctgTransId"/>
+		             </call-service>
+		             <log level="info" message="Accounting transaction ${acctgTransId} created for payment application ${paymentApplication.paymentApplicationId}"/>                 
+		         </iterate>
+	         </if-empty>
 	    </if-compare>
     </simple-method>
 
@@ -2473,13 +2481,21 @@ under the License.
             <entity-and entity-name="PaymentApplication" list="paymentApplications">
                 <field-map field-name="paymentId" from-field="payment.paymentId"/>
             </entity-and>
-            <iterate list="paymentApplications" entry="paymentApplication">
-                <set field="createAcctgTransAndEntriesForPaymentApplicationInMap.paymentApplicationId" from-field="paymentApplication.paymentApplicationId"/>
-                <call-service service-name="createAcctgTransAndEntriesForPaymentApplication" in-map-name="createAcctgTransAndEntriesForPaymentApplicationInMap">
-                    <result-to-field result-name="acctgTransId"/>
-                </call-service>
-                <log level="info" message="Accounting transaction ${acctgTransId} created for payment application ${paymentApplication.paymentApplicationId}"/> 
-            </iterate> 
+            <entity-condition list="paymentAcctgTrans" entity-name="AcctgTrans">
+             	<condition-list combine="and">
+             		<condition-expr field-name="paymentId" value="${payment.paymentId}"/>
+             		<condition-expr field-name="acctgTransTypeId" value="PAYMENT_APPL"/>
+             	</condition-list>
+             </entity-condition>                
+            <if-empty field="paymentAcctgTrans">    
+	            <iterate list="paymentApplications" entry="paymentApplication">
+	                <set field="createAcctgTransAndEntriesForPaymentApplicationInMap.paymentApplicationId" from-field="paymentApplication.paymentApplicationId"/>
+	                <call-service service-name="createAcctgTransAndEntriesForPaymentApplication" in-map-name="createAcctgTransAndEntriesForPaymentApplicationInMap">
+	                    <result-to-field result-name="acctgTransId"/>
+	                </call-service>
+	                <log level="info" message="Accounting transaction ${acctgTransId} created for payment application ${paymentApplication.paymentApplicationId}"/> 
+	            </iterate> 
+            </if-empty>
             <!-- Now create FinAccount Trans for payment(this is actually removed from at the time of  payment creation)  -->
             <entity-one entity-name="PaymentMethod" value-field="paymentMethod">
             	<field-map field-name="paymentMethodId" from-field="payment.paymentMethodId"/>
