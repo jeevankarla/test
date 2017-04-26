@@ -265,6 +265,7 @@ public class FinAccountServices {
     }
     
     public static Map<String, Object> createDepositFinAccountAndDeposit(DispatchContext dctx, Map<String, Object> context) {
+    	Debug.log("zsjkfrhukxsergtdrui6tyotpu");
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -282,10 +283,9 @@ public class FinAccountServices {
         String finAccountParentId = (String)context.get("finAccountParentId");
         String costCenterId = (String)context.get("costCenterId");
         String segmentId = (String)context.get("segmentId");
-        String custRequestId="";
+        String finAccountId="";
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Timestamp fromDate = null;
-        
         if(UtilValidate.isEmpty(transactionDate)){
         	transactionDate = UtilDateTime.nowTimestamp();
         }
@@ -293,34 +293,85 @@ public class FinAccountServices {
         context.put("fromDate", fromDate);
         String finAccountTransTypeId = "DEPOSIT";
         try {
-           
-        	
-             	GenericValue newTransAttr = delegator.makeValue("CustRequest"); 
-             	newTransAttr.set("accParentTypeId", parentTypeId);
-             	newTransAttr.set("finAccountTypeId", finAccountTypeId);
-             	newTransAttr.set("finAccountParentId", finAccountParentId);
-             	newTransAttr.set("roleTypeId", "EMPLOYEE");
-             	newTransAttr.set("entryTypeId", "Contra");
-             	newTransAttr.set("finAccountTransTypeId", finAccountTransTypeId);
-             	newTransAttr.set("currencyUomId", "INR");
-             	newTransAttr.set("finstatusId", "CREATED");
-             	newTransAttr.set("segmentId", segmentId);
-             	newTransAttr.set("costCenterId", costCenterId);
-             	newTransAttr.set("fromPartyId", depositPartyId);
-             	newTransAttr.set("custRequestDate", transactionDate);
-             	newTransAttr.set("amount", amount);
-             	newTransAttr.set("referenceNumber", contraRefNum);
-             	newTransAttr.set("reason", comments);
-             	newTransAttr.set("createdByUserLogin", userLogin.get("userLoginId"));
-             	delegator.createSetNextSeqId(newTransAttr); 
-             	delegator.createOrStore(newTransAttr);
-             	custRequestId = (String) newTransAttr.get("custRequestId");
+            // get the product store id and use it to generate a unique fin account code
+        	// check party FinAccount 
+			Map<String, Object> createResult=FastMap.newInstance();
+        	if("EMP_ADV".equals(finAccountTypeId) || "EMPLOYEE_ADV".equals(finAccountParentId)){
+	        	List condList = FastList.newInstance();
+				condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,depositPartyId));
+				condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS ,finAccountTypeId));
+				condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"FNACT_ACTIVE"));
+		    	EntityCondition cond = EntityCondition.makeCondition(condList,EntityOperator.AND); 
+				GenericValue finAccountList = EntityUtil.getFirst(delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId","finAccountName"), null, null, false));
+				if(UtilValidate.isNotEmpty(finAccountList)){
+		            finAccountId = finAccountList.getString("finAccountId");
+				}else{
+		        	 createResult = dispatcher.runSync("createFinAccount", context);
+		             if (ServiceUtil.isError(createResult)) {
+		                 return createResult;
+		             }
+			            finAccountId = (String)createResult.get("finAccountId");
+				}
+			
+        	}else{
+        		 createResult = dispatcher.runSync("createFinAccount", context);
+	             if (ServiceUtil.isError(createResult)) {
+	                 return createResult;
+	             }
+		            finAccountId = (String)createResult.get("finAccountId");
+        	}
+             if(UtilValidate.isNotEmpty(parentTypeId) && parentTypeId.equals("DEPOSIT_RECEIPT")){
+            	 finAccountTransTypeId = "WITHDRAWAL";
              }
-         catch (Exception ex) {
+             
+             GenericValue finAcct = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+             GenericValue finAccntTo = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountIdTo), false);
+             if(UtilValidate.isNotEmpty(finAcct.get("costCenterId"))){
+            	 if(UtilValidate.isEmpty(finAccntTo.get("costCenterId"))){
+            		 finAccntTo.put("costCenterId",(String)finAcct.get("costCenterId"));
+            		 finAccntTo.store();
+                 }
+             }
+             if(UtilValidate.isNotEmpty(finAccntTo.get("costCenterId"))){
+            	 if(UtilValidate.isEmpty(finAcct.get("costCenterId"))){
+            		 finAcct.put("costCenterId",(String)finAccntTo.get("costCenterId"));
+            		 finAcct.store();
+                 }
+             }
+             Map<String, Object> transCtxMap = FastMap.newInstance();
+             transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
+             transCtxMap.put("entryType", entryType);
+             transCtxMap.put("transactionDate", transactionDate);
+             transCtxMap.put("comments", comments);
+             transCtxMap.put("amount", amount);
+           	 transCtxMap.put("contraFinAccountId", finAccountIdTo);
+             transCtxMap.put("finAccountId", finAccountId); 
+           	 transCtxMap.put("finAccountTransTypeId", finAccountTransTypeId);
+             transCtxMap.put("contraRefNum", contraRefNum);
+             transCtxMap.put("userLogin", userLogin);
+             transCtxMap.put("costCenterId", costCenterId);
+             transCtxMap.put("segmentId", segmentId);
+             createResult = dispatcher.runSync("preCreateFinAccountTrans", transCtxMap);
+
+             if (ServiceUtil.isError(createResult)) {
+                 return createResult;
+             }
+             
+             String finAccountTransId = (String)createResult.get("finAccountTransId");
+             if(UtilValidate.isNotEmpty(inFavor)){
+             	
+             	GenericValue newTransAttr = delegator.makeValue("FinAccountTransAttribute");        	 
+             	newTransAttr.set("finAccountTransId", finAccountTransId);
+             	newTransAttr.set("attrName", "INFAVOUR_OF");
+             	newTransAttr.set("attrValue", inFavor);
+             	delegator.createOrStore(newTransAttr);
+             }
+
+        } catch (Exception ex) {
             return ServiceUtil.returnError(ex.getMessage());
         }
-        result = ServiceUtil.returnSuccess("Successfully created account for party : "+depositPartyId);
-        result.put("custRequestId", custRequestId);
+        result = ServiceUtil.returnSuccess("Successfully created account and deposit for party : "+depositPartyId);
+        result.put("finAccountId", finAccountId);
         return result;
     }
 

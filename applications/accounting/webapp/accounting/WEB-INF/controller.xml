@@ -1034,7 +1034,6 @@ under the License.
         <response name="error" type="view" value="EditCustomTimePeriod"/>
     </request-map>
 
-    
     <!-- =============== Fixed Asset mapping =================-->
     <request-map uri="ListFixedAssets"><security https="true" auth="true"/><response name="success" type="view" value="ListFixedAssets"/></request-map>
     <request-map uri="FixedAssetSearchResults"><security https="true" auth="false"/><response name="success" type="view" value="FixedAssetSearchResults"/></request-map>
@@ -2223,10 +2222,6 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditEmployeeAdvFinAccount"/>
     </request-map>
-    <request-map uri="FindEmplAdvance">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindEmplAdvance"/>
-    </request-map>
     <request-map uri="WithdrawFromDepositAcct">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="WithdrawFromDepositAcct"/>
@@ -2777,11 +2772,6 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="createPaymentAndFinAccountTrans"/>
         <response name="success" type="view" value="PortalPaymentOverview"/>
-    </request-map>
-    <request-map uri="cancelRequest">
-        <event type="service" invoke="cancelCustRequest"/>
-        <response name="success" type="view" value="FindEmployeeAdv"/>
-        <response name="error" type="view" value="FindEmployeeAdv"/> 
     </request-map>
     <request-map uri="OutgoingDepositsPaid">
         <security https="true" auth="true"/>
@@ -4025,15 +4015,6 @@ under the License.
         <response name="error" type="request-redirect-noparam" value="cpfAccounts"/>
     </request-map>
     
-    <request-map uri="createEmpAdvDisbursement">
-     	<security https="true" auth="true"/>
-     	<event type="java"  path="org.ofbiz.accounting.finaccount.FinAccountServices"  invoke="createEmpAdvDisbursement" global-transaction="true"/>
-     	<response name="success" type="request-redirect" value="FindEmployeeAdv">
-        </response>     	
-        <response name="error" type="request-redirect" value="FindEmployeeAdv">
-        </response>
-    </request-map>
-    
     <request-map uri="findAPGroupPayment">
            <security https="true" auth="true"/>
             <response name="success" type="view" value="FindAPGroupPayment"/>
@@ -4568,7 +4549,6 @@ under the License.
 <!--     <view-map name="FindDepositAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositAccount"/> -->
         <view-map name="FindDepositReceivedAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositReceivedAccount"/>
         <view-map name="FindDepositPaidAccount" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindDepositPaidAccount"/>
-        <view-map name="FindEmplAdvance" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindEmplAdvance"/>
         <view-map name="FindEmployeeAdv" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindEmployeeAdv"/>
         <view-map name="EmployeeAdvance" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#EmployeeAdvance"/>
         <view-map name="DepositTransfer" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#DepositTransfer"/>
