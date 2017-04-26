@@ -426,20 +426,17 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.paymentDecoratorLocation}">
                     <decorator-section name="body">
-                     <platform-specific>
-                               <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatusCancel.ftl"/></html>
-              				</platform-specific>
+                    <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatus.ftl"/></html>
+                            </platform-specific>
                         <section>
                             <condition>
                                 <if-compare field="payment.statusId" operator="equals"  value="PMNT_NOT_PAID"/>
                             </condition>
                             <widgets>
-                             <platform-specific>
-                                <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatus.ftl"/></html>
-                            </platform-specific>
                                 <container style="lefthalf">
                                     <screenlet title="${flag} Overview">
-                                        <link target="editPayment" text="ad${uiLabelMap.CommonUpdate}" style="buttontext">
+                                        <link target="editPayment" text="${uiLabelMap.CommonUpdate}" style="buttontext">
                                             <parameter param-name="paymentId"/>
                                         </link>
                                         <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>

@@ -5948,7 +5948,9 @@ public class ByProductServices {
           	Map<String, Object> result =  FastMap.newInstance();
           	Map<String, Object> inMap = FastMap.newInstance();
           	Map<String, Object> createInvoiceResult = FastMap.newInstance();
-          	BigDecimal invoiceAmount = new BigDecimal(300);
+          	String amount = (String)context.get("fineAmount");
+          	//Debug.log("amount======"+amount);
+          	BigDecimal invoiceAmount = new BigDecimal(amount);
     		inMap.put("paymentId", paymentId);
     		inMap.put("userLogin", userLogin);
     		GenericValue payment = null;
@@ -5973,10 +5975,12 @@ public class ByProductServices {
     				isNonRouteMrktingChqReturn = Boolean.TRUE;    			
     			}
     			payment.put("chequeReturns", chequeReturns);
-    			payment.put("comments", comments);
+    			payment.put("cancelComments", comments);
     			payment.put("cancelDate", cancelDate);
     			payment.store();
-    			
+    			if(UtilAccounting.isReceipt(payment)){
+    				
+    			}
     			Map<String, Object> cancelResults = dispatcher.runSync("voidPayment",inMap);
     			if (ServiceUtil.isError(cancelResults)) {
                 	Debug.logError("Error cancelling payment of retailer ", module);	
@@ -5985,12 +5989,13 @@ public class ByProductServices {
     			// if it is from NonRouteMakting Then return from After payment void
     			/*if(isNonRouteMrktingChqReturn){
     				return result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("partyIdFrom"));
-        		}
+        		}*/
     			if(chequeReturns.equals("Y")){
     				Map<String, Object> createInvoice = FastMap.newInstance();
     				createInvoice.put("userLogin", userLogin);
-    				createInvoice.put("facilityId", payment.get("facilityId"));
+    				//createInvoice.put("facilityId", payment.get("facilityId"));
     				createInvoice.put("partyId", payment.get("partyIdFrom"));
+    				createInvoice.put("partyIdFrom", payment.get("partyIdTo"));
     				createInvoice.put("invoiceAmount",invoiceAmount);
     				createInvoice.put("referenceNumber",paymentId);
     				createInvoice.put("invoiceItemTypeId","INCO_FINEPENALTY_CHQ");
@@ -5998,12 +6003,13 @@ public class ByProductServices {
     				createInvoice.put("description", "Cheque Bounce");
     				createInvoice.put("invoiceDate", cancelDate);
     				createInvoiceResult = ByProductNetworkServices.createFacilityInvoice(ctx, createInvoice);
-    				
+    				//Debug.log("createInvoice======"+createInvoice);
+    				//Debug.log("createInvoiceresult======"+createInvoiceResult);
     				if (ServiceUtil.isError(createInvoiceResult)) {
 	                	Debug.logError("Error creating invoice for the retailer"+payment.get("partyIdFrom"), module);	
 	                    return ServiceUtil.returnError("Error creating invoice for the retailer"+payment.get("partyIdFrom"));
     				}
-    			}*/
+    			}
     			
     			
     		}catch(Exception e){

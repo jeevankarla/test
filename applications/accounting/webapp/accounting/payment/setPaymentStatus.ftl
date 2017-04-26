@@ -42,7 +42,7 @@
 			events: {
 				// Hide the tooltip when any buttons in the dialogue are clicked
 				render: function(event, api) {
-				populateParams();
+				populateParams();chequeBounceFieldsOnchange();
 					$('button', api.elements.content).click(api.hide);
 				},
 				// Destroy the tooltip once it's hidden as we no longer need it!
@@ -61,6 +61,33 @@
 		
 	}
 	
+	function chequeBounceFieldsOnchange(){
+		
+		jQuery("input[name='returnDate']").parent().parent().hide();
+		jQuery("input[name='fineAmount']").parent().parent().hide();
+		var str=jQuery("select[name='chequeBounce']").val();
+		if(str == "Y"){	
+		
+			jQuery("input[name='returnDate']").parent().parent().show();
+			jQuery("input[name='fineAmount']").parent().parent().show();
+		}else{
+			$('#bounceReason').attr('value','');
+			
+			jQuery("input[name='returnDate']").parent().parent().hide();
+			jQuery("input[name='fineAmount']").parent().parent().hide();
+			
+		}
+	}
+	function datepick2()
+	{		
+		$( "#returnDate" ).datepicker({
+			dateFormat:'dd MM, yy',
+			changeMonth: true,
+			maxDate:0,
+			numberOfMonths: 1});		
+		$('#ui-datepicker-div').css('clip', 'auto');
+		
+	}
 	function datepick()	{
 	  var startDate = new Date('${payment.paymentDate?if_exists}');		
 		$( "#transactionDate" ).datetimepicker({
@@ -101,6 +128,47 @@
 	function setCancelDomObj(thisObj){
 		cancelDom = thisObj;
 	}
+	function submitForm(){		 
+		
+		var option = $("#chequeBounce").val();
+		if(option=='Y')
+		{
+		var returnDate = $("#returnDate").val();
+		if(returnDate == undefined || returnDate == ""){
+		alert("Please enter the return Date");
+		return false;
+		}
+		var amt = $("#fineAmount").val();
+		if(amt == undefined || amt == ""){
+		alert("Please enter the Fine Amount");
+		return false;
+		}
+		}
+		var comments = $("#bounceReason").val();
+		if(comments == undefined || comments == ""){
+		alert("Please enter the Reason for to Void The Payment");
+		return false;
+		}
+		disableGenerateButton();
+		 jQuery('#invoicestatuschange').submit();
+	}
+	
+	function getPaymentDescription(paymentId){
+	  var message = "";
+		message += "<html><head></head><body><form name='invoicestatuschange' id='invoicestatuschange' action='cancelPaymentForChequeReturns' method='post' onsubmit='return submitForm();'><table cellspacing=10 cellpadding=10 width=400>";
+			message += "<tr class='h3'><td align='left' class='h3' width='60%'>Cheque Bounce/Returns :</td><td align='left' width='60%'><select name='chequeBounce'  id='chequeBounce' onchange='javascript:chequeBounceFieldsOnchange();' class='h4'>"+
+						"<option value='N' >No</option>"+  
+						"<option value='Y' >Yes</option>"+          
+						"</select></td></tr>"+
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Return Date :</td><td align='left' width='70%'><input class='h4' type='text' id='returnDate' name='returnDate' onmouseover='datepick2()'/></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Reason For Bounce/Return :</td><td align='left' width='70%'><input class='h4' type='text' id='bounceReason' name='bounceReason' /></td></tr>" +
+						"<tr class='h3'><td align='left' class='h3' width='60%'>Amount:</td><td align='left' width='70%'><input class='h4' type='text' id='fineAmount' name='fineAmount' /></td></tr>" +
+						"<tr class='h3'><td></td><td><input type='hidden' name='paymentId' id='paymentId' value='"+paymentId+"'></td></tr>"+
+					"<tr class='h3'><td align='center'><span align='right'><input type='submit' value='Submit' class='smallSubmit' /></span></td><td class='h3' width='100%' align='left'><span align='left'><button value='${uiLabelMap.CommonCancel}' onclick='return cancelForm();' class='smallSubmit'>${uiLabelMap.CommonCancel}</button></span></td></tr>";
+					message +=	"</table></form></body></html>";
+		var title = "Cancel Payment For paymentId : "+paymentId;
+		Alert(message, title);
+}
 	
 	function paymentStatusToolTip(checkFlag){
 		var message = "";

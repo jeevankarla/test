@@ -2620,10 +2620,14 @@
                 </service>
                <set field="hasPaymentStatusCancelPermission" from-field="permResult.hasPermission"/>
                <script location="component://accounting/webapp/accounting/WEB-INF/actions/PaymentAttributeInfo.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonTreasurerPaymentPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
+                        <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/payment/setPaymentStatus.ftl"/></html>
+                            </platform-specific>
                         <section>
                             <condition>
                                 <if-compare field="payment.statusId" operator="equals"  value="PMNT_NOT_PAID"/>
@@ -4395,7 +4399,7 @@
                                  			<parameter param-name="paymentDate_fld1_op" from-field="parameters.paymentDate_fld1_op"/>
                                     	</link>
                                     </container>
-                                    	<platform-specific>
+                                    	<platform-specific><!-- for cancel cheque in the same screen -->
 											<html><html-template location="component://byproducts/webapp/byproducts/byproducts/ChequeReturnsCancel.ftl"/></html>		                                     					
                           				</platform-specific>	
                                         <include-form name="ListTreasurerPayments"  location="component://accounting/widget/TreasurerPortalForms.xml"/>
@@ -6646,7 +6650,7 @@
 	<screen name="PrintChequeBouncingDetailsPdf">
 		<section>
 			<actions>
-				 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
+				          <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                  <script location="component://accounting/webapp/accounting/WEB-INF/actions/ChequeBouncingDetail.groovy"/>
             </actions>
