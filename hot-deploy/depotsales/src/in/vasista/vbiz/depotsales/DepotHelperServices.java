@@ -3398,18 +3398,8 @@ public static Map<String, Object> creatingAcctTransForAllPayment(DispatchContext
                  paymentStatusCtx.put("userLogin", userLogin);
                  if(UtilValidate.isNotEmpty(paymentTypeId) && (paymentTypeId.contains("PAYOUT"))){
                     paymentStatusCtx.put("statusId", "PMNT_SENT");
-                    List condList1=FastList.newInstance();
-                    condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS ,paymentId));
-                    condList1.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.EQUALS ,"OUTGOING_PAYMENT"));
-            	    EntityCondition cond1 = EntityCondition.makeCondition(condList1,EntityOperator.AND); 
-                    acctgTrans = delegator.findList("AcctgTrans", cond1, UtilMisc.toSet("paymentId"), null, null, false);
                  }else{
-                    paymentStatusCtx.put("statusId", "PMNT_RECEIVED");
-                    List condList1=FastList.newInstance();
-                    condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS ,paymentId));
-                    condList1.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS ,"INCOMING_PAYMENT"));
-            	    EntityCondition cond1 = EntityCondition.makeCondition(condList1,EntityOperator.AND); 
-                    acctgTrans = delegator.findList("AcctgTrans", cond1, UtilMisc.toSet("paymentId"), null, null, false);
+                    paymentStatusCtx.put("statusId", "PMNT_RECEIVED");                   
                  }
                      
               Map paymentStatusResult = FastMap.newInstance();
@@ -3436,6 +3426,11 @@ public static Map<String, Object> creatingAcctTransForAllPayment(DispatchContext
                   paymentSentCtx.put("userLogin", userLogin);
                paymentSentCtx.put("paymentId", paymentId);
                   if(oldStatusId.equals("PMNT_SENT")){
+                	  List condList1=FastList.newInstance();
+                      condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS ,paymentId));
+                      condList1.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.EQUALS ,"OUTGOING_PAYMENT"));
+              	    EntityCondition cond1 = EntityCondition.makeCondition(condList1,EntityOperator.AND); 
+                      acctgTrans = delegator.findList("AcctgTrans", cond1, UtilMisc.toSet("paymentId"), null, null, false);
                   try{
 	                	  if(UtilValidate.isEmpty(acctgTrans)){
 				              Map<String, Object> paymentSentResult = dispatcher.runSync("createAcctgTransAndEntriesForOutgoingPayment",paymentSentCtx);
@@ -3452,6 +3447,11 @@ public static Map<String, Object> creatingAcctTransForAllPayment(DispatchContext
                   }
                   if(oldStatusId.equals("PMNT_RECEIVED")){
                   try{
+                	  List condList1=FastList.newInstance();
+                      condList1.add(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS ,paymentId));
+                      condList1.add(EntityCondition.makeCondition("acctgTransTypeId", EntityOperator.EQUALS ,"INCOMING_PAYMENT"));
+              	    EntityCondition cond1 = EntityCondition.makeCondition(condList1,EntityOperator.AND); 
+                      acctgTrans = delegator.findList("AcctgTrans", cond1, UtilMisc.toSet("paymentId"), null, null, false);
 	                	  if(UtilValidate.isEmpty(acctgTrans)){
 				              Map<String, Object> paymentReceivedResult = dispatcher.runSync("createAcctgTransAndEntriesForIncomingPayment",paymentSentCtx);
 				              Debug.log("paymentReceivedResult========================"+paymentReceivedResult);
