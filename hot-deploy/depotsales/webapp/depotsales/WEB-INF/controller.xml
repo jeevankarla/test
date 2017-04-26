@@ -1049,6 +1049,15 @@
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="agencyWiseInvoiceOutstandingReportPDF"/>
     </request-map>
+    <request-map uri="advancePaymentReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="advancePaymentReportPDF"/>
+    </request-map>
+    <request-map uri="partyWiseAdvaceReport.pdf">
+     <security https="true" auth="true"/>
+    	<response name="success" type="view" value="partyWiseAdvaceReportPDF"/>
+    </request-map>
+    
     <request-map uri="agencyWiseInvoiceOutstandingReport.xls">
      <security https="true" auth="true"/>
     	<response name="success" type="view" value="agencyWiseInvoiceOutstandingReportCSV"/>
@@ -3548,6 +3557,9 @@
     <view-map name="purchaseRegisterCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#purchaseRegisterCSV" content-type="text/csv"/>
     <view-map name="agencyWiseInvoiceOutstandingReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#agencyWiseInvoiceOutstandingReportCSV" content-type="text/csv"/>
     <view-map name="agencyWiseInvoiceOutstandingReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#agencyWiseInvoiceOutstandingReportPDF" content-type="application/pdf"/>
+   <view-map name="advancePaymentReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#advancePaymentReportPDF" content-type="application/pdf"/>
+   <view-map name="partyWiseAdvaceReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#partyWiseAdvaceReportPDF" content-type="application/pdf"/>
+   
     <view-map name="m1ReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#m1ReportCSV" content-type="text/csv"/>
     <view-map name="m1ReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#m1ReportPDF" content-type="application/pdf"/>
      <view-map name="fiberAndCountWiseSalesReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#fiberAndCountWiseSalesReportCSV" content-type="text/csv"/>

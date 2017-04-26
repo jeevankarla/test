@@ -356,6 +356,52 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="advancePaymentReportPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/advancePaymentReportPDF.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/advancePaymentReportPDF.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="partyWiseAdvaceReportPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/partyWiseAdvaceReportPDF.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://depotsales/webapp/depotsales/depotsales/partyWiseAdvaceReportPDF.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
 	<screen name="m1ReportPDF">
 		<section>
 			<actions>

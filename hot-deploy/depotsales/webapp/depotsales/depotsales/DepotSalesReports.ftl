@@ -54,6 +54,8 @@ $(document).ready(function(){
 	    makeDatePicker2("salesPurchaseReportFRO","salesPurchaseReportTHRU");
 	    makeDatePicker1("stockDate");
 	    makeDatePicker1("AWIORDate");
+	    makeDatePicker1("APRDate"); 
+	    makeDatePicker1("PWAPRDate"); 
 	    makeDatePicker1("CASHFromDateId","");
 	    makeDatePicker1("billWiseSalesReportFrom","billWiseSalesReportThru");
 	    makeDatePicker1("billWisePurchaseReportFrom","billWisePurchaseReportThru");
@@ -159,7 +161,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 	function showSearchFilteration(obj){
        	var searchType=obj.value;
        	if(searchType=="BY_STATE"){
-       		$('#branchId').hide();
+       		$('#branchId3').hide();
 			$('#BranchFilterlabel').hide();
 			$('#StateFilterLabel').show();
 			$('#state').show();   		
@@ -328,7 +330,62 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('agencyWiseInvoiceOutstandingReport', '<@ofbizUrl>agencyWiseInvoiceOutstandingReport.pdf</@ofbizUrl>');" class="buttontext"/></td> 
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('agencyWiseInvoiceOutstandingReport', '<@ofbizUrl>agencyWiseInvoiceOutstandingReport.xls?header=required</@ofbizUrl>');" class="buttontext"/></td> 	       			
 				
+		</form>
+		 </tr>	
+		<tr class="alternate-row">
+    	<form id="advaceReport" name="advaceReport" method="post"  target="_blank" action="<@ofbizUrl>advancePaymentReport.pdf</@ofbizUrl>">	
+  			<td width="30%"> Payment Wise Advace Report</td>
+  			<td width="15%">Date<input  type="text" size="18pt" id="APRDate"   name="APRDate"/></td>
+  			<td width="10%">ReportType :<select name="reportType" id="reportType">
+                <option value='ADV_RECEIVED'>Received Advance</option>
+                <option value='ADV_PAID'>Paid Advance</option>
+  			 </select></td>	
+  			<td width="10%">Days Wise :<select name="days" id="days">
+                <option value='30days'>30 Days</option>
+                <option value='45days'>45 Days</option>
+  			 </select>
+  			 </td>
+  			 <td width="15%"><span class='h3'>RO
+				 <select name="roId" id="roId">
+				 <option value='HO'>HO</option>
+				     <#list  formatRList as formatRList>
+						<option value='${formatRList.payToPartyId?if_exists}'>${formatRList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>	
+			<td width="10%"></td>
+			<td width="10%"></td>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('advancePaymentReport', '<@ofbizUrl>advancePaymentReport.pdf</@ofbizUrl>');" class="buttontext"/></td>       			
+				
 		</form>	
+     
+      </tr>
+      <tr class="alternate-row">
+    	<form id="advaceReport" name="advaceReport" method="post"  target="_blank" action="<@ofbizUrl>partyWiseAdvaceReport.pdf</@ofbizUrl>">	
+  			<td width="30%"> Party Wise Advace Report</td>
+  			<td width="15%">Date<input  type="text" size="18pt" id="PWAPRDate"   name="PWAPRDate"/></td>
+  			<td width="10%">ReportType :<select name="reportType" id="reportType">
+                <option value='ADV_RECEIVED'>Received Advance</option>
+                <option value='ADV_PAID'>Paid Advance</option>
+  			 </select></td>
+  			<td width="10%">Days Wise :<select name="days" id="days">
+                <option value='30days'>30 Days</option>
+                <option value='45days'>45 Days</option>
+  			 </select>
+  			 </td>
+  			 <td width="15%"><span class='h3'>RO
+				 <select name="roId" id="roId">
+				 <option value='HO'>HO</option>
+				     <#list  formatRList as formatRList>
+						<option value='${formatRList.payToPartyId?if_exists}'>${formatRList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			  </span></td>	
+			<td width="10%"></td>
+			<td width="10%"></td>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('partyWiseAdvaceReport', '<@ofbizUrl>partyWiseAdvaceReport.pdf</@ofbizUrl>');" class="buttontext"/></td>       				
+		</form>	
+     
       </tr>
 		</#if>
 		<#if ReportsType?has_content &&  ReportsType=="INDENT_REPORTS">
