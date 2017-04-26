@@ -308,26 +308,6 @@ under the License.
         <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
-        <field name="custRequestId" position="1" title="CustRequestId"><text-find/></field>
-        <field name="AccDate" position="2" title="Date" event="onclick" action="javascript:datepick2();" id-name ="AccDate"><text  size="12"/></field> 
-        <field name="amount" position="2"><text/></field>
-        <field name="costCenterId" title="RO" position="2">
-        	<drop-down allow-empty="false">
-        		<list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
-         	</drop-down>
-        </field>
-        <field name="finAccountTypeId" position="1" title="Advance Type Id">
-        	<drop-down allow-empty="true">
-        		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
-        	</drop-down>
-        </field>
-        <field name="fromPartyId"  title="Employee Id " position="2"><lookup target-form-name="LookupPartyName"  target-parameter="roleTypeId"/></field>        
-        <field name="searchButton" widget-style="smallSubmit"><submit/></field>
-    </form>
-    <form name="FindEmplAdvance" type="single" target="FindEmplAdvance" header-row-style="header-row" default-table-style="basic-table">        
-        <field name="hideSearch"><hidden value="Y" /></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
         <field name="finAccountId" position="1" title="Account Id"><text-find/></field>
         <field name="AccDate" position="2" title="Date" event="onclick" action="javascript:datepick2();" id-name ="AccDate"><text  size="12"/></field> 
         <field name="finAccountName" position="1" title="Name"><text-find/></field>
@@ -1342,7 +1322,7 @@ under the License.
         <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
-        <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
+        <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="EmployeelookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
         <field name="transactionDate" title="Adv Date"> <date-time/> </field>
         <!-- <field name="contraFinAccountId"  title="From Account">
@@ -1350,11 +1330,11 @@ under the License.
             	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
             </drop-down>
         </field> -->
-       <!--  <field name="finAccountIdTo" title="From/To Account" >
+        <field name="finAccountIdTo" title="From/To Account" >
             <drop-down allow-empty="false">
             	<list-options key-name="finAccountId" list-name="finalList" description="${finAccountName}"/>
             </drop-down>
-        </field> -->
+        </field>
         <field name="amount" required-field="true"><text/></field>
         <field name="contraRefNum" title="Instrument No"><text/></field>
         <field name="inFavor" title="Cheque Infavor of"><text/></field>         
