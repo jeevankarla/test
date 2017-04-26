@@ -5405,6 +5405,9 @@ public static Map<String, Object> populateInvoiceItemPrice(DispatchContext dctx,
 		 
    for (String invoiceId : invoiceIdsList) {
 		
+	   
+	   invoiceId = invoiceId.trim();
+	   
 		List conditionList = FastList.newInstance();
 		
 		String invoiceItemType = "";
@@ -6002,6 +6005,7 @@ public static Map<String, Object> effectPriceDifferenceInvoices(DispatchContext 
  
  return result;
 }
+
 
 
 
