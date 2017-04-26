@@ -554,8 +554,8 @@ under the License.
 		
             <#list invoiceRemainigAdjItemList as eachList>
             
-            <#if eachList.invoiceItemTypeId != "PRICE_DISCOUNT" && eachList.invoiceItemTypeId != "EXCISE_DUTY">
-            
+            <#--<#if eachList.invoiceItemTypeId != "PRICE_DISCOUNT" && eachList.invoiceItemTypeId != "EXCISE_DUTY">-->
+            <#if eachList.invoiceItemTypeId == "ENTRY_TAX" || eachList.invoiceItemTypeId == "EXCISE_DUTY">
             <#assign remainingAdjustMents = remainingAdjustMents+eachList.itemValue>
 			<fo:table-row white-space-collapse="false">
 				
@@ -619,13 +619,13 @@ under the License.
 				<fo:block text-align="left"    font-size="10pt" ></fo:block>
 				</fo:table-cell>
 				
-				<fo:table-cell number-columns-spanned="2">
+				<#--<fo:table-cell number-columns-spanned="2">
 				<#list invoiceRemainigAdjItemList as eachList>
 				<#if eachList.invoiceItemTypeId == "ENTRY_TAX">
 				<fo:block text-align="right"    font-size="10pt" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if>&#160;&#160;&#160;&#160;&#160;&#160;${eachList.itemValue?if_exists}</fo:block>
 				</#if>
 				</#list>
-				</fo:table-cell>
+				</fo:table-cell>-->
 				
 			</fo:table-row>
 			
