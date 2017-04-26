@@ -44,6 +44,7 @@ import net.sf.json.JSONArray;
 
 Map formatMap = [:];
 List formatList = [];
+List formatRList = [];
 	
 	List<GenericValue> partyClassificationList = null;
 		partyClassificationList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE","BRANCH_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
@@ -57,7 +58,19 @@ List formatList = [];
 			formatList.addAll(formatMap);
 		}
 	}
-
+	List<GenericValue> partyClassificationRList = null;
+	partyClassificationRList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+	if(partyClassificationList){
+		for (eachList in partyClassificationRList) {
+			//Debug.log("eachList========================"+eachList.get("partyId"));
+			formatRMap = [:];
+			partyName = PartyHelper.getPartyName(delegator, eachList.get("partyId"), false);
+			formatRMap.put("productStoreName",partyName);
+			formatRMap.put("payToPartyId",eachList.get("partyId"));
+			formatRList.addAll(formatRMap);
+		}
+	}
+	context.formatRList = formatRList;
 	context.formatList = formatList;
 	resultCtx = dispatcher.runSync("getCustomerBranch",UtilMisc.toMap("userLogin",userLogin));
 	Map branchMap = [:];
