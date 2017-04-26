@@ -22,6 +22,7 @@ import in.vasista.vbiz.byproducts.icp.ICPServices;
 periodName = parameters.periodName;
 frmDateStr = parameters.fromDate;
 toDateStr = parameters.toDate;
+periodTypeId = parameters.periodTypeId; 
 dctx = dispatcher.getDispatchContext();
 subscriptionProdList = [];
 displayGrid = true;
@@ -47,14 +48,13 @@ if(UtilValidate.isNotEmpty(toDateStr)){
 	}
 	thruDate = UtilDateTime.getDayEnd(thruDate);
 }
-
-Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin, "fromDate", fromDate, "thruDate",thruDate, "periodName", periodName ,"periodTypeId","TEN_SUB_REIMB_PERIOD");
+Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin, "fromDate", fromDate, "thruDate",thruDate, "periodName", periodName ,"periodTypeId",periodTypeId);
 Map<String, Object> result = dispatcher.runSync("createSchemeTimePeriod", input);
 
 JSONArray billingPeriodsList = new JSONArray();
 
 conditionList=[];
-conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "TEN_SUB_REIMB_PERIOD"));
+conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, periodTypeId));
 conditionList.add(EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
 schemeTimePeriod = delegator.findList("SchemeTimePeriod",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("periodName","fromDate","thruDate","schemeTimePeriodId"), null, null, false);
 

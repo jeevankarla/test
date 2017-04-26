@@ -1949,10 +1949,15 @@
         <security https="true" auth="true"/>
         <event type="groovy" path="component:/depotsales/webapp/depotsales/WEB-INF/actions/depotsales/generateBillForTenPerAndSerchrg.groovy"/>
         <response name="success" type="request" value="json"/>
-    </request-map>
-     <request-map uri="generateBillingForPeriod">
+    </request-map> 
+     <request-map uri="generateBillingForPeriodTS">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="generateBillingForPeriod.groovy"/>
+        <response name="success" type="request" value="json"/>
+    </request-map>
+    <request-map uri="generateBillingForPeriodDS">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="generateBillingForPeriodDS.groovy"/>
         <response name="success" type="request" value="json"/>
     </request-map>
      <request-map uri="FindShipmentReimbursementBilling">
