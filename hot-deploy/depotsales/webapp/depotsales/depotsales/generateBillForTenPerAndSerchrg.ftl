@@ -2,7 +2,8 @@
 <input type="hidden" name="partyClassificationGroupId" id="partyClassificationGroupId" value="${partyClassificationGroupId}">
 
 <script type="application/javascript">
-
+     var billingListOpen;
+     var billingListClose;
 	function makeDatePicker(fromDateId ,thruDateId){
 	$('#fromDate').datepicker({
 			dateFormat:'mm/dd/yy',
@@ -24,7 +25,10 @@
    $(document).ready(function(){
  		makeDatePicker("fromDate","toDate");
  		var list = ${StringUtil.wrapString(billingPeriodsList)!'[]'};
- 		var list2 = ${StringUtil.wrapString(closebillingPeriodsList)!'[]'}; 
+ 		var list2 = ${StringUtil.wrapString(closebillingPeriodsList)!'[]'}; 	
+	     billingListOpen= ${StringUtil.wrapString(openPeriodBillings)!'[]'}; 
+		billingListClose= ${StringUtil.wrapString(closePeriodBillings)!'[]'};
+ 		
  		var optionList = '';
 		var optionList2 = '';
 		optionList += "<option value = " + "" + " >" +" "+ "</option>";
@@ -44,17 +48,24 @@
       	$("#billingPeriod").html(optionList);
       	$("#findbillingPeriod").html(optionList2);
 	});
-    
     function generateBillingForPeriod()
-    { 
+    {   
+        var url="";
         var schemeBillingId= $('#billingPeriod').val();
+        var billingType= $('#periodTypeId_generate').val();
+        if(billingType=="TEN_SUB_REIMB_PRD"){
+        	url="generateBillingForPeriodTS"
+        }else{
+        	url="generateBillingForPeriodDS"
+        }
         var dataJson ={};
         dataJson["schemeBillingId"]=schemeBillingId;
+        dataJson["billingType"]=billingType;
       	$('div#pastDues_spinner').show();
       	$('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
          $.ajax({
              type: "POST",
-             url: "generateBillingForPeriod",
+             url: url,
              data: dataJson,
              dataType: 'json',
              async: false,
@@ -100,8 +111,10 @@
      function getInvoicesForForPeriod()
      { 
         var billingId= $('#findbillingPeriod').val();
-        var dataJson ={};
+        var dataJson ={}; 
+        var billingType= $('#periodTypeId_find').val();
         dataJson["billingId"]=billingId;
+        dataJson["billingType"]=billingType;
         dataJson["isInvoiceFind"]="Y";
       	$('div#pastDues_spinner').show();
       	$('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
@@ -157,12 +170,14 @@
     function createSchemeTimePeriod()
     { 
         var frmDate= $('#fromDate').val();
-        var toDate= $('#toDate').val();
+        var toDate= $('#toDate').val(); 
         var periodNam= $('#periodName').val();
+        var periodTypeId= $('#periodTypeId_create').val();
         var dataJson ={};
         dataJson["periodName"]=periodNam;
         dataJson["fromDate"]=frmDate;
         dataJson["toDate"]=toDate;
+        dataJson["periodTypeId"]=periodTypeId;
         $('div#pastDues_spinner').html('<img src="/images/ajax-loader64.gif">');
          $.ajax({
              type: "POST",
@@ -206,6 +221,29 @@
             	 }
             }); 
     }
+    
+    function getActiveBillingPeriods(curEle)
+    { 
+    	var value = curEle.value;
+    	var id = curEle.id;
+    	var periodsList;
+    	var periodId;
+    	var optionList={};
+    	if(id=="periodTypeId_find"){
+    		periodsList=billingListClose[value];
+    		periodId="findbillingPeriod";
+    	}else{
+    		periodsList=billingListOpen[value];
+    		periodId="billingPeriod";
+    	}
+    	
+        if(periodsList) {		       				        	
+        	for(var i=0 ; i<periodsList.length; i++){
+                optionList += "<option value = " + periodsList[0]['value'] + " >" +periodsList[0]['label']+" </option>";          			
+      		}
+      	}
+      	$("#"+periodId).html(optionList);
+    }
 </script>
 <form name="updateForm" id="updateForm"   method="post"  action="createOrUpdateWeaversPartyClassification"> </form>
  
@@ -220,12 +258,33 @@
 	        </tr>
 		</thead>
      <tbody>
+        <tr>
+			<td><b>Billing Type:</b> &#160; &#160;<select name="periodTypeId_create" id="periodTypeId_create">  <option value =""></option> 
+																					<option value ="TEN_SUB_REIMB_PRD">Ten% And Service Reimbursement</option> 
+																				    <option value ="DEP_SHIP_REIMB_PRD"> Depot And Shipment Reimbursement</option>
+																										</select>  </td>
+			<td >&#160;</td>
+			<td >&#160;</td>
+		</tr>
 		<tr>
 			<td><b>Period Name :</b> <input type="text" name="periodName" id="periodName" size="18"/></td> 
-			<td ></td>
+			<td >&#160;</td>
+			<td >&#160;</td>
 		</tr>
 		<tr>
 		  	<td ><b>From Date :</b>&#160; &#160;&#160; <input type="text" name="fromDate" id="fromDate" size="18" maxlength="40"   /></td> 
+		  	<td><b>Billing Type:</b> &#160; &#160;<select name="periodTypeId_generate" id="periodTypeId_generate" onChange="javascript:getActiveBillingPeriods(this);">  <option value =""></option> 
+																					<option value ="TEN_SUB_REIMB_PRD">Ten% And Service Reimbursement</option> 
+																				    <option value ="DEP_SHIP_REIMB_PRD"> Depot And Shipment Reimbursement</option>
+																										</select>  </td>
+			
+			<td><b>Billing Type:</b> &#160; &#160;<select name="periodTypeId_find" id="periodTypeId_find" onChange="javascript:getActiveBillingPeriods(this);">  <option value =""></option> 
+																					<option value ="TEN_SUB_REIMB_PRD">Ten% And Service Reimbursement</option> 
+																				    <option value ="DEP_SHIP_REIMB_PRD"> Depot And Shipment Reimbursement</option>
+																										</select>  </td>
+		</tr>
+		<tr>
+		  	<td ><b>To Date :</b>&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160; <input type="text" name="toDate" id="toDate" size="18" maxlength="40"   /></td> 
 		  	<td ><b>Billing Period</b>
 				<select name="billingPeriod" id="billingPeriod">
 				</select>
@@ -236,7 +295,7 @@
 			</td>
 		</tr>
 		<tr>
-		  	<td ><b>To Date :</b>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<input type="text" name="toDate" id="toDate" size="18" maxlength="40"/></td>
+		  	<td ></td>
 		  	 
 		</tr>
 		<tr>
