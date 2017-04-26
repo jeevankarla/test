@@ -392,7 +392,7 @@ under the License.
         </field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="transactionDate"> <date-time/> </field>
-        <field name="entryDate"><date-time/></field>
+        <field name="entryDate"><date-time/><hidden/></field>
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="RECEIPT"/></field>
          <field name="segmentId"  title="Segment Id">
             <drop-down>
@@ -401,14 +401,17 @@ under the License.
                 <option key="DIES_AND_CHEM_SALE" description="Dies And Chemicals Segment"/> 
             </drop-down>
         </field>
-        <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field> 
+        <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field>
+         <field name="invoiceId" use-when="&quot;${entryType}&quot;==&quot;Other&quot;">
+            <lookup target-form-name="LookupInvoice" >
+                <sub-hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/>
+            </lookup>
+        </field>
         <field name="amount" required-field="true" use-when="&quot;${entryType}&quot;!=&quot;Payment&quot;"><text/></field>
         <field name="amount" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;"><text/></field>       
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down>
-                <entity-options entity-name="StatusItem" description="${description}">
-                    <entity-constraint name="statusTypeId" value="FINACT_TRNS_STATUS"/>
-                </entity-options>
+                <option key="FINACT_TRNS_CREATED" description="Created"/>
             </drop-down>
         </field>
          <field name="contraFinAccountTypeId" title="FinAccountType" use-when="&quot;${entryType}&quot;==&quot;Contra&quot;" action="javascript:setFinAccountType(this,'${finAccountTypeMap}');" event="onChange">
@@ -428,7 +431,11 @@ under the License.
             </drop-down>
         </field>      
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Other&quot;"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field>
-        <field name="glAccountId" use-when="&quot;${entryType}&quot;==&quot;Other&quot;"><lookup target-form-name="LookupGlAccount"/></field>
+        <field name="glAccountId" use-when="&quot;${entryType}&quot;==&quot;Other&quot;" event="onclick" action="javascript:getGLAccounts();">
+            <drop-down allow-empty="true">
+             <list-options key-name="glAccountId" list-name="glAccountList" description="${description}"/> 
+            </drop-down> 
+        </field>   
         <field name="comments"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

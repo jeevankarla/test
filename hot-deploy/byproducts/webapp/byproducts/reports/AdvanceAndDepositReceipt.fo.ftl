@@ -23,8 +23,8 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
-            margin-top="0.2in" margin-bottom=".3in" margin-left=".55in" margin-right=".1in">
-        <fo:region-body margin-top="2.8in"/>
+            margin-top="0.3in" margin-bottom=".3in" margin-left=".55in" margin-right=".1in">
+        <fo:region-body margin-top="3.0in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -40,28 +40,14 @@ under the License.
 			       <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;  </fo:block>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;  &#160;&#160;   KARNATAKA CO-OPERATIVE MILK PRODUCERS FEDERATION LTD</fo:block>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false">&#160;      UNIT: MOTHER DAIRY: G.K.V.K POST,YELAHANKA,BENGALORE:560065</fo:block>-->
-					<fo:block text-align="left" keep-together="always"  white-space-collapse="false">
-        			<fo:table>
-			            <fo:table-column column-width="150pt"/>
-			            <fo:table-column column-width="150pt"/>
-			            <fo:table-column column-width="150pt"/>
-			            <fo:table-column column-width="150pt"/> 
-			            <fo:table-body>
-			                <fo:table-row>
-			                    <fo:table-cell number-columns-spanned="4">
-					            	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
-                                    <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
-					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
-					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false"> ${reportSubHeader.description?if_exists}</fo:block>
-					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false"> S-13/36, SRI RAM MARKET, TELIA BAGH </fo:block>
-					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false"> VARANSI-221002 </fo:block>
-					            	<fo:block  keep-together="always" text-align="center" white-space-collapse="false"> EMAIL:nhdcltdvaranasi@yahoo.in </fo:block>
-					            </fo:table-cell>
-							</fo:table-row>
-			            </fo:table-body>
-			        </fo:table>
-        		</fo:block>
-                    <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;&#160;&#160;&#160;&#160; &#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
+					<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" font-size="10pt" white-space-collapse="false">&#160;${uiLabelMap.CommonPage}- <fo:page-number/> </fo:block>
+			        	<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+						<#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportSubHeaderLable"}, true)>
+	        			<fo:block  keep-together="always" text-align="center" font-size="12pt" font-family="Courier,monospace" white-space-collapse="false">${reportHeader.description?if_exists}</fo:block>
+						<fo:block text-align="center" font-size="12pt" white-space-collapse="false">&#160;${BOAddress?if_exists}</fo:block>
+		        		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+		        		<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+                    <fo:block text-align="left"  keep-together="always"  white-space-collapse="false">&#160;Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentListReport.paymentDate, "MMMM dd,yyyy HH:MM:SS")}&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;UserLogin : <#if userLogin?exists>${userLogin.userLoginId?if_exists}</#if>   </fo:block>
               		<fo:block>------------------------------------------------------------------------</fo:block>
               		
               		<#--

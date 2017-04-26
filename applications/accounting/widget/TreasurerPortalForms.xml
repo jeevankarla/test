@@ -196,8 +196,8 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="finAccountCode" title ="Head Office Code"><display/></field>
-        <field name="finAccPrefix" title ="Head Office Prefix"><display/></field>
+        <field name="finAccountCode" title ="Head Office Code"><display/><hidden/></field>
+        <field name="finAccPrefix" title ="Head Office Prefix"><display/><hidden/></field>
       <!--   <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field> -->
        <!--  <field name="organizationPartyId">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
@@ -214,6 +214,18 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field> -->
+         <field name="createNewContra" title="Fund Transfers" widget-style="buttontext">
+        	<hyperlink target="EditFinAccountTrans" description="Fund Transfers" target-window="_BLANK"  also-hidden="false">
+	            <parameter param-name="finAccountId" from-field="finAccountId"/>                           			
+	            <parameter param-name="entryType" value="Contra"/>
+            </hyperlink>
+        </field> 
+         <field name="createNewOther" title="Other adjustment" widget-style="buttontext">
+        	<hyperlink target="EditFinAccountTrans" description="Other Adjustment" target-window="_BLANK"  also-hidden="false">
+	            <parameter param-name="finAccountId" from-field="finAccountId"/>                           			
+	            <parameter param-name="entryType" value="Other"/>
+            </hyperlink>
+        </field> 
     </form> 
     <form name="ListSchemeAccounts" type="list" separate-columns="true" default-entity-name="FinAccount"   list-name="nonBankAccountsList" paginate-target="${targetRequest}" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -293,6 +305,26 @@ under the License.
         <field name="searchButton" widget-style="smallSubmit"><submit/></field>
     </form>
      <form name="FindEmployeeAdvance" type="single" target="FindEmployeeAdv" header-row-style="header-row" default-table-style="basic-table">        
+        <field name="hideSearch"><hidden value="Y" /></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
+        <field name="custRequestId" position="1" title="CustRequestId"><text-find/></field>
+        <field name="AccDate" position="2" title="Date" event="onclick" action="javascript:datepick2();" id-name ="AccDate"><text  size="12"/></field> 
+        <field name="amount" position="2"><text/></field>
+        <field name="costCenterId" title="RO" position="2">
+        	<drop-down allow-empty="false">
+        		<list-options key-name="partyId" list-name="intOrgList" description="${groupName}"/>
+         	</drop-down>
+        </field>
+        <field name="finAccountTypeId" position="1" title="Advance Type Id">
+        	<drop-down allow-empty="true">
+        		<list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
+        	</drop-down>
+        </field>
+        <field name="fromPartyId"  title="Employee Id " position="2"><lookup target-form-name="LookupPartyName"  target-parameter="roleTypeId"/></field>        
+        <field name="searchButton" widget-style="smallSubmit"><submit/></field>
+    </form>
+    <form name="FindEmplAdvance" type="single" target="FindEmplAdvance" header-row-style="header-row" default-table-style="basic-table">        
         <field name="hideSearch"><hidden value="Y" /></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
@@ -1310,7 +1342,7 @@ under the License.
         <!-- <field name="finAccountName" title="Account Name"><text size="20"/></field> -->
         <field name="roleTypeId"><hidden value="EMPLOYEE"/></field>
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
-        <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="EmployeelookupPartyName" target-parameter="roleTypeId"/></field>
+        <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
         <field name="transactionDate" title="Adv Date"> <date-time/> </field>
         <!-- <field name="contraFinAccountId"  title="From Account">
@@ -1318,11 +1350,11 @@ under the License.
             	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
             </drop-down>
         </field> -->
-        <field name="finAccountIdTo" title="From/To Account" >
+       <!--  <field name="finAccountIdTo" title="From/To Account" >
             <drop-down allow-empty="false">
             	<list-options key-name="finAccountId" list-name="finalList" description="${finAccountName}"/>
             </drop-down>
-        </field>
+        </field> -->
         <field name="amount" required-field="true"><text/></field>
         <field name="contraRefNum" title="Instrument No"><text/></field>
         <field name="inFavor" title="Cheque Infavor of"><text/></field>         
@@ -1352,14 +1384,14 @@ under the License.
 
         <field name="finAccountCode"><text size="20" /></field>
         <field name="finAccountCode" use-when="!hasFinEditPermission"><display/></field>
-       <!--  <field name="categoryTypeEnum">
+       <field name="categoryTypeEnum">
 			<drop-down>
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="FIN_ACCOUNT_CAT_ENUM"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-		</field>     -->  
+		</field> 
         <field name="finAccountPin"><text size="10"/></field>
         <field name="finAccountPin" use-when="!hasFinEditPermission"><display/></field>
         <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}">
@@ -3136,6 +3168,7 @@ under the License.
         <field name="paymentRefNum" title="Cheque No."><display/></field>
        <!--  <field name="issuingAuthority"><display/></field> -->
         <field name="amount" ><display/></field>
+        <field name="statusId" ><display/></field>
         
         <field name="viewDetails" widget-style="buttontext" >
             <hyperlink target="javascript: paymentDetails('${paymentGroupId}');" description="View" target-type="plain">
@@ -3177,7 +3210,7 @@ under the License.
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field> 
-        <field use-when="${groovy:((security.hasEntityPermission(&quot;BATCHPAY&quot;, &quot;_CREATE&quot;, session)))}" name="cancelBatch" widget-style="buttontext">
+                <field use-when="(&quot;${statusId}&quot;!=&quot;PAYGRP_CANCELLED&quot;)&amp;&amp;${groovy:((security.hasEntityPermission(&quot;BATCHPAY&quot;, &quot;_CREATE&quot;, session)))}" name="cancelBatch" widget-style="buttontext">
             <hyperlink target="cancelAPGroupPayment" description="Cancel">
 	            <parameter param-name="paymentGroupId"/>
             </hyperlink>

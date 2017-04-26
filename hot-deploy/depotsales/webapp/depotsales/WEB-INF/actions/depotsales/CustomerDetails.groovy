@@ -100,8 +100,9 @@ condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, 
 else{
 	condList.add(EntityCondition.makeCondition("roleTypeId" ,EntityOperator.EQUALS, "DYS_CMLS_CUSTOMER"));
 }
-condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));
-
+if(customerType=="YARN"){
+	condList.add(EntityCondition.makeCondition("partyIdentificationTypeId" ,EntityOperator.EQUALS,"PSB_NUMER"));
+}
 
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 fieldsToSelect = ["partyId","idValue","partyIdFrom"] as Set;

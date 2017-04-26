@@ -3440,7 +3440,7 @@ public class ByProductServices {
         	
         	List<GenericValue> payments = delegator.findList("Payment", EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds), null, null, null, false);
         	for(GenericValue payment: payments){
-        		
+        		Map<String, Object> cancelResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", payment.get("paymentId"), "statusId", "PMNT_VOID"));
         		String finAccountTransId = payment.getString("finAccountTransId");
         		if(UtilValidate.isNotEmpty(finAccountTransId)){
         			Map finAccountTransMap = FastMap.newInstance();
@@ -3465,7 +3465,7 @@ public class ByProductServices {
 			  Debug.logError(e, e.toString(), module);
 		      return ServiceUtil.returnError(e.toString());
 		} 
-  		result = ServiceUtil.returnSuccess("Batch Payment successfully cancelled.");
+  		result = ServiceUtil.returnSuccess("Payment successfully cancelled.");
         return result;
     }
 	

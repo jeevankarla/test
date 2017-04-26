@@ -45,7 +45,6 @@ under the License.
 		<!-- <attribute name="depositPartyId" mode="IN" optional="false" type="String"/> -->
 		<attribute name="entryType" mode="IN" optional="true" type="String"/>
 		<attribute name="transactionDate" mode="IN" optional="true" type="Timestamp"/>
-		<attribute name="finAccountIdTo" mode="IN" optional="false" type="String"/>
 		<attribute name="acctParentTypeId" mode="IN" optional="true" type="String"/>
 		<attribute name="finAccountTransTypeId" mode="IN" optional="false" type="String"/>
 		<attribute name="amount" mode="IN" optional="false" type="BigDecimal"/>
@@ -53,7 +52,7 @@ under the License.
 		<attribute name="inFavor" mode="IN" optional="true" type="String"/>
 		<attribute name="comments" mode="IN" optional="true" type="String"/>
 		<attribute name="finAccountParentId" mode="IN" optional="true" type="String"/>
-		<attribute name="finAccountId" mode="OUT" optional="true" type="String"/>
+		<attribute name="custRequestId" mode="OUT" optional="true" type="String"/>
 		<attribute name="costCenterId" mode="IN" optional="true" type="String"/>
 		<attribute name="segmentId" mode="IN" optional="true" type="String"/>
     </service>
@@ -163,6 +162,7 @@ under the License.
             <exclude field-name="performedByPartyId"/>
         </auto-attributes>
         <attribute name="glAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
    		<attribute name="segmentId" type="String" mode="IN" optional="true"/>
     </service>
      <service name="createFinAccountTransIdForInv" engine="simple" default-entity-name="FinAccountTrans"
@@ -186,6 +186,7 @@ under the License.
             <exclude field-name="performedByPartyId"/>
         </auto-attributes>
         <attribute name="glAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
         <attribute name="segmentId" type="String" mode="IN" optional="true"/>
         <attribute name="entryType" type="String" mode="IN" optional="true"/>
         <attribute name="contraFinAccountId" type="String" mode="IN" optional="true"/>
@@ -792,5 +793,10 @@ under the License.
 		<attribute name="finAccountTransId" mode="INOUT" optional="false" type="String"/>
 		<attribute name="chequeBounce" type="String" mode="IN" optional="false"/>
         <attribute name="returnDate" type="String" mode="IN" optional="true"/>
-    </service>    
+    </service>
+    <service name="cancelCustRequest" engine="java" location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="cancelCustRequest">
+        <description>cancel CustRequest.</description>
+		<attribute name="custRequestId" type="String" mode="IN" optional="true"/>
+		
+    </service>   
 </services>

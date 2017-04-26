@@ -228,6 +228,8 @@ headingMap.put("quantity", " ");
 headingMap.put("purTax", " ");
 headingMap.put("adj", " ");
 headingMap.put("totalItemValue", " ");
+headingMap.put("estimatedShipCost", " ");
+
 finalList.add(headingMap);
 
 headingMap1=[:];
@@ -241,6 +243,7 @@ headingMap1.put("quantity", " ");
 headingMap1.put("purTax", " ");
 headingMap1.put("adj", " ");
 headingMap1.put("totalItemValue", " ");
+headingMap1.put("estimatedShipCost", " ");
 finalList.add(headingMap1);
 
 headingMap2=[:];
@@ -254,6 +257,7 @@ headingMap2.put("quantity", " ");
 headingMap2.put("purTax", " ");
 headingMap2.put("adj", " ");
 headingMap2.put("totalItemValue", " ");
+headingMap2.put("estimatedShipCost", " ");
 finalList.add(headingMap2);
  
 headingMap3=[:];
@@ -267,6 +271,7 @@ headingMap3.put("quantity", "Quantity");
 headingMap3.put("purTax", "Tax");
 headingMap3.put("adj", "Adjustments");
 headingMap3.put("totalItemValue", "Total Item Value");
+headingMap3.put("estimatedShipCost", "Freight Chages");
 finalList.add(headingMap3);
 
 if(invoice){
@@ -294,7 +299,13 @@ if(invoice){
 					invoiceDetailMap.put("invoiceSeqId", invoiceSequence);
 				}
 				shipmentId=eachInvoice.shipmentId;
+				
+				ShipmentDetails = delegator.findOne("Shipment", UtilMisc.toMap("shipmentId", shipmentId), true);
+				
+				estimatedShipCost = ShipmentDetails.get("estimatedShipCost");
+				
 				invoiceDetailMap.put("shipmentId",shipmentId);
+				invoiceDetailMap.put("estimatedShipCost",estimatedShipCost);
 				invoiceDetailMap.put("quantity", eachInvoiceitem.quantity);
 				invoiceDetails = delegator.findOne("Invoice", UtilMisc.toMap("invoiceId", eachInvoiceitem.invoiceId), true);
 				if(invoiceDetails){

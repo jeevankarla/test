@@ -135,6 +135,7 @@ if(UtilValidate.isNotEmpty(geoId)){
 }
 condition=EntityCondition.makeCondition(conditionList,EntityOperator.AND);
 invoices = delegator.findList("Invoice",condition,UtilMisc.toSet("invoiceId"),null,null,false);
+
 invoiceIds=EntityUtil.getFieldListFromEntityList(invoices, "invoiceId", true);
 
 conditionList.clear();
@@ -300,9 +301,9 @@ if(UtilValidate.isNotEmpty(InvoiceItem)){
 			 conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,invoiceItemSeqId)));
 			 tenPeSubDetails = EntityUtil.filterByCondition(invoiceSubsidyDetails1, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
 			 tenPeSubDetail= EntityUtil.getFirst(tenPeSubDetails);
-			 subsidyAmt=subsidyAmt.add(tenPeSubDetail.itemValue*(-1))
+			 subsidyAmt=subsidyAmt.add((tenPeSubDetail.amount*tenPeSubDetail.quantity)*(-1))
 			 if(subsidyAmt){
-			 value=subsidyAmt.multiply(10);
+				 value=subsidyAmt.multiply(10);
 			 }
 			 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoiceId));

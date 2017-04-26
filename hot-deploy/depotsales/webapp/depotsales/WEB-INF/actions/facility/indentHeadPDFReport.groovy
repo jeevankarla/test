@@ -42,6 +42,35 @@ partyId = parameters.partyId;
 
 //DateList.add(DateMap);
 //context.DateList=DateList;
+
+
+if(UtilValidate.isNotEmpty(parameters.partyfromDate)){
+	
+		try {
+			//daystart = UtilDateTime.toTimestamp(sdf.parse(parameters.partyfromDate));
+	
+			fromDate = new java.sql.Timestamp(sdf.parse(parameters.partyfromDate).getTime());
+	
+		} catch (ParseException e) {
+			//Debug.logError(e, "Cannot parse date string: " + parameters.partyfromDate, "");
+		}
+	
+	}
+	if(UtilValidate.isNotEmpty(parameters.partythruDate)){
+	
+		try {
+			//  dayend = UtilDateTime.toTimestamp(sdf.parse(parameters.partythruDate));
+	
+			thruDate = new java.sql.Timestamp(sdf.parse(parameters.partythruDate).getTime());
+		} catch (ParseException e) {
+			//Debug.logError(e, "Cannot parse date string: " + parameters.partythruDate, "");
+		}
+	}
+	
+	daystart = UtilDateTime.getDayStart(fromDate);
+	dayend = UtilDateTime.getDayEnd(thruDate);
+
+
 branchId = parameters.branchId;
 branch = delegator.findOne("PartyGroup",[partyId : branchId] , false);
 branchName = branch.get("groupName");
@@ -53,6 +82,10 @@ condListb = [];
 condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
 condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
 condListb.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
+condListb.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, daystart));
+condListb.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
+EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart)));
+
 condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 
 PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
@@ -1106,8 +1139,8 @@ totPurInvoiceNetAmt=0;
 						OrderHeaderAss = delegator.findOne("OrderHeader",[orderId : eachAssoc.toOrderId] , false);
 						
 						if(OrderHeaderAss.statusId != "ORDER_CANCELLED"){
-						 poOrderId  = OrderItemAssoc[0].toOrderId;
-						 poOrderItemSeqId  = OrderItemAssoc[0].toOrderItemSeqId;
+						 poOrderId  = eachAssoc.toOrderId;
+						 poOrderItemSeqId  = eachAssoc.toOrderItemSeqId;
 						 break;
 						}
 						
@@ -1507,6 +1540,19 @@ totPurInvoiceNetAmt=0;
 				shipmentIdDe = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
 			}
 
+			
+			InventoryItemList = delegator.findOne("InventoryItem",[inventoryItemId : inventoryItemId] , false);
+			
+			facilityId = "";
+			if(InventoryItemList)
+			facilityId = InventoryItemList.get("facilityId");
+			
+			
+			FacilityList = delegator.findOne("Facility",[facilityId : facilityId] , false);
+			
+			facilityName = "";
+			if(FacilityList)
+			facilityName = FacilityList.get("facilityName");
 
 			////Debug.log("shipmentIdDe============"+shipmentIdDe);
 
@@ -2023,6 +2069,10 @@ totPurInvoiceNetAmt=0;
 				//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
 
 
+				tempMap.put("facilityId",facilityId);
+				
+				tempMap.put("facilityName",facilityName);
+				
 				//==============scheme Quantity===============
 
 

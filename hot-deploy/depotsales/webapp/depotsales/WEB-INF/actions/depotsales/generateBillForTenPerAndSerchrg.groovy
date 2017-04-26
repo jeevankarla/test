@@ -27,20 +27,24 @@ import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
 
 billingId = parameters.billingId;
+billingType = parameters.billingType; 
 isInvoiceFind = parameters.isInvoiceFind;
 JSONArray openbillingPeriodsList = new JSONArray();
 JSONArray closebillingPeriodsList = new JSONArray();
 JSONArray rembInvoicesList = new JSONArray();
 
 conditionList=[];
-conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "TEN_SUB_REIMB_PERIOD"));
-schemeTimePeriod = delegator.findList("SchemeTimePeriod",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("periodName","fromDate","thruDate","schemeTimePeriodId","isClosed"), null, null, false);
-
+conditionList.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.IN,["DEP_SHIP_REIMB_PRD","TEN_SUB_REIMB_PRD"]));
+schemeTimePeriod = delegator.findList("SchemeTimePeriod",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 
 List<GenericValue> openschemeTimePeriod = EntityUtil.filterByCondition(schemeTimePeriod, EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"));
 List<GenericValue> closeschemeTimePeriod = EntityUtil.filterByCondition(schemeTimePeriod, EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "Y"));
-
-
+JSONObject openPeriodBillings = new JSONObject();
+JSONObject closePeriodBillings = new JSONObject();
+JSONArray  newList1 = new JSONArray();
+JSONArray  newList2 = new JSONArray();
+JSONArray  newList3 = new JSONArray();
+JSONArray  newList4 = new JSONArray();
 for(eachId in openschemeTimePeriod)
 {
 	JSONObject newObj = new JSONObject();
@@ -49,8 +53,14 @@ for(eachId in openschemeTimePeriod)
 	newObj.put("label", fromDateStr + "-" + thruDateStr + "[" + eachId.periodName +"]")
 	newObj.put("value", eachId.schemeTimePeriodId)
 	openbillingPeriodsList.add(newObj);
+	if("TEN_SUB_REIMB_PRD".equals(eachId.getString("periodTypeId"))){
+		newList1.add(newObj);
+	}else{
+		newList2.add(newObj);
+	}
 }
-
+openPeriodBillings.put("TEN_SUB_REIMB_PRD", newList1)
+openPeriodBillings.put("DEP_SHIP_REIMB_PRD", newList2)
 for(eachId in closeschemeTimePeriod)
 {
 	JSONObject newObj = new JSONObject();
@@ -59,8 +69,14 @@ for(eachId in closeschemeTimePeriod)
 	newObj.put("label", fromDateStr + "-" + thruDateStr + "[" + eachId.periodName +"]")
 	newObj.put("value", eachId.schemeTimePeriodId)
 	closebillingPeriodsList.add(newObj);
+	if("TEN_SUB_REIMB_PRD".equals(eachId.getString("periodTypeId"))){
+		newList3.add(newObj);
+	}else{
+		newList4.add(newObj);
+	}
 }
-
+closePeriodBillings.put("TEN_SUB_REIMB_PRD", newList3)
+closePeriodBillings.put("DEP_SHIP_REIMB_PRD", newList4)
 if(UtilValidate.isNotEmpty(isInvoiceFind)){
 	fromDate=null;
 	thruDate=null;
@@ -95,10 +111,16 @@ if(UtilValidate.isNotEmpty(isInvoiceFind)){
 	shemeId="";
 	if(UtilValidate.isNotEmpty(schemePeriod)){
 		shemeId=schemePeriod.schemeTimePeriodId;
-	}*/
+	}*/ 
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
-	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, ["SER_CHRG_REMB","TEN_PER_SUB_REMB"]));
+	if("TEN_SUB_REIMB_PRD".equals(billingType)){
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, ["SER_CHRG_REMB","TEN_PER_SUB_REMB"]));
+		conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "TEN_PER_SUB_SER_CHRG"));
+	}else{
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN, ["SHIP_CHARG_REMB","DEPO_CHRG_REMB"]));
+		conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "DEP_SHIP_REMB_CHARG"));
+	}
 	conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 	if(UtilValidate.isNotEmpty(billingId)){
 		conditionList.add(EntityCondition.makeCondition("periodBillingId", EntityOperator.EQUALS, billingId));
@@ -129,7 +151,8 @@ if(UtilValidate.isNotEmpty(isInvoiceFind)){
 	request.setAttribute("rembInvoicesList",rembInvoicesList);
 	return "success";
 }
-
+context.closePeriodBillings=closePeriodBillings;
+context.openPeriodBillings=openPeriodBillings;
 context.billingPeriodsList=openbillingPeriodsList;
 context.closebillingPeriodsList=closebillingPeriodsList;
 

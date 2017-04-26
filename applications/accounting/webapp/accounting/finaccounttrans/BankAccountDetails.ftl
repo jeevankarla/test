@@ -112,7 +112,7 @@ function setContent(){
           <td>Account ID</td>
           <td>Name of Bank</td>
           <td>Bank Acc No</td>
-          <td>Is Operative</td>
+          <td>Is Operative(Y or N)</td>
           <td>Bank balance</td>
           <td>Balance confirmation is on record Yes/No</td>
           <td>BRS available as on</td>
@@ -130,10 +130,10 @@ function setContent(){
               <td>${bankAccountDetailEntry.finAccountId?if_exists}<input type="hidden" name="finAccountId" id="finAccountId" value="${bankAccountDetailEntry.finAccountId?if_exists}"/></td>
               <td>${bankAccountDetailEntry.finAccountName?if_exists}<input type="hidden" name="finAccountName" id="finAccountName" value="${bankAccountDetailEntry.finAccountName?if_exists}"/></td>
               <td>${(bankAccountDetailEntry.finAccountCode)?if_exists}<input type="hidden" name="finAccountCode" id="finAccountCode" value="${bankAccountDetailEntry.finAccountCode?if_exists}"/></td>
-			  <td>${(bankAccountDetailEntry.isOperative)?if_exists}<input type="hidden" name="isOperative" id="isOperative" value="${bankAccountDetailEntry.isOperative?if_exists}"/></td>
+			  <td align="center"><input class='h3' text-align="center" type='text' id='isOperative' name='isOperative' size='1'  value="${bankAccountDetailEntry.isOperative?if_exists}"/><input type="hidden" name="isOperative" id="isOperative" value="${bankAccountDetailEntry.isOperative?if_exists}"/></td>
 			  <td><@ofbizCurrency amount=bankAccountDetailEntry.balance?if_exists/><input type="hidden" name="balance" id="balance" value="${bankAccountDetailEntry.balance?if_exists}"/></td>
 			  <td><input class='h3'  type='text' id='balanceConfirmation' name='balanceConfirmation' size='10'/><input type="hidden" name="pickRecord" id="pickRecord" value="Y"/> </td>
-              <td>${realisationDate?if_exists}<input type="hidden" name="realisationDate" id="realisationDate" value="${bankAccountDetailEntry.realisationDate?if_exists}"/></td>
+              <td><#if realisationDate?has_content>${realisationDate?if_exists}<#else><input class='h3'  type='text' id='realisationDate' name='realisationDate' size='10'/></#if><input type="hidden" name="realisationDate" id="realisationDate" value="${bankAccountDetailEntry.realisationDate?if_exists}"/></td>
               <td><input class='h3'  type='text' id='remarks' name='remarks' size='10'/></td>
             </tr>
             <#-- toggle the row color -->
@@ -142,7 +142,7 @@ function setContent(){
         </#list>
         <tr>
         	<td></td>
-        	<td></td>
+        	<td><input type="hidden" name="asOnDate" id="asOnDate" value="${parameters.asOnDate?if_exists}"/></td>
         	<td> <input type="hidden" name="printBankAccountDetails" id="printBankAccountDetails" value="Y"/> <input type="submit" class="smallSubmit" id="viewPrint" value="Print" onclick="javascript:setContent();"/></td>
         	<td><div class="loader" id="loader" ></div></td>
         	<td></td>
