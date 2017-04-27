@@ -253,6 +253,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker4("PartyLedgerFromDate","PartyLedgerThruDate");
 		makeDatePicker4("PartyLedgerCreditorFromDate","PartyLedgerCreditorThruDate");
 		makeDatePicker4("ChequeBouncingFromDate","ChequeBouncingThruDate");
+		makeDatePicker4("AsOnDate","");
 		makeDatePicker4("PartyWiseLedgerFromDate","PartyWiseLedgerThruDate");
 		makeDatePicker4("PartyWiseLedgerInterFromDate","PartyWiseLedgerInterThruDate");
 		makeDatePicker4("EMPLoanCrdtAdvFromDate","EMPLoanCrdtAdvThruDate");
@@ -765,6 +766,15 @@ function setOrgPartyId() {
 				    <td width="10%">To<input  type="text" size="18pt" id="ChequeBouncingThruDate" readonly  name="thruDate"/></td>
   					 <td width="5%">   </td>
 					  <td width="10%" align=""><input type="submit" value="PDF" onClick="javascript:appendParams('ChequeBouncingDetails', '<@ofbizUrl>printChequeBouncingDetails.pdf</@ofbizUrl>');" class="buttontext"/> </td>
+				</form>
+              </tr>
+              <tr class="alternate-row">
+				<form id="AdvanceOutstandingDetails" name="AdvanceOutstandingDetails" method="post" action="<@ofbizUrl>advanceOutstandingDetails.pdf</@ofbizUrl>" target="_blank">	
+					<td width="30%">Advance Outstanding Details</td>
+					<td width="10%">From<input  type="text" size="18pt" id="AsOnDate" readonly  name="AsOnDate"/></td>
+				    <td width="10%"></td>
+  					 <td width="5%">   </td>
+					  <td width="10%" align=""><input type="submit" value="PDF" onClick="javascript:appendParams('AdvanceOutstandingDetails', '<@ofbizUrl>advanceOutstandingDetails.pdf</@ofbizUrl>');" class="buttontext"/> </td>
 				</form>
               </tr>
               <#--

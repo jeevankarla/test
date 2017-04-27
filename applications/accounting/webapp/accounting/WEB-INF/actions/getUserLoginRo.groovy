@@ -84,7 +84,7 @@ if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
 }
 intOrgList = delegator.findList("PartyRelationshipAndDetail", EntityCondition.makeCondition(conditionList,EntityOperator.AND),null, null, null, false);
 
-
+context.roId=parameters.roId;
 context.intOrgList=intOrgList;
 
 
