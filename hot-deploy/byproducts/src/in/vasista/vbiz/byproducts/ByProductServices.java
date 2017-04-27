@@ -3440,22 +3440,14 @@ public class ByProductServices {
         	
         	List<GenericValue> payments = delegator.findList("Payment", EntityCondition.makeCondition("paymentId", EntityOperator.IN, paymentIds), null, null, null, false);
         	for(GenericValue payment: payments){
-        		Map<String, Object> cancelResults = dispatcher.runSync("setPaymentStatus", UtilMisc.toMap("userLogin", userLogin, "paymentId", payment.get("paymentId"), "statusId", "PMNT_VOID"));
-        		String finAccountTransId = payment.getString("finAccountTransId");
-        		if(UtilValidate.isNotEmpty(finAccountTransId)){
-        			Map finAccountTransMap = FastMap.newInstance();
-
-        			finAccountTransMap.put("finAccountTransId", finAccountTransId);
-        			finAccountTransMap.put("statusId", "FINACT_TRNS_CANCELED");
-        			finAccountTransMap.put("userLogin", userLogin);
-        			
-        			Map finAccountTransMapResult = dispatcher.runSync("setFinAccountTransStatus", finAccountTransMap);
-                    if (ServiceUtil.isError(finAccountTransMapResult)){
-                    	String errMsg =  ServiceUtil.getErrorMessage(finAccountTransMapResult);
-            		  	Debug.logError(errMsg , module);
-            		  	return ServiceUtil.returnError("Problem changing finaccount trans status to cancelled for transId :" + finAccountTransId);    
-            		}
-        		}
+        		String pmntId = payment.getString("paymentId");
+ 				Map paymentStatusMap = UtilMisc.toMap("userLogin", userLogin);
+ 				paymentStatusMap.put("paymentId", pmntId); 				
+ 				Map result1 = dispatcher.runSync("voidPayment", paymentStatusMap);
+ 				if(ServiceUtil.isError(result1)){
+ 		 			 Debug.logError("Error while calculating price service:"+result, module);
+ 				     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(result));
+ 		 		  }
         	}
             paymentGroup.set("statusId", "PAYGRP_CANCELLED");
             paymentGroup.set("lastModifiedDate", UtilDateTime.nowTimestamp());
