@@ -59,7 +59,7 @@ List formatRList = [];
 		}
 	}
 	List<GenericValue> partyClassificationRList = null;
-	partyClassificationRList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.IN, UtilMisc.toList("REGIONAL_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
+	partyClassificationRList = delegator.findList("PartyClassification", EntityCondition.makeCondition("partyClassificationGroupId", EntityOperator.EQUALS, UtilMisc.toList("REGIONAL_OFFICE")), UtilMisc.toSet("partyId"), null, null,false);
 	if(partyClassificationList){
 		for (eachList in partyClassificationRList) {
 			//Debug.log("eachList========================"+eachList.get("partyId"));

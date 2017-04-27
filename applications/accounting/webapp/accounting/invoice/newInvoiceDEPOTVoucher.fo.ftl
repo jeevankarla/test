@@ -40,10 +40,12 @@ under the License.
          	 <fo:block text-align="left"    font-size="10pt" >T.I.N No     : ${allDetailsMap.get("tinNumber")?if_exists}</fo:block>
            <fo:block text-align="left"  white-space-collapse="false"  font-size="10pt" >C.S.T No : ${allDetailsMap.get("cstNumber")?if_exists}                                                     C.I.N No : ${allDetailsMap.get("cinNumber")?if_exists} </fo:block>
            <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">SALE INVOICE</fo:block>
-           <fo:block text-align="center" font-size="14pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if><#if scheme != "General"><#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></#if></fo:block> 
+           <fo:block text-align="center" font-size="12pt"   white-space-collapse="false">Under : <#if scheme == "MGPS_10Pecent">MGP 10% Scheme<#elseif scheme == "MGPS">MGPS<#elseif scheme == "General">General</#if><#if scheme != "General"><#if isDepot=="Y">(Depot)<#else>(Non Depot)</#if></#if></fo:block> 
            <fo:block text-align="center" font-size="14pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED.</fo:block>
    		   <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">${BOAddress?if_exists}</fo:block>
-           <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">E-MAIL:${BOEmail?if_exists}</fo:block> 
+           <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">E-MAIL:${BOEmail?if_exists}</fo:block>   
+           <fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">${facilityName?if_exists}(Depot Transaction)</fo:block> 
+           <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>   
         </fo:static-content>
                  				
         
@@ -393,7 +395,7 @@ under the License.
 	   	            <#if scheme != "General">  
 	                <fo:block text-align="left"    font-size="10pt" >Purchase Value (RS):<#if grandTotal?has_content>${grandTotal?string("#0.00")}</#if></fo:block>
 	   				</#if>
-	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   
+	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvo?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   
 	        </fo:table-cell>
 			</fo:table-row>
 			<#if mgpsAmt != 0>
