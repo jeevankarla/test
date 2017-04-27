@@ -281,6 +281,12 @@ under the License.
             <if-not-empty field="invoice.billingAccountId">
                 <set field="paymentAppl.billingAccountId" from-field="invoice.billingAccountId"/>
             </if-not-empty>
+            <if-compare-field operator="greater-equals" field="payment.paymentDate" to-field="invoice.invoiceDate" type="Timestamp">
+       			<set field="paymentAppl.applicationDate" from-field="payment.paymentDate" type="Timestamp"/> 
+	        	<else>
+	        		<set field="paymentAppl.applicationDate" value="${invoice.invoiceDate}" type="Timestamp"/>
+	        	</else>
+       		</if-compare-field>       		
         </if-not-empty>
         <set field="tempAmountApplied" from-field="paymentAppl.amountApplied" type="BigDecimal"/>
     	<set field="tempAmountApplied" value="${groovy: return tempAmountApplied.setScale(2,BigDecimal.ROUND_DOWN)}" type="BigDecimal"/>
