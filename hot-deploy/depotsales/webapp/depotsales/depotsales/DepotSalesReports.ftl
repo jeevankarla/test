@@ -333,8 +333,8 @@ function makeDatePicker3(fromDateId ,thruDateId){
 		</form>
 		 </tr>	
 		<tr class="alternate-row">
-    	<form id="advaceReport" name="advaceReport" method="post"  target="_blank" action="<@ofbizUrl>advancePaymentReport.pdf</@ofbizUrl>">	
-  			<td width="30%"> Payment Wise Advace Report</td>
+    	<form id="advancePaymentReport" name="advancePaymentReport" method="post"  target="_blank" action="<@ofbizUrl>advancePaymentReport</@ofbizUrl>">	
+  			<td width="30%"> Payment Wise Advance Report</td>
   			<td width="15%">Date<input  type="text" size="18pt" id="APRDate"   name="APRDate"/></td>
   			<td width="10%">ReportType :<select name="reportType" id="reportType">
                 <option value='ADV_RECEIVED'>Received Advance</option>
@@ -354,15 +354,14 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				  </select>    								
 			  </span></td>	
 			<td width="10%"></td>
-			<td width="10%"></td>
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('advancePaymentReport', '<@ofbizUrl>advancePaymentReport.pdf</@ofbizUrl>');" class="buttontext"/></td>       			
-				
+				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('advancePaymentReport', '<@ofbizUrl>advancePaymentReport.xls?header=required</@ofbizUrl>');" class="buttontext"/></td>       			
 		</form>	
      
       </tr>
       <tr class="alternate-row">
-    	<form id="advaceReport" name="advaceReport" method="post"  target="_blank" action="<@ofbizUrl>partyWiseAdvaceReport.pdf</@ofbizUrl>">	
-  			<td width="30%"> Party Wise Advace Report</td>
+    	<form id="partyWiseAdvaceReport" name="partyWiseAdvaceReport" method="post"  target="_blank" action="<@ofbizUrl>partyWiseAdvaceReport</@ofbizUrl>">	
+  			<td width="30%"> Party Wise Advance Report </td>
   			<td width="15%">Date<input  type="text" size="18pt" id="PWAPRDate"   name="PWAPRDate"/></td>
   			<td width="10%">ReportType :<select name="reportType" id="reportType">
                 <option value='ADV_RECEIVED'>Received Advance</option>
@@ -382,8 +381,8 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				  </select>    								
 			  </span></td>	
 			<td width="10%"></td>
-			<td width="10%"></td>
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('partyWiseAdvaceReport', '<@ofbizUrl>partyWiseAdvaceReport.pdf</@ofbizUrl>');" class="buttontext"/></td>       				
+				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('partyWiseAdvaceReport', '<@ofbizUrl>partyWiseAdvaceReport.xls?header=required</@ofbizUrl>');" class="buttontext"/></td>       				
 		</form>	
      
       </tr>
@@ -664,6 +663,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				 		<option value=''></option>
 						<option value='YARN_SALE'>Branch Sales</option>
 						<option value='DEPOT_YARN_SALE'>Depot Sales</option>
+						<option value='DIES_AND_CHEM_SALE'>Dyes and Chemicals</option>
 				  </select>    								
 			  </span></td>
 			  

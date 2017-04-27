@@ -105,6 +105,19 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		 inventoryItemId = EntityUtil.getFirst(OrderItemAttribute).attrValue;
 	 }
 	 
+	 facilityId="";
+	 conditionList.clear();
+	 conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId));
+	 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+	 InventoryItem= delegator.findList("InventoryItem",  cond,null, null, null, false );
+	 if(InventoryItem){
+		 facilityId=EntityUtil.getFirst(InventoryItem).facilityId;
+	 }
+	 facilityName="";
+	 FacilityList = delegator.findOne("Facility",[facilityId : facilityId] , false);
+	 if(FacilityList)
+	 facilityName = FacilityList.get("facilityName");
+	 
 	 conditionList.clear();
 	 conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId));
 	 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -134,8 +147,8 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	context.supplierInvo = supplierInvoiceId;
 	
 	context.supplierInvoDate = supplierInvoiceDate;
-		 
-	 
+	
+	context.facilityName = facilityName;
 	 poOrderId = "";
 	 if(shipmentList){
 		 poOrderId = shipmentList.primaryOrderId;
@@ -1120,6 +1133,19 @@ OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false
 	 inventoryItemId = EntityUtil.getFirst(OrderItemAttribute).attrValue;
  }
  
+ facilityId="";
+ conditionList.clear();
+ conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId));
+ cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+ InventoryItem= delegator.findList("InventoryItem",  cond,null, null, null, false );
+ if(InventoryItem){
+	 facilityId=EntityUtil.getFirst(InventoryItem).facilityId;
+ }
+ facilityName="";
+ FacilityList = delegator.findOne("Facility",[facilityId : facilityId] , false);
+ if(FacilityList)
+ facilityName = FacilityList.get("facilityName");
+ 
  conditionList.clear();
  conditionList.add(EntityCondition.makeCondition("inventoryItemId", EntityOperator.EQUALS , inventoryItemId));
  cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -1150,6 +1176,7 @@ context.supplierInvo = supplierInvoiceId;
 
 context.supplierInvoDate = supplierInvoiceDate;
 	 
+context.facilityName = facilityName;
  
  poOrderId = "";
  if(shipmentList){

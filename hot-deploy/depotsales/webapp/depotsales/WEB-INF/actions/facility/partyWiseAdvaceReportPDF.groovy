@@ -136,6 +136,52 @@ if(UtilValidate.isNotEmpty(dateStr)){
 	}
 }
 
+paymentList=[];
+
+if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
+	stylesMap=[:];
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD");
+	stylesMap.put("mainHeader2", BOAddress);
+	stylesMap.put("mainHeader3", "PARTY WISE ADVANCE REPORT");
+	stylesMap.put("mainHeaderFontName","Arial");
+	stylesMap.put("mainHeadercellHeight",300);
+	stylesMap.put("mainHeadingCell",2);
+	stylesMap.put("mainHeaderFontSize",10);
+	stylesMap.put("mainHeaderBold",true);
+	stylesMap.put("columnHeaderBgColor",false);
+	stylesMap.put("columnHeaderFontName","Arial");
+	stylesMap.put("columnHeaderFontSize",10);
+	stylesMap.put("autoSizeCell",true);
+	stylesMap.put("columnHeaderCellHeight",300);
+	request.setAttribute("stylesMap", stylesMap);
+	request.setAttribute("enableStyles", true);
+	paymentList.add(stylesMap);
+	headerData=[:];
+	headerData.put("partyId", "Party Code");
+	headerData.put("partyName", "Party Name");
+	if(days == "30days"){
+		headerData.put("fstMntAdvPmntTotals", "Advance Value Between 0-30 Days");
+	}
+	else{
+		headerData.put("fstMntAdvPmntTotals", "Advance Value Between 0-45 Days");
+	}
+	if(days == "30days"){
+		headerData.put("secMntAdvPmntTotals", "Advance Value Between 31-60 Days");
+	}
+	else{
+		headerData.put("secMntAdvPmntTotals", "Advance Value Between 46-90 Days");
+	}
+	if(days == "30days"){
+		headerData.put("thrdMntAdvPmntTotals", "Advance Value Between 61-90 Days");
+	}
+	headerData.put("frthToSixthMntAdvPmntTotals", "Advance Value Between 91-180 Days");
+	headerData.put("sixthToOneYrAdvPmntTotals", "Advance Value Between 181 Days-1yr");
+	headerData.put("oneToTwoYrsAdvPmntTotals", "Advance Value Between 1yr-2yrs");
+	headerData.put("secndToThirdYrAdvPmntTotals", "Advance Value Between 2yrs-3yrs");
+	headerData.put("above3YrsAdvPmntTotals", "Advance Value Above 3yrs");
+	paymentList.add(headerData);
+}
+
 conditionList=[];
 if(reportType=="ADV_RECEIVED"){
 	conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.IN,["ONACCOUNT_PAYIN","INDENTADV_PAYIN"]));
@@ -162,7 +208,6 @@ else{
 	partyIds = EntityUtil.getFieldListFromEntityList(advancePaymentList, "partyIdTo", true);
 }
 
-paymentList=[];
 for(eachPartyId in partyIds){
 	tempMap=[:];
 	fstMntAdvPmntTotals =0;

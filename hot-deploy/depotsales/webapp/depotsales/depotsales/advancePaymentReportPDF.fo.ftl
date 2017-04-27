@@ -139,7 +139,7 @@ under the License.
 								            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false">${payment.get("paymentId")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false">${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.get("paymentDate"), "dd/MM/yyyy")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" white-space-collapse="false">${payment.get("paymentDate")?if_exists}</fo:block>
 								            </fo:table-cell >
 								             
 								            <fo:table-cell border-style="solid" >
