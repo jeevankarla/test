@@ -12451,12 +12451,15 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 		
 			  
 	       //============================increase inventory================================
-			  
-			  
-			  GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", orderId), false);
-			  
-			  String statusId = OrderHeader.get("statusId");
-			  
+			  String statusId ="";
+			  GenericValue	OrderHeader =null;
+			  try{
+				  	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", orderId), false);				  
+				    statusId = OrderHeader.getString("statusId");
+			  }catch(Exception e){
+				  
+			  }
+				  
 			  
 			  if(!statusId.equals("ORDER_CREATED")){
 			  
