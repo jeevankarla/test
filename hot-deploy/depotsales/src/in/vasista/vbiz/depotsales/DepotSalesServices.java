@@ -12453,6 +12453,12 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 	       //============================increase inventory================================
 			  
 			  
+			  GenericValue	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", orderId), false);
+			  
+			  String statusId = OrderHeader.get("statusId");
+			  
+			  
+			  if(!statusId.equals("ORDER_CREATED")){
 			  
 			  try {
 					List<GenericValue> orderItems =null;
@@ -12574,6 +12580,8 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 						 } catch (GenericEntityException e) {
 								Debug.logError(e, module);
 							}  
+			  
+			  }
 			  
 		result.put("salesChannelEnumId", salesChannelEnumId);
 		return result;
