@@ -1622,6 +1622,8 @@ totPurInvoiceNetAmt=0;
 			partyName = "";
 			if(partyId)
 				partyName = PartyHelper.getPartyName(delegator, partyId, false);
+				
+				partyName=partyName+"["+partyId+"]";
 
 			supplierName = "";
 			if(supplier)
