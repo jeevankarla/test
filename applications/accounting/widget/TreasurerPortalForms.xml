@@ -3150,7 +3150,7 @@ under the License.
         <field name="amount" ><display/></field>
         <field name="statusId" ><display/></field>
         
-        <field name="viewDetails" widget-style="buttontext" >
+        <field use-when="(&quot;${statusId}&quot;!=&quot;PAYGRP_CANCELLED&quot;)" name="viewDetails" widget-style="buttontext" >
             <hyperlink target="javascript: paymentDetails('${paymentGroupId}');" description="View" target-type="plain">
             </hyperlink>
         </field>
@@ -3159,33 +3159,33 @@ under the License.
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field> -->
-        <field use-when="paymentMethodTypeId.contains(&quot;CHEQUE&quot;)" name="Print Cheque" widget-style="buttontext" >
-            <hyperlink target="printPayGroupCheque.pdf" description="Print" target-window="_blank">
+        <field use-when="(paymentMethodTypeId.contains(&quot;CHEQUE&quot;))&amp;&amp;(&quot;${statusId}&quot;!=&quot;PAYGRP_CANCELLED&quot;)" name="Print Cheque" widget-style="buttontext" >
+         <hyperlink target="printPayGroupCheque.pdf" description="Print" target-window="_blank">
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field>
-        <field name="PartywiseVoucher" widget-style="buttontext" >
+        <field use-when="(&quot;${statusId}&quot;!=&quot;PAYGRP_CANCELLED&quot;)" name="PartywiseVoucher" widget-style="buttontext" >
             <hyperlink target="partyPayGroupVoucher.pdf" description="Voucher" target-window="_blank">
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field>
-        <field name="CSV" widget-style="buttontext" >
+        <field use-when="(&quot;${statusId}&quot;!=&quot;PAYGRP_CANCELLED&quot;)" name="CSV" widget-style="buttontext" >
             <hyperlink target="printBankReport.xls" description="Bank CSV" target-window="_blank">
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field>
-        <field name="PDF" widget-style="buttontext" >
+        <field use-when="(&quot;${statusId}&quot;!=&quot;PAYGRP_CANCELLED&quot;)" name="PDF" widget-style="buttontext" >
             <hyperlink target="printBankReport.pdf" description="Bank Report" target-window="_blank">
                	  <parameter param-name="paymentGroupId" />
                	  <parameter param-name="paymentRefNum" />
             </hyperlink>
         </field>
-        <field name="Print Voucher" widget-style="buttontext" >
+        <field use-when="(&quot;${statusId}&quot;!=&quot;PAYGRP_CANCELLED&quot;)" name="Print Voucher" widget-style="buttontext" >
             <hyperlink target="printPayGroupVoucher.pdf" description="Voucher" target-window="_blank">
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
         </field>
-        <field name="AbstractVoucher" widget-style="buttontext" >
+        <field use-when="(&quot;${statusId}&quot;!=&quot;PAYGRP_CANCELLED&quot;)" name="AbstractVoucher" widget-style="buttontext" >
             <hyperlink target="printPayGroupVoucherAbstract.pdf" description="AbstractVoucher" target-window="_blank">
                	  <parameter param-name="paymentGroupId" />
             </hyperlink>
