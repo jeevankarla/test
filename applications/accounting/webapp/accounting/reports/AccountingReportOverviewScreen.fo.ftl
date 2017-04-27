@@ -77,7 +77,7 @@ under the License.
 		                    <fo:table-body>
 			                    <fo:table-row>	                    	
 		                   			<fo:table-cell>
-		                        		<fo:block text-align="right" font-weight="bold"><#if invSequenceNum?has_content>Sequence Number:<fo:inline font-weight="bold">${invSequenceNum?if_exists}</fo:inline><#elseif finAccntTransSequence?has_content>Sequence Number:<fo:inline font-weight="bold">${finAccntTransSequence?if_exists}</fo:inline><#else></#if></fo:block>  
+		                        		
 		                   			</fo:table-cell>
 			                    </fo:table-row>
 		                    </fo:table-body>
@@ -91,6 +91,13 @@ under the License.
                     <fo:table-column column-width="50%"/>
                     <fo:table-column column-width="70%"/>
                     <fo:table-body>
+                    <fo:table-row>
+                   			<fo:table-cell></fo:table-cell>
+            				<fo:table-cell>
+                        		<fo:block text-align="left" font-weight="bold">${BankName?if_exists}</fo:block>
+                        		<fo:block text-align="left" font-weight="bold"><#if finAccntTransSequence?has_content>Sequence Number:${finAccntTransSequence?if_exists}</#if></fo:block>
+                   			</fo:table-cell>
+                   	</fo:table-row>
                     <fo:table-row>
             				<#if acctgTransId?has_content>
             				<fo:table-cell>
