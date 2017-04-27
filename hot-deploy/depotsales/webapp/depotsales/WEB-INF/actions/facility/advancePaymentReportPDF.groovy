@@ -242,10 +242,9 @@ for(eachPaymentId in paymentIds){
 		
 	if(UtilValidate.isNotEmpty(secndMntAdvPmnt)){
 		secndMntAdvPmnt=EntityUtil.getFirst(secndMntAdvPmnt);
-		secMntAdvPmntTotals = secndMntAdvPmnt.amount;
-		
-		secMntAdvPmntTotals=secMntAdvPmntTotals+thrdMntAdvPmntTotals;
+		secMntAdvPmntTotals = secndMntAdvPmnt.amount;		
 	}
+	secMntAdvPmntTotals=secMntAdvPmntTotals+thrdMntAdvPmntTotals;
 	
 	if(UtilValidate.isNotEmpty(firstMntAdvPmnt)){
 		firstMntAdvPmnt=EntityUtil.getFirst(firstMntAdvPmnt);
