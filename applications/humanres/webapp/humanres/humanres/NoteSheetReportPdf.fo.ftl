@@ -286,12 +286,14 @@ under the License.
        					 		<fo:table-cell><fo:block>Total</fo:block></fo:table-cell>       					 		
        					 		<fo:table-cell><fo:block text-align="right"><#if totalEarnings?has_content>
                    					<#assign total = totalEarnings?if_exists />
-                   			<@ofbizCurrency amount=total?string("#0") /></#if></fo:block></fo:table-cell>  
+                   					${total?string("#0")?if_exists}
+                   					</#if></fo:block></fo:table-cell>  
        					 		<fo:table-cell><fo:block></fo:block></fo:table-cell>
        					 		<fo:table-cell><fo:block text-align="right"> <#if totalDeductions?has_content>
                    					<#assign totalAmt = totalDeductions?if_exists />
                    					<#assign totalAmt=(totalAmt*-1)>
-                   			<@ofbizCurrency amount=totalAmt?string("#0") /></#if></fo:block></fo:table-cell>       					 		
+                   					${totalAmt?string("#0")?if_exists}
+                   					</#if></fo:block></fo:table-cell>       					 		
        					 	</fo:table-row>
        					 	<fo:table-row>
        					 		<fo:table-cell>
