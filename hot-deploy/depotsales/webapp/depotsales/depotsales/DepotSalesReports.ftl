@@ -334,7 +334,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 		 </tr>	
 		<tr class="alternate-row">
     	<form id="advaceReport" name="advaceReport" method="post"  target="_blank" action="<@ofbizUrl>advancePaymentReport.pdf</@ofbizUrl>">	
-  			<td width="30%"> Payment Wise Advace Report</td>
+  			<td width="30%"> Payment Wise Advance Report</td>
   			<td width="15%">Date<input  type="text" size="18pt" id="APRDate"   name="APRDate"/></td>
   			<td width="10%">ReportType :<select name="reportType" id="reportType">
                 <option value='ADV_RECEIVED'>Received Advance</option>
@@ -362,7 +362,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
       </tr>
       <tr class="alternate-row">
     	<form id="advaceReport" name="advaceReport" method="post"  target="_blank" action="<@ofbizUrl>partyWiseAdvaceReport.pdf</@ofbizUrl>">	
-  			<td width="30%"> Party Wise Advace Report</td>
+  			<td width="30%"> Party Wise Advance Report</td>
   			<td width="15%">Date<input  type="text" size="18pt" id="PWAPRDate"   name="PWAPRDate"/></td>
   			<td width="10%">ReportType :<select name="reportType" id="reportType">
                 <option value='ADV_RECEIVED'>Received Advance</option>
