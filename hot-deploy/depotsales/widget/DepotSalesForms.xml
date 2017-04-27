@@ -3861,6 +3861,32 @@
          <field name="above180Days" title="Invoice Value Above 180 Days"><display/></field>
          <field name="allMonthsTotal" title="Total Invoice Value"><display/></field>
     </form>
+    <form name="advancePaymentReportCSV" type="list" list-name="paymentList" view-size="99999">
+    	 <field name="paymentId" title="_"><display/></field>
+    	 <field name="paymentDate" title="_"><display/></field>
+    	 <field name="partyName" title="_"><display/></field>
+    	 <field name="fstMntAdvPmntTotals" title="_"><display/></field>
+         <field name="secMntAdvPmntTotals" title="_"><display/></field>
+         <field name="thrdMntAdvPmntTotals" title="_"><display/></field>
+         <field name="frthToSixthMntAdvPmntTotals" title="_"><display/></field>
+         <field name="sixthToOneYrAdvPmntTotals" title="_"><display/></field>
+         <field name="oneToTwoYrsAdvPmntTotals" title="_"><display/></field>
+         <field name="secndToThirdYrAdvPmntTotals" title="_"><display/></field>
+         <field name="above3YrsAdvPmntTotals" title="_"><display/></field>
+    </form>
+    
+    <form name="partyWiseAdvaceReportCSV" type="list" list-name="paymentList" view-size="99999">
+    	 <field name="partyId" title="_"><display/></field>
+    	 <field name="partyName" title="_"><display/></field>
+    	 <field name="fstMntAdvPmntTotals" title="_"><display/></field>
+         <field name="secMntAdvPmntTotals" title="_"><display/></field>
+         <field name="thrdMntAdvPmntTotals" title="_"><display/></field>
+         <field name="frthToSixthMntAdvPmntTotals" title="_"><display/></field>
+         <field name="sixthToOneYrAdvPmntTotals" title="_"><display/></field>
+         <field name="oneToTwoYrsAdvPmntTotals" title="_"><display/></field>
+         <field name="secndToThirdYrAdvPmntTotals" title="_"><display/></field>
+         <field name="above3YrsAdvPmntTotals" title="_"><display/></field>
+    </form>
     <form name="m1ReportCSV" type="list" list-name="finalCSVList" view-size="99999">
     	 <field name="prodcatName" title="_"><display/></field>
     	 <field name="productName" title="_"><display/></field>
