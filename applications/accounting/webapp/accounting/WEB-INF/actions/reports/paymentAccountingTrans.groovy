@@ -126,17 +126,19 @@ if(UtilValidate.isNotEmpty(acctgTransList) && acctgTransList.size()>0){
 //for display of sequence and Bank Name in AccountingReport in Payment overview
 finAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, paymentDetails.finAccountTransId), null, null, null, false));
 finAccountId="";
+finAccount="";
+BankName="";
 if(finAccntTransSequenceEntry){
 	finAccntTransSequence = finAccntTransSequenceEntry.transSequenceId;
 	finAccountId=finAccntTransSequenceEntry.finAccountId;
+	if(finAccountId){
+			finAccount=delegator.findOne("FinAccount",[finAccountId : finAccountId] , false);
+				if(finAccount.finAccountName){
+					BankName=finAccount.finAccountName;
+				}	
+	}
 }
 context.finAccntTransSequence = finAccntTransSequence;
-if(finAccountId){
-bankName=delegator.findOne("FinAccount",[finAccountId : finAccountId] , false);
-if(bankName.finAccountName){
-	context.BankName=bankName.finAccountName;
-	}	
-}
-
+context.BankName=BankName;
 context.put("finalMap",finalMap);
 context.put("entryList",entryList);

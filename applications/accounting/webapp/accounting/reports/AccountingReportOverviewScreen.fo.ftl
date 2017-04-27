@@ -77,7 +77,7 @@ under the License.
 		                    <fo:table-body>
 			                    <fo:table-row>	                    	
 		                   			<fo:table-cell>
-		                        		
+		                        		<fo:block text-align="right" font-weight="bold"><#if invSequenceNum?has_content>Sequence Number:<fo:inline font-weight="bold">${invSequenceNum?if_exists}</fo:inline></#if></fo:block>  
 		                   			</fo:table-cell>
 			                    </fo:table-row>
 		                    </fo:table-body>
