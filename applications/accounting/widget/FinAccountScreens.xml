@@ -77,6 +77,7 @@ under the License.
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
@@ -428,6 +429,7 @@ under the License.
         <section>
             <actions>
                 <set field="tabButtonItem" value="finAccountMain"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
