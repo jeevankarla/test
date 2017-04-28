@@ -487,7 +487,7 @@ under the License.
       					   <fo:table-column column-width="100%"/>	             
 				           	  <fo:table-body>
 							  <fo:table-row>
-							  <#if allDetailsMap.get("DstAddr")?has_content>
+							  <#--<#if allDetailsMap.get("DstAddr")?has_content>
 								  <fo:table-cell>
 	                                <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${allDetailsMap.get("DstAddr")?if_exists}</fo:block>
 	                               </fo:table-cell>
@@ -495,8 +495,12 @@ under the License.
 								  <fo:table-cell>
 								    <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="false" keep-together="always" font-size="12pt" ></fo:block> 
 								  </fo:table-cell>
-							 </#if>
-							 
+							 </#if>-->
+							 <#if facilityName?has_content>
+								 <fo:table-cell>
+		                         <fo:block text-align="left" font-family="Courier,monospace" white-space-collapse="true" keep-together="always" font-size="12pt"  >${facilityName?if_exists}</fo:block>
+		                         </fo:table-cell>
+	                         </#if>
 							</fo:table-row>
 						</fo:table-body>
 					   </fo:table>
