@@ -246,6 +246,8 @@ BranchList=[];
 	headerData.put("Qty", "Qty");
 	headerData.put("unit", "Unit");
 	headerData.put("poQty", "PO Qty");
+	headerData.put("poUnitPrice", "PO Rate");
+	headerData.put("POtotalamount", "PO Value");
 	headerData.put("salInv", "Sale Invoice");
 	headerData.put("salDate", "Sale Date");
 	headerData.put("salVal", "Sale Value");
@@ -356,9 +358,12 @@ BranchList=[];
 		poId="";
 		salValue=0;
 		poQty=0;
-	unitPrice=0;
+		unitPrice=0;
+		poUnitPrice=0;
 		unitpricetotalamount=0;
+		poUnitPriceTotal=0;
 		totalamount1=0;
+		POtotalamount=0;
 		salquantity1=0;
 		custCondList.clear();
 		custCondList.add(EntityCondition.makeCondition("toOrderId",  EntityOperator.EQUALS, orderId));
@@ -390,10 +395,16 @@ BranchList=[];
 					}
 				
 				orderItemList2 = EntityUtil.filterByCondition(orderItemList, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, poId));
+				//Debug.log("orderItemList2=========="+orderItemList2);
 				if(UtilValidate.isNotEmpty(orderItemList)){
 					for(orderItem in orderItemList2){
 						poQty=poQty+orderItem.quantity;
+						
+						poUnitPriceTotal=poUnitPriceTotal+orderItem.unitPrice;
 					}
+					poUnitPrice=(poUnitPriceTotal)/(orderItemList2.size());
+					poUnitPrice=Math.round(poUnitPrice * 100) / 100;
+					POtotalamount=POtotalamount+((poUnitPrice)*(poQty));
 				}
 			}
 			tempData.put("poNo", poId);
@@ -449,9 +460,8 @@ BranchList=[];
 			
 			tempData.put("unit", unitPrice);
 			tempData.put("amount",totalamount1);
-			
-			
-			
+			tempData.put("poUnitPrice", poUnitPrice);
+			tempData.put("POtotalamount",POtotalamount);			
 		}
 		
 		productStoreId=eachHeader.productStoreId;
