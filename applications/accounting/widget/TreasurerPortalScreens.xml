@@ -6661,6 +6661,20 @@
 			</widgets>
 		</section>
 	</screen>
+	<screen name="AdvanceOutstandingDetailsPdf">
+		<section>
+			<actions>
+				 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginBranch.groovy"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/outstandingAdvances.groovy"/>
+            </actions>
+			<widgets>
+				<platform-specific> 
+					<xsl-fo><html-template location="component://accounting/webapp/accounting/reports/AdvanceOutstandingDetails.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+			</widgets>
+		</section>
+	</screen>
 	
 	<screen name="APSingleGroupPaymentProcessing">
     	<section>
