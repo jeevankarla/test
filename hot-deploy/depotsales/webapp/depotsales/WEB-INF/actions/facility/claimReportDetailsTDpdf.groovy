@@ -27,6 +27,7 @@ import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.order.order.*;
 import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.accounting.invoice.InvoiceWorker;
 import java.util.Map.Entry;
 reportTypeFlag=parameters.reportTypeFlag;
 context.reportTypeFlag=reportTypeFlag;
@@ -209,19 +210,26 @@ conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.E
 conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,silkProdIds));
-silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","costCenterId","shipmentId","productId"), null, null, false );
+silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
 
 index=1;
 for(invoice in silkinvoicesAndItems)
 {
 	tempMap=[:]
-	BigDecimal actualFrightCharges = Bigdecimal.ZERO;
-	BigDecimal eligibleFrightCharges = Bigdecimal.ZERO;
-	BigDecimal depotCharges = Bigdecimal.ZERO;
+	BigDecimal actualFrightCharges = BigDecimal.ZERO;
+	BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
+	BigDecimal depotCharges = BigDecimal.ZERO;
 	invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 	shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-	actualFrightCharges=shipment.estimatedShipCost
-	eligibleFrightCharges=(invoiceAmount.multiply(2)).divide(100);
+	Debug.log("shipment.estimatedShipCost=============="+ shipment.estimatedShipCost)
+	if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+		actualFrightCharges=shipment.estimatedShipCost
+	}
+	product = delegator.findOne("Product",[productId : invoice.productId] , false);
+	productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+	roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
+	schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+	eligibleFrightCharges=(invoiceAmount.multiply(schemePercentage)).divide(100);
 	depotCharges=(invoiceAmount.multiply(2)).divide(100);
 	String partyName = PartyHelper.getPartyName(delegator,invoice.partyId,false);
 	tempMap.put("sNo", index);
@@ -229,16 +237,22 @@ for(invoice in silkinvoicesAndItems)
 	tempMap.put("totInvQty", invoice.quantity);
 	tempMap.put("totInvValue", invoiceAmount);
 	tempMap.put("actualFrightCharges", actualFrightCharges);
-	if(actualFrightCharges.compareTo(eligibleFrightCharges)>0){
-		tempMap.put("frightCharges", eligibleFrightCharges);
+	if(UtilValidate.isNotEmpty(actualFrightCharges)){
+		if(actualFrightCharges.compareTo(eligibleFrightCharges)>0){
+			tempMap.put("frightCharges", eligibleFrightCharges);
+		}else{
+			tempMap.put("frightCharges", actualFrightCharges);
+		}
 	}else{
-		tempMap.put("frightCharges", actualFrightCharges);
+		tempMap.put("frightCharges", BigDecimal.ZERO);
 	}
-	tempMap.put("depotCharges", depotCharges);
-	facility = delegator.findOne("Facility",[ownerPartyId : invoice.partyId] , false);
+	
+	facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,invoice.partyId), UtilMisc.toSet("facilityId"), null, null, false );
 	if(UtilValidate.isNotEmpty(facility)){
+		tempMap.put("depotCharges", depotCharges);
 		silkDepotList.add(tempMap);
 	}else{
+	    tempMap.put("depotCharges", BigDecimal.ZERO);
 		silkNonDepotList.add(tempMap);
 	}
 	++index;
@@ -251,11 +265,47 @@ conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.E
 conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,cottonProdIds));
-cottonInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","partyIdFrom","partyId","costCenterId","shipmentId","productId"), null, null, false );
+cottonInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
 
 for(invoice in cottonInvoicesAndItems)
 {
-	tempmap=[:];
+	tempMap=[:]
+	BigDecimal actualFrightCharges = BigDecimal.ZERO;
+	BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
+	BigDecimal depotCharges = BigDecimal.ZERO;
+	invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+	shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+	Debug.log("shipment.estimatedShipCost=============="+ shipment.estimatedShipCost)
+	if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+		actualFrightCharges=shipment.estimatedShipCost
+	}
+	eligibleFrightCharges=(invoiceAmount.multiply(2)).divide(100);
+	depotCharges=(invoiceAmount.multiply(2)).divide(100);
+	String partyName = PartyHelper.getPartyName(delegator,invoice.partyId,false);
+	tempMap.put("sNo", index);
+	tempMap.put("partyName", partyName);
+	tempMap.put("totInvQty", invoice.quantity);
+	tempMap.put("totInvValue", invoiceAmount);
+	tempMap.put("actualFrightCharges", actualFrightCharges);
+	if(UtilValidate.isNotEmpty(actualFrightCharges)){
+		if(actualFrightCharges.compareTo(eligibleFrightCharges)>0){
+			tempMap.put("frightCharges", eligibleFrightCharges);
+		}else{
+			tempMap.put("frightCharges", actualFrightCharges);
+		}
+	}else{
+		tempMap.put("frightCharges", BigDecimal.ZERO);
+	}
+	
+	facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,invoice.partyId), UtilMisc.toSet("facilityId"), null, null, false );
+	if(UtilValidate.isNotEmpty(facility)){
+		tempMap.put("depotCharges", depotCharges);
+		cottonDepotList.add(tempMap);
+	}else{      
+	    tempMap.put("depotCharges", BigDecimal.ZERO);
+		cottonNonDepotList.add(tempMap);
+	}
+	++index;
 	
 }
 
@@ -266,12 +316,48 @@ conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.E
 conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,juteProdIds));
-juteInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","partyIdFrom","partyId","costCenterId","shipmentId","productId"), null, null, false );
+juteInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
 
 
 for(invoice in juteInvoicesAndItems)
 {
-	tempmap=[:];
+	tempMap=[:]
+	BigDecimal actualFrightCharges = BigDecimal.ZERO;
+	BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
+	BigDecimal depotCharges = BigDecimal.ZERO;
+	invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+	shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+	Debug.log("shipment.estimatedShipCost=============="+ shipment.estimatedShipCost)
+	if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+		actualFrightCharges=shipment.estimatedShipCost
+	}
+	eligibleFrightCharges=(invoiceAmount.multiply(2)).divide(100);
+	depotCharges=(invoiceAmount.multiply(2)).divide(100);
+	String partyName = PartyHelper.getPartyName(delegator,invoice.partyId,false);
+	tempMap.put("sNo", index);
+	tempMap.put("partyName", partyName);
+	tempMap.put("totInvQty", invoice.quantity);
+	tempMap.put("totInvValue", invoiceAmount);
+	tempMap.put("actualFrightCharges", actualFrightCharges);
+	if(UtilValidate.isNotEmpty(actualFrightCharges)){
+		if(actualFrightCharges.compareTo(eligibleFrightCharges)>0){
+			tempMap.put("frightCharges", eligibleFrightCharges);
+		}else{
+			tempMap.put("frightCharges", actualFrightCharges);
+		}
+	}else{
+		tempMap.put("frightCharges", BigDecimal.ZERO);
+	}
+	
+	facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,invoice.partyId), UtilMisc.toSet("facilityId"), null, null, false );
+	if(UtilValidate.isNotEmpty(facility)){
+		tempMap.put("depotCharges", depotCharges);
+		juteDepotList.add(tempMap);
+	}else{    
+	    tempMap.put("depotCharges", BigDecimal.ZERO);
+		juteNonDepotList.add(tempMap);
+	}
+	++index;
 }
 conditionList.clear();
 conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -280,18 +366,57 @@ conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.E
 conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,otherProdIds));
-otherInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","partyIdFrom","partyId","costCenterId","shipmentId","productId"), null, null, false );
+otherInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
 
 
 for(invoice in otherInvoicesAndItems)
 {
-	tempmap=[:];
+	tempMap=[:]
+	BigDecimal actualFrightCharges = BigDecimal.ZERO;
+	BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
+	BigDecimal depotCharges = BigDecimal.ZERO;
+	invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+	shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+	Debug.log("shipment.estimatedShipCost=============="+ shipment.estimatedShipCost)
+	if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+		actualFrightCharges=shipment.estimatedShipCost
+	}
+	eligibleFrightCharges=(invoiceAmount.multiply(2)).divide(100);
+	depotCharges=(invoiceAmount.multiply(2)).divide(100);
+	String partyName = PartyHelper.getPartyName(delegator,invoice.partyId,false);
+	tempMap.put("sNo", index);
+	tempMap.put("partyName", partyName);
+	tempMap.put("totInvQty", invoice.quantity);
+	tempMap.put("totInvValue", invoiceAmount);
+	tempMap.put("actualFrightCharges", actualFrightCharges);
+	if(UtilValidate.isNotEmpty(actualFrightCharges)){
+		if(actualFrightCharges.compareTo(eligibleFrightCharges)>0){
+			tempMap.put("frightCharges", eligibleFrightCharges);
+		}else{
+			tempMap.put("frightCharges", actualFrightCharges);
+		}
+	}else{
+		tempMap.put("frightCharges", BigDecimal.ZERO);
+	}
+	
+	facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,invoice.partyId), UtilMisc.toSet("facilityId"), null, null, false );
+	if(UtilValidate.isNotEmpty(facility)){
+		tempMap.put("depotCharges", depotCharges);
+		otherDepotList.add(tempMap);
+	}else{
+	    tempMap.put("depotCharges", BigDecimal.ZERO);
+		otherNonDepotList.add(tempMap);
+	}
+	++index;
 	
 }
+
+Debug.log("silkNonDepotList============"+ silkNonDepotList)
+Debug.log("silkDepotList============"+ silkDepotList)
 context.silkDepotList=silkDepotList
 context.silkNonDepotList=silkNonDepotList
-
-context.cottonDepotList=cottonDepotList
+  
+context.cottonDepotList=cottonDepotList  
 context.cottonNonDepotList=cottonNonDepotList
 
 context.juteDepotList=juteDepotList
