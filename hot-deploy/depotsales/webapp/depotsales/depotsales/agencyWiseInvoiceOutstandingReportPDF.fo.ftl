@@ -43,64 +43,91 @@ under the License.
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOEmail?if_exists}</fo:block>
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                 <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
-				<fo:block text-align="center" font-size="12pt" font-weight="bold" >AGENCY WISE INVOICE OUTSTANDING REPORT</fo:block>
+				<fo:block text-align="center" font-size="12pt" font-weight="bold" >AGENCY WISE INVOICE OUTSTANDING REPORT AS ON ${dateStr?if_exists}</fo:block>
 				
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		       
         		<fo:block>
              		<fo:table >
-             			
-             		    <fo:table-column column-width="20%"/>
-			            <fo:table-column column-width="13.3%"/>
-			            <fo:table-column column-width="13.3%"/>
-			            <fo:table-column column-width="13.3%"/>
-	                    <fo:table-column column-width="13.3%"/>
-	                    <fo:table-column column-width="13.3%"/>
-	                    <fo:table-column column-width="13.3%"/>
+             		    <fo:table-column column-width="12%"/>
+             		    <fo:table-column column-width="8.5%"/>
+             		    <#if days=="30days">
+             		    <fo:table-column column-width="8.5%"/>
+			            <fo:table-column column-width="8.5%"/>
+			            <fo:table-column column-width="8.1%"/>
+			            <#else>
+			            <fo:table-column column-width="8.5%"/>
+			            <fo:table-column column-width="8.5%"/>
+			            </#if>
+			            <fo:table-column column-width="8.5%"/>
+	                    <fo:table-column column-width="8.5%"/>
+	                    <fo:table-column column-width="8.5%"/>
+	                    <fo:table-column column-width="8%"/>
+	                    <fo:table-column column-width="9%"/>
+	                    <fo:table-column column-width="11%"/>
 			            <fo:table-body>
-		            		 
 			                 <fo:table-row>
-								
 					            <fo:table-cell border-style="solid">
 					                <#if reportType=="CREDITORS">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Supplier/Creditor</fo:block>
+										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Supplier/</fo:block>
+										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Creditor</fo:block>
 									<#else>
-										 <fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Customer/Debitor</fo:block>
+										 <fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Customer/</fo:block>
+										  <fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">Debitor</fo:block>
 									</#if>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Between</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">PartyId</fo:block>
+					            </fo:table-cell >
+					            <#if days=="30days">
+					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">1-30 Days</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Between</fo:block>
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">31-60 Days</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Between</fo:block>
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">61-90 Days</fo:block>
 					            </fo:table-cell>
+					            <#else>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Between</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">1-45 Days</fo:block>
+					            </fo:table-cell >
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">45-90 Days</fo:block>
+					            </fo:table-cell>
+					            </#if>
+					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">91-180 Days</fo:block>
 					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">181days-</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">1year</fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">1-2</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">years</fo:block>
+					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">2-3</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">years</fo:block>
+					            </fo:table-cell>
 					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Invoice Value</fo:block>
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Above 180 Days</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Above</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">3years</fo:block>
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Total Invoice</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Total</fo:block>
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">Value</fo:block>
 					            </fo:table-cell>
-							</fo:table-row>  
+							</fo:table-row>
 								<#list invocieList as invoice>
 										<fo:table-row>
 								            <fo:table-cell border-style="solid" >
 								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell border-style="solid" >
+								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyId")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("fstMntInvTotals")?if_exists?string("##0.00")}</fo:block>
@@ -115,13 +142,23 @@ under the License.
 								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frthMntInvTotals")?if_exists?string("##0.00")}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("above180Days")?if_exists?string("##0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("fifthMntInvTotals")?if_exists?string("##0.00")}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("oneyearInvTotals")?if_exists?string("##0.00")}</fo:block>
+								            </fo:table-cell >
+								             <#if days=="30days">
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("twoyearInvTotals")?if_exists?string("##0.00")}</fo:block>
+								            </fo:table-cell >
+								            </#if>
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("above3years")?if_exists?string("##0.00")}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("allMonthsTotal")?if_exists?string("##0.00")}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
-								
 							     </#list>
 						</fo:table-body>
 					</fo:table>

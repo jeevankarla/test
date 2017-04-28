@@ -320,11 +320,28 @@ function makeDatePicker3(fromDateId ,thruDateId){
     	<form id="agencyWiseInvoiceOutstandingReport" name="agencyWiseInvoiceOutstandingReport" method="post"  target="_blank" action="<@ofbizUrl>agencyWiseInvoiceOutstandingReport</@ofbizUrl>">	
   			<td width="30%"> Agency Wise Invoice Outstanding Report</td>
   			<td width="15%">Date<input  type="text" size="18pt" id="AWIORDate"   name="AWIORDate"/></td>
-  			
+  			<td width="10%">Days Wise :<select name="days" id="days">
+                <option value='30days'>30 Days</option>
+                <option value='45days'>45 Days</option>
+  			 </select>
+  			 <span class='h3'>Type :
+				 <select name="Agencyreport" id="Agencyreport">
+				     <option value='DETAILED'>Detailed</option>
+				     <option value='ABSTRACT'>Abstract</option>
+				  </select>    								
+			  </span>
+  			 </td>
 			<td width="10%">ReportType :<select name="reportType" id="reportType">
                 <option value='CREDITORS'>CREDITORS</option>
                 <option value='DEBITORS'>DEBITORS</option>
-  			 </select></td>	
+  			 </select></td>
+  			 <td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			</td>	
 			<td width="10%"></td>
 			<td width="10%"></td>
 				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('agencyWiseInvoiceOutstandingReport', '<@ofbizUrl>agencyWiseInvoiceOutstandingReport.pdf</@ofbizUrl>');" class="buttontext"/></td> 

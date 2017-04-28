@@ -3855,13 +3855,31 @@
     </form>
     
     <form name="agencyWiseInvoiceOutstandingReportCSV" type="list" list-name="invocieList" view-size="99999">
-    	 <field name="partyName" title="Debitor/Creditor"><display/></field>
-    	 <field name="fstMntInvTotals" title="Invoice Value Between 1-30 Days"><display/></field>
-         <field name="secMntInvTotals" title="Invoice Value Between 31-60 Days"><display/></field>
-         <field name="thrdMntInvTotals" title="Invoice Value Between 61-90 Days"><display/></field>
-         <field name="frthMntInvTotals" title="Invoice Value Between 91-180 Days"><display/></field>
-         <field name="above180Days" title="Invoice Value Above 180 Days"><display/></field>
-         <field name="allMonthsTotal" title="Total Invoice Value"><display/></field>
+    	 <field name="partyName" title="-"><display/></field>
+    	 <field name="partyId" title="-"><display/></field>
+    	 <field name="fstMntInvTotals" title="-"><display/></field>
+         <field name="secMntInvTotals" title="-"><display/></field>
+         <field name="thrdMntInvTotals" title="-"><display/></field>
+         <field name="frthMntInvTotals" title="-"><display/></field>
+         <field name="fifthMntInvTotals" title="-"><display/></field>
+         <field name="oneyearInvTotals" title="-"><display/></field>
+         <field name="twoyearInvTotals" title="-"><display/></field>
+         <field name="above3years" title="-"><display/></field>
+         <field name="allMonthsTotal" title="-"><display/></field>
+    </form>
+    <form name="DetailedagencyWiseInvoiceOutstandingReportCSV" type="list" list-name="invoiceDetailedList" view-size="99999">
+    	 <field name="partyName" title="-"><display/></field>
+    	 <field name="partyId" title="-"><display/></field>
+    	 <field name="invoiceId" title="-"><display/></field>
+    	 <field name="invoiceDate" title="-"><display/></field>
+    	 <field name="fstMntInvTotals" title="-"><display/></field>
+         <field name="secMntInvTotals" title="-"><display/></field>
+         <field name="thrdMntInvTotals" title="-"><display/></field>
+         <field name="frthMntInvTotals" title="-"><display/></field>
+         <field name="fifthMntInvTotals" title="-"><display/></field>
+         <field name="oneyearInvTotals" title="-"><display/></field>
+         <field name="twoyearInvTotals" title="-"><display/></field>
+         <field name="above3years" title="-"><display/></field>
     </form>
     <form name="advancePaymentReportCSV" type="list" list-name="paymentList" view-size="99999">
     	 <field name="paymentId" title="_"><display/></field>
