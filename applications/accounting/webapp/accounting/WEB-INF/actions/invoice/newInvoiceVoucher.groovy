@@ -757,8 +757,11 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 		
 			 
 			 remarks = "";
+			 uom="";
 			 if(OrderItemDetail)
 			 remarks = OrderItemDetail[0].get("remarks");
+			 if(OrderItemDetail)
+			 uom = OrderItemDetail[0].get("Uom");
 			 
 		/*	 conditionList.clear();
 			 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
@@ -820,6 +823,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 				
 				
 				tempMap.put("quantity", quantity);
+				tempMap.put("Uom", uom);
 			
 			//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
 				
@@ -1872,12 +1876,13 @@ context.externalOrderId = externalOrderId;
 		 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 		 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 		 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
-	
 		 
 		 remarks = "";
+		 uom="";
 		 if(OrderItemDetail)
 		 remarks = OrderItemDetail[0].get("remarks");
-		 
+		 if(OrderItemDetail)
+		 uom = OrderItemDetail[0].get("Uom");
 	/*	 conditionList.clear();
 		 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 		 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, seq));
@@ -1934,6 +1939,7 @@ context.externalOrderId = externalOrderId;
 			
 			
 			tempMap.put("quantity", quantity);
+			tempMap.put("Uom", uom);
 		
 		//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
 			

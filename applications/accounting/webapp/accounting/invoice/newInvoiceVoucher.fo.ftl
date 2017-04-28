@@ -218,7 +218,7 @@ under the License.
 				<#assign totQuantity = totQuantity+invoiceDetail.get("quantity")>
 				</#if>
 				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists}<#else>&#160;</#if></fo:block>
-				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}(${invoiceDetail.get("unit")?if_exists})<#else>&#160;</#if></fo:block>
+				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}(${invoiceDetail.get("Uom")?if_exists})(${invoiceDetail.get("unit")?if_exists})<#else>&#160;</#if></fo:block>
 				
 				
                 <#assign totServiceCharge = 0>

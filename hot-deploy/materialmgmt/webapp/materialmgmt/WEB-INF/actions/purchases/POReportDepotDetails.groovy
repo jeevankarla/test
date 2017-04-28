@@ -52,7 +52,11 @@ if (orderId) {
 	orderHeader = delegator.findByPrimaryKey("OrderHeader", [orderId : orderId]);
 	orderDesctioption=orderHeader.orderName;
 	productStoreId = orderHeader.productStoreId;
-	
+	originFacilityId=orderHeader.get("originFacilityId");
+	facilityName="";
+	FacilityList=delegator.findOne("Facility",[facilityId:originFacilityId],false);
+	facilityName=FacilityList.facilityName;
+	context.facilityName = facilityName;
 	if (productStoreId) {
 		productStore = delegator.findByPrimaryKey("ProductStore", [productStoreId : productStoreId]);
 		branchId=productStore.payToPartyId;

@@ -40,9 +40,14 @@ context.heldOnDate = heldOnDate;
  orderDate = orderHeaderList.get("orderDate");
  
  externalOrderId = orderHeaderList.get("externalId");
+ originFacilityId=orderHeaderList.get("originFacilityId");
  
  context.orderDate = orderDate;
  context.externalOrderId = externalOrderId;
+ facilityName="";
+ FacilityList=delegator.findOne("Facility",[facilityId:originFacilityId],false);
+ facilityName=FacilityList.facilityName;
+ context.facilityName = facilityName;
  allDetailsMap = [:];
 grandTOt = orderHeaderList.get("grandTotal");
 productStoreId = orderHeaderList.get("productStoreId");

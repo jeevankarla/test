@@ -311,6 +311,7 @@ BranchList=[];
 	orderList.add(stylesMap);
 	headerData=[:];
 	headerData.put("orderDate", "Date");
+	headerData.put("indentRefNo", "Indent Reference No");
 	headerData.put("orderId", "Cust Order");
 	headerData.put("orderNo", "Indent No");
 	headerData.put("productNameCSV", "Count");
@@ -371,7 +372,11 @@ BranchList=[];
 		 tempData.put("tallyRefNo", eachHeader.tallyRefNo);
 		else
 		 tempData.put("tallyRefNo", "NA");
-		
+		 if(eachHeader.externalId)
+		 tempData.put("indentRefNo", eachHeader.externalId);
+		else
+		 tempData.put("indentRefNo", "");
+	
 		orderNo ="NA";
 		orderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , eachHeader.orderId)  , null, null, null, false );
 		if(UtilValidate.isNotEmpty(orderHeaderSequences)){
