@@ -480,6 +480,8 @@
         <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
         <attribute name="schemeTimePeriodIdList" mode="IN" type="List" optional="false"/>
         <attribute name="quota" mode="IN" type="BigDecimal" optional="false"/>
+         <attribute name="fromDate" mode="IN" type="Timestamp" optional="true"/>
+          <attribute name="thruDate" mode="IN" type="Timestamp" optional="true"/>
     </service>
     <service name="getBranchCfcList" engine="java"
                 location="in.vasista.vbiz.depotsales.DepotSalesServices" invoke="getBranchCfcList" auth="false">

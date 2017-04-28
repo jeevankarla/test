@@ -12642,7 +12642,7 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 			}
 			
 			Map partyBalanceHistoryContext = FastMap.newInstance();
-			partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quota",quota,"userLogin", userLogin);
+			partyBalanceHistoryContext = UtilMisc.toMap("schemeId",schemeId,"partyId",partyId,"productCategoryId",productCategoryId,"schemeTimePeriodIdList", schemeTimePeriodIdList,"quota",quota,"userLogin", userLogin,"fromDate",fromDate,"thruDate",thruDate);
 			
 			try { 	
 				Map<String, Object> resultMapquota = dispatcher.runSync("cancelQuota", partyBalanceHistoryContext);
@@ -12665,6 +12665,8 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 		String schemeId=(String) context.get("schemeId");
 		String partyId=(String) context.get("partyId");
 		BigDecimal quota = (BigDecimal)context.get("quota");
+		Timestamp fromDate = (Timestamp) context.get("fromDate");
+		Timestamp thruDate = (Timestamp) context.get("thruDate");
 		String schemeTimePeriodId=null;
 		List<GenericValue> schemeTimePeriodIdList=(List<GenericValue>) context.get("schemeTimePeriodIdList");
 		try{
@@ -12677,6 +12679,19 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 			if(UtilValidate.isEmpty(periodTime)){
 				periodTime=BigDecimal.ONE;
 			}
+			Timestamp getThruDate = null;
+			if(periodTime.doubleValue()==2)
+				thruDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(fromDate),60);
+			if(periodTime.doubleValue()==3)
+				thruDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(fromDate),90);
+				
+			condsList.clear();
+		    condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(fromDate.getTime())));
+		  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+					EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime()))));
+		  	
+		  	 schemeTimePeriodIdList = EntityUtil.filterByCondition(schemeTimePeriodIdList, EntityCondition.makeCondition(condsList,EntityOperator.AND));
+
 			if(UtilValidate.isNotEmpty(periodTime) && periodTime.compareTo(BigDecimal.ZERO)>0){
 			//if periodTime is exist
 				List schemeTimePeriodIds = EntityUtil.getFieldListFromEntityList(schemeTimePeriodIdList, "schemeTimePeriodId", true);
@@ -12685,7 +12700,7 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 				condsList.add(EntityCondition.makeCondition("usedQuota", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
 				condsList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
 				schemeTimePeriodIdList =  delegator.findList("PartyQuotaBalanceHistoryAndTimePeriod",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, UtilMisc.toList("-periodNum"), null, true);   
-
+				
 				//test
 				
 			  for(int i=0;i< periodTime.intValueExact();i++){
