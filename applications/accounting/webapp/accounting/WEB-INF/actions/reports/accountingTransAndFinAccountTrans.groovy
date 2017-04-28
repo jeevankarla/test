@@ -122,8 +122,16 @@ if(UtilValidate.isNotEmpty(acctgTransId)){
 	}else{
 		accountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : acctgTransId] , false);
 	}
-	finAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, accountingTransEntries.finAccountTransId), null, null, null, false));
-}else{
+	if(UtilValidate.isNotEmpty(finAccountTransId)){
+		finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
+	}
+	if(finAccountTransAttributeDetails){
+		finAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, finAccountTransAttributeDetails.attrValue), null, null, null, false));
+	}
+	else{
+		finAccntTransSequenceEntry = EntityUtil.getFirst(delegator.findList("FinAccntTransSequence", EntityCondition.makeCondition("finAccountTransId", EntityOperator.EQUALS, accountingTransEntries.finAccountTransId ), null, null, null, false));
+	}
+	}else{
 	if(UtilValidate.isNotEmpty(finAccountTransId)){
 		finAccountTransAttributeDetails = delegator.findOne("FinAccountTransAttribute", [finAccountTransId : finAccountTransId, attrName : "FATR_CONTRA"], false);
 		
