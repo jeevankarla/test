@@ -35,11 +35,13 @@ under the License.
               		<fo:block  keep-together="always" text-align="right" font-family="Courier,monospace" white-space-collapse="false"> &#160;${uiLabelMap.CommonPage}- <fo:page-number/></fo:block>
               		<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
 		        	 <#assign paymentGroupList = delegator.findOne("PaymentGroup", {"paymentGroupId" : paymentGroupId}, true) />	
+		        	 <#if paymentGroupList.finAccountId?has_content>
 		        	 <#assign paymentGroupName = delegator.findOne("FinAccount", {"finAccountId" : paymentGroupList.finAccountId}, true) />	
+		        	 </#if>
 		        	<fo:block text-align="center" font-size="13pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${reportHeader.description?if_exists}</fo:block>
 		        	<fo:block text-align="center" font-size="12pt" keep-together="always"  white-space-collapse="false" font-weight="bold">&#160;${BOAddress?if_exists}</fo:block>
 		        	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;</fo:block>
-		        	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;BANK REPORT for ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentGroupList.paymentDate?if_exists, "dd-MMM-yy ")}</fo:block>
+		        	<fo:block text-align="center"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;BANK REPORT for <#if paymentGroupList.paymentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(paymentGroupList.paymentDate?if_exists, "dd-MMM-yy ")}</#if></fo:block>
 		        	<fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;To&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</fo:block>
 		        	<fo:block text-align="left"  font-family="Courier,monospace" font-weight="bold"  white-space-collapse="false">&#160;The Chief Manager</fo:block>
 		        	<#if paymentGroupName?has_content>

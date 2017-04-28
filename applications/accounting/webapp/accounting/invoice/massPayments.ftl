@@ -205,9 +205,11 @@
 		  
 		            message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Weaver Code :</font></td><td align='left' width='60%'>"+partyIdFrom+"</td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Method Type :</font></td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
+						<#if PaymentMethodType?has_content>
 						<#list PaymentMethodType as payment>
 						"<option value='${payment.paymentMethodTypeId}' <#if (payment.paymentMethodTypeId == 'CHEQUE')>selected='selected'</#if>>${payment.description}</option>"+
 	                   </#list> 
+	                   </#if>
 					    "</select><input class='h4' type='input' id='paymentPurposeType' name='paymentPurposeType' value='"+purposeTypeId+"'/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
@@ -262,9 +264,11 @@
 		  
 		            message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Branch Code :</font></td><td align='left' width='60%'>"+partyIdFrom+"</td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Method Type :</font></td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
+						<#if PaymentMethodType?has_content>
 						<#list PaymentMethodType as payment>
 						"<option value='${payment.paymentMethodTypeId}' <#if (payment.paymentMethodTypeId == 'CHEQUE')>selected='selected'</#if>>${payment.description}</option>"+
-	                   </#list> 
+	                   </#list>
+	                   </#if> 
 					    "</select><input class='h4' type='input' id='paymentPurposeType' name='paymentPurposeType' value='"+purposeTypeId+"'/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
@@ -320,9 +324,11 @@
 		  
 		            message += "<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Weaver Code :</font></td><td align='left' width='60%'>"+partyIdFrom+"</td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Method Type :</font></td><td align='left' width='60%'><select name='paymentTypeId' id='paymentTypeId' onchange='javascript:paymentFieldsOnchange();' class='h4'>"+
+						<#if PaymentMethodType?has_content>
 						<#list PaymentMethodType as payment>
 						"<option value='${payment.paymentMethodTypeId}' <#if (payment.paymentMethodTypeId == 'CHEQUE')>selected='selected'</#if>>${payment.description}</option>"+
 	                   </#list> 
+	                   </#if>
 					    "</select><input class='h4' type='input' id='paymentPurposeType' name='paymentPurposeType' value='"+purposeTypeId+"'/></td></tr>"+
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Amount :</font></td><td align='left' width='60%'><input class='h4' type='number' id='amount'  name='amount' max='"+balance+"' step='.01' onblur='javascript:amountOnchange(this,balance);amountCheck()'/></td></tr>" +
 						"<tr class='h3'><td align='left' class='h3' width='60%'><font color='green'>Payment Date:</font></td><td align='left' width='60%'><input class='h4' type='text' readonly id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td></tr>" +
