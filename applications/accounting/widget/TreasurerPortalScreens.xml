@@ -6588,6 +6588,7 @@
              <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherSinglePaymentMethod.groovy"/>
              <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
              <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getbankAccounts.groovy" /> 
+             <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 <set field="titleProperty" value="Find Group Invoices"/>
                   <set field="tabButtonItem" value="apSingleGroupPayment" />	
 			      <set field="tabButtonItem2" value="ApUnAppliedInvoiceSearch"/>  
