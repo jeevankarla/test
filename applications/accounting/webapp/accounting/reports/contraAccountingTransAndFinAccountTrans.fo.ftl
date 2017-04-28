@@ -24,7 +24,7 @@ under the License.
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"
             margin-top="0.2in" margin-bottom=".3in" margin-left=".5in" margin-right=".1in">
-        <fo:region-body margin-top="1in"/>
+        <fo:region-body margin-top="1.3in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -82,7 +82,15 @@ under the License.
 		                        		<fo:block text-align="left" font-weight="bold">Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "MMMM dd,yyyy")}</fo:block>  
 		                   			</fo:table-cell>
 		                   			<fo:table-cell>
-		                        		<fo:block text-align="right" font-weight="bold"><#if invSequenceNum?has_content>Sequence Number:<fo:inline font-weight="bold">${invSequenceNum?if_exists}</fo:inline><#elseif finAccntTransSequence?has_content>Sequence Number:<fo:inline font-weight="bold">${finAccntTransSequence?if_exists}</fo:inline><#else></#if></fo:block>  
+		                        		<fo:block text-align="center" font-weight="bold"><#if invSequenceNum?has_content>Sequence Number:<fo:inline font-weight="bold">${invSequenceNum?if_exists}</fo:inline><#elseif finAccntTransSequence?has_content>Sequence Number:<fo:inline font-weight="bold">${finAccntTransSequence?if_exists}</fo:inline><#else></#if></fo:block>  
+		                   			</fo:table-cell>
+			                    </fo:table-row>
+			                    <fo:table-row>
+			                    	<fo:table-cell>
+		                        		<fo:block text-align="left" font-weight="bold"></fo:block>  
+		                   			</fo:table-cell>
+		                   			<fo:table-cell>
+		                        		<fo:block text-align="center" font-weight="bold"><#if BankName?has_content>Bank:<fo:inline font-weight="bold">${BankName?if_exists}</fo:inline></#if></fo:block>  
 		                   			</fo:table-cell>
 			                    </fo:table-row>
 		                    </fo:table-body>

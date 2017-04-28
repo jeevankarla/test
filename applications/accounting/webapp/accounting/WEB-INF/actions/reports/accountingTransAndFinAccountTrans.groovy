@@ -115,6 +115,7 @@ if(UtilValidate.isNotEmpty(parameters.invoiceId) ||UtilValidate.isNotEmpty(param
 }
 //end of acctngTrans find
 GenericValue finAccntTransSequenceEntry;
+finAccountTransAttributeDetails="";
 if(UtilValidate.isNotEmpty(acctgTransId)){
 	
 	if(UtilValidate.isNotEmpty(allAcctgTransIds)){
@@ -162,9 +163,19 @@ if(UtilValidate.isNotEmpty(acctgTransId)){
 	}
 }
 finAccntTransSequence = "";
+finAccountId="";
+BankName="";
 if(UtilValidate.isNotEmpty(finAccntTransSequenceEntry)){
 	finAccntTransSequence = finAccntTransSequenceEntry.transSequenceId;
+	finAccountId=finAccntTransSequenceEntry.finAccountId;
+	if(finAccountId){
+		finAccount=delegator.findOne("FinAccount",[finAccountId : finAccountId] , false);
+		if(finAccount.finAccountName){
+			BankName=finAccount.finAccountName;
+		}
+	}
 }
+context.BankName=BankName;
 context.finAccntTransSequence = finAccntTransSequence;
 context.put("accountingTransEntries",accountingTransEntries);
 if(UtilValidate.isNotEmpty(acctgTransId)){
