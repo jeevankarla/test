@@ -305,6 +305,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
         jQuery.each(invoices, function() {
             if (jQuery(this).is(':checked')) {
             	var domObj = $(this).parent().parent();
+            	var refnumObj = $(domObj).find("#refNumber");
+            	var millerNumberObj = $(domObj).find("#millerNumber");
             	var amtObj = $(domObj).find("#amt");
             	var partyIdObj = $(domObj).find("#partyId");
             	var fromPartyIdObj = $(domObj).find("#fromPartyId");
@@ -313,6 +315,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
             	var purposeTypeIdObj = $(domObj).find("#purposeTypeId");
             	
             	var invId = $(this).val();
+            	var refNumber = $(refnumObj).val();
+            	var millerNumber = $(millerNumberObj).val();
             	var amt = $(amtObj).val();
             	var partyId = $(partyIdObj).val();
             	var fromPartyId = $(fromPartyIdObj).val();
@@ -321,6 +325,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
             	var purposeTypeId = $(purposeTypeIdObj).val();
             	
             	appendStr += "<tr><td><input type=hidden name=invId id=invId value="+invId+" />";
+            	appendStr += "<input type=hidden name=refNumber id=refNumber value="+refNumber+" />";
+            	appendStr += "<input type=hidden name=millerNumber id=millerNumber value="+millerNumber+" />";
             	appendStr += "<input type=hidden name=partyId id=partyId value="+partyId+" />";
             	appendStr += "<input type=hidden name=fromPartyId id=fromPartyId value="+fromPartyId+" />";
             	appendStr += "<input type=hidden name=partyIdName id=partyIdName value="+partyIdName+" />";
@@ -441,6 +447,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <input type = "hidden" name = "fromPartyId" id = "fromPartyId" value = "${invoice.partyIdFrom}">
               <input type = "hidden" name = "amt" id = "amt" value = "${invoicePaymentInfo.outstandingAmount}">
               <input type = "hidden" name = "invId" id = "invId" value = "${invoice.invoiceId}">
+              <input type = "hidden" name = "refNumber" id = "refNumber" value = "${invoice.referenceNumber}">
+              <input type = "hidden" name = "millerNumber" id = "millerNumber" value = "${Shipment.supplierInvoiceId?default(invoice.shipmentId)}">
               <input type = "hidden" name = "partyIdName" id = "partyIdName" value = "${partyName}">
               <input type = "hidden" name = "voucherTypeId" id = "voucherTypeId" value = "${invoice.prefPaymentMethodTypeId?if_exists}">
               <input type = "hidden" name = "purposeTypeId" id = "purposeTypeId" value = "${invoice.purposeTypeId?if_exists}">

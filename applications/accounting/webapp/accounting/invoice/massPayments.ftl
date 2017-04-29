@@ -91,7 +91,8 @@
 	
 	var invoiceId;
 	var amt;
-	
+	var referenceNumber;
+	var millerNumb;
 	
 	function massInvoicePayments(form) {
 		var test = $(form).html();
@@ -113,6 +114,8 @@
 			message += "<tr>";
 			$(tdObj).each(function(j, cell){
 				var inv = $($(cell).find("#invId")).val();
+				var refNum = $($(cell).find("#refNumber")).val();
+				var millerNum = $($(cell).find("#millerNumber")).val();
 				var amt = $($(cell).find("#amt")).val();
 				partyId = $($(cell).find("#partyId")).val();
 				fromPartyId = $($(cell).find("#fromPartyId")).val();
@@ -135,6 +138,8 @@
 			 	  }
 				  paymentMethodList = methodOptionList;
 				message += "<tr class='h2'><td align='left'class='h3' width='60%'>Invoice:</td><td><input type=hidden name='invoiceId_o_"+i+"' value='"+inv+"'>"+inv+"</td>";
+				message += "<tr class='h2'><td align='left'class='h3' width='60%'>Reference Number:</td><td><input type=hidden name='referenceNumber_o_"+i+"' value='"+refNum+"'>"+refNum+"</td>";
+				message += "<tr class='h2'><td align='left'class='h3' width='60%'>Miller Number:</td><td><input type=hidden name='millerNumb_o_"+i+"' value='"+millerNum+"'>"+millerNum+"</td>";
 				message += "<td align='left'class='h3' width='60%'>Amount:</td><td><input type=text name='amt_o_"+i+"' value='"+amt+"'></td></tr>";
 			});
 		});
