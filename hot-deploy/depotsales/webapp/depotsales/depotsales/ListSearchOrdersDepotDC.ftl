@@ -293,7 +293,7 @@ function drawRow(rowData) {
     
     /*
    if( (rowData.POorder == "NA") && (rowData.statusId != "ORDER_CANCELLED")){
-    var editOrder = '<a class="buttontext" href="<@ofbizUrl>editBranchIndent?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Edit</a>';
+    var editOrder = '<a class="buttontext" href="<@ofbizUrl>editBranchIndentDC?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Edit</a>';
    row.append($("<td>" +  editOrder  +"</td>"));  
    }else{
    

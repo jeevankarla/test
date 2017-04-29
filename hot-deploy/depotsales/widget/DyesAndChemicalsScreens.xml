@@ -1122,6 +1122,97 @@
 	</screen>
 
 
+<screen name="EditBranchIndentDC">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.BranchSalesEntry}" />
+				<set field="tabButtonItem" value="BranchSalesOrder" />
+<!-- 				<set field="tabButtonItem2" value="BranchSalesOrder" /> -->
+				<set field="changeFlag" value="EditDepotSales" />
+				<set field="priceTypeId" from-field="parameters.priceTypeId" />
+				<set field="orderStatus" from-field="parameters.orderStatus" />
+				<set field="salesChannelEnumId" from-field="parameters.salesChannelEnumId" />
+				<set field="orderId" from-field="parameters.orderId" />
+				<set field="supplyDate" from-field="parameters.supplyDate" />
+				<set field="parameters.isFormSubmitted" value="YES" />
+				<set field="defaultEffectiveDateTime" value="${supplyDate}"
+					default-value="${bsh:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="defaultEffectiveDate"
+					value="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(defaultEffectiveDateTime, &quot;dd MMMMM, yyyy&quot;);}" />
+				<!-- <set field="parameters.roleTypeId" value="WSD_CUSTOMER"/> -->
+				<script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/editBranchsaleIndent.groovy" />
+				 <script
+					location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/BranchSalesOrderInnerScreenHelper.groovy" />
+			</actions>
+			<widgets>
+					<section>
+							<condition>
+								<if-compare operator="equals" field="catType"
+									value="Silk" />
+							</condition>
+							
+							<widgets>
+							<section>
+								<condition>
+								<if-compare operator="equals" value="direct" field="orderType"/>
+								</condition>
+								<widgets>
+									<include-screen name="SilkBranchSalesOrderDC" />
+								</widgets>
+								<fail-widgets>
+									<include-screen name="SilkMultiBranchSalesOrder" />
+								</fail-widgets>
+								
+							</section>
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="catType"
+									value="Cotton" />
+							</condition>
+							<widgets>
+							<section>
+								<condition>
+								<if-compare operator="equals" value="direct" field="orderType"/>
+								</condition>
+								<widgets>
+									<include-screen name="CottonBranchSalesOrder" />
+								</widgets>
+								<fail-widgets>
+									<include-screen name="CottonMultiBranchSalesOrder" />
+								</fail-widgets>
+							</section>
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" field="catType"
+									value="other" />
+							</condition>
+							<widgets>
+							<section>
+								<condition>
+								<if-compare operator="equals" value="direct" field="orderType"/>
+								</condition>
+								<widgets>
+									<include-screen name="DyesSalesOrder" />
+								</widgets>
+								<fail-widgets>
+									<include-screen name="OtherMultiBranchSalesOrder" />
+								</fail-widgets>
+								
+							</section>
+							</widgets>
+						</section>
+					
+				
+			</widgets>
+		</section>
+	</screen>
+
+
 <screen name="DyesMultiBranchSalesOrder">
 		<section>
 			<actions>

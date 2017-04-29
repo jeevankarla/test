@@ -792,10 +792,10 @@
 				   </link>
 				</menu-item>
         	   <menu-item name="onBeHalfIndent" title="${uiLabelMap.onBeHalfIndent}">
-        	<link target="DyesMultiBranchSalesOrder">
+        	<!-- <link target="DyesMultiBranchSalesOrder">
         		<parameter param-name="salesChannelEnumId" value="DEPOT_CHANNEL"/>
         		<parameter param-name="shipmentTypeId" value="DEPOT_SHIPMENT"/>
-        	</link>
+        	</link> -->
 	        </menu-item> 
 	        <!-- <menu-item name="FindDepotBranchSalesShipment" title="Find Shipments">
 	        	<link target="FindDepotBranchSalesShipment" />
