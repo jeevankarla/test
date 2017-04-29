@@ -73,43 +73,45 @@ context.AsOnDate=AsOndate;
 	finAccountList = delegator.findList("FinAccount", paramCond, null, orderBy, null, false);
   //	Debug.log("finAccount list======="+finAccountList.get(0).fromDate);
 	List outstandingList = [];
+	if(finAccountList){
 	for(GenericValue finAccountEntry:finAccountList){
 		noOfDays=UtilDateTime.getIntervalInDays(finAccountEntry.fromDate,AsOndate);
-		if(noOfDays>45&&finAccountEntry.actualBalance>0){   // no of days more than 45
-		tempMap = [:];
-		tempMap["finAccountId"]=finAccountEntry.finAccountId;
-	    finAccountTypeDes = delegator.findOne("FinAccountType", ["finAccountTypeId":finAccountEntry.finAccountTypeId], false);
-		if(finAccountTypeDes){
-			if(finAccountTypeDes.description){
-				tempMap["description"]=finAccountTypeDes.description;
+		if(noOfDays>45 && finAccountEntry.actualBalance>0){   // no of days more than 45 and balance > 0
+			tempMap = [:];
+			tempMap["finAccountId"]=finAccountEntry.finAccountId;
+			finAccountTypeDes = delegator.findOne("FinAccountType", ["finAccountTypeId":finAccountEntry.finAccountTypeId], false);
+			if(finAccountTypeDes){
+				if(finAccountTypeDes.description){
+					tempMap["description"]=finAccountTypeDes.description;
+				}
 			}
+			else{
+				tempMap["description"]=finAccountEntry.finAccountTypeId;
+			}
+
+			tempMap["finAccountName"]=finAccountEntry.finAccountTypeId;
+			tempMap["ownerPartyId"]=finAccountEntry.ownerPartyId;
+			tempMap["fromDate"]=finAccountEntry.fromDate;
+			tempMap["actualBalance"]=finAccountEntry.actualBalance;
+			conditionList = [];
+			conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountEntry.finAccountId));
+			conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, finAccountEntry.ownerPartyId));
+			condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+			List finAccountTransList = delegator.findList("FinAccountTrans", condition, null, null, null, false);
+			List depositFinAccTransList = EntityUtil.filterByCondition(finAccountTransList, EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "DEPOSIT"));
+			List withDrawFinAccTransList = EntityUtil.filterByCondition(finAccountTransList, EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL"));
+			BigDecimal depositAmt = BigDecimal.ZERO;
+			BigDecimal adjustAmt = BigDecimal.ZERO;
+			for(GenericValue depositFinAccTransEntry:depositFinAccTransList){
+				depositAmt += depositFinAccTransEntry.amount;
+			}
+			for(GenericValue withDrawFinAccTransEntry:withDrawFinAccTransList){
+				adjustAmt += withDrawFinAccTransEntry.amount;
+			}
+			tempMap["depositAmt"]=depositAmt;
+			tempMap["adjustAmt"]=adjustAmt;
+			outstandingList.add(tempMap);
 		}
-		else{
-			tempMap["description"]=finAccountEntry.finAccountTypeId;
-		}
-	    
-		tempMap["finAccountName"]=finAccountEntry.finAccountTypeId;
-		tempMap["ownerPartyId"]=finAccountEntry.ownerPartyId;
-		tempMap["fromDate"]=finAccountEntry.fromDate;
-		tempMap["actualBalance"]=finAccountEntry.actualBalance;
-		conditionList = [];
-		conditionList.add(EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountEntry.finAccountId));
-		conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, finAccountEntry.ownerPartyId));
-		condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		List finAccountTransList = delegator.findList("FinAccountTrans", condition, null, null, null, false);
-		List depositFinAccTransList = EntityUtil.filterByCondition(finAccountTransList, EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "DEPOSIT"));
-		List withDrawFinAccTransList = EntityUtil.filterByCondition(finAccountTransList, EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS, "WITHDRAWAL"));
-		BigDecimal depositAmt = BigDecimal.ZERO;
-		BigDecimal adjustAmt = BigDecimal.ZERO;
-		for(GenericValue depositFinAccTransEntry:depositFinAccTransList){
-			depositAmt += depositFinAccTransEntry.amount;
-		}
-		for(GenericValue withDrawFinAccTransEntry:withDrawFinAccTransList){
-			adjustAmt += withDrawFinAccTransEntry.amount;
-		}
-		tempMap["depositAmt"]=depositAmt;
-		tempMap["adjustAmt"]=adjustAmt;
-		outstandingList.add(tempMap);
-		}
+	}
 	}
 	   context.printAdvanceOutstandingDetailList=outstandingList;
