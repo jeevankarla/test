@@ -1158,6 +1158,7 @@ reportType:byAccount -->
 				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
 					global="true" />
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/getAllCostCenterIds.groovy" />
 			</actions>
 			<widgets>
 				<container>

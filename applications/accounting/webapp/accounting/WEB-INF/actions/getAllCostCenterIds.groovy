@@ -82,7 +82,9 @@ if("All".equals(costCenter)){
 		costCenterList.add(tmp);
 	}
 	//costCenterList.addAll(branchList);
-	costCenterList.addAll(partyFrom);
+	if(partyFrom){
+		costCenterList.addAll(partyFrom);
+	}
 	
 }else{
 	costCenterList.add(costCenter);
