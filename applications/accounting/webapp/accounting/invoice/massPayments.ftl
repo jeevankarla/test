@@ -97,16 +97,18 @@
 	function massInvoicePayments(form) {
 		var test = $(form).html();
 		var table = $("#parameters").parent().html();
-		
+		var temp = jQuery('#running').val();
 		var partyIdName;
 	    var partyId;
 	    var fromPartyId;
 	    var voucherTypeId;
 		var purposeTypeId;
 		
+		
 		message = "";
 		message += "<form action='makeMassInvoicePayments' method='post' onsubmit='return disableSubmitButton();'>";
-			message += "<table cellspacing=10 cellpadding=10 border=2 width='100%'>";
+			message += "<table cellspacing=10 cellpadding=10 border=2  id='indentAdjustmentTable'  width='100%'>";
+			message += "<tr class='h2'><td align='left'class='h3' width='60%'>Invoice:</td><td><span id='totamt'>"+temp+"</span></td>";
 		$('#parameters tr').each(function(i, row){
 			payMethodList = "";
  		    methodOptionList = [];
@@ -140,7 +142,7 @@
 				message += "<tr class='h2'><td align='left'class='h3' width='60%'>Invoice:</td><td><input type=hidden name='invoiceId_o_"+i+"' value='"+inv+"'>"+inv+"</td>";
 				message += "<tr class='h2'><td align='left'class='h3' width='60%'>Reference Number:</td><td><input type=hidden name='referenceNumber_o_"+i+"' value='"+refNum+"'>"+refNum+"</td>";
 				message += "<tr class='h2'><td align='left'class='h3' width='60%'>Miller Number:</td><td><input type=hidden name='millerNumb_o_"+i+"' value='"+millerNum+"'>"+millerNum+"</td>";
-				message += "<td align='left'class='h3' width='60%'>Amount:</td><td><input type=text name='amt_o_"+i+"' value='"+amt+"'></td></tr>";
+				message += "<td align='left'class='h3' width='60%'>Amount:</td><td><input type=text name='amt_o_"+i+"' id='amt_o_"+i+"' value='"+amt+"' onChange='javascript:amountThis(this);'></td></tr>";
 			});
 		});
 		
@@ -179,6 +181,16 @@
 	};
 	
 	
+	
+	function amountThis(thisObjNew) {
+	   var adjValueAmt = 0;
+	  $("#indentAdjustmentTable tr :input:visible").each(function () {
+		    var id = this.id;
+		    if(id.substring(0,3) == 'amt')
+		     adjValueAmt += parseFloat($('#'+id).val());
+		});
+	 $("#totamt").html("Rs "+adjValueAmt);
+	}	
 	
 	  function showPaymentEntryForInvoListing(invoiceId,grandTotal,balance,partyIdFrom,partyIdTo,partyName,purposeTypeId1) {
 		var message = "";
