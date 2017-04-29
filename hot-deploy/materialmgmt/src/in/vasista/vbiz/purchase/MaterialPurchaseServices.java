@@ -4704,7 +4704,7 @@ public class MaterialPurchaseServices {
 								
 								////Debug.log("serviceResult===================="+serviceResult);
 								
-							  	BigDecimal quota =BigDecimal.ZERO;
+							  	/*BigDecimal quota =BigDecimal.ZERO;
 							  	try {
 									List<GenericValue> OrderItemDetailList1 = delegator.findList("OrderItemDetail", EntityCondition.makeCondition(condsList,EntityOperator.AND), UtilMisc.toSet("partyId","quotaQuantity","productId"), null, null, true);
 
@@ -4726,7 +4726,7 @@ public class MaterialPurchaseServices {
 							  	} catch (GenericEntityException e) {
 									Debug.logError(e, "Failed to retrive ProductPriceType ", module);
 									//return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
-								}
+								}*/
 							}
 						}
 					}catch (GenericEntityException e) {
