@@ -2775,6 +2775,7 @@ under the License.
                     <condition-expr field-name="paymentMethodTypeId" operator="equals" value="CASH_PAYOUT"/>
                     <condition-expr field-name="paymentMethodTypeId" operator="equals" value="CHEQUE_PAYIN"/>
                     <condition-expr field-name="paymentMethodTypeId" operator="equals" value="FUND_TRANSFER"/>
+                    <condition-expr field-name="paymentMethodTypeId" operator="equals" value="MOBILE_PAYIN"/>
                 </condition-list>
                 <order-by field-name="description"/>
             </entity-condition>
