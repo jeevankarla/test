@@ -117,7 +117,7 @@ under the License.
                              <#assign creditTotal=0>
                              <#assign debitTotal=0>
                              <#assign closingBal=0>
-                               <fo:table-row>
+                               <#--<fo:table-row>
                                 <fo:table-cell>
 	                                  <fo:block   text-align="left" keep-together="always" font-size="11pt" white-space-collapse="false"> Opening Balance</fo:block>
 								</fo:table-cell>
@@ -136,7 +136,7 @@ under the License.
 	                                <fo:table-cell>
 		                                  <fo:block   text-align="left" keep-together="always" font-size="11pt" white-space-collapse="false"> &#160;</fo:block>
 									</fo:table-cell>
-								</fo:table-row>	
+								</fo:table-row>	-->
                                 <#list acctgTransEntryList as acctgTransEntry>
                                     <fo:table-row>
                                         <fo:table-cell >
@@ -264,7 +264,7 @@ under the License.
                             </fo:table-body>
                         </fo:table>
                          <fo:block>---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-                        <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
+                       <#-- <fo:table  table-layout="fixed" width="100%" space-before="0.2in">
 							 <fo:table-column column-width="10%"/>
 							 <fo:table-column column-width="90%"/>	
 							 <fo:table-body>
@@ -277,7 +277,7 @@ under the License.
 						  		  </fo:table-cell>
 							 </fo:table-row>
 							 </fo:table-body>
-			   		 </fo:table>
+			   		 </fo:table>-->
                     </fo:block>
                 <#else>
                     <fo:block text-align="left">${uiLabelMap.AccountingNoAcctgTransFound}</fo:block>

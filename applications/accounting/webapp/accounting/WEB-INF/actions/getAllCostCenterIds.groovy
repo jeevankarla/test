@@ -139,7 +139,6 @@ if(thruDate){
 
 
 EntityCondition testCond = EntityCondition.makeCondition(condList1,EntityOperator.AND);
-Debug.log("testCond============"+testCond);
 
 Set fieldToSelect =UtilMisc.toSet("glAccountId","acctgTransId","acctgTransEntrySeqId","transactionDate","acctgTransTypeId","glFiscalTypeId");
 fieldToSelect.add("invoiceId");
@@ -148,6 +147,7 @@ fieldToSelect.add("workEffortId");
 fieldToSelect.add("shipmentId");
 fieldToSelect.add("costCenterId");
 fieldToSelect.add("purposeTypeId");
+fieldToSelect.add("glAccountId");
 fieldToSelect.add("partyId");
 fieldToSelect.add("isPosted");
 fieldToSelect.add("postedDate");
