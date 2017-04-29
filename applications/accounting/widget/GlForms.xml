@@ -1273,7 +1273,7 @@ under the License.
     </form>
 
     <form name="AcctgTransEntriesSearchResultsCsv" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList" paginate="false">
-        <actions>
+        <!-- <actions>
             <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransEntryList">
                 <condition-list>
                     <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.organizationPartyId"/>
@@ -1297,7 +1297,7 @@ under the License.
                 </condition-list>
                 <order-by field-name="-transactionDate"/>
             </entity-condition>
-        </actions>
+        </actions> -->
         <row-actions>
            <set field="parameters.invoiceId" value="${invoiceId}"/>
            <set field="parameters.paymentId" value="${paymentId}"/>
