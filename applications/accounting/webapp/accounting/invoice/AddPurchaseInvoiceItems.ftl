@@ -67,19 +67,6 @@ under the License.
 		return false;
 	}
 	
-	
-	function amountWithTaxCall(thisObjNew) {
-	   var rowObjNew =$(thisObjNew).parent().parent().parent();
-       var TaxPer = $(rowObjNew).find('[name=TaxPer]').val();
-	   var taxableAmt = $(rowObjNew).find('[name=taxableAmt]').val();
-		
-		if(TaxPer != "undefined" && TaxPer != null && TaxPer != "undefined" && TaxPer != null){
-	 	  var tdsAmount =(TaxPer*taxableAmt)/100;
-	  	    $("#tdsAmount").val(tdsAmount)
-	  	  
-	  	 }
-	}
-	
 	function setLessTaxParameters() {
 	
 		formName=document.forms['listInvoiceItems'];
