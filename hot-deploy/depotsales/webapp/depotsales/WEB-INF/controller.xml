@@ -551,6 +551,12 @@
    		<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditBranchIndent"/>
     </request-map>
+    
+    <request-map uri="editBranchIndentDC">
+   		<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditBranchIndentDC"/>
+    </request-map>
+    
     <request-map uri="getPartyQuotaList">
        <security https="true" auth="true"/>
        <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/"  invoke="getPartyProductQuotas.groovy"/>
@@ -3605,6 +3611,9 @@
     <view-map name="EditMaterialPO" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditMaterialPO"/>
     <view-map name="EditDepotOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditDepotOrder"/>
     <view-map name="EditBranchIndent" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#EditBranchIndent"/>
+    <view-map name="EditBranchIndentDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#EditBranchIndentDC"/>
+    
+    
     
     <view-map name="IndentorEditBranchIndent" type="screen" page="component://depotsales/widget/IndentorScreens.xml#IndentorEditBranchIndent"/>
    
