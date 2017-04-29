@@ -144,7 +144,7 @@ conditionList =[];
 	if(UtilValidate.isNotEmpty(parameters.statusId)){
 		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,parameters.statusId));
 	}
-	conditionList.add(EntityCondition.makeCondition("shipmentPurposeTypeId",EntityOperator.EQUALS,"DC_DEPOT_SHIPMENT"));
+	//conditionList.add(EntityCondition.makeCondition("shipmentPurposeTypeId",EntityOperator.EQUALS,"DC_DEPOT_SHIPMENT"));
 	shipmentCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	shipmentList = delegator.findList("Shipment", shipmentCondition, null, ['shipmentId'], null, false);
 
@@ -177,7 +177,9 @@ conditionList =[];
 	if(facilityId){
 		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	}
-	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIdsList));
+	if(shipmentIdsList){
+		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIdsList));
+	}
 	shipmentReceiptCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	  shipmentReceiptList=delegator.findList("ShipmentReceiptAndItem", shipmentReceiptCondition, null, ['receiptId'], null, false);
 	

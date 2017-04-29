@@ -209,7 +209,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 					 </#list> 
 				  </select>    								
 			  </span></td>
-  			<td width="15%">ShipmentId <input  type="text" size="18pt" id="shipmentId" name="shipmentId"/></td>
+  			<#--<td width="15%">ShipmentId <input  type="text" size="18pt" id="shipmentId" name="shipmentId"/></td>-->
   			
   			<td width="15%">FacilityId<@htmlTemplate.lookupField size="10" maxlength="22" formName="stockreport" name="facilityId" id="facilityId" fieldFormName="ProductionLookupFacility"/></td>
   			<td width="10%"></td>
