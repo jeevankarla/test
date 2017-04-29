@@ -27,8 +27,8 @@ under the License.
 		        <fo:region-after extent="1in"/>        
 		    </fo:simple-page-master>   
 		</fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "AdvanceOutstandingDetails.pdf")}
-	   <#if printAdvanceOutstandingDetailList?has_content>
+      
+	   <#if outstandingList?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 	        		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
@@ -83,51 +83,42 @@ under the License.
 							            
 							     </fo:table-row>
 							</fo:table-header>
-		                     <fo:table-body>
-		         <#if printAdvanceOutstandingDetailList?has_content>            
-		        <#assign slNo = 1>         
-		        <#list printAdvanceOutstandingDetailList as printAdvanceOutstandingDetailEntry> 
-				 	<fo:table-row>
-	                     <fo:table-cell border-style="solid">
-			            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false">${slNo}</fo:block>  
-			            </fo:table-cell>
-			              <#assign staffName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, printAdvanceOutstandingDetailEntry.ownerPartyId, false)>
-			             <fo:table-cell border-style="solid">
-			            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${staffName?if_exists}</fo:block>  
-			            </fo:table-cell>
-			             <fo:table-cell border-style="solid">
-			            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${printAdvanceOutstandingDetailEntry.fromDate?if_exists}</fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=printAdvanceOutstandingDetailEntry.depositAmt  isoCode=currencyUomId/></fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=printAdvanceOutstandingDetailEntry.actualBalance isoCode=currencyUomId/> </fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">&#160;${printAdvanceOutstandingDetailEntry.description?if_exists}</fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="left" font-size="8pt"   white-space-collapse="">${printAdvanceOutstandingDetailEntry.remarks?if_exists}</fo:block>  
-			            </fo:table-cell>
-				     </fo:table-row>
+		                    <fo:table-body>	
+		                    	<fo:table-row>
+		                    		<fo:table-cell></fo:table-cell>
+		                    	</fo:table-row>	                
+		        				<#assign slNo = 1>         
+		        				<#list outstandingList as outStanding> 
+							 	<fo:table-row>
+				                     <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false">${slNo?if_exists}</fo:block>  
+						            </fo:table-cell>
+						              <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, outStanding.ownerPartyId, false)>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${partyName?if_exists}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${outStanding.fromDate?if_exists}</fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=outStanding.depositAmt  isoCode=currencyUomId/></fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=outStanding.actualBalance isoCode=currencyUomId/> </fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">&#160;${outStanding.description?if_exists}</fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="left" font-size="8pt"   white-space-collapse="">${outStanding.remarks?if_exists}</fo:block>  
+						            </fo:table-cell>
+							    </fo:table-row>
 				     <#assign slNo = slNo + 1>
 		         </#list>    
-		         <#else>
-		          <fo:table-row>
-		           <fo:table-cell></fo:table-cell>
-		           <fo:table-cell></fo:table-cell>
-		           <fo:table-cell></fo:table-cell>
-		           <fo:table-cell></fo:table-cell>
-		           <fo:table-cell></fo:table-cell>
-		           <fo:table-cell></fo:table-cell>
-		           <fo:table-cell></fo:table-cell>
-		           <fo:table-cell></fo:table-cell>
-		          </fo:table-row>
-		         </#if>     
+		             
 			</fo:table-body>
 			</fo:table>
 			</fo:flow>

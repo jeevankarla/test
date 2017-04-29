@@ -34,7 +34,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
 
-
+List outstandingList = [];
 AsOnDate=parameters.AsOnDate;
 //Debug.log("asondate ===="+AsOnDate);
 Timestamp AsOndate = null;
@@ -72,7 +72,7 @@ context.AsOnDate=AsOndate;
 	List<String> orderBy = UtilMisc.toList("fromDate");				
 	finAccountList = delegator.findList("FinAccount", paramCond, null, orderBy, null, false);
   //	Debug.log("finAccount list======="+finAccountList.get(0).fromDate);
-	List outstandingList = [];
+	
 	if(finAccountList){
 	for(GenericValue finAccountEntry:finAccountList){
 		noOfDays=UtilDateTime.getIntervalInDays(finAccountEntry.fromDate,AsOndate);
@@ -114,4 +114,4 @@ context.AsOnDate=AsOndate;
 		}
 	}
 	}
-	   context.printAdvanceOutstandingDetailList=outstandingList;
+	  context.outstandingList=outstandingList;
