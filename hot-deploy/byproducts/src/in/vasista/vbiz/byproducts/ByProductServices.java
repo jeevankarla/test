@@ -5942,7 +5942,10 @@ public class ByProductServices {
           	Map<String, Object> createInvoiceResult = FastMap.newInstance();
           	String amount = (String)context.get("fineAmount");
           	//Debug.log("amount======"+amount);
-          	BigDecimal invoiceAmount = new BigDecimal(amount);
+          	BigDecimal invoiceAmount =BigDecimal.ZERO;
+          	if(UtilValidate.isNotEmpty(amount)){
+          		 invoiceAmount = new BigDecimal(amount);
+          	}
     		inMap.put("paymentId", paymentId);
     		inMap.put("userLogin", userLogin);
     		GenericValue payment = null;
@@ -5982,7 +5985,7 @@ public class ByProductServices {
     			/*if(isNonRouteMrktingChqReturn){
     				return result = ServiceUtil.returnSuccess("Payment Successfully cancelled For Party : "+payment.get("partyIdFrom"));
         		}*/
-    			if(chequeReturns.equals("Y")){
+    			if(chequeReturns.equals("Y") && invoiceAmount.compareTo(BigDecimal.ZERO)>0){
     				Map<String, Object> createInvoice = FastMap.newInstance();
     				createInvoice.put("userLogin", userLogin);
     				//createInvoice.put("facilityId", payment.get("facilityId"));
