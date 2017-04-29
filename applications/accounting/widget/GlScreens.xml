@@ -352,6 +352,7 @@
 												<parameter param-name="glJournalId" from-field="parameters.glJournalId"/>
 												<parameter param-name="isPosted" from-field="parameters.isPosted"/>
 												<parameter param-name="partyId" from-field="parameters.partyId"/>
+												<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
 												<parameter param-name="costCenterId" from-field="parameters.costCenterId"/>
 												<parameter param-name="purposeTypeId" from-field="parameters.purposeTypeId"/>
 												<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
@@ -369,6 +370,7 @@
 												<parameter param-name="glFiscalTypeId" from-field="parameters.glFiscalTypeId"/>
 												<parameter param-name="glJournalId" from-field="parameters.glJournalId"/>
 												<parameter param-name="isPosted" from-field="parameters.isPosted"/>
+												<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
 												<parameter param-name="costCenterId" from-field="parameters.costCenterId"/>
 												<parameter param-name="purposeTypeId" from-field="parameters.purposeTypeId"/>
 												<parameter param-name="partyId" from-field="parameters.partyId"/>
@@ -1182,12 +1184,12 @@ reportType:byAccount -->
 					global="true" />
 				<set field="organizationPartyId" from-field="parameters.organizationPartyId"
 					global="true" />
-				<set field="fromDate" type="Date" from-field="parameters.fromDate"
+				<!-- <set field="fromDate" type="Date" from-field="parameters.fromDate"
 					global="true" />
 			    <set field="thruDate" type="Date" from-field="parameters.thruDate"
 					global="true" />
-				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AcctgTransEntriesSearchResult.groovy" />
-				<entity-condition entity-name="AcctgTransAndEntries"
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AcctgTransEntriesSearchResult.groovy" /> -->
+				<!-- <entity-condition entity-name="AcctgTransAndEntries"
 					list="acctgTransEntryList">
 					<condition-list>
 						<condition-expr field-name="organizationPartyId"
@@ -1229,7 +1231,8 @@ reportType:byAccount -->
 							operator="less-equals" from-field="parameters.thruDate" ignore-if-empty="true" />
 					</condition-list>
 					<order-by field-name="-transactionDate" />
-				</entity-condition>
+				</entity-condition> -->
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/getAllCostCenterIds.groovy" />
 			</actions>
 			<widgets>
 				<platform-specific>
