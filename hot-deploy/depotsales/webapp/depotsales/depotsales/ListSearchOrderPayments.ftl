@@ -245,11 +245,11 @@ function drawRow(rowData) {
     }
     */
     
-    if(rowData.orderTotal != rowData.balance)
-    {
+    if(rowData.pmntstatus == "payment_realized"){
      row.append($("<td align=left>Payment Realized</td>"));
-    }else if(rowData.balance == 0){
-     row.append($("<td align=left>Payment Received</td>"));
+    } else if(rowData.orderTotal != rowData.balance)
+    {
+     row.append($("<td align=left>Payment Not Realized</td>"));
     }else{
      row.append($("<td align=left>Payment Not Received</td>"));
     }

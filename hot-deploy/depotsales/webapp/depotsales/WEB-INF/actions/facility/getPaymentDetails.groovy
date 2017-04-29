@@ -473,7 +473,14 @@ orderHeader.each{ eachHeader ->
 	
 	paymentIdsOfIndentPayment = EntityUtil.getFieldListFromEntityList(PaymentList,"paymentId", true);
 	
-	
+	if(PaymentList){
+		paymentsslist = EntityUtil.filterByCondition(PaymentList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_CONFIRMED"));
+		if(PaymentList.size() == paymentsslist.size()){
+			tempData.put("pmntstatus", "payment_realized");
+		}else{
+			tempData.put("pmntstatus", "");
+		}
+	}
 	for (eachPayment in PaymentList) {
 		paidAmt = paidAmt+eachPayment.get("amount");
 	}

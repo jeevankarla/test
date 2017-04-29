@@ -243,7 +243,14 @@
 	{
       var amount = $("#amount").val();
       var balance = $("#balance").val();
-       
+      
+       <#--if(parseFloat(amount)>balance){
+       	alert("Please Enter Amount less Than the balance.");
+       	$("#amount").val(balance);
+       	var bal = balance;
+       }else{
+       	var bal = parseFloat(balance)-parseFloat(amount);
+       }-->
        var bal = parseFloat(balance)-parseFloat(amount);
 	   
 	    if(parseFloat(amount)<=0){
