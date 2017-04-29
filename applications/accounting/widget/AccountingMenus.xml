@@ -2356,8 +2356,8 @@
             	</or>            
             </condition>
 			<link target="ArInvoices">
-				<parameter param-name="invoiceTypeId" value="MIS_INCOME_IN" />
-             	<parameter param-name="subTabButtonValue" value="Miscellaneous" />
+				<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
+             	<parameter param-name="subTabButtonValue" value="salesInvoice" />
              	<parameter param-name="actionSubTabButtonValue" value="find" />
 			</link>
 		</menu-item>
@@ -3911,19 +3911,19 @@
 	</menu>  
 	
 	<menu name="ARInvoiceTypesTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem5">
-          <menu-item name="Miscellaneous" title="Miscellaneous Income">
-             <link target="ArInvoices">
-             	<parameter param-name="invoiceTypeId" value="MIS_INCOME_IN" />
-             	<parameter param-name="subTabButtonValue" value="Miscellaneous" />
-             	<parameter param-name="actionSubTabButtonValue" value="find" />
-             </link>
-          </menu-item>
           <menu-item name="salesInvoice" title="Weavers Invoice">
             <link target="ArInvoices">
              	<parameter param-name="invoiceTypeId" value="SALES_INVOICE" />
              	<parameter param-name="subTabButtonValue" value="salesInvoice" />
              	<parameter param-name="actionSubTabButtonValue" value="find" /> 
              </link> 
+          </menu-item>
+          <menu-item name="Miscellaneous" title="Miscellaneous Income">
+             <link target="ArInvoices">
+             	<parameter param-name="invoiceTypeId" value="MIS_INCOME_IN" />
+             	<parameter param-name="subTabButtonValue" value="Miscellaneous" />
+             	<parameter param-name="actionSubTabButtonValue" value="find" />
+             </link>
           </menu-item>
           <!-- <menu-item name="Finance" title="Finance Income">
              <link target="ArInvoices">
