@@ -40,11 +40,11 @@ if ("Y".equals(parameters.noConditionFind)) {
     if (paymentMethodTypeId) {
     exprListForParameters.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, paymentMethodTypeId));
     }
-    if (fromDate) {
-        exprListForParameters.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+     if (fromDate) {
+        exprListForParameters.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(fromDate)));
     }
     if (thruDate) {
-        exprListForParameters.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
+        exprListForParameters.add(EntityCondition.makeCondition("effectiveDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDate)));
     }
     if (partyIdFrom) {
         exprListForParameters.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyIdFrom));
