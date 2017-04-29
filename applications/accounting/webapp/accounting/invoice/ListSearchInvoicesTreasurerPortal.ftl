@@ -147,7 +147,10 @@ function datepick()
                 type: 'POST',
                 async: true,
                 data: jQuery('#listInvoices').serialize(),
-                success: function(data) { jQuery('#showInvoiceRunningTotal').html(data.invoiceRunningTotal + '  (' + checkedInvoices.size() + ')') }
+                success: function(data) { jQuery('#showInvoiceRunningTotal').html(data.invoiceRunningTotal + '  (' + checkedInvoices.size() + ')') 
+                jQuery("#running").val(data.invoiceRunningTotal);
+                }
+           
             });
 
             if(jQuery('#serviceName').val() != "") {
@@ -348,6 +351,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
     <span class="label">${uiLabelMap.AccountingTotalInvoicesCount} :${invoiceList?size}</span>  
     <span class="label">${uiLabelMap.AccountingRunningTotalOutstanding} (${uiLabelMap.AccountingSelectedInvoicesCount}) :</span>
     <span class="label" id="showInvoiceRunningTotal"></span>
+    <input type="hidden" name="running" id="running" />
   </div>
   <form name="listInvoices" id="listInvoices"  method="post" action="">
     <div align="right">
@@ -423,7 +427,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
              <td>
              	<#if invoice.shipmentId?has_content && invoice.shipmentId!="OBC">
 					<#assign Shipment = delegator.findOne("Shipment", {"shipmentId" : invoice.shipmentId}, true) />
-                	${Shipment.supplierInvoiceId?default(invoice.shipmentId)}
+                	${Shipment.supplierInvoiceId?default(invoice.shipmentId)?if_exists}
 			  	</#if>
              </td>
  			
@@ -436,8 +440,8 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <input type = "hidden" name = "fromPartyId" id = "fromPartyId" value = "${invoice.partyIdFrom}">
               <input type = "hidden" name = "amt" id = "amt" value = "${invoicePaymentInfo.outstandingAmount}">
               <input type = "hidden" name = "invId" id = "invId" value = "${invoice.invoiceId}">
-              <input type = "hidden" name = "refNumber" id = "refNumber" value = "${invoice.referenceNumber}">
-              <input type = "hidden" name = "millerNumber" id = "millerNumber" value = "${Shipment.supplierInvoiceId?default(invoice.shipmentId)}">
+              <input type = "hidden" name = "refNumber" id = "refNumber" value = "${invoice.referenceNumber?if_exists}">
+              <input type = "hidden" name = "millerNumber" id = "millerNumber" value = "${Shipment.supplierInvoiceId?default(invoice.shipmentId)?if_exists}">
               <input type = "hidden" name = "partyIdName" id = "partyIdName" value = "${partyName}">
               <input type = "hidden" name = "voucherTypeId" id = "voucherTypeId" value = "${invoice.prefPaymentMethodTypeId?if_exists}">
 			  <input type = "hidden" name = "purposeTypeId" id = "purposeTypeId" value = "${invoice.purposeTypeId?if_exists}">            
