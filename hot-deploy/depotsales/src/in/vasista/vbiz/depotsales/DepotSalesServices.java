@@ -12684,23 +12684,32 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 				thruDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(fromDate),60);
 			if(periodTime.doubleValue()==3)
 				thruDate = UtilDateTime.addDaysToTimestamp(UtilDateTime.getDayStart(fromDate),90);
+			
+			fromDate = UtilDateTime.getMonthStart(fromDate);
 				
 			condsList.clear();
-		    condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(fromDate.getTime())));
+		    condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(UtilDateTime.getDayStart(fromDate).getTime())));
 		  	condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
 					EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(thruDate.getTime()))));
 		  	
 		  	 schemeTimePeriodIdList = EntityUtil.filterByCondition(schemeTimePeriodIdList, EntityCondition.makeCondition(condsList,EntityOperator.AND));
 
+		  	 Debug.log("schemeTimePeriodIdList================="+schemeTimePeriodIdList);
+		  	 
 			if(UtilValidate.isNotEmpty(periodTime) && periodTime.compareTo(BigDecimal.ZERO)>0){
 			//if periodTime is exist
 				List schemeTimePeriodIds = EntityUtil.getFieldListFromEntityList(schemeTimePeriodIdList, "schemeTimePeriodId", true);
+				
+				 Debug.log("schemeTimePeriodIds================="+schemeTimePeriodIds);
+				
 				condsList.clear();
 				condsList.add(EntityCondition.makeCondition("schemeTimePeriodId", EntityOperator.IN,schemeTimePeriodIds));
 				condsList.add(EntityCondition.makeCondition("usedQuota", EntityOperator.GREATER_THAN,BigDecimal.ZERO));
 				condsList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,partyId));
 				schemeTimePeriodIdList =  delegator.findList("PartyQuotaBalanceHistoryAndTimePeriod",EntityCondition.makeCondition(condsList,EntityOperator.AND),null, UtilMisc.toList("-periodNum"), null, true);   
 				
+				
+				 Debug.log("schemeTimePeriodIdList================="+schemeTimePeriodIdList);
 				//test
 				
 			  for(int i=0;i< periodTime.intValueExact();i++){
