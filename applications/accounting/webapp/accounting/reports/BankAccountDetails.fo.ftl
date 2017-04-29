@@ -117,14 +117,19 @@ under the License.
 			            <#--   <@ofbizCurrency amount=printBankAccountDetailEntry.balance isoCode=currencyUomId/> -->
 			            <#if printBankAccountDetailEntry.isNegBalance == 'Y' >
 			            	<fo:table-cell border-style="solid">
-			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balance?if_exists}  Cr</fo:block>  
+			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balance*(-1)?if_exists}  Cr</fo:block>  
 			            </fo:table-cell>
 			            <#else>
+			                <#if printBankAccountDetailEntry.balance &gt; 0>
 			            	<fo:table-cell border-style="solid">
 			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balance?if_exists}  Dr</fo:block>  
 			            </fo:table-cell>
+			            <#else>
+			            <fo:table-cell border-style="solid">
+			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balance?if_exists}  </fo:block>  
+			            </fo:table-cell>
 			            </#if>
-			            
+			            </#if>
 			            <fo:table-cell border-style="solid">
 			            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false">${printBankAccountDetailEntry.balanceConfirmation?if_exists}</fo:block>  
 			            </fo:table-cell>

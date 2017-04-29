@@ -27,25 +27,18 @@ under the License.
 		        <fo:region-after extent="1in"/>        
 		    </fo:simple-page-master>   
 		</fo:layout-master-set>
-        ${setRequestAttribute("OUTPUT_FILENAME", "AdvanceOutstandingDetails.pdf")}
-        <#if errorMessage?has_content>
-			<fo:page-sequence master-reference="main">
-				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-	 			  <fo:block font-size="14pt">
-	         		  ${errorMessage}.
-        			</fo:block>
-				</fo:flow>
-			</fo:page-sequence>	
-	  <#else>
-         <#if printAdvanceOutstandingDetailList?has_content>
+      
+	   <#if outstandingList?has_content>
 	        <fo:page-sequence master-reference="main" font-size="12pt">	
 	        	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
 	        		<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "reportHeaderLable"}, true)>
+	        		<#if roId?has_content>
                     <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "${roId}_Header"}, true)>
 				    <#assign reportSubHeader1 = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "${roId}_Header01"}, true)>
+				    </#if>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
-				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}</fo:block>	
-        			 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader1.description?if_exists}</fo:block>
+				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"><#if reportSubHeader?has_content >${reportSubHeader.description?if_exists}</#if></fo:block>	
+        			 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"><#if reportSubHeader1?has_content >${reportSubHeader1.description?if_exists}</#if></fo:block>
         			 <fo:block >&#160;</fo:block>
                 	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size = "12pt" font-family="Arial">DETAIL OF IMPREST/ STAFF ADVANCE OUTSTANDING FOR MORE THAN 45 DAYS</fo:block>
             	</fo:static-content>	        	
@@ -90,46 +83,47 @@ under the License.
 							            
 							     </fo:table-row>
 							</fo:table-header>
-		                     <fo:table-body>
-		        <#assign slNo = 1>         
-		        <#list printAdvanceOutstandingDetailList as printAdvanceOutstandingDetailEntry> 
-				 	<fo:table-row>
-	                    <fo:table-cell border-style="solid">
-			            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false">${slNo}</fo:block>  
-			            </fo:table-cell>
-			              <#assign staffName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, printAdvanceOutstandingDetailEntry.ownerPartyId, false)>
-			             <fo:table-cell border-style="solid">
-			            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${staffName?if_exists}</fo:block>  
-			            </fo:table-cell>
-			             <fo:table-cell border-style="solid">
-			            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${printAdvanceOutstandingDetailEntry.fromDate?if_exists}</fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=printAdvanceOutstandingDetailEntry.depositAmt  isoCode=currencyUomId/></fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=printAdvanceOutstandingDetailEntry.actualBalance isoCode=currencyUomId/> </fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">&#160;${printAdvanceOutstandingDetailEntry.description?if_exists}</fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>  
-			            </fo:table-cell>
-			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="left" font-size="8pt"   white-space-collapse="">${printAdvanceOutstandingDetailEntry.remarks?if_exists}</fo:block>  
-			            </fo:table-cell>
-				     </fo:table-row>
+		                    <fo:table-body>	
+		                    	<fo:table-row>
+		                    		<fo:table-cell></fo:table-cell>
+		                    	</fo:table-row>	                
+		        				<#assign slNo = 1>         
+		        				<#list outstandingList as outStanding> 
+							 	<fo:table-row>
+				                     <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false">${slNo?if_exists}</fo:block>  
+						            </fo:table-cell>
+						              <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, outStanding.ownerPartyId, false)>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${partyName?if_exists}</fo:block>  
+						            </fo:table-cell>
+						             <fo:table-cell border-style="solid">
+						            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${outStanding.fromDate?if_exists}</fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=outStanding.depositAmt  isoCode=currencyUomId/></fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=outStanding.actualBalance isoCode=currencyUomId/> </fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">&#160;${outStanding.description?if_exists}</fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>  
+						            </fo:table-cell>
+						            <fo:table-cell border-style="solid">
+						            	<fo:block text-align="left" font-size="8pt"   white-space-collapse="">${outStanding.remarks?if_exists}</fo:block>  
+						            </fo:table-cell>
+							    </fo:table-row>
 				     <#assign slNo = slNo + 1>
-		         </#list>         
-		       
+		         </#list>    
+		             
 			</fo:table-body>
 			</fo:table>
 			</fo:flow>
-		</fo:page-sequence>
-			
-			 <#else> 
-			
+		  </fo:page-sequence>
+<#else> 
 			<fo:page-sequence master-reference="main">
 				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 			   		 <fo:block font-size="14pt" text-align="center" >
@@ -137,7 +131,6 @@ under the License.
 			   		 </fo:block>
 				</fo:flow>
 			</fo:page-sequence>	
-		  </#if>   
  </#if>
  </fo:root>
 </#escape>
