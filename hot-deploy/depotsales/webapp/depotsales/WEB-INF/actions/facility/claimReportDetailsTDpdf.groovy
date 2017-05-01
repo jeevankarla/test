@@ -66,6 +66,8 @@ dayEnd = UtilDateTime.getDayEnd(thruDateTime);
 context.fromDate = claimFromDate;
 context.thruDate = claimThruDate;
 branchIds=[];
+stateGeoIds=[];
+partyAndPostalAddress=[];
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId",EntityOperator.EQUALS,"REGIONAL_OFFICE"));
 partyClassification = delegator.findList("PartyClassification",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyId"), null, null, false );
@@ -80,9 +82,10 @@ if(UtilValidate.isNotEmpty(geoId)){
 		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId",EntityOperator.EQUALS,geoId));
 	}
 	
-	partyAndPostalAddress = delegator.findList("PartyAndPostalAddress",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyId"), null, null, false );
+	partyAndPostalAddress = delegator.findList("PartyAndPostalAddress",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyId","stateProvinceGeoId"), null, null, false );
 	if(UtilValidate.isNotEmpty(partyAndPostalAddress)){
 		branchIds= EntityUtil.getFieldListFromEntityList(partyAndPostalAddress,"partyId", true);
+		stateGeoIds= EntityUtil.getFieldListFromEntityList(partyAndPostalAddress,"stateProvinceGeoId", true);
 	}
 }
 
@@ -214,6 +217,7 @@ if(reportTypeFlag=="BILL_WISE"){
 	generatePartyWiseReport();
 }else{
 
+	generateSummaryReport(stateGeoIds);
 }
 
 def generateBillWiseReport()
@@ -697,7 +701,7 @@ def generatePartyWiseReport()
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,silkProdIds));
 	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
-	silkPartyIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"partyId", false);
+	silkPartyIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"partyId", true);
 	
 	for(eachParty in silkPartyIds)
 	{
@@ -808,7 +812,7 @@ def generatePartyWiseReport()
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,cottonProdIds));
 	cottonInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
-	cottonPartyIds=EntityUtil.getFieldListFromEntityList(cottonInvoicesAndItems,"partyId", false);
+	cottonPartyIds=EntityUtil.getFieldListFromEntityList(cottonInvoicesAndItems,"partyId", true);
 	
 	for(eachParty in cottonPartyIds)
 	{
@@ -919,7 +923,7 @@ def generatePartyWiseReport()
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,juteProdIds));
 	juteInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
-	jutePartyIds=EntityUtil.getFieldListFromEntityList(juteInvoicesAndItems,"partyId", false);
+	jutePartyIds=EntityUtil.getFieldListFromEntityList(juteInvoicesAndItems,"partyId", true);
 	
 	for(eachParty in jutePartyIds)
 	{
@@ -1029,7 +1033,7 @@ def generatePartyWiseReport()
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,otherProdIds));
 	otherInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
-	otherPartyIds=EntityUtil.getFieldListFromEntityList(otherInvoicesAndItems,"partyId", false);
+	otherPartyIds=EntityUtil.getFieldListFromEntityList(otherInvoicesAndItems,"partyId", true);
 	
 	for(eachParty in otherPartyIds)
 	{
@@ -1118,9 +1122,645 @@ def generatePartyWiseReport()
 	
 }
 
-def generateSummaryReport()
+
+
+
+
+
+def generateSummaryReport(stateGeoIds)
 {
+	index=1;
+	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
+	BigDecimal totalInvoiceValueD = BigDecimal.ZERO;
+	BigDecimal totalActualFrightChargesD = BigDecimal.ZERO;
+	BigDecimal totalFrightChargesD = BigDecimal.ZERO;
+	BigDecimal totalDepotChargesD = BigDecimal.ZERO;
+	BigDecimal totalSerChargesD = BigDecimal.ZERO;
 	
+	BigDecimal totalInvoiceQtyND = BigDecimal.ZERO;
+	BigDecimal totalInvoiceValueND = BigDecimal.ZERO;
+	BigDecimal totalActualFrightChargesND = BigDecimal.ZERO;
+	BigDecimal totalFrightChargesND = BigDecimal.ZERO;
+	BigDecimal totalDepotChargesND = BigDecimal.ZERO;
+	BigDecimal totalSerChargesND = BigDecimal.ZERO;
+	
+	silkDepottotalsMap=[:];
+	silkNonDepottotalsMap=[:];
+	
+	cottonDepottotalsMap=[:];
+	cottonNonDepottotalsMap=[:];
+	
+	juteDepottotalsMap=[:];
+	juteNonDepottotalsMap=[:];
+	
+	otherDepottotalsMap=[:];
+	otherNonDepottotalsMap=[:];
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
+	conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd))
+	conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"SALES_INVOICE"));
+	conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
+	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
+	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,silkProdIds));
+	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
+	silkPartyIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"partyId", true);
+	
+	for(eachState in stateGeoIds)
+	{
+		tempMapD=[:]
+		tempMapND=[:]
+		String stateName = "";
+		BigDecimal invoiceQty = BigDecimal.ZERO;
+		BigDecimal invoiceValue = BigDecimal.ZERO;
+		BigDecimal actualFrightCharges = BigDecimal.ZERO;
+		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
+		BigDecimal depotCharges = BigDecimal.ZERO;
+		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
+		
+		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
+		stateName=stateDetails.geoName
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,silkPartyIds));
+		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId",EntityOperator.EQUALS,eachState));
+		eachStateCustomerList = EntityUtil.filterByCondition(partyAndPostalAddress, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
+		eachStateSilkPartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomerList,"partyId", true);
+		stateSilkinvoicesAndItems = EntityUtil.filterByCondition(silkinvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateSilkPartyIds));
+		facilitys = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,eachStateSilkPartyIds), UtilMisc.toSet("ownerPartyId"), null, null, false );
+		eachStateSilkPartyIdsD=EntityUtil.getFieldListFromEntityList(facilitys,"ownerPartyId", true);
+		
+		silkinvoicesAndItems1D = EntityUtil.filterByCondition(stateSilkinvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateSilkPartyIdsD));
+		silkinvoicesAndItems1ND = EntityUtil.filterByCondition(stateSilkinvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.NOT_IN,eachStateSilkPartyIdsD));
+		
+		
+		for(invoice in silkinvoicesAndItems1D)
+		{
+			invoiceQty=invoiceQty.add(invoice.quantity);
+			invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+			invoiceValue=invoiceValue.add(invoiceAmount);
+			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
+			}
+			product = delegator.findOne("Product",[productId : invoice.productId] , false);
+			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
+			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			serviceChrgPercentage=roPercentagesMap.get("serCharge")
+			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
+			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
+			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+			
+		}
+		
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
+		totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
+		totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
+		totalDepotChargesD=totalDepotChargesD.add(depotCharges);
+		totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
+		
+		tempMapD.put("sNo", index);
+		tempMapD.put("partyName", stateName);
+		tempMapD.put("totInvQty", invoiceQty);
+		tempMapD.put("totInvValue", invoiceValue);
+		tempMapD.put("actualFrightCharges", actualFrightCharges);
+		tempMapD.put("frightCharges", eligibleFrightCharges);
+		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
+		tempMapD.put("depotCharges", depotCharges);
+		if(invoiceQty>0){
+			silkDepotList.add(tempMapD);
+		}
+		 invoiceQty = BigDecimal.ZERO;
+		 invoiceValue = BigDecimal.ZERO;
+		 actualFrightCharges = BigDecimal.ZERO;
+		 eligibleFrightCharges = BigDecimal.ZERO;
+		 depotCharges = BigDecimal.ZERO;
+		 mgpsServiceCharge = BigDecimal.ZERO;
+		
+		for(invoice in silkinvoicesAndItems1ND)
+		{
+			invoiceQty=invoiceQty.add(invoice.quantity);
+			invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+			invoiceValue=invoiceValue.add(invoiceAmount);
+			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
+			}
+			product = delegator.findOne("Product",[productId : invoice.productId] , false);
+			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
+			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			serviceChrgPercentage=roPercentagesMap.get("serCharge")
+			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
+			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
+			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+		}
+		
+		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
+		totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
+		totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
+		totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
+		totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+		totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
+		
+		tempMapND.put("sNo", index);
+		tempMapND.put("partyName", stateName);
+		tempMapND.put("totInvQty", invoiceQty);
+		tempMapND.put("totInvValue", invoiceValue);
+		tempMapND.put("actualFrightCharges", actualFrightCharges);
+		tempMapND.put("frightCharges", eligibleFrightCharges);
+		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
+		tempMapND.put("depotCharges", depotCharges);
+		
+		if(invoiceQty>0){
+			silkNonDepotList.add(tempMapND);
+		}
+		index=index+1;
+		
+	}
+	
+	
+	silkDepottotalsMap.put("partyName","TOTAL");
+	silkDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
+	silkDepottotalsMap.put("totInvValue",totalInvoiceValueD);
+	silkDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
+	silkDepottotalsMap.put("frightCharges",totalFrightChargesD);
+	silkDepottotalsMap.put("depotCharges",totalDepotChargesD);
+	silkDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	silkDepotList.add(silkDepottotalsMap);
+	
+	silkNonDepottotalsMap.put("partyName","TOTAL");
+	silkNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
+	silkNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
+	silkNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
+	silkNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
+	silkNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
+	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
+	silkNonDepotList.add(silkNonDepottotalsMap);
+	
+	index=1;
+	totalInvoiceQtyD = BigDecimal.ZERO;
+	totalInvoiceValueD = BigDecimal.ZERO;
+	totalActualFrightChargesD = BigDecimal.ZERO;
+	totalFrightChargesD = BigDecimal.ZERO;
+	totalDepotChargesD = BigDecimal.ZERO;
+	totalSerChargesD = BigDecimal.ZERO;
+	
+	totalInvoiceQtyND = BigDecimal.ZERO;
+	totalInvoiceValueND = BigDecimal.ZERO;
+	totalActualFrightChargesND = BigDecimal.ZERO;
+	totalFrightChargesND = BigDecimal.ZERO;
+	totalDepotChargesND = BigDecimal.ZERO;
+	totalSerChargesND=BigDecimal.ZERO;
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
+	conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd))
+	conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"SALES_INVOICE"));
+	conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
+	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
+	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,cottonProdIds));
+	cottonInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
+	cottonPartyIds=EntityUtil.getFieldListFromEntityList(cottonInvoicesAndItems,"partyId", true);
+	
+	
+	for(eachState in stateGeoIds)
+	{
+		tempMapD=[:]
+		tempMapND=[:]
+		String stateName = "";
+		BigDecimal invoiceQty = BigDecimal.ZERO;
+		BigDecimal invoiceValue = BigDecimal.ZERO;
+		BigDecimal actualFrightCharges = BigDecimal.ZERO;
+		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
+		BigDecimal depotCharges = BigDecimal.ZERO;
+		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
+		
+		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
+		stateName=stateDetails.geoName
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,cottonPartyIds));
+		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId",EntityOperator.EQUALS,eachState));
+		eachStateCustomerList = EntityUtil.filterByCondition(partyAndPostalAddress, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
+		eachStateCottonPartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomerList,"partyId", true);
+		stateCottoninvoicesAndItems = EntityUtil.filterByCondition(cottonInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateCottonPartyIds));
+		facilitys = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,eachStateCottonPartyIds), UtilMisc.toSet("ownerPartyId"), null, null, false );
+		eachStateCottonPartyIdsD=EntityUtil.getFieldListFromEntityList(facilitys,"ownerPartyId", true);
+		cottoninvoicesAndItems1D = EntityUtil.filterByCondition(stateCottoninvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateCottonPartyIdsD));
+		cottoninvoicesAndItems1ND = EntityUtil.filterOutByCondition(stateCottoninvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateCottonPartyIdsD));
+		
+		for(invoice in cottoninvoicesAndItems1D)
+		{
+			invoiceQty=invoiceQty.add(invoice.quantity);
+			invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+			invoiceValue=invoiceValue.add(invoiceAmount);
+			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
+			}
+			product = delegator.findOne("Product",[productId : invoice.productId] , false);
+			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
+			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			serviceChrgPercentage=roPercentagesMap.get("serCharge")
+			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
+			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
+			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+			
+		}
+		
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
+		totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
+		totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
+		totalDepotChargesD=totalDepotChargesD.add(depotCharges);
+		totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
+		
+		tempMapD.put("sNo", index);
+		tempMapD.put("partyName", stateName);
+		tempMapD.put("totInvQty", invoiceQty);
+		tempMapD.put("totInvValue", invoiceValue);
+		tempMapD.put("actualFrightCharges", actualFrightCharges);
+		tempMapD.put("frightCharges", eligibleFrightCharges);
+		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
+		if(invoiceQty>0)
+		cottonDepotList.add(tempMapD);
+		
+		invoiceQty = BigDecimal.ZERO;
+		invoiceValue = BigDecimal.ZERO;
+		actualFrightCharges = BigDecimal.ZERO;
+		eligibleFrightCharges = BigDecimal.ZERO;
+		depotCharges = BigDecimal.ZERO;
+		mgpsServiceCharge = BigDecimal.ZERO;
+		
+		for(invoice in cottoninvoicesAndItems1ND)
+		{
+			invoiceQty=invoiceQty.add(invoice.quantity);
+			invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+			invoiceValue=invoiceValue.add(invoiceAmount);
+			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
+			}
+			product = delegator.findOne("Product",[productId : invoice.productId] , false);
+			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
+			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			serviceChrgPercentage=roPercentagesMap.get("serCharge")
+			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
+			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
+			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+			
+		}
+		
+		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
+		totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
+		totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
+		totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
+		totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+		totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
+		
+		tempMapND.put("sNo", index);
+		tempMapND.put("partyName", stateName);
+		tempMapND.put("totInvQty", invoiceQty);
+		tempMapND.put("totInvValue", invoiceValue);
+		tempMapND.put("actualFrightCharges", actualFrightCharges);
+		tempMapND.put("frightCharges", eligibleFrightCharges);
+		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
+		if(invoiceQty>0)
+		cottonNonDepotList.add(tempMapND);
+		
+		index=index+1;
+	}
+	
+	cottonDepottotalsMap.put("partyName","TOTAL");
+	cottonDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
+	cottonDepottotalsMap.put("totInvValue",totalInvoiceValueD);
+	cottonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
+	cottonDepottotalsMap.put("frightCharges",totalFrightChargesD);
+	cottonDepottotalsMap.put("depotCharges",totalDepotChargesD);
+	cottonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	cottonDepotList.add(cottonDepottotalsMap);
+	
+	cottonNonDepottotalsMap.put("partyName","TOTAL");
+	cottonNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
+	cottonNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
+	cottonNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
+	cottonNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
+	cottonNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
+	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
+	cottonNonDepotList.add(cottonNonDepottotalsMap);
+	
+	index=1
+	totalInvoiceQtyD = BigDecimal.ZERO;
+	totalInvoiceValueD = BigDecimal.ZERO;
+	totalActualFrightChargesD = BigDecimal.ZERO;
+	totalFrightChargesD = BigDecimal.ZERO;
+	totalDepotChargesD = BigDecimal.ZERO;
+	totalSerChargesD = BigDecimal.ZERO;
+	
+	totalInvoiceQtyND = BigDecimal.ZERO;
+	totalInvoiceValueND = BigDecimal.ZERO;
+	totalActualFrightChargesND = BigDecimal.ZERO;
+	totalFrightChargesND = BigDecimal.ZERO;
+	totalDepotChargesND = BigDecimal.ZERO;
+	totalSerChargesND=BigDecimal.ZERO;
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
+	conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd))
+	conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"SALES_INVOICE"));
+	conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
+	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
+	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,juteProdIds));
+	juteInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
+	jutePartyIds=EntityUtil.getFieldListFromEntityList(juteInvoicesAndItems,"partyId", true);
+	
+	for(eachState in stateGeoIds)
+	{
+		tempMapD=[:]
+		tempMapND=[:]
+		String stateName = "";
+		BigDecimal invoiceQty = BigDecimal.ZERO;
+		BigDecimal invoiceValue = BigDecimal.ZERO;
+		BigDecimal actualFrightCharges = BigDecimal.ZERO;
+		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
+		BigDecimal depotCharges = BigDecimal.ZERO;
+		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
+		
+		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
+		stateName=stateDetails.geoName
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,jutePartyIds));
+		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId",EntityOperator.EQUALS,eachState));
+		eachStateCustomerList = EntityUtil.filterByCondition(partyAndPostalAddress, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
+		eachStateJutePartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomerList,"partyId", true);
+		stateJuteInvoicesAndItems = EntityUtil.filterByCondition(juteInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateJutePartyIds));
+		facilitys = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,eachStateJutePartyIds), UtilMisc.toSet("ownerPartyId"), null, null, false );
+		eachStateJutePartyIdsD=EntityUtil.getFieldListFromEntityList(facilitys,"ownerPartyId", true);
+		juteInvoicesAndItems1D = EntityUtil.filterByCondition(stateJuteInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateJutePartyIdsD));
+		juteInvoicesAndItems1ND = EntityUtil.filterOutByCondition(stateJuteInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateJutePartyIdsD));
+		
+		
+		for(invoice in juteInvoicesAndItems1D)
+		{
+			invoiceQty=invoiceQty.add(invoice.quantity);
+			invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+			invoiceValue=invoiceValue.add(invoiceAmount);
+			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
+			}
+			product = delegator.findOne("Product",[productId : invoice.productId] , false);
+			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
+			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			serviceChrgPercentage=roPercentagesMap.get("serCharge")
+			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
+			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
+			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+			
+		}
+		
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
+		totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
+		totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
+		totalDepotChargesD=totalDepotChargesD.add(depotCharges);
+		totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
+		
+		tempMapD.put("sNo", index);
+		tempMapD.put("partyName", stateName);
+		tempMapD.put("totInvQty", invoiceQty);
+		tempMapD.put("totInvValue", invoiceValue);
+		tempMapD.put("actualFrightCharges", actualFrightCharges);
+		tempMapD.put("frightCharges", eligibleFrightCharges);
+		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
+		if(invoiceQty>0)
+		juteDepotList.add(tempMapD);
+		
+		invoiceQty = BigDecimal.ZERO;
+		invoiceValue = BigDecimal.ZERO;
+		actualFrightCharges = BigDecimal.ZERO;
+		eligibleFrightCharges = BigDecimal.ZERO;
+		depotCharges = BigDecimal.ZERO;
+		mgpsServiceCharge = BigDecimal.ZERO;
+		
+		for(invoice in juteInvoicesAndItems1ND)
+		{
+			invoiceQty=invoiceQty.add(invoice.quantity);
+			invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+			invoiceValue=invoiceValue.add(invoiceAmount);
+			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
+			}
+			product = delegator.findOne("Product",[productId : invoice.productId] , false);
+			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
+			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			serviceChrgPercentage=roPercentagesMap.get("serCharge")
+			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
+			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
+			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+			
+		}
+		
+		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
+		totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
+		totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
+		totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
+		totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+		totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
+		
+		tempMapND.put("sNo", index);
+		tempMapND.put("partyName", stateName);
+		tempMapND.put("totInvQty", invoiceQty);
+		tempMapND.put("totInvValue", invoiceValue);
+		tempMapND.put("actualFrightCharges", actualFrightCharges);
+		tempMapND.put("frightCharges", eligibleFrightCharges);
+		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
+		if(invoiceQty>0)
+		juteNonDepotList.add(tempMapND);
+		
+		index=index+1;
+	}
+	
+	juteDepottotalsMap.put("partyName","TOTAL");
+	juteDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
+	juteDepottotalsMap.put("totInvValue",totalInvoiceValueD);
+	juteDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
+	juteDepottotalsMap.put("frightCharges",totalFrightChargesD);
+	juteDepottotalsMap.put("depotCharges",totalDepotChargesD);
+	juteDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	juteDepotList.add(juteDepottotalsMap);
+	juteNonDepottotalsMap.put("partyName","TOTAL");
+	juteNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
+	juteNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
+	juteNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
+	juteNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
+	juteNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
+	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
+	juteNonDepotList.add(juteNonDepottotalsMap);
+	
+	index=1
+	totalInvoiceQtyD = BigDecimal.ZERO;
+	totalInvoiceValueD = BigDecimal.ZERO;
+	totalActualFrightChargesD = BigDecimal.ZERO;
+	totalFrightChargesD = BigDecimal.ZERO;
+	totalDepotChargesD = BigDecimal.ZERO;
+	totalSerChargesD = BigDecimal.ZERO;
+	
+	totalInvoiceQtyND = BigDecimal.ZERO;
+	totalInvoiceValueND = BigDecimal.ZERO;
+	totalActualFrightChargesND = BigDecimal.ZERO;
+	totalFrightChargesND = BigDecimal.ZERO;
+	totalDepotChargesND = BigDecimal.ZERO;
+	totalSerChargesND=BigDecimal.ZERO;
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
+	conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd))
+	conditionList.add(EntityCondition.makeCondition("invoiceTypeId",EntityOperator.EQUALS,"SALES_INVOICE"));
+	conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
+	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
+	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,otherProdIds));
+	otherInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
+	otherPartyIds=EntityUtil.getFieldListFromEntityList(otherInvoicesAndItems,"partyId", true);
+	
+	for(eachState in stateGeoIds)
+	{
+		tempMapD=[:]
+		tempMapND=[:]
+		String stateName = "";
+		BigDecimal invoiceQty = BigDecimal.ZERO;
+		BigDecimal invoiceValue = BigDecimal.ZERO;
+		BigDecimal actualFrightCharges = BigDecimal.ZERO;
+		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
+		BigDecimal depotCharges = BigDecimal.ZERO;
+		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
+		
+		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
+		stateName=stateDetails.geoName
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,otherPartyIds));
+		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId",EntityOperator.EQUALS,eachState));
+		eachStateCustomerList = EntityUtil.filterByCondition(partyAndPostalAddress, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
+		eachStateOtherPartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomerList,"partyId", true);
+		stateOtherInvoicesAndItems = EntityUtil.filterByCondition(otherInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateOtherPartyIds));
+		facilitys = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,eachStateOtherPartyIds), UtilMisc.toSet("ownerPartyId"), null, null, false );
+		eachStateOtherPartyIdsD=EntityUtil.getFieldListFromEntityList(facilitys,"ownerPartyId", true);
+		otherInvoicesAndItems1D = EntityUtil.filterByCondition(stateOtherInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateOtherPartyIdsD));
+		otherInvoicesAndItems1ND = EntityUtil.filterOutByCondition(stateOtherInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateOtherPartyIdsD));
+		
+		for(invoice in otherInvoicesAndItems1D)
+		{
+			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
+			invoiceQty=invoiceQty.add(invoice.quantity);
+			invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+			invoiceValue=invoiceValue.add(invoiceAmount);
+			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
+			}
+			product = delegator.findOne("Product",[productId : invoice.productId] , false);
+			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
+			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			serviceChrgPercentage=roPercentagesMap.get("serCharge")
+			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
+			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
+			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+		}
+		
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
+		totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
+		totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
+		totalDepotChargesD=totalDepotChargesD.add(depotCharges);
+		totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
+		
+		tempMapD.put("sNo", index);
+		tempMapD.put("partyName", stateName);
+		tempMapD.put("totInvQty", invoiceQty);
+		tempMapD.put("totInvValue", invoiceValue);
+		tempMapD.put("actualFrightCharges", actualFrightCharges);
+		tempMapD.put("frightCharges", eligibleFrightCharges);
+		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
+		if(invoiceQty>0)
+		otherDepotList.add(tempMapD)
+		
+		invoiceQty = BigDecimal.ZERO;
+		invoiceValue = BigDecimal.ZERO;
+		actualFrightCharges = BigDecimal.ZERO;
+		eligibleFrightCharges = BigDecimal.ZERO;
+		depotCharges = BigDecimal.ZERO;
+		mgpsServiceCharge = BigDecimal.ZERO;
+		
+		for(invoice in otherInvoicesAndItems1ND)
+		{
+			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
+			invoiceQty=invoiceQty.add(invoice.quantity);
+			invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
+			invoiceValue=invoiceValue.add(invoiceAmount);
+			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
+			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
+			}
+			product = delegator.findOne("Product",[productId : invoice.productId] , false);
+			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
+			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			serviceChrgPercentage=roPercentagesMap.get("serCharge")
+			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
+			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
+			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+		}
+		
+		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
+		totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
+		totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
+		totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
+		totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+		totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
+		
+		
+		tempMapND.put("sNo", index);
+		tempMapND.put("partyName", stateName);
+		tempMapND.put("totInvQty", invoiceQty);
+		tempMapND.put("totInvValue", invoiceValue);
+		tempMapND.put("actualFrightCharges", actualFrightCharges);
+		tempMapND.put("frightCharges", eligibleFrightCharges);
+		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
+		if(invoiceQty>0)
+		otherNonDepotList.add(tempMapND)
+		index=index+1;
+	}
+	
+	otherDepottotalsMap.put("partyName","TOTAL");
+	otherDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
+	otherDepottotalsMap.put("totInvValue",totalInvoiceValueD);
+	otherDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
+	otherDepottotalsMap.put("frightCharges",totalFrightChargesD);
+	otherDepottotalsMap.put("depotCharges",totalDepotChargesD);
+	otherDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	otherDepotList.add(otherDepottotalsMap);
+
+	otherNonDepottotalsMap.put("partyName","TOTAL");
+	otherNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
+	otherNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
+	otherNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
+	otherNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
+	otherNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
+	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
+	otherNonDepotList.add(otherNonDepottotalsMap);
+	
+
 	
 }
 
