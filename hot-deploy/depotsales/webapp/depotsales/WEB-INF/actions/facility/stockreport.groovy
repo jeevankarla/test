@@ -144,7 +144,7 @@ conditionList =[];
 	if(UtilValidate.isNotEmpty(parameters.statusId)){
 		conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.EQUALS,parameters.statusId));
 	}
-	conditionList.add(EntityCondition.makeCondition("shipmentPurposeTypeId",EntityOperator.EQUALS,"DC_DEPOT_SHIPMENT"));
+	//conditionList.add(EntityCondition.makeCondition("shipmentPurposeTypeId",EntityOperator.EQUALS,"DC_DEPOT_SHIPMENT"));
 	shipmentCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	shipmentList = delegator.findList("Shipment", shipmentCondition, null, ['shipmentId'], null, false);
 

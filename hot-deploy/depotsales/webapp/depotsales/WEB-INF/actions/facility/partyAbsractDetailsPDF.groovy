@@ -129,7 +129,7 @@ if(UtilValidate.isNotEmpty(partyfromDate)){
   
   stylesMap=[:];
   stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");
-  stylesMap.put("mainHeader2", "Fiber And Count Wise Sales Report");
+  stylesMap.put("mainHeader2", "Detailed Report");
   stylesMap.put("mainHeader3", "from "+ partyfromDate +" to "+partythruDate);
   stylesMap.put("mainHeadercellHeight",400);
   stylesMap.put("mainHeaderFontSize",12);
