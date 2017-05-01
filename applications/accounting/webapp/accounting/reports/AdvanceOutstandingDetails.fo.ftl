@@ -113,7 +113,7 @@ under the License.
 						            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false"></fo:block>  
 						            </fo:table-cell>
 						            <fo:table-cell border-style="solid">
-						            	<fo:block text-align="left" font-size="8pt"   white-space-collapse="">${outStanding.remarks?if_exists}</fo:block>  
+						            	<fo:block text-align="left" font-size="8pt"   white-space-collapse="false">${outStanding.remarks?if_exists}</fo:block>  
 						            </fo:table-cell>
 							    </fo:table-row>
 				     <#assign slNo = slNo + 1>
