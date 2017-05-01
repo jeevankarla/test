@@ -345,6 +345,7 @@
             	</entity-condition>
             	 
             	    <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/findCustDepositAccounts.groovy"/>
+            	     <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/getFinAccounts.groovy"/>
             </actions>
             <widgets>
             	<decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml"> 

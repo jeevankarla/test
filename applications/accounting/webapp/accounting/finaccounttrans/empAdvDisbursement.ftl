@@ -105,7 +105,7 @@
 			});
 		});
 			message += 	"<tr class='h2'><td align='left'class='h3' width='60%'>Financial Account:</td><td align='left' width='20%'><select name='finAccountId' id='finAccountId'  class='h4'>"+
-							"<#if companyBanksList?has_content><#list companyBanksList as finAccount><option value='${finAccount.finAccountId?if_exists}' >${finAccount.finAccountName?if_exists}</option></#list></#if>"+            
+							"<#if finAccountList?has_content><#list finAccountList as finAccount><option value='${finAccount.finAccountId?if_exists}' >${finAccount.finAccountName?if_exists}</option></#list></#if>"+            
 							"</select></td></tr>";
 						
 		   message += "<tr class='h2'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='instrumentDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
