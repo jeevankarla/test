@@ -2081,26 +2081,26 @@ public class PartyServices {
 	    	  List conditionList = FastList.newInstance();
 	    	  conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyId));
 	    	  EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
-	    	  List<GenericValue> finAccountList = delegator.findList("FinAccount", condition, null, null, null, false);
+	    	  List<GenericValue> finAccountList = delegator.findList("BankAccount", condition, null, null, null, false);
 	    		  if(UtilValidate.isEmpty(finAccountList)){
-						GenericValue newEntity = delegator.makeValue("FinAccount");
+						GenericValue newEntity = delegator.makeValue("BankAccount");
 						//newEntity.set("finAccountId", partyId);
-						newEntity.set("finAccountCode", finAccountCode);
-						newEntity.set("finAccountName", finAccountName);
+						newEntity.set("bankAccountCode", finAccountCode);
+						newEntity.set("bankAccountName", finAccountName);
 						newEntity.set("organizationPartyId", "Company");
 						newEntity.set("ownerPartyId", partyId);
-						newEntity.set("finAccountTypeId", finAccountTypeId);
+						//newEntity.set("finAccountTypeId", finAccountTypeId);
 						newEntity.set("statusId", "FNACT_ACTIVE");
-						if(UtilValidate.isNotEmpty(finAccountBranch)){
+						/*if(UtilValidate.isNotEmpty(finAccountBranch)){
 							newEntity.set("finAccountBranch", finAccountBranch);
-						}
+						}*/
 						if(UtilValidate.isNotEmpty(ifscCode)){
 							newEntity.set("ifscCode", ifscCode);
 						}
 						newEntity.set("fromDate", dateTime);
 						try {  
 							delegator.createSetNextSeqId(newEntity);
-							finAccountId = (String) newEntity.get("finAccountId");
+						//	finAccountId = (String) newEntity.get("finAccountId");
 						} catch (GenericEntityException e) {
 							Debug.logError(e, module);
 							return ServiceUtil.returnError("Failed to create a new Entry "+ e);
@@ -2109,16 +2109,16 @@ public class PartyServices {
 						GenericValue finAccount = finAccountList.get(0);
 						
 						if(!finAccountCode.equals(finAccount.getString("finAccountCode"))){
-							finAccount.set("finAccountCode",finAccountCode);
+							finAccount.set("bankAccountCode",finAccountCode);
 						}
 						if(!finAccountName.equals(finAccount.getString("finAccountName"))){
-							finAccount.set("finAccountName",finAccountName);
+							finAccount.set("bankAccountName",finAccountName);
 						}
-						if((UtilValidate.isNotEmpty(finAccountBranch))){
+						/*if((UtilValidate.isNotEmpty(finAccountBranch))){
 							if(!finAccountBranch.equals(finAccount.getString("finAccountBranch"))){
 								finAccount.set("finAccountBranch", finAccountBranch);
 							}
-						}						
+						}*/						
 						if((UtilValidate.isNotEmpty(ifscCode))){
 							if(!ifscCode.equals(finAccount.getString("ifscCode"))){
 								finAccount.set("ifscCode", ifscCode);
