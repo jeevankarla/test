@@ -18,7 +18,6 @@ specific language governing permissions and limitations
 under the License.
 -->
    
-
 <#escape x as x?xml>
 	<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
         <fo:layout-master-set>
@@ -42,8 +41,10 @@ under the License.
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOAddress?if_exists}</fo:block>
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOEmail?if_exists}</fo:block>
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
-                <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block>
-				<fo:block text-align="center" font-size="12pt" font-weight="bold" >AGENCY WISE INVOICE OUTSTANDING REPORT</fo:block>
+                <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block> 
+				<fo:block text-align="center" font-size="12pt" font-weight="bold" >STATEMENT FOR CLAIMING REIMBURSEMENT OF THE COST OF TRANSPORTATION AND OVERHEADS TOWARDS </fo:block>
+				<fo:block text-align="center" font-size="12pt" font-weight="bold" >THE QUANTUM OF YARN SUPPLIED UNDER MILL GATE PRICE SCHEME FOR THE PERIOD </fo:block>
+				<fo:block text-align="center" font-size="12pt" font-weight="bold" >TRANSPORTATION AND DEPOT EXPENSES FOR THE PERIOD FROM ${fromDate?if_exists} to ${thruDate?if_exists} </fo:block>
 				
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		       
@@ -51,12 +52,13 @@ under the License.
              		<fo:table >
              			
              		    <fo:table-column column-width="3%"/>
-			            <fo:table-column column-width="18.8%"/>
-			            <fo:table-column column-width="12.8%"/>
-			            <fo:table-column column-width="12.8%"/>
-	                    <fo:table-column column-width="12.8%"/>
-	                    <fo:table-column column-width="12.8%"/>
-	                    <fo:table-column column-width="12.8%"/>
+			            <fo:table-column column-width="18%"/>
+			            <fo:table-column column-width="10.8%"/>
+			            <fo:table-column column-width="10.8%"/>
+	                    <fo:table-column column-width="10.8%"/>
+	                    <fo:table-column column-width="10.8%"/>
+	                    <fo:table-column column-width="10.8%"/>
+	                    <fo:table-column column-width="10.8%"/>
 			            <fo:table-body>
 		            		 <fo:table-row>
 								 <fo:table-cell number-columns-spanned="7">
@@ -85,30 +87,36 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
+					             <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            </fo:table-cell>
 							</fo:table-row>  
 							
 								<#list silkDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold"  white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"   white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("totInvValue")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"    font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists?string("0.00")} </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frightCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("depotCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
+								            </fo:table-cell >
+											 <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
@@ -143,30 +151,36 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
+								<fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            </fo:table-cell>
 							</fo:table-row>  
 							
 								<#list silkNonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("totInvValue")?if_exists?string("##0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists?string("##0.00")} </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frightCharges")?if_exists?string("##0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("depotCharges")?if_exists?string("##0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
@@ -202,30 +216,36 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            </fo:table-cell>
 							</fo:table-row>  
 							
 								<#list cottonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("totInvValue")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists?string("0.00")} </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frightCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("depotCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
@@ -261,30 +281,36 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
+								<fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            </fo:table-cell>
 							</fo:table-row>  
 							
 								<#list cottonNonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("totInvValue")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists?string("0.00")} </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frightCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("depotCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
@@ -323,30 +349,36 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            </fo:table-cell>
 							</fo:table-row>  
 							
 								<#list juteDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("totInvValue")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists?string("0.00")} </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frightCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("depotCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
@@ -381,30 +413,36 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
+								<fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            </fo:table-cell>
 							</fo:table-row>  
 							
 								<#list juteNonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("totInvValue")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists?string("0.00")} </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frightCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("depotCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
@@ -439,30 +477,36 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
+					            <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            </fo:table-cell>
 							</fo:table-row>  
 							
 								<#list otherDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("totInvValue")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists?string("0.00")} </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frightCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("depotCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
@@ -503,30 +547,36 @@ under the License.
 					           <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
+								<fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            </fo:table-cell>
 							</fo:table-row>  
 							
 								<#list otherNonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if>  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("totInvValue")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists?string("0.00")} </fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("frightCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  <#if invoice.get("partyName")=="TOTAL"> font-weight="bold"  </#if> white-space-collapse="false">${invoice.get("depotCharges")?if_exists?string("0.00")}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								

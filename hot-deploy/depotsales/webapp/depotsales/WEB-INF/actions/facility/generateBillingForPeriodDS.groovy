@@ -26,12 +26,26 @@ import in.vasista.vbiz.byproducts.ByProductNetworkServices;
 import in.vasista.vbiz.byproducts.ByProductServices;
 
 import org.ofbiz.product.product.ProductWorker;
+import org.ofbiz.accounting.invoice.InvoiceWorker;
 
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import in.vasista.vbiz.byproducts.icp.ICPServices;
 rounding = RoundingMode.HALF_UP;
 schemeBillingId = parameters.schemeBillingId;
 dctx = dispatcher.getDispatchContext();
+
+rowiseTsPercentageMap=[:];
+hydRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
+cmbRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
+kolRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
+kanRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
+vjyRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
+panRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
+gwhRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
+varRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
+bhuRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
+
+rowiseTsPercentageMap= UtilMisc.toMap("INT1",varRoMap,"INT2",panRoMap,"INT3",kolRoMap,"INT4",cmbRoMap,"INT5",hydRoMap,"INT6",kanRoMap,"INT26",bhuRoMap,"INT28",gwhRoMap,"INT47",vjyRoMap);
 
 schemeTimePeriod = delegator.findOne("SchemeTimePeriod",[schemeTimePeriodId : schemeBillingId] , false);
 /*invoice = delegator.findList("Invoice",EntityCondition.makeCondition("periodBillingId",EntityOperator.EQUALS,schemeBillingId), UtilMisc.toSet("invoiceId"), null, null, false);
@@ -77,17 +91,17 @@ roPartIds.each{ eachRo ->
 	}
 	partyIdToList.add(eachRo);
 }
-
 boolean beganTransaction = false;
 try {
 	beganTransaction = TransactionUtil.begin();
 	conditionList=[];
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
-	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,partyIdToList));
+	//conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,partyIdToList));
 	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
-	salesInvoicesForPeriod = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","partyId","productId","invoiceDate","shipmentId"), null, null, false);
+	salesInvoicesForPeriod = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","partyId","productId","invoiceDate","shipmentId","costCenterId"), null, null, false);
 	invocieIds=EntityUtil.getFieldListFromEntityList(salesInvoicesForPeriod, "invoiceId", true);
 	allcustomerIds=EntityUtil.getFieldListFromEntityList(salesInvoicesForPeriod, "partyId", true);
 	
@@ -119,7 +133,6 @@ try {
 	facilityList = delegator.findList("Facility",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("ownerPartyId"), null, null, false);
 	depotcustomerIds=EntityUtil.getFieldListFromEntityList(facilityList, "ownerPartyId", true);
 	
-	
 	BigDecimal TotalTRAmount=BigDecimal.ZERO;
 	BigDecimal totalDepoChrgAmount=BigDecimal.ZERO;
 	BigDecimal totalInvoiceAmount=BigDecimal.ZERO;
@@ -135,18 +148,24 @@ try {
 			transportaionCost=transportaionCost.add(shipment.estimatedShipCost);
 		}
 		invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoiceId);
-		Map<String, Object> inputParams = UtilMisc.toMap("userLogin", userLogin)
-		
+		/*Map<String, Object> inputParams = UtilMisc.toMap("userLogin", userLogin)
+		Debug.log("eachRecord.productId====="+ eachRecord.productId);
 		inputParams.put("partyId", eachRecord.partyId)
 		inputParams.put("productId", eachRecord.productId)
 		inputParams.put("schemeTypeId", "SHIP_REIMBURSEMENT")
 		inputParams.put("invoiceDate", eachRecord.invoiceDate)
 		Map<String, Object> result = dispatcher.runSync("getReimbursmentPercentage", inputParams);
 		if (ServiceUtil.isError(result)) {
-			request.setAttribute("_ERROR_MESSAGE_","Error while creating invoic");
+			request.setAttribute("_ERROR_MESSAGE_","Unable to get scheme percentage");
 			return "error";
-		}
-		transSchemePercentageForParty= result.get("schemePercent");
+		}*/
+		percentageMap=rowiseTsPercentageMap.get(eachRecord.partyIdFrom);
+		product = delegator.findOne("Product",[productId : eachRecord.productId] , false);
+		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+		transSchemePercentageForParty=percentageMap.get(productCategory.primaryParentCategoryId);
+		
+		Debug.log("transSchemePercentageForParty====="+ transSchemePercentageForParty);
+		//transSchemePercentageForParty= percentageMap.get("schemePercent");
 		invoiceAmount=invoiceAmount.multiply(transSchemePercentageForParty);
 		eligiableAmtForParty=invoiceAmount.divide(100);
 		
