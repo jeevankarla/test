@@ -135,7 +135,7 @@ under the License.
         						<fo:table-cell>
         						<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold"> &#160; </fo:block>
 		        								<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Party Name:  ${partyName?if_exists}</fo:block>
-        										<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Address: ${partyaddr[0].address1?if_exists} </fo:block>
+        										<fo:block text-align="left" font-size="12pt" white-space-collapse="false" font-weight="bold">&#160;Address: <#if partyaddr?has_content> ${partyaddr[0].address1?if_exists} </#if></fo:block>
         										<fo:block text-align="left" font-size="13pt" white-space-collapse="false" font-weight="bold">&#160;Dear sir, </fo:block>
         										<fo:block text-align="left" font-size="12pt" white-space-collapse="false" keep-together="always" font-weight="bold">&#160;WE ARE ENCLOSING HERE WITH OUR DEMAND DRAFT/CHEQUE/RTGS TOWARDS THE PAYMENT OF FOLLOWING BILLS:-</fo:block>
 		        				</fo:table-cell>
