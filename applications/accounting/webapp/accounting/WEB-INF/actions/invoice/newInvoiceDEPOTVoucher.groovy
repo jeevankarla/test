@@ -144,9 +144,9 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		 //Debug.log("supplierInvoiceDate==============="+supplierInvoiceDate);
 		 
 		 
-	context.supplierInvo = supplierInvoiceId;
+	context.supplierInvoiceId = supplierInvoiceId;
 	
-	context.supplierInvoDate = supplierInvoiceDate;
+	context.supplierInvoiceDate = supplierInvoiceDate;
 	
 	context.facilityName = facilityName;
 	 poOrderId = "";
@@ -1172,9 +1172,9 @@ OrderHeaderAct = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false
 	 //Debug.log("supplierInvoiceDate==============="+supplierInvoiceDate);
 	 
 	 
-context.supplierInvo = supplierInvoiceId;
+context.supplierInvoiceId = supplierInvoiceId;
 
-context.supplierInvoDate = supplierInvoiceDate;
+context.supplierInvoiceDate = supplierInvoiceDate;
 	 
 context.facilityName = facilityName;
  

@@ -3650,6 +3650,8 @@
         <!-- <field name="poNo" title="_"><display/></field> --> 
         <field name="poDate" title="_"><display/></field> 
         <field name="poQty" title="_"><display/></field>
+         <field name="poUnitPrice" title="_"><display/></field>
+          <field name="POtotalamount" title="_"><display/></field>
         <field name="supplierName" title="_"><display/></field>
         <field name="salInv" title="_"><display/></field>
         <field name="salDate" title="_"><display/></field>

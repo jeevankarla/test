@@ -53,10 +53,12 @@ if (orderId) {
 	orderDesctioption=orderHeader.orderName;
 	productStoreId = orderHeader.productStoreId;
 	originFacilityId=orderHeader.get("originFacilityId");
+	facilityId=originFacilityId;
 	facilityName="";
-	FacilityList=delegator.findOne("Facility",[facilityId:originFacilityId],false);
+	FacilityList=delegator.findOne("Facility",[facilityId:facilityId],false);
 	facilityName=FacilityList.facilityName;
 	context.facilityName = facilityName;
+	
 	if (productStoreId) {
 		productStore = delegator.findByPrimaryKey("ProductStore", [productStoreId : productStoreId]);
 		branchId=productStore.payToPartyId;
@@ -106,6 +108,8 @@ if (orderId) {
  }}
 context.roundedGrandTotal=roundedGrandTotal;
 context.orderDesctioption=orderDesctioption;
+context.facilityId = facilityId;
+//Debug.log("facilityId===111111111=========="+facilityId);
 // orderDate
 orderHeaderDetails=orderHeader;
 if(UtilValidate.isNotEmpty(orderHeader)){
@@ -555,6 +559,35 @@ if(UtilValidate.isNotEmpty(supplierDtls)){
 			}
  }
 	 shipingAdd=[:];
+	 //Debug.log("facilityId================="+PostalAddressList);
+	 if(facilityId=="WAREHOUSE9"){
+		 conditionList.clear();
+		 conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS ,facilityId));
+		 condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND);
+		 FacilityContactMechList = delegator.findList("FacilityContactMechPurpose", condition, UtilMisc.toSet("contactMechId","contactMechPurposeTypeId"), null, null, false);
+		 FacilityContactMechList=EntityUtil.getFirst(FacilityContactMechList);
+		 contactMechId=FacilityContactMechList.contactMechId;
+		 PostalAddressList=delegator.findOne("PostalAddress",[contactMechId:contactMechId],false);
+		 if(PostalAddressList){
+			 if(PostalAddressList.address1){
+				 address1=PostalAddressList.address1;
+				 shipingAdd.put("address1",address1);
+			}
+			if(PostalAddressList.address2){
+				 address2=PostalAddressList.address2;
+				 shipingAdd.put("address2",address2);
+			}
+			if(PostalAddressList.city){
+				 city=PostalAddressList.city;
+				 shipingAdd.put("city",city);
+			}
+			if(PostalAddressList.postalCode){
+				 postalCode=PostalAddressList.postalCode;
+				 shipingAdd.put("postalCode",postalCode);
+			}	      
+		 }
+	}
+	 else{
 	   if(UtilValidate.isNotEmpty(shipingPartyId)){
 		   partyName =  PartyHelper.getPartyName(delegator, partyId, false);
 		   shipingAdd.put("partyName",partyName);
@@ -584,9 +617,10 @@ if(UtilValidate.isNotEmpty(supplierDtls)){
 				  phoneNumber = partyTelephone.contactNumber;
 			  }
 			  shipingAdd.put("phoneNumber", phoneNumber);	  
-   }
+	   }
+	 }
 	   
-	   Debug.log("allDetailsMap================="+allDetailsMap);	   
+	   //Debug.log("allDetailsMap================="+allDetailsMap);*/	   
 
 context.shipingAdd=shipingAdd;
 context.allDetailsMap=allDetailsMap;

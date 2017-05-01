@@ -205,9 +205,56 @@ if(branchList){
 	for(eachTaxPer in taxPercentageList){
 		branchWiseMap=[:];
 		for(eachBranch in branchList){
+			if(taxType=="VAT_SALE" || taxType=="CST_SALE"){
+				if(eachTaxPer == 0){
+					condList=[];
+					condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
+					condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
+					condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
+					if(eachBranch){
+						condList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS,eachBranch));
+					}
+					condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+					if(purposeTypeId=="YARN_SALE"){
+					condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE"]));
+					}
+					else if(purposeTypeId=="DIES_AND_CHEM_SALE"){
+						condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["DIES_AND_CHEM_SALE","DEPOT_DIES_CHEM_SALE"]));
+					}
+					else{
+						condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE","DIES_AND_CHEM_SALE","DEPOT_DIES_CHEM_SALE"]));
+					}
+					condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"saleTaxType"));
+					if(taxType=="VAT_SALE"){
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Intra-State"));
+					}
+					else{
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Inter-State"));
+					}
+					cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
+					invWithAllPer = delegator.findList("InvoiceAndAttribute",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
+					invIds=EntityUtil.getFieldListFromEntityList(invWithAllPer, "invoiceId", true);
+					
+					condList.clear();
+					condList=[];
+					condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN,invIds));
+					condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,taxType));
+					invWithZeroPer = delegator.findList("InvoiceItem",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
+					
+					invoiceIds=EntityUtil.getFieldListFromEntityList(invWithZeroPer, "invoiceId", true);
+					invWithoutTaxType= EntityUtil.filterByCondition(invWithAllPer, EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_IN,invoiceIds));
+					
+					invoiceIds=EntityUtil.getFieldListFromEntityList(invWithoutTaxType, "invoiceId", true);
+				  }
+			}
+						
 			invioceItemsList=[];
 			findOpts = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
 			condList = [];
+			
+			if((taxType=="VAT_SALE" || taxType=="CST_SALE") && (eachTaxPer == 0)){
+				condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+			}
 			if(UtilValidate.isNotEmpty(daystart)){
 				condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
 				condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
@@ -219,6 +266,7 @@ if(branchList){
 			if(eachBranch){
 				condList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS,eachBranch));
 			}
+			if(eachTaxPer != 0)
 			condList.add(EntityCondition.makeCondition("sourcePercentage", EntityOperator.EQUALS, new BigDecimal(eachTaxPer)));
 			condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
 			if(purposeTypeId=="YARN_SALE"){
@@ -230,10 +278,14 @@ if(branchList){
 			else{
 				condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE","DIES_AND_CHEM_SALE","DEPOT_DIES_CHEM_SALE"]));
 			}
+			if(eachTaxPer != 0){
 			condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.IN,["INV_FPROD_ITEM",taxType]));
+			}
+			else{
+				condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+			}
 			cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-			//Debug.log("cond=========#########======="+cond);
-			fieldsToSelect = ["invoiceId","invoiceTypeId","partyId","invoiceItemTypeId","itemValue","sourcePercentage","shipmentId","invoiceDate","parentInvoiceItemSeqId","purposeTypeId"] as Set;
+			fieldsToSelect = ["invoiceId","invoiceTypeId","partyIdFrom","invoiceItemTypeId","itemValue","sourcePercentage","shipmentId","invoiceDate","parentInvoiceItemSeqId","invoiceItemSeqId"] as Set;
 			invoiceIterator = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, findOpts);
 			//invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
 			partyId="";
@@ -248,15 +300,23 @@ if(branchList){
 				taxSurChgPer=0;
 				conditionList=[];
 				conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS,eachInvoice.invoiceId));
-				conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS,eachInvoice.parentInvoiceItemSeqId));
+				if(eachTaxPer == 0){
+					condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+				}
+				if((eachInvoice.parentInvoiceItemSeqId) && (eachTaxPer != 0)){
+					conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS,eachInvoice.parentInvoiceItemSeqId));
+				}
+				else{
+					conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS,eachInvoice.invoiceItemSeqId));
+				}
 				invoiceItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
+				
 				
 				invItemsWithCstSur="";
 				invItemsWithVatSur="";
 				for(eachInvoiceItem in invoiceItems){
 					invoiceDetailMap=[:];
 					invoiceId=eachInvoiceItem.invoiceId;
-					//Debug.log("eachInvoiceItem============="+eachInvoiceItem);
 					invoiceDetailMap.put("invoiceId", eachInvoiceItem.invoiceId);
 					if(UtilValidate.isNotEmpty(eachInvoiceItem)){
 						partyId = eachInvoiceItem.partyId;
@@ -333,27 +393,31 @@ if(branchList){
 					conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS,eachInvoiceItem.invoiceId));
 					conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachInvoiceItem.invoiceItemSeqId));
 					invoiceItemsList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
-					
+												
 					invoiceItemsWithTax= EntityUtil.filterByCondition(invoiceItemsList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,taxType));
 					if(invoiceItemsWithTax)
 						invoiceItemsWithTax=EntityUtil.getFirst(invoiceItemsWithTax);
-					invoiceItemsWithCstSur= EntityUtil.filterByCondition(invoiceItemsList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"VAT_SURCHARGE"));
-					if(invoiceItemsWithCstSur)
-						invItemsWithCstSur=EntityUtil.getFirst(invoiceItemsWithCstSur);
-					invoiceItemsWithVatSur= EntityUtil.filterByCondition(invoiceItemsList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"CST_SURCHARGE"));
-					if(invoiceItemsWithVatSur)
-						invItemsWithVatSur=EntityUtil.getFirst(invoiceItemsWithVatSur);
-					
+					if(invoiceItemsWithTax.itemValue)
 						taxValue= invoiceItemsWithTax.itemValue;
+					if(invoiceItemsWithTax.sourcePercentage)
 						taxPercentage=invoiceItemsWithTax.sourcePercentage;
-					
-					if(UtilValidate.isNotEmpty(invItemsWithCstSur)){
-						SURCHARGE=invItemsWithCstSur.itemValue;
-						taxSurChgPer=invItemsWithCstSur.sourcePercentage;
-					}
-					else if(UtilValidate.isNotEmpty(invItemsWithVatSur)){
-						SURCHARGE=invItemsWithVatSur.itemValue;
-						taxSurChgPer=invItemsWithVatSur.sourcePercentage;
+					if((taxValue) && (taxType=="VAT_SALE" || taxType=="CST_SALE")){
+						if(invoiceItemsWithTax)
+							invoiceItemsWithCstSur= EntityUtil.filterByCondition(invoiceItemsList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"VAT_SURCHARGE"));
+						if(invoiceItemsWithCstSur)
+								invItemsWithCstSur=EntityUtil.getFirst(invoiceItemsWithCstSur);
+							invoiceItemsWithVatSur= EntityUtil.filterByCondition(invoiceItemsList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,"CST_SURCHARGE"));
+						if(invoiceItemsWithVatSur)
+								invItemsWithVatSur=EntityUtil.getFirst(invoiceItemsWithVatSur);
+							
+						if(UtilValidate.isNotEmpty(invItemsWithCstSur)){
+								SURCHARGE=invItemsWithCstSur.itemValue;
+								taxSurChgPer=invItemsWithCstSur.sourcePercentage;
+						}
+						else if(UtilValidate.isNotEmpty(invItemsWithVatSur)){
+								SURCHARGE=invItemsWithVatSur.itemValue;
+								taxSurChgPer=invItemsWithVatSur.sourcePercentage;
+						}
 					}
 					baseValue=eachInvoiceItem.itemValue;
 					invoiceDetailMap.put("baseValue", baseValue);
@@ -366,7 +430,6 @@ if(branchList){
 					
 					invItemsList.add(invoiceDetailMap);
 				}
-				
 			}
 			if(invItemsList){
 				branchWiseMap.put(eachBranch, invItemsList);
@@ -377,7 +440,6 @@ if(branchList){
 			}
 	}
 }
-
 
 context.finalMap=finalMap;
 

@@ -73,8 +73,8 @@ under the License.
 				<fo:table-cell >
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Indent No :${indentNo?if_exists}</fo:block>
-				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Supplier Inv No     :${supplierInvo?if_exists}</fo:block> 
-	 		 	<#--><fo:block text-align="right"  font-weight="bold"  font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;Suppler Name :${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}</fo:block> -->
+				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC Supplier Inv No     :${supplierInvoiceId?if_exists}</fo:block> 
+	 		 	<fo:block text-align="right"  font-weight="bold"  font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;Suppler Name :${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, supplierId, true)}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
@@ -86,7 +86,7 @@ under the License.
 		</fo:table-body>
 	</fo:table>
 	</fo:block>
-	<#-->	<fo:block text-align="left" font-size="11pt">Your above confirmed indent goods dispatched through M/S :${carrierName?if_exists} LR No :${lrNumber?if_exists} Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(estimatedShipDate, "dd-MMM-yyyy")} </fo:block> -->
+	<fo:block text-align="left" font-size="11pt">Your above confirmed indent goods dispatched through M/S :${carrierName?if_exists} LR No :${lrNumber?if_exists} Dt:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(estimatedShipDate, "dd-MMM-yyyy")} </fo:block>
         <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
          <fo:block>     
     <fo:table width="100%" border-style="solid"  align="right" table-layout="fixed" font-size="10pt"> 
@@ -99,7 +99,7 @@ under the License.
 	<#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
 	<fo:table-column column-width="15%"/>
 	</#if>
-	<fo:table-column column-width="10%"/>
+	<fo:table-column column-width="17%"/>
 	<fo:table-column column-width="10%"/>
 	<fo:table-column column-width="12%"/>
 	<fo:table-column column-width="15%"/>
@@ -397,7 +397,7 @@ under the License.
 	   	            <#if scheme != "General">  
 	                <fo:block text-align="left"    font-size="10pt" >Purchase Value (RS):<#if grandTotal?has_content>${grandTotal?string("#0.00")}</#if></fo:block>
 	   				</#if>
-	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvo?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   
+	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   
 	        </fo:table-cell>
 			</fo:table-row>
 			<#if mgpsAmt != 0>
