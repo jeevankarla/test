@@ -1733,6 +1733,7 @@ public static String createEmpAdvDisbursement(HttpServletRequest request, HttpSe
 	        List condList = FastList.newInstance();
 	        if(UtilValidate.isNotEmpty(partyId)){
 	        condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
+	        condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, custfinAccountTypeId));
     		EntityCondition cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
     		List<GenericValue> finAccounts = delegator.findList("FinAccount", cond, UtilMisc.toSet("finAccountId"), null, null, false);
 	        if(UtilValidate.isNotEmpty(finAccounts)){
@@ -1743,10 +1744,6 @@ public static String createEmpAdvDisbursement(HttpServletRequest request, HttpSe
 	        
 	        }
 	        
-  			if (UtilValidate.isNotEmpty(partyfinAccountId)) {
-				   
-					
-					
 					//creating  fin account transactions here
 		             Map<String, Object> transCtxMap = FastMap.newInstance();
 		             transCtxMap.put("statusId", "FINACT_TRNS_CREATED");
@@ -1756,7 +1753,12 @@ public static String createEmpAdvDisbursement(HttpServletRequest request, HttpSe
 		             transCtxMap.put("comments", description);
 		             transCtxMap.put("contraRefNum", contraRefNum);
 		             transCtxMap.put("inFavourOf", inFavourOf);
+		             if(UtilValidate.isNotEmpty(custfinAccountId)){
+		             transCtxMap.put("contraFinAccountId", custfinAccountId);
+		             }
+		             if(UtilValidate.isNotEmpty(partyfinAccountId)){
 		           	 transCtxMap.put("contraFinAccountId", partyfinAccountId);
+		             }
 		             transCtxMap.put("finAccountId", finAccountId); 
 		           	 transCtxMap.put("finAccountTransTypeId", "WITHDRAWAL");
 		           	 transCtxMap.put("partyId", partyId);
@@ -1766,11 +1768,18 @@ public static String createEmpAdvDisbursement(HttpServletRequest request, HttpSe
 		            	 return "error";
 		             }
 		             String finAccountTransId = (String)createResult.get("finAccountTransId");
+		             
+		             GenericValue FinAccountTransDetails = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", finAccountTransId), false);
+		             BigDecimal transAmount = FinAccountTransDetails.getBigDecimal("amount");
+		             GenericValue finAcctValue = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", custfinAccountId), false);
+						finAcctValue.set("actualBalance",transAmount);
+						finAcctValue.store();
+		             
 		             finAccountTransIds.add(finAccountTransId);
 				
 			  totalAmount = totalAmount.add(amount);
-			}//end of for loop
-  			
+			//end of for loop
+  
   		//creating batch fin account transactions here
 	  	if(UtilValidate.isNotEmpty(finAccountTransIds) && finAccountTransIds.size() > 0 ){
 	  		  Map serviceCtx = FastMap.newInstance();
