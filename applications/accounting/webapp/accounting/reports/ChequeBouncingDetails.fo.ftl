@@ -44,11 +44,11 @@ under the License.
                     <#assign reportSubHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "${roId}_Header"}, true)>
                     <#assign reportSubHeader1 = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : "${roId}_Header01"}, true)>
 				    <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
-				    <fo:block   text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader.description?if_exists}                             </fo:block>	
-        			 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${reportSubHeader1.description?if_exists}                             </fo:block>
+				    <fo:block   text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"><#if reportSubHeader?has_content >${reportSubHeader.description?if_exists} </#if></fo:block>	
+        			 <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold"><#if reportSubHeader1?has_content >${reportSubHeader1.description?if_exists}</#if></fo:block>
         			 <fo:block >&#160;</fo:block>
                 	<fo:block text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold" font-size = "12pt" font-family="Arial">CHEQUE BOUNCING DETAILS</fo:block>
-          		<fo:block text-align="center" keep-together="always"  white-space-collapse="false" font-family="Arial" font-size = "10pt"> From ${fromDate} - To ${thruDate} </fo:block>
+          		<fo:block text-align="center" keep-together="always"  white-space-collapse="false" font-family="Arial" font-size = "10pt"> From ${fromDate?if_exists} - To ${thruDate?if_exists} </fo:block>
             	</fo:static-content>	        	
 	        	<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">		
 	        	<fo:table font-family="Arial" border-style="solid">
@@ -93,7 +93,7 @@ under the License.
 							            
 							     </fo:table-row>
 							</fo:table-header>
-		                    <fo:table-body>
+		        <fo:table-body>
 		        <#assign slNo = 1>         
 		        <#list printChequeBouncingDetailList as printChequeBouncingDetailEntry>
 				 	<fo:table-row>
@@ -122,7 +122,7 @@ under the License.
 			            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false">${printChequeBouncingDetailEntry.duescleared?if_exists}</fo:block>  
 			            </fo:table-cell>
 			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="left" font-size="8pt"   white-space-collapse="">${printChequeBouncingDetailEntry.remarks?if_exists}</fo:block>  
+			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printChequeBouncingDetailEntry.remarks?if_exists}</fo:block>  
 			            </fo:table-cell>
 				     </fo:table-row>
 				     <#assign slNo = slNo + 1>
