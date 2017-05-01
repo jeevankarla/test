@@ -51,6 +51,13 @@ context.branchList = formatList;
 	 if(UtilValidate.isNotEmpty(orderRoleList)){
 		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
 	 }
+	 condList = [];
+	 condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, supplierFilteredOrderIds));
+	 condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyIdFrom));
+	 orderRoleList = delegator.findList("OrderRole", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
+	 if(UtilValidate.isNotEmpty(orderRoleList)){
+		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
+	 }
  }
  
  
@@ -61,6 +68,13 @@ context.branchList = formatList;
 	 customerCondList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
 	 customerCondList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.partyIdFrom));
 	 orderRoleList = delegator.findList("OrderRole", EntityCondition.makeCondition(customerCondList, EntityOperator.AND), null, null, null, false);
+	 if(UtilValidate.isNotEmpty(orderRoleList)){
+		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
+	 }
+	 condList = [];
+	 condList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, supplierFilteredOrderIds));
+	 condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.supplierId));
+	 orderRoleList = delegator.findList("OrderRole", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
 	 if(UtilValidate.isNotEmpty(orderRoleList)){
 		 supplierFilteredOrderIds = EntityUtil.getFieldListFromEntityList(orderRoleList, "orderId", true);
 	 }
