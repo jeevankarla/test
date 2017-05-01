@@ -1695,16 +1695,15 @@ public static String createEmpAdvDisbursement(HttpServletRequest request, HttpSe
 		  	fincondList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, custfinAccountTypeId));
     		EntityCondition fincond = EntityCondition.makeCondition(fincondList, EntityOperator.AND);
 		  	List<GenericValue> custfinAccounts = delegator.findList("FinAccount", fincond, UtilMisc.toSet("finAccountId"), null, null, false);
-		  	
 		  	if(UtilValidate.isEmpty(custfinAccounts)){
 				GenericValue finAccount = delegator.makeValue("FinAccount");
 				finAccount.set("ownerPartyId", custPartyId);
 				finAccount.set("costCenterId", costCenterId);
+				finAccount.set("fromDate", custRequest.getTimestamp("custRequestDate"));
 				finAccount.set("currencyUomId", "INR");
 				finAccount.set("finAccountTypeId", custfinAccountTypeId);
 				finAccount.set("statusId", "FNACT_ACTIVE");
 				finAccount.set("organizationPartyId", "Company");
-				
 	 			delegator.createSetNextSeqId(finAccount);
 	 			if(UtilValidate.isNotEmpty(finAccount)){
 	 				custfinAccountId=finAccount.getString("finAccountId");
