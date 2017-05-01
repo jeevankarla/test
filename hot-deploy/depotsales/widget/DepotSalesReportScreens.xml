@@ -1192,27 +1192,10 @@
 			    <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/claimReportDetailsTDpdf.groovy"/> 
 				<set field="flag" from-field="parameters.reportTypeFlag"/>								
    			</actions>
-			<widgets>
-			<section>
-			<condition>
-				<if-compare operator="equals" value="Summary" field="flag"/>
-			</condition>
-				<widgets>
+   			<widgets>
 				<platform-specific>
-   							<xsl-fo><html-template location="component://depotsales/webapp/depotsales/depotsales/claimReportDetailsTDpdf.fo.ftl"/></xsl-fo>
-   					</platform-specific>
-				</widgets>
-			</section>
-			<section>
-			<condition>
-				<if-compare operator="equals" value="Detailed" field="flag"/>
-			</condition>
-				<widgets>
-					<platform-specific>
-   							<xsl-fo><html-template location="component://depotsales/webapp/depotsales/depotsales/claimReportDetailsTDpdf.fo.ftl"/></xsl-fo>
-   					</platform-specific>
-                </widgets>
-                </section>
+					<xsl-fo><html-template location="component://depotsales/webapp/depotsales/depotsales/claimReportDetailsTDpdf.fo.ftl"/></xsl-fo>
+				</platform-specific>
 			</widgets>
 		</section>
 	</screen>

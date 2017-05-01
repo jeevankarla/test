@@ -187,6 +187,16 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			$('#stateId').hide();       		
        	}
     }	
+    
+    function disableFields(curEle,fieldId)
+	{
+	    var value =curEle.value;
+	    if(value==""){
+	    	document.getElementById(fieldId).disabled = false;
+	    }else{
+	    	document.getElementById(fieldId).disabled = true;
+	    }
+	} 
 </script>
 
 <div class="screenlet">
@@ -819,7 +829,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
   			<td width="15%">From</br><input  type="text" size="18pt" id="claimFromDateTD" readonly  name="claimFromDateTD"/></br>
   			To</br><input  type="text" size="18pt" id="claimThruDateTD" readonly  name="claimThruDateTD"/></td>
   			 <td width="15%"><span class='h3'>Branch
-				<select name="branchId" id="branchId">
+				<select name="branchId" id="branchId2" onchange="javascript:disableFields(this,'geoId2');">
 					<option value=""></option>
 					<option value="HO">Head Office</option>
 					<#list  formatList as formatList>
@@ -828,7 +838,8 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				</select>    								
 			</span></br>
   			<span class='h3'>State</br>
-				<select name="geoId" id="geoId">
+				<select name="geoId" id="geoId2" onchange="javascript:disableFields(this,'branchId2');">
+				    <option value=""></option>
 					<option value="ALL">ALL</option>
 					<#list  statesList as eachState>
 						<option value='${eachState.geoId?if_exists}'>${eachState.geoName?if_exists}</option>
@@ -836,9 +847,10 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				</select>    								
 			</span></td>
 			<td width="10%">
-			    <span class='h3'>Type :<select name="reportTypeFlag" id="reportTypeFlag">
-					<option value="Detailed">Detailed</option>
-					<option value="Summary">Summary</option>
+			    <span class='h3'>Type :<select name="reportTypeFlag" id="reportTypeFlag" selected>
+					<option value="BILL_WISE">Bill Wise</option>
+					<option value="PARTY_WISE">Party Wise</option>
+					<option value="SUMMARY">Summary</option>
 				</select></span>
 			</td>
 			<td width="10%"></td>			
