@@ -338,7 +338,10 @@ under the License.
                                             </container>
                                             <section>
                                                 <condition>
+                                                    <and>
                                                     <not><if-empty field="invoices"/></not>
+                                                    <if-compare-field operator="not-equals" field="shipmentId" value="OBC"/>
+                                                    </and>
                                                 </condition>
                                                 <widgets>
                                                     <include-form name="listInvoicesNotApplied" location="component://accounting/widget/PaymentForms.xml"/>

@@ -473,12 +473,21 @@ under the License.
 
     <form name="listInvoicesNotApplied" type="list" list-name="invoices" target="createPaymentApplication" title=""
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions></actions>
+         <row-actions>
+            <entity-condition entity-name="Shipment" list="shipmentList">
+                <condition-list combine="and">
+                    <condition-expr field-name="shipmentId" from-field="shipmentId"/>
+                </condition-list>
+            </entity-condition>
+        </row-actions>
         <field name="paymentId"><hidden/></field>
         <field name="invoiceId" widget-style="buttontext">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
+        <field name="Miller Invoice"><display description="${shipmentList[0].supplierInvoiceId}"/></field>
         <field name="description"><display/></field>
         <field name="invoiceDate"><display type="date"/></field>
         <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
