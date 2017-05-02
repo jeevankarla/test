@@ -71,7 +71,7 @@
              async: false,
              success: function(result) {
                if(result["_ERROR_MESSAGE_"]){            	  
-            	   alert(result["_ERROR_MESSAGE_"]);
+            	   
                }else{
             	    var billingPeriodsList =   result["billingPeriodsList"];
             	    var closebillingPeriodsList =   result["closebillingPeriodsList"];
@@ -239,7 +239,7 @@
     	
         if(periodsList) {		       				        	
         	for(var i=0 ; i<periodsList.length; i++){
-                optionList += "<option value = " + periodsList[0]['value'] + " >" +periodsList[0]['label']+" </option>";          			
+                optionList += "<option value = " + periodsList[i]['value'] + " >" +periodsList[i]['label']+" </option>";          			
       		}
       	}
       	$("#"+periodId).html(optionList);
