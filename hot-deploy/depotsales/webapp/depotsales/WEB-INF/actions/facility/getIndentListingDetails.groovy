@@ -528,6 +528,65 @@ orderHeader.each{ eachHeader ->
 	tempData.put("statusId", eachHeader.statusId);
 	tempData.put("showAmend", showAmend);
 	
+	
+	conditonList = [];
+	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, orderId));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond, null, null, null ,false);
+	double paidAmt = 0;
+	
+	paymentIdsOfIndentPayment = [];
+	
+	if(OrderPaymentPreference){
+	
+	orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+ 
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
+	conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+	
+	paymentIdsOfIndentPayment = EntityUtil.getFieldListFromEntityList(PaymentList,"paymentId", true);
+	
+	if(PaymentList){
+		paymentsslist = EntityUtil.filterByCondition(PaymentList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_CONFIRMED"));
+		if(PaymentList.size() == paymentsslist.size()){
+			tempData.put("pmntstatus", "payment_realized");
+		}else{
+			tempData.put("pmntstatus", "");
+		}
+	}
+	for (eachPayment in PaymentList) {
+		paidAmt = paidAmt+eachPayment.get("amount");
+	}
+	
+  }
+	
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS,orderId));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	OrderItemBillingList = delegator.findList("OrderItemBilling", cond, null, null, null ,false);
+	
+	invoiceIds = EntityUtil.getFieldListFromEntityList(OrderItemBillingList,"invoiceId", true);
+	
+	if(invoiceIds){
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("invoiceId" ,EntityOperator.IN,invoiceIds));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	PaymentApplicationList = delegator.findList("PaymentApplication", cond, null, null, null ,false);
+	
+		for (eachList in PaymentApplicationList) {
+			 if(!paymentIdsOfIndentPayment.contains(eachList.paymentId))
+				paidAmt = paidAmt+eachList.amountApplied;
+		}
+	}
+	
+	tempData.put("paidAmt", String.format( "%.2f", paidAmt ));
+	
+	
+	
+	
 
 	if(UtilValidate.isNotEmpty(eachHeader.getBigDecimal("grandTotal"))){
 		tempData.put("orderTotal", eachHeader.getBigDecimal("grandTotal"));

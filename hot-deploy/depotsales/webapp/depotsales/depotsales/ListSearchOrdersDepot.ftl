@@ -420,7 +420,7 @@ function drawRow(rowData) {
        row.append($("<td></td>")); 
     }
     var approveButton = "";
-    if ((rowData.orderTotal) <= (rowData.paidAmt) && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N")){
+    if ((rowData.orderTotal) <= (rowData.paidAmt) && (rowData.statusId == "APPROVE_LEVEL3") && (rowData.isgeneratedPO !="N") && (rowData.pmntstatus == "payment_realized")){
     
         if (((rowData.orderTotal)>= 0) && ((rowData.orderTotal)<= 200000))
         {
@@ -544,7 +544,7 @@ function drawRow(rowData) {
     }
     
     
-    if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId != "ORDER_CREATED" && rowData.showAmend == true){
+    if(rowData.statusId != "ORDER_CANCELLED" && rowData.statusId != "ORDER_COMPLETED" && rowData.statusId != "ORDER_CREATED"){
       var amendButton = '<a class="buttontext" href="<@ofbizUrl>amendOrder?orderId='+rowData.orderId+'&&partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">Amend Indent</a>';
       row.append($("<td>" +  amendButton  +"</td>"));  
    }else{

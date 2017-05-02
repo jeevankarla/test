@@ -205,10 +205,10 @@
 	      	<link target="Rounding">
         	</link>
 	    </menu-item> --> 
-	    <!-- <menu-item name="CustomerAssoc" title="Customer Assoc">
+	    <menu-item name="CustomerAssoc" title="Customer Assoc">
 	      	<link target="CustomerAssoc">
         	</link>
-	    </menu-item> -->
+	    </menu-item>
 	    <menu-item name="analytics" title="Dashboard">
         	<!-- <condition>
             	<if-has-permission permission="ANALYTICS"  action="_VIEW"/>

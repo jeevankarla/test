@@ -280,11 +280,42 @@ public class DepotSalesServices{
 						 Debug.logError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId, module);
 						 return ServiceUtil.returnError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId);
 					 }*/
-					GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
-					orderAttribute.set("orderId", orderId);
-					orderAttribute.set("attrName", "CREDIT_APPROVE");
-					orderAttribute.set("attrValue", "Y");
-					delegator.createOrStore(orderAttribute);
+					
+					List conditonList = FastList.newInstance();
+					conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, orderId));
+					EntityCondition cond1 = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+					List<GenericValue> OrderPaymentPreference = null;
+					try {
+						OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond1, null, null, null ,false);
+					} catch (GenericEntityException e) {
+						Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+						return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+					}
+					
+					
+					double paidAmt = 0;
+					if(UtilValidate.isNotEmpty(OrderPaymentPreference)){
+					
+					List orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+					conditonList.clear();
+					conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
+					conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+					EntityCondition cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+					List<GenericValue> PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+					
+					if(UtilValidate.isNotEmpty(PaymentList)){
+						List<GenericValue> paymentsslist = EntityUtil.filterByCondition(PaymentList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_CONFIRMED"));
+						if(PaymentList.size() != paymentsslist.size()){
+							
+							GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+							orderAttribute.set("orderId", orderId);
+							orderAttribute.set("attrName", "CREDIT_APPROVE");
+							orderAttribute.set("attrValue", "Y");
+							delegator.createOrStore(orderAttribute);
+						}
+					}
+				  }
+					
 			 }
            boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
            /*List condList= FastList.newInstance();;
@@ -425,11 +456,44 @@ public class DepotSalesServices{
 						 Debug.logError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId, module);
 						 return ServiceUtil.returnError("Available Balance:"+arPartyOB+" Less Than The Order Amount:"+orderTotal+" For Party:"+ partyId);
 					 }*/
-					GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
-					orderAttribute.set("orderId", orderId);
-					orderAttribute.set("attrName", "CREDIT_APPROVE");
-					orderAttribute.set("attrValue", "Y");
-					delegator.createOrStore(orderAttribute);
+					
+					
+					
+					
+					List conditonList = FastList.newInstance();
+					conditonList.add(EntityCondition.makeCondition("orderId" ,EntityOperator.EQUALS, orderId));
+					EntityCondition cond1 = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+					List<GenericValue> OrderPaymentPreference = null;
+					try {
+						OrderPaymentPreference = delegator.findList("OrderPaymentPreference", cond1, null, null, null ,false);
+					} catch (GenericEntityException e) {
+						Debug.logError(e, "Failed to retrive ProductPriceType ", module);
+						return ServiceUtil.returnError("Failed to retrive ProductPriceType " + e);
+					}
+					
+					
+					double paidAmt = 0;
+					if(UtilValidate.isNotEmpty(OrderPaymentPreference)){
+					
+					List orderPreferenceIds = EntityUtil.getFieldListFromEntityList(OrderPaymentPreference,"orderPaymentPreferenceId", true);
+					conditonList.clear();
+					conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
+					conditonList.add(EntityCondition.makeCondition("statusId" ,EntityOperator.NOT_EQUAL, "PMNT_VOID"));
+					EntityCondition cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+					List<GenericValue> PaymentList = delegator.findList("Payment", cond, null, null, null ,false);
+					
+					if(UtilValidate.isNotEmpty(PaymentList)){
+						List<GenericValue> paymentsslist = EntityUtil.filterByCondition(PaymentList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_CONFIRMED"));
+						if(PaymentList.size() != paymentsslist.size()){
+							
+							GenericValue orderAttribute = delegator.makeValue("OrderAttribute");
+							orderAttribute.set("orderId", orderId);
+							orderAttribute.set("attrName", "CREDIT_APPROVE");
+							orderAttribute.set("attrValue", "Y");
+							delegator.createOrStore(orderAttribute);
+						}
+					}
+				  }
 			 }
            boolean approved = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
            /*List condList= FastList.newInstance();;
