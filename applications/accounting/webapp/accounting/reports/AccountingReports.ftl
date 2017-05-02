@@ -233,6 +233,7 @@ function reportTypeChangeFunc() {
 	    makeDatePicker("eObFromDate");
 	    makeDatePicker("prFromDate","prThruDate");
 	    makeDatePicker("aprFromDate","aprThruDate");
+	    makeRecDatePicker("reconcileFromDateId","");
 	    makeDatePicker("TrlLedgerFromDate","TrlLedgerThruDate");
 	    makeDatePicker("glLedgerFromDate","glLedgerThruDate");
 	    makeDatePicker3("PFHFromDateCrDr","PFHThruDateCrDr");
@@ -281,6 +282,29 @@ function reportTypeChangeFunc() {
 	        });    
 	     });
 	});
+	
+	function makeRecDatePicker(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'yy-mm-dd',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function(selectedDate) {
+			date = $(this).datepicker('getDate');
+			var maxDate = new Date(date.getTime());
+	        	maxDate.setDate(maxDate.getDate() + 31);
+				$("#"+thruDateId).datepicker( "option", {minDate: selectedDate, maxDate: maxDate}).datepicker('setDate', date);
+				//$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	$( "#"+thruDateId ).datepicker({
+			dateFormat:'yy, MM dd',
+			changeMonth: true,
+			numberOfMonths: 1,
+			onSelect: function( selectedDate ) {
+				//$( "#"+fromDateId ).datepicker( "option", "maxDate", selectedDate );
+			}
+		});
+	}
 	
 	$(document).ready(function verifyFields(){
 		$('input[name=submitButton]').click (function verifyFields(){
@@ -400,8 +424,7 @@ function setOrgPartyId() {
 		  <tr class="alternate-row">
 				<form id="BankReconciliationReports" name="BankReconciliationReports" method="post" action="<@ofbizUrl>recStatemetn.pdf</@ofbizUrl>" target="_blank">	
 					<td width="30%"> Bank  Reconciliation  Report</td>
-					<td width="15%">Date<input  type="text" size="18pt" id="FinacialFromDate" readonly  name="fromDate"/></td>
-				    
+                      <td>Date<input  type="text" size="18pt" id="reconcileFromDateId" readonly  name="thruDateReport"/></td>				    
 				    <td width="15%">Bank<select name='finAccountId' id ="finAccountId">	
 							<option value=""></option>								
 						<#list finAccountList as finAcunt> 	
