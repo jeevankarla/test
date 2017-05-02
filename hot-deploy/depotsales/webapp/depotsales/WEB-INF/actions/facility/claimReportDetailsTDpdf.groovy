@@ -81,11 +81,11 @@ if(UtilValidate.isNotEmpty(geoId)){
 	}else{
 		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId",EntityOperator.EQUALS,geoId));
 	}
-	
 	partyAndPostalAddress = delegator.findList("PartyAndPostalAddress",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyId","stateProvinceGeoId"), null, null, false );
-	if(UtilValidate.isNotEmpty(partyAndPostalAddress)){
-		branchIds= EntityUtil.getFieldListFromEntityList(partyAndPostalAddress,"partyId", true);
-		stateGeoIds= EntityUtil.getFieldListFromEntityList(partyAndPostalAddress,"stateProvinceGeoId", true);
+	partyAndPostalAddress1 = EntityUtil.filterByCondition(partyAndPostalAddress, EntityCondition.makeCondition("partyId",EntityOperator.LIKE,"INT%"));
+	if(UtilValidate.isNotEmpty(partyAndPostalAddress1)){
+		branchIds= EntityUtil.getFieldListFromEntityList(partyAndPostalAddress1,"partyId", true);
+		stateGeoIds= EntityUtil.getFieldListFromEntityList(partyAndPostalAddress1,"stateProvinceGeoId", true);
 	}
 }
 
@@ -117,13 +117,13 @@ if(UtilValidate.isNotEmpty(branchId)){
 	context.BOAddress=BOAddress;
 	context.BOEmail=BOEmail;
 	
-	if(branchId.equals("HO")){
+	if(branchId=="HO"){
 		roPartIds.each{ eachRo ->
 				resultCtx = dispatcher.runSync("getRoBranchList",UtilMisc.toMap("userLogin",userLogin,"productStoreId",eachRo));
 				if(resultCtx && resultCtx.get("partyList")){
 					partyList=resultCtx.get("partyList");
 					partyList.each{eachparty ->
-					branchIds.add(eachparty.partyIdTo);
+						branchIds.add(eachparty.partyIdTo);
 					}
 				}
 				branchIds.add(eachRo);
@@ -210,7 +210,6 @@ juteNonDepotList =[]
 otherDepotList =[]
 otherNonDepotList =[]
 
-
 if(reportTypeFlag=="BILL_WISE"){
 	generateBillWiseReport();
 }else if(reportTypeFlag=="PARTY_WISE"){
@@ -219,7 +218,6 @@ if(reportTypeFlag=="BILL_WISE"){
 
 	generateSummaryReport(stateGeoIds);
 }
-
 def generateBillWiseReport()
 {
 	index=1;
@@ -316,7 +314,7 @@ def generateBillWiseReport()
 			totalInvoiceValueND=totalInvoiceValueND.add(invoiceAmount)
 			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
 			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+			totalDepotChargesND=totalDepotChargesND.add(0);
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 		}
 		index=index+1;
@@ -418,7 +416,7 @@ def generateBillWiseReport()
 			totalInvoiceValueND=totalInvoiceValueND.add(invoiceAmount)
 			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
 			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+			totalDepotChargesND=totalDepotChargesND.add(0);
 		}
 		
 		index=index+1;
@@ -525,7 +523,7 @@ def generateBillWiseReport()
 			totalInvoiceValueND=totalInvoiceValueND.add(invoiceAmount)
 			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
 			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+			totalDepotChargesND=totalDepotChargesND.add(0);
 		}
 		
 		index=index+1;
@@ -629,7 +627,7 @@ def generateBillWiseReport()
 			totalInvoiceValueND=totalInvoiceValueND.add(invoiceAmount)
 			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
 			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+			totalDepotChargesND=totalDepotChargesND.add(0);
 		}
 	
 		index=index+1;
@@ -764,7 +762,7 @@ def generatePartyWiseReport()
 			totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
 			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
 			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+			totalDepotChargesND=totalDepotChargesND.add(0);
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 		}
 		index=index+1;
@@ -875,7 +873,7 @@ def generatePartyWiseReport()
 			totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
 			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
 			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+			totalDepotChargesND=totalDepotChargesND.add(0);
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 		}
 		index=index+1;
@@ -986,7 +984,7 @@ def generatePartyWiseReport()
 			totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
 			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
 			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+			totalDepotChargesND=totalDepotChargesND.add(0);
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 		}
 		index=index+1;
@@ -1096,7 +1094,7 @@ def generatePartyWiseReport()
 			totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
 			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
 			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(depotCharges);
+			totalDepotChargesND=totalDepotChargesND.add(0);
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 		}
 		index=index+1;
@@ -1164,7 +1162,8 @@ def generateSummaryReport(stateGeoIds)
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,silkProdIds));
-	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
+	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","shipmentId","quantity","productId","costCenterId"] as Set;
+	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	silkPartyIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"partyId", true);
 	
 	for(eachState in stateGeoIds)
@@ -1182,18 +1181,22 @@ def generateSummaryReport(stateGeoIds)
 		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
 		stateName=stateDetails.geoName
 		conditionList.clear();
-		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,silkPartyIds));
+		conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.IN,branchIds));
 		conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId",EntityOperator.EQUALS,eachState));
-		eachStateCustomerList = EntityUtil.filterByCondition(partyAndPostalAddress, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
-		eachStateSilkPartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomerList,"partyId", true);
-		stateSilkinvoicesAndItems = EntityUtil.filterByCondition(silkinvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateSilkPartyIds));
+		eachStateBranchsList = EntityUtil.filterByCondition(partyAndPostalAddress, EntityCondition.makeCondition(conditionList,EntityOperator.AND));
+		eachStateBranchIds=EntityUtil.getFieldListFromEntityList(eachStateBranchsList,"partyId", true);
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("partyIdFrom",EntityOperator.IN,eachStateBranchIds));
+		conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom",EntityOperator.EQUALS,"ORGANIZATION_UNIT"));
+		conditionList.add(EntityCondition.makeCondition("roleTypeIdTo",EntityOperator.EQUALS,"EMPANELLED_CUSTOMER"));
+		eachStateCustomersList = delegator.findList("PartyRelationship",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyIdTo"), null, null, false );
+		eachStateSilkPartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomersList,"partyIdTo", true);
+		stateSilkinvoicesAndItems = EntityUtil.filterByCondition(silkinvoicesAndItems, EntityCondition.makeCondition("costCenterId", EntityOperator.IN,eachStateBranchIds));
 		facilitys = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,eachStateSilkPartyIds), UtilMisc.toSet("ownerPartyId"), null, null, false );
 		eachStateSilkPartyIdsD=EntityUtil.getFieldListFromEntityList(facilitys,"ownerPartyId", true);
 		
 		silkinvoicesAndItems1D = EntityUtil.filterByCondition(stateSilkinvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateSilkPartyIdsD));
 		silkinvoicesAndItems1ND = EntityUtil.filterByCondition(stateSilkinvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.NOT_IN,eachStateSilkPartyIdsD));
-		
-		
 		for(invoice in silkinvoicesAndItems1D)
 		{
 			invoiceQty=invoiceQty.add(invoice.quantity);
@@ -1255,7 +1258,6 @@ def generateSummaryReport(stateGeoIds)
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
-			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
 		}
 		
 		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
@@ -1385,6 +1387,7 @@ def generateSummaryReport(stateGeoIds)
 		tempMapD.put("totInvValue", invoiceValue);
 		tempMapD.put("actualFrightCharges", actualFrightCharges);
 		tempMapD.put("frightCharges", eligibleFrightCharges);
+		tempMapD.put("depotCharges", depotCharges);
 		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
 		if(invoiceQty>0)
 		cottonDepotList.add(tempMapD);
@@ -1412,7 +1415,6 @@ def generateSummaryReport(stateGeoIds)
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
-			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
 			
 		}
 		
@@ -1429,6 +1431,7 @@ def generateSummaryReport(stateGeoIds)
 		tempMapND.put("totInvValue", invoiceValue);
 		tempMapND.put("actualFrightCharges", actualFrightCharges);
 		tempMapND.put("frightCharges", eligibleFrightCharges);
+		tempMapND.put("depotCharges", depotCharges);
 		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
 		if(invoiceQty>0)
 		cottonNonDepotList.add(tempMapND);
@@ -1539,6 +1542,7 @@ def generateSummaryReport(stateGeoIds)
 		tempMapD.put("totInvValue", invoiceValue);
 		tempMapD.put("actualFrightCharges", actualFrightCharges);
 		tempMapD.put("frightCharges", eligibleFrightCharges);
+		tempMapD.put("depotCharges", depotCharges);
 		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
 		if(invoiceQty>0)
 		juteDepotList.add(tempMapD);
@@ -1566,8 +1570,6 @@ def generateSummaryReport(stateGeoIds)
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
-			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
-			
 		}
 		
 		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
@@ -1583,6 +1585,7 @@ def generateSummaryReport(stateGeoIds)
 		tempMapND.put("totInvValue", invoiceValue);
 		tempMapND.put("actualFrightCharges", actualFrightCharges);
 		tempMapND.put("frightCharges", eligibleFrightCharges);
+		tempMapND.put("depotCharges", depotCharges);
 		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
 		if(invoiceQty>0)
 		juteNonDepotList.add(tempMapND);
@@ -1691,6 +1694,7 @@ def generateSummaryReport(stateGeoIds)
 		tempMapD.put("totInvValue", invoiceValue);
 		tempMapD.put("actualFrightCharges", actualFrightCharges);
 		tempMapD.put("frightCharges", eligibleFrightCharges);
+		tempMapD.put("depotCharges", depotCharges);
 		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
 		if(invoiceQty>0)
 		otherDepotList.add(tempMapD)
@@ -1719,7 +1723,6 @@ def generateSummaryReport(stateGeoIds)
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
-			depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
 		}
 		
 		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
@@ -1736,6 +1739,7 @@ def generateSummaryReport(stateGeoIds)
 		tempMapND.put("totInvValue", invoiceValue);
 		tempMapND.put("actualFrightCharges", actualFrightCharges);
 		tempMapND.put("frightCharges", eligibleFrightCharges);
+		tempMapND.put("depotCharges", depotCharges);
 		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
 		if(invoiceQty>0)
 		otherNonDepotList.add(tempMapND)

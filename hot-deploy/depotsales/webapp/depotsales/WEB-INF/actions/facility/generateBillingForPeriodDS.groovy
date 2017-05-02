@@ -34,17 +34,17 @@ rounding = RoundingMode.HALF_UP;
 schemeBillingId = parameters.schemeBillingId;
 dctx = dispatcher.getDispatchContext();
 
+prodCatsList=UtilMisc.toList("JUTE_YARN","SILK","COTTON","COIR_YARN");
 rowiseTsPercentageMap=[:];
-hydRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
-cmbRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
-kolRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
-kanRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
-vjyRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
-panRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
-gwhRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
-varRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
-bhuRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2);
-
+hydRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+cmbRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+kolRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+kanRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+vjyRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+panRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+gwhRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+varRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+bhuRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
 rowiseTsPercentageMap= UtilMisc.toMap("INT1",varRoMap,"INT2",panRoMap,"INT3",kolRoMap,"INT4",cmbRoMap,"INT5",hydRoMap,"INT6",kanRoMap,"INT26",bhuRoMap,"INT28",gwhRoMap,"INT47",vjyRoMap);
 
 schemeTimePeriod = delegator.findOne("SchemeTimePeriod",[schemeTimePeriodId : schemeBillingId] , false);
@@ -101,7 +101,7 @@ try {
 	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("statusId",EntityOperator.NOT_EQUAL,"INVOICE_CANCELLED"));
-	salesInvoicesForPeriod = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","partyId","productId","invoiceDate","shipmentId","costCenterId"), null, null, false);
+	salesInvoicesForPeriod = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","partyId","productId","partyIdFrom","shipmentId","costCenterId"), null, null, false);
 	invocieIds=EntityUtil.getFieldListFromEntityList(salesInvoicesForPeriod, "invoiceId", true);
 	allcustomerIds=EntityUtil.getFieldListFromEntityList(salesInvoicesForPeriod, "partyId", true);
 	
@@ -114,14 +114,19 @@ try {
 	conditionList.add(EntityCondition.makeCondition("orderId",EntityOperator.IN,orderIds));
 	conditionList.add(EntityCondition.makeCondition("attrName",EntityOperator.EQUALS,"SCHEME_CAT"));
 	conditionList.add(EntityCondition.makeCondition("attrValue",EntityOperator.IN,["MGPS_10Pecent","MGPS"]));
-	ordersListForInvoices = delegator.findList("OrderAttribute",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("orderId"), null, null, false);
+	ordersListForInvoices = delegator.findList("OrderAttribute",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("orderId","attrName","attrValue"), null, null, false);
 	orderIds=EntityUtil.getFieldListFromEntityList(ordersListForInvoices, "orderId", true);
+	mgpsOrdersList = EntityUtil.filterByCondition(ordersListForInvoices, EntityCondition.makeCondition("attrValue", EntityOperator.EQUALS,"MGPS"));
+	mgpsOrderIds=EntityUtil.getFieldListFromEntityList(mgpsOrdersList, "orderId", true);
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,invocieIds));
 	conditionList.add(EntityCondition.makeCondition("orderId",EntityOperator.IN,orderIds));
-	ordersListForInvoices = delegator.findList("OrderItemBilling",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, false);
-	mgpsAnd10perinvoiceIdsForPeriod=EntityUtil.getFieldListFromEntityList(ordersListForInvoices, "invoiceId", true);
+	orderItemsBillListForInvoices = delegator.findList("OrderItemBilling",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId"), null, null, false);
+	mgpsAnd10perinvoiceIdsForPeriod=EntityUtil.getFieldListFromEntityList(orderItemsBillListForInvoices, "invoiceId", true);
+	
+	mgpsOrderItemsBillList = EntityUtil.filterByCondition(orderItemsBillListForInvoices, EntityCondition.makeCondition("orderId", EntityOperator.IN,mgpsOrderIds));
+	mgpsinvoiceIdsForPeriod=EntityUtil.getFieldListFromEntityList(mgpsOrderItemsBillList, "invoiceId", true);
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,mgpsAnd10perinvoiceIdsForPeriod));
@@ -136,16 +141,20 @@ try {
 	BigDecimal TotalTRAmount=BigDecimal.ZERO;
 	BigDecimal totalDepoChrgAmount=BigDecimal.ZERO;
 	BigDecimal totalInvoiceAmount=BigDecimal.ZERO;
-	
+	BigDecimal totalMgpsSerChrgAmount=BigDecimal.ZERO;
+	Debug.log("allInvoiceListBtPeriodDates==========="+ allInvoiceListBtPeriodDates);
 	for(eachRecord  in allInvoiceListBtPeriodDates){
+		
 		invoiceId=eachRecord.invoiceId;
 		BigDecimal transSchemePercentageForParty = BigDecimal.ZERO;
 		BigDecimal depoSchemePercentageForParty = BigDecimal.ZERO;
-		BigDecimal transportaionCost=BigDecimal.ZERO;
+		BigDecimal actualFrightCharges=BigDecimal.ZERO;
 		BigDecimal invoiceAmount = BigDecimal.ZERO;
+		BigDecimal depotSerChargs = BigDecimal.ZERO;
+		BigDecimal mgpsSerCharges = BigDecimal.ZERO;
 		shipment = delegator.findOne("Shipment",[shipmentId : eachRecord.shipmentId] , false);
-		if(shipment.estimatedShipCost){
-			transportaionCost=transportaionCost.add(shipment.estimatedShipCost);
+		if(UtilValidate.isNotEmpty(shipment) && shipment.estimatedShipCost){
+			actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost);
 		}
 		invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoiceId);
 		/*Map<String, Object> inputParams = UtilMisc.toMap("userLogin", userLogin)
@@ -162,31 +171,36 @@ try {
 		percentageMap=rowiseTsPercentageMap.get(eachRecord.partyIdFrom);
 		product = delegator.findOne("Product",[productId : eachRecord.productId] , false);
 		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-		transSchemePercentageForParty=percentageMap.get(productCategory.primaryParentCategoryId);
 		
-		Debug.log("transSchemePercentageForParty====="+ transSchemePercentageForParty);
-		//transSchemePercentageForParty= percentageMap.get("schemePercent");
-		invoiceAmount=invoiceAmount.multiply(transSchemePercentageForParty);
-		eligiableAmtForParty=invoiceAmount.divide(100);
-		
-		if(eligiableAmtForParty.compareTo(transportaionCost)>0){
-			TotalTRAmount=TotalTRAmount.add(transportaionCost);
+		if(prodCatsList.contains(productCategory.primaryParentCategoryId)){
+			transSchemePercentageForParty=percentageMap.get(productCategory.primaryParentCategoryId);
 		}else{
-			TotalTRAmount=TotalTRAmount.add(eligiableAmtForParty);
+			transSchemePercentageForParty=percentageMap.get("OTHER");
 		}
-		
-		if(depotcustomerIds.contains(eachRecord.partyId)){
-			inputParams.put("schemeTypeId", "DEPOT_REIMBURSEMENT");
+		eligiableFrightCharges=(invoiceAmount.multiply(transSchemePercentageForParty)).divide(100)
+		//transSchemePercentageForParty= percentageMap.get("schemePercent");
+		if(eligiableFrightCharges.compareTo(actualFrightCharges)>0){							  // Transportation Charges Calculation
+			TotalTRAmount=TotalTRAmount.add(actualFrightCharges);
+		}else{
+			TotalTRAmount=TotalTRAmount.add(eligiableFrightCharges);
+		}
+		if(depotcustomerIds.contains(eachRecord.partyId)){                                          // Depot Charges Calculation
+			/*inputParams.put("schemeTypeId", "DEPOT_REIMBURSEMENT");
 			Map<String, Object> result2 = dispatcher.runSync("getReimbursmentPercentage", inputParams);
 			if (ServiceUtil.isError(result2)) {
 				request.setAttribute("_ERROR_MESSAGE_","Error while creating invoic");
 				return "error";
-			}
-			depoSchemePercentageForParty= result2.get("schemePercent");
-			invoiceAmount=invoiceAmount.multiply(depoSchemePercentageForParty)
-			eligiableDepoAmtForParty=invoiceAmount.divide(100);
-			totalDepoChrgAmount=totalDepoChrgAmount.add(eligiableDepoAmtForParty);
+			}*/
+			//depoSchemePercentageForParty= result2.get("schemePercent");
+			depotSerChargs=(invoiceAmount.multiply(2)).divide(100) 
+			totalDepoChrgAmount=totalDepoChrgAmount.add(depotSerChargs);
 		}
+	    if(mgpsinvoiceIdsForPeriod.contains(invoiceId)){    											//mgps service charge calculation
+			serviceChargePercentage=percentageMap.get("serCharge")
+			mgpsSerCharges=(invoiceAmount.multiply(serviceChargePercentage)).divide(100)
+			totalMgpsSerChrgAmount=totalMgpsSerChrgAmount.add(mgpsSerCharges);
+		}
+		
 	}
 	Map<String, Object> input = UtilMisc.toMap("userLogin", userLogin)
 	input.put("invoiceTypeId", "SALES_INVOICE")
@@ -225,6 +239,18 @@ try {
 		request.setAttribute("_ERROR_MESSAGE_","Error while creating invoicItem For Depot Charge item");
 		return "error";
 	}
+	Map<String, Object> inputItem3 = UtilMisc.toMap("userLogin", userLogin)
+	inputItem3.put("invoiceId", invoiceId)
+	inputItem3.put("invoiceItemTypeId","MGPS_SER_CHRG_REMB");
+	inputItem3.put( "quantity", BigDecimal.ONE)
+	inputItem3.put("amount",totalMgpsSerChrgAmount)
+	inputItem3.put("itemValue",totalMgpsSerChrgAmount.setScale(2,rounding))
+	Map<String, Object> result4 = dispatcher.runSync("createInvoiceItem", inputItem3);
+	if (ServiceUtil.isError(result4)) {
+		request.setAttribute("_ERROR_MESSAGE_","Error while creating invoicItem For Depot Charge item");
+		return "error";
+	}
+	
 	schemeTimePeriod.set("isClosed","Y")
 	delegator.store(schemeTimePeriod)
 	
