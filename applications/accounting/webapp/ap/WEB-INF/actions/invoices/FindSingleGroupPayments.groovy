@@ -124,7 +124,10 @@ PaymentTypeListt =EntityUtil.getFieldListFromEntityList(PaymentTypeList1, "payme
 
 
 condList1 = [];
-
+if(parameters.ownerPartyId && parameters.ownerPartyId!=null){
+	partyId = parameters.ownerPartyId
+	condList1.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,partyId));
+}
 condList1.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.IN,PaymentTypeListt));
 condList1.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS,"PMNT_NOT_PAID"));
 cond1 = EntityCondition.makeCondition(condList1, EntityOperator.AND);
