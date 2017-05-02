@@ -424,6 +424,7 @@ function setOrgPartyId() {
 		  <tr class="alternate-row">
 				<form id="BankReconciliationReports" name="BankReconciliationReports" method="post" action="<@ofbizUrl>recStatemetn.pdf</@ofbizUrl>" target="_blank">	
 					<td width="30%"> Bank  Reconciliation  Report</td>
+					<input type="hidden" name="glReconciliationId" id="glReconciliationId" value="_NA_">
                       <td>Date<input  type="text" size="18pt" id="reconcileFromDateId" readonly  name="thruDateReport"/></td>				    
 				    <td width="15%">Bank<select name='finAccountId' id ="finAccountId">	
 							<option value=""></option>								
