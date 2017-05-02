@@ -232,7 +232,7 @@ function drawRow(rowData) {
     row.append($("<td align=center>" +  viewButton  +"</td>"));
    
    //For indent Payment
-   /*
+   
    if(rowData.orderTotal != rowData.paidAmt)
    {
     var partyName = "'" + rowData.partyName + "'";
@@ -243,7 +243,7 @@ function drawRow(rowData) {
     }else{
     row.append($("<td></td>"));
     }
-    */
+    
     
     if(rowData.pmntstatus == "payment_realized"){
      row.append($("<td align=left>Payment Realized</td>"));
@@ -328,7 +328,7 @@ function drawRow(rowData) {
           <td>Edit Batch</td>
           <td>Approve</td>
           <td>DC Report</td>-->
-           <#--<td>Indent Payment</td>-->
+          <td>Indent Payment</td>
           <#-- <td>Payment</td> -->
            <td>Payment Status</td>
           <#--> <td>Advance Payments</td> -->
