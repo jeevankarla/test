@@ -2650,6 +2650,12 @@ under the License.
                 </condition-list>
                 <order-by field-name="description"/>
             </entity-condition>
+            <entity-condition entity-name="FinAccount" list="finAccountNames">
+                <condition-list combine="and">
+                    <condition-expr field-name="costCenterId" operator="equals" from-field="parameters.ownerPartyId"/>
+                    <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+                </condition-list>
+            </entity-condition>
         </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="paymentId"><text-find ignore-case="true"/></field>
@@ -2668,6 +2674,11 @@ under the License.
                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>        
+         <field name="bankName" title="Bank Name" position="2">
+            <drop-down allow-empty="true">
+                <list-options list-name="finAccountNames" key-name="finAccountId" description="${finAccountName}"/>
+            </drop-down>
+        </field>
         <!-- <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="false">
                 <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
@@ -2703,6 +2714,18 @@ under the License.
         <actions>
             
         </actions>
+        <row-actions>
+            <entity-condition entity-name="FinAccntTransSequence" list="FinAccntTransSequenceList">
+            <condition-list > 
+                    <condition-expr field-name="finAccountTransId" operator="equals" from-field="finAccountTransId"/>
+             </condition-list>       
+            </entity-condition>
+             <entity-condition entity-name="FinAccount" list="FinAccntList">
+            <condition-list > 
+                    <condition-expr field-name="finAccountId" operator="equals" from-field="FinAccntTransSequenceList[0].finAccountId"/>
+             </condition-list>       
+            </entity-condition>
+        </row-actions>
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
@@ -2718,9 +2741,9 @@ under the License.
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display/></field>-->  
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="comments"><display/></field>
+         <field name="transSequenceId" title="Sequence"><display description="${FinAccntTransSequenceList[0].transSequenceId}"/></field>
         <field name="tallyRefNo"><display/></field>
-        <field name="cancelComments" title="Reason For Voided"><display/></field>
+       <field name="bankName" title="Bank Name"><display description="${FinAccntList[0].finAccountName}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
@@ -2779,6 +2802,12 @@ under the License.
                 </condition-list>
                 <order-by field-name="description"/>
             </entity-condition>
+            <entity-condition entity-name="FinAccount" list="finAccountList">
+                <condition-list combine="and">
+                	<condition-expr field-name="costCenterId" operator="equals" from-field="parameters.ownerPartyId"/>
+                    <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
+                </condition-list>
+            </entity-condition>
         </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="paymentId"><text-find ignore-case="true"/></field>
@@ -2795,6 +2824,11 @@ under the License.
         <field name="paymentMethodTypeId">
             <drop-down allow-empty="true" >
                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="bankName" title="Bank Name" position="2">
+            <drop-down allow-empty="true">
+                <list-options list-name="finAccountList" key-name="finAccountTypeId" description="${finAccountName}"/>
             </drop-down>
         </field>        
         <!-- <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
@@ -2832,6 +2866,18 @@ under the License.
         <actions>
             
         </actions>
+        <row-actions>
+            <entity-condition entity-name="FinAccntTransSequence" list="FinAccntTransSequenceList">
+            <condition-list > 
+                    <condition-expr field-name="finAccountTransId" operator="equals" from-field="finAccountTransId"/>
+             </condition-list>       
+            </entity-condition>
+             <entity-condition entity-name="FinAccount" list="FinAccntList">
+            <condition-list > 
+                    <condition-expr field-name="finAccountId" operator="equals" from-field="FinAccntTransSequenceList[0].finAccountId"/>
+             </condition-list>       
+            </entity-condition>
+        </row-actions>
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
@@ -2847,9 +2893,9 @@ under the License.
         <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><display/></field>-->  
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="comments"><display/></field>
+        <field name="transSequenceId" title="Sequence"><display description="${FinAccntTransSequenceList[0].transSequenceId}"/></field>
         <field name="tallyRefNo"><display/></field>
-        <field name="cancelComments" title="Reason For Voided"><display/></field>
+        <field name="bankName" title="Bank Name"><display description="${FinAccntList[0].finAccountName}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
