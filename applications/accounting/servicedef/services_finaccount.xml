@@ -796,7 +796,7 @@ under the License.
     </service>
     <service name="cancelCustRequest" engine="java" location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="cancelCustRequest">
         <description>cancel CustRequest.</description>
-		<attribute name="custRequestId" type="String" mode="IN" optional="true"/>
+		<attribute name="custRequestId" type="String" mode="INOUT" optional="false"/>
 		
     </service>   
 </services>
