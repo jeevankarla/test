@@ -720,9 +720,22 @@ if(UtilValidate.isNotEmpty(dayFinAccountTransList)){
 		}
 	}
 }
+
+ 
+if(parameters.reconcileReportFlag == "reconcile"){
+	reconcileClosingBal = "";
+	if(UtilValidate.isNotEmpty(finalFinAccntTransList)){
+		   for(int i=0;i<finalFinAccntTransList.size();i++){
+			eachFinAcct=finalFinAccntTransList.get(i);
+			if(UtilValidate.isNotEmpty(eachFinAcct.closingBalance)){
+			  reconcileClosingBal = eachFinAcct.closingBalance;
+			}
+		}
+	}
+	context.reconcileClosingBal = reconcileClosingBal;
+	}
+	
 context.dayFinAccountTransList = finalFinAccntTransList;
-
-
 
 
 
