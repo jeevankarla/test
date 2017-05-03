@@ -825,13 +825,13 @@ public class MaterialPurchaseServices {
 	            
 	            String contactNumberTo = (String) serviceResult.get("contactNumber");            
 	            String countryCode = (String) serviceResult.get("countryCode");
-	            if(UtilValidate.isEmpty(contactNumberTo)){
+	           /* if(UtilValidate.isEmpty(contactNumberTo)){
 	            	contactNumberTo = "7330776928";
 	            }
 	            if(UtilValidate.isEmpty(carrierName)){
 	            	carrierName = "_";
 	            }
-	            contactNumberTo = "7330776928";
+	            contactNumberTo = "7330776928";*/
 	            Debug.log("contactNumberTo = "+contactNumberTo);
 	            if(UtilValidate.isNotEmpty(contactNumberTo)){
 	            	 if(UtilValidate.isNotEmpty(countryCode)){
@@ -1710,13 +1710,13 @@ public class MaterialPurchaseServices {
 	            
 	            String contactNumberTo = (String) serviceResult.get("contactNumber");            
 	            String countryCode = (String) serviceResult.get("countryCode");
-	            if(UtilValidate.isEmpty(contactNumberTo)){
+	           /* if(UtilValidate.isEmpty(contactNumberTo)){
 	            	contactNumberTo = "7330776928";
 	            }
 	            if(UtilValidate.isEmpty(carrierName)){
 	            	carrierName = "_";
 	            }
-	            contactNumberTo = "7330776928";
+	            contactNumberTo = "7330776928";*/
 	            ////Debug.log("contactNumberTo = "+contactNumberTo);
 	            if(UtilValidate.isNotEmpty(contactNumberTo)){
 	            	 if(UtilValidate.isNotEmpty(countryCode)){
