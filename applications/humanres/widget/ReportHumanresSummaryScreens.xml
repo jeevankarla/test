@@ -1554,7 +1554,7 @@
 			</widgets>
 		</section>
 	</screen>	
-    <screen name="PrintPaySlipsPdf">
+    <screen name="PrintPaySlipsPdf" transaction-timeout="90000">
 	<section>
 		<actions>
            	<property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>

@@ -136,7 +136,27 @@ under the License.
         <field name="holidayDate" id-name="holidayDate" event="onclick" action="javascript:picker()"><text  size="12"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="HolidayResults" list-name="holidayDetailsList" type="list" default-table-style="basic-table hover-bar" separate-columns="true" target="updateHoliday">
+    
+     <form name="HolidayResults" list-name="holidayDetailsList" type="list" default-table-style="basic-table hover-bar" separate-columns="true" target="updateHoliday">
+        <field name="customTimePeriodId"><hidden/></field>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="prevHoliDayDate"><hidden/></field>
+        <field name="holiDayDate" id-name="holiDayDate" title = "Holiday Date"><display></display><!-- <display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(holiDayDate, &quot;dd-MM-yyyy&quot;);}"/>  --></field>
+        <field name="weekDay"><display></display></field>
+        <field name="description"><display></display></field>
+        <field name="ro" title = "RO"><display></display></field>
+        <sort-order type="explicit">   
+        	<sort-field name="holiDayDate"/>
+        	<sort-field name="weekDay"/>
+        	<sort-field name="description"/>
+        	<sort-field name="ro"/>
+        	<sort-field name="submitButton"/>
+        	<sort-field name="deleteLink"/>
+        </sort-order>
+          
+    </form>
+    
+    <form name="HolidayResultsUpdate" list-name="holidayDetailsList" type="list" default-table-style="basic-table hover-bar" separate-columns="true" target="updateHoliday">
         <field name="customTimePeriodId"><hidden/></field>
         <field name="organizationPartyId"><hidden/></field>
         <field name="prevHoliDayDate"><hidden/></field>
