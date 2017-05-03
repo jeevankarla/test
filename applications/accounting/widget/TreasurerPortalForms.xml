@@ -430,7 +430,7 @@ under the License.
             </hyperlink>
         </field> -->
     </form>
-     <form name="ListAdvDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindEmployeeAdv" paginate="true"
+     <form name="ListAdvDepositPaidAccounts" type="list" separate-columns="true" default-entity-name="FinAccountAndRole" list-name="depositAccounts" paginate-target="FindEmplAdvance" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="finAccountId" title="AccountId"><display/>
          <hyperlink target="EditFinAccount" description="${finAccountId}" target-window="_blank">
