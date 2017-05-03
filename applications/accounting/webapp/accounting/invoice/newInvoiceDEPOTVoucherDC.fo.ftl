@@ -101,8 +101,12 @@ under the License.
 	<fo:table-column column-width="7%"/>
 	<fo:table-column column-width="8%"/>
 	<fo:table-column column-width="11%"/>
+	<#if isItVatOrCst?has_content>
 	<fo:table-column column-width="8%"/>
+	</#if>
+	<#if isVatSurOrCstSur?has_content>
 	<fo:table-column column-width="8%"/>
+	</#if>
 	<fo:table-column column-width="8%"/>
 	
 

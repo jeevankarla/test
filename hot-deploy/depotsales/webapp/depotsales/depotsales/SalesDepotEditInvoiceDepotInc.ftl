@@ -152,9 +152,9 @@
 				var inputQty = jQuery("<input>").attr("type", "hidden").attr("name", "quantity_o_" + rowCount).val(qty);
 				var invoiceItemSeqId1 = jQuery("<input>").attr("type", "hidden").attr("name", "invoiceItemSeqId_o_" + rowCount).val(invoiceItemSeqId);
 				
-				var SERVICE_CHARGE = jQuery("<input>").attr("type", "hidden").attr("name", "SERVICE_CHARGE_o_" + rowCount).val(SERVICE_CHARGE_AMT);
+				//var SERVICE_CHARGE = jQuery("<input>").attr("type", "hidden").attr("name", "SERVICE_CHARGE_o_" + rowCount).val(SERVICE_CHARGE_AMT);
 				
-				jQuery(formId).append(jQuery(SERVICE_CHARGE));
+				//jQuery(formId).append(jQuery(SERVICE_CHARGE));
 				
 				jQuery(formId).append(jQuery(inputProd));				
 				jQuery(formId).append(jQuery(inputQty));
@@ -212,6 +212,7 @@
 				taxList.push("CST_SALE");
 				taxList.push("VAT_SURCHARGE");
 				taxList.push("CST_SURCHARGE");
+				taxList.push("SERVICE_CHARGE");
 				
 				var taxListItem = jQuery("<input>").attr("type", "hidden").attr("name", "taxList_o_" + rowCount).val(taxList);
 				jQuery(formId).append(jQuery(taxListItem));	
@@ -237,8 +238,29 @@
 						}
 						
 						
+						if(taxType == "SERVICE_CHARGE"){
+						
+						if(data[rowCount]["SERVICE_CHARGE_PUR"])		
+						 taxValue = data[rowCount]["SERVICE_CHARGE_PUR_AMT"];
+						else
+						 taxPercentage = data[rowCount]["SERVICE_CHARGE"];
+						
+						
+						if(data[rowCount]["SERVICE_CHARGE_PUR_AMT"])		
+						 taxValue = data[rowCount]["SERVICE_CHARGE_PUR_AMT"];
+						else
+						 taxValue = data[rowCount]["SERVICE_CHARGE_AMT"];
+						 
 						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
 						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
+						
+						}else{
+						
+						
+						var inputTaxTypePerc = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_o_" + rowCount).val(taxPercentage);
+						var inputTaxTypeValue = jQuery("<input>").attr("type", "hidden").attr("name", taxType + "_AMT_o_"+ rowCount).val(taxValue);
+						
+						}
 						jQuery(formId).append(jQuery(inputTaxTypePerc));
 						jQuery(formId).append(jQuery(inputTaxTypeValue));
 					}
