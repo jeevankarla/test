@@ -311,23 +311,51 @@
 				<decorator-screen name="HumanresCommonDecorator" location="component://humanres/widget/CommonScreens.xml">
 				 	<decorator-section name="body">
 				 	<include-menu location="component://humanres/widget/HumanresMenus.xml" name="AttendanceTabBar"/>
-                   	<container style="button-bar">
-                     	<link target="NewHoliday" style="buttontext create" text="${uiLabelMap.CommonCreateNew} Holiday"/>
-                   	</container>                           
-	            		<screenlet title="Search-Options">
-                           	<section>
-                               	<widgets>
-                                   	<include-form name="HolidayOptions" location="component://humanres/widget/CalendarForms.xml"/>
-                               	</widgets>
-                           	</section>
-                       	</screenlet>
-                       	<screenlet title="Holiday Calender for HR Year ${yearStart}-${yearEnd} ${year}">
-                           	<section>
-                               	<widgets>
-                                   	<include-form name="HolidayResults" location="component://humanres/widget/CalendarForms.xml"/>
-                               	</widgets>
-                           	</section>
-                       	</screenlet>
+				 	
+				 	<section>
+                         	<condition>
+                         		<or>
+                         			<if-service-permission service-name="humanResManagerPermission" main-action="EMPLOYMENT_EDIT"/>
+                         			<if-has-permission permission="HR_PROFILE" action="_ADMIN"/>
+                         		</or>
+                            </condition>
+                            <widgets>
+                               <container style="button-bar">
+			                    	<link target="NewHoliday" style="buttontext create" text="${uiLabelMap.CommonCreateNew} Holiday"/>
+			                   	</container>                           
+	            				<screenlet title="Search-Options">
+                           			<section>
+		                               	<widgets>
+		                                   	<include-form name="HolidayOptions" location="component://humanres/widget/CalendarForms.xml"/>
+		                               	</widgets>
+                           			</section>
+                       			</screenlet>
+                       			<screenlet title="Holiday Calender for HR Year ${yearStart}-${yearEnd} ${year}">
+		                           	<section>
+		                               	<widgets>
+		                                   	<include-form name="HolidayResultsUpdate" location="component://humanres/widget/CalendarForms.xml"/>
+		                               	</widgets>
+		                           	</section>
+                       			</screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="Search-Options">
+                           			<section>
+                               			<widgets>
+                                   			<include-form name="HolidayOptions" location="component://humanres/widget/CalendarForms.xml"/>
+                               			</widgets>
+                           			</section>
+                       			</screenlet>
+                       			<screenlet title="Holiday Calender for HR Year ${yearStart}-${yearEnd} ${year}">
+		                           	<section>
+		                               	<widgets>
+		                                   	<include-form name="HolidayResults" location="component://humanres/widget/CalendarForms.xml"/>
+		                               	</widgets>
+		                           	</section>
+                       			</screenlet>
+                            </fail-widgets>
+                        </section>
+				 	
                  	</decorator-section>		                           	 
                 </decorator-screen>
             </widgets>
