@@ -639,7 +639,8 @@ financialAcctgTransList.each{ dayFinAccount ->
 			dayFinAccountMap["paymentTransSequenceId"] = dayFinAccount.paymentTransSequenceId;
 			dayFinAccountMap["paymentId"] = dayFinAccount.paymentId;
 			dayFinAccountMap["partyId"] = dayFinAccount.partyId;
-			dayFinAccountMap["partyName"] = dayFinAccount.partyName;
+			partyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, dayFinAccount.partyId, false);
+			dayFinAccountMap["partyName"] = partyName;
 			dayFinAccountMap["finAccountOwnerPartyId"] = dayFinAccount.finAccountOwnerPartyId;
 			dayFinAccountMap["finAccountPartyName"] = dayFinAccount.finAccountPartyName;
 			dayFinAccountMap["description"] = dayFinAccount.description;
