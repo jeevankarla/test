@@ -176,8 +176,10 @@ if(partyId)
 	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
 
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-if(purposeType)
-	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, purposeType));
+if(purposeType && purposeType =="B_DEPOT")
+	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE"]));
+ else if(purposeType && purposeType =="DIES_AND_CHEM_SALE")
+	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN,  ["DIES_AND_CHEM_SALE","DEPOT_DIES_CHEM_SALE"]));
 
 
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
