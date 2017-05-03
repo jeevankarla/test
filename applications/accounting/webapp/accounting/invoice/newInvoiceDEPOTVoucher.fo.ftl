@@ -91,15 +91,15 @@ under the License.
          <fo:block>     
     <fo:table width="100%" border-style="solid"  align="right" table-layout="fixed" font-size="10pt"> 
 	<fo:table-column column-width="5%"/>
-	<fo:table-column column-width="17%"/>
+	<fo:table-column column-width="15%"/>
 	<fo:table-column column-width="10%"/>
 	<#if scheme == "MGPS_10Pecent">
-	<fo:table-column column-width="8%"/>
+	<fo:table-column column-width="10%"/>
 	</#if>
 	<#if (scheme == "MGPS_10Pecent") || (scheme == "MGPS")>
-	<fo:table-column column-width="15%"/>
+	<fo:table-column column-width="10%"/>
 	</#if>
-	<fo:table-column column-width="17%"/>
+	<fo:table-column column-width="15%"/>
 	<fo:table-column column-width="10%"/>
 	<fo:table-column column-width="12%"/>
 	<fo:table-column column-width="15%"/>
@@ -212,7 +212,7 @@ under the License.
 				<#assign totQuantity = totQuantity+invoiceDetail.get("quantity")>
 				</#if>
 				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("quantity")?has_content>${invoiceDetail.get("quantity")?if_exists?string("#0.000")}<#else>&#160;</#if></fo:block>
-				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}(${invoiceDetail.get("unit")?if_exists})<#else>&#160;</#if></fo:block>
+				<fo:block text-align="center"  font-size="10pt" ><#if invoiceDetail.get("baleQty")?has_content>${invoiceDetail.get("baleQty")?if_exists}(${invoiceDetail.get("Uom")?if_exists})(${invoiceDetail.get("unit")?if_exists})<#else>&#160;</#if></fo:block>
 				
 				
                 <#assign totServiceCharge = 0>

@@ -744,6 +744,9 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			 conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
 			 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 			 OrderItemDetail = delegator.findList("OrderItemDetail", cond, null, null, null, false);
+			 uom="";
+			 if(OrderItemDetail)
+			 uom = OrderItemDetail[0].get("Uom");
 			 
 			 
 			 quantity = quantity+eachInvoiceList.quantity;
@@ -769,7 +772,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 			}
 			 
 			 tempMap.put("unit", unit);
-			 
+			 tempMap.put("Uom", uom);
 			 
 				if(baleQty)
 				tempMap.put("baleQty",baleQty);
@@ -1815,7 +1818,10 @@ context.externalOrderId = externalOrderId;
 		 
 		 quantity = quantity+eachInvoiceList.quantity;
 		 amount = eachInvoiceList.amount;
-		
+		 uom="";
+		 if(OrderItemDetail)
+		 uom = OrderItemDetail[0].get("Uom");
+		 //Debug.log("uom========###############======="+uom);
 		 double baleQty = 0;
 		 double unit = 0;
 		 double quotaQuantity = 0;
@@ -1845,6 +1851,8 @@ context.externalOrderId = externalOrderId;
 			
 			
 			tempMap.put("quantity", quantity);
+			
+			tempMap.put("Uom", uom);
 		
 		//String schemeAmt = (String)SchemeQtyMap.get(eachInvoiceList.invoiceItemSeqId);
 			
