@@ -339,6 +339,16 @@ totInvoiceAmt=0;
 totNetInvoiceAmt=0;
 totPoInvoiceAmt=0;
 totPurInvoiceNetAmt=0;
+totaltaxAmt=0;
+totalschemeQty=0;
+totalsubsidyAmt=0;
+totallAdjWitOutTEN=0;
+totsalevalue=0;
+totpurchaseQuantity=0;
+totsalesQuantity=0;
+totfreight=0;
+totpurTax=0;
+totallAdjPur=0;
 	for (eachInvoice in invoice) {
 
 		
@@ -626,10 +636,12 @@ totPurInvoiceNetAmt=0;
 
 			orderDate = "";
 			TallyPoNumber = "";
+			referenceNo = "";
 			if(actualOrderId){
 				OrderHeader = delegator.findOne("OrderHeader",[orderId : actualOrderId] , false);
 				orderDate = OrderHeader.orderDate;
 				TallyPoNumber = OrderHeader.tallyRefNo;
+				referenceNo = OrderHeader.externalId;
 
 
 				//=================PartyClassification=========================
@@ -797,6 +809,7 @@ totPurInvoiceNetAmt=0;
 
 
 				double invoiceNetAmt = 0;
+				double salevalue = 0;
 
 				tempMap = [:];
 
@@ -944,6 +957,8 @@ totPurInvoiceNetAmt=0;
 				tenPerQty = schemeQQQty;
 
 				tempMap.put("schemeQty", schemeQQQty);
+				
+				totalschemeQty=totalschemeQty+schemeQQQty;
 
 
 				//=============================Tax Amount======================
@@ -971,7 +986,12 @@ totPurInvoiceNetAmt=0;
 					}
 				}
 
+				salevalue = salevalue+eachItem.itemValue;
+				if(dontRepeat.size() == 1)
+				salevalue = salevalue+allAdjWitOutTEN;
 				
+				tempMap.put("salevalue", salevalue);
+				totsalevalue=totsalevalue+salevalue;
 				
 				if(isKunnur == "INT6")
 				tempMap.put("invoiceAmount", eachItem.itemValue+taxAmtkannur);
@@ -983,11 +1003,15 @@ totPurInvoiceNetAmt=0;
 
 
 				tempMap.put("altaxAmt", taxAmt);
+				
+				totaltaxAmt=totaltaxAmt+taxAmt;
 
 				if(dontRepeat.size() == 1)
 					tempMap.put("allAdjWitOutTEN", allAdjWitOutTEN);
 				else
 					tempMap.put("allAdjWitOutTEN", "");
+					
+				totallAdjWitOutTEN=totallAdjWitOutTEN+allAdjWitOutTEN;
 
 			    if(isKunnur == "INT6")
 				invoiceNetAmt = invoiceNetAmt+taxAmt+taxAmtkannur;
@@ -1068,6 +1092,8 @@ totPurInvoiceNetAmt=0;
 				tempMap.put("cluster", "");
 
 				tempMap.put("subsidyAmt", schemeAMMMt);
+				
+				totalsubsidyAmt=totalsubsidyAmt+schemeAMMMt;
 
 				invoiceNetAmt = invoiceNetAmt+schemeAMMMt;
 
@@ -1261,6 +1287,8 @@ totPurInvoiceNetAmt=0;
 					
 					tempMap.put("purTax", purTax);
 					
+					totpurTax=totpurTax+purTax;
+					
 					purInvoiceNetAmt = purInvoiceNetAmt+purTax;
 					
 					purInvoiceNetAmt = purInvoiceNetAmt+purTaxAmtkannur;
@@ -1292,6 +1320,8 @@ totPurInvoiceNetAmt=0;
 						else
 						tempMap.put("allAdjPur", "");
 						
+						totallAdjPur=totallAdjPur+allAdjPur;
+						
 						if(dontRepeat.size() == 1)
 						purInvoiceNetAmt = purInvoiceNetAmt+allAdjPur;
 						
@@ -1313,6 +1343,11 @@ totPurInvoiceNetAmt=0;
 					tempMap.put("TallyPoNumber", TallyPoNumber);
 				else
 					tempMap.put("TallyPoNumber", "");
+				
+				if(referenceNo)
+					tempMap.put("referenceNo", referenceNo);
+				else
+					tempMap.put("referenceNo", "");
 					
 				if(partyClassification)
 				tempMap.put("partyClassification", partyClassification);
@@ -1370,7 +1405,10 @@ totPurInvoiceNetAmt=0;
 						tempMap.put("freight", "");
 
 					estimatedShipCost = shipmentList.get("estimatedShipCost");
-
+					if(estimatedShipCost != null){
+						totfreight=totfreight+estimatedShipCost;
+					}
+					
 					if(estimatedShipCost)
 						tempMap.put("eligibility", estimatedShipCost);
 					else
@@ -1434,8 +1472,11 @@ totPurInvoiceNetAmt=0;
 				else
 					tempMap.put("purchaseQuantity", "");
 
-
+				totpurchaseQuantity=totpurchaseQuantity+tempMap["purchaseQuantity"];
+				
 				tempMap.put("salesQuantity", eachItem.quantity);
+				
+				totsalesQuantity=totsalesQuantity+eachItem.quantity;
 
 				tempMap.put("rate", eachItem.amount);
 
@@ -1820,10 +1861,12 @@ totPurInvoiceNetAmt=0;
 
 			orderDate = "";
 			TallyPoNumber = "";
+			referenceNo = "";
 			if(actualOrderId){
 				OrderHeader = delegator.findOne("OrderHeader",[orderId : actualOrderId] , false);
 				orderDate = OrderHeader.orderDate;
 				TallyPoNumber = OrderHeader.tallyRefNo;
+				referenceNo = OrderHeader.externalId;
 			}
 
 			////Debug.log("TallyPoNumber================"+TallyPoNumber);
@@ -1974,6 +2017,7 @@ totPurInvoiceNetAmt=0;
 
 
 				double invoiceNetAmt = 0;
+				double salevalue = 0;
 
 				tempMap = [:];
 
@@ -2126,6 +2170,7 @@ totPurInvoiceNetAmt=0;
 				tenPerQty = schemeQQQty;
 
 				tempMap.put("schemeQty", schemeQQQty);
+				totalschemeQty=totalschemeQty+schemeQQQty;
 
 
 				//=============================Tax Amount======================
@@ -2157,6 +2202,12 @@ totPurInvoiceNetAmt=0;
 						
 					}
 				}
+				salevalue = salevalue+eachItem.itemValue;
+				if(dontRepeat.size() == 1)
+				salevalue = salevalue+allAdjWitOutTEN;
+				
+				tempMap.put("salevalue", salevalue);
+				totsalevalue=totsalevalue+salevalue;
 				
 				if(isKunnur == "INT6")
 				tempMap.put("invoiceAmount", eachItem.itemValue+taxAmtkannur);
@@ -2168,11 +2219,15 @@ totPurInvoiceNetAmt=0;
 
 
 				tempMap.put("altaxAmt", taxAmt);
+				
+				totaltaxAmt=totaltaxAmt+taxAmt;
 
 				if(dontRepeat.size() == 1)
 					tempMap.put("allAdjWitOutTEN", allAdjWitOutTEN);
 				else
 					tempMap.put("allAdjWitOutTEN", "");
+					
+				totallAdjWitOutTEN=totallAdjWitOutTEN+allAdjWitOutTEN;
 
 
 				if(isKunnur == "INT6")
@@ -2254,6 +2309,8 @@ totPurInvoiceNetAmt=0;
 				tempMap.put("cluster", "");
 
 				tempMap.put("subsidyAmt", schemeAMMMt);
+				
+				totalsubsidyAmt=totalsubsidyAmt+schemeAMMMt;
 
 				invoiceNetAmt = invoiceNetAmt+schemeAMMMt;
 
@@ -2522,6 +2579,11 @@ totPurInvoiceNetAmt=0;
 					tempMap.put("TallyPoNumber", TallyPoNumber);
 				else
 					tempMap.put("TallyPoNumber", "");
+					
+				if(referenceNo)
+					tempMap.put("referenceNo", referenceNo);
+				else
+					tempMap.put("referenceNo", "");
 
 
 				PoorderHeaderSequences = delegator.findList("OrderHeaderSequence",EntityCondition.makeCondition("orderId", EntityOperator.EQUALS , poOrderId)  , UtilMisc.toSet("orderNo"), null, null, false );
@@ -2572,9 +2634,12 @@ totPurInvoiceNetAmt=0;
 						tempMap.put("freight", "");*/
 					
 					tempMap.put("freight", "");
+					if(estimatedShipCost != null){
+						totfreight=totfreight+estimatedShipCost;
+					}
 
 					estimatedShipCost = shipmentList.get("estimatedShipCost");
-
+					
 					if(estimatedShipCost)
 						tempMap.put("eligibility", estimatedShipCost);
 					else
@@ -2641,6 +2706,8 @@ totPurInvoiceNetAmt=0;
 
 
 				tempMap.put("salesQuantity", eachItem.quantity);
+				
+				totsalesQuantity=totsalesQuantity+eachItem.quantity;
 
 				tempMap.put("rate", eachItem.amount);
 
@@ -2699,6 +2766,16 @@ tempTotMap.put("invoiceAmount", totInvoiceAmt);
 tempTotMap.put("invoiceNetAmt",totNetInvoiceAmt );
 tempTotMap.put("poInvoiceAmt", totPoInvoiceAmt);
 tempTotMap.put("purInvoiceNetAmt", totPurInvoiceNetAmt);
+tempTotMap.put("altaxAmt", totaltaxAmt);
+tempTotMap.put("schemeQty", totalschemeQty);
+tempTotMap.put("subsidyAmt", totalsubsidyAmt);
+tempTotMap.put("allAdjWitOutTEN", totallAdjWitOutTEN);
+tempTotMap.put("salevalue", totsalevalue);
+tempTotMap.put("purchaseQuantity", totpurchaseQuantity);
+tempTotMap.put("salesQuantity", totsalesQuantity);
+tempTotMap.put("freight", totfreight);
+tempTotMap.put("purTax", totpurTax);
+tempTotMap.put("allAdjPur", totallAdjPur);
 salesAndPurchaseList.add(tempTotMap);
 //////Debug.log("salesAndPurchaseList=================="+salesAndPurchaseList);
 
