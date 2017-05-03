@@ -299,7 +299,8 @@ if(roID){
 	double totTaxAmount2 =0;
 	double mgpsAmt = 0;
 	
-	
+	isItVatOrCst="";
+	isVatSurOrCstSur="";
 	
 	int i=0;
 	for (eachList in invoiceItemList) {
@@ -322,6 +323,12 @@ if(roID){
 			 
 			   if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE"||eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
 			  tempMap = [:];
+			  if(UtilValidate.isEmpty(isItVatOrCst) && (eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="VAT_SALE")){
+				  isItVatOrCst=eachItem.invoiceItemTypeId;
+			  }
+			  if(UtilValidate.isEmpty(isVatSurOrCstSur) && (eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE")){
+				  isVatSurOrCstSur=eachItem.invoiceItemTypeId;
+			  }
 			  
 			  invoiceForPercentage = delegator.findOne("Invoice",[invoiceId : eachItem.invoiceId] , false);
 			  
@@ -370,7 +377,7 @@ if(roID){
 			  tempMap.put("itemValue", eachItem.itemValue);
 			  
 			  totTaxAmount = totTaxAmount+(eachItem.itemValue);
-			  totTaxAmount2 = totTaxAmount2+(eachItem.itemValue);
+			  //totTaxAmount2 = totTaxAmount2+(eachItem.itemValue);
 			  
 			  itemAdjustList.add(tempMap);
 			  }
@@ -379,12 +386,22 @@ if(roID){
 			  }
 			  //////////Debug.log("eachItem.invoiceItemTypeId============"+eachItem.invoiceItemTypeId);
 			  //if(eachItem.invoiceItemTypeId=="CST_SALE" || eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"  || eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
-			  if(eachItem.invoiceItemTypeId=="INVOICE_ITM_ADJ" || eachItem.invoiceItemTypeId=="PRICE_DISCOUNT"){
+			 /* if(eachItem.invoiceItemTypeId=="INVOICE_ITM_ADJ" || eachItem.invoiceItemTypeId=="PRICE_DISCOUNT"){
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
 				  if(eachItem.invoiceItemTypeId=="CESS" || eachItem.invoiceItemTypeId=="INSURANCE_CHGS"){
 					  totTaxAmount2=totTaxAmount2+(eachItem.itemValue);
 				  }
+			  }*/
+			  if(eachItem.invoiceItemTypeId!="CST_SALE" && eachItem.invoiceItemTypeId!="VAT_SALE" && eachItem.invoiceItemTypeId!="CST_SURCHARGE" && eachItem.invoiceItemTypeId!="VAT_SURCHARGE" && eachItem.invoiceItemTypeId!="ENTRY_TAX" && eachItem.invoiceItemTypeId!="EXCISE_DUTY"){
+				  
+				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
+			 }
+			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
+				  totTaxAmount2=totTaxAmount2+(eachItem.itemValue);
 			  }
+			  /*if(eachItem.invoiceItemTypeId=="CST_SALE"){
+				  cFormAgnst=cFormAgnst+1;
+			   }*/
 		}
 		 }
 		 invoiceItemLevelUnitListPrice.put(eachList.productId, unitPriceIncTax);
@@ -396,6 +413,9 @@ if(roID){
 		i++;
 		
 	}
+	context.isItVatOrCst=isItVatOrCst;
+	//context.isExciseDuty=isExciseDuty;
+	context.isVatSurOrCstSur=isVatSurOrCstSur;
 	context.invoiceItemLevelUnitListPrice=invoiceItemLevelUnitListPrice;
 	context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 	
