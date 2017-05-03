@@ -137,6 +137,14 @@ if(UtilValidate.isNotEmpty(branchId)){
 		}
 		branchIds.add(branchId);
 	}
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId",EntityOperator.LIKE,"IN-%"));
+	partyAndPostalAddress = delegator.findList("PartyAndPostalAddress",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyId","stateProvinceGeoId"), null, null, false );
+	partyAndPostalAddress1 = EntityUtil.filterByCondition(partyAndPostalAddress, EntityCondition.makeCondition("partyId",EntityOperator.LIKE,"INT%"));
+	if(UtilValidate.isNotEmpty(partyAndPostalAddress1)){
+		stateGeoIds= EntityUtil.getFieldListFromEntityList(partyAndPostalAddress1,"stateProvinceGeoId", true);
+	}
+	
 }
 
 silkDepotList=[]
@@ -172,11 +180,10 @@ productCategorys= delegator.findList("ProductCategory",EntityCondition.makeCondi
 juteProdCats= EntityUtil.getFieldListFromEntityList(productCategorys,"productCategoryId", true);
 
 conditionList.clear();
-conditionList.add(EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS,"NATURAL_FIBERS"));
-conditionList.add(EntityCondition.makeCondition("productCategoryId",EntityOperator.NOT_IN,UtilMisc.toList("JUTE_YARN","SILK","COTTON")));
+conditionList.add(EntityCondition.makeCondition("productCategoryTypeId",EntityOperator.EQUALS,"YARN_SALE"));
+conditionList.add(EntityCondition.makeCondition("primaryParentCategoryId",EntityOperator.NOT_IN,UtilMisc.toList("JUTE_YARN","SILK","COTTON")));
 productCategorys= delegator.findList("ProductCategory",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false );
 otherProdCats= EntityUtil.getFieldListFromEntityList(productCategorys,"productCategoryId", true);
-
 
 
 // getting Silk,Cotton,Jute  and other products
@@ -264,6 +271,7 @@ def generateBillWiseReport()
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
+		schemePercentage=0;
 		invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 		shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
 		if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
@@ -273,6 +281,9 @@ def generateBillWiseReport()
 		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 		roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 		schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+		if(!schemePercentage){
+			schemePercentage=roPercentagesMap.get("OTHER")
+		}	
 		serviceChrgPercentage=roPercentagesMap.get("serCharge")
 		mgpsServiceCharge=(invoiceAmount.multiply(serviceChrgPercentage)).divide(100);
 		eligibleFrightCharges=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -368,6 +379,7 @@ def generateBillWiseReport()
 		BigDecimal actualFrightCharges = BigDecimal.ZERO;
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
+		schemePercentage=0
 		invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 		shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
 		if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
@@ -377,6 +389,9 @@ def generateBillWiseReport()
 		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 		roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 		schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+		if(schemePercentage==null){
+			schemePercentage=roPercentagesMap.get("OTHER")
+		}
 		serviceChrgPercentage=roPercentagesMap.get("serCharge")
 		mgpsServiceCharge=(invoiceAmount.multiply(serviceChrgPercentage)).divide(100);
 		eligibleFrightCharges=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -475,6 +490,7 @@ def generateBillWiseReport()
 		BigDecimal actualFrightCharges = BigDecimal.ZERO;
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
+		schemePercentage=0;
 		invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 		shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
 		if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
@@ -484,6 +500,9 @@ def generateBillWiseReport()
 		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 		roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 		schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+		if(schemePercentage==null){
+			schemePercentage=roPercentagesMap.get("OTHER")
+		}
 		serviceChrgPercentage=roPercentagesMap.get("serCharge")
 		mgpsServiceCharge=(invoiceAmount.multiply(serviceChrgPercentage)).divide(100);
 		eligibleFrightCharges=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -561,7 +580,7 @@ def generateBillWiseReport()
 	totalFrightChargesND = BigDecimal.ZERO;
 	totalDepotChargesND = BigDecimal.ZERO;
 	totalSerChargesND=BigDecimal.ZERO;
-	
+	schemePercentage=0;
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
 	conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd))
@@ -572,22 +591,25 @@ def generateBillWiseReport()
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,otherProdIds));
 	otherInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
 	
-	
 	for(invoice in otherInvoicesAndItems)
 	{
 		tempMap=[:]
 		BigDecimal actualFrightCharges = BigDecimal.ZERO;
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
+		schemePercentage=0;
 		invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 		shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-		if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
+		if(UtilValidate.isNotEmpty(shipment) && UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
 			actualFrightCharges=shipment.estimatedShipCost
 		}
 		product = delegator.findOne("Product",[productId : invoice.productId] , false);
 		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 		roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 		schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+		if(schemePercentage==null){
+			schemePercentage=roPercentagesMap.get("OTHER")
+		}
 		serviceChrgPercentage=roPercentagesMap.get("serCharge")
 		mgpsServiceCharge=(invoiceAmount.multiply(serviceChrgPercentage)).divide(100);
 		eligibleFrightCharges=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -712,7 +734,7 @@ def generatePartyWiseReport()
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0;
 		for(invoice in silkinvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
@@ -727,6 +749,9 @@ def generatePartyWiseReport()
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -823,7 +848,7 @@ def generatePartyWiseReport()
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0
 		for(invoice in cottonInvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
@@ -838,6 +863,9 @@ def generatePartyWiseReport()
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -934,7 +962,7 @@ def generatePartyWiseReport()
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0
 		for(invoice in juteInvoicesAndItems1)
 		{
 			partyName= PartyHelper.getPartyName(delegator,invoice.partyId,false);
@@ -949,6 +977,9 @@ def generatePartyWiseReport()
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -1044,7 +1075,7 @@ def generatePartyWiseReport()
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0
 		for(invoice in otherInvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
@@ -1059,6 +1090,9 @@ def generatePartyWiseReport()
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -1177,7 +1211,7 @@ def generateSummaryReport(stateGeoIds)
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0
 		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
 		stateName=stateDetails.geoName
 		conditionList.clear();
@@ -1210,6 +1244,9 @@ def generateSummaryReport(stateGeoIds)
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -1241,7 +1278,7 @@ def generateSummaryReport(stateGeoIds)
 		 eligibleFrightCharges = BigDecimal.ZERO;
 		 depotCharges = BigDecimal.ZERO;
 		 mgpsServiceCharge = BigDecimal.ZERO;
-		
+		 schemePercentage=0
 		for(invoice in silkinvoicesAndItems1ND)
 		{
 			invoiceQty=invoiceQty.add(invoice.quantity);
@@ -1255,6 +1292,9 @@ def generateSummaryReport(stateGeoIds)
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -1340,7 +1380,7 @@ def generateSummaryReport(stateGeoIds)
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0
 		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
 		stateName=stateDetails.geoName
 		conditionList.clear();
@@ -1367,6 +1407,9 @@ def generateSummaryReport(stateGeoIds)
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -1398,7 +1441,7 @@ def generateSummaryReport(stateGeoIds)
 		eligibleFrightCharges = BigDecimal.ZERO;
 		depotCharges = BigDecimal.ZERO;
 		mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0
 		for(invoice in cottoninvoicesAndItems1ND)
 		{
 			invoiceQty=invoiceQty.add(invoice.quantity);
@@ -1412,6 +1455,9 @@ def generateSummaryReport(stateGeoIds)
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -1494,7 +1540,7 @@ def generateSummaryReport(stateGeoIds)
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0
 		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
 		stateName=stateDetails.geoName
 		conditionList.clear();
@@ -1522,6 +1568,9 @@ def generateSummaryReport(stateGeoIds)
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -1567,6 +1616,9 @@ def generateSummaryReport(stateGeoIds)
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -1647,7 +1699,7 @@ def generateSummaryReport(stateGeoIds)
 		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0
 		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
 		stateName=stateDetails.geoName
 		conditionList.clear();
@@ -1675,6 +1727,9 @@ def generateSummaryReport(stateGeoIds)
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
@@ -1705,7 +1760,7 @@ def generateSummaryReport(stateGeoIds)
 		eligibleFrightCharges = BigDecimal.ZERO;
 		depotCharges = BigDecimal.ZERO;
 		mgpsServiceCharge = BigDecimal.ZERO;
-		
+		schemePercentage=0
 		for(invoice in otherInvoicesAndItems1ND)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
@@ -1720,6 +1775,9 @@ def generateSummaryReport(stateGeoIds)
 			productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 			roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
 			schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
+			if(schemePercentage==null){
+				schemePercentage=roPercentagesMap.get("OTHER")
+			}
 			serviceChrgPercentage=roPercentagesMap.get("serCharge")
 			mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			eligibleFrightCharges=eligibleFrightCharges.add((invoiceAmount.multiply(schemePercentage)).divide(100))
