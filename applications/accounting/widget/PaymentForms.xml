@@ -475,9 +475,11 @@ under the License.
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions></actions>
          <row-actions>
-            <entity-one entity-name="Shipment" value-field="shipmentEntry">
-                    <field-map field-name="shipmentId" from-field="shipmentId"/>
-            </entity-one>
+            <entity-condition entity-name="Shipment" list="shipmentList">
+                <condition-list combine="and">
+                    <condition-expr field-name="shipmentId" from-field="shipmentId"/>
+                </condition-list>
+            </entity-condition>
         </row-actions>
         <field name="paymentId"><hidden/></field>
         <field name="invoiceId" widget-style="buttontext">
@@ -485,13 +487,13 @@ under the License.
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="Miller Invoice"><display description="${shipmentEntry.supplierInvoiceId}"/></field>
+        <field name="Miller Invoice"><display description="${shipmentList[0].supplierInvoiceId}"/></field>
         <field name="description"><display/></field>
         <field name="invoiceDate"><display type="date"/></field>
         <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountApplied" parameter-name="dummy"><display  type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
-        <field name="invoiceProcessing" ><check/></field>
+        <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
         <field name="applyButton" widget-style="smallSubmit" use-when="hasPaymentAppEditPermission">
             <submit button-type="button"/>
