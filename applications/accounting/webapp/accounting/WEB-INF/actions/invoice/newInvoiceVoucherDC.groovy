@@ -28,6 +28,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.finder.EntityFinderUtil.ConditionList;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
+import java.math.RoundingMode;
 
 invoiceId = parameters.invoiceId;
 
@@ -51,6 +52,7 @@ roID = EntityUtil.getFirst(branchRo);
 roIDForAdd=roID.partyIdFrom;
 context.partyIdFrom=partyIdFrom;
 context.roIDForAdd=roIDForAdd;
+rounding = RoundingMode.HALF_UP;
 if(roID){
 	kanAndKalRo="yes";
 	context.kanAndKalRo=kanAndKalRo;
@@ -233,8 +235,8 @@ if(roID){
 	//isExciseDuty="";
 	isVatSurOrCstSur="";
 	int i=0;
-	taxPercentage="";
-	taxSurchargePur="";
+	taxPercentage=0;
+	BigDecimal taxSurchargePur=0;
 	for (eachList in invoiceItemList) {
 		
 		 
@@ -335,7 +337,7 @@ if(roID){
 			  }
 			  if(eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
 				  
-				  taxSurchargePur=eachItem.sourcePercentage;
+				  taxSurchargePur=(eachItem.sourcePercentage).setScale(2, rounding);
 			  }
 			  
 			  //Debug.log("tempMap======================="+tempMap);

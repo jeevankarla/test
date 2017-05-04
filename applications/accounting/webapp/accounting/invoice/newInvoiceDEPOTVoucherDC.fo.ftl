@@ -64,7 +64,7 @@ under the License.
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
-				<fo:block text-align="left"  font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>
+				<#--<fo:block text-align="left"  font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>-->
 				</fo:table-cell>
 				<fo:table-cell >
 				<fo:block text-align="right"    font-size="10pt" keep-together="always" white-space-collapse="false">&#160;&#160;&#160;&#160;NHDC BILL NO   :${invoiceId?if_exists}</fo:block>
@@ -76,7 +76,7 @@ under the License.
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if invoiceDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if indentDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(indentDate, "dd-MMM-yyyy")}</#if></fo:block>
 				<fo:block text-align="right"     font-size="10pt" >DATE :<#if supplierInvoDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoDate, "dd-MMM-yyyy")}</#if></fo:block>
-				<fo:block text-align="right"     font-size="10pt" >Tally Sale No : <#if tallyRefNo?has_content>${tallyRefNo?if_exists}<#else><#if tallySalesNo?has_content>${tallySalesNo?if_exists}</#if></#if></fo:block>
+				<#--<fo:block text-align="right"     font-size="10pt" >Tally Sale No : <#if tallyRefNo?has_content>${tallyRefNo?if_exists}<#else><#if tallySalesNo?has_content>${tallySalesNo?if_exists}</#if></#if></fo:block>-->
 				</fo:table-cell>
 			</fo:table-row>
 		</fo:table-body>
@@ -630,7 +630,7 @@ under the License.
 						</fo:table-cell> -->
 						
 						<fo:table-cell  border-style-right="hidden">
-						<fo:block text-align="left" keep-together="always"   font-size="10pt" >Due Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(invoiceDate, "dd-MMM-yyyy")}</fo:block>
+						<fo:block text-align="left" keep-together="always"   font-size="10pt">Due Date :${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(DueDate, "dd-MMM-yyyy")}</fo:block>
 						</fo:table-cell>
 						
 				  </fo:table-row>

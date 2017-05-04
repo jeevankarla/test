@@ -127,7 +127,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	 if(ShipmentReceipt){
 		 shipmentIdForSale = EntityUtil.getFirst(ShipmentReceipt).shipmentId;
 	 }
-	 
+	//Debug.log("shipmentIdForSale============"+shipmentIdForSale);
 	 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentIdForSale] , false);
 	 
 	 supplierInvoiceId ="";
@@ -139,9 +139,9 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
 	 
 	 
-		 //Debug.log("supplierInvoiceId==============="+supplierInvoiceId);
+		 //Debug.log("supplierInvoiceId======142========="+supplierInvoiceId);
 		 
-		 //Debug.log("supplierInvoiceDate==============="+supplierInvoiceDate);
+		 //Debug.log("supplierInvoiceDate======144========="+supplierInvoiceDate);
 		 
 		 
 	context.supplierInvoiceId = supplierInvoiceId;
@@ -233,8 +233,10 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	deliveryChallanDate = "";
 	
 	
-	if(shipmentId){
-	shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+	//if(shipmentId){
+	//shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+	if(shipmentIdForSale){
+	shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentIdForSale] , false);
 	orderId = shipmentList.get("primaryOrderId");
 	
 	estimatedShipDate = shipmentList.get("estimatedShipDate");
@@ -1265,8 +1267,10 @@ estimatedShipDate = "";
 deliveryChallanDate = "";
 
 
-if(shipmentId){
-shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+//if(shipmentId){
+//shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+if(shipmentIdForSale){
+	shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentIdForSale] , false);
 orderId = shipmentList.get("primaryOrderId");
 
 estimatedShipDate = shipmentList.get("estimatedShipDate");
