@@ -65,7 +65,7 @@ under the License.
 							            	<fo:block  text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Date of Advance</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Amount of advance given </fo:block>  
+							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Amount of advance given (in Rs)</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
 							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Amount of Advance outstanding as on ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(AsOnDate?if_exists, "dd/MM/yyyy ")}</fo:block>  
@@ -101,10 +101,10 @@ under the License.
 						            	<fo:block  text-align="left" font-size="8pt" white-space-collapse="false">${outStanding.fromDate?if_exists}</fo:block>  
 						            </fo:table-cell>
 						            <fo:table-cell border-style="solid">
-						            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=outStanding.depositAmt  isoCode=currencyUomId/></fo:block>  
+						            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false">${outStanding.depositAmt?if_exists}</fo:block>  
 						            </fo:table-cell>
 						            <fo:table-cell border-style="solid">
-						            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=outStanding.actualBalance isoCode=currencyUomId/> </fo:block>  
+						            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false">${outStanding.actualBalance?if_exists}</fo:block>  
 						            </fo:table-cell>
 						            <fo:table-cell border-style="solid">
 						            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">&#160;${outStanding.description?if_exists}</fo:block>  
