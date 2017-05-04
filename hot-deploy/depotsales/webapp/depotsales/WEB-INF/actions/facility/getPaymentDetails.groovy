@@ -481,6 +481,20 @@ orderHeader.each{ eachHeader ->
 			tempData.put("pmntstatus", "");
 		}
 	}
+	
+	conditonList.clear();
+	conditonList.add(EntityCondition.makeCondition("paymentPreferenceId" ,EntityOperator.IN,orderPreferenceIds));
+	cond = EntityCondition.makeCondition(conditonList, EntityOperator.AND);
+	fullPaymentsList = delegator.findList("Payment", cond, null, null, null ,false);
+	if(fullPaymentsList){
+		paymentsslist = EntityUtil.filterByCondition(fullPaymentsList, EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_CONFIRMED"));
+		if(fullPaymentsList.size() == paymentsslist.size()){
+			tempData.put("pmntstatus", "payment_realized");
+		}else{
+			tempData.put("pmntstatus", "");
+		}
+	}
+	
 	for (eachPayment in PaymentList) {
 		paidAmt = paidAmt+eachPayment.get("amount");
 	}
