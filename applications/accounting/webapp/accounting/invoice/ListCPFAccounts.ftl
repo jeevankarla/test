@@ -222,7 +222,7 @@ under the License.
     				<option value=""></option>
     				<#if finAccountList?has_content>
     				<#list finAccountList as eachFinAccount>
-    					<option value="${eachFinAccount.finAccountId}">${eachFinAccount.finAccountName}[${eachFinAccount.finAccountId}]</option>	
+    					<option value="${eachFinAccount.finAccountId?if_exists}">${eachFinAccount.finAccountName?if_exists}[${eachFinAccount.finAccountId?if_exists}]</option>	
     				</#list>
     				</#if>
     				</select>
@@ -238,10 +238,12 @@ under the License.
       <thead>
         <tr class="header-row-2">
           <td>PARTY CODE</td>
+          <#if finAccountIds?has_content>
          <#list finAccountIds as eachFinAcctId>
-              <#assign FinAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" : eachFinAcctId}, true) />
-          <td><#if FinAccountType?has_content>${FinAccountType.description?if_exists}<#else></#if></td>
+          	
+          <td>${eachFinAcctId?if_exists}</td>
          </#list> 
+         </#if>
           <td>select</td>
         </tr>
       </thead>
@@ -250,8 +252,8 @@ under the License.
         <#list empPartyIds as eachParty>
              <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator,eachParty, false)?if_exists/>
             <tr valign="middle"<#if alt_row> class="alternate-row"</#if>>
-              <td><font <font color="green" >${partyName}</font><a href="/partymgr/control/viewprofile?partyId=${eachParty}" title="Supplier">[${eachParty}]</a></td>
-              <input type = "hidden" name = "partyId" id = "partyId" value = "${eachParty}">
+              <td><font <font color="green" >${partyName?if_exists}</font><a href="/partymgr/control/viewprofile?partyId=${eachParty?if_exists}" title="Supplier">[${eachParty}]</a></td>
+              <input type = "hidden" name = "partyId" id = "partyId" value = "${eachParty?if_exists}">
               <td>
               	<input type="text" name="empCon" id="empCon" value="" size="10" onblur="javascript:getInvoiceRunningTotal();">
               </td>	
@@ -261,7 +263,7 @@ under the License.
               <td>
               	<input type="text" name="vpfCon" id="vpfCon" value="" size="10" onblur="javascript:getInvoiceRunningTotal();">
               </td>	
-             <td align="right"><input type="checkbox" id="partyId_${eachParty_index}" name="partyIds" value="${eachParty}" onclick="javascript:getInvoiceRunningTotal();"/></td>
+             <td align="right"><input type="checkbox" id="partyId_${eachParty_index}" name="partyIds" value="${eachParty?if_exists}" onclick="javascript:getInvoiceRunningTotal();"/></td>
             </tr>
             <#assign alt_row = !alt_row>
         </#list>
