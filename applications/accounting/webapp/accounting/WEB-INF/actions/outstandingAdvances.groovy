@@ -51,13 +51,12 @@ if(AsOnDate){
 
 }
 context.AsOnDate=AsOndate;
-   //Debug.log("ownerPartyId===="+parameters.ownerPartyId);
+  // Debug.log("ownerPartyId===="+parameters.ownerPartyId);
    List exprListForParameters = [];
    conditionlist=[];
    finAccountTypeList = delegator.findList("FinAccountType",EntityCondition.makeCondition("parentTypeId", EntityOperator.EQUALS, "EMPLOYEE_ADV") , null, null, null, false);
    finAccountTypeIdList = EntityUtil.getFieldListFromEntityList(finAccountTypeList, "finAccountTypeId", false);
-   //   Debug.log("finAccountTypeList======="+finAccountTypeList);
-   //   Debug.log("finAccountTypeIdList======="+finAccountTypeIdList);
+   // Debug.log("finAccountTypeIdList======="+finAccountTypeIdList);
     if (AsOndate) {
 		   exprListForParameters.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, AsOndate));
 	   }
@@ -71,16 +70,17 @@ context.AsOnDate=AsOndate;
 	paramCond = EntityCondition.makeCondition(exprListForParameters, EntityOperator.AND);
 	List<String> orderBy = UtilMisc.toList("fromDate");				
 	finAccountList = delegator.findList("FinAccount", paramCond, null, orderBy, null, false);
-  //	Debug.log("finAccount list======="+finAccountList.get(0).fromDate);
-	
-	if(finAccountList){
+	//Debug.log("condition===="+paramCond);
+	if(finAccountList.size()>0){
 	for(GenericValue finAccountEntry:finAccountList){
 		noOfDays=UtilDateTime.getIntervalInDays(finAccountEntry.fromDate,AsOndate);
 		if(noOfDays>45 && finAccountEntry.actualBalance>0){   // no of days more than 45 and balance > 0
+			//Debug.log("finAccount list======="+finAccountEntry);
 			tempMap = [:];
 			tempMap["finAccountId"]=finAccountEntry.finAccountId;
 			finAccountTypeDes = delegator.findOne("FinAccountType", ["finAccountTypeId":finAccountEntry.finAccountTypeId], false);
-			if(finAccountTypeDes){
+			//Debug.log("finAccountTypeDes======="+finAccountTypeDes);
+			if(finAccountTypeDes.size()>0){
 				if(finAccountTypeDes.description){
 					tempMap["description"]=finAccountTypeDes.description;
 				}
@@ -114,4 +114,6 @@ context.AsOnDate=AsOndate;
 		}
 	}
 	}
+	//Debug.log("outstandinglist======="+outstandingList);
 	  context.outstandingList=outstandingList;
+	  context.currencyUomId="INR";

@@ -76,7 +76,7 @@ under the License.
 							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Cheque Date</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
-							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Cheque Amount</fo:block>  
+							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Cheque Amount(in Rs)</fo:block>  
 							            </fo:table-cell>
 							            <fo:table-cell border-style="solid">
 							            	<fo:block text-align="center" font-size="8pt" white-space-collapse="false" font-weight="bold">Reason</fo:block>  
@@ -110,7 +110,7 @@ under the License.
 			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printChequeBouncingDetailEntry.chequeDate?if_exists}</fo:block>  
 			            </fo:table-cell>
 			            <fo:table-cell border-style="solid">
-			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false"><@ofbizCurrency amount=printChequeBouncingDetailEntry.chequeAmount isoCode=currencyUomId/> </fo:block>  
+			            	<fo:block text-align="right" font-size="8pt" white-space-collapse="false">${printChequeBouncingDetailEntry.chequeAmount?if_exists}</fo:block>  
 			            </fo:table-cell>
 			            <fo:table-cell border-style="solid">
 			            	<fo:block text-align="left" font-size="8pt" white-space-collapse="false">${printChequeBouncingDetailEntry.cancelComments?if_exists}</fo:block>  
