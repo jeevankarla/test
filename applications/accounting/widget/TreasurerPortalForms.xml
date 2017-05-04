@@ -2674,7 +2674,7 @@ under the License.
                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>        
-         <field name="bankName" title="Bank Name" position="2">
+         <field name="finAccountName" title="Bank Name" position="2">
             <drop-down allow-empty="true">
                 <list-options list-name="finAccountNames" key-name="finAccountId" description="${finAccountName}"/>
             </drop-down>
@@ -2720,11 +2720,9 @@ under the License.
                     <condition-expr field-name="finAccountTransId" operator="equals" from-field="finAccountTransId"/>
              </condition-list>       
             </entity-condition>
-             <entity-condition entity-name="FinAccount" list="FinAccntList">
-            <condition-list > 
-                    <condition-expr field-name="finAccountId" operator="equals" from-field="FinAccntTransSequenceList[0].finAccountId"/>
-             </condition-list>       
-            </entity-condition>
+           <entity-one entity-name="FinAccount" value-field="FinAccountEntry">
+                <field-map field-name="finAccountId" from-field="FinAccntTransSequenceList[0].finAccountId"/>
+            </entity-one>
         </row-actions>
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
@@ -2743,7 +2741,7 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
          <field name="transSequenceId" title="Sequence"><display description="${FinAccntTransSequenceList[0].transSequenceId}"/></field>
         <field name="tallyRefNo"><display/></field>
-       <field name="bankName" title="Bank Name"><display description="${FinAccntList[0].finAccountName}"/></field>
+       <field name="finAccountName" title="Bank Name"><display description="${FinAccountEntry.finAccountName}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
@@ -2826,7 +2824,7 @@ under the License.
                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="bankName" title="Bank Name" position="2">
+        <field name="finAccountName" title="Bank Name" position="2">
             <drop-down allow-empty="true">
                 <list-options list-name="finAccountList" key-name="finAccountTypeId" description="${finAccountName}"/>
             </drop-down>
@@ -2867,16 +2865,18 @@ under the License.
             
         </actions>
         <row-actions>
+       		 <!-- <entity-one entity-name="FinAccntTransSequence" value-field="FinAccountTransSequenceEntry">
+                <field-map field-name="finAccountTransId" from-field="finAccountTransId"/>
+            </entity-one> -->
             <entity-condition entity-name="FinAccntTransSequence" list="FinAccntTransSequenceList">
             <condition-list > 
                     <condition-expr field-name="finAccountTransId" operator="equals" from-field="finAccountTransId"/>
              </condition-list>       
             </entity-condition>
-             <entity-condition entity-name="FinAccount" list="FinAccntList">
-            <condition-list > 
-                    <condition-expr field-name="finAccountId" operator="equals" from-field="FinAccntTransSequenceList[0].finAccountId"/>
-             </condition-list>       
-            </entity-condition>
+            <entity-one entity-name="FinAccount" value-field="FinAccountEntry">
+                <field-map field-name="finAccountId" from-field="FinAccntTransSequenceList[0].finAccountId"/>
+            </entity-one>
+            
         </row-actions>
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
@@ -2895,7 +2895,7 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="transSequenceId" title="Sequence"><display description="${FinAccntTransSequenceList[0].transSequenceId}"/></field>
         <field name="tallyRefNo"><display/></field>
-        <field name="bankName" title="Bank Name"><display description="${FinAccntList[0].finAccountName}"/></field>
+        <field name="finAccountName" title="Bank Name"><display description="${FinAccountEntry.finAccountName}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
