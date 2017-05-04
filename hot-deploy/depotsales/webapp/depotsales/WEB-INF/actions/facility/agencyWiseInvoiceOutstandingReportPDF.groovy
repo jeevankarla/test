@@ -265,7 +265,7 @@ if(days=="30days"){
 		headingMap.put("invoiceId", "InvoiceId");
 		headingMap.put("invoiceDate", "InvoiceDate");
 	}
-	headingMap.put("fstMntInvTotals", "1-30 Days");
+	headingMap.put("fstMntInvTotals", "0-30 Days");
 	headingMap.put("secMntInvTotals", "31-60 Days");
 	headingMap.put("thrdMntInvTotals", "61-90 Days");
 	headingMap.put("frthMntInvTotals", "91-180 Days");
@@ -285,7 +285,7 @@ if(days=="45days"){
 		headingMap.put("invoiceId", "InvoiceId");
 		headingMap.put("invoiceDate", "InvoiceDate");
 	}
-	headingMap.put("fstMntInvTotals", "1-45 Days");
+	headingMap.put("fstMntInvTotals", "0-45 Days");
 	headingMap.put("secMntInvTotals", "45-90 Days");
 	headingMap.put("thrdMntInvTotals", "91-180 Days");
 	headingMap.put("frthMntInvTotals", "181Days-1year");
@@ -559,7 +559,6 @@ if(totallMonthsTotal>0){
 		oneyearInvTotals =0;
 		twoyearInvTotals =0;
 		above3years=0;
-		tempMap=[:];
 		
 		if(reportType=="CREDITORS"){
 			invoiceAndItemsForParty = EntityUtil.filterByCondition(invoiceslist, EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, partyId));
@@ -640,6 +639,7 @@ if(totallMonthsTotal>0){
 			
 			fstMntInvTotals=invoiceAmount;
 			totfstMntInvTotals =totfstMntInvTotals+fstMntInvTotals;
+			tempMap=[:];
 			tempMap.put("invoiceId", invoice.invoiceId);
 			tempMap.put("invoiceDate", invoice.invoiceDate);
 			tempMap.put("fstMntInvTotals", fstMntInvTotals);
@@ -659,7 +659,7 @@ if(totallMonthsTotal>0){
 				}
 				secMntInvTotals=invoiceAmount;
 				totsecMntInvTotals =totsecMntInvTotals+secMntInvTotals;
-				
+				tempMap=[:];
 				tempMap.put("invoiceId", invoice.invoiceId);
 				tempMap.put("invoiceDate", invoice.invoiceDate);
 				tempMap.put("secMntInvTotals", secMntInvTotals);
@@ -679,7 +679,7 @@ if(totallMonthsTotal>0){
 				}
 				thrdMntInvTotals=invoiceAmount;
 				totthrdMntInvTotals =totthrdMntInvTotals+thrdMntInvTotals;
-				
+				tempMap=[:];
 				tempMap.put("invoiceId", invoice.invoiceId);
 				tempMap.put("invoiceDate", invoice.invoiceDate);
 				tempMap.put("thrdMntInvTotals", thrdMntInvTotals);
@@ -699,6 +699,7 @@ if(totallMonthsTotal>0){
 				}
 				frthMntInvTotals=invoiceAmount;
 				totfrthMntInvTotals =totfrthMntInvTotals+frthMntInvTotals;
+				tempMap=[:];
 				tempMap.put("invoiceId", invoice.invoiceId);
 				tempMap.put("invoiceDate", invoice.invoiceDate);
 				tempMap.put("frthMntInvTotals", frthMntInvTotals);
@@ -719,7 +720,7 @@ if(totallMonthsTotal>0){
 				}
 				fifthMntInvTotals=invoiceAmount;
 				totfifthMntInvTotals =totfifthMntInvTotals+fifthMntInvTotals;
-				
+				tempMap=[:];
 				tempMap.put("invoiceId", invoice.invoiceId);
 				tempMap.put("invoiceDate", invoice.invoiceDate);
 				tempMap.put("fifthMntInvTotals", fifthMntInvTotals);
@@ -739,7 +740,7 @@ if(totallMonthsTotal>0){
 				}
 				oneyearInvTotals=invoiceAmount;
 				totoneyearInvTotals =totoneyearInvTotals+oneyearInvTotals;
-				
+				tempMap=[:];
 				tempMap.put("invoiceId", invoice.invoiceId);
 				tempMap.put("invoiceDate", invoice.invoiceDate);
 				tempMap.put("oneyearInvTotals", oneyearInvTotals);
@@ -760,7 +761,7 @@ if(totallMonthsTotal>0){
 					}
 					twoyearInvTotals=invoiceAmount;
 					tottwoyearInvTotals =tottwoyearInvTotals+twoyearInvTotals;
-					
+					tempMap=[:];
 					tempMap.put("invoiceId", invoice.invoiceId);
 					tempMap.put("invoiceDate", invoice.invoiceDate);
 					tempMap.put("twoyearInvTotals", twoyearInvTotals);
@@ -781,7 +782,7 @@ if(totallMonthsTotal>0){
 				}
 				above3years=invoiceAmount;
 				totabove3years=totabove3years+above3years;
-				
+				tempMap=[:];
 				tempMap.put("invoiceId", invoice.invoiceId);
 				tempMap.put("invoiceDate", invoice.invoiceDate);
 				tempMap.put("above3years", above3years);
