@@ -292,7 +292,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		//Debug.log("productCategorySelectIds====3232==========="+productCategorySelectIds);
 		List condsList = [];
 		condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productIds[0]));
-		condsList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.EQUALS, "YARN_SALE"));
+		condsList.add(EntityCondition.makeCondition("productCategoryTypeId", EntityOperator.IN, ["DC_SALE","YARN_SALE"]));
 		/*condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, invoiceDate));
 		condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 			  EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, invoiceDate)));
@@ -404,7 +404,10 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			wieverName="";
 			weaverId=eachItem.partyId;
 			psbNo="";
-			
+			packQuantity=0;
+			packets=0;
+			packQuantity=eachItem.packQuantity;
+			packets=eachItem.packets;
 			if(weaverId){
 				partyIdentification = delegator.findOne("PartyIdentification",UtilMisc.toMap("partyId", weaverId, "partyIdentificationTypeId", "PSB_NUMER"), false);
 				if(partyIdentification){
@@ -424,6 +427,8 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			newObj.put("baleQuantity",baleQty);
 			newObj.put("cottonUom",yarnUOM);
 			newObj.put("bundleWeight",bundleWeight);
+			newObj.put("Packaging",packQuantity);
+			newObj.put("packets",packets);
 			if(orderAdjList){
 				conditionList.clear();
 				conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachItem.orderItemSeqId));
