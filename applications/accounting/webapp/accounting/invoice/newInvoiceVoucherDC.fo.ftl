@@ -164,6 +164,7 @@ under the License.
 				 <fo:block text-align="center"    font-size="10pt" >CST</fo:block>
 				 </#if>
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
+				  <fo:block text-align="center"    font-size="10pt" >(${taxPercentage?if_exists}%)</fo:block>
 				</fo:table-cell>
 				</#if>
 				<#if isVatSurOrCstSur?has_content>
@@ -175,6 +176,7 @@ under the License.
 				 </#if>
 				 <fo:block text-align="center"    font-size="10pt" >Surcharge</fo:block>
 				 <fo:block text-align="center"    font-size="10pt" >Amount</fo:block>
+				  <fo:block text-align="center"    font-size="10pt" >(${taxSurchargePur?if_exists}%)</fo:block>
 				</fo:table-cell>
 				 </#if>
 				<#--<#if isExciseDuty?has_content>

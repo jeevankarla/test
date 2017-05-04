@@ -301,7 +301,8 @@ if(roID){
 	
 	isItVatOrCst="";
 	isVatSurOrCstSur="";
-	
+	taxPercentage="";
+	taxSurchargePur="";
 	int i=0;
 	for (eachList in invoiceItemList) {
 		
@@ -402,6 +403,14 @@ if(roID){
 			  /*if(eachItem.invoiceItemTypeId=="CST_SALE"){
 				  cFormAgnst=cFormAgnst+1;
 			   }*/
+			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="CST_SALE"){
+				  
+				  taxPercentage=eachItem.sourcePercentage;
+			  }
+			  if(eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
+				  
+				  taxSurchargePur=eachItem.sourcePercentage;
+			  }
 		}
 		 }
 		 invoiceItemLevelUnitListPrice.put(eachList.productId, unitPriceIncTax);
@@ -416,6 +425,8 @@ if(roID){
 	context.isItVatOrCst=isItVatOrCst;
 	//context.isExciseDuty=isExciseDuty;
 	context.isVatSurOrCstSur=isVatSurOrCstSur;
+	context.taxPercentage=taxPercentage;
+	context.taxSurchargePur=taxSurchargePur;
 	context.invoiceItemLevelUnitListPrice=invoiceItemLevelUnitListPrice;
 	context.invoiceItemLevelAdjustments = invoiceItemLevelAdjustments;
 	

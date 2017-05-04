@@ -233,6 +233,8 @@ if(roID){
 	//isExciseDuty="";
 	isVatSurOrCstSur="";
 	int i=0;
+	taxPercentage="";
+	taxSurchargePur="";
 	for (eachList in invoiceItemList) {
 		
 		 
@@ -326,6 +328,17 @@ if(roID){
 			  if(eachItem.invoiceItemTypeId=="CST_SALE"){
 				  cFormAgnst=cFormAgnst+1;
 			   }
+			 
+			  if(eachItem.invoiceItemTypeId=="VAT_SALE" || eachItem.invoiceItemTypeId=="CST_SALE"){
+				  
+				  taxPercentage=eachItem.sourcePercentage;
+			  }
+			  if(eachItem.invoiceItemTypeId=="CST_SURCHARGE" || eachItem.invoiceItemTypeId=="VAT_SURCHARGE"){
+				  
+				  taxSurchargePur=eachItem.sourcePercentage;
+			  }
+			  
+			  //Debug.log("tempMap======================="+tempMap);
 		}
 		 }
 		 
@@ -352,6 +365,8 @@ if(roID){
 	
 	
 	context.isItVatOrCst=isItVatOrCst;
+	context.taxPercentage=taxPercentage;
+	context.taxSurchargePur=taxSurchargePur;
 	//context.isExciseDuty=isExciseDuty;
 	context.isVatSurOrCstSur=isVatSurOrCstSur;
 	conditionList.clear();
