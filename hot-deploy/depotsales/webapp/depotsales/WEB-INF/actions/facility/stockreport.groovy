@@ -177,7 +177,9 @@ conditionList =[];
 	if(facilityId){
 		conditionList.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
 	}
-	conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIdsList));
+	if(shipmentIdsList){
+		conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.IN,shipmentIdsList));
+	}
 	shipmentReceiptCondition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	  shipmentReceiptList=delegator.findList("ShipmentReceiptAndItem", shipmentReceiptCondition, null, ['receiptId'], null, false);
 	
