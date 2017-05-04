@@ -6022,9 +6022,9 @@ public static Map<String, Object> getInvoiceSequence(DispatchContext dctx, Map c
 	 	
 	 	if(UtilValidate.isNotEmpty(invoiceSeqType)){
 		 	if(invoiceSeqType.equals("TAX"))
-		 		conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId", EntityOperator.NOT_EQUAL,"SALE_INV_SQUENCE"));
-		 	else if(invoiceSeqType.equals("INVOICE_SEQUENCE"))
-		 	conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId", EntityOperator.EQUALS,"SALE_INV_SQUENCE"));
+		 		conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId", EntityOperator.NOT_IN, UtilMisc.toList("SALE_INV_SQUENCE", "PUR_INV_SQUENCE")));
+		 	else 
+		 	conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId", EntityOperator.EQUALS,invoiceSeqType));
 	 	}	 	
 	 	 try{
 	 		
