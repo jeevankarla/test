@@ -450,6 +450,7 @@ public class FindServices {
      * to indicate their purpose in formulating an SQL query statement.
      */
     public static Map<String, Object> performFind(DispatchContext dctx, Map<String, ?> context) {
+    	
         String entityName = (String) context.get("entityName");
         String orderBy = (String) context.get("orderBy");
         Map<String, ?> inputFields = checkMap(context.get("inputFields"), String.class, Object.class); // Input
@@ -479,7 +480,7 @@ public class FindServices {
         if (viewSize != null && viewIndex != null) {
             maxRows = viewSize * (viewIndex + 1);
         }
-
+        Debug.log("Context============="+fieldList+"=================Entity Name=="+entityName);
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         Map<String, Object> prepareResult = null;
@@ -493,7 +494,7 @@ public class FindServices {
         }
         EntityConditionList<EntityCondition> exprList = UtilGenerics.cast(prepareResult.get("entityConditionList"));
         List<String> orderByList = checkList(prepareResult.get("orderByList"), String.class);
-
+        Debug.log("prepareResult============="+prepareResult+"=======exprList=========="+exprList);
         Map<String, Object> executeResult = null;
         try {
             executeResult = dispatcher.runSync("executeFind", UtilMisc.toMap("entityName", entityName, "orderByList", orderByList,
@@ -508,7 +509,7 @@ public class FindServices {
         if (executeResult.get("listIt") == null) {
             if (Debug.verboseOn()) Debug.logVerbose("No list iterator found for query string + [" + prepareResult.get("queryString") + "]", module);
         }
-
+        Debug.log("executeResult============="+executeResult+"=================");
         Map<String, Object> results = ServiceUtil.returnSuccess();
         results.put("listIt", executeResult.get("listIt"));
         results.put("listSize", executeResult.get("listSize"));

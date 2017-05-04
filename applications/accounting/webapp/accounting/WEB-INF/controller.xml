@@ -4420,7 +4420,23 @@ under the License.
         <response name="success" type="view" value="BankContraEntry" />
         <response name="error" type="view" value="BankContraEntry"/>
     </request-map>
-    
+    <!--  for Bulkprinting tab-->
+    <request-map uri="bulkPrinting">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BulkPrinting"/>
+    </request-map>
+    <request-map uri="bulkFindInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BulkFindInvoice"/>
+    </request-map>
+    <request-map uri="bulkFindPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BulkFindPayments"/>
+    </request-map>
+    <request-map uri="bulkPrintCheque">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BulkPrintCheque"/>
+    </request-map>
 
     
     <view-map name="LookupEmployeeName" type="screen" page="component://humanres/widget/LookupScreens.xml#LookupEmployeeName"/>
@@ -5026,6 +5042,10 @@ under the License.
    <view-map name="PrintBankAccountDetails" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintBankAccountDetails" content-type="application/pdf" encoding="none"/>
    <view-map name="PrintChequeBouncingDetails" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintChequeBouncingDetailsPdf" content-type="application/pdf" encoding="none"/>
    <view-map name="AdvanceOutstandingDetails" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#AdvanceOutstandingDetailsPdf" content-type="application/pdf" encoding="none"/>
+   <view-map name="BulkPrinting" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BulkPrinting" />
+   <view-map name="BulkFindInvoice" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BulkFindInvoice" />
+   <view-map name="BulkFindPayments" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BulkFindPayments" />
+   <view-map name="BulkPrintCheque" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#BulkPrintCheque" />
    
    
    <view-map name="manufacturingAccntReportPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#manufacturingAccntReportPDF" content-type="application/pdf" encoding="none"/>

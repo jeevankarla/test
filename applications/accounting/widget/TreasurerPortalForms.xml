@@ -3579,5 +3579,162 @@ under the License.
         <field name="hideSearch"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form> 
+        <form name="FindInvoiceBulk" type="single" target="bulkFindInvoice" header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	<!-- <entity-condition entity-name="Invoice" list="invoices">
+                <condition-list combine="or">
+                    <condition-expr field-name="statusId" operator="equals" value="INVOICE_READY"/>
+                    <condition-expr field-name="statusId" operator="equals" value="INVOICE_PAID"/>
+                </condition-list>
+                <order-by field-name="statusId"/>
+            </entity-condition> -->
+            <entity-condition entity-name="InvoiceType" list="invoiceTypes">
+                <condition-list combine="or">
+                    <condition-expr field-name="invoiceTypeId" operator="equals" value="PURCHASE_INVOICE"/>
+                    <condition-expr field-name="invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
+                </condition-list>
+                <order-by field-name="invoiceTypeId"/>
+            </entity-condition>
+        </actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="partyId"><hidden value="${parameters.ownerPartyId}"/></field>
+        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <field name="invoiceTypeId">
+            <drop-down allow-empty="false">
+            	 <list-options list-name="invoiceTypes" key-name="invoiceTypeId" description="${description}"/>
+            </drop-down>
+        </field> 
+<!--         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field> -->
+<!--         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field> -->
+<!--         <field position="1" name="amount"><text/></field> -->
+<!--         <field position="1" name="tallyRefNo" title="Tally Reference No"><text/></field> -->
+<!--         <field name="paymentRefNum"><text-find ignore-case="true"/></field> -->
+        <!--<field name="paymentGatewayResponseId"><text/></field>-->
+        <field name="invoiceDate_fld0_value" title="From Date"><date-time type="date"/> </field>
+        <field name="invoiceDate_fld01_value" title="Thru Date"><date-time type="date" /></field>
+        <field name="invoiceDate_fld0_op"><hidden value="greaterThan"/></field>
+        <field name="invoiceDate_fld1_op"><hidden value="opLessThan"/></field>
+       <!--  <field name="statusId"><hidden value="INVOICE_PAID"/></field>
+        <field name="statusId"><hidden value="INVOICE_READY"/></field> -->
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="PaymentsBulk" type="single" target="bulkFindPayments"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        	<entity-condition entity-name="Invoice" list="invoices">
+                <condition-list combine="or">
+                    <condition-expr field-name="statusId" operator="equals" value="INVOICE_READY"/>
+                    <condition-expr field-name="statusId" operator="equals" value="INVOICE_PAID"/>
+                </condition-list>
+                <order-by field-name="statusId"/>
+            </entity-condition>
+        </actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <!--  <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>  -->
+    	<!-- <field name="comments"><text-find ignore-case="true"/></field> -->
+        <field name="invoiceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${invoiceTypeId}" entity-name="Invoice" key-field-name="invoiceTypeId">
+	                    <entity-constraint name="invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
+	                    <entity-constraint name="invoiceTypeId" operator="equals" value="PURCHASE_INVOICE"/>
+	                    <entity-order-by field-name="invoiceTypeId"/>
+	                </entity-options>
+            </drop-down>
+        </field> 
+<!--         <field name="paymentMethodTypeId"> -->
+<!--             <drop-down allow-empty="true"> -->
+<!--                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/> -->
+<!--             </drop-down> -->
+<!--         </field>         -->
+        <!-- <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+            <drop-down allow-empty="false">
+                <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
+            </drop-down>
+        </field> -->
+<!--         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1"> -->
+<!--             <drop-down allow-empty="true"> -->
+<!--                 <entity-options description="${description}" entity-name="PaymentType"> -->
+<!--                     <entity-order-by field-name="description"/> -->
+<!--                 </entity-options> -->
+<!--             </drop-down> -->
+<!--         </field> -->
+<!--         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2"> -->
+<!--             <drop-down allow-empty="true"> -->
+<!--                 <entity-options description="${description}" entity-name="StatusItem"> -->
+<!--                     <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/> -->
+<!--                     <entity-order-by field-name="description"/> -->
+<!--                 </entity-options> -->
+<!--             </drop-down> -->
+<!--         </field> -->
+<!--         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field> -->
+<!--         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field> -->
+<!--         <field position="1" name="amount"><text/></field> -->
+<!--         <field position="1" name="tallyRefNo" title="Tally Reference No"><text/></field> -->
+<!--         <field name="paymentRefNum"><text-find ignore-case="true"/></field> -->
+        <!--<field name="paymentGatewayResponseId"><text/></field>-->
+        <field name="FromDate"><date-find type="date" default-option-from="sameDay"/></field>
+        <field name="ThruDate" title="Thru Date"><date-find type="date" default-option-from="sameDay"/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="PrintChequeBulk" type="single" target="bulkPrintCheque"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        	<entity-condition entity-name="Invoice" list="invoices">
+                <condition-list combine="or">
+                    <condition-expr field-name="statusId" operator="equals" value="INVOICE_READY"/>
+                    <condition-expr field-name="statusId" operator="equals" value="INVOICE_PAID"/>
+                </condition-list>
+                <order-by field-name="statusId"/>
+            </entity-condition>
+        </actions>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <!--  <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>  -->
+    	<!-- <field name="comments"><text-find ignore-case="true"/></field> -->
+        <field name="invoiceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${invoiceTypeId}" entity-name="Invoice" key-field-name="invoiceId">
+	                    <entity-constraint name="invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
+	                    <entity-constraint name="invoiceTypeId" operator="equals" value="PURCHASE_INVOICE"/>
+	                    <entity-order-by field-name="invoiceTypeId"/>
+	                </entity-options>
+            </drop-down>
+        </field> 
+<!--         <field name="paymentMethodTypeId"> -->
+<!--             <drop-down allow-empty="true"> -->
+<!--                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/> -->
+<!--             </drop-down> -->
+<!--         </field>         -->
+        <!-- <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
+            <drop-down allow-empty="false">
+                <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
+            </drop-down>
+        </field> -->
+<!--         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1"> -->
+<!--             <drop-down allow-empty="true"> -->
+<!--                 <entity-options description="${description}" entity-name="PaymentType"> -->
+<!--                     <entity-order-by field-name="description"/> -->
+<!--                 </entity-options> -->
+<!--             </drop-down> -->
+<!--         </field> -->
+<!--         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2"> -->
+<!--             <drop-down allow-empty="true"> -->
+<!--                 <entity-options description="${description}" entity-name="StatusItem"> -->
+<!--                     <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/> -->
+<!--                     <entity-order-by field-name="description"/> -->
+<!--                 </entity-options> -->
+<!--             </drop-down> -->
+<!--         </field> -->
+<!--         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field> -->
+<!--         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field> -->
+<!--         <field position="1" name="amount"><text/></field> -->
+<!--         <field position="1" name="tallyRefNo" title="Tally Reference No"><text/></field> -->
+<!--         <field name="paymentRefNum"><text-find ignore-case="true"/></field> -->
+        <!--<field name="paymentGatewayResponseId"><text/></field>-->
+        <field name="FromDate"><date-find type="date" default-option-from="sameDay"/></field>
+        <field name="ThruDate" title="Thru Date"><date-find type="date" default-option-from="sameDay"/></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
     
 </forms>
