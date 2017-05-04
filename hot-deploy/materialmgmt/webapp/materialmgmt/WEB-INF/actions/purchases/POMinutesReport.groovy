@@ -216,7 +216,8 @@ context.scheme = scheme;
 					partyId=orderRoleAgencyList[0].partyId;
 				}
 			}
-			billFromPartyDetails = EntityUtil.filterByCondition(orderRoleList, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			//billFromPartyDetails = EntityUtil.filterByCondition(orderRoleList, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+			billFromPartyDetails = EntityUtil.filterByCondition(orderRoleList, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_TO_CUSTOMER"));
 			billFromPartyDetails = EntityUtil.getFirst(billFromPartyDetails);
 			boPartyId = billFromPartyDetails.partyId;
 			partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , boPartyId)  , null, null, null, false );
