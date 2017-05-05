@@ -2674,11 +2674,11 @@ under the License.
                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>        
-         <field name="finAccountName" title="Bank Name" position="2">
+        <!--  <field name="finAccountName" title="Bank Name" position="2">
             <drop-down allow-empty="true">
                 <list-options list-name="finAccountNames" key-name="finAccountId" description="${finAccountName}"/>
             </drop-down>
-        </field>
+        </field> -->
         <!-- <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="false">
                 <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
@@ -2824,11 +2824,11 @@ under the License.
                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="finAccountName" title="Bank Name" position="2">
+        <!-- <field name="finAccountName" title="Bank Name" position="2">
             <drop-down allow-empty="true">
                 <list-options list-name="finAccountList" key-name="finAccountTypeId" description="${finAccountName}"/>
             </drop-down>
-        </field>        
+        </field> -->        
         <!-- <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="false">
                 <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
