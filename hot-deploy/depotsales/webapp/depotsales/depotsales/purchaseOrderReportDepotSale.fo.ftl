@@ -476,8 +476,6 @@ under the License.
          </#if>  
         </fo:block>
 		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" >&#160;&#160;----------------------------------------------------------------------------------------- </fo:block>
-        <fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" > &#160;&#160;
-        </fo:block>	        
 	</fo:flow>
 			 </fo:page-sequence>
 			 <#else>
