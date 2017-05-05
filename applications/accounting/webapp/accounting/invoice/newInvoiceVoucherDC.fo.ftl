@@ -63,6 +63,7 @@ under the License.
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"   font-weight="bold" font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
+				<fo:block text-align="left" font-weight="bold" font-size="10pt" >Tin No : ${CustomerTinNo?if_exists}</fo:block>
 				<#--<fo:block text-align="left" font-weight="bold" font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>-->
 				</fo:table-cell>
 				<fo:table-cell >

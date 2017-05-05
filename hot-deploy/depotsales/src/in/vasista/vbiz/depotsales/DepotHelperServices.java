@@ -6008,6 +6008,37 @@ public static Map<String, Object> effectPriceDifferenceInvoices(DispatchContext 
 
 
 
+public static Map<String, Object> getInvoiceSequence(DispatchContext dctx, Map context) {
+	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+	LocalDispatcher dispatcher = dctx.getDispatcher();
+	Map<String, Object> result = ServiceUtil.returnSuccess();
+	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	
+	String invoiceId = (String) context.get("invoiceId");
+	String invoiceSeqType = (String) context.get("invoiceSeqType");
+	List conditionList = FastList.newInstance();
+	 List<GenericValue> billOfSaleInvoiceSequence = null;
+	 	conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+	 	
+	 	if(UtilValidate.isNotEmpty(invoiceSeqType)){
+		 	if(invoiceSeqType.equals("TAX"))
+		 		conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId", EntityOperator.NOT_IN, UtilMisc.toList("SALE_INV_SQUENCE", "PUR_INV_SQUENCE")));
+		 	else 
+		 	conditionList.add(EntityCondition.makeCondition("billOfSaleTypeId", EntityOperator.EQUALS,invoiceSeqType));
+	 	}	 	
+	 	 try{
+	 		
+	 		billOfSaleInvoiceSequence = delegator.findList("BillOfSaleInvoiceSequence", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceSequence"), null, null, false);
+	 	 
+	 	 }catch(GenericEntityException e){
+					Debug.logError(e, "Failed to retrive BillOfSaleInvoiceSequence ", module);
+			}
+	
+  
+  result.put("sequenceList",billOfSaleInvoiceSequence);
+ 
+ return result;
+}
 
 
 

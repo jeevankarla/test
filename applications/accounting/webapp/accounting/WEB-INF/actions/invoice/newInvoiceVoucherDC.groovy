@@ -32,14 +32,26 @@ import java.math.RoundingMode;
 
 invoiceId = parameters.invoiceId;
 
-billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
-if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
-	invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
-	invoiceSequence = invoiceSeqDetails.invoiceSequence;
-	context.invoiceId = invoiceSequence;
-}else{
-	context.invoiceId = invoiceId;
-}
+//billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+
+
+inputCtx = [:];
+inputCtx.put("userLogin",userLogin);
+inputCtx.put("invoiceId", invoiceId);
+inputCtx.put("invoiceSeqType", "SALE_INV_SQUENCE");
+try{
+ billOfSalesInvSeqs = dispatcher.runSync("getInvoiceSequence", inputCtx);
+ //Debug.log("resultCtx======1111111111============"+billOfSalesInvSeqs.sequenceList);
+ if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+	 invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs.sequenceList);
+	 invoiceSequence = invoiceSeqDetails.invoiceSequence;
+	 context.invoiceId = invoiceSequence;
+ }else{
+	 context.invoiceId = invoiceId;
+ }
+  //Debug.log("invoiceId=================="+invoiceId);
+}catch(Exception e){}
+
 
 int cFormAgnst=0;
 
@@ -84,17 +96,26 @@ if(roID){
 	
 	
 	context.isDepot = isDepot;
-	
 	passNo = "";
+	CustomerTinNo="";
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-	conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
+	//conditionList.add(EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
 	cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 	PartyIdentificationList = delegator.findList("PartyIdentification", cond, null, null, null, false);
 	if(PartyIdentificationList){
-	passNo = PartyIdentificationList[0].get("idValue");
+		partyTinNoDetails = EntityUtil.filterByCondition(PartyIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "TIN_NUMBER"));
 	}
-	
+	if(partyTinNoDetails){
+		partyTinNoDetails = EntityUtil.getFirst(partyTinNoDetails);
+		CustomerTinNo=partyTinNoDetails.idValue;
+	}
+	if(PartyIdentificationList){
+		partyPassNoDetails = EntityUtil.filterByCondition(PartyIdentificationList, EntityCondition.makeCondition("partyIdentificationTypeId", EntityOperator.EQUALS, "PSB_NUMER"));
+		if(partyPassNoDetails)
+			partyPassNoDetails = EntityUtil.getFirst(partyPassNoDetails);
+			passNo = partyPassNoDetails.idValue;
+	}
 	poNumber = "";
 	orderId  = "";
 	shipmentDate = "";
@@ -170,7 +191,7 @@ if(roID){
 	context.estimatedShipCost = estimatedShipCost;
 	context.passNo = passNo;
 	context.estimatedShipDate = estimatedShipDate;
-	
+	context.CustomerTinNo = CustomerTinNo;
 	
 	
 	conditionList = [];
@@ -217,10 +238,6 @@ if(roID){
 		
 		
 	}
-	
-	
-	
-	
 	
 	
 	
