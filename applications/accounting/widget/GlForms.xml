@@ -65,6 +65,7 @@ under the License.
         <field name="fromDate" position="2"><date-time/></field>
         <field name="thruDate" position="1"><date-time/></field>
         <field name="performSearch" position="1"><hidden value="Y"/></field>
+         <field name="costCenterId" position="1"><hidden value="${parameters.ownerPartyId}"/></field>
         <field name="searchButton" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 
@@ -73,6 +74,7 @@ under the License.
         <actions>
             <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransList" distinct="true">
                 <condition-list>
+               		<condition-expr field-name="costCenterId" operator="equals" from-field="parameters.costCenterId"/>	
                     <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
                     <condition-expr field-name="acctgTransTypeId" operator="equals" from-field="parameters.acctgTransTypeId" ignore-if-empty="true"/>
                     <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
