@@ -4482,11 +4482,23 @@
             	<set field="titleProperty" value="View Deposit Transactions"/>
                   <set field="tabButtonItem" value="FindDepositAccount"/>
                  <set field="tabButtonItem2" value="FindDepositAccount"/>
+                 <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
             </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
+                        	<!-- <condition>
+                        		<if-compare operator="equals" value="headOfficeTras" field="parameters.reportTypeFlag"/>
+                        	</condition>
+                            <widgets>
+                                <screenlet title="New Incoming Deposit">
+                                    <include-form name="NewBankGuaranteeReceipt" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                            	<label style="h3" text="${uiLabelMap.newPaymentScreenError}"/>
+                            </fail-widgets> -->
                             <widgets>
 								<screenlet title="List Deposit Transactions">
 									<section>

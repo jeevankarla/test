@@ -55,7 +55,7 @@ import org.ofbiz.party.party.PartyHelper;
 reportTypeFlag = parameters.reportTypeFlag;
 interUnitFlag = parameters.interUnitFlag;
 finAccountTransList = [];
-if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque"){
+if(UtilValidate.isNotEmpty(reportTypeFlag) && reportTypeFlag == "depositCheque" && reportTypeFlag == "headOfficeTras"){
 	//finAccountTransList = [];
 	finAccountId = parameters.finAccountId;
 	if(UtilValidate.isNotEmpty(finAccountId)){
