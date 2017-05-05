@@ -625,7 +625,9 @@ function setOrgPartyId() {
 					<td width="30%"> Employee Advances And Sub Schedule</td>
 					<td width="10%">From<input  type="text" size="18pt" id="EMPAdvSehFromDate" readonly  name="fromDate"/></td>
 				    <td width="10%">To<input  type="text" size="18pt" id="EMPAdvSehThruDate" readonly  name="thruDate"/></td>
-  					<td width="10%">Loan Type :<select name='finAccountTypeId' id ="finAccountTypeId">	
+  					<td width="10%">Loan Type :<select name='finAccountTypeId' id ="finAccountTypeId">
+  					    <option value=""></option>
+  					    <option value="ALL">ALL</option>	
 						<#list FinAccountTypeList as finAcunt> 	
 							<option value='${finAcunt.finAccountTypeId}'>${finAcunt.description?if_exists}</option>
               		   </#list>
