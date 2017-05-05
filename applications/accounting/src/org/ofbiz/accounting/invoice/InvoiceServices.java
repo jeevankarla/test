@@ -5892,6 +5892,329 @@ public class InvoiceServices {
 	}
 	
 	
+	public static Map<String, Object> createTaxInvoiceSequenceNew(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();              
+        String invoiceId = (String) context.get("invoiceId");
+        Locale locale = (Locale) context.get("locale");        
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericValue invoiceDetails = null;
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        GenericValue tenantConfigEnableTaxInvSeq;
+        
+       Debug.log("invoiceId======ATTR======="+invoiceId);
+       
+       String invoiceTaxType = null;
+        
+        try {
+        	
+        	Boolean enableTaxInvSeq  = Boolean.FALSE;
+    	    tenantConfigEnableTaxInvSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","LMS", "propertyName","enableTaxInvSeq"), false);
+       		if (UtilValidate.isNotEmpty(tenantConfigEnableTaxInvSeq) && (tenantConfigEnableTaxInvSeq.getString("propertyValue")).equals("Y")) {
+       			enableTaxInvSeq = Boolean.TRUE;
+       		}
+       		else{
+       			tenantConfigEnableTaxInvSeq = delegator.findOne("TenantConfiguration", UtilMisc.toMap("propertyTypeEnumId","INVOICE_SQUENCE", "propertyName","enableInvoiceSequence"), false);
+	       		if (UtilValidate.isNotEmpty(tenantConfigEnableTaxInvSeq) && (tenantConfigEnableTaxInvSeq.getString("propertyValue")).equals("Y")) {
+	       			enableTaxInvSeq = Boolean.TRUE;
+	       		}
+       		}
+       		
+       		
+       		List condListTax = FastList.newInstance();
+       		condListTax.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+   			List<GenericValue> InvoiceAttributeList =null;
+   			try{
+   				InvoiceAttributeList = delegator.findList("InvoiceAttribute", EntityCondition.makeCondition(condListTax, EntityOperator.AND), null, null, null, false);
+   			    
+   			     
+   				
+   				condListTax.clear();
+			condListTax.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			condListTax.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "saleTitleTransferEnumId"));
+			EntityCondition condExprTax = EntityCondition.makeCondition(condListTax, EntityOperator.AND);
+			InvoiceAttributeList = EntityUtil.filterByCondition(InvoiceAttributeList, condExprTax);
+			
+			if(UtilValidate.isNotEmpty(InvoiceAttributeList))
+				invoiceTaxType = (EntityUtil.getFirst(InvoiceAttributeList)).getString("attrValue");
+				
+			if(UtilValidate.isEmpty(InvoiceAttributeList)){	
+			condListTax.clear();	
+			condListTax.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			condListTax.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "purchaseTitleTransferEnumId"));
+			EntityCondition condExprTax1 = EntityCondition.makeCondition(condListTax, EntityOperator.AND);
+			InvoiceAttributeList = EntityUtil.filterByCondition(InvoiceAttributeList, condExprTax1);
+			
+			if(UtilValidate.isNotEmpty(InvoiceAttributeList))
+				invoiceTaxType = (EntityUtil.getFirst(InvoiceAttributeList)).getString("attrValue");
+				
+			}
+   			
+   			
+   			
+   			} catch (Exception e) {
+   	   		  	Debug.logError(e, "Error in fetching InvoiceAttribute ", module);
+   			}
+   			
+   			
+        	 Debug.log("invoiceTaxType============="+invoiceTaxType);
+
+       		
+         	 Debug.log("enableTaxInvSeq============="+enableTaxInvSeq);
+       		Timestamp invDate=null;
+       		String purPoseTypeId = "";
+       		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId) && UtilValidate.isNotEmpty(invoiceTaxType)){
+       			List<GenericValue> invoiceItems = delegator.findList("Invoice", EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId), null, null, null, false);
+       			List invoiceItemTypeIds = EntityUtil.getFieldListFromEntityList(invoiceItems, "invoiceTypeId", true);
+       			if(UtilValidate.isNotEmpty((EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate"))){
+       			    invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("dueDate");
+       			}    
+       			if(UtilValidate.isEmpty(invDate)){
+       				invDate = (EntityUtil.getFirst(invoiceItems)).getTimestamp("invoiceDate");
+       			}
+       			if(UtilValidate.isNotEmpty((EntityUtil.getFirst(invoiceItems)).getString("purposeTypeId"))){
+       				purPoseTypeId = (EntityUtil.getFirst(invoiceItems)).getString("purposeTypeId");
+       				purPoseTypeId = purPoseTypeId.trim();
+       			}
+       			
+       		    Debug.log("invDate============="+invDate);
+       			
+       			String partyId ="";
+       			String prefix ="";
+       			String orderId = "";
+       			String shipmentId = "";
+       			GenericValue shipments = null;
+       			List<GenericValue> orderAssoc = FastList.newInstance();
+       			String invoiceParty = (EntityUtil.getFirst(invoiceItems)).getString("partyIdFrom");
+       			GenericValue obPartyDetails = delegator.findOne("Party", UtilMisc.toMap("partyId", invoiceParty), false);
+                String externalId = obPartyDetails.getString("externalId");
+       			shipmentId = (EntityUtil.getFirst(invoiceItems)).getString("shipmentId");
+       			String indentTypeId = "D";
+       			String boSequnce = "";
+       			String roSequnce ="";
+       			//if(UtilValidate.isNotEmpty(shipmentId)){
+	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("PURCHASE_INVOICE")){
+	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("costCenterId");
+	       				
+	       			//=======================New Sequence from Role========================
+		       			 try {
+		 					List conditions = FastList.newInstance();
+		 					conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		 					conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER_AGENT"));
+		 			    	List <GenericValue> InvoiceRole = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+		 			    	if(UtilValidate.isNotEmpty(InvoiceRole)){
+		 			    		partyId = (EntityUtil.getFirst(InvoiceRole)).getString("partyId");
+		 			    		
+		 			    	}
+		 			 } catch (Exception e) {
+		 				Debug.logError("Problem in Invoice Role", module);
+		 			 }
+      				//=========================================================================
+	       				
+	        			shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
+	        			if(UtilValidate.isNotEmpty(shipments)){
+	        				orderId = shipments.getString("primaryOrderId");
+	        			}
+	        			//Debug.log("invDate============="+invDate);
+	        			try{
+	           			orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+		           			if(UtilValidate.isNotEmpty(orderAssoc)){
+		           				orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+		           			}
+	        			}catch(Exception e){
+	        				Debug.logError("Problem in OrderAssoc", module);
+	        			}
+	           			
+	                	prefix="PI";
+	       			}
+	       			
+	       			//Debug.log("prefix============="+prefix);
+	       			
+	       			if(((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
+	       				partyId = (EntityUtil.getFirst(invoiceItems)).getString("costCenterId");
+	       				
+	       				
+	       				//=======================New Sequence from Role========================
+	       				
+			       			 try {
+			 					List conditions = FastList.newInstance();
+			 					conditions.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+			 					conditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "CUSTOMER_AGENT"));
+			 			    	List <GenericValue> InvoiceRole = delegator.findList("InvoiceRole", EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false);
+			 			    	if(UtilValidate.isNotEmpty(InvoiceRole)){
+			 			    		partyId = (EntityUtil.getFirst(InvoiceRole)).getString("partyId");
+			 			    		
+			 			    	}
+			 			 } catch (Exception e) {
+			 				Debug.logError("Problem in Invoice Role", module);
+			 			 }
+	       				
+	       				
+	       				//=========================================================================
+	       				
+	       				shipments= delegator.findOne("Shipment",UtilMisc.toMap("shipmentId", shipmentId), true);
+	       				if(UtilValidate.isNotEmpty(shipments)){
+	       					orderId = shipments.getString("primaryOrderId");
+	       				}
+	        			//Debug.log("orderId============="+orderId);
+	        			try{
+	        				orderAssoc = delegator.findList("OrderAssoc", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("toOrderId"), null, null, false);
+		                	if(UtilValidate.isNotEmpty(orderAssoc)){
+		                		orderId = EntityUtil.getFirst(orderAssoc).getString("toOrderId");
+		       				}
+	        			}catch(Exception e){
+	        				Debug.logError("Problem in OrderAssoc", module);
+	        			}
+	                	prefix="SI";
+	       			}
+	       			
+	       			
+	       			//=====================================Get Tax Type=====================
+	       			
+	       			
+	       			
+	       			
+	       			
+	       			//Debug.log("prefix============="+prefix);
+	       			if(UtilValidate.isNotEmpty(shipmentId)){
+	       				
+	      				if(UtilValidate.isEmpty(orderAssoc) && ((EntityUtil.getFirst(invoiceItems)).getString("invoiceTypeId")).equals("SALES_INVOICE")){
+	       					
+	       				    List condList = FastList.newInstance();
+			                condList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
+							EntityCondition condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+							List<GenericValue> OrderHeader = delegator.findList("OrderHeader", condExpr1, null, null, null, false);
+	       					
+							orderId = (EntityUtil.getFirst(OrderHeader)).getString("orderId");
+							
+						    condList.clear();
+			                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+							EntityCondition condExpr2 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+							List<GenericValue> orderRolesDetails = delegator.findList("OrderRole", condExpr2, null, null, null, false);
+			                if(UtilValidate.isNotEmpty(orderRolesDetails)){
+			                	indentTypeId = "O";
+			                }
+	       					
+	       				}else{
+			       		    List condList = FastList.newInstance();
+			                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+			                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+							EntityCondition condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+							List<GenericValue> orderRolesDetails = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+			                if(UtilValidate.isNotEmpty(orderRolesDetails)){
+			                	indentTypeId = "O";
+			                }
+	       				}
+	       				
+	       			    List condList = FastList.newInstance();
+		                condList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
+		                condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "ON_BEHALF_OF"));
+						EntityCondition condExpr1 = EntityCondition.makeCondition(condList, EntityOperator.AND);
+						List<GenericValue> orderRolesDetails = delegator.findList("OrderRole", condExpr1, null, null, null, false);
+		                if(UtilValidate.isNotEmpty(orderRolesDetails)){
+		                	indentTypeId = "O";
+		                }
+	                
+	                //Debug.log("indentTypeId============="+indentTypeId);
+	       			GenericValue partyBOs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyId), false);
+	                boSequnce = partyBOs.getString("externalId");
+	                
+	                List conditionList = FastList.newInstance();
+	     			conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+	     			conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT" ));
+	     	        conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	     			conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(invDate)));
+	    			conditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+	    			EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.getDayStart(invDate))));
+	    			    EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);  	
+	                
+	       			List<GenericValue> partyRelations = delegator.findList("PartyRelationship", condition, null, null, null, false);
+	       		    String partyIdFrom = EntityUtil.getFirst(partyRelations).getString("partyIdFrom");
+	    			GenericValue partyROs = delegator.findOne("Party", UtilMisc.toMap("partyId", partyIdFrom), false);
+	                roSequnce = partyROs.getString("externalId");
+       			}
+	       			
+	       			//Debug.log("roSequnce============="+roSequnce);
+       			Map finYearContext = FastMap.newInstance();
+   				finYearContext.put("onlyIncludePeriodTypeIdList", UtilMisc.toList("FISCAL_YEAR"));
+   				finYearContext.put("organizationPartyId", "Company");
+   				finYearContext.put("userLogin", userLogin);
+   				finYearContext.put("findDate", invDate);
+   				finYearContext.put("excludeNoOrganizationPeriods", "Y");
+   				List customTimePeriodList = FastList.newInstance();
+   				Map resultCtx = FastMap.newInstance();
+   				try{
+   					resultCtx = dispatcher.runSync("findCustomTimePeriods", finYearContext);
+   					if(ServiceUtil.isError(resultCtx)){
+   						Debug.logError("Problem in fetching financial year ", module);
+   						return ServiceUtil.returnError("Problem in fetching financial year ");
+   					}
+   				}catch(GenericServiceException e){
+   					Debug.logError(e, module);
+   					return ServiceUtil.returnError(e.getMessage());
+   				}
+   				customTimePeriodList = (List)resultCtx.get("customTimePeriodList");
+   				String finYearId = "";
+   				GenericValue customTimePeriod =null;
+   				if(UtilValidate.isNotEmpty(customTimePeriodList)){
+   					customTimePeriod = EntityUtil.getFirst(customTimePeriodList);
+   					finYearId = (String)customTimePeriod.get("customTimePeriodId");
+   				}
+       			
+       			if(invoiceTaxType.equals("NO_E2_FORM")){
+       				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+       				
+       				//Debug.log("billOfSale============="+billOfSale);
+       				
+    				billOfSale.put("billOfSaleTypeId", "VAT_INV_SEQ");
+    				billOfSale.put("invoiceId", invoiceId);
+    				billOfSale.put("finYearId", finYearId);
+    				billOfSale.put("partyId", partyId);
+    				billOfSale.put("invoiceDueDate", invDate);
+                    if(UtilValidate.isNotEmpty(purPoseTypeId) && (purPoseTypeId.equals("DIES_AND_CHEM_SALE") || purPoseTypeId.equals("DEPOT_DIES_CHEM_SALE")))
+                     billOfSale.put("productCategoryId", "DC");
+                    else	
+                     billOfSale.put("productCategoryId", "Y");
+    				delegator.setNextSubSeqId(billOfSale, "sequenceId", 6, 1);
+    				billOfSale.put("indentTypeId",indentTypeId);
+    	            delegator.create(billOfSale);
+		            String sequenceId = (String) billOfSale.get("sequenceId");
+		            String productCategoryId = (String) billOfSale.get("productCategoryId");
+    				billOfSale.put("invoiceSequence", prefix+"/"+roSequnce+"/"+"VAT"+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
+    				delegator.createOrStore(billOfSale); 
+   			    }
+   			    if(!invoiceTaxType.equals("NO_E2_FORM")){
+       				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
+       				
+       				//Debug.log("billOfSale===sale=========="+billOfSale);
+    				billOfSale.put("billOfSaleTypeId", "CST_INV_SEQ");
+    				billOfSale.put("invoiceId", invoiceId);
+    				billOfSale.put("partyId", partyId);
+    				billOfSale.put("finYearId", finYearId);
+    				billOfSale.put("invoiceDueDate", invDate);
+    				if(UtilValidate.isNotEmpty(purPoseTypeId) && (purPoseTypeId.equals("DIES_AND_CHEM_SALE") || purPoseTypeId.equals("DEPOT_DIES_CHEM_SALE")))
+                    billOfSale.put("productCategoryId", "DC");
+                    else	
+                    billOfSale.put("productCategoryId", "Y");
+    				delegator.setNextSubSeqId(billOfSale, "sequenceId", 6, 1);
+    				billOfSale.put("indentTypeId",indentTypeId);
+    	            delegator.create(billOfSale);
+		            String sequenceId = (String) billOfSale.get("sequenceId");
+		            String productCategoryId = (String) billOfSale.get("productCategoryId");
+    				billOfSale.put("invoiceSequence", prefix+"/"+roSequnce+"/"+"CST"+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
+    				delegator.createOrStore(billOfSale);
+   			   }
+       			
+       		}
+        }catch(Exception e){
+        	Debug.logError(e, e.toString(), module);
+        	return ServiceUtil.returnError(e.toString());
+        }
+        return result;
+	}
+	
+	
 	
 	public static Map<String, Object> createCreditNoteOrDebitNoteForInvoice(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
