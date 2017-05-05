@@ -31,14 +31,21 @@ import org.ofbiz.service.ServiceUtil;
 
 
 invoiceId = parameters.invoiceId;
-billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
-if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
-	invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
-	invoiceSequence = invoiceSeqDetails.invoiceSequence;
-	context.invoiceId = invoiceSequence;
-}else{
-	context.invoiceId = invoiceId;
-}
+//billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+inputCtx = [:];
+inputCtx.put("userLogin",userLogin);
+inputCtx.put("invoiceId", invoiceId);
+inputCtx.put("invoiceSeqType", "SALE_INV_SQUENCE");
+try{
+ billOfSalesInvSeqs = dispatcher.runSync("getInvoiceSequence", inputCtx);
+ if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+	 invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs.sequenceList);
+	 invoiceSequence = invoiceSeqDetails.invoiceSequence;
+	 context.invoiceId = invoiceSequence;
+ }else{
+	 context.invoiceId = invoiceId;
+ }
+}catch(Exception e){}
 invoiceList = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 partyId = invoiceList.get("partyId");
 partyIdFrom=invoiceList.get("costCenterId");

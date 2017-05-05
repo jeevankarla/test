@@ -19,7 +19,6 @@ import org.ofbiz.base.util.UtilNumber;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.ofbiz.party.party.PartyHelper;
-
 import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.party.contact.ContactMechWorker;
 
@@ -31,14 +30,21 @@ import org.ofbiz.service.ServiceUtil;
 
 invoiceId = parameters.invoiceId;
 
-billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
-if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
-	invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
-	invoiceSequence = invoiceSeqDetails.invoiceSequence;
-	context.invoiceId = invoiceSequence;
-}else{
-	context.invoiceId = invoiceId;
-}
+//billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+inputCtx = [:];
+inputCtx.put("userLogin",userLogin);
+inputCtx.put("invoiceId", invoiceId);
+inputCtx.put("invoiceSeqType", "SALE_INV_SQUENCE");
+try{
+ billOfSalesInvSeqs = dispatcher.runSync("getInvoiceSequence", inputCtx);
+ if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+	 invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs.sequenceList);
+	 invoiceSequence = invoiceSeqDetails.invoiceSequence;
+	 context.invoiceId = invoiceSequence;
+ }else{
+	 context.invoiceId = invoiceId;
+ }
+}catch(Exception e){}
 
 int cFormAgnst=0;
 

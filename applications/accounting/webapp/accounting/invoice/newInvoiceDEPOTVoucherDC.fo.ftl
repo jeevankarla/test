@@ -64,6 +64,7 @@ under the License.
 				<#list finalAddresList as eachDetail>
 				<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
 				</#list>
+				<fo:block text-align="left" font-weight="bold" font-size="10pt" >Tin No : ${CustomerTinNo?if_exists}</fo:block>
 				<#--<fo:block text-align="left"  font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>-->
 				</fo:table-cell>
 				<fo:table-cell >
@@ -673,7 +674,7 @@ under the License.
 		       	</fo:table>
 	       </fo:block>
       	
-              <fo:block text-align="left" font-weight="bold"    font-size="10pt" >TERMS &amp; CONDITIONS:</fo:block>
+              <#--<fo:block text-align="left" font-weight="bold"    font-size="10pt" >TERMS &amp; CONDITIONS:</fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * All payment  should be made by crossed cheque/draft in favour of 'National Handloom Development Corp Ltd'.</fo:block>
 			   <fo:block text-align="left" white-space-collapse="false"    font-size="10pt" >* INTEREST will be charged  ____________per annum on overdue Amount.</fo:block>
 			   
@@ -682,7 +683,25 @@ under the License.
 			   <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" >&#160; whose will be final and binding E.&amp;.O.E</fo:block>
 	       	   <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
       			
-      		 <fo:block page-break-after="always"></fo:block>  
+      		 <fo:block page-break-after="always"></fo:block>-->  
+		     <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > * All payment  should be made by RTGS/NEFT/CHECK/DRAFT in favour of 'National Handloom Development Corp Ltd'.</fo:block>
+			 <fo:block text-align="left" white-space-collapse="false"    font-size="10pt" >* INTEREST will be charged  @___________ % per annum on overdue Amount.</fo:block> 
+		     <fo:block text-align="left" font-weight="bold"    font-size="10pt" >TERMS &amp; CONDITIONS:</fo:block>
+			 <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 1. Rates indicated are subjects to change without notice and the rates applicable will be the one ruling at the time of delivery.</fo:block>
+			 <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 2. Freight, Octroi and other charges if any will be extra and has to be borne by the buyer.</fo:block>
+			 <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 3. Packing charges for small packings are charged extra.</fo:block>
+			 <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 4. Supplies are subject to availability.</fo:block>
+			 <fo:block text-align="left" white-space-collapse="false"   font-size="10pt" > 5. The weight recorded in our invoice shall be final and will be binding on buyer.</fo:block>
+		     <fo:block text-align="center"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
+		     <#if roIDForAdd?has_content && roIDForAdd=="INT2">
+			 <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;RTGS/NEFT Detail:</fo:block>
+			 <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.</fo:block>
+			 <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;AXIS BANK LTD.</fo:block>
+			 <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;G.T ROAD PANIPAT-132 103</fo:block>
+			 <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;A/C No. 240010200012865</fo:block>
+			 <fo:block text-align="left"   font-weight="bold" font-size="10pt" >&#160;&#160;&#160;&#160;IFSC Code No: UTIB0000240</fo:block>
+	       	   
+      		   </#if>
       		 
       		
       		<#if onbehalf == true>
