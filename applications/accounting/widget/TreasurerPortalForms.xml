@@ -2306,7 +2306,7 @@ under the License.
 		</field> -->
 		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;PURCHASE_INVOICE&quot;)"
 			position="3">
-			<drop-down allow-empty="true" allow-multiple="true">
+			<drop-down allow-empty="true">
 				<entity-options description="${description}"
 					entity-name="StatusItem">
 					<entity-constraint name="statusTypeId" operator="equals"
@@ -2318,7 +2318,7 @@ under the License.
 		</field>
 		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;ADMIN_OUT&quot;)"
 			position="2">
-			<drop-down allow-empty="true" allow-multiple="true">
+			<drop-down allow-empty="true">
 				<entity-options description="${description}"
 					entity-name="StatusItem">
 					<entity-constraint name="statusTypeId" operator="equals"
