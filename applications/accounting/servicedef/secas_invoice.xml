@@ -42,6 +42,13 @@ under the License.
     <eca service="createInvoice" event="commit">
         <action service="createTaxInvoiceSequence" mode="sync"/>
     </eca> 
+   
+   <!-- 
+    <eca service="createInvoiceAttribute" event="commit">
+        <action service="createTaxInvoiceSequenceNew" mode="sync"/>
+    </eca> 
+    -->
+    
     <!-- <eca service="createInvoice" event="commit">
         <condition field-name="billOfSaleTypeId" operator="is-not-empty"/>      
         <action service="createBillOfSaleSeqForInvoice" mode="sync"/>

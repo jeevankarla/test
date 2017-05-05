@@ -43,6 +43,12 @@ under the License.
         <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
     </service>
     
+   <!--  <service name="createTaxInvoiceSequenceNew" engine="java"
+        location="org.ofbiz.accounting.invoice.InvoiceServices" invoke="createTaxInvoiceSequenceNew">
+        <description>Get the Next Sequence for Tax Invoices</description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
+    </service> -->
+    
     <!-- Invoice services -->
     <service name="createInvoice" engine="simple" default-entity-name="Invoice"
         location="component://accounting/script/org/ofbiz/accounting/invoice/InvoiceServices.xml" invoke="createInvoice">
