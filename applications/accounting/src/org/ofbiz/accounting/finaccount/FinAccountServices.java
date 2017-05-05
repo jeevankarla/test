@@ -1766,14 +1766,24 @@ public static String createEmpAdvDisbursement(HttpServletRequest request, HttpSe
 		             if (ServiceUtil.isError(createResult)) {
 		            	 return "error";
 		             }
+		             BigDecimal totAmt = BigDecimal.ZERO;
 		             String finAccountTransId = (String)createResult.get("finAccountTransId");
 		             
+		             if(UtilValidate.isEmpty(custfinAccounts)){
 		             GenericValue FinAccountTransDetails = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", finAccountTransId), false);
 		             BigDecimal transAmount = FinAccountTransDetails.getBigDecimal("amount");
 		             GenericValue finAcctValue = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", custfinAccountId), false);
-						finAcctValue.set("actualBalance",transAmount);
-						finAcctValue.store();
+		             BigDecimal existingactualBalance = FinAccountTransDetails.getBigDecimal("actualBalance");
+		             if(UtilValidate.isNotEmpty(existingactualBalance)){
+		             totAmt = existingactualBalance.add(transAmount);
+		             finAcctValue.set("actualBalance",totAmt);
 		             
+		             }else{
+		            	 finAcctValue.set("actualBalance",transAmount);
+		             }
+		             
+						finAcctValue.store();
+		             }
 		             finAccountTransIds.add(finAccountTransId);
 				
 			  totalAmount = totalAmount.add(amount);
