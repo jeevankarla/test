@@ -1166,6 +1166,16 @@ under the License.
             </service> -->
             <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/searchPayments.groovy"/>
         </actions>
+        <row-actions>
+            <entity-condition entity-name="FinAccntTransSequence" list="FinAccntTransSequenceList">
+            <condition-list > 
+                    <condition-expr field-name="finAccountTransId" operator="equals" from-field="finAccountTransId"/>
+             </condition-list>       
+            </entity-condition>
+           <entity-one entity-name="FinAccount" value-field="FinAccountEntry">
+                <field-map field-name="finAccountId" from-field="FinAccntTransSequenceList[0].finAccountId"/>
+            </entity-one>
+        </row-actions>
         <field name="paymentId" widget-style="buttontext">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
@@ -1174,9 +1184,9 @@ under the License.
         <!-- <field name="facilityId" title="Booth Id"><display/></field>  -->
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
         <field name="statusId" title="Status"><display-entity entity-name="StatusItem"/></field>
-        <field name="comments"><display/></field>
+        <field name="transSequenceId" title="Sequence"><display description="${FinAccntTransSequenceList[0].transSequenceId}"/></field>
          <field name="tallyRefNo" title="Tally Reference Number"><display/></field>
-        <field name="cancelComments" title="Reason For Voided"><display/></field>
+        <field name="finAccountName" title="Bank Name"><display description="${FinAccountEntry.finAccountName}"/></field>
        <field name="partyIdFrom"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdFrom, false);}[${partyIdFrom}]"/> </field>
     	<field name="partyIdTo"><display description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdTo, false);}[${partyIdTo}]"/></field>       
         <field name="paymentDate"><display  description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(paymentDate, &quot;dd/MM/yyyy&quot;);}"/></field>
