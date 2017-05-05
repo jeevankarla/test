@@ -137,6 +137,7 @@
 					<field-map field-name="mainAction" value="VIEW" />
 				</service>
 				<set field="hasAcctgAtxViewPermission" from-field="permResult.hasPermission" />
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="CommonPartyAccountingTransactionDecorator"
