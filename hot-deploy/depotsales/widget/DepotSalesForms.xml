@@ -5242,5 +5242,17 @@
       <field name="changeDatetime" title="Changed Date"><display description="${groovy:org.ofbiz.base.util.UtilDateTime.toDateString(changeDatetime, &quot;dd-MMM-yyyy&quot;);}"></display></field>
       <field name="changeUserLogin" title="Changed By"><display></display></field>
       <field name="changeComments" title="Comments"><display></display></field>
-     </form>   
+     </form>
+     <form name="agencyOutstandingReportCSV" type="list" list-name="invocieList" view-size="99999">
+    	 <field name="partyName" title="-"><display/></field>
+    	 <field name="partyId" title="-"><display/></field>
+         <field name="above3years" title="-"><display/></field>
+    </form>
+    <form name="DetailedagencyOutstandingReportCSV" type="list" list-name="invoiceDetailedList" view-size="99999">
+    	 <field name="partyName" title="-"><display/></field>
+    	 <field name="partyId" title="-"><display/></field>
+    	 <field name="invoiceId" title="-"><display/></field>
+    	 <field name="invoiceDate" title="-"><display/></field>
+         <field name="above3years" title="-"><display/></field>
+    </form>   
 </forms>

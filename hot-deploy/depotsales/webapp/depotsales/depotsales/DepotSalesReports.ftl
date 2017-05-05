@@ -55,6 +55,7 @@ $(document).ready(function(){
 	    makeDatePicker2("salesPurchaseReportFRO","salesPurchaseReportTHRU");
 	    makeDatePicker1("stockDate");
 	    makeDatePicker1("AWIORDate");
+	    makeDatePicker1("AWORDate");
 	    makeDatePicker1("APRDate"); 
 	    makeDatePicker1("PWAPRDate"); 
 	    makeDatePicker1("CASHFromDateId","");
@@ -360,6 +361,34 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				
 		</form>
 		 </tr>	
+		 <tr class="alternate-row">
+    	<form id="agencyOutstandingReport" name="agencyOutstandingReport" method="post"  target="_blank" action="<@ofbizUrl>agencyOutstandingReport</@ofbizUrl>">	
+  			<td width="30%">Outstanding Report For More Than 3Years</td>
+  			<td width="15%">Date<input  type="text" size="18pt" id="AWORDate"   name="AWORDate"/></td>
+  			<td width="10%">Type :
+				 <select name="Agencyreport" id="Agencyreport">
+				     <option value='DETAILED'>Detailed</option>
+				     <option value='ABSTRACT'>Abstract</option>
+				  </select>    								
+  			 </td>
+			<td width="10%">ReportType :<select name="reportType" id="reportType">
+                <option value='CREDITORS'>CREDITORS</option>
+                <option value='DEBITORS'>DEBITORS</option>
+  			 </select></td>
+  			 <td width="15%"><span class='h3'>Branch
+				 <select name="branchId" id="branchId">
+				     <#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					 </#list> 
+				  </select>    								
+			</td>	
+			<td width="10%"></td>
+			<td width="10%"></td>
+				<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('agencyOutstandingReport', '<@ofbizUrl>agencyOutstandingReport.pdf</@ofbizUrl>');" class="buttontext"/></td> 
+				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('agencyOutstandingReport', '<@ofbizUrl>agencyOutstandingReport.xls?header=required</@ofbizUrl>');" class="buttontext"/></td> 	       			
+				
+		</form>
+		 </tr>
 		<tr class="alternate-row">
     	<form id="advancePaymentReport" name="advancePaymentReport" method="post"  target="_blank" action="<@ofbizUrl>advancePaymentReport</@ofbizUrl>">	
   			<td width="30%"> Payment Wise Advance Report</td>
