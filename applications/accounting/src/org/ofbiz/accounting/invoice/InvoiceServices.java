@@ -5902,7 +5902,7 @@ public class InvoiceServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         GenericValue tenantConfigEnableTaxInvSeq;
         
-       Debug.log("invoiceId======ATTR======="+invoiceId);
+       //Debug.log("invoiceId======ATTR======="+invoiceId);
        
        String invoiceTaxType = null;
         
@@ -5920,33 +5920,44 @@ public class InvoiceServices {
 	       		}
        		}
        		
-       		
        		List condListTax = FastList.newInstance();
+       		condListTax.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+       		condListTax.add(EntityCondition.makeCondition("billOfSaleTypeId", EntityOperator.NOT_IN,UtilMisc.toList("SALE_INV_SQUENCE","PUR_INV_SQUENCE")));
+   			List<GenericValue> BillOfSaleInvoiceSequence =null;
+   			try{
+   				BillOfSaleInvoiceSequence = delegator.findList("BillOfSaleInvoiceSequence", EntityCondition.makeCondition(condListTax, EntityOperator.AND), null, null, null, false);
+   			} catch (Exception e) {
+   	   		  	Debug.logError(e, "Error in fetching InvoiceAttribute ", module);
+   			}
+       		
+       		
+   			if(UtilValidate.isEmpty(BillOfSaleInvoiceSequence)){
+   			condListTax.clear();
        		condListTax.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
    			List<GenericValue> InvoiceAttributeList =null;
    			try{
    				InvoiceAttributeList = delegator.findList("InvoiceAttribute", EntityCondition.makeCondition(condListTax, EntityOperator.AND), null, null, null, false);
    			    
-   			     
+   				//Debug.log("InvoiceAttributeList==========5930================"+InvoiceAttributeList);
    				
    				condListTax.clear();
 			condListTax.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 			condListTax.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "saleTitleTransferEnumId"));
 			EntityCondition condExprTax = EntityCondition.makeCondition(condListTax, EntityOperator.AND);
-			InvoiceAttributeList = EntityUtil.filterByCondition(InvoiceAttributeList, condExprTax);
-			
-			if(UtilValidate.isNotEmpty(InvoiceAttributeList))
-				invoiceTaxType = (EntityUtil.getFirst(InvoiceAttributeList)).getString("attrValue");
+			List<GenericValue> InvoiceAttributeSaleList = EntityUtil.filterByCondition(InvoiceAttributeList, condExprTax);
+			//Debug.log("InvoiceAttributeSaleList==========5937================"+InvoiceAttributeSaleList);
+			if(UtilValidate.isNotEmpty(InvoiceAttributeSaleList))
+				invoiceTaxType = (EntityUtil.getFirst(InvoiceAttributeSaleList)).getString("attrValue");
 				
-			if(UtilValidate.isEmpty(InvoiceAttributeList)){	
+			if(UtilValidate.isEmpty(InvoiceAttributeSaleList)){	
 			condListTax.clear();	
 			condListTax.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
 			condListTax.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "purchaseTitleTransferEnumId"));
 			EntityCondition condExprTax1 = EntityCondition.makeCondition(condListTax, EntityOperator.AND);
-			InvoiceAttributeList = EntityUtil.filterByCondition(InvoiceAttributeList, condExprTax1);
-			
-			if(UtilValidate.isNotEmpty(InvoiceAttributeList))
-				invoiceTaxType = (EntityUtil.getFirst(InvoiceAttributeList)).getString("attrValue");
+			List<GenericValue> InvoiceAttributePurList = EntityUtil.filterByCondition(InvoiceAttributeList, condExprTax1);
+			//Debug.log("InvoiceAttributePurList==========5947================"+InvoiceAttributePurList);
+			if(UtilValidate.isNotEmpty(InvoiceAttributePurList))
+				invoiceTaxType = (EntityUtil.getFirst(InvoiceAttributePurList)).getString("attrValue");
 				
 			}
    			
@@ -5956,11 +5967,12 @@ public class InvoiceServices {
    	   		  	Debug.logError(e, "Error in fetching InvoiceAttribute ", module);
    			}
    			
+   			}
    			
-        	 Debug.log("invoiceTaxType============="+invoiceTaxType);
+        	 //Debug.log("invoiceTaxType============="+invoiceTaxType);
 
        		
-         	 Debug.log("enableTaxInvSeq============="+enableTaxInvSeq);
+         	 //Debug.log("enableTaxInvSeq============="+enableTaxInvSeq);
        		Timestamp invDate=null;
        		String purPoseTypeId = "";
        		if(enableTaxInvSeq && UtilValidate.isNotEmpty(invoiceId) && UtilValidate.isNotEmpty(invoiceTaxType)){
@@ -5977,7 +5989,7 @@ public class InvoiceServices {
        				purPoseTypeId = purPoseTypeId.trim();
        			}
        			
-       		    Debug.log("invDate============="+invDate);
+       		    //Debug.log("invDate============="+invDate);
        			
        			String partyId ="";
        			String prefix ="";
@@ -6207,6 +6219,7 @@ public class InvoiceServices {
    			   }
        			
        		}
+       		
         }catch(Exception e){
         	Debug.logError(e, e.toString(), module);
         	return ServiceUtil.returnError(e.toString());
