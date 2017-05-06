@@ -6008,7 +6008,7 @@ public static Map<String, Object> effectPriceDifferenceInvoices(DispatchContext 
 
 
 
-public static Map<String, Object> getInvoiceSequence(DispatchContext dctx, Map context) {
+public static Map<String, Object> getInvoiceSequenceForTransaction(DispatchContext dctx, Map context) {
 	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
 	LocalDispatcher dispatcher = dctx.getDispatcher();
 	Map<String, Object> result = ServiceUtil.returnSuccess();

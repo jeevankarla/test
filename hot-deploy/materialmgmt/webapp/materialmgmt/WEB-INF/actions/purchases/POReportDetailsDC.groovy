@@ -781,9 +781,13 @@ if(customerAddressDetails){
 			state="";
 			city="";
 			postalCode="";
-			if(partyPostalAddress.get("toName")){
+			customerName="";
+			/*if(partyPostalAddress.get("toName")){
 				customerName=partyPostalAddress.get("toName");
-				}
+				}*/
+			if(shipToParty.partyId){
+				customerName = PartyHelper.getPartyName(delegator, shipToParty.partyId, false);
+			}
 			if(partyPostalAddress.get("address1")){
 			address1=partyPostalAddress.get("address1");
 			}

@@ -679,7 +679,7 @@ under the License.
 					</fo:table-row>	
 					<fo:table-row white-space-collapse="false" >
 						<fo:table-cell  border-style-right="hidden">
-						<fo:block text-align="left" keep-together="always"    font-size="10pt" >Freight (RS.)     :<#if estimatedShipCost?has_content>${estimatedShipCost?if_exists?string("#0.00")}</#if>   </fo:block>
+						<#--<fo:block text-align="left" keep-together="always"    font-size="10pt" >Freight (RS.)     :<#if estimatedShipCost?has_content>${estimatedShipCost?if_exists?string("#0.00")}</#if>   </fo:block>-->
 						</fo:table-cell>
 						
 						<fo:table-cell  border-style-right="hidden">

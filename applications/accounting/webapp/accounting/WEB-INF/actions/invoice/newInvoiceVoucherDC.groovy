@@ -40,7 +40,7 @@ inputCtx.put("userLogin",userLogin);
 inputCtx.put("invoiceId", invoiceId);
 inputCtx.put("invoiceSeqType", "SALE_INV_SQUENCE");
 try{
- billOfSalesInvSeqs = dispatcher.runSync("getInvoiceSequence", inputCtx);
+ billOfSalesInvSeqs = dispatcher.runSync("getInvoiceSequenceForTransaction", inputCtx);
  //Debug.log("resultCtx======1111111111============"+billOfSalesInvSeqs.sequenceList);
  if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 	 invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs.sequenceList);
