@@ -3634,37 +3634,7 @@ under the License.
 	                </entity-options>
             </drop-down>
         </field> 
-<!--         <field name="paymentMethodTypeId"> -->
-<!--             <drop-down allow-empty="true"> -->
-<!--                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/> -->
-<!--             </drop-down> -->
-<!--         </field>         -->
-        <!-- <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
-            <drop-down allow-empty="false">
-                <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
-            </drop-down>
-        </field> -->
-<!--         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1"> -->
-<!--             <drop-down allow-empty="true"> -->
-<!--                 <entity-options description="${description}" entity-name="PaymentType"> -->
-<!--                     <entity-order-by field-name="description"/> -->
-<!--                 </entity-options> -->
-<!--             </drop-down> -->
-<!--         </field> -->
-<!--         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2"> -->
-<!--             <drop-down allow-empty="true"> -->
-<!--                 <entity-options description="${description}" entity-name="StatusItem"> -->
-<!--                     <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/> -->
-<!--                     <entity-order-by field-name="description"/> -->
-<!--                 </entity-options> -->
-<!--             </drop-down> -->
-<!--         </field> -->
-<!--         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field> -->
-<!--         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field> -->
-<!--         <field position="1" name="amount"><text/></field> -->
-<!--         <field position="1" name="tallyRefNo" title="Tally Reference No"><text/></field> -->
-<!--         <field name="paymentRefNum"><text-find ignore-case="true"/></field> -->
-        <!--<field name="paymentGatewayResponseId"><text/></field>-->
+
         <field name="FromDate"><date-find type="date" default-option-from="sameDay"/></field>
         <field name="ThruDate" title="Thru Date"><date-find type="date" default-option-from="sameDay"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -3693,37 +3663,6 @@ under the License.
 	                </entity-options>
             </drop-down>
         </field> 
-<!--         <field name="paymentMethodTypeId"> -->
-<!--             <drop-down allow-empty="true"> -->
-<!--                 <list-options list-name="paymentMethodTypes" key-name="paymentMethodTypeId" description="${description}"/> -->
-<!--             </drop-down> -->
-<!--         </field>         -->
-        <!-- <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
-            <drop-down allow-empty="false">
-                <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
-            </drop-down>
-        </field> -->
-<!--         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1"> -->
-<!--             <drop-down allow-empty="true"> -->
-<!--                 <entity-options description="${description}" entity-name="PaymentType"> -->
-<!--                     <entity-order-by field-name="description"/> -->
-<!--                 </entity-options> -->
-<!--             </drop-down> -->
-<!--         </field> -->
-<!--         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2"> -->
-<!--             <drop-down allow-empty="true"> -->
-<!--                 <entity-options description="${description}" entity-name="StatusItem"> -->
-<!--                     <entity-constraint name="statusTypeId" operator="equals" value="PMNT_STATUS"/> -->
-<!--                     <entity-order-by field-name="description"/> -->
-<!--                 </entity-options> -->
-<!--             </drop-down> -->
-<!--         </field> -->
-<!--         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field> -->
-<!--         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field> -->
-<!--         <field position="1" name="amount"><text/></field> -->
-<!--         <field position="1" name="tallyRefNo" title="Tally Reference No"><text/></field> -->
-<!--         <field name="paymentRefNum"><text-find ignore-case="true"/></field> -->
-        <!--<field name="paymentGatewayResponseId"><text/></field>-->
         <field name="FromDate"><date-find type="date" default-option-from="sameDay"/></field>
         <field name="ThruDate" title="Thru Date"><date-find type="date" default-option-from="sameDay"/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
