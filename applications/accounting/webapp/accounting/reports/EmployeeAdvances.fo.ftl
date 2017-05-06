@@ -23,7 +23,7 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-bottom=".3in" margin-top=".3in">
-        <fo:region-body margin-top="0.2in"/>
+        <fo:region-body margin-top="2.2in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -31,16 +31,11 @@ under the License.
 ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.pdf")}
  
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">					
+			 <#if finAccountTypeIdsMap?has_content>
+			<#assign finAccountTypeId=finAccountTypeIdsMap.entrySet()> 
 			<fo:static-content flow-name="xsl-region-before">
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
               	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-            </fo:static-content>
-            <#if finAccountTypeIdsMap?has_content>
-			<#assign finAccountTypeId=finAccountTypeIdsMap.entrySet()> 
-			<#list finAccountTypeId as finAccntId>		
-            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-            		<#assign finAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" :finAccntId.getKey()}, true)>
-                    <#assign finAccountTypeglAccnt = delegator.findOne("FinAccountTypeGlAccount", {"finAccountTypeId" :finAccntId.getKey(),"organizationPartyId":"Company"}, true)>
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                          Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
 					<#assign roId = parameters.division>
               	 	<#assign roHeader = roId+"_HEADER">
@@ -51,6 +46,13 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold" >${reportHeader.description?if_exists} </fo:block>
 				  	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">&#160;&#160;&#160;&#160;&#160;&#160;               ${reportSubHeader.description?if_exists}                              Page No:<fo:page-number/></fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
+            </fo:static-content>
+           
+			<fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
+            		<#list finAccountTypeId as finAccntId>
+			   	<#assign finAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" :finAccntId.getKey()}, true)>
+                    <#assign finAccountTypeglAccnt = delegator.findOne("FinAccountTypeGlAccount", {"finAccountTypeId" :finAccntId.getKey(),"organizationPartyId":"Company"}, true)>
+            
 					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;STATEMENT FOR ${finAccountTypeglAccnt.glAccountId?if_exists} - ${finAccountType.description?if_exists?upper_case}</fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
                     <fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">FOR THE PERIOD FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
@@ -225,6 +227,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 </fo:table>
                </fo:block> 
 			<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+				 </#list>
 				<fo:block>
                     <fo:table>
 				    <fo:table-column column-width="8%"/>
@@ -288,7 +291,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 </fo:table>
                </fo:block> 
 			 </fo:flow>
-			 </#list>
+			
 			 <#else>	
 				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">
 					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                          Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>

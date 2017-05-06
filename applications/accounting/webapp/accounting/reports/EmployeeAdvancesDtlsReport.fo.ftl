@@ -23,7 +23,7 @@ under the License.
 <#-- do not display columns associated with values specified in the request, ie constraint values -->
 <fo:layout-master-set>
 	<fo:simple-page-master master-name="main" page-height="12in" page-width="10in"  margin-left=".3in" margin-right=".3in" margin-bottom=".3in" margin-top=".3in">
-        <fo:region-body margin-top="0.2in" margin-bottom=".6in"/>
+        <fo:region-body margin-top="2.2in" margin-bottom=".6in"/>
         <fo:region-before extent="1in"/>
         <fo:region-after extent="1in"/>        
     </fo:simple-page-master>   
@@ -31,18 +31,9 @@ under the License.
 ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.pdf")}
  
 <fo:page-sequence master-reference="main" force-page-count="no-force" font-family="Courier,monospace">				
+			<#if detailTempList?has_content>
 			<fo:static-content flow-name="xsl-region-before">
-              	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-              	<fo:block text-align="left"  keep-together="always"  white-space-collapse="false" linefeed-treatment="preserve">&#xA;</fo:block> 
-            </fo:static-content>
-	            <#if detailTempList?has_content>
-				<#list detailTempList as finAccntId>
-	    		<#assign grandDebit=0>
-	   			<#assign grandCredit=0> 		
-            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
-            		<#assign finAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" :finAccntId.get("finAccountTypeId")}, true)>
-                    <#assign finAccountTypeglAccnt = delegator.findOne("FinAccountTypeGlAccount", {"finAccountTypeId" :finAccntId.get("finAccountTypeId"),"organizationPartyId":"Company"}, true)>
-					<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
+            	<fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" white-space-collapse="false" font-weight="bold">&#160;                                                                      Date:${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(nowTimestamp, "dd-MM-yyyy")}</fo:block>
                     <#assign roHeader = roId+"_HEADER">
               	 	<#assign roSubheader = roId+"_HEADER01">
 					<#assign reportHeader = delegator.findOne("TenantConfiguration", {"propertyTypeEnumId" : "COMPANY_HEADER","propertyName" : roHeader}, true)>
@@ -53,8 +44,14 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 		
 					<fo:block  text-align="center"  keep-together="always"  white-space-collapse="false" font-weight="bold">SUBLEDGER REPORT FOR THE PERIOD FROM ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(fromDate, "dd-MMM-yyyy")} TO ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(thruDate, "dd-MMM-yyyy")} </fo:block>
 					<fo:block linefeed-treatment="preserve">&#xA;</fo:block> 
-					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;ACCOUNT : ${finAccountTypeglAccnt.glAccountId?if_exists}          ${finAccountType.description?if_exists?upper_case}</fo:block>
+					<#assign finAccountTypeId=detailTempList[45].get("finAccountTypeId") >
+              		<#assign finAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" :finAccountTypeId}, true)>
+                    <#assign finAccountTypeglAccnt = delegator.findOne("FinAccountTypeGlAccount", {"finAccountTypeId" :finAccountTypeId,"organizationPartyId":"Company"}, true)>
+              
+					<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;ACCOUNT :   ${finAccountTypeglAccnt.glAccountId?if_exists}          ${finAccountType.description?if_exists?upper_case}</fo:block>
               		<fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+            	
+	    		
             	<fo:block>
                     <fo:table>
 				    <fo:table-column column-width="12%"/>
@@ -87,6 +84,19 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                 </fo:table>
                </fo:block> 	
                <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+              
+            </fo:static-content>
+	            
+						
+            <fo:flow flow-name="xsl-region-body"   font-family="Courier,monospace">	
+            		
+            		
+					
+              		 <#list detailTempList as finAccntId>
+              		<#assign finAccountType = delegator.findOne("FinAccountType", {"finAccountTypeId" :finAccntId.get("finAccountTypeId")}, true)>
+                    <#assign finAccountTypeglAccnt = delegator.findOne("FinAccountTypeGlAccount", {"finAccountTypeId" :finAccntId.get("finAccountTypeId"),"organizationPartyId":"Company"}, true)>
+               <#assign grandDebit=0>
+	   			<#assign grandCredit=0> 
                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;         SL CODE : ${finAccntId.get("partyId")?if_exists}     ${finAccntId.get("Name")?if_exists?upper_case}                 </fo:block>
                <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                          OPENING BALANCE:     ${finAccntId.get("openBalanceDebit")?if_exists?string("##0.00")}      ${finAccntId.get("openBalanceCredit")?if_exists?string("##0.00")} </fo:block>
                 <#assign DaywiseMap=finAccntId.get("list")>
@@ -172,6 +182,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
               <fo:block  keep-together="always" text-align="left" font-family="Courier,monospace" font-weight="bold" white-space-collapse="false">&#160;                        CLOSING BALANCE:     ${(balance)?string("##0.00")}          ${(balance)?string("##0.00")} </fo:block>
              </#if> 
              <fo:block font-size="10pt">-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
+			  </#list>	
 			 <fo:block>
                     <fo:table>
 				    <fo:table-column column-width="8%"/>
@@ -237,7 +248,7 @@ ${setRequestAttribute("OUTPUT_FILENAME", "EmployeeAdvancesAndSubScheduleReport.p
                </fo:block> 
 			 
 			 </fo:flow>
-			 </#list>	
+			
 			  <#else>
 			  
 				<fo:flow flow-name="xsl-region-body" font-family="Helvetica">

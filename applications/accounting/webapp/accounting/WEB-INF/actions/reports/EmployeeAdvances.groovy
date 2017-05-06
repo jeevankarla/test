@@ -59,16 +59,16 @@ thruDate = UtilDateTime.getDayEnd(thruDateTs, timeZone, locale);
 context.fromDate = fromDate;
 context.thruDate = thruDate;
 employeeIds=[];
-ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"LOAN_ACCOUNT")],EntityOperator.AND);
+ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"EMPLOYEE_ADV")],EntityOperator.AND);
 finAccountTypes=delegator.findList("FinAccountType",ecl,null,null,null,false);
 finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);
 conditionList =[];
-if(UtilValidate.isEmpty(parameters.finAccountTypeId)){
+if(UtilValidate.isNotEmpty(parameters.finAccountTypeId)){
 	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.IN,finAccountTypeIds)],EntityOperator.AND));
 }else{
 	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId)],EntityOperator.AND));
 }
-	conditionList.add(EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId));
+//	conditionList.add(EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId));
 if(UtilValidate.isNotEmpty(parameters.partyId)){
 	conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,parameters.partyId));
 }
@@ -81,7 +81,7 @@ finAccountTypeIdList=[];
 List detailTempList=FastList.newInstance();
 
 finAccntDetailedCsv=[];
-
+finAccountDetailedMap2=[:];
 finAccountList.each{finAccountTypeId->
 	List tempList=FastList.newInstance();
 	
@@ -252,8 +252,12 @@ finAccountList.each{finAccountTypeId->
 		finAccountTypeIdsMap[finAccountTypeId.finAccountTypeId]=existing;
 	}
 }
+//finAccountDetailedMap2["finAccountTypeId"]=detailTempList;
 context.finAccountTypeIdsMap=finAccountTypeIdsMap;
 context.detailTempList=detailTempList
+
+tempListkj=finAccountTypeIdsMap.entrySet();
+Debug.log("detailTempList====="+detailTempList);
 context.finAccountTypeIdList=finAccountTypeIdList;
 context.finAccntDetailedCsv=finAccntDetailedCsv;
 //Debug.log("finAccountTypeIdList======================"+finAccountTypeIdList);
