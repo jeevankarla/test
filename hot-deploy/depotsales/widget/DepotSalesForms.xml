@@ -1159,7 +1159,7 @@
 			</drop-down>
 		</field> -->
 		<field name="costCenterId" title="${uiLabelMap.Branch}" >
-              <drop-down allow-empty="true">
+              <drop-down allow-empty="false">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
