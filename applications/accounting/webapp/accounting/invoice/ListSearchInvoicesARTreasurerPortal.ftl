@@ -352,10 +352,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
 	
 	
 </script>
-<#if invoices?has_content>
-  <#assign invoiceList  =  invoices.getCompleteList() />
-  <#assign eliClose = invoices.close() />
-</#if>
+
 <#if invoiceList?has_content && (parameters.noConditionFind)?if_exists == 'Y'>
 <form name="paymentSubmitForm" id="paymentSubmitForm" method="post" action="makeMassInvoicePayments">
 </form>
@@ -483,8 +480,10 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <#else>
                <td align="center"></td>
                </#if>
-              <#if (invoicePaymentInfo.outstandingAmount != 0)>   
+              <#if (invoicePaymentInfo.outstandingAmount != 0)>  
+              <#if (invoice.statusId != "INVOICE_CANCELLED")> 
               <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
+            </#if>
             </#if>
             </tr>
             <#-- toggle the row color -->
