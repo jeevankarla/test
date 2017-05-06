@@ -392,6 +392,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
           <td>${uiLabelMap.AccountingAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_paidAmount}</td>
           <td>${uiLabelMap.FormFieldTitle_outstandingAmount}</td>
+          <td>Print</td>
           <td align="right">${uiLabelMap.CommonSelectAll} <input type="checkbox" id="checkAllInvoices" name="checkAllInvoices" onchange="javascript:toggleInvoiceId(this);"/></td>
         </tr>
       </thead>
@@ -431,7 +432,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <input type = "hidden" name = "amt" id = "amt" value = "${invoicePaymentInfo.outstandingAmount}">
               <input type = "hidden" name = "invId" id = "invId" value = "${invoice.invoiceId}">
               <input type = "hidden" name = "refNumber" id = "refNumber" value = "${invoice.referenceNumber?if_exists}">
-              <input type = "hidden" name = "millerNumber" id = "millerNumber" value = "${Shipment.supplierInvoiceId?default(invoice.shipmentId)?if_exists}">
+              <input type = "hidden" name = "millerNumber" id = "millerNumber" value = "<#if Shipment?has_content>${Shipment.supplierInvoiceId?default(invoice.shipmentId)?if_exists}</#if>">
               <input type = "hidden" name = "partyIdName" id = "partyIdName" value = "${partyName}">
               <input type = "hidden" name = "voucherTypeId" id = "voucherTypeId" value = "${invoice.prefPaymentMethodTypeId?if_exists}">
 			  <input type = "hidden" name = "purposeTypeId" id = "purposeTypeId" value = "${invoice.purposeTypeId?if_exists}">            
@@ -441,7 +442,7 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
               <td><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></td>        
-               <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
+              <#--   <#if ((invoice.statusId != "INVOICE_IN_PROCESS") && (invoice.statusId != "INVOICE_CANCELLED") && (invoicePaymentInfo.outstandingAmount >0)) >
               	  <#if (invoice.parentTypeId == "PURCHASE_INVOICE")||(invoice.prefPaymentMethodTypeId?exists) >
               		  <td align="center"><input type="button"  name="paymentBuuton" value="Payment" onclick="javascript:showPaymentEntryQTip('${invoice.partyId}','${invoice.partyIdFrom}','${invoice.invoiceId}','${invoice.prefPaymentMethodTypeId?if_exists}','${invoicePaymentInfo.outstandingAmount}','${partyName}','${invoice.purposeTypeId?if_exists}');"/></td>
                	    <#else>
@@ -449,16 +450,16 @@ function showPaymentEntryQTip(partyIdFrom1,partyIdTo1,invoiceId1,voucherType1,am
                	  </#if>
                 <#else>
                 	<td align="center"></td>
-              </#if>
-              <td></td>
+              </#if>-->
+              
              <td>
 					<a class="buttontext" target='_blank' href="<@ofbizUrl>DepotpurchaseInvoiceReport.pdf?invoiceId=${invoice.invoiceId}</@ofbizUrl>">Print</a>
 				</td>
-              <#if invoice.parentTypeId?has_content>
+             <#--   <#if invoice.parentTypeId?has_content>
               <td><#if ((invoice.statusId != "INVOICE_CANCELLED") &&(invoice.parentTypeId == "PURCHASE_INVOICE"))></#if></td>
               <#else>
                <td align="center"></td>
-               </#if>
+               </#if>-->
                <#if (invoicePaymentInfo.outstandingAmount != 0)>
               <td align="right"><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:getInvoiceRunningTotal();"/></td>
               </#if>

@@ -6856,91 +6856,7 @@
             </widgets>
         </section>
     </screen>
-	  
-	<screen name="BulkPrinting">
-        <section>
-            <actions>
-            	<set field="titleProperty" value="Bulk Printing" />
-                <set field="tabButtonItem" value="BulkPrinting"/>
-                <set field="tabButtonItem2" value="Invoice"/>
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
-                <set field="parameters.partyIdTo" from-field="parameters.ownerPartyId"/>
-                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
-                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
-                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
-                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
-                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
-                <service service-name="performFind" result-map="result">
-                    <field-map field-name="inputFields" from-field="parameters"/>
-                    <field-map field-name="entityName" value="InvoiceAndType"/>
-                    <field-map field-name="statusId" value="INVOICE_READY"/>
-                    <!-- <field-map field-name="statusId" value="INVOICE_PAID"/> -->
-                    <field-map field-name="orderBy" value="invoiceDate DESC"/>
-                 </service>
-                 <set field="invoices" from-field="result.listIt"/>
-            </actions>
-            <widgets>
-                 <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
-                    <decorator-section name="body">
-                        <include-menu name="BulkPrintingSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <section>
-                            <widgets>
-                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
-                                    <decorator-section name="search-options">
-                                        <include-form name="FindInvoiceBulk" location="component://accounting/widget/TreasurerPortalForms.xml"/>
-                                    </decorator-section>
-                                    <decorator-section name="search-results">
-            							<screenlet title="Invoices List">  
-            								<section>   
-            									<condition >
-            										<not><if-empty field="invoices" /></not>
-            										<and>
-														<if-compare operator="equals" value="INVOICE_PAID" field="statusId" />
-														<if-compare operator="equals" value="INVOICE_READY" field="statusId" />
-														<if-compare operator="not-equals" value="OBC*" field="invoiceId" />
-													</and>
-            									</condition>
-            									<widgets>                        
-		            								<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
-														target="InvoiceSearchResultsCsv.csv">
-														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
-														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op"/>
-														<parameter param-name="invoiceId" from-field="parameters.invoiceId"/>
-														<parameter param-name="invoiceId_ic" from-field="parameters.invoiceId_ic"/>
-														<parameter param-name="description_op" from-field="parameters.description_op"/>
-														<parameter param-name="description" from-field="parameters.description"/>
-														<parameter param-name="description_ic" from-field="parameters.description_ic"/>
-														<parameter param-name="invoiceTypeId" from-field="parameters.invoiceTypeId"/>
-														<parameter param-name="statusId" from-field="parameters.statusId"/>
-														<parameter param-name="partyIdFrom" from-field="parameters.partyIdFrom"/>
-														<parameter param-name="partyId" from-field="parameters.partyId"/>
-														<parameter param-name="invoiceDate_fld0_value" from-field="parameters.invoiceDate_fld0_value"/>
-														<parameter param-name="invoiceDate_fld0_op" from-field="parameters.invoiceDate_fld0_op"/>
-														<parameter param-name="invoiceDate_fld1_value" from-field="parameters.invoiceDate_fld1_value"/>
-														<parameter param-name="invoiceDate_fld1_op" from-field="parameters.invoiceDate_fld1_op"/>
-														<parameter param-name="dueDate_fld0_value" from-field="parameters.dueDate_fld0_value"/>
-														<parameter param-name="dueDate_fld0_op" from-field="parameters.dueDate_fld0_op"/>
-														<parameter param-name="dueDate_fld1_value" from-field="parameters.dueDate_fld1_value"/>
-														<parameter param-name="dueDate_fld1_op" from-field="parameters.dueDate_fld1_op"/>
-													</link>	                 
-												</widgets>
-											</section>
-                                        	<platform-specific>
-                                        	<html><html-template location="component://accounting/webapp/accounting/invoice/massPayments.ftl"/></html>
-											</platform-specific>
-											<platform-specific>
-                                            	<html><html-template location="component://accounting/webapp/accounting/invoice/ListSearchBulkInvoicesTreasurerPortal.ftl"/></html>
-                                        	</platform-specific>
-                                        </screenlet>
-                                    </decorator-section>
-                                </decorator-screen>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+	<!-- for bulk printing tab  -->  
     <screen name="BulkFindInvoice">
         <section>
             <actions>
@@ -6950,11 +6866,11 @@
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 
                 <set field="parameters.partyIdTo" from-field="parameters.ownerPartyId"/>
-                <set  field="parameters.paymentDate" from-field="parameters.paymentDate_fld0_value"/>
-                <set field="parameters.paymentDate_fld0_value" from-field="parameters.paymentDate_fld0_value"/>
-                <set field="parameters.paymentDate_fld1_value" from-field="parameters.paymentDate_fld1_value"/>
-                <set field="parameters.paymentDate_fld0_op" from-field="parameters.paymentDate_fld0_op"/>
-                <set field="parameters. paymentDate_fld1_op" from-field="parameters. paymentDate_fld1_op"/>
+                <set  field="parameters.invoiceDate" from-field="parameters.invoiceDate"/>
+                <set field="parameters.invoiceDate_fld0_value" from-field="parameters.invoiceDate_fld0_value"/>
+                <set field="parameters.invoiceDate_fld1_value" from-field="parameters.invoiceDate_fld1_value"/>
+                <set field="parameters.invoiceDate_fld0_op" from-field="parameters.invoiceDate_fld0_op"/>
+                <set field="parameters. invoiceDate_fld1_op" from-field="parameters. invoiceDate_fld1_op"/>
                 <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>

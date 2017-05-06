@@ -3604,18 +3604,10 @@ under the License.
             	 <list-options list-name="invoiceTypes" key-name="invoiceTypeId" description="${description}"/>
             </drop-down>
         </field> 
-<!--         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field> -->
-<!--         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field> -->
-<!--         <field position="1" name="amount"><text/></field> -->
-<!--         <field position="1" name="tallyRefNo" title="Tally Reference No"><text/></field> -->
-<!--         <field name="paymentRefNum"><text-find ignore-case="true"/></field> -->
-        <!--<field name="paymentGatewayResponseId"><text/></field>-->
         <field name="invoiceDate_fld0_value" title="From Date"><date-time type="date"/> </field>
         <field name="invoiceDate_fld01_value" title="Thru Date"><date-time type="date" /></field>
         <field name="invoiceDate_fld0_op"><hidden value="greaterThan"/></field>
         <field name="invoiceDate_fld1_op"><hidden value="opLessThan"/></field>
-       <!--  <field name="statusId"><hidden value="INVOICE_PAID"/></field>
-        <field name="statusId"><hidden value="INVOICE_READY"/></field> -->
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="PaymentsBulk" type="single" target="bulkFindPayments"
