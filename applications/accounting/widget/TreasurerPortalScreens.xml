@@ -3123,16 +3123,11 @@
                 <set field="filterByDate" value="true"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 <set field="parameters.partyIdTo" from-field="parameters.ownerPartyId"/>
-                <service service-name="performFind" result-map="result">
-                    <field-map field-name="inputFields" from-field="parameters"/>
-                    <field-map field-name="entityName" value="InvoiceAndType"/>
-                    <field-map field-name="orderBy" value="invoiceDate DESC"/>
-                </service>
-                <set field="invoices" from-field="result.listIt"/>
                 <set field="tabButtonItem" value="accountPayable"/>
                 <set field="tabButtonItem5" value="${parameters.subTabButtonValue}"/>
                 <set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}"/>
                 <set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoicesList.groovy"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
            		 <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>
             </actions>
@@ -3736,12 +3731,6 @@
                 <set field="titleProperty" value="AccountingFindArInvoices"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 <set field="parameters.partyIdFrom" from-field="parameters.ownerPartyId"/>
-                <service service-name="performFind" result-map="result">
-                    <field-map field-name="inputFields" from-field="parameters"/>
-                    <field-map field-name="entityName" value="InvoiceAndType"/>
-                    <field-map field-name="orderBy" value="invoiceDate DESC"/>
-                </service>
-                <set field="invoices" from-field="result.listIt"/>
                 <service service-name="acctgInvoicePermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="ARINVOICE_EDIT"/>
                 </service>
@@ -3751,6 +3740,7 @@
                 <set field="tabButtonItem5" value="${parameters.subTabButtonValue}"/>
                 <set field="tabButtonItem2" value="${parameters.actionSubTabButtonValue}"/>
                 <set field="invoiceTypeId"  value="${parameters.invoiceTypeId}"/>
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoicesList.groovy"/>
                  <script location="component://accounting/webapp/ap/WEB-INF/actions/invoices/voucherPaymentMethod.groovy"/>            
             </actions>
             <widgets>
