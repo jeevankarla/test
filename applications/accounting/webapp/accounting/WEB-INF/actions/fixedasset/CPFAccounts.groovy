@@ -34,15 +34,15 @@ condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 fieldToSelect = UtilMisc.toSet("partyId");
 EntityListIterator partyRoleList = delegator.find("PartyRole",condListb,null,fieldToSelect,null,null);
 partyIds=EntityUtil.getFieldListFromEntityListIterator(partyRoleList, "partyId", true);
-context.empPartyIds=partyIds;
-//Debug.log("partyIds====================="+partyIds);
+//context.empPartyIds=partyIds;
 partyRoleList.close();
-/*condList=[];
+condList=[];
 condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, partyIds));
 condList.add(EntityCondition.makeCondition("finAccountTypeId", EntityOperator.IN, finAccountIds));
 cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 EntityListIterator finAccountList = delegator.find("FinAccount",cond,null,null,null,null);
-
+ownerPartyIds=EntityUtil.getFieldListFromEntityListIterator(finAccountList, "ownerPartyId", true);
+context.empPartyIds=ownerPartyIds;
 iter = finAccountList.iterator();
-*/
+
 
