@@ -950,7 +950,7 @@
         <description>Creating populate Invoice Adjustment</description>
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
    </service> -->
-    <service name="getInvoiceSequence" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getInvoiceSequence" transaction-timeout="6000000000000000">
+    <service name="getInvoiceSequenceForTransaction" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getInvoiceSequenceForTransaction" transaction-timeout="6000000000000000">
         <description>Get Invoice Sequence Id</description>
          <attribute name="invoiceId" type="String" mode="IN" optional="false"/>
          <attribute name="invoiceSeqType" type="String" mode="IN" optional="true"/>

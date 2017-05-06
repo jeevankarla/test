@@ -38,7 +38,7 @@ inputCtx.put("userLogin",userLogin);
 inputCtx.put("invoiceId", invoiceId);
 inputCtx.put("invoiceSeqType", "SALE_INV_SQUENCE");
 try{
- billOfSalesInvSeqs = dispatcher.runSync("getInvoiceSequence", inputCtx);
+ billOfSalesInvSeqs = dispatcher.runSync("getInvoiceSequenceForTransaction", inputCtx);
  if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
 	 invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs.sequenceList);
 	 invoiceSequence = invoiceSeqDetails.invoiceSequence;
@@ -227,8 +227,8 @@ if(roID){
 	deliveryChallanDate = "";
 	
 	
-	if(shipmentId){
-	shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+	if(shipmentIdForSale){
+	shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentIdForSale] , false);
 	orderId = shipmentList.get("primaryOrderId");
 	
 	estimatedShipDate = shipmentList.get("estimatedShipDate");
