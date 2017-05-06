@@ -241,14 +241,18 @@ input[type=button]:hover {
 	          						<#if purchaseTitleTransferEnumId == "CST_NOCFORM">
 	          							<option value="CST_NOCFORM" selected>Transaction Without C Form</option>
 	          						</#if>
+	          						<#if purchaseTitleTransferEnumId == "EXEMPTED_GOODS">
+	          							<option value="EXEMPTED_GOODS" selected>Exempted Goods</option>
+	          						</#if>
 	          						<#if purchaseTitleTransferEnumId == "NO_E2_FORM">
 	          							<option value="NO_E2_FORM" selected></option>
-	          						</#if> 
+	          						</#if>  
 	          					</#if> 
 	          				
 	          				
 	          					<option value="CST_CFORM">Transaction With C Form</option>
 	          					<option value="CST_NOCFORM">Transaction Without C Form</option>
+	          					<option value="EXEMPTED_GOODS">Exempted Goods</option>
 	          					<option value="NO_E2_FORM"></option>
 	          				</select>
 	          			</td>
