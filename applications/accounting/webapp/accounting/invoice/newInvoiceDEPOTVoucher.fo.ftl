@@ -196,7 +196,19 @@ under the License.
 				       </#if>
 				  </#list>
 				 </#if>
-				
+				<#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
+                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
+				   <#list alladjustList as eachOne>
+				       <#if eachOne.getKey() == i>				       
+				        <#list eachOne.getValue() as each>  
+				        <#if each.invoiceItemTypeId == "VAT_SALE">
+				        <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				        <fo:block text-align="left"  font-weight="bold"   font-size="10pt" ><#if each.description?has_content>${each.description?if_exists}<#else>${each.invoiceItemTypeId?if_exists}</#if><#if each.percentage?has_content>(${each.percentage?if_exists?string("#0.00")}%)</#if></fo:block>
+				       </#if>
+				        </#list>
+				       </#if>
+				  </#list>
+				 </#if>
 				</fo:table-cell>
 				
 				<#--><fo:table-cell border-style="solid">
@@ -286,7 +298,21 @@ under the License.
 				       </#if>
 				  </#list>
 				 </#if>
-				 
+				 <#if invoiceItemLevelAdjustments?has_content && kanAndKalRo?has_content>	
+                   <#assign alladjustList = invoiceItemLevelAdjustments.entrySet()>		 
+				   <#list alladjustList as eachOne>
+				       <#if eachOne.getKey() == i>				       
+				        <#list eachOne.getValue() as each> 
+				        <#if each.invoiceItemTypeId == "VAT_SALE">
+		                <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				         <fo:block text-align="left" font-weight="bold"  font-size="10pt" >&#160;</fo:block>
+				         <fo:block text-align="center" font-weight="bold"  font-size="10pt" >${each.itemValue?string("#0.00")}</fo:block>
+				          <#assign adjamt=adjamt+each.itemValue> 
+				         </#if>
+				        </#list>
+				       </#if>
+				  </#list>
+				 </#if>
 				</fo:table-cell>
 				</fo:table-row>
 
@@ -327,7 +353,7 @@ under the License.
 		   			<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount)?string("#0.00")}</fo:block>
 				<#else>
 					<#assign finalGrndToal=grandTotal+totTaxAmount2>
-					<fo:block text-align="center"  font-size="10pt" >${(grandTotal+totTaxAmount2)?string("#0.00")}</fo:block>
+					<fo:block text-align="center"  font-size="10pt" >${(totAmount+totTaxAmount2)?string("#0.00")}</fo:block>
 	            </#if>
 				</fo:table-cell>
 								
@@ -447,7 +473,7 @@ under the License.
 				<#if !kanAndKalRo?has_content>
 					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((finalTOtal+totTaxAmount)+mgpsAmt)?string("#0.00")}</fo:block>
 				<#else>
-					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((grandTotal+totTaxAmount2)+mgpsAmt)?string("#0.00")}</fo:block>
+					<fo:block text-align="right" font-weight="bold"   font-size="10pt" >TOTAL VALUE (RS.):   ${((totAmount+totTaxAmount2)+mgpsAmt)?string("#0.00")}</fo:block>
 				</#if>
 				<fo:block text-align="right"    font-size="10pt" >--------------</fo:block>
 				</fo:table-cell>
