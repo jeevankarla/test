@@ -208,7 +208,6 @@ conditionList.add(EntityCondition.makeCondition("primaryProductCategoryId",Entit
 products= delegator.findList("Product",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false );
 otherProdIds= EntityUtil.getFieldListFromEntityList(products,"productId", true);
 
-
 silkDepotList =[]
 silkNonDepotList =[]
 cottonDepotList =[]
@@ -230,6 +229,10 @@ def generateBillWiseReport()
 {
 	indexD=1;
 	indexND=1
+	BigDecimal totalReimbursementAmount = BigDecimal.ZERO;
+	BigDecimal advanceAmount = BigDecimal.ZERO;
+	BigDecimal balanceAmount = BigDecimal.ZERO;
+	
 	duplicateInvoiceIds=[];
 	DecimalFormat twoDForm = new DecimalFormat("#.##");
 	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
@@ -369,7 +372,6 @@ def generateBillWiseReport()
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 			indexND=indexND+1
 		}
-		
 	}
 	duplicateInvoiceIds.clear()
 	silkDepottotalsMap.put("partyName","TOTAL");
@@ -389,6 +391,9 @@ def generateBillWiseReport()
 	silkNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	silkNonDepotList.add(silkNonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -507,7 +512,6 @@ def generateBillWiseReport()
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 			indexND=indexND+1
 		}
-		
 	}
 	duplicateInvoiceIds.clear()
 	
@@ -528,6 +532,9 @@ def generateBillWiseReport()
 	cottonNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	cottonNonDepotList.add(cottonNonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -648,7 +655,6 @@ def generateBillWiseReport()
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 			indexND=indexND+1
 		}
-		
 	}
 	duplicateInvoiceIds.clear()
 	
@@ -668,6 +674,9 @@ def generateBillWiseReport()
 	juteNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	juteNonDepotList.add(juteNonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -786,7 +795,6 @@ def generateBillWiseReport()
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 			indexND=indexND+1
 		}
-		
 	}
 	duplicateInvoiceIds.clear()
 	
@@ -807,6 +815,13 @@ def generateBillWiseReport()
 	otherNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	otherNonDepotList.add(otherNonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
+	
+	context.totalReimbursementAmount=totalReimbursementAmount
+	context.advanceAmount=advanceAmount
+	context.balanceAmount=balanceAmount
 }
 
 
@@ -886,6 +901,9 @@ def generatePartyWiseReport()
 {
 	indexD=1;
 	indexND=1;
+	BigDecimal totalReimbursementAmount = BigDecimal.ZERO;
+	BigDecimal advanceAmount = BigDecimal.ZERO;
+	BigDecimal balanceAmount = BigDecimal.ZERO;
 	duplicateInvoiceIds=[];
 	DecimalFormat twoDForm = new DecimalFormat("#.##");
 	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
@@ -977,10 +995,8 @@ def generatePartyWiseReport()
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
-				if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				}
+				serviceChrgPercentage=roPercentagesMap.get("serCharge")
+				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
@@ -992,14 +1008,14 @@ def generatePartyWiseReport()
 		tempMap.put("actualFrightCharges", twoDForm.format(actualFrightCharges) );
         tempMap.put("frightCharges", twoDForm.format(eligibleFrightCharges));
 		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
 		
 		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachParty), UtilMisc.toSet("facilityId"), null, null, false );
 		
 		if(UtilValidate.isNotEmpty(facility)){
 			
 			tempMap.put("sNo", indexD);
+			mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
+			tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
 			tempMap.put("depotCharges", twoDForm.format(depotCharges) );
 			silkDepotList.add(tempMap);
 			
@@ -1013,6 +1029,7 @@ def generatePartyWiseReport()
 			
 		}else{
 		    tempMap.put("sNo", indexND);
+			tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
 			tempMap.put("depotCharges", BigDecimal.ZERO);
 			silkNonDepotList.add(tempMap);
 			
@@ -1024,7 +1041,6 @@ def generatePartyWiseReport()
 			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
 			indexND=indexND+1
 		}
-		
 	}
 	duplicateInvoiceIds.clear()
 	silkDepottotalsMap.put("partyName","TOTAL");
@@ -1044,6 +1060,9 @@ def generatePartyWiseReport()
 	silkNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	silkNonDepotList.add(silkNonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -1113,10 +1132,9 @@ def generatePartyWiseReport()
 				}else{
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
-				if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				}
+				
+				serviceChrgPercentage=roPercentagesMap.get("serCharge")
+				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
@@ -1132,11 +1150,11 @@ def generatePartyWiseReport()
 		tempMap.put("actualFrightCharges", twoDForm.format(actualFrightCharges));
 		tempMap.put("frightCharges", twoDForm.format(eligibleFrightCharges));
 		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge));
 		
 		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachParty), UtilMisc.toSet("facilityId"), null, null, false );
 		if(UtilValidate.isNotEmpty(facility)){
+			mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
+			tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
 			tempMap.put("depotCharges", depotCharges);
 			cottonDepotList.add(tempMap);
 			
@@ -1148,6 +1166,7 @@ def generatePartyWiseReport()
 			totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
 			
 		}else{
+			tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
 			tempMap.put("depotCharges", BigDecimal.ZERO);
 			cottonNonDepotList.add(tempMap);
 			
@@ -1178,6 +1197,9 @@ def generatePartyWiseReport()
 	cottonNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	cottonNonDepotList.add(cottonNonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -1246,10 +1268,8 @@ def generatePartyWiseReport()
 				}else{
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
-				if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				}
+				serviceChrgPercentage=roPercentagesMap.get("serCharge")
+				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
@@ -1264,11 +1284,11 @@ def generatePartyWiseReport()
 		tempMap.put("actualFrightCharges", actualFrightCharges);
 		tempMap.put("frightCharges", eligibleFrightCharges);
 		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMap.put("mgpsServiceCharge", mgpsServiceCharge);
 		
 		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachParty), UtilMisc.toSet("facilityId"), null, null, false );
 		if(UtilValidate.isNotEmpty(facility)){
+			mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
+			tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
 			tempMap.put("depotCharges", depotCharges);
 			juteDepotList.add(tempMap);
 			
@@ -1280,6 +1300,7 @@ def generatePartyWiseReport()
 			totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
 			
 		}else{
+			tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
 			tempMap.put("depotCharges", BigDecimal.ZERO);
 			juteNonDepotList.add(tempMap);
 			  
@@ -1309,6 +1330,9 @@ def generatePartyWiseReport()
 	juteNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	juteNonDepotList.add(juteNonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -1376,10 +1400,8 @@ def generatePartyWiseReport()
 				}else{
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
-				if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				}
+				serviceChrgPercentage=roPercentagesMap.get("serCharge")
+				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
@@ -1393,11 +1415,11 @@ def generatePartyWiseReport()
 		tempMap.put("actualFrightCharges", actualFrightCharges);
 		tempMap.put("frightCharges", eligibleFrightCharges);
 		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMap.put("mgpsServiceCharge", mgpsServiceCharge);
 		
 		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachParty), UtilMisc.toSet("facilityId"), null, null, false );
 		if(UtilValidate.isNotEmpty(facility)){
+			mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
+			tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
 			tempMap.put("depotCharges", depotCharges);
 			otherDepotList.add(tempMap);
 			
@@ -1409,6 +1431,7 @@ def generatePartyWiseReport()
 			totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
 			
 		}else{
+			tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
 			tempMap.put("depotCharges", BigDecimal.ZERO);
 			otherNonDepotList.add(tempMap);
 			 
@@ -1440,6 +1463,13 @@ def generatePartyWiseReport()
 	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	otherNonDepotList.add(otherNonDepottotalsMap);
 	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
+	
+	context.totalReimbursementAmount=totalReimbursementAmount
+	context.advanceAmount=advanceAmount
+	context.balanceAmount=balanceAmount
+	
 }
 
 
@@ -1450,6 +1480,10 @@ def generatePartyWiseReport()
 def generateSummaryReport(stateGeoIds)
 {
 	index=1;
+	BigDecimal totalReimbursementAmount = BigDecimal.ZERO;
+	BigDecimal advanceAmount = BigDecimal.ZERO;
+	BigDecimal balanceAmount = BigDecimal.ZERO;
+	
 	duplicateInvoiceIds=[];
 	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
 	BigDecimal totalInvoiceValueD = BigDecimal.ZERO;
@@ -1676,6 +1710,9 @@ def generateSummaryReport(stateGeoIds)
 	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	silkNonDepotList.add(silkNonDepottotalsMap);
 	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
+	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
@@ -1691,14 +1728,6 @@ def generateSummaryReport(stateGeoIds)
 	totalDepotChargesND = BigDecimal.ZERO;
 	totalSerChargesND=BigDecimal.ZERO;
 	
-	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
-	
-	tenPerInvoiceIds=result.getAt("tenPerInvoiceIds")
-	mgpsInvoiceIds=result.getAt("mgpsInvoiceIds")
-	
-	tenPerAndMgpsInvoiceIds=[];
-	tenPerAndMgpsInvoiceIds.addAll(tenPerInvoiceIds)
-	tenPerAndMgpsInvoiceIds.addAll(mgpsInvoiceIds)
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -1888,6 +1917,9 @@ def generateSummaryReport(stateGeoIds)
 	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	cottonNonDepotList.add(cottonNonDepottotalsMap);
 	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
+	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
@@ -1902,15 +1934,6 @@ def generateSummaryReport(stateGeoIds)
 	totalFrightChargesND = BigDecimal.ZERO;
 	totalDepotChargesND = BigDecimal.ZERO;
 	totalSerChargesND=BigDecimal.ZERO;
-	
-	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
-	
-	tenPerInvoiceIds=result.getAt("tenPerInvoiceIds")
-	mgpsInvoiceIds=result.getAt("mgpsInvoiceIds")
-	
-	tenPerAndMgpsInvoiceIds=[];
-	tenPerAndMgpsInvoiceIds.addAll(tenPerInvoiceIds)
-	tenPerAndMgpsInvoiceIds.addAll(mgpsInvoiceIds)
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -2098,6 +2121,9 @@ def generateSummaryReport(stateGeoIds)
 	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	juteNonDepotList.add(juteNonDepottotalsMap);
 	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
+	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
@@ -2112,15 +2138,6 @@ def generateSummaryReport(stateGeoIds)
 	totalFrightChargesND = BigDecimal.ZERO;
 	totalDepotChargesND = BigDecimal.ZERO;
 	totalSerChargesND=BigDecimal.ZERO;
-	
-	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
-	
-	tenPerInvoiceIds=result.getAt("tenPerInvoiceIds")
-	mgpsInvoiceIds=result.getAt("mgpsInvoiceIds")
-	
-	tenPerAndMgpsInvoiceIds=[];
-	tenPerAndMgpsInvoiceIds.addAll(tenPerInvoiceIds)
-	tenPerAndMgpsInvoiceIds.addAll(mgpsInvoiceIds)
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -2306,6 +2323,13 @@ def generateSummaryReport(stateGeoIds)
 	otherNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	otherNonDepotList.add(otherNonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
+	
+	context.totalReimbursementAmount=totalReimbursementAmount
+	context.advanceAmount=advanceAmount
+	context.balanceAmount=balanceAmount
 }
 
 
@@ -2320,6 +2344,7 @@ context.juteNonDepotList=juteNonDepotList
 
 context.otherDepotList=otherDepotList
 context.otherNonDepotList=otherNonDepotList
+
 
 
 

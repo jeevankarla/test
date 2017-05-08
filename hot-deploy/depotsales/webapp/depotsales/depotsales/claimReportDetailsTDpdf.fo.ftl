@@ -53,19 +53,19 @@ under the License.
              			
              		    <fo:table-column column-width="3%"/>
 			            <fo:table-column column-width="18%"/>
-			            <fo:table-column column-width="10.8%"/>
-			            <fo:table-column column-width="10.8%"/>
-	                    <fo:table-column column-width="10.8%"/>
-	                    <fo:table-column column-width="10.8%"/>
-	                    <fo:table-column column-width="10.8%"/>
-	                    <fo:table-column column-width="10.8%"/>
+			            <fo:table-column column-width="13.1%"/>
+			            <fo:table-column column-width="13.1%"/>
+	                    <fo:table-column column-width="13.1%"/>
+	                    <fo:table-column column-width="13.1%"/>
+	                    <fo:table-column column-width="13.1%"/>
+	                    <fo:table-column column-width="13.1%"/>
 			            <fo:table-body>
 		            		 <fo:table-row>
 								 <fo:table-cell number-columns-spanned="7">
 										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">SILK DEPOT</fo:block>
 					            </fo:table-cell >
-							</fo:table-row>  
-			                 <fo:table-row>
+							</fo:table-row> 
+			                 <fo:table-row page-break-inside="avoid">
 								 <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
 					            </fo:table-cell >
@@ -88,10 +88,9 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL SUBSIDY</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>  
-							
 								<#list silkDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
@@ -128,8 +127,8 @@ under the License.
 								 <fo:table-cell  number-columns-spanned="7">
 										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">SILK NON-DEPOT</fo:block>
 					            </fo:table-cell >
-							</fo:table-row>  
-			                 <fo:table-row>
+							</fo:table-row> 
+			                 <fo:table-row page-break-inside="avoid">
 								 <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
 					            </fo:table-cell >
@@ -152,10 +151,9 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL SUBSIDY</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>  
-							
 								<#list silkNonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
@@ -194,7 +192,7 @@ under the License.
 										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">COTTON DEPOT</fo:block>
 					            </fo:table-cell >
 							</fo:table-row>  
-			                 <fo:table-row>
+			                 <fo:table-row page-break-inside="avoid">
 								 <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
 					            </fo:table-cell >
@@ -217,10 +215,9 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL SUBSIDY</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>  
-							
 								<#list cottonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
@@ -258,8 +255,8 @@ under the License.
 								 <fo:table-cell number-columns-spanned="7">
 										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">COTTON NON-DEPOT</fo:block>
 					            </fo:table-cell >
-							</fo:table-row>  
-			                 <fo:table-row>
+							</fo:table-row>
+			                 <fo:table-row page-break-inside="avoid">
 								 <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
 					            </fo:table-cell >
@@ -282,10 +279,9 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL SUBSIDY</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>  
-							
 								<#list cottonNonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
@@ -327,7 +323,7 @@ under the License.
 										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">JUTE DEPOT</fo:block>
 					            </fo:table-cell >
 							</fo:table-row>  
-			                 <fo:table-row>
+			                 <fo:table-row page-break-inside="avoid">
 								 <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
 					            </fo:table-cell >
@@ -350,10 +346,9 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL SUBSIDY</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>  
-							
 								<#list juteDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
@@ -386,12 +381,12 @@ under the License.
 
 
 
-                               <fo:table-row>
+                            <fo:table-row>
 								 <fo:table-cell number-columns-spanned="7">
 										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">JUTE NON-DEPOT</fo:block>
 					            </fo:table-cell >
 							</fo:table-row>  
-			                 <fo:table-row>
+			                 <fo:table-row page-break-inside="avoid">
 								 <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
 					            </fo:table-cell >
@@ -414,10 +409,9 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL SUBSIDY</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>  
-							
 								<#list juteNonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
@@ -450,12 +444,12 @@ under the License.
 							     
 							     
 							     
-							     <fo:table-row>
+							<fo:table-row>
 								 <fo:table-cell number-columns-spanned="7">
 										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">OTHER DEPOT</fo:block>
 					            </fo:table-cell >
 							</fo:table-row>  
-			                 <fo:table-row>
+			                 <fo:table-row page-break-inside="avoid">
 								 <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
 					            </fo:table-cell >
@@ -478,10 +472,9 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL SUBSIDY</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>  
-							
 								<#list otherDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
@@ -525,7 +518,7 @@ under the License.
 										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">OTHER NON DEPOT</fo:block>
 					            </fo:table-cell >
 							</fo:table-row>  
-			                 <fo:table-row>
+			                 <fo:table-row page-break-inside="avoid">
 								 <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
 					            </fo:table-cell >
@@ -548,10 +541,9 @@ under the License.
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
 					            </fo:table-cell>
 								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">MGPS SERVICE Charges</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL SUBSIDY</fo:block>
 					            </fo:table-cell>
 							</fo:table-row>  
-							
 								<#list otherNonDepotList as invoice>
 										<fo:table-row>
 										    <fo:table-cell  border-style="solid">
@@ -581,7 +573,63 @@ under the License.
 										</fo:table-row> 
 								
 							     </#list>
-
+										<fo:table-row>
+										    <fo:table-cell  number-columns-spanned="8">
+								            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+								            </fo:table-cell >
+										</fo:table-row> 
+										<fo:table-row>
+										    <fo:table-cell  number-columns-spanned="8">
+								            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+								            </fo:table-cell >
+										</fo:table-row> 
+										<fo:table-row>
+										    <fo:table-cell  number-columns-spanned="7">
+								            	<fo:block  text-align="right" font-size="12pt"  font-weight="bold" white-space-collapse="false">Amount of Reimburesment Claimed Under MGPS:</fo:block>
+								            </fo:table-cell >
+											<fo:table-cell>
+								            	<fo:block  text-align="right" font-size="12pt"  font-weight="bold" white-space-collapse="false"> ${totalReimbursementAmount?if_exists}</fo:block>
+								            </fo:table-cell >
+								            
+										</fo:table-row> 
+										<fo:table-row>
+										    <fo:table-cell   number-columns-spanned="7">
+								            	<fo:block  text-align="right" font-size="12pt"  font-weight="bold" white-space-collapse="false">Less :  Advance Amount:</fo:block>
+								            </fo:table-cell >
+											<fo:table-cell>
+								            	<fo:block  text-align="right" font-size="12pt"  font-weight="bold" white-space-collapse="false">${advanceAmount?if_exists}</fo:block>
+								            </fo:table-cell >
+										</fo:table-row> 
+										<fo:table-row>
+										    <fo:table-cell  number-columns-spanned="7">
+								            	<fo:block  text-align="right" font-size="12pt"  font-weight="bold" white-space-collapse="false">Balance amount Due:</fo:block>
+								            </fo:table-cell >
+											<fo:table-cell>
+								            	<fo:block  text-align="right" font-size="12pt"  font-weight="bold" white-space-collapse="false">${balanceAmount?if_exists}</fo:block>
+								            </fo:table-cell >
+										</fo:table-row> 
+										<fo:table-row>
+										    <fo:table-cell  number-columns-spanned="8">
+								            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+								            </fo:table-cell >
+										</fo:table-row> 
+										<fo:table-row>
+										    <fo:table-cell  number-columns-spanned="8">
+								            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
+								            </fo:table-cell >
+										</fo:table-row> 
+										<fo:table-row>
+										    <fo:table-cell   number-columns-spanned="7">
+								            	<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">HYDERABAD</fo:block>
+								            </fo:table-cell >
+											
+										</fo:table-row> 
+										<fo:table-row>
+										    
+											<fo:table-cell>
+								            	<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">DATE:06-05-2017</fo:block>
+								            </fo:table-cell >
+										</fo:table-row> 
 						</fo:table-body>
 					</fo:table>
 				</fo:block>

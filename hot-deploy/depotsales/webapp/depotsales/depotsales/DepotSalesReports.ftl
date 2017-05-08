@@ -46,6 +46,7 @@ $(document).ready(function(){
 	    makeDatePicker1("eObFromDate");
 	    makeDatePicker2("subsidyFromDate","subsidyThruDate"); 
 	    makeDatePicker2("claimFromDateTD","claimThruDateTD");
+	    makeDatePicker2("claimFromDateTenPer","claimThruDateTenPer");
 	    makeDatePicker2("claimFromDate","claimThruDate");
 	    makeDatePicker4("PFHFromDateCrDr","PFHThruDateCrDr");
 	    makeDatePicker1("reimburcentTransporterFRO","reimburcentTransporterTHRU");
@@ -857,6 +858,41 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			<td width="10%"></td>			
 			<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('claimReportDetailsTD', '<@ofbizUrl>claimReportDetailsTD.pdf</@ofbizUrl>');" class="buttontext"/></td>
 			<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('claimReportDetailsTD', '<@ofbizUrl>claimReportDetailsTD.xls?header=required</@ofbizUrl>');" class="buttontext"/></td>         			
+		</form>	
+      </tr>
+      <tr class="alternate-row">
+    	<form id="claimReportDetailsTenPer" name="claimReportDetailsTenPer" method="post"  target="_blank" action="<@ofbizUrl>claimReportDetailsTenPer.pdf</@ofbizUrl>">	
+  			<td width="20%" nowrap>State Of claim For Reimbursement Of 10%  Subsidy Report</td>
+  			<td width="15%">From</br><input  type="text" size="18pt" id="claimFromDateTenPer" readonly  name="claimFromDateTenPer"/></br>
+  			To</br><input  type="text" size="18pt" id="claimThruDateTenPer" readonly  name="claimThruDateTenPer"/></td>
+  			 <td width="15%"><span class='h3'>Branch
+				<select name="branchId" id="branchId_TEN" onchange="javascript:disableFields(this,'geoId_TEN');">
+					<option value=""></option>
+					<option value="HO">Head Office</option>
+					<#list  formatList as formatList>
+						<option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+					</#list> 
+				</select>    								
+			</span></br>
+  			<span class='h3'>State</br>
+				<select name="geoId" id="geoId_TEN" onchange="javascript:disableFields(this,'branchId_TEN');">
+				    <option value=""></option>
+					<option value="ALL">ALL</option>
+					<#list  statesList as eachState>
+						<option value='${eachState.geoId?if_exists}'>${eachState.geoName?if_exists}</option>
+					</#list> 
+				</select>    								
+			</span></td>
+			<td width="10%">
+			    <span class='h3'>Type :<select name="reportTypeFlag" id="reportTypeFlag" selected>
+					<option value="BILL_WISE">Bill Wise</option>
+					<option value="PARTY_WISE">Party Wise</option>
+					<option value="SUMMARY">Summary</option>
+				</select></span>
+			</td>
+			<td width="10%"></td>			
+			<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('claimReportDetailsTenPer', '<@ofbizUrl>claimReportDetailsTenPer.pdf</@ofbizUrl>');" class="buttontext"/></td>
+			<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('claimReportDetailsTenPer', '<@ofbizUrl>claimReportDetailsTenPer.xls?header=required</@ofbizUrl>');" class="buttontext"/></td>         			
 		</form>	
       </tr>
 <tr class="alternate-row">

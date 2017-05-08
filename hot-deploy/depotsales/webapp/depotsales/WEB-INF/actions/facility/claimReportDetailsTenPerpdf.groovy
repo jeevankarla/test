@@ -739,14 +739,25 @@ def getInvocieAmount(invoiceId)
 	innerCondition.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
 	innerCondition.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 	innerCondition.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
-	fieldsToSelect = ["itemValue"] as Set;
+	fieldsToSelect = ["amount","invoiceId","invoiceItemSeqId","parentInvoiceItemSeqId","itemValue"] as Set;
 	invoiceItems = delegator.findList("InvoiceItem",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
 	
 	for(eachItem in invoiceItems)
 	{
-		if(eachItem.itemValue!=null)
-		invoiceAmount=invoiceAmount.add(eachItem.itemValue)
-		
+		innerCondition.clear();
+		innerCondition.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoiceId));
+		innerCondition.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,eachItem.invoiceItemSeqId));
+		innerCondition.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+		fieldsToSelect = ["invoiceItemSeqId"] as Set;
+		invoiceItems1 = delegator.findList("InvoiceItem",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
+		invoiceItem1=EntityUtil.getFirst(invoiceItems1)
+		if(invoiceItem1!=null){
+			schemeQty = getSchemeQty(eachItem.invoiceId,invoiceItem1.invoiceItemSeqId)
+			if(schemeQty>0)
+			invoiceAmount=invoiceAmount.add(schemeQty.multiply(eachItem.amount));
+			else if(eachItem.itemValue!=null)
+			invoiceAmount=invoiceAmount.add(eachItem.itemValue);
+		}
 	}
 	return invoiceAmount;
 }
@@ -768,6 +779,25 @@ def getTenPerSubsidyAmount(invoiceId)
 	return tenPerSubAmount;
 	
 }
+
+def getSchemeQty(invoiceId,invoiceItemSeqId)
+{
+	BigDecimal schemeQty = BigDecimal.ZERO;
+	innerCondition=[];
+	innerCondition.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoiceId));
+	if(UtilValidate.isNotEmpty(invoiceItemSeqId)){
+		innerCondition.add(EntityCondition.makeCondition("invoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
+	}
+	fieldsToSelect = ["quantity"] as Set;
+	result = delegator.findList("OrderAdjustmentBilling",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
+	for(eachItem in result)
+	{
+		if(eachItem.quantity!=null)
+		schemeQty=schemeQty.add(eachItem.quantity)
+	}
+	return schemeQty;
+}
+
 
 def generatePartyWiseReport()
 {
@@ -813,7 +843,7 @@ def generatePartyWiseReport()
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerInvoiceIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,silkProdIds));
-	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","quantity","productId","costCenterId","itemValue","invoiceGrandTotal"] as Set;
+	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","quantity","productId","costCenterId","itemValue","invoiceItemSeqId"] as Set;
 	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	silkPartyIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"partyId", true);
 	
@@ -832,16 +862,17 @@ def generatePartyWiseReport()
 		for(invoice in silkinvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
-			invoiceQty=invoiceQty.add(invoice.quantity);
+			
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId)
+			schemeQty=getSchemeQty(invoice.invoiceId,"")
 			
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				
+				invoiceQty=invoiceQty.add(schemeQty);
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				tenPerSubAmount=tenPerSubAmount.add(tenSubAmount)
-				serviceCharge=serviceCharge.add(invoiceAmount.multiply(0.05))
-				subsidyAmount=subsidyAmount.add(tenSubAmount.add(serviceCharge))
+				serviceCharge=serviceCharge.add(tenSubAmount.multiply(0.05))
+				subsidyAmount=subsidyAmount.add(tenSubAmount.add(tenSubAmount.multiply(0.05)))
 				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
 		}
@@ -881,19 +912,19 @@ def generatePartyWiseReport()
 	}
 	duplicateInvoiceIds.clear()
 	silkDepottotalsMap.put("partyName","TOTAL");
-	silkDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
-	silkDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	silkDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountD);
-	silkDepottotalsMap.put("frightCharges",totalServiceChargeD);
-	silkDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
+	silkDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyD) );
+	silkDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueD) );
+	silkDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountD) );
+	silkDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD) );
+	silkDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD) );
 	silkDepotList.add(silkDepottotalsMap);
 	
 	silkNonDepottotalsMap.put("partyName","TOTAL");
-	silkNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	silkNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	silkNonDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountND);
-	silkNonDepottotalsMap.put("frightCharges",totalServiceChargeND);
-	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSubAmountND);
+	silkNonDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyND) );
+	silkNonDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueND) );
+	silkNonDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountND) );
+	silkNonDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeND) );
+	silkNonDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountND) );
 	silkNonDepotList.add(silkNonDepottotalsMap);
 	
 	index=1;
@@ -941,16 +972,17 @@ def generatePartyWiseReport()
 		for(invoice in cottonInvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
-			invoiceQty=invoiceQty.add(invoice.quantity);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId)
+			schemeQty=getSchemeQty(invoice.invoiceId,"")
+			
 			
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				
+				invoiceQty=invoiceQty.add(schemeQty);
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				tenPerSubAmount=tenPerSubAmount.add(tenSubAmount)
-				serviceCharge=serviceCharge.add(invoiceAmount.multiply(0.05))
-				subsidyAmount=subsidyAmount.add(tenSubAmount.add(serviceCharge))
+				serviceCharge=serviceCharge.add(tenSubAmount.multiply(0.05))
+				subsidyAmount=subsidyAmount.add(tenSubAmount.add(tenSubAmount.multiply(0.05)))
 				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
 		}
@@ -1046,16 +1078,17 @@ def generatePartyWiseReport()
 		for(invoice in juteInvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
-			invoiceQty=invoiceQty.add(invoice.quantity);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId)
+			schemeQty=getSchemeQty(invoice.invoiceId,"")
+			
 			
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				
+				invoiceQty=invoiceQty.add(schemeQty);
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				tenPerSubAmount=tenPerSubAmount.add(tenSubAmount)
-				serviceCharge=serviceCharge.add(invoiceAmount.multiply(0.05))
-				subsidyAmount=subsidyAmount.add(tenSubAmount.add(serviceCharge))
+				serviceCharge=serviceCharge.add(tenSubAmount.multiply(0.05))
+				subsidyAmount=subsidyAmount.add(tenSubAmount.add(tenSubAmount.multiply(0.05)))
 				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
 			
@@ -1150,16 +1183,17 @@ def generatePartyWiseReport()
 		for(invoice in otherInvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
-			invoiceQty=invoiceQty.add(invoice.quantity);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId)
+			schemeQty=getSchemeQty(invoice.invoiceId,"")
+			
 			
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				
+				invoiceQty=invoiceQty.add(schemeQty);
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				tenPerSubAmount=tenPerSubAmount.add(tenSubAmount)
-				serviceCharge=serviceCharge.add(invoiceAmount.multiply(0.05))
-				subsidyAmount=subsidyAmount.add(tenSubAmount.add(serviceCharge))
+				serviceCharge=serviceCharge.add(tenSubAmount.multiply(0.05))
+				subsidyAmount=subsidyAmount.add(tenSubAmount.add(tenSubAmount.multiply(0.05)))
 				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
 		}
