@@ -3566,10 +3566,11 @@ public class MaterialPurchaseServices {
 				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
 	
 				
-				if(!purposeTypeId.equals("DC_DEPOT_PURCHASE")){
 				try{
 					Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
 			        
+					Debug.log("resultMap==========333=========="+resultMap);
+					
 			        if (ServiceUtil.isError(resultMap)) {
 			        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
 			        	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
@@ -3579,7 +3580,6 @@ public class MaterialPurchaseServices {
 			  		return ServiceUtil.returnError( "Error in Order Item Detail");
 			  	}
 				
-				}
 				
 				orderItemDetailSeq++;
 				
@@ -3588,7 +3588,13 @@ public class MaterialPurchaseServices {
 
 			//end populating orderItem Detail
 			
+
+			
 			List<GenericValue> orderItems = delegator.findList("OrderItem", EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId), UtilMisc.toSet("orderItemSeqId", "productId"), null, null, false);
+			
+			Debug.log("orderItems=========444==========="+orderItems);
+
+			
 			for(Map eachTermMap : termsList){
 				Map termCreateCtx = FastMap.newInstance();
 				termCreateCtx.put("userLogin", userLogin);
