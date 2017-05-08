@@ -3534,7 +3534,7 @@ public class MaterialPurchaseServices {
 				
 				Debug.log("yarnUOM===================="+yarnUOM);
 				orderItemDetail.put("productId",productId);
-				
+				 
 				Debug.log("productId===================="+productId);
 				if(UtilValidate.isNotEmpty(baleQuantity))
 				orderItemDetail.put("baleQuantity",baleQuantity);
