@@ -397,9 +397,9 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 		remarks = "";
 		if(OrderItemDetail)
 		remarks = OrderItemDetail.remarks;
-		packQuantity="";
-		packets="";
-		if(UtilValidate.isNotEmpty(orderitems.orderId)){
+		//packQuantity="";
+		//packets="";
+		/*if(UtilValidate.isNotEmpty(orderitems.orderId)){
 			conditionList=[];
 			conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderitems.orderId));
 			conditionList.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, orderitems.orderItemSeqId));
@@ -416,12 +416,12 @@ if(UtilValidate.isNotEmpty(orderDetails)){
 				packetsDetails=EntityUtil.getFirst(packetsDetails);
 				packets=packetsDetails.attrValue;
 			}
-		}
+		}*/
 		orderDetailsMap["remarks"]=remarks;
 		orderDetailsMap["quantity"]=orderitems.quantity;
 		orderDetailsMap["unitPrice"]=orderitems.unitPrice;
-		orderDetailsMap["packetQuantity"]=packQuantity;
-		orderDetailsMap["packets"]=packets;
+		//orderDetailsMap["packetQuantity"]=packQuantity;
+		//orderDetailsMap["packets"]=packets;
 		orderDetailsMap["numQuantity"]=OrderItemDetail.baleQuantity;
 		orderDetailsMap["bundleWeight"]=OrderItemDetail.bundleWeight;
 		orderDetailsMap["Uom"]=OrderItemDetail.Uom;
