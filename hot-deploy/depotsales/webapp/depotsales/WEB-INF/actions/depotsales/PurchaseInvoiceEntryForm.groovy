@@ -212,7 +212,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 			context.purchaseTaxType = purchaseTaxType;
 			context.purchaseTitleTransferEnumId = purchaseTitleTransferEnumId;
 			
-			//Debug.log("purchaseTitleTransferEnumId=============="+purchaseTitleTransferEnumId);
+			Debug.log("purchaseTitleTransferEnumId=============="+purchaseTitleTransferEnumId);
 			
 			purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
 			context.purTaxListReady = purTaxList;

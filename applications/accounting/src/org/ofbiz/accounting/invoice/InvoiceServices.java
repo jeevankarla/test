@@ -6196,7 +6196,7 @@ public class InvoiceServices {
     				billOfSale.put("invoiceSequence", prefix+"/"+roSequnce+"/"+"VAT"+"/"+productCategoryId+"/"+indentTypeId+"/"+UtilDateTime.toDateString(customTimePeriod.getDate("fromDate"),"yy")+"-"+UtilDateTime.toDateString(customTimePeriod.getDate("thruDate"),"yy"+"/"+sequenceId));
     				delegator.createOrStore(billOfSale); 
    			    }
-   			    if(!invoiceTaxType.equals("NO_E2_FORM")){
+   			    if(!invoiceTaxType.equals("NO_E2_FORM") && !invoiceTaxType.equals("EXEMPTED_GOODS")){
        				GenericValue billOfSale = delegator.makeValue("BillOfSaleInvoiceSequence");
        				
        				//Debug.log("billOfSale===sale=========="+billOfSale);
