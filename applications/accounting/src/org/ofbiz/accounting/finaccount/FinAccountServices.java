@@ -1433,13 +1433,34 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	  		  if (paramMap.containsKey("partyId"+ thisSuffix)) {
 	  			  partyId = (String) paramMap.get("partyId"+thisSuffix);
 	  		  }
-	  		  String empFin=(String)("EMPCON_"+partyId);
-	  		  String emprFin=(String)("EMPRCON_"+partyId);
-	  		  String vpfFin=(String)("VPFCON_"+partyId);
-
+	  		 
+	  		 try {
+	  		
+	  			 List conditionList = FastList.newInstance();
+	  			if(UtilValidate.isNotEmpty(partyId)){
+	  	  		  conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyId));
+	  	  		  }
+	  			conditionList.add(EntityCondition.makeCondition("finAccountTypeId",EntityOperator.IN,UtilMisc.toList("EMP_CONTRI","EMPR_CONTRI","VPF_CONTRI")));
+	  			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+		  		  List<GenericValue> finAccList = delegator.findList("FinAccount", condition, null, null, null, false);
+	  			 
+		  		String employeefinAccountId =  null;
+		  		List<GenericValue> employeefinAccountList = EntityUtil.filterByCondition(finAccList, EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,"EMP_CONTRI"));
+	  			employeefinAccountId = EntityUtil.getFirst(employeefinAccountList).getString("finAccountId");
+	  			
+	  			String employerfinAccountId =  null;
+	  			List<GenericValue> employerconditionList = EntityUtil.filterByCondition(finAccList, EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "EMPR_CONTRI"));
+	  			employerfinAccountId = EntityUtil.getFirst(employerconditionList).getString("finAccountId");
+	  			
+	  			String volunteerfinAccountId =  null;
+	  			List<GenericValue> volunteerfinAccountList = EntityUtil.filterByCondition(finAccList, EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "VPF_CONTRI"));
+	  			volunteerfinAccountId = EntityUtil.getFirst(volunteerfinAccountList).getString("finAccountId");
+	  			
 	  	  		Map employeefinMap = FastMap.newInstance();
 		  	  		employeefinMap.put("partyId",partyId);
-		  	  		employeefinMap.put("finAccountId","EMPCON_"+partyId);
+		  	  	if(UtilValidate.isNotEmpty(employerfinAccountId)){   
+		  	  		employeefinMap.put("finAccountId",employeefinAccountId);
+		  	  	}  
 		  	  		employeefinMap.put("transactionDate",paymentDate);
 		  	  		employeefinMap.put("finAccountTransTypeId","WITHDRAWAL");
 		  	  		employeefinMap.put("statusId","FINACT_TRNS_CREATED");
@@ -1449,7 +1470,9 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		employeefinMap.put("amount",employeeFinAmount);
 	  	  		Map employeerfinMap = FastMap.newInstance();
 		  	  		employeerfinMap.put("partyId",partyId);
-		  	  		employeerfinMap.put("finAccountId","EMPRCON_"+partyId);
+		  	 if(UtilValidate.isNotEmpty(employerfinAccountId)){  		
+		  	  		employeerfinMap.put("finAccountId",employerfinAccountId);
+	  		 }
 		  	  		employeerfinMap.put("transactionDate",paymentDate);
 		  	  		employeerfinMap.put("statusId","FINACT_TRNS_CREATED");
 		  	  		employeerfinMap.put("finAccountTransTypeId","WITHDRAWAL");
@@ -1457,9 +1480,13 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		//employeerfinMap.put("contraRefNum", contraRefNum);
 		  	  		employeerfinMap.put("userLogin", userLogin);
 		  	  		employeerfinMap.put("amount",employeerFinAmount);
+	  		
+	  		
 	  	  		Map vpffinMap = FastMap.newInstance();
 		  	  		vpffinMap.put("partyId",partyId);
-		  	  		vpffinMap.put("finAccountId","VPFCON_"+partyId);
+		  	  	if(UtilValidate.isNotEmpty(volunteerfinAccountId)){
+		  	  		vpffinMap.put("finAccountId",volunteerfinAccountId);
+		  	  	}
 		  	  		vpffinMap.put("transactionDate",paymentDate);
 		  	  		vpffinMap.put("finAccountTransTypeId","WITHDRAWAL");
 		  	  		vpffinMap.put("statusId","FINACT_TRNS_CREATED");
@@ -1468,10 +1495,20 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		vpffinMap.put("userLogin", userLogin);
 		  	  		vpffinMap.put("amount",vpfFinAmount);
 
-		  	  	finTransCreationMap.put(empFin,employeefinMap);
-		  	  	finTransCreationMap.put(emprFin,employeerfinMap);
-		  	  	finTransCreationMap.put(vpfFin,vpffinMap);
-		  }
+		  	  	finTransCreationMap.put(employeefinAccountId,employeefinMap);
+		  	  	finTransCreationMap.put(employerfinAccountId,employeerfinMap);
+		  	  	finTransCreationMap.put(volunteerfinAccountId,vpffinMap);
+	  		}catch (GenericEntityException e) {
+	  	  		  try {
+	  	  			  // only rollback the transaction if we started one...
+	  	  			  TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  	  		  } catch (GenericEntityException e2) {
+	  	  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  	  		  }
+	  	  		  Debug.logError("An entity engine error occurred while fetching data", module);
+	  	  	  }
+		}
+	  			 
 		BigDecimal depositAmt=BigDecimal.ZERO;
 		 if(UtilValidate.isNotEmpty(depositAmtStr)){
 		  try {
@@ -1502,11 +1539,6 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		 				Entry tempEntry = (Entry) tempIter.next();
 		 				String tempFinAccountId = (String) tempEntry.getKey();
 		 				Map FinAccountTransMap = (Map) tempEntry.getValue();
-		  				/*GenericValue finAccount = delegator.findOne("FinAccountAndType", UtilMisc.toMap("finAccountId", tempFinAccountId), false);
-				  		List condsList = FastList.newInstance();
-			        	if(UtilValidate.isEmpty(finAccount)){
-			        		return "error";
-			        	}*/
 			        	 Map<String, Object> createResult = dispatcher.runSync("createFinAccountTrans", FinAccountTransMap);
 					       if (ServiceUtil.isError(createResult)) {
 					       	   Debug.logError("Problems in service batchDepositContraFinAccTrans", module);
@@ -1518,6 +1550,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  				
 		  			}
 		  		}
+		  		 totalAmount = totalAmount.add(depositAmt);
         	if(UtilValidate.isNotEmpty(finAccountTransIds) && finAccountTransIds.size() > 0 ){
 		  		  Map serviceCtx = FastMap.newInstance();
 		  		  serviceCtx.put("finAccountTransIds", finAccountTransIds);
@@ -1543,7 +1576,6 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 			  			return "error";
 		  		  }
 			  	  String finAccntTransGroupId = (String)resultCtx.get("finAccntTransGroupId");
-//			  	  Debug.log("finAccntTransGroupId============"+finAccntTransGroupId);
 		  	  }	
         } catch (Exception ex) {
 	  		    return "error";
