@@ -63,6 +63,8 @@ conditionList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.
 }
 if(parameters.costCenterId){
 	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, parameters.costCenterId));
+	}else{
+	conditionList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.EQUALS, parameters.ownerPartyId));
 	}
 conditionList.add(EntityCondition.makeCondition("finstatusId", EntityOperator.EQUALS, "CREATED"));
 if(parameters.finAccountTypeId){
