@@ -150,23 +150,23 @@ under the License.
 					            	<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${eachEntry.get("partyIdName")?if_exists}</fo:block>
 					            </fo:table-cell >
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${eachEntry.get("buyerInvId")?if_exists}</fo:block>
+					            	<fo:block   text-align="center" font-size="9pt" white-space-collapse="false">${eachEntry.get("buyerInvId")?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="left" font-size="9pt" white-space-collapse="false">${eachEntry.get("invoiceDate")?if_exists}</fo:block>
+					            	<fo:block   text-align="center" font-size="9pt" white-space-collapse="false">${eachEntry.get("invoiceDate")?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${eachEntry.get("productId")?if_exists}</fo:block>
+					            	<fo:block   text-align="center" font-size="9pt" white-space-collapse="false">${eachEntry.get("productId")?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <#assign totSalVal = totSalVal+eachEntry.get("baseValue")?if_exists>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${eachEntry.get("baseValue")?if_exists}</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${eachEntry.get("taxPercentage")?if_exists}</fo:block>
+					            	<fo:block   text-align="center" font-size="9pt" white-space-collapse="false">${eachEntry.get("taxPercentage")?if_exists}</fo:block>
 					            	<#if eachEntry.get("taxSurChgPer")?has_content && eachEntry.get("taxSurChgPer")!=0>
-					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">&#160;</fo:block>
-					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${eachEntry.get("taxSurChgPer")?if_exists}</fo:block>
+					            	<fo:block   text-align="center" font-size="9pt" white-space-collapse="false">&#160;</fo:block>
+					            	<fo:block   text-align="center" font-size="9pt" white-space-collapse="false">${eachEntry.get("taxSurChgPer")?if_exists}</fo:block>
 					            	</#if>
 					            </fo:table-cell>
 					            <#if taxType?has_content>
