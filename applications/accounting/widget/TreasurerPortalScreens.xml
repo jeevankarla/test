@@ -6865,7 +6865,7 @@
                 <set field="tabButtonItem2" value="Invoice"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
                 
-                <set field="parameters.partyIdTo" from-field="parameters.ownerPartyId"/>
+                <!-- <set field="parameters.partyIdTo" from-field="parameters.ownerPartyId"/>
                 <set  field="parameters.invoiceDate" from-field="parameters.invoiceDate"/>
                 <set field="parameters.invoiceDate_fld0_value" from-field="parameters.invoiceDate_fld0_value"/>
                 <set field="parameters.invoiceDate_fld1_value" from-field="parameters.invoiceDate_fld1_value"/>
@@ -6876,7 +6876,8 @@
                     <field-map field-name="entityName" value="InvoiceAndType"/>
                     <field-map field-name="orderBy" value="invoiceDate DESC"/>
                  </service>
-                 <set field="invoices" from-field="result.listIt"/>
+                 <set field="invoices" from-field="result.listIt"/> -->
+                 <script location="component:/accounting/webapp/accounting/WEB-INF/actions/invoice/BulkFindInvoices.groovy"/>
             </actions>
             <widgets>
                  <decorator-screen name="CommonTreasurerPortalDecorator" location="component://accounting/widget/CommonScreens.xml">
@@ -6893,14 +6894,14 @@
             								<section>   
             									<condition >
             										<not><if-empty field="invoices" /></not>
-            										<and>
+            										<!-- <and>
 														<if-compare operator="equals" value="INVOICE_PAID" field="statusId" />
 														<if-compare operator="equals" value="INVOICE_READY" field="statusId" />
 														<if-compare operator="not-equals" value="OBC*" field="invoiceId" />
-													</and>
+													</and> -->
             									</condition>
             									<widgets>                        
-		            								<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
+		            								<!-- <link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
 														target="InvoiceSearchResultsCsv.csv">
 														<parameter param-name="parentTypeId" from-field="parameters.parentTypeId"/>
 														<parameter param-name="invoiceId_op" from-field="parameters.invoiceId_op"/>
@@ -6921,7 +6922,7 @@
 														<parameter param-name="dueDate_fld0_op" from-field="parameters.dueDate_fld0_op"/>
 														<parameter param-name="dueDate_fld1_value" from-field="parameters.dueDate_fld1_value"/>
 														<parameter param-name="dueDate_fld1_op" from-field="parameters.dueDate_fld1_op"/>
-													</link>	                 
+													</link>	 -->                 
 												</widgets>
 											</section>
                                         	<platform-specific>

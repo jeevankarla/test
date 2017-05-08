@@ -3604,39 +3604,43 @@ under the License.
             	 <list-options list-name="invoiceTypes" key-name="invoiceTypeId" description="${description}"/>
             </drop-down>
         </field> 
-        <field name="invoiceDate_fld0_value" title="From Date"><date-time type="date"/> </field>
+       <field name="fromDate" title="From Date"><date-time type="date"/> </field>
+        <field name="thruDate" title="Thru Date"><date-time type="date" /></field>
+        <!-- <field name="invoiceDate_fld0_value" title="From Date"><date-time type="date"/> </field>
         <field name="invoiceDate_fld01_value" title="Thru Date"><date-time type="date" /></field>
         <field name="invoiceDate_fld0_op"><hidden value="greaterThan"/></field>
         <field name="invoiceDate_fld1_op"><hidden value="opLessThan"/></field>
+	    <field name="statusId" ><hidden value="INVOICE_PAID"/></field>
+	    <field name="shipmentId_fld0_op"><hidden value="notEqual"/></field>
+	     <field name="shipmentId_fld1_op"><hidden value="notEqual"/></field>
+	    <field name="shipmentId_fld0_value"><hidden value="OBC"/></field>
+	    <field name="parentTypeId" entry-name="invoiceTypeId"><hidden /></field> -->
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        
     </form>
     <form name="PaymentsBulk" type="single" target="bulkFindPayments"
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
-        	<entity-condition entity-name="Invoice" list="invoices">
+        <entity-condition entity-name="PaymentType" list="PaymentTypes">
                 <condition-list combine="or">
-                    <condition-expr field-name="statusId" operator="equals" value="INVOICE_READY"/>
-                    <condition-expr field-name="statusId" operator="equals" value="INVOICE_PAID"/>
+                    <condition-expr field-name="paymentTypeId" operator="equals" value="ADVANCES_PAYIN"/>
+                    <condition-expr field-name="paymentTypeId" operator="equals" value="RECEIPT"/>
+                     <condition-expr field-name="paymentTypeId" operator="equals" value="ADVANCES_PAYOUT"/>
+                      <condition-expr field-name="paymentTypeId" operator="equals" value="DISBURSEMENT"/>
                 </condition-list>
-                <order-by field-name="statusId"/>
+                <order-by field-name="-paymentTypeId"/>
             </entity-condition>
         </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="invoiceId"><text-find ignore-case="true"/></field>
-        <!--  <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>  -->
-    	<!-- <field name="comments"><text-find ignore-case="true"/></field> -->
-        <field name="invoiceTypeId">
+        <field name="paymentId"><text-find ignore-case="true"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="true">
-                <entity-options description="${invoiceTypeId}" entity-name="Invoice" key-field-name="invoiceTypeId">
-	                    <entity-constraint name="invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
-	                    <entity-constraint name="invoiceTypeId" operator="equals" value="PURCHASE_INVOICE"/>
-	                    <entity-order-by field-name="invoiceTypeId"/>
-	                </entity-options>
+                <list-options list-name="PaymentTypes" key-name="paymentTypeId" description="${description}"/>
             </drop-down>
-        </field> 
+        </field>
 
-        <field name="FromDate"><date-find type="date" default-option-from="sameDay"/></field>
-        <field name="ThruDate" title="Thru Date"><date-find type="date" default-option-from="sameDay"/></field>
+        <field name="FromDate"><date-time type="date" /></field>
+        <field name="ThruDate" title="Thru Date"><date-time type="date" /></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="PrintChequeBulk" type="single" target="bulkPrintCheque"
@@ -3651,20 +3655,9 @@ under the License.
             </entity-condition>
         </actions>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="invoiceId"><text-find ignore-case="true"/></field>
-        <!--  <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field>  -->
-    	<!-- <field name="comments"><text-find ignore-case="true"/></field> -->
-        <field name="invoiceTypeId">
-            <drop-down allow-empty="true">
-                <entity-options description="${invoiceTypeId}" entity-name="Invoice" key-field-name="invoiceId">
-	                    <entity-constraint name="invoiceTypeId" operator="equals" value="SALES_INVOICE"/>
-	                    <entity-constraint name="invoiceTypeId" operator="equals" value="PURCHASE_INVOICE"/>
-	                    <entity-order-by field-name="invoiceTypeId"/>
-	                </entity-options>
-            </drop-down>
-        </field> 
-        <field name="FromDate"><date-find type="date" default-option-from="sameDay"/></field>
-        <field name="ThruDate" title="Thru Date"><date-find type="date" default-option-from="sameDay"/></field>
+      
+        <field name="FromDate"><date-time type="date" /></field>
+        <field name="ThruDate" title="Thru Date"><date-time type="date" /></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
