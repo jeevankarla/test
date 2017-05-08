@@ -3526,13 +3526,16 @@ public class MaterialPurchaseServices {
 				Debug.log("unitPrice===================="+unitPrice);
 				//if(UtilValidate.isNotEmpty(discountAmount))
 				
+				if(UtilValidate.isNotEmpty(discountAmount))
 				orderItemDetail.put("discountAmount",discountAmount);
 				
 				Debug.log("discountAmount===================="+discountAmount);
 				
+				if(UtilValidate.isNotEmpty(yarnUOM))
 				orderItemDetail.put("Uom",yarnUOM);
 				
 				Debug.log("yarnUOM===================="+yarnUOM);
+				if(UtilValidate.isNotEmpty(productId))
 				orderItemDetail.put("productId",productId);
 				 
 				Debug.log("productId===================="+productId);
@@ -3548,26 +3551,27 @@ public class MaterialPurchaseServices {
 				orderItemDetail.put("bundleUnitPrice",bundleUnitPrice);
 				
 				Debug.log("bundleUnitPrice===================="+bundleUnitPrice);
+				if(UtilValidate.isNotEmpty(remarks))
 				orderItemDetail.put("remarks",remarks);
 				
 				Debug.log("remarks===================="+remarks);
-				//if(UtilValidate.isNotEmpty(quotaQuantity))
+				if(UtilValidate.isNotEmpty(quotaQuantity))
 				orderItemDetail.put("quotaQuantity",quotaQuantity);
 				
-				Debug.log("quotaQuantity===================="+quotaQuantity);
+				Debug.log("quotaQuantity=========333==========="+quotaQuantity);
 				if(UtilValidate.isNotEmpty(quantity))
 				orderItemDetail.put("quantity",quantity);
 				
-				Debug.log("quantity===================="+quantity);
+				Debug.log("quantity==========333=========="+quantity);
 				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
 	
 				try{
 					Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
 			        
-			       /* if (ServiceUtil.isError(resultMap)) {
+			        if (ServiceUtil.isError(resultMap)) {
 			        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
 			        	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
-			        }*/
+			        }
 				}catch(Exception e){
 			  		Debug.logError(e, "Error in Order Item Detail, module");
 			  		return ServiceUtil.returnError( "Error in Order Item Detail");
