@@ -3514,35 +3514,60 @@ public class MaterialPurchaseServices {
 				BigDecimal quotaQuantity = BigDecimal.ZERO;
 				BigDecimal discountAmount = BigDecimal.ZERO;
 				orderItemDetail.put("orderId",orderId);
+				Debug.log("orderId===================="+orderId);
 				orderItemDetail.put("orderItemSeqId",orderItemSeq);
+				Debug.log("orderItemSeq===================="+orderItemSeq);
 				orderItemDetail.put("userLogin",userLogin);
 				orderItemDetail.put("partyId",partyId);
+				Debug.log("partyId===================="+partyId);
 				if(UtilValidate.isNotEmpty(unitPrice))
 				orderItemDetail.put("unitPrice",unitPrice);
+				
+				Debug.log("unitPrice===================="+unitPrice);
 				//if(UtilValidate.isNotEmpty(discountAmount))
+				
 				orderItemDetail.put("discountAmount",discountAmount);
+				
+				Debug.log("discountAmount===================="+discountAmount);
+				
 				orderItemDetail.put("Uom",yarnUOM);
+				
+				Debug.log("yarnUOM===================="+yarnUOM);
 				orderItemDetail.put("productId",productId);
+				 
+				Debug.log("productId===================="+productId);
 				if(UtilValidate.isNotEmpty(baleQuantity))
 				orderItemDetail.put("baleQuantity",baleQuantity);
+				
+				Debug.log("baleQuantity===================="+baleQuantity);
 				if(UtilValidate.isNotEmpty(bundleWeight))
 				orderItemDetail.put("bundleWeight",bundleWeight);
+				  
+				Debug.log("bundleWeight===================="+bundleWeight);
 				if(UtilValidate.isNotEmpty(bundleUnitPrice))
 				orderItemDetail.put("bundleUnitPrice",bundleUnitPrice);
+				
+				Debug.log("bundleUnitPrice===================="+bundleUnitPrice);
 				orderItemDetail.put("remarks",remarks);
+				
+				Debug.log("remarks===================="+remarks);
 				//if(UtilValidate.isNotEmpty(quotaQuantity))
 				orderItemDetail.put("quotaQuantity",quotaQuantity);
+				
+				Debug.log("quotaQuantity===================="+quotaQuantity);
 				if(UtilValidate.isNotEmpty(quantity))
 				orderItemDetail.put("quantity",quantity);
+				
+				Debug.log("quantity===================="+quantity);
 				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
 	
 				try{
 					Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
 			        
-			        if (ServiceUtil.isError(resultMap)) {
+			       /* if (ServiceUtil.isError(resultMap)) {
 			        	Debug.logError("Problem creating order Item  change for orderId :"+orderId, module);
 			        	return ServiceUtil.returnError("Problem creating order Item  Detail for orderId :"+orderId);	
-			        }
+			        }*/
 				}catch(Exception e){
 			  		Debug.logError(e, "Error in Order Item Detail, module");
 			  		return ServiceUtil.returnError( "Error in Order Item Detail");
