@@ -51,7 +51,7 @@ under the License.
 		    makeDatePicker("ShipmentHistoryfromDate","ShipmentHistoryThruDate");
 			$('#ui-datepicker-div').css('clip', 'auto'); 
 			$("#SupplierId").autocomplete({ source: supplierJSON }).keydown(function(e){});
-			$("#cutomerId").autocomplete({ source: cutomerJSON }).keydown(function(e){});3
+			$("#cutomerId").autocomplete({ source: cutomerJSON }).keydown(function(e){});
 			var currentLocation=window.location;
 			if(currentLocation=='http://erp.nhdcltd.co.in/ViewShipmentHistory'){
 				$("#ShipmentHistory").submit();
