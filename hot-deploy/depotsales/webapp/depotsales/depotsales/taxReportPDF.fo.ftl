@@ -49,11 +49,11 @@ under the License.
              		    <fo:table-column column-width="4%"/>
 			            <fo:table-column column-width="13%"/>
 			            <fo:table-column column-width="14%"/>
-			            <fo:table-column column-width="9%"/>
+			            <fo:table-column column-width="15%"/>
 	                    <fo:table-column column-width="9%"/>
 			            <fo:table-column column-width="9%"/>
 			            <fo:table-column column-width="10%"/>
-			            <fo:table-column column-width="6%"/>
+			            <fo:table-column column-width="5%"/>
 			            <fo:table-column column-width="10%"/>
 			            <fo:table-column column-width="10%"/>
 			             <fo:table-column column-width="10%"/>
