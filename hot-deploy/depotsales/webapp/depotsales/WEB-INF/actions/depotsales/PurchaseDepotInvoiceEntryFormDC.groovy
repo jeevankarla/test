@@ -509,7 +509,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 				Debug.log("purchaseTitleTransferEnumId ============="+purchaseTitleTransferEnumId);
 				
 				
-				if(purchaseTitleTransferEnumId){
+				if(purchaseTitleTransferEnumId && purTaxList){
 					//purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
 					for(int i=0; i<purTaxList.size(); i++){
 						taxItem = purTaxList.get(i);

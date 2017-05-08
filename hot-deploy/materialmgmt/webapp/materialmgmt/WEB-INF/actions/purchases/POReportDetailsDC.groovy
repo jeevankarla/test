@@ -256,9 +256,11 @@ if(TransactionTypeId){
 	TransactionType=TransactionTypeId.get("attrValue");
 	if(TransactionType == "CST_CFORM"){
 		TransactionTypevalue = "Transaction With C Form";
-	}
-	else
+	}else if(TransactionType == "EXEMPTED_GOODS"){
+		TransactionTypevalue = "Transaction With exempted goods";
+	}else{
 		TransactionTypevalue = "Transaction Without C Form";
+	}
 }
 context.TransactionTypevalue=TransactionTypevalue;
 //FileNo

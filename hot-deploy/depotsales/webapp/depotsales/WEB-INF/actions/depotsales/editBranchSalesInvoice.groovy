@@ -276,7 +276,7 @@
 				condExpr.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
 				tenPercentItems = EntityUtil.filterByCondition(invoiceItemLists, EntityCondition.makeCondition(condExpr, EntityOperator.AND));
 				
-				if(saleTitleTransferEnumId){
+				if(saleTitleTransferEnumId && taxList){
 					//purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
 					for(int i=0; i<taxList.size(); i++){
 						taxItem = taxList.get(i);
