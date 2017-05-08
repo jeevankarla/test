@@ -3565,6 +3565,8 @@ public class MaterialPurchaseServices {
 				Debug.log("quantity==========333=========="+quantity);
 				orderItemDetail.put("changeUserLogin",userLogin.getString("userLoginId"));
 	
+				
+				if(!purposeTypeId.equals("DC_DEPOT_PURCHASE")){
 				try{
 					Map resultMap = dispatcher.runSync("createOrderItemDetail",orderItemDetail);
 			        
@@ -3576,6 +3578,8 @@ public class MaterialPurchaseServices {
 			  		Debug.logError(e, "Error in Order Item Detail, module");
 			  		return ServiceUtil.returnError( "Error in Order Item Detail");
 			  	}
+				
+				}
 				
 				orderItemDetailSeq++;
 				
