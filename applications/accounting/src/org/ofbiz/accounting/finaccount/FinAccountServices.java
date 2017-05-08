@@ -1433,9 +1433,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	  		  if (paramMap.containsKey("partyId"+ thisSuffix)) {
 	  			  partyId = (String) paramMap.get("partyId"+thisSuffix);
 	  		  }
-	  		  String empFin=(String)("EMPCON_"+partyId);
-	  		  String emprFin=(String)("EMPRCON_"+partyId);
-	  		  String vpfFin=(String)("VPFCON_"+partyId);
+	  		 
 	  		 try {
 	  		
 	  			 List conditionList = FastList.newInstance();
@@ -1497,9 +1495,9 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		vpffinMap.put("userLogin", userLogin);
 		  	  		vpffinMap.put("amount",vpfFinAmount);
 
-		  	  	finTransCreationMap.put(empFin,employeefinMap);
-		  	  	finTransCreationMap.put(emprFin,employeerfinMap);
-		  	  	finTransCreationMap.put(vpfFin,vpffinMap);
+		  	  	finTransCreationMap.put(employeefinAccountId,employeefinMap);
+		  	  	finTransCreationMap.put(employerfinAccountId,employeerfinMap);
+		  	  	finTransCreationMap.put(volunteerfinAccountId,vpffinMap);
 	  		}catch (GenericEntityException e) {
 	  	  		  try {
 	  	  			  // only rollback the transaction if we started one...
