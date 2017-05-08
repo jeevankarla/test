@@ -1719,6 +1719,7 @@ function fillPartyQuota(partyId){
 			          				<select name="purchaseTitleTransferEnumId" id="purchaseTitleTransferEnumId" class='h4' style="width:205px">
 			          					<option value="CST_CFORM">Transaction With C Form</option>
 			          					<option value="CST_NOCFORM">Transaction Without C Form</option>
+			          					<option value="EXEMPTED_GOODS">Exempted Goods</option>
 			          					<option value="NO_E2_FORM"></option>
 			          				</select>
 			          			</td>
@@ -1740,6 +1741,7 @@ function fillPartyQuota(partyId){
 			          					<option value="CST_CFORM">Transaction With C Form</option>
 			          					<option value="CST_NOCFORM">Transaction Without C Form</option>
 			          					<option value="E2_FORM">Transaction With E1 Form</option>
+			          					<option value="EXEMPTED_GOODS">Exempted Goods</option>
 			          					<option value="NO_E2_FORM"></option>
 			          				</select>
 			          			</td>

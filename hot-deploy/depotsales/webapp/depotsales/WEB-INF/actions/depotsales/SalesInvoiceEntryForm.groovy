@@ -747,7 +747,7 @@ if(shipments){
 				}
 				
 				totalTaxAmt = 0;
-				if(saleTitleTransferEnumId){
+				if(saleTitleTransferEnumId && taxList){
 					//purTaxList = transactionTypeTaxMap.get(purchaseTitleTransferEnumId);
 					for(int i=0; i<taxList.size(); i++){
 						taxItem = taxList.get(i);
