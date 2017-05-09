@@ -716,7 +716,7 @@ under the License.
 				<fo:block text-align="center"  font-size="10pt" >${sr}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
-				<fo:block text-align="left"  font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoiceDetail.get("partyId"), true)}</fo:block>
+				<fo:block text-align="left"  font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoiceDetail.get("partyId"), false)}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 				<fo:block text-align="left"  font-size="10pt" ><#if invoiceDetail.get("passNo")?has_content>${invoiceDetail.get("passNo")?if_exists}</#if></fo:block>
