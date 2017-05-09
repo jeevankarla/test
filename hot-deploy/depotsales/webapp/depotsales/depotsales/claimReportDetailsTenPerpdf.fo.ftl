@@ -30,7 +30,7 @@ under the License.
         
         
         ${setRequestAttribute("OUTPUT_FILENAME", "IndentReport.pdf")}
-        <#if silkNonDepotList?has_content>
+        <#if silkDepotList?has_content>
         <fo:page-sequence master-reference="main" font-size="10pt">	
         	<fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
         	</fo:static-content>
@@ -62,16 +62,20 @@ under the License.
 			            <fo:table-body>
 		            		 <fo:table-row>
 								 <fo:table-cell number-columns-spanned="7">
-										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">SILK DEPOT</fo:block>
+										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">SILK</fo:block>
 					            </fo:table-cell >
 							</fo:table-row>  
 			                 <fo:table-row>
 								 <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
 					            </fo:table-cell >
+					           
 					            <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
 					            </fo:table-cell >
+					              <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BILL NO</fo:block>
+					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
 					            </fo:table-cell >
@@ -84,9 +88,7 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SERVICE CHARGES @0.5% OF YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
 					            </fo:table-cell>
-					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
-					            </fo:table-cell>
+					          
 					             <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL CLAIM FOR YARN SUBSIDY AND SERVICE CHARGES (IN RS)</fo:block>
 					            </fo:table-cell>
@@ -101,6 +103,10 @@ under the License.
 								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold"  white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("invoiceId")?if_exists}</fo:block>
+								            </fo:table-cell >
+								            
+								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"   white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
@@ -112,9 +118,7 @@ under the License.
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
+								            
 											 <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
@@ -124,74 +128,11 @@ under the License.
 
 
 
-							<fo:table-row>
-								 <fo:table-cell  number-columns-spanned="7">
-										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">SILK NON-DEPOT</fo:block>
-					            </fo:table-cell >
-							</fo:table-row>  
-			                 <fo:table-row>
-								 <fo:table-cell border-style="solid">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VALUE OF YARN SUPPLIED Rs</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">YARN SUBSIDY @10% ON YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SERVICE CHARGES @0.5% OF YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
-					            </fo:table-cell>
-					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
-					            </fo:table-cell>
-								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL CLAIM FOR YARN SUBSIDY AND SERVICE CHARGES (IN RS)</fo:block>
-					            </fo:table-cell>
-							</fo:table-row>  
-							
-								<#list silkNonDepotList as invoice>
-										<fo:table-row>
-										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
-								            </fo:table-cell >
-										</fo:table-row> 
-								
-							     </#list>
-
-  
-
+						
                                 
                               <fo:table-row>
 								 <fo:table-cell number-columns-spanned="7">
-										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">COTTON DEPOT</fo:block>
+										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">COTTON</fo:block>
 					            </fo:table-cell >
 							</fo:table-row>  
 			                 <fo:table-row>
@@ -201,6 +142,9 @@ under the License.
 					            <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
 					            </fo:table-cell >
+					             <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BILL NO</fo:block>
+					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
 					            </fo:table-cell >
@@ -213,9 +157,7 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SERVICE CHARGES @0.5% OF YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
 					            </fo:table-cell>
-					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
-					            </fo:table-cell>
+					          
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL CLAIM FOR YARN SUBSIDY AND SERVICE CHARGES (IN RS)</fo:block>
 					            </fo:table-cell>
@@ -229,70 +171,8 @@ under the License.
 								            <fo:table-cell border-style="solid" >
 								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
-								            </fo:table-cell >
-										</fo:table-row> 
-								
-							     </#list>
-
-
-
-
-                                <fo:table-row>
-								 <fo:table-cell number-columns-spanned="7">
-										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">COTTON NON-DEPOT</fo:block>
-					            </fo:table-cell >
-							</fo:table-row>  
-			                 <fo:table-row>
-								 <fo:table-cell border-style="solid">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VALUE OF YARN SUPPLIED Rs</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">YARN SUBSIDY @10% ON YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SERVICE CHARGES @0.5% OF YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
-					            </fo:table-cell>
-					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
-					            </fo:table-cell>
-								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL CLAIM FOR YARN SUBSIDY AND SERVICE CHARGES (IN RS)</fo:block>
-					            </fo:table-cell>
-							</fo:table-row>  
-							
-								<#list cottonNonDepotList as invoice>
-										<fo:table-row>
-										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+											<fo:table-cell  border-style="solid">
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("invoiceId")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
@@ -306,25 +186,18 @@ under the License.
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
+								           
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
 							     </#list>
-
-
-
-
-
 
 
 									<fo:table-row>
 								 <fo:table-cell number-columns-spanned="7">
-										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">JUTE DEPOT</fo:block>
+										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">JUTE</fo:block>
 					            </fo:table-cell >
 							</fo:table-row>  
 			                 <fo:table-row>
@@ -334,6 +207,9 @@ under the License.
 					            <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
 					            </fo:table-cell >
+					             <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BILL NO</fo:block>
+					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
 					            </fo:table-cell >
@@ -346,9 +222,7 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SERVICE CHARGES @0.5% OF YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
 					            </fo:table-cell>
-					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
-					            </fo:table-cell>
+					         
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL CLAIM FOR YARN SUBSIDY AND SERVICE CHARGES (IN RS)</fo:block>
 					            </fo:table-cell>
@@ -363,69 +237,9 @@ under the License.
 								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("invoiceId")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
-								            </fo:table-cell >
-										</fo:table-row> 
-								
-							     </#list>
-
-
-
-                               <fo:table-row>
-								 <fo:table-cell number-columns-spanned="7">
-										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">JUTE NON-DEPOT</fo:block>
-					            </fo:table-cell >
-							</fo:table-row>  
-			                 <fo:table-row>
-								 <fo:table-cell border-style="solid">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VALUE OF YARN SUPPLIED Rs</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">YARN SUBSIDY @10% ON YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SERVICE CHARGES @0.5% OF YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
-					            </fo:table-cell>
-					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
-					            </fo:table-cell>
-								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL CLAIM FOR YARN SUBSIDY AND SERVICE CHARGES (IN RS)</fo:block>
-					            </fo:table-cell>
-							</fo:table-row>  
-							
-								<#list juteNonDepotList as invoice>
-										<fo:table-row>
-										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
-								            </fo:table-cell >
+								            
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
 								            </fo:table-cell >
@@ -438,21 +252,18 @@ under the License.
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
+								            
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
 							     </#list>
-							     
-							     
-							     
+
+
 							     <fo:table-row>
 								 <fo:table-cell number-columns-spanned="7">
-										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">OTHER DEPOT</fo:block>
+										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">OTHER</fo:block>
 					            </fo:table-cell >
 							</fo:table-row>  
 			                 <fo:table-row>
@@ -462,6 +273,9 @@ under the License.
 					            <fo:table-cell border-style="solid">
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
 					            </fo:table-cell >
+					             <fo:table-cell border-style="solid">
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BILL NO</fo:block>
+					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
 					            </fo:table-cell >
@@ -474,9 +288,7 @@ under the License.
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SERVICE CHARGES @0.5% OF YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
 					            </fo:table-cell>
-					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
-					            </fo:table-cell>
+					          
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL CLAIM FOR YARN SUBSIDY AND SERVICE CHARGES (IN RS)</fo:block>
 					            </fo:table-cell>
@@ -491,74 +303,7 @@ under the License.
 								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false">${invoice.get("totInvValue")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold" white-space-collapse="false"> ${invoice.get("actualFrightCharges")?if_exists} </fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
-								            </fo:table-cell >
-										</fo:table-row> 
-								
-							     </#list>
-
-
-
-
-
-
-
-
-
-                              <fo:table-row>
-								 <fo:table-cell number-columns-spanned="7">
-										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">OTHER NON DEPOT</fo:block>
-					            </fo:table-cell >
-							</fo:table-row>  
-			                 <fo:table-row>
-								 <fo:table-cell border-style="solid">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">SNO</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
-					            </fo:table-cell >
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VALUE OF YARN SUPPLIED Rs</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">YARN SUBSIDY @10% ON YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
-					            </fo:table-cell>
-					            <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">SERVICE CHARGES @0.5% OF YARN VALUE BEFORE SUBSIDY(IN RS)</fo:block>
-					            </fo:table-cell>
-					           <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">DEPOT  Charges</fo:block>
-					            </fo:table-cell>
-								<fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">TOTAL CLAIM FOR YARN SUBSIDY AND SERVICE CHARGES (IN RS)</fo:block>
-					            </fo:table-cell>
-							</fo:table-row>  
-							
-								<#list otherNonDepotList as invoice>
-										<fo:table-row>
-										    <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("sNo")?if_exists}</fo:block>
-								            </fo:table-cell >
-								            <fo:table-cell border-style="solid" >
-								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
+								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("invoiceId")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
@@ -572,15 +317,15 @@ under the License.
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("frightCharges")?if_exists}</fo:block>
 								            </fo:table-cell >
-								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold" white-space-collapse="false">${invoice.get("depotCharges")?if_exists}</fo:block>
-								            </fo:table-cell >
+								           
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("mgpsServiceCharge")?if_exists}</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
 								
 							     </#list>
+
+
 										<fo:table-row>
 										    <fo:table-cell  number-columns-spanned="8">
 								            	<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
