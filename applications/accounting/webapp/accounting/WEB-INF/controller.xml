@@ -2856,6 +2856,11 @@ under the License.
         <response name="success" type="view" value="cpfAccounts"/>
         <response name="error" type="view" value="cpfAccounts"/>
     </request-map>
+    <request-map uri="findcpfAccounts">
+     	<security https="true" auth="true"/>     	
+        <response name="success" type="view" value="findcpfAccounts"/>
+        <response name="error" type="view" value="findcpfAccounts"/>
+    </request-map>
      <request-map uri="findGroupPayment">
      	<security https="true" auth="true"/>     	
         <response name="success" type="view" value="FindGroupPayment"/>
@@ -4971,6 +4976,7 @@ under the License.
    <view-map name="SubLedgerReport" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#SubLedgerReport" content-type="application/pdf" encoding="none"/>
    <view-map name="GroupPaymentNew" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#GroupPaymentNew"/>
    <view-map name="cpfAccounts" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#cpfAccounts"/>
+   <view-map name="findcpfAccounts" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#findcpfAccounts"/>
    <view-map name="FindGroupPayment" type="screen" page="component://accounting/widget/TreasurerPortalScreens.xml#FindGroupPayment"/>
    <view-map name="PrintPayGroupVoucherAbstract" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucherAbstract" content-type="application/pdf" encoding="none"/>  
    <view-map name="PrintPayGroupVoucher" type="screenfop" page="component://accounting/widget/TreasurerPortalScreens.xml#PrintPayGroupVoucher" content-type="application/pdf" encoding="none"/>

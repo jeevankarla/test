@@ -4359,6 +4359,9 @@
         <menu-item name="cpfAccounts" title="CPF Accounts">
             <link target="cpfAccounts"/>
         </menu-item>
+         <menu-item name="findcpfAccounts" title="Find CPF Accounts">
+            <link target="findcpfAccounts"/>
+        </menu-item>
      </menu>
      
      <menu name="BankAccountSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
