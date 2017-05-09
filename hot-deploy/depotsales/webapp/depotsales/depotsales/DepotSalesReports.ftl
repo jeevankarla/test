@@ -474,6 +474,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				     <option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></td>
+			  <td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="pendingShipmentsReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>	
 			 	<td width="15%"><span class='h3'>Shipment Status
 				 <select name="shipmentstate" id="shipmentstate">
 				     <option value='Pending'>Pending</option>

@@ -59,7 +59,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
-
+import java.text.DecimalFormat;
 import javolution.util.FastSet;
 
 public class ReimbursementService {
@@ -832,4 +832,66 @@ public class ReimbursementService {
 			     result = ServiceUtil.returnSuccess("Billing cancelled successfully !!");
 			     return result;
 		   	}
+	
+	public static Map<String, Object> getTenPercentageSubsidyAmount(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = new HashMap<String, Object>();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String invoiceId = (String) context.get("invoiceId");
+		String invoiceItemSeqId = (String) context.get("invoiceItemSeqId");
+		List conditionList = FastList.newInstance();
+		List<GenericValue> invoiceItem = null;
+		List<GenericValue> orderAdjustmentBilling = null;
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));	
+		if(UtilValidate.isNotEmpty(invoiceItemSeqId))
+			conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqId));	
+		try{
+			invoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND),null, null, null, false);
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive InvoiceItem ", module);
+		}
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+		try{
+		orderAdjustmentBilling = delegator.findList("OrderAdjustmentBilling", EntityCondition.makeCondition(conditionList, EntityOperator.AND),null, null, null, false);
+		}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive OrderAdjustmentBilling ", module);
+		}
+		 DecimalFormat df = new DecimalFormat("###.##"); 
+		BigDecimal qty=BigDecimal.ZERO;
+		BigDecimal amount=BigDecimal.ZERO;
+		BigDecimal subsidyAmount=BigDecimal.ZERO;
+		BigDecimal subsidyQuantity=BigDecimal.ZERO;
+		for(int i=0;i< invoiceItem.size();i++){
+			GenericValue invoiceItemObj=invoiceItem.get(i);
+			GenericValue invoiceItemDetails=null;
+			String invoiceIdForEach=invoiceItemObj.getString("invoiceId");
+			String parentInvoiceItemSeqId=invoiceItemObj.getString("parentInvoiceItemSeqId");
+			String invoiceItemSeqIdForEach=invoiceItemObj.getString("invoiceItemSeqId");
+			conditionList.clear();
+			conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceIdForEach));
+			conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, invoiceItemSeqIdForEach));	
+			 List<GenericValue> OrderAdjustment = EntityUtil.filterByCondition(orderAdjustmentBilling, EntityCondition.makeCondition(conditionList, EntityOperator.AND));
+			 if(UtilValidate.isNotEmpty(OrderAdjustment)){
+				 GenericValue OrderAdjustmentDetails = EntityUtil.getFirst(OrderAdjustment);
+				 qty=OrderAdjustmentDetails.getBigDecimal("quantity");
+			 }
+			 try{	 
+			 invoiceItemDetails = delegator.findOne("InvoiceItem",UtilMisc.toMap("invoiceItemSeqId", parentInvoiceItemSeqId,"invoiceId",invoiceIdForEach), false);
+			 }catch(GenericEntityException e){
+					Debug.logError(e, "Failed to retrive invoiceItemDetails ", module);
+			 }
+			 if(UtilValidate.isNotEmpty(invoiceItemDetails)){
+				 amount=invoiceItemDetails.getBigDecimal("amount");
+			 }
+			 subsidyAmount=subsidyAmount.add(qty.multiply(amount));
+			 subsidyQuantity=subsidyQuantity.add(qty);
+		}
+		result.put("subsidyQuantity", df.format(subsidyQuantity));
+		result.put("subsidyAmount", df.format(subsidyAmount));
+        return result;
+	}
+	
 }//end of class

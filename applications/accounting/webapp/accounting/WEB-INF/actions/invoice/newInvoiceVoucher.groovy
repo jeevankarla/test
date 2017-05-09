@@ -1147,9 +1147,11 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 				//eachOrderItemList = EntityUtil.filterByCondition(OrderItemList, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachSeq));
 				
 				if(eachOrderItemList){
-					
+					productId=eachOrderItemList.get("productId");
+					productDetails = delegator.findOne("Product",[productId : productId] , false);
+					itemDescription=productDetails.description;
 					//itemDescription = eachOrderItemList[0].get("itemDescription");
-					tempMap.put("itemDescription", "");
+					tempMap.put("itemDescription",itemDescription);
 					quantity = eachOrderItemList.get("quantity");
 					tempMap.put("quantity", quantity);
 					unitPrice = eachOrderItemList.get("unitPrice");
@@ -2202,7 +2204,7 @@ context.finalAddresList = finalAddresList;
 	OrderItemList = delegator.findList("OrderItem", cond, null, null, null, false);
 */
 	if(actualOrderId){
-		
+		//Debug.log("actualOrderId=================="+actualOrderId);
 		conditionList.clear();
 		conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, actualOrderId));
 		cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
@@ -2264,9 +2266,11 @@ context.finalAddresList = finalAddresList;
 			//eachOrderItemList = EntityUtil.filterByCondition(OrderItemList, EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, eachSeq));
 			
 			if(eachOrderItemList){
-				
+				productId=eachOrderItemList.get("productId");
+				productDetails = delegator.findOne("Product",[productId : productId] , false);
+				itemDescription=productDetails.description;
 				//itemDescription = eachOrderItemList[0].get("itemDescription");
-				tempMap.put("itemDescription", "");
+				tempMap.put("itemDescription",itemDescription);
 				quantity = eachOrderItemList.get("quantity");
 				tempMap.put("quantity", quantity);
 				unitPrice = eachOrderItemList.get("unitPrice");

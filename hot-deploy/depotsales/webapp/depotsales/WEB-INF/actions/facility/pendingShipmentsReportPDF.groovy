@@ -29,6 +29,7 @@ Timestamp fromDate;
 Timestamp thruDate;
 partyfromDate=parameters.partyfromDate;
 partythruDate=parameters.partythruDate;
+partyId=parameters.partyId;
 branchIds=[];
 branchId = parameters.branchId;
 rounding = RoundingMode.HALF_UP;
@@ -197,8 +198,14 @@ conditionList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS
 conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"));
 conditionList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
 conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
-conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
-conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+if(partyId){
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
+}
+else{
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchList));
+	conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+}
 salesOrderDetailsList = delegator.findList("OrderHeaderItemAndRoles", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 OrderIdList = EntityUtil.getFieldListFromEntityList(salesOrderDetailsList, "orderId", true);
 
