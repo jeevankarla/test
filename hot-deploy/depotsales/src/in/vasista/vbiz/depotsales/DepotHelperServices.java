@@ -6043,6 +6043,60 @@ public static Map<String, Object> getInvoiceSequenceForTransaction(DispatchConte
 
 
 
+public static Map<String, Object> getCustomerState(DispatchContext dctx, Map context) {
+	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+	LocalDispatcher dispatcher = dctx.getDispatcher();
+	Map<String, Object> result = ServiceUtil.returnSuccess();
+	GenericValue userLogin = (GenericValue) context.get("userLogin");
+	
+	String partyId = (String) context.get("partyId");
+	List conditionList = FastList.newInstance();
+	 List<GenericValue> partyIdFromList = null;
+	 List<GenericValue> stateProvinceGeoIdList = null;
+	 
+	 String partyIdFrom = "";
+	 String stateProvinceGeoId = "";
+	 String geoName = "";
+	 GenericValue BranchList=null;
+	 GenericValue StateIdsList=null;
+	 GenericValue StateList=null;
+	 
+	 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
+	 	try{
+	 		partyIdFromList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyIdFrom"), null, null, false);
+	 	
+	 	}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive partyIdFromList ", module);
+	 	}
+	 	BranchList = EntityUtil.getFirst(partyIdFromList);
+	 	partyIdFrom = BranchList.getString("partyIdFrom");
+	 	
+	 	conditionList.clear();
+	 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom));
+	 	try{
+	 		stateProvinceGeoIdList = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("stateProvinceGeoId"), null, null, false);
+	 	
+	 	}catch(GenericEntityException e){
+	 		Debug.logError(e, "Failed to retrive stateProvinceGeoIdList ", module);
+		}
+	 	if(UtilValidate.isNotEmpty(stateProvinceGeoIdList)){
+	 		StateIdsList = EntityUtil.getFirst(stateProvinceGeoIdList);
+	 		stateProvinceGeoId = StateIdsList.getString("stateProvinceGeoId");
+	 	}
+	 	if(UtilValidate.isEmpty(stateProvinceGeoId)){
+ 			return ServiceUtil.returnError("State not configured for this party.");
+		}
+	 	try{
+	 		GenericValue geoNameList = delegator.findOne("Geo", UtilMisc.toMap("geoId", stateProvinceGeoId), false);
+	 		geoName=geoNameList.getString("geoName");
+	 	
+	 	}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive geoNameList ", module);
+	 	}
+	 	result.put("StateName",geoName);
+	 	return result;
+	}
+
 
   	
 }
