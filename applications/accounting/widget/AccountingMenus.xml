@@ -2408,14 +2408,15 @@
             </condition>
 			<link target="apGroupPayment"></link>
 		</menu-item> 
-		<!-- <menu-item name="cpfAccounts" title="CPF Accounts">
+		<menu-item name="cpfAccounts" title="CPF Accounts">
 		     <condition>
-				<or>
+				<and>
+				    <if-has-permission permission="ACC_" action="CPF" />
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
-            	</or>            
+            	</and>            
             </condition>
 			<link target="cpfAccounts"></link>
-		</menu-item>  -->
+		</menu-item>
 		<menu-item name="Reports" title="Reports">
 		     <condition>
 				<or>

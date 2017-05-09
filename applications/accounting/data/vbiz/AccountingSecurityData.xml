@@ -224,5 +224,10 @@ under the License.
     <SecurityPermission description="Permission to view cancel button for FinaccountTrans" permissionId="CANCEL_FINTRNS"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="CANCEL_FINTRNS"/>
    
+    <SecurityGroup description="CPF View. " groupId="ACC_CPF"/>
+    <SecurityPermission description="CPF View. " permissionId="ACC_CPF"/>
+    <SecurityGroupPermission groupId="ACC_CPF" permissionId="ACC_CPF"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACC_CPF"/>
+   
      
 </entity-engine-xml>
