@@ -149,16 +149,12 @@ if(UtilValidate.isNotEmpty(branchId)){
 }
 
 silkDepotList=[]
-silkNonDepotList=[]
 
 cottonDepotList=[]
-cottonNonDepotList=[]
 
 juteDepotList=[]
-juteNonDepotList=[]
 
 otherDepotList=[]
-otherNonDepotList=[]
 
 
 // getting Silk,Cotton,Jute  and other product categories
@@ -229,31 +225,23 @@ if(reportTypeFlag=="BILL_WISE"){
 def generateBillWiseReport()
 {
 	index=1;
+	DecimalFormat twoDForm = new DecimalFormat("#.##");
 	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
 	BigDecimal totalInvoiceValueD = BigDecimal.ZERO;
-	BigDecimal totalActualFrightChargesD = BigDecimal.ZERO;
-	BigDecimal totalFrightChargesD = BigDecimal.ZERO;
-	BigDecimal totalDepotChargesD = BigDecimal.ZERO;
-	BigDecimal totalSerChargesD = BigDecimal.ZERO;
-	
-	BigDecimal totalInvoiceQtyND = BigDecimal.ZERO;
-	BigDecimal totalInvoiceValueND = BigDecimal.ZERO;
-	BigDecimal totalActualFrightChargesND = BigDecimal.ZERO;
-	BigDecimal totalFrightChargesND = BigDecimal.ZERO;
-	BigDecimal totalDepotChargesND = BigDecimal.ZERO;
-	BigDecimal totalSerChargesND = BigDecimal.ZERO;
+	BigDecimal totalTenPerSubAmountD = BigDecimal.ZERO;
+	BigDecimal totalServiceChargeD = BigDecimal.ZERO;
+	BigDecimal totalSubAmountD = BigDecimal.ZERO;
 	
 	silkDepottotalsMap=[:];
-	silkNonDepottotalsMap=[:];
 	
 	cottonDepottotalsMap=[:];
-	cottonNonDepottotalsMap=[:];
 	
 	juteDepottotalsMap=[:];
-	juteNonDepottotalsMap=[:];
 	
-	otherDepottotalsMap=[:];
-	otherNonDepottotalsMap=[:];
+	otherDepottotalsMap=[:]; 
+	
+	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
+	tenPerInvoiceIds=result.getAt("tenPerInvoiceIds")
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -263,108 +251,69 @@ def generateBillWiseReport()
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,silkProdIds));
-	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","shipmentId","quantity","productId","costCenterId","itemValue"] as Set;
+	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerInvoiceIds));
+	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","invoiceItemSeqId","quantity","productId","costCenterId","itemValue"] as Set;
 	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	
 	for(invoice in silkinvoicesAndItems)
 	{
-		tempMap=[:]
-		BigDecimal actualFrightCharges = BigDecimal.ZERO;
-		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
-		BigDecimal depotCharges = BigDecimal.ZERO;
-		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
-		schemePercentage=0;
-		//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-		invoiceAmount=invoice.itemValue
-		shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-		if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-			actualFrightCharges=shipment.estimatedShipCost
-		}
+		tempMap=[:];
+		BigDecimal invoiceQty = BigDecimal.ZERO;
+		BigDecimal invoiceValue = BigDecimal.ZERO;
+		BigDecimal tenPerSubAmount = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		product = delegator.findOne("Product",[productId : invoice.productId] , false);
-		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-		roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-		schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-		if(!schemePercentage){
-			schemePercentage=roPercentagesMap.get("OTHER")
-		}
-		serviceChrgPercentage=roPercentagesMap.get("serCharge")
-		mgpsServiceCharge=(invoiceAmount.multiply(serviceChrgPercentage)).divide(100);
-		eligibleFrightCharges=(invoiceAmount.multiply(schemePercentage)).divide(100);
-		depotCharges=(invoiceAmount.multiply(2)).divide(100);
-		String partyName = PartyHelper.getPartyName(delegator,invoice.partyId,false);
-		tempMap.put("sNo", index);
-		tempMap.put("partyName", partyName);
-		tempMap.put("totInvQty", invoice.quantity);
-		tempMap.put("totInvValue", invoiceAmount);
-		tempMap.put("actualFrightCharges", actualFrightCharges);
-		if(UtilValidate.isNotEmpty(actualFrightCharges)){
-			if(actualFrightCharges.compareTo(eligibleFrightCharges)>0){
-				tempMap.put("frightCharges", eligibleFrightCharges);
-			}else{
-				tempMap.put("frightCharges", actualFrightCharges);
-			}
-		}else{
-			tempMap.put("frightCharges", BigDecimal.ZERO);
-		}
-		tempMap.put("mgpsServiceCharge", mgpsServiceCharge);
 		
-		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,invoice.partyId), UtilMisc.toSet("facilityId"), null, null, false );
-		if(UtilValidate.isNotEmpty(facility)){
-			tempMap.put("depotCharges", depotCharges);
-			silkDepotList.add(tempMap);
-			
-			totalInvoiceQtyD=totalInvoiceQtyD.add(invoice.quantity)
-			totalInvoiceValueD=totalInvoiceValueD.add(invoiceAmount)
-			totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
-			totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
-			totalDepotChargesD=totalDepotChargesD.add(depotCharges);
-			totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
-			
-		}else{
-			tempMap.put("depotCharges", BigDecimal.ZERO);
-			silkNonDepotList.add(tempMap);
-			
-			totalInvoiceQtyND=totalInvoiceQtyND.add(invoice.quantity)
-			totalInvoiceValueND=totalInvoiceValueND.add(invoiceAmount)
-			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
-			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(0);
-			totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
+		invoiceAmount=getInvocieAmount(invoice.invoiceId,invoice.invoiceItemSeqId)
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoice.invoiceId));
+		conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoice.invoiceItemSeqId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+		fieldsToSelect = ["invoiceItemSeqId"] as Set;
+		invoiceItems1 = delegator.findList("InvoiceItem",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
+		invoiceItem1=EntityUtil.getFirst(invoiceItems1)
+		if(invoiceItem1!=null){
+			invoiceQty=getSchemeQty(invoice.invoiceId,invoiceItem1.invoiceItemSeqId)
+			tenPerSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,invoiceItem1.invoiceItemSeqId)
 		}
+		
+		serviceCharge=tenPerSubAmount.multiply(0.05)
+		subsidyAmount=tenPerSubAmount.add(tenPerSubAmount.multiply(0.05))
+		tempMap.put("sNo", index);
+		tempMap.put("partyName", product.productName);
+		tempMap.put("invoiceId", invoice.invoiceId);
+		tempMap.put("totInvQty", invoiceQty);
+		tempMap.put("totInvValue", twoDForm.format(invoiceAmount));
+		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
+		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
+		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
+		
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceAmount)
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
+		
+		silkDepotList.add(tempMap);
 		index=index+1;
 	}
-	silkDepottotalsMap.put("partyName","TOTAL");
-	silkDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
-	silkDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	silkDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
-	silkDepottotalsMap.put("frightCharges",totalFrightChargesD);
-	silkDepottotalsMap.put("depotCharges",totalDepotChargesD);
-	silkDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
-	silkDepotList.add(silkDepottotalsMap);
 	
-	silkNonDepottotalsMap.put("partyName","TOTAL");
-	silkNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	silkNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	silkNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
-	silkNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
-	silkNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
-	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
-	silkNonDepotList.add(silkNonDepottotalsMap);
+	silkDepottotalsMap.put("partyName","TOTAL");
+	silkDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyD));
+	silkDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueD));
+	silkDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountD));
+	silkDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
+	silkDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD) );
+	silkDepotList.add(silkDepottotalsMap);
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
-	totalActualFrightChargesD = BigDecimal.ZERO;
-	totalFrightChargesD = BigDecimal.ZERO;
-	totalDepotChargesD = BigDecimal.ZERO;
-	totalSerChargesD = BigDecimal.ZERO;
-	
-	totalInvoiceQtyND = BigDecimal.ZERO;
-	totalInvoiceValueND = BigDecimal.ZERO;
-	totalActualFrightChargesND = BigDecimal.ZERO;
-	totalFrightChargesND = BigDecimal.ZERO;
-	totalDepotChargesND = BigDecimal.ZERO;
-	totalSerChargesND=BigDecimal.ZERO;
+	totalTenPerSubAmountD = BigDecimal.ZERO;
+	totalServiceChargeD = BigDecimal.ZERO;
+	totalSubAmountD = BigDecimal.ZERO;
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -374,107 +323,71 @@ def generateBillWiseReport()
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,cottonProdIds));
-	cottonInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
+	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerInvoiceIds));
+	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","invoiceItemSeqId","quantity","productId","costCenterId","itemValue"] as Set;
+	cottonInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND),fieldsToSelect, null, null, false );
+	
+	
 	
 	for(invoice in cottonInvoicesAndItems)
 	{
-		tempMap=[:]
-		BigDecimal actualFrightCharges = BigDecimal.ZERO;
-		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
-		BigDecimal depotCharges = BigDecimal.ZERO;
-		schemePercentage=0
-		invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-		shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-		if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-			actualFrightCharges=shipment.estimatedShipCost
-		}
+		tempMap=[:];
+		BigDecimal invoiceQty = BigDecimal.ZERO;
+		BigDecimal invoiceValue = BigDecimal.ZERO;
+		BigDecimal tenPerSubAmount = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		product = delegator.findOne("Product",[productId : invoice.productId] , false);
-		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-		roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-		schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-		if(schemePercentage==null){
-			schemePercentage=roPercentagesMap.get("OTHER")
+		
+		invoiceAmount=getInvocieAmount(invoice.invoiceId,invoice.invoiceItemSeqId)
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoice.invoiceId));
+		conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoice.invoiceItemSeqId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+		fieldsToSelect = ["invoiceItemSeqId"] as Set;
+		invoiceItems1 = delegator.findList("InvoiceItem",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
+		invoiceItem1=EntityUtil.getFirst(invoiceItems1)
+		if(invoiceItem1!=null){
+			invoiceQty=getSchemeQty(invoice.invoiceId,invoiceItem1.invoiceItemSeqId)
+			tenPerSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,invoiceItem1.invoiceItemSeqId)
 		}
-		serviceChrgPercentage=roPercentagesMap.get("serCharge")
-		mgpsServiceCharge=(invoiceAmount.multiply(serviceChrgPercentage)).divide(100);
-		eligibleFrightCharges=(invoiceAmount.multiply(schemePercentage)).divide(100);
-		depotCharges=(invoiceAmount.multiply(2)).divide(100);
-		String partyName = PartyHelper.getPartyName(delegator,invoice.partyId,false);
+		
+		serviceCharge=tenPerSubAmount.multiply(0.05)
+		subsidyAmount=tenPerSubAmount.add(tenPerSubAmount.multiply(0.05))
 		tempMap.put("sNo", index);
-		tempMap.put("partyName", partyName);
-		tempMap.put("totInvQty", invoice.quantity);
-		tempMap.put("totInvValue", invoiceAmount);
-		tempMap.put("actualFrightCharges", actualFrightCharges);
-		if(UtilValidate.isNotEmpty(actualFrightCharges)){
-			if(actualFrightCharges.compareTo(eligibleFrightCharges)>0){
-				tempMap.put("frightCharges", eligibleFrightCharges);
-			}else{
-				tempMap.put("frightCharges", actualFrightCharges);
-			}
-		}else{
-			tempMap.put("frightCharges", BigDecimal.ZERO);
-		}
-		tempMap.put("mgpsServiceCharge", mgpsServiceCharge);
-		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,invoice.partyId), UtilMisc.toSet("facilityId"), null, null, false );
-		if(UtilValidate.isNotEmpty(facility)){
-			tempMap.put("depotCharges", depotCharges);
-			cottonDepotList.add(tempMap);
-			
-			totalInvoiceQtyD=totalInvoiceQtyD.add(invoice.quantity)
-			totalInvoiceValueD=totalInvoiceValueD.add(invoiceAmount)
-			totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
-			totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
-			totalDepotChargesD=totalDepotChargesD.add(depotCharges);
-			
-		}else{
-			tempMap.put("depotCharges", BigDecimal.ZERO);
-			cottonNonDepotList.add(tempMap);
-			
-			totalInvoiceQtyND=totalInvoiceQtyND.add(invoice.quantity)
-			totalInvoiceValueND=totalInvoiceValueND.add(invoiceAmount)
-			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
-			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(0);
-		}
+		tempMap.put("partyName", product.productName);
+		tempMap.put("invoiceId", invoice.invoiceId);
+		tempMap.put("totInvQty", invoiceQty);
+		tempMap.put("totInvValue", twoDForm.format(invoiceAmount));
+		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
+		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
+		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
 		
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceAmount)
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
+		
+		cottonDepotList.add(tempMap);
 		index=index+1;
-		
 	}
 	
-	
-	
 	cottonDepottotalsMap.put("partyName","TOTAL");
-	cottonDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
-	cottonDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	cottonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
-	cottonDepottotalsMap.put("frightCharges",totalFrightChargesD);
-	cottonDepottotalsMap.put("depotCharges",totalDepotChargesD);
-	cottonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	cottonDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyD));
+	cottonDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueD));
+	cottonDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountD));
+	cottonDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
+	cottonDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	cottonDepotList.add(cottonDepottotalsMap);
 	
-	cottonNonDepottotalsMap.put("partyName","TOTAL");
-	cottonNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	cottonNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	cottonNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
-	cottonNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
-	cottonNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
-	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
-	cottonNonDepotList.add(cottonNonDepottotalsMap);
-	
-	index=1
+	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
-	totalActualFrightChargesD = BigDecimal.ZERO;
-	totalFrightChargesD = BigDecimal.ZERO;
-	totalDepotChargesD = BigDecimal.ZERO;
-	totalSerChargesD = BigDecimal.ZERO;
-	
-	totalInvoiceQtyND = BigDecimal.ZERO;
-	totalInvoiceValueND = BigDecimal.ZERO;
-	totalActualFrightChargesND = BigDecimal.ZERO;
-	totalFrightChargesND = BigDecimal.ZERO;
-	totalDepotChargesND = BigDecimal.ZERO;
-	totalSerChargesND=BigDecimal.ZERO;
+	totalTenPerSubAmountD = BigDecimal.ZERO;
+	totalServiceChargeD = BigDecimal.ZERO;
+	totalSubAmountD = BigDecimal.ZERO;
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -484,105 +397,72 @@ def generateBillWiseReport()
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,juteProdIds));
-	juteInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
+	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerInvoiceIds));
+	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","invoiceItemSeqId","quantity","productId","costCenterId","itemValue"] as Set;
+	juteInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect , null, null, false );
 	
 	
 	for(invoice in juteInvoicesAndItems)
 	{
-		tempMap=[:]
-		BigDecimal actualFrightCharges = BigDecimal.ZERO;
-		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
-		BigDecimal depotCharges = BigDecimal.ZERO;
-		schemePercentage=0;
-		invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-		shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-		if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-			actualFrightCharges=shipment.estimatedShipCost
-		}
+		tempMap=[:];
+		BigDecimal invoiceQty = BigDecimal.ZERO;
+		BigDecimal invoiceValue = BigDecimal.ZERO;
+		BigDecimal tenPerSubAmount = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		product = delegator.findOne("Product",[productId : invoice.productId] , false);
-		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-		roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-		schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-		if(schemePercentage==null){
-			schemePercentage=roPercentagesMap.get("OTHER")
-		}
-		serviceChrgPercentage=roPercentagesMap.get("serCharge")
-		mgpsServiceCharge=(invoiceAmount.multiply(serviceChrgPercentage)).divide(100);
-		eligibleFrightCharges=(invoiceAmount.multiply(schemePercentage)).divide(100);
-		depotCharges=(invoiceAmount.multiply(2)).divide(100);
-		String partyName = PartyHelper.getPartyName(delegator,invoice.partyId,false);
-		tempMap.put("sNo", index);
-		tempMap.put("partyName", partyName);
-		tempMap.put("totInvQty", invoice.quantity);
-		tempMap.put("totInvValue", invoiceAmount);
-		tempMap.put("actualFrightCharges", actualFrightCharges);
-		if(UtilValidate.isNotEmpty(actualFrightCharges)){
-			if(actualFrightCharges.compareTo(eligibleFrightCharges)>0){
-				tempMap.put("frightCharges", eligibleFrightCharges);
-			}else{
-				tempMap.put("frightCharges", actualFrightCharges);
-			}
-		}else{
-			tempMap.put("frightCharges", BigDecimal.ZERO);
-		}
-		tempMap.put("mgpsServiceCharge", mgpsServiceCharge);
-		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,invoice.partyId), UtilMisc.toSet("facilityId"), null, null, false );
-		if(UtilValidate.isNotEmpty(facility)){
-			tempMap.put("depotCharges", depotCharges);
-			juteDepotList.add(tempMap);
-			
-			totalInvoiceQtyD=totalInvoiceQtyD.add(invoice.quantity)
-			totalInvoiceValueD=totalInvoiceValueD.add(invoiceAmount)
-			totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
-			totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
-			totalDepotChargesD=totalDepotChargesD.add(depotCharges);
-			
-		}else{
-			tempMap.put("depotCharges", BigDecimal.ZERO);
-			juteNonDepotList.add(tempMap);
-			
-			totalInvoiceQtyND=totalInvoiceQtyND.add(invoice.quantity)
-			totalInvoiceValueND=totalInvoiceValueND.add(invoiceAmount)
-			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
-			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(0);
+		
+		invoiceAmount=getInvocieAmount(invoice.invoiceId,invoice.invoiceItemSeqId)
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoice.invoiceId));
+		conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoice.invoiceItemSeqId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+		fieldsToSelect = ["invoiceItemSeqId"] as Set;
+		invoiceItems1 = delegator.findList("InvoiceItem",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
+		invoiceItem1=EntityUtil.getFirst(invoiceItems1)
+		if(invoiceItem1!=null){
+			invoiceQty=getSchemeQty(invoice.invoiceId,invoiceItem1.invoiceItemSeqId)
+			tenPerSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,invoiceItem1.invoiceItemSeqId)
 		}
 		
+		serviceCharge=tenPerSubAmount.multiply(0.05)
+		subsidyAmount=tenPerSubAmount.add(tenPerSubAmount.multiply(0.05))
+		tempMap.put("sNo", index);
+		tempMap.put("partyName", product.productName);
+		tempMap.put("invoiceId", invoice.invoiceId);
+		tempMap.put("totInvQty", invoiceQty);
+		tempMap.put("totInvValue", twoDForm.format(invoiceAmount));
+		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
+		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
+		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
+		
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceAmount)
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
+		 
+		juteDepotList.add(tempMap);
 		index=index+1;
 	}
 	
-	
 	juteDepottotalsMap.put("partyName","TOTAL");
-	juteDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
-	juteDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	juteDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
-	juteDepottotalsMap.put("frightCharges",totalFrightChargesD);
-	juteDepottotalsMap.put("depotCharges",totalDepotChargesD);
-	juteDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	juteDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyD));
+	juteDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueD));
+	juteDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountD));
+	juteDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
+	juteDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	juteDepotList.add(juteDepottotalsMap);
-	juteNonDepottotalsMap.put("partyName","TOTAL");
-	juteNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	juteNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	juteNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
-	juteNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
-	juteNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
-	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
-	juteNonDepotList.add(juteNonDepottotalsMap);
 	
-	index=1
+	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
-	totalActualFrightChargesD = BigDecimal.ZERO;
-	totalFrightChargesD = BigDecimal.ZERO;
-	totalDepotChargesD = BigDecimal.ZERO;
-	totalSerChargesD = BigDecimal.ZERO;
+	totalTenPerSubAmountD = BigDecimal.ZERO;
+	totalServiceChargeD = BigDecimal.ZERO;
+	totalSubAmountD = BigDecimal.ZERO;
 	
-	totalInvoiceQtyND = BigDecimal.ZERO;
-	totalInvoiceValueND = BigDecimal.ZERO;
-	totalActualFrightChargesND = BigDecimal.ZERO;
-	totalFrightChargesND = BigDecimal.ZERO;
-	totalDepotChargesND = BigDecimal.ZERO;
-	totalSerChargesND=BigDecimal.ZERO;
+	
 	schemePercentage=0;
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -592,91 +472,65 @@ def generateBillWiseReport()
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,otherProdIds));
-	otherInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
+	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerInvoiceIds));
+	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","invoiceItemSeqId","quantity","productId","costCenterId","itemValue"] as Set;
+	otherInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
+	
 	
 	for(invoice in otherInvoicesAndItems)
 	{
-		tempMap=[:]
-		BigDecimal actualFrightCharges = BigDecimal.ZERO;
-		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
-		BigDecimal depotCharges = BigDecimal.ZERO;
-		schemePercentage=0;
-		invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-		shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-		if(UtilValidate.isNotEmpty(shipment) && UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-			actualFrightCharges=shipment.estimatedShipCost
-		}
+		tempMap=[:];
+		BigDecimal invoiceQty = BigDecimal.ZERO;
+		BigDecimal invoiceValue = BigDecimal.ZERO;
+		BigDecimal tenPerSubAmount = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		product = delegator.findOne("Product",[productId : invoice.productId] , false);
-		productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-		roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-		schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-		if(schemePercentage==null){
-			schemePercentage=roPercentagesMap.get("OTHER")
-		}
-		serviceChrgPercentage=roPercentagesMap.get("serCharge")
-		mgpsServiceCharge=(invoiceAmount.multiply(serviceChrgPercentage)).divide(100);
-		eligibleFrightCharges=(invoiceAmount.multiply(schemePercentage)).divide(100);
-		depotCharges=(invoiceAmount.multiply(2)).divide(100);
-		String partyName = PartyHelper.getPartyName(delegator,invoice.partyId,false);
-		tempMap.put("sNo", index);
-		tempMap.put("partyName", partyName);
-		tempMap.put("totInvQty", invoice.quantity);
-		tempMap.put("totInvValue", invoiceAmount);
-		tempMap.put("actualFrightCharges", actualFrightCharges);
-		if(UtilValidate.isNotEmpty(actualFrightCharges)){
-			if(actualFrightCharges.compareTo(eligibleFrightCharges)>0){
-				tempMap.put("frightCharges", eligibleFrightCharges);
-			}else{
-				tempMap.put("frightCharges", actualFrightCharges);
-			}
-		}else{
-			tempMap.put("frightCharges", BigDecimal.ZERO);
-		}
-		tempMap.put("mgpsServiceCharge", mgpsServiceCharge);
-		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,invoice.partyId), UtilMisc.toSet("facilityId"), null, null, false );
-		if(UtilValidate.isNotEmpty(facility)){
-			tempMap.put("depotCharges", depotCharges);
-			otherDepotList.add(tempMap);
-			
-			totalInvoiceQtyD=totalInvoiceQtyD.add(invoice.quantity)
-			totalInvoiceValueD=totalInvoiceValueD.add(invoiceAmount)
-			totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
-			totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
-			totalDepotChargesD=totalDepotChargesD.add(depotCharges);
-			
-		}else{
-			tempMap.put("depotCharges", BigDecimal.ZERO);
-			otherNonDepotList.add(tempMap);
-			
-			totalInvoiceQtyND=totalInvoiceQtyND.add(invoice.quantity)
-			totalInvoiceValueND=totalInvoiceValueND.add(invoiceAmount)
-			totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
-			totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-			totalDepotChargesND=totalDepotChargesND.add(0);
-		}
-	
-		index=index+1;
 		
+		invoiceAmount=getInvocieAmount(invoice.invoiceId,invoice.invoiceItemSeqId)
+		
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoice.invoiceId));
+		conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId",EntityOperator.EQUALS,invoice.invoiceItemSeqId));
+		conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS, "TEN_PERCENT_SUBSIDY"));
+		fieldsToSelect = ["invoiceItemSeqId"] as Set;
+		invoiceItems1 = delegator.findList("InvoiceItem",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
+		invoiceItem1=EntityUtil.getFirst(invoiceItems1)
+		if(invoiceItem1!=null){
+			invoiceQty=getSchemeQty(invoice.invoiceId,invoiceItem1.invoiceItemSeqId)
+			tenPerSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,invoiceItem1.invoiceItemSeqId)
+		}
+		serviceCharge=tenPerSubAmount.multiply(0.05)
+		subsidyAmount=tenPerSubAmount.add(tenPerSubAmount.multiply(0.05))
+		tempMap.put("sNo", index);
+		tempMap.put("partyName", product.productName);
+		tempMap.put("invoiceId", invoice.invoiceId);
+		tempMap.put("totInvQty", invoiceQty);
+		tempMap.put("totInvValue", twoDForm.format(invoiceAmount));
+		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
+		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
+		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
+		
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceAmount)
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
+		 
+		otherDepotList.add(tempMap);
+		index=index+1;
 	}
 	
-	
 	otherDepottotalsMap.put("partyName","TOTAL");
-	otherDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
-	otherDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	otherDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
-	otherDepottotalsMap.put("frightCharges",totalFrightChargesD);
-	otherDepottotalsMap.put("depotCharges",totalDepotChargesD);
-	otherDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	otherDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyD));
+	otherDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueD));
+	otherDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountD));
+	otherDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
+	otherDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	otherDepotList.add(otherDepottotalsMap);
 	
-	otherNonDepottotalsMap.put("partyName","TOTAL");
-	otherNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	otherNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	otherNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
-	otherNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
-	otherNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
-	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
-	otherNonDepotList.add(otherNonDepottotalsMap);
+	index=1;
+	
 }
 
 
@@ -731,7 +585,7 @@ def getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd)
 	return result;
 }
 
-def getInvocieAmount(invoiceId)
+def getInvocieAmount(invoiceId ,invoiceItemSeqId)
 {
 	BigDecimal invoiceAmount = BigDecimal.ZERO;
 	innerCondition=[];
@@ -739,6 +593,9 @@ def getInvocieAmount(invoiceId)
 	innerCondition.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.NOT_EQUAL,"TEN_PERCENT_SUBSIDY"));
 	innerCondition.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL, "ROUNDING_ADJUSTMENT"));
 	innerCondition.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
+	if(UtilValidate.isNotEmpty(invoiceItemSeqId)){
+		innerCondition.add(EntityCondition.makeCondition("invoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
+	}
 	fieldsToSelect = ["amount","invoiceId","invoiceItemSeqId","parentInvoiceItemSeqId","itemValue"] as Set;
 	invoiceItems = delegator.findList("InvoiceItem",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
 	
@@ -762,20 +619,32 @@ def getInvocieAmount(invoiceId)
 	return invoiceAmount;
 }
 
-def getTenPerSubsidyAmount(invoiceId)
+def getTenPerSubsidyAmount(invoiceId,invoiceItemSeqId)
 {
 	BigDecimal tenPerSubAmount = BigDecimal.ZERO;
 	innerCondition=[];
 	innerCondition.add(EntityCondition.makeCondition("invoiceId",EntityOperator.EQUALS,invoiceId));
 	innerCondition.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"TEN_PERCENT_SUBSIDY"));
+	if(UtilValidate.isNotEmpty(invoiceItemSeqId)){
+		innerCondition.add(EntityCondition.makeCondition("invoiceItemSeqId",EntityOperator.EQUALS,invoiceItemSeqId));
+	}
 	fieldsToSelect = ["itemValue"] as Set;
 	invoiceItems = delegator.findList("InvoiceItem",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
+	
+	if(invoiceId=="166597"){
+		Debug.log("invoiceItems==========================================="+ invoiceItems);
+	}
+	
 	for(eachItem in invoiceItems)
 	{
 		if(eachItem.itemValue!=null)
 		tenPerSubAmount=tenPerSubAmount.add(eachItem.itemValue)
 	}
 	tenPerSubAmount=tenPerSubAmount.multiply(-1)
+	if(invoiceId=="166597"){
+		Debug.log("tenPerSubAmount==========================================="+ tenPerSubAmount);
+		kkkk
+	}
 	return tenPerSubAmount;
 	
 }
@@ -801,8 +670,7 @@ def getSchemeQty(invoiceId,invoiceItemSeqId)
 
 def generatePartyWiseReport()
 {
-	indexD=1;
-	indexND=1;
+	index=1;
 	duplicateInvoiceIds=[];
 	DecimalFormat twoDForm = new DecimalFormat("#.##");
 	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
@@ -811,23 +679,13 @@ def generatePartyWiseReport()
 	BigDecimal totalServiceChargeD = BigDecimal.ZERO;
 	BigDecimal totalSubAmountD = BigDecimal.ZERO;
 	
-	BigDecimal totalInvoiceQtyND = BigDecimal.ZERO;
-	BigDecimal totalInvoiceValueND = BigDecimal.ZERO;
-	BigDecimal totalTenPerSubAmountND = BigDecimal.ZERO;
-	BigDecimal totalServiceChargeND = BigDecimal.ZERO;
-	BigDecimal totalSubAmountND = BigDecimal.ZERO;
-	
 	silkDepottotalsMap=[:];
-	silkNonDepottotalsMap=[:];
 	
 	cottonDepottotalsMap=[:];
-	cottonNonDepottotalsMap=[:];
 	
 	juteDepottotalsMap=[:];
-	juteNonDepottotalsMap=[:];
 	
 	otherDepottotalsMap=[:];
-	otherNonDepottotalsMap=[:];
 	  
 	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
 	
@@ -863,8 +721,8 @@ def generatePartyWiseReport()
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
 			
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId)
+			invoiceAmount=getInvocieAmount(invoice.invoiceId,"")
+			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,"")
 			schemeQty=getSchemeQty(invoice.invoiceId,"")
 			
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
@@ -876,6 +734,7 @@ def generatePartyWiseReport()
 				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
 		}
+		tempMap.put("Sno", index);
 		tempMap.put("partyName", partyName);
 		tempMap.put("totInvQty", twoDForm.format(invoiceQty));
 		tempMap.put("totInvValue", twoDForm.format(invoiceValue) );
@@ -883,31 +742,14 @@ def generatePartyWiseReport()
 		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
 		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount) );
 		
-		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachParty), UtilMisc.toSet("facilityId"), null, null, false );
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
 		
-		if(UtilValidate.isNotEmpty(facility)){
-			  
-			tempMap.put("sNo", indexD);
-			silkDepotList.add(tempMap);
-			
-			totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
-			totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
-			totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
-			totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
-			totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-			indexD=indexD+1
-			
-		}else{
-			tempMap.put("sNo", indexND);
-			silkNonDepotList.add(tempMap);
-			
-			totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
-			totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
-			totalTenPerSubAmountND=totalTenPerSubAmountND.add(tenPerSubAmount)
-			totalServiceChargeND=totalServiceChargeND.add(serviceCharge);
-			totalSubAmountND=totalSubAmountND.add(subsidyAmount);
-			indexND=indexND+1
-		}
+		silkDepotList.add(tempMap);
+		index=index+1;
 		
 	}
 	duplicateInvoiceIds.clear()
@@ -919,26 +761,12 @@ def generatePartyWiseReport()
 	silkDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD) );
 	silkDepotList.add(silkDepottotalsMap);
 	
-	silkNonDepottotalsMap.put("partyName","TOTAL");
-	silkNonDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyND) );
-	silkNonDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueND) );
-	silkNonDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountND) );
-	silkNonDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeND) );
-	silkNonDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountND) );
-	silkNonDepotList.add(silkNonDepottotalsMap);
-	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
 	totalTenPerSubAmountD = BigDecimal.ZERO;
 	totalServiceChargeD = BigDecimal.ZERO;
 	totalSubAmountD = BigDecimal.ZERO;
-	
-	totalInvoiceQtyND = BigDecimal.ZERO;
-	totalInvoiceValueND = BigDecimal.ZERO;
-	totalTenPerSubAmountND = BigDecimal.ZERO;
-	totalServiceChargeND = BigDecimal.ZERO;
-	totalSubAmountND = BigDecimal.ZERO;
 	
 	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
 	
@@ -972,8 +800,8 @@ def generatePartyWiseReport()
 		for(invoice in cottonInvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId)
+			invoiceAmount=getInvocieAmount(invoice.invoiceId,"")
+			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,"")
 			schemeQty=getSchemeQty(invoice.invoiceId,"")
 			
 			
@@ -995,26 +823,13 @@ def generatePartyWiseReport()
 		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
 		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
 		
-		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachParty), UtilMisc.toSet("facilityId"), null, null, false );
-		if(UtilValidate.isNotEmpty(facility)){
-			cottonDepotList.add(tempMap);
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
 		
-			totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
-			totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
-			totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
-			totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
-			totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-			
-		}else{
-			tempMap.put("depotCharges", BigDecimal.ZERO);
-			cottonNonDepotList.add(tempMap);
-			
-			totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
-			totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
-			totalTenPerSubAmountND=totalTenPerSubAmountD.add(tenPerSubAmount)
-			totalServiceChargeND=totalServiceChargeND.add(serviceCharge);
-			totalSubAmountND=totalSubAmountND.add(subsidyAmount);
-		}
+		cottonDepotList.add(tempMap);
 		index=index+1;
 	}
 	duplicateInvoiceIds.clear()
@@ -1026,14 +841,6 @@ def generatePartyWiseReport()
 	cottonDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
 	cottonDepotList.add(cottonDepottotalsMap);
 	
-	cottonNonDepottotalsMap.put("partyName","TOTAL");
-	cottonNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	cottonNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	cottonNonDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountND);
-	cottonNonDepottotalsMap.put("frightCharges",totalServiceChargeND);
-	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSubAmountND);
-	cottonNonDepotList.add(cottonNonDepottotalsMap);
-	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
@@ -1041,11 +848,6 @@ def generatePartyWiseReport()
 	totalServiceChargeD = BigDecimal.ZERO;
 	totalSubAmountD = BigDecimal.ZERO;
 	
-	totalInvoiceQtyND = BigDecimal.ZERO;
-	totalInvoiceValueND = BigDecimal.ZERO;
-	totalTenPerSubAmountND = BigDecimal.ZERO;
-	totalServiceChargeND = BigDecimal.ZERO;
-	totalSubAmountND = BigDecimal.ZERO;
 	
 	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
 	
@@ -1078,8 +880,8 @@ def generatePartyWiseReport()
 		for(invoice in juteInvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId)
+			invoiceAmount=getInvocieAmount(invoice.invoiceId,"")
+			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,"")
 			schemeQty=getSchemeQty(invoice.invoiceId,"")
 			
 			
@@ -1102,42 +904,24 @@ def generatePartyWiseReport()
 		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
 		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
 		
-		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachParty), UtilMisc.toSet("facilityId"), null, null, false );
-		if(UtilValidate.isNotEmpty(facility)){
-			juteDepotList.add(tempMap);
-			
-			totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
-			totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
-			totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
-			totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
-			totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-			
-		}else{
-			juteNonDepotList.add(tempMap);
-			  
-			totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
-			totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
-			totalTenPerSubAmountND=totalTenPerSubAmountD.add(tenPerSubAmount)
-			totalServiceChargeND=totalServiceChargeND.add(serviceCharge);
-			totalSubAmountND=totalSubAmountND.add(subsidyAmount);
-		}
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
+		juteDepotList.add(tempMap);
+		
 		index=index+1;
 	}
 	duplicateInvoiceIds.clear()
 	juteDepottotalsMap.put("partyName","TOTAL");
 	juteDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
 	juteDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	juteDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountND);
-	juteDepottotalsMap.put("frightCharges",totalServiceChargeND);
-	juteDepottotalsMap.put("mgpsServiceCharge",totalSubAmountND);
+	juteDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountD);
+	juteDepottotalsMap.put("frightCharges",totalServiceChargeD);
+	juteDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
 	juteDepotList.add(juteDepottotalsMap);
-	juteNonDepottotalsMap.put("partyName","TOTAL");
-	juteNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	juteNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	juteNonDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountND);
-	juteNonDepottotalsMap.put("frightCharges",totalServiceChargeND);
-	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSubAmountND);
-	juteNonDepotList.add(juteNonDepottotalsMap);
+	
 	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -1146,11 +930,6 @@ def generatePartyWiseReport()
 	totalServiceChargeD = BigDecimal.ZERO;
 	totalSubAmountD = BigDecimal.ZERO;
 	
-	totalInvoiceQtyND = BigDecimal.ZERO;
-	totalInvoiceValueND = BigDecimal.ZERO;
-	totalTenPerSubAmountND = BigDecimal.ZERO;
-	totalServiceChargeND = BigDecimal.ZERO;
-	totalSubAmountND = BigDecimal.ZERO;
 	
 	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
 	
@@ -1183,10 +962,9 @@ def generatePartyWiseReport()
 		for(invoice in otherInvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId)
+			invoiceAmount=getInvocieAmount(invoice.invoiceId,"")
+			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,"")
 			schemeQty=getSchemeQty(invoice.invoiceId,"")
-			
 			
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				invoiceQty=invoiceQty.add(schemeQty);
@@ -1205,26 +983,14 @@ def generatePartyWiseReport()
 		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
 		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
 		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
+			
+		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
+		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
 		
-		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,eachParty), UtilMisc.toSet("facilityId"), null, null, false );
-		if(UtilValidate.isNotEmpty(facility)){
-			otherDepotList.add(tempMap);
-			
-			totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
-			totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
-			totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
-			totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
-			totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-			
-		}else{
-			otherNonDepotList.add(tempMap);
-			 
-			totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
-			totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
-			totalTenPerSubAmountND=totalTenPerSubAmountD.add(tenPerSubAmount)
-			totalServiceChargeND=totalServiceChargeND.add(serviceCharge);
-			totalSubAmountND=totalSubAmountND.add(subsidyAmount);
-		}
+		otherDepotList.add(tempMap);
 		index=index+1;
 	}
 	duplicateInvoiceIds.clear()
@@ -1235,14 +1001,6 @@ def generatePartyWiseReport()
 	otherDepottotalsMap.put("frightCharges",totalServiceChargeD);
 	otherDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
 	otherDepotList.add(otherDepottotalsMap);
-	
-	otherNonDepottotalsMap.put("partyName","TOTAL");
-	otherNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	otherNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	otherNonDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountND);
-	otherNonDepottotalsMap.put("frightCharges",totalServiceChargeND);
-	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSubAmountND);
-	otherNonDepotList.add(otherNonDepottotalsMap);
 	
 }
 
@@ -1255,40 +1013,23 @@ def generateSummaryReport(stateGeoIds)
 {
 	index=1;
 	duplicateInvoiceIds=[];
+	DecimalFormat twoDForm = new DecimalFormat("#.##");
 	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
 	BigDecimal totalInvoiceValueD = BigDecimal.ZERO;
-	BigDecimal totalActualFrightChargesD = BigDecimal.ZERO;
-	BigDecimal totalFrightChargesD = BigDecimal.ZERO;
-	BigDecimal totalDepotChargesD = BigDecimal.ZERO;
-	BigDecimal totalSerChargesD = BigDecimal.ZERO;
-	
-	BigDecimal totalInvoiceQtyND = BigDecimal.ZERO;
-	BigDecimal totalInvoiceValueND = BigDecimal.ZERO;
-	BigDecimal totalActualFrightChargesND = BigDecimal.ZERO;
-	BigDecimal totalFrightChargesND = BigDecimal.ZERO;
-	BigDecimal totalDepotChargesND = BigDecimal.ZERO;
-	BigDecimal totalSerChargesND = BigDecimal.ZERO;
+	BigDecimal totalTenPerSubAmountD = BigDecimal.ZERO;
+	BigDecimal totalServiceChargeD = BigDecimal.ZERO;
+	BigDecimal totalSubAmountD = BigDecimal.ZERO;
 	
 	silkDepottotalsMap=[:];
-	silkNonDepottotalsMap=[:];
 	
 	cottonDepottotalsMap=[:];
-	cottonNonDepottotalsMap=[:];
 	
 	juteDepottotalsMap=[:];
-	juteNonDepottotalsMap=[:];
 	
 	otherDepottotalsMap=[:];
-	otherNonDepottotalsMap=[:];
 	
 	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
-	
 	tenPerInvoiceIds=result.getAt("tenPerInvoiceIds")
-	mgpsInvoiceIds=result.getAt("mgpsInvoiceIds")
-	
-	tenPerAndMgpsInvoiceIds=[];
-	tenPerAndMgpsInvoiceIds.addAll(tenPerInvoiceIds)
-	tenPerAndMgpsInvoiceIds.addAll(mgpsInvoiceIds)
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -1298,22 +1039,20 @@ def generateSummaryReport(stateGeoIds)
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,silkProdIds));
-	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerAndMgpsInvoiceIds));
-	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","shipmentId","quantity","productId","costCenterId"] as Set;
+	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerInvoiceIds));
+	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","quantity","productId","costCenterId","itemValue"] as Set;
 	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	silkPartyIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"partyId", true);
 	
 	for(eachState in stateGeoIds)
 	{
-		tempMapD=[:]
-		tempMapND=[:]
+		tempMap=[:]
 		String stateName = "";
 		BigDecimal invoiceQty = BigDecimal.ZERO;
 		BigDecimal invoiceValue = BigDecimal.ZERO;
-		BigDecimal actualFrightCharges = BigDecimal.ZERO;
-		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
-		BigDecimal depotCharges = BigDecimal.ZERO;
-		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
+		BigDecimal tenPerSubAmount = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		schemePercentage=0
 		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
 		stateName=stateDetails.geoName
@@ -1329,133 +1068,39 @@ def generateSummaryReport(stateGeoIds)
 		eachStateCustomersList = delegator.findList("PartyRelationship",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyIdTo"), null, null, false );
 		eachStateSilkPartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomersList,"partyIdTo", true);
 		stateSilkinvoicesAndItems = EntityUtil.filterByCondition(silkinvoicesAndItems, EntityCondition.makeCondition("costCenterId", EntityOperator.IN,eachStateBranchIds));
-		facilitys = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,eachStateSilkPartyIds), UtilMisc.toSet("ownerPartyId"), null, null, false );
-		eachStateSilkPartyIdsD=EntityUtil.getFieldListFromEntityList(facilitys,"ownerPartyId", true);
 		
-		silkinvoicesAndItems1D = EntityUtil.filterByCondition(stateSilkinvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateSilkPartyIdsD));
-		silkinvoicesAndItems1ND = EntityUtil.filterByCondition(stateSilkinvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.NOT_IN,eachStateSilkPartyIdsD));
-		for(invoice in silkinvoicesAndItems1D)
+		for(invoice in stateSilkinvoicesAndItems)
 		{
-			invoiceQty=invoiceQty.add(invoice.quantity);
-			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
-			}
+			invoiceAmount=getInvocieAmount(invoice.invoiceId,"")
+			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,"")
+			schemeQty=getSchemeQty(invoice.invoiceId,"")
+			
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
-				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				//}
-				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
-				if(actulFrgtAmt>=eligFrgtAmt){
-					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
-				}else{
-					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
-				}
-				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+				invoiceQty=invoiceQty.add(schemeQty);
 				invoiceValue=invoiceValue.add(invoiceAmount);
-				duplicateInvoiceIds.add(invoice.invoiceId)
+				tenPerSubAmount=tenPerSubAmount.add(tenSubAmount)
+				serviceCharge=serviceCharge.add(tenSubAmount.multiply(0.05))
+				subsidyAmount=subsidyAmount.add(tenSubAmount.add(tenSubAmount.multiply(0.05)))
+				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
+			
 		}
-		duplicateInvoiceIds.clear()
 		
-		
-		tempMapD.put("sNo", index);
-		tempMapD.put("partyName", stateName);
-		tempMapD.put("totInvQty", invoiceQty);
-		tempMapD.put("totInvValue", invoiceValue);
-		tempMapD.put("actualFrightCharges", actualFrightCharges);
-		tempMapD.put("frightCharges", eligibleFrightCharges);
-		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
-		tempMapD.put("depotCharges", depotCharges);
-		if(invoiceQty>0){
-			silkDepotList.add(tempMapD);
-		}
+		tempMap.put("sNo", index);
+		tempMap.put("partyName", stateName);
+		tempMap.put("totInvQty", twoDForm.format(invoiceQty));
+		tempMap.put("totInvValue", twoDForm.format(invoiceValue));
+		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
+		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
+		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
+		if(invoiceQty>0)
+		silkDepotList.add(tempMap);
 		
 		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
 		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
-		totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
-		totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
-		totalDepotChargesD=totalDepotChargesD.add(depotCharges);
-		totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
-		
-		 invoiceQty = BigDecimal.ZERO;
-		 invoiceValue = BigDecimal.ZERO;
-		 actualFrightCharges = BigDecimal.ZERO;
-		 eligibleFrightCharges = BigDecimal.ZERO;
-		 depotCharges = BigDecimal.ZERO;
-		 mgpsServiceCharge = BigDecimal.ZERO;
-		 schemePercentage=0
-		for(invoice in silkinvoicesAndItems1ND)
-		{
-			invoiceQty=invoiceQty.add(invoice.quantity);
-			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
-			}
-			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
-				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				//}
-				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
-				if(actulFrgtAmt>=eligFrgtAmt){
-					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
-				}else{
-					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
-				}
-				invoiceValue=invoiceValue.add(invoiceAmount);
-				duplicateInvoiceIds.add(invoice.invoiceId)
-			}
-		}
-		duplicateInvoiceIds.clear()
-		
-		tempMapND.put("sNo", index);
-		tempMapND.put("partyName", stateName);
-		tempMapND.put("totInvQty", invoiceQty);
-		tempMapND.put("totInvValue", invoiceValue);
-		tempMapND.put("actualFrightCharges", actualFrightCharges);
-		tempMapND.put("frightCharges", eligibleFrightCharges);
-		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
-		tempMapND.put("depotCharges", depotCharges);
-		
-		if(invoiceQty>0){
-			silkNonDepotList.add(tempMapND);
-		}
-		
-		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
-		totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
-		totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
-		totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-		totalDepotChargesND=totalDepotChargesND.add(depotCharges);
-		totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
 		
 		index=index+1;
 		
@@ -1463,46 +1108,19 @@ def generateSummaryReport(stateGeoIds)
 	
 	duplicateInvoiceIds.clear();
 	silkDepottotalsMap.put("partyName","TOTAL");
-	silkDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
-	silkDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	silkDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
-	silkDepottotalsMap.put("frightCharges",totalFrightChargesD);
-	silkDepottotalsMap.put("depotCharges",totalDepotChargesD);
-	silkDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	silkDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyD));
+	silkDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueD));
+	silkDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountD));
+	silkDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
+	silkDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	silkDepotList.add(silkDepottotalsMap);
-	
-	silkNonDepottotalsMap.put("partyName","TOTAL");
-	silkNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	silkNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	silkNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
-	silkNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
-	silkNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
-	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
-	silkNonDepotList.add(silkNonDepottotalsMap);
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
-	totalActualFrightChargesD = BigDecimal.ZERO;
-	totalFrightChargesD = BigDecimal.ZERO;
-	totalDepotChargesD = BigDecimal.ZERO;
-	totalSerChargesD = BigDecimal.ZERO;
-	
-	totalInvoiceQtyND = BigDecimal.ZERO;
-	totalInvoiceValueND = BigDecimal.ZERO;
-	totalActualFrightChargesND = BigDecimal.ZERO;
-	totalFrightChargesND = BigDecimal.ZERO;
-	totalDepotChargesND = BigDecimal.ZERO;
-	totalSerChargesND=BigDecimal.ZERO;
-	
-	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
-	
-	tenPerInvoiceIds=result.getAt("tenPerInvoiceIds")
-	mgpsInvoiceIds=result.getAt("mgpsInvoiceIds")
-	
-	tenPerAndMgpsInvoiceIds=[];
-	tenPerAndMgpsInvoiceIds.addAll(tenPerInvoiceIds)
-	tenPerAndMgpsInvoiceIds.addAll(mgpsInvoiceIds)
+	totalTenPerSubAmountD = BigDecimal.ZERO;
+	totalServiceChargeD = BigDecimal.ZERO;
+	totalSubAmountD = BigDecimal.ZERO;
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -1512,22 +1130,20 @@ def generateSummaryReport(stateGeoIds)
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,cottonProdIds));
-	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerAndMgpsInvoiceIds));
+	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerInvoiceIds));
 	cottonInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
 	cottonPartyIds=EntityUtil.getFieldListFromEntityList(cottonInvoicesAndItems,"partyId", true);
 	
 	
 	for(eachState in stateGeoIds)
 	{
-		tempMapD=[:]
-		tempMapND=[:]
+		tempMap=[:]
 		String stateName = "";
 		BigDecimal invoiceQty = BigDecimal.ZERO;
 		BigDecimal invoiceValue = BigDecimal.ZERO;
-		BigDecimal actualFrightCharges = BigDecimal.ZERO;
-		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
-		BigDecimal depotCharges = BigDecimal.ZERO;
-		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
+		BigDecimal tenPerSubAmount = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		schemePercentage=0
 		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
 		stateName=stateDetails.geoName
@@ -1543,178 +1159,59 @@ def generateSummaryReport(stateGeoIds)
 		eachStateCustomersList = delegator.findList("PartyRelationship",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyIdTo"), null, null, false );
 		eachStateCottonPartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomersList,"partyIdTo", true);
 		stateCottoninvoicesAndItems = EntityUtil.filterByCondition(cottonInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateCottonPartyIds));
-		facilitys = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,eachStateCottonPartyIds), UtilMisc.toSet("ownerPartyId"), null, null, false );
-		eachStateCottonPartyIdsD=EntityUtil.getFieldListFromEntityList(facilitys,"ownerPartyId", true);
-		cottoninvoicesAndItems1D = EntityUtil.filterByCondition(stateCottoninvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateCottonPartyIdsD));
-		cottoninvoicesAndItems1ND = EntityUtil.filterOutByCondition(stateCottoninvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateCottonPartyIdsD));
 		
-		for(invoice in cottoninvoicesAndItems1D)
+		for(invoice in stateCottoninvoicesAndItems)
 		{
-			invoiceQty=invoiceQty.add(invoice.quantity);
-			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
+			invoiceAmount=getInvocieAmount(invoice.invoiceId,"")
+			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,"")
+			schemeQty=getSchemeQty(invoice.invoiceId,"")
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
-			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
-				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				//}
-				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
-				if(actulFrgtAmt>=eligFrgtAmt){
-					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
-				}else{
-					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
-				}
-				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+				invoiceQty=invoiceQty.add(schemeQty);
 				invoiceValue=invoiceValue.add(invoiceAmount);
+				tenPerSubAmount=tenPerSubAmount.add(tenSubAmount)
+				serviceCharge=serviceCharge.add(tenSubAmount.multiply(0.05))
+				subsidyAmount=subsidyAmount.add(tenSubAmount.add(tenSubAmount.multiply(0.05)))
 				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
 			
-			
 		}
-		duplicateInvoiceIds.clear()
 		
-		tempMapD.put("sNo", index);
-		tempMapD.put("partyName", stateName);
-		tempMapD.put("totInvQty", invoiceQty);
-		tempMapD.put("totInvValue", invoiceValue);
-		tempMapD.put("actualFrightCharges", actualFrightCharges);
-		tempMapD.put("frightCharges", eligibleFrightCharges);
-		tempMapD.put("depotCharges", depotCharges);
-		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
+		tempMap.put("sNo", index);
+		tempMap.put("partyName", stateName);
+		tempMap.put("totInvQty", twoDForm.format(invoiceQty));
+		tempMap.put("totInvValue", twoDForm.format(invoiceValue));
+		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
+		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
+		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
 		if(invoiceQty>0)
-		cottonDepotList.add(tempMapD);
+		cottonDepotList.add(tempMap);
 		
 		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
 		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
-		totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
-		totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
-		totalDepotChargesD=totalDepotChargesD.add(depotCharges);
-		totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
-		
-		invoiceQty = BigDecimal.ZERO;
-		invoiceValue = BigDecimal.ZERO;
-		actualFrightCharges = BigDecimal.ZERO;
-		eligibleFrightCharges = BigDecimal.ZERO;
-		depotCharges = BigDecimal.ZERO;
-		mgpsServiceCharge = BigDecimal.ZERO;
-		schemePercentage=0
-		for(invoice in cottoninvoicesAndItems1ND)
-		{
-			invoiceQty=invoiceQty.add(invoice.quantity);
-			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
-			}
-			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
-				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				//}
-				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
-				if(actulFrgtAmt>=eligFrgtAmt){
-					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
-				}else{
-					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
-				}
-				invoiceValue=invoiceValue.add(invoiceAmount);
-				duplicateInvoiceIds.add(invoice.invoiceId);
-			}
-		}
-		duplicateInvoiceIds.clear();
-		
-		
-		tempMapND.put("sNo", index);
-		tempMapND.put("partyName", stateName);
-		tempMapND.put("totInvQty", invoiceQty);
-		tempMapND.put("totInvValue", invoiceValue);
-		tempMapND.put("actualFrightCharges", actualFrightCharges);
-		tempMapND.put("frightCharges", eligibleFrightCharges);
-		tempMapND.put("depotCharges", depotCharges);
-		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
-		if(invoiceQty>0)
-		cottonNonDepotList.add(tempMapND);
-		
-		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
-		totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
-		totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
-		totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-		totalDepotChargesND=totalDepotChargesND.add(depotCharges);
-		totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
 		
 		index=index+1;
+		
 	}
 	
+	duplicateInvoiceIds.clear();
 	cottonDepottotalsMap.put("partyName","TOTAL");
-	cottonDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
-	cottonDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	cottonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
-	cottonDepottotalsMap.put("frightCharges",totalFrightChargesD);
-	cottonDepottotalsMap.put("depotCharges",totalDepotChargesD);
-	cottonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	cottonDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyD));
+	cottonDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueD));
+	cottonDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountD));
+	cottonDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
+	cottonDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	cottonDepotList.add(cottonDepottotalsMap);
 	
-	cottonNonDepottotalsMap.put("partyName","TOTAL");
-	cottonNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	cottonNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	cottonNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
-	cottonNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
-	cottonNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
-	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
-	cottonNonDepotList.add(cottonNonDepottotalsMap);
-	
-	index=1
+	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
-	totalActualFrightChargesD = BigDecimal.ZERO;
-	totalFrightChargesD = BigDecimal.ZERO;
-	totalDepotChargesD = BigDecimal.ZERO;
-	totalSerChargesD = BigDecimal.ZERO;
-	
-	totalInvoiceQtyND = BigDecimal.ZERO;
-	totalInvoiceValueND = BigDecimal.ZERO;
-	totalActualFrightChargesND = BigDecimal.ZERO;
-	totalFrightChargesND = BigDecimal.ZERO;
-	totalDepotChargesND = BigDecimal.ZERO;
-	totalSerChargesND=BigDecimal.ZERO;
-	
-	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
-	
-	tenPerInvoiceIds=result.getAt("tenPerInvoiceIds")
-	mgpsInvoiceIds=result.getAt("mgpsInvoiceIds")
-	
-	tenPerAndMgpsInvoiceIds=[];
-	tenPerAndMgpsInvoiceIds.addAll(tenPerInvoiceIds)
-	tenPerAndMgpsInvoiceIds.addAll(mgpsInvoiceIds)
+	totalTenPerSubAmountD = BigDecimal.ZERO;
+	totalServiceChargeD = BigDecimal.ZERO;
+	totalSubAmountD = BigDecimal.ZERO;
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -1724,21 +1221,19 @@ def generateSummaryReport(stateGeoIds)
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,juteProdIds));
-	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerAndMgpsInvoiceIds));
+	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerInvoiceIds));
 	juteInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
 	jutePartyIds=EntityUtil.getFieldListFromEntityList(juteInvoicesAndItems,"partyId", true);
 	
 	for(eachState in stateGeoIds)
 	{
-		tempMapD=[:]
-		tempMapND=[:]
+		tempMap=[:]
 		String stateName = "";
 		BigDecimal invoiceQty = BigDecimal.ZERO;
 		BigDecimal invoiceValue = BigDecimal.ZERO;
-		BigDecimal actualFrightCharges = BigDecimal.ZERO;
-		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
-		BigDecimal depotCharges = BigDecimal.ZERO;
-		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
+		BigDecimal tenPerSubAmount = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		schemePercentage=0
 		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
 		stateName=stateDetails.geoName
@@ -1754,177 +1249,59 @@ def generateSummaryReport(stateGeoIds)
 		eachStateCustomersList = delegator.findList("PartyRelationship",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyIdTo"), null, null, false );
 		eachStateJutePartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomersList,"partyIdTo", true);
 		stateJuteInvoicesAndItems = EntityUtil.filterByCondition(juteInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateJutePartyIds));
-		facilitys = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,eachStateJutePartyIds), UtilMisc.toSet("ownerPartyId"), null, null, false );
-		eachStateJutePartyIdsD=EntityUtil.getFieldListFromEntityList(facilitys,"ownerPartyId", true);
-		juteInvoicesAndItems1D = EntityUtil.filterByCondition(stateJuteInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateJutePartyIdsD));
-		juteInvoicesAndItems1ND = EntityUtil.filterOutByCondition(stateJuteInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateJutePartyIdsD));
 		
-		
-		for(invoice in juteInvoicesAndItems1D)
+		for(invoice in stateJuteInvoicesAndItems)
 		{
-			invoiceQty=invoiceQty.add(invoice.quantity);
-			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
+			invoiceAmount=getInvocieAmount(invoice.invoiceId,"")
+			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,"")
+			schemeQty=getSchemeQty(invoice.invoiceId,"")
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
-			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
-				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				//}
-				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
-				if(actulFrgtAmt>=eligFrgtAmt){
-					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
-				}else{
-					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
-				}
-				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+				invoiceQty=invoiceQty.add(schemeQty);
 				invoiceValue=invoiceValue.add(invoiceAmount);
+				tenPerSubAmount=tenPerSubAmount.add(tenSubAmount)
+				serviceCharge=serviceCharge.add(tenSubAmount.multiply(0.05))
+				subsidyAmount=subsidyAmount.add(tenSubAmount.add(tenSubAmount.multiply(0.05)))
 				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
+			
 		}
-		duplicateInvoiceIds.clear();
 		
-		
-		tempMapD.put("sNo", index);
-		tempMapD.put("partyName", stateName);
-		tempMapD.put("totInvQty", invoiceQty);
-		tempMapD.put("totInvValue", invoiceValue);
-		tempMapD.put("actualFrightCharges", actualFrightCharges);
-		tempMapD.put("frightCharges", eligibleFrightCharges);
-		tempMapD.put("depotCharges", depotCharges);
-		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
+		tempMap.put("sNo", index);
+		tempMap.put("partyName", stateName);
+		tempMap.put("totInvQty", twoDForm.format(invoiceQty));
+		tempMap.put("totInvValue", twoDForm.format(invoiceValue));
+		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
+		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
+		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
 		if(invoiceQty>0)
-		juteDepotList.add(tempMapD);
-		
+		juteDepotList.add(tempMap);
+	
 		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
 		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
-		totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
-		totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
-		totalDepotChargesD=totalDepotChargesD.add(depotCharges);
-		totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
-		
-		invoiceQty = BigDecimal.ZERO;
-		invoiceValue = BigDecimal.ZERO;
-		actualFrightCharges = BigDecimal.ZERO;
-		eligibleFrightCharges = BigDecimal.ZERO;
-		depotCharges = BigDecimal.ZERO;
-		mgpsServiceCharge = BigDecimal.ZERO;
-		
-		for(invoice in juteInvoicesAndItems1ND)
-		{
-			invoiceQty=invoiceQty.add(invoice.quantity);
-			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
-			}
-			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
-				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				//}
-				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
-				if(actulFrgtAmt>=eligFrgtAmt){
-					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
-				}else{
-					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
-				}
-				invoiceValue=invoiceValue.add(invoiceAmount);
-				duplicateInvoiceIds.add(invoice.invoiceId);
-			}
-		}
-		duplicateInvoiceIds.clear();
-		
-		
-		tempMapND.put("sNo", index);
-		tempMapND.put("partyName", stateName);
-		tempMapND.put("totInvQty", invoiceQty);
-		tempMapND.put("totInvValue", invoiceValue);
-		tempMapND.put("actualFrightCharges", actualFrightCharges);
-		tempMapND.put("frightCharges", eligibleFrightCharges);
-		tempMapND.put("depotCharges", depotCharges);
-		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
-		if(invoiceQty>0)
-		juteNonDepotList.add(tempMapND);
-		
-		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
-		totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
-		totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
-		totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-		totalDepotChargesND=totalDepotChargesND.add(depotCharges);
-		totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
 		
 		index=index+1;
+		
 	}
 	
+	duplicateInvoiceIds.clear();
 	juteDepottotalsMap.put("partyName","TOTAL");
 	juteDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
 	juteDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	juteDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
-	juteDepottotalsMap.put("frightCharges",totalFrightChargesD);
-	juteDepottotalsMap.put("depotCharges",totalDepotChargesD);
-	juteDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	juteDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountD);
+	juteDepottotalsMap.put("frightCharges",totalServiceChargeD);
+	juteDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
 	juteDepotList.add(juteDepottotalsMap);
-	juteNonDepottotalsMap.put("partyName","TOTAL");
-	juteNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	juteNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	juteNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
-	juteNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
-	juteNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
-	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
-	juteNonDepotList.add(juteNonDepottotalsMap);
 	
-	index=1
+	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
 	totalInvoiceValueD = BigDecimal.ZERO;
-	totalActualFrightChargesD = BigDecimal.ZERO;
-	totalFrightChargesD = BigDecimal.ZERO;
-	totalDepotChargesD = BigDecimal.ZERO;
-	totalSerChargesD = BigDecimal.ZERO;
-	
-	totalInvoiceQtyND = BigDecimal.ZERO;
-	totalInvoiceValueND = BigDecimal.ZERO;
-	totalActualFrightChargesND = BigDecimal.ZERO;
-	totalFrightChargesND = BigDecimal.ZERO;
-	totalDepotChargesND = BigDecimal.ZERO;
-	totalSerChargesND=BigDecimal.ZERO;
-	
-	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
-	
-	tenPerInvoiceIds=result.getAt("tenPerInvoiceIds")
-	mgpsInvoiceIds=result.getAt("mgpsInvoiceIds")
-	
-	tenPerAndMgpsInvoiceIds=[];
-	tenPerAndMgpsInvoiceIds.addAll(tenPerInvoiceIds)
-	tenPerAndMgpsInvoiceIds.addAll(mgpsInvoiceIds)
+	totalTenPerSubAmountD = BigDecimal.ZERO;
+	totalServiceChargeD = BigDecimal.ZERO;
+	totalSubAmountD = BigDecimal.ZERO;
 	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
@@ -1934,21 +1311,19 @@ def generateSummaryReport(stateGeoIds)
 	conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
 	conditionList.add(EntityCondition.makeCondition("costCenterId",EntityOperator.IN,branchIds))
 	conditionList.add(EntityCondition.makeCondition("productId",EntityOperator.IN,otherProdIds));
-	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerAndMgpsInvoiceIds));
+	conditionList.add(EntityCondition.makeCondition("invoiceId",EntityOperator.IN,tenPerInvoiceIds));
 	otherInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("invoiceId","quantity","partyId","partyIdFrom","shipmentId","productId"), null, null, false );
 	otherPartyIds=EntityUtil.getFieldListFromEntityList(otherInvoicesAndItems,"partyId", true);
 	
 	for(eachState in stateGeoIds)
 	{
-		tempMapD=[:]
-		tempMapND=[:]
+		tempMap=[:]
 		String stateName = "";
 		BigDecimal invoiceQty = BigDecimal.ZERO;
 		BigDecimal invoiceValue = BigDecimal.ZERO;
-		BigDecimal actualFrightCharges = BigDecimal.ZERO;
-		BigDecimal eligibleFrightCharges = BigDecimal.ZERO;
-		BigDecimal depotCharges = BigDecimal.ZERO;
-		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
+		BigDecimal tenPerSubAmount = BigDecimal.ZERO;
+		BigDecimal serviceCharge = BigDecimal.ZERO;
+		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		schemePercentage=0
 		stateDetails = delegator.findOne("Geo",[geoId : eachState] , false);
 		stateName=stateDetails.geoName
@@ -1964,166 +1339,63 @@ def generateSummaryReport(stateGeoIds)
 		eachStateCustomersList = delegator.findList("PartyRelationship",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyIdTo"), null, null, false );
 		eachStateOtherPartyIds=EntityUtil.getFieldListFromEntityList(eachStateCustomersList,"partyIdTo", true);
 		stateOtherInvoicesAndItems = EntityUtil.filterByCondition(otherInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateOtherPartyIds));
-		facilitys = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.IN,eachStateOtherPartyIds), UtilMisc.toSet("ownerPartyId"), null, null, false );
-		eachStateOtherPartyIdsD=EntityUtil.getFieldListFromEntityList(facilitys,"ownerPartyId", true);
-		otherInvoicesAndItems1D = EntityUtil.filterByCondition(stateOtherInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateOtherPartyIdsD));
-		otherInvoicesAndItems1ND = EntityUtil.filterOutByCondition(stateOtherInvoicesAndItems, EntityCondition.makeCondition("partyId", EntityOperator.IN,eachStateOtherPartyIdsD));
 		
-		for(invoice in otherInvoicesAndItems1D)
+		for(invoice in stateOtherInvoicesAndItems)
 		{
-			invoiceQty=invoiceQty.add(invoice.quantity);
-			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
+			invoiceAmount=getInvocieAmount(invoice.invoiceId,"")
+			tenSubAmount=getTenPerSubsidyAmount(invoice.invoiceId,"")
+			schemeQty=getSchemeQty(invoice.invoiceId,"")
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
-			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
-			//	if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-			//	}
-				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
-				if(actulFrgtAmt>=eligFrgtAmt){
-					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
-				}else{
-					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
-				}
-				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
+				invoiceQty=invoiceQty.add(schemeQty);
 				invoiceValue=invoiceValue.add(invoiceAmount);
+				tenPerSubAmount=tenPerSubAmount.add(tenSubAmount)
+				serviceCharge=serviceCharge.add(tenSubAmount.multiply(0.05))
+				subsidyAmount=subsidyAmount.add(tenSubAmount.add(tenSubAmount.multiply(0.05)))
 				duplicateInvoiceIds.add(invoice.invoiceId);
-			 }
+			}
+			
 		}
-		duplicateInvoiceIds.clear();
 		
-		
-		tempMapD.put("sNo", index);
-		tempMapD.put("partyName", stateName);
-		tempMapD.put("totInvQty", invoiceQty);
-		tempMapD.put("totInvValue", invoiceValue);
-		tempMapD.put("actualFrightCharges", actualFrightCharges);
-		tempMapD.put("frightCharges", eligibleFrightCharges);
-		tempMapD.put("depotCharges", depotCharges);
-		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMapD.put("mgpsServiceCharge", mgpsServiceCharge);
+		tempMap.put("sNo", index);
+		tempMap.put("partyName", stateName);
+		tempMap.put("totInvQty", twoDForm.format(invoiceQty));
+		tempMap.put("totInvValue", twoDForm.format(invoiceValue));
+		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
+		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
+		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
 		if(invoiceQty>0)
-		otherDepotList.add(tempMapD)
+		otherDepotList.add(tempMap);
 		
 		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
 		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
-		totalActualFrightChargesD=totalActualFrightChargesD.add(actualFrightCharges)
-		totalFrightChargesD=totalFrightChargesD.add(eligibleFrightCharges);
-		totalDepotChargesD=totalDepotChargesD.add(depotCharges);
-		totalSerChargesD=totalSerChargesD.add(mgpsServiceCharge);
-		
-		invoiceQty = BigDecimal.ZERO;
-		invoiceValue = BigDecimal.ZERO;
-		actualFrightCharges = BigDecimal.ZERO;
-		eligibleFrightCharges = BigDecimal.ZERO;
-		depotCharges = BigDecimal.ZERO;
-		mgpsServiceCharge = BigDecimal.ZERO;
-		schemePercentage=0
-		for(invoice in otherInvoicesAndItems1ND)
-		{
-			invoiceQty=invoiceQty.add(invoice.quantity);
-			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
-			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-				actualFrightCharges=actualFrightCharges.add(shipment.estimatedShipCost)
-			}
-			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
-				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				//}
-				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
-				if(actulFrgtAmt>=eligFrgtAmt){
-					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
-				}else{
-					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
-				}
-				invoiceValue=invoiceValue.add(invoiceAmount);
-				duplicateInvoiceIds.add(invoice.invoiceId);
-			}
-		}
-		duplicateInvoiceIds.clear()
-		
-		tempMapND.put("sNo", index);
-		tempMapND.put("partyName", stateName);
-		tempMapND.put("totInvQty", invoiceQty);
-		tempMapND.put("totInvValue", invoiceValue);
-		tempMapND.put("actualFrightCharges", actualFrightCharges);
-		tempMapND.put("frightCharges", eligibleFrightCharges);
-		tempMapND.put("depotCharges", depotCharges);
-		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
-		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
-		tempMapND.put("mgpsServiceCharge", mgpsServiceCharge);
-		if(invoiceQty>0)
-		otherNonDepotList.add(tempMapND)
-		
-		totalInvoiceQtyND=totalInvoiceQtyND.add(invoiceQty)
-		totalInvoiceValueND=totalInvoiceValueND.add(invoiceValue)
-		totalActualFrightChargesND=totalActualFrightChargesND.add(actualFrightCharges)
-		totalFrightChargesND=totalFrightChargesND.add(eligibleFrightCharges);
-		totalDepotChargesND=totalDepotChargesND.add(depotCharges);
-		totalSerChargesND=totalSerChargesND.add(mgpsServiceCharge);
+		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
+		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
+		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
 		
 		index=index+1;
+		
 	}
 	
+	duplicateInvoiceIds.clear();
 	otherDepottotalsMap.put("partyName","TOTAL");
 	otherDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
 	otherDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	otherDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesD);
-	otherDepottotalsMap.put("frightCharges",totalFrightChargesD);
-	otherDepottotalsMap.put("depotCharges",totalDepotChargesD);
-	otherDepottotalsMap.put("mgpsServiceCharge",totalSerChargesD);
+	otherDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountD);
+	otherDepottotalsMap.put("frightCharges",totalServiceChargeD);
+	otherDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
 	otherDepotList.add(otherDepottotalsMap);
-
-	otherNonDepottotalsMap.put("partyName","TOTAL");
-	otherNonDepottotalsMap.put("totInvQty",totalInvoiceQtyND);
-	otherNonDepottotalsMap.put("totInvValue",totalInvoiceValueND);
-	otherNonDepottotalsMap.put("actualFrightCharges",totalActualFrightChargesND);
-	otherNonDepottotalsMap.put("frightCharges",totalFrightChargesND);
-	otherNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
-	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
-	otherNonDepotList.add(otherNonDepottotalsMap);
+	
 }
 
 
 context.silkDepotList=silkDepotList
-context.silkNonDepotList=silkNonDepotList
   
 context.cottonDepotList=cottonDepotList
-context.cottonNonDepotList=cottonNonDepotList
 
 context.juteDepotList=juteDepotList
-context.juteNonDepotList=juteNonDepotList
 
 context.otherDepotList=otherDepotList
-context.otherNonDepotList=otherNonDepotList
 
 
 
