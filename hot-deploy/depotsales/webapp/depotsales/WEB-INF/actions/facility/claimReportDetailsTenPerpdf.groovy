@@ -226,6 +226,7 @@ def generateBillWiseReport()
 {
 	index=1;
 	DecimalFormat twoDForm = new DecimalFormat("#.##");
+	BigDecimal totalReimbursementAmount= BigDecimal.ZERO;
 	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
 	BigDecimal totalInvoiceValueD = BigDecimal.ZERO;
 	BigDecimal totalTenPerSubAmountD = BigDecimal.ZERO;
@@ -233,11 +234,8 @@ def generateBillWiseReport()
 	BigDecimal totalSubAmountD = BigDecimal.ZERO;
 	
 	silkDepottotalsMap=[:];
-	
 	cottonDepottotalsMap=[:];
-	
 	juteDepottotalsMap=[:];
-	
 	otherDepottotalsMap=[:]; 
 	
 	result=getMgpsAnd10PerInvoiceIdForPeriod(dayBegin,dayEnd);
@@ -264,7 +262,7 @@ def generateBillWiseReport()
 		BigDecimal serviceCharge = BigDecimal.ZERO;
 		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		product = delegator.findOne("Product",[productId : invoice.productId] , false);
-		
+		partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
 		invoiceAmount=getInvocieAmount(invoice.invoiceId,invoice.invoiceItemSeqId)
 		
 		conditionList.clear();
@@ -282,8 +280,8 @@ def generateBillWiseReport()
 		serviceCharge=tenPerSubAmount.multiply(0.05)
 		subsidyAmount=tenPerSubAmount.add(tenPerSubAmount.multiply(0.05))
 		tempMap.put("sNo", index);
-		tempMap.put("partyName", product.productName);
-		tempMap.put("invoiceId", invoice.invoiceId);
+		tempMap.put("partyName", partyName);
+		tempMap.put("productName", product.productName);
 		tempMap.put("totInvQty", invoiceQty);
 		tempMap.put("totInvValue", twoDForm.format(invoiceAmount));
 		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
@@ -295,9 +293,11 @@ def generateBillWiseReport()
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
+		if(invoiceQty>0){
+			silkDepotList.add(tempMap);
+			index=index+1;
+		}
 		
-		silkDepotList.add(tempMap);
-		index=index+1;
 	}
 	
 	silkDepottotalsMap.put("partyName","TOTAL");
@@ -307,6 +307,8 @@ def generateBillWiseReport()
 	silkDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
 	silkDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD) );
 	silkDepotList.add(silkDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -338,7 +340,7 @@ def generateBillWiseReport()
 		BigDecimal serviceCharge = BigDecimal.ZERO;
 		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		product = delegator.findOne("Product",[productId : invoice.productId] , false);
-		
+		partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
 		invoiceAmount=getInvocieAmount(invoice.invoiceId,invoice.invoiceItemSeqId)
 		
 		conditionList.clear();
@@ -356,8 +358,8 @@ def generateBillWiseReport()
 		serviceCharge=tenPerSubAmount.multiply(0.05)
 		subsidyAmount=tenPerSubAmount.add(tenPerSubAmount.multiply(0.05))
 		tempMap.put("sNo", index);
-		tempMap.put("partyName", product.productName);
-		tempMap.put("invoiceId", invoice.invoiceId);
+		tempMap.put("partyName", partyName);
+		tempMap.put("productName", product.productName);
 		tempMap.put("totInvQty", invoiceQty);
 		tempMap.put("totInvValue", twoDForm.format(invoiceAmount));
 		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
@@ -369,9 +371,12 @@ def generateBillWiseReport()
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
+		if(invoiceQty>0){
+			cottonDepotList.add(tempMap);
+			index=index+1;
+		}
 		
-		cottonDepotList.add(tempMap);
-		index=index+1;
+		
 	}
 	
 	cottonDepottotalsMap.put("partyName","TOTAL");
@@ -381,6 +386,8 @@ def generateBillWiseReport()
 	cottonDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
 	cottonDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	cottonDepotList.add(cottonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -411,7 +418,7 @@ def generateBillWiseReport()
 		BigDecimal serviceCharge = BigDecimal.ZERO;
 		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		product = delegator.findOne("Product",[productId : invoice.productId] , false);
-		
+		partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
 		invoiceAmount=getInvocieAmount(invoice.invoiceId,invoice.invoiceItemSeqId)
 		
 		conditionList.clear();
@@ -429,8 +436,8 @@ def generateBillWiseReport()
 		serviceCharge=tenPerSubAmount.multiply(0.05)
 		subsidyAmount=tenPerSubAmount.add(tenPerSubAmount.multiply(0.05))
 		tempMap.put("sNo", index);
-		tempMap.put("partyName", product.productName);
-		tempMap.put("invoiceId", invoice.invoiceId);
+		tempMap.put("partyName", partyName);
+		tempMap.put("productName", product.productName);
 		tempMap.put("totInvQty", invoiceQty);
 		tempMap.put("totInvValue", twoDForm.format(invoiceAmount));
 		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
@@ -442,9 +449,11 @@ def generateBillWiseReport()
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		 
-		juteDepotList.add(tempMap);
-		index=index+1;
+		if(invoiceQty>0){
+			juteDepotList.add(tempMap);
+		    index=index+1;
+		}
+		
 	}
 	
 	juteDepottotalsMap.put("partyName","TOTAL");
@@ -454,6 +463,8 @@ def generateBillWiseReport()
 	juteDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
 	juteDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	juteDepotList.add(juteDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -486,7 +497,7 @@ def generateBillWiseReport()
 		BigDecimal serviceCharge = BigDecimal.ZERO;
 		BigDecimal subsidyAmount = BigDecimal.ZERO;
 		product = delegator.findOne("Product",[productId : invoice.productId] , false);
-		
+		partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
 		invoiceAmount=getInvocieAmount(invoice.invoiceId,invoice.invoiceItemSeqId)
 		
 		conditionList.clear();
@@ -503,8 +514,8 @@ def generateBillWiseReport()
 		serviceCharge=tenPerSubAmount.multiply(0.05)
 		subsidyAmount=tenPerSubAmount.add(tenPerSubAmount.multiply(0.05))
 		tempMap.put("sNo", index);
-		tempMap.put("partyName", product.productName);
-		tempMap.put("invoiceId", invoice.invoiceId);
+		tempMap.put("partyName", partyName);
+		tempMap.put("productName", product.productName);
 		tempMap.put("totInvQty", invoiceQty);
 		tempMap.put("totInvValue", twoDForm.format(invoiceAmount));
 		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
@@ -516,9 +527,11 @@ def generateBillWiseReport()
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		 
-		otherDepotList.add(tempMap);
-		index=index+1;
+		if(invoiceQty>0){
+			otherDepotList.add(tempMap);
+		    index=index+1;
+		}
+		
 	}
 	
 	otherDepottotalsMap.put("partyName","TOTAL");
@@ -529,7 +542,9 @@ def generateBillWiseReport()
 	otherDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	otherDepotList.add(otherDepottotalsMap);
 	
-	index=1;
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
+	
+	context.totalReimbursementAmount=twoDForm.format(totalReimbursementAmount);
 	
 }
 
@@ -631,20 +646,13 @@ def getTenPerSubsidyAmount(invoiceId,invoiceItemSeqId)
 	fieldsToSelect = ["itemValue"] as Set;
 	invoiceItems = delegator.findList("InvoiceItem",EntityCondition.makeCondition(innerCondition, EntityOperator.AND), fieldsToSelect, null, null, false );
 	
-	if(invoiceId=="166597"){
-		Debug.log("invoiceItems==========================================="+ invoiceItems);
-	}
-	
 	for(eachItem in invoiceItems)
 	{
 		if(eachItem.itemValue!=null)
 		tenPerSubAmount=tenPerSubAmount.add(eachItem.itemValue)
 	}
 	tenPerSubAmount=tenPerSubAmount.multiply(-1)
-	if(invoiceId=="166597"){
-		Debug.log("tenPerSubAmount==========================================="+ tenPerSubAmount);
-		kkkk
-	}
+	
 	return tenPerSubAmount;
 	
 }
@@ -673,6 +681,7 @@ def generatePartyWiseReport()
 	index=1;
 	duplicateInvoiceIds=[];
 	DecimalFormat twoDForm = new DecimalFormat("#.##");
+	BigDecimal totalReimbursementAmount= BigDecimal.ZERO;
 	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
 	BigDecimal totalInvoiceValueD = BigDecimal.ZERO;
 	BigDecimal totalTenPerSubAmountD = BigDecimal.ZERO;
@@ -747,9 +756,10 @@ def generatePartyWiseReport()
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		
-		silkDepotList.add(tempMap);
-		index=index+1;
+		if(invoiceQty>0){
+			silkDepotList.add(tempMap);
+		    index=index+1;
+		}
 		
 	}
 	duplicateInvoiceIds.clear()
@@ -760,6 +770,8 @@ def generatePartyWiseReport()
 	silkDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD) );
 	silkDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD) );
 	silkDepotList.add(silkDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -828,18 +840,21 @@ def generatePartyWiseReport()
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		
-		cottonDepotList.add(tempMap);
-		index=index+1;
+		if(invoiceQty>0){
+			cottonDepotList.add(tempMap);
+		    index=index+1;
+		}
 	}
 	duplicateInvoiceIds.clear()
 	cottonDepottotalsMap.put("partyName","TOTAL");
-	cottonDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
-	cottonDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	cottonDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountD);
-	cottonDepottotalsMap.put("frightCharges",totalServiceChargeD);
-	cottonDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
+	cottonDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyD));
+	cottonDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueD));
+	cottonDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountD));
+	cottonDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
+	cottonDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	cottonDepotList.add(cottonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
 	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -909,9 +924,10 @@ def generatePartyWiseReport()
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		juteDepotList.add(tempMap);
-		
-		index=index+1;
+		if(invoiceQty>0){
+			juteDepotList.add(tempMap);
+		    index=index+1;
+		}
 	}
 	duplicateInvoiceIds.clear()
 	juteDepottotalsMap.put("partyName","TOTAL");
@@ -922,6 +938,7 @@ def generatePartyWiseReport()
 	juteDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
 	juteDepotList.add(juteDepottotalsMap);
 	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
 	
 	index=1
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -989,18 +1006,23 @@ def generatePartyWiseReport()
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		
-		otherDepotList.add(tempMap);
-		index=index+1;
+		if(invoiceQty>0){
+			otherDepotList.add(tempMap);
+		    index=index+1;
+		}
 	}
 	duplicateInvoiceIds.clear()
 	otherDepottotalsMap.put("partyName","TOTAL");
-	otherDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
-	otherDepottotalsMap.put("totInvValue",totalInvoiceValueD);
-	otherDepottotalsMap.put("actualFrightCharges",totalTenPerSubAmountD);
-	otherDepottotalsMap.put("frightCharges",totalServiceChargeD);
-	otherDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
+	otherDepottotalsMap.put("totInvQty",twoDForm.format(totalInvoiceQtyD));
+	otherDepottotalsMap.put("totInvValue",twoDForm.format(totalInvoiceValueD));
+	otherDepottotalsMap.put("actualFrightCharges",twoDForm.format(totalTenPerSubAmountD));
+	otherDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
+	otherDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	otherDepotList.add(otherDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
+	
+	context.totalReimbursementAmount=twoDForm.format(totalReimbursementAmount)
 	
 }
 
@@ -1014,6 +1036,7 @@ def generateSummaryReport(stateGeoIds)
 	index=1;
 	duplicateInvoiceIds=[];
 	DecimalFormat twoDForm = new DecimalFormat("#.##");
+	BigDecimal totalReimbursementAmount= BigDecimal.ZERO;
 	BigDecimal totalInvoiceQtyD = BigDecimal.ZERO;
 	BigDecimal totalInvoiceValueD = BigDecimal.ZERO;
 	BigDecimal totalTenPerSubAmountD = BigDecimal.ZERO;
@@ -1093,16 +1116,15 @@ def generateSummaryReport(stateGeoIds)
 		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
 		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
 		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
-		if(invoiceQty>0)
-		silkDepotList.add(tempMap);
-		
+		if(invoiceQty>0){
+			silkDepotList.add(tempMap);
+		    index=index+1;
+		}
 		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
 		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		
-		index=index+1;
 		
 	}
 	
@@ -1114,6 +1136,8 @@ def generateSummaryReport(stateGeoIds)
 	silkDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
 	silkDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	silkDepotList.add(silkDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -1184,16 +1208,16 @@ def generateSummaryReport(stateGeoIds)
 		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
 		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
 		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
-		if(invoiceQty>0)
-		cottonDepotList.add(tempMap);
+		if(invoiceQty>0){
+			cottonDepotList.add(tempMap);
+		    index=index+1;
+		}
 		
 		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
 		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		
-		index=index+1;
 		
 	}
 	
@@ -1205,6 +1229,8 @@ def generateSummaryReport(stateGeoIds)
 	cottonDepottotalsMap.put("frightCharges",twoDForm.format(totalServiceChargeD));
 	cottonDepottotalsMap.put("mgpsServiceCharge",twoDForm.format(totalSubAmountD));
 	cottonDepotList.add(cottonDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -1274,16 +1300,15 @@ def generateSummaryReport(stateGeoIds)
 		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
 		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
 		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
-		if(invoiceQty>0)
-		juteDepotList.add(tempMap);
-	
+		if(invoiceQty>0){
+			juteDepotList.add(tempMap);
+		    index=index+1;
+		}
 		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
 		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		
-		index=index+1;
 		
 	}
 	
@@ -1295,6 +1320,8 @@ def generateSummaryReport(stateGeoIds)
 	juteDepottotalsMap.put("frightCharges",totalServiceChargeD);
 	juteDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
 	juteDepotList.add(juteDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
 	
 	index=1;
 	totalInvoiceQtyD = BigDecimal.ZERO;
@@ -1364,16 +1391,15 @@ def generateSummaryReport(stateGeoIds)
 		tempMap.put("actualFrightCharges", twoDForm.format(tenPerSubAmount));
 		tempMap.put("frightCharges", twoDForm.format(serviceCharge));
 		tempMap.put("mgpsServiceCharge", twoDForm.format(subsidyAmount));
-		if(invoiceQty>0)
-		otherDepotList.add(tempMap);
-		
+		if(invoiceQty>0){
+			otherDepotList.add(tempMap);
+		    index=index+1;
+		}
 		totalInvoiceQtyD=totalInvoiceQtyD.add(invoiceQty)
 		totalInvoiceValueD=totalInvoiceValueD.add(invoiceValue)
 		totalTenPerSubAmountD=totalTenPerSubAmountD.add(tenPerSubAmount)
 		totalServiceChargeD=totalServiceChargeD.add(serviceCharge);
 		totalSubAmountD=totalSubAmountD.add(subsidyAmount);
-		
-		index=index+1;
 		
 	}
 	
@@ -1385,6 +1411,10 @@ def generateSummaryReport(stateGeoIds)
 	otherDepottotalsMap.put("frightCharges",totalServiceChargeD);
 	otherDepottotalsMap.put("mgpsServiceCharge",totalSubAmountD);
 	otherDepotList.add(otherDepottotalsMap);
+	
+	totalReimbursementAmount=totalReimbursementAmount.add(totalSubAmountD)
+	
+	context.totalReimbursementAmount=twoDForm.format(totalReimbursementAmount)
 	
 }
 
