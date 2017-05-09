@@ -1357,7 +1357,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
   	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
   	  BigDecimal totalAmount = BigDecimal.ZERO;
   	  List paymentIds = FastList.newInstance();
-  	
+    	
   	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
   	  if (rowCount < 1) {
   		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
@@ -1375,6 +1375,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
   	  String paymentGroupId = "";
   	  String paymentGroupTypeId="";
   	  String depositAmtStr="";
+  	  String defaultglAccountId =  null;
   	  finAccountId = (String) paramMap.get("finAccountId");
   	  instrumentDateStr = (String) paramMap.get("instrumentDate");
   	  paymentDateStr = (String) paramMap.get("paymentDate");
@@ -1456,16 +1457,31 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	  			List<GenericValue> volunteerfinAccountList = EntityUtil.filterByCondition(finAccList, EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "VPF_CONTRI"));
 	  			volunteerfinAccountId = EntityUtil.getFirst(volunteerfinAccountList).getString("finAccountId");
 	  			
+	  			List fintypeconditionList = FastList.newInstance();
+	  			fintypeconditionList.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS ,"Company"));
+	  			fintypeconditionList.add(EntityCondition.makeCondition("glAccountTypeId",EntityOperator.EQUALS,"CONTRA_ADJUSTMENT"));
+	  			EntityCondition fintypecondition = EntityCondition.makeCondition(fintypeconditionList,EntityOperator.AND); 		
+		  		 List<GenericValue> GlAccountTypeDefaultList = delegator.findList("GlAccountTypeDefault", fintypecondition, null, null, null, false);
+		  		
+		  		defaultglAccountId = EntityUtil.getFirst(GlAccountTypeDefaultList).getString("glAccountId");
+		  		
 	  	  		Map employeefinMap = FastMap.newInstance();
 		  	  		employeefinMap.put("partyId",partyId);
-		  	  	if(UtilValidate.isNotEmpty(employerfinAccountId)){   
+		  	  	if(UtilValidate.isNotEmpty(employeefinAccountId)){   
 		  	  		employeefinMap.put("finAccountId",employeefinAccountId);
 		  	  	}  
 		  	  		employeefinMap.put("transactionDate",paymentDate);
 		  	  		employeefinMap.put("finAccountTransTypeId","WITHDRAWAL");
-		  	  		employeefinMap.put("statusId","FINACT_TRNS_CREATED");
+		  	  		employeefinMap.put("reasonEnumId","FATR_CONTRA");
+		  	  	    employeefinMap.put("statusId","FINACT_TRNS_CREATED");
+		  	  	    employeefinMap.put("costCenterId","Company");
+		  	  	    employeefinMap.put("segmentId","CPF_TRUST");
+		  	  	if(UtilValidate.isNotEmpty(defaultglAccountId)){   
+		  	  	    employeefinMap.put("glAccountId",defaultglAccountId);
+		  	  	}
 //		  	  		employeefinMap.put("entryType","Adjustment");
 			  		//paymentInputMap.put("contraRefNum", contraRefNum);
+		  	  	    employeefinMap.put("statusId","FINACT_TRNS_CREATED");
 		  	  		employeefinMap.put("userLogin", userLogin);
 		  	  		employeefinMap.put("amount",employeeFinAmount);
 	  	  		Map employeerfinMap = FastMap.newInstance();
@@ -1476,6 +1492,12 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  		employeerfinMap.put("transactionDate",paymentDate);
 		  	  		employeerfinMap.put("statusId","FINACT_TRNS_CREATED");
 		  	  		employeerfinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  	    employeerfinMap.put("reasonEnumId","FATR_CONTRA");
+		  	  	    employeerfinMap.put("costCenterId","Company");
+	  	  	        employeerfinMap.put("segmentId","CPF_TRUST");
+		  	  	 if(UtilValidate.isNotEmpty(defaultglAccountId)){  
+		  	  	    employeerfinMap.put("glAccountId",defaultglAccountId);
+		  	  	 }
 //		  	  		employeerfinMap.put("entryType","Adjustment");
 		  	  		//employeerfinMap.put("contraRefNum", contraRefNum);
 		  	  		employeerfinMap.put("userLogin", userLogin);
@@ -1489,7 +1511,13 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  	  	}
 		  	  		vpffinMap.put("transactionDate",paymentDate);
 		  	  		vpffinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  	if(UtilValidate.isNotEmpty(defaultglAccountId)){  
+		  	  	    vpffinMap.put("glAccountId",defaultglAccountId);
+		  	  	}
+		  	  	    vpffinMap.put("reasonEnumId","FATR_CONTRA");
 		  	  		vpffinMap.put("statusId","FINACT_TRNS_CREATED");
+		  	  	    vpffinMap.put("costCenterId","Company");
+		  	        vpffinMap.put("segmentId","CPF_TRUST");
 //		  	  		vpffinMap.put("entryType","Adjustment");
 		  	  		//vpffinMap.put("contraRefNum", contraRefNum);
 		  	  		vpffinMap.put("userLogin", userLogin);
@@ -1526,6 +1554,11 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 			depositFinTransMap.put("transactionDate",paymentDate);
 	  		depositFinTransMap.put("finAccountTransTypeId","DEPOSIT");
 	  		depositFinTransMap.put("statusId","FINACT_TRNS_CREATED");
+	  		depositFinTransMap.put("costCenterId","Company");
+	  		depositFinTransMap.put("segmentId","CPF_TRUST");
+	  		if(UtilValidate.isNotEmpty(defaultglAccountId)){  
+	  			depositFinTransMap.put("glAccountId",defaultglAccountId);
+	  	  	}
 //	  		depositFinTransMap.put("entryType","Adjustment");
 	  		//vpffinMap.put("contraRefNum", contraRefNum);
 	  		depositFinTransMap.put("userLogin", userLogin);
@@ -1545,9 +1578,19 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 							   request.setAttribute("_ERROR_MESSAGE_", "Error in service batchDepositContraFinAccTrans");
 							   return "error";
 					        }
+					       
 	                        String finAccountTransId = (String)createResult.get("finAccountTransId");
+	                      
 	                        finAccountTransIds.add(finAccountTransId);
-		  				
+	                        
+	        		        for(String eachfinAccountTransId:finAccountTransIds){
+	        		        	GenericValue newTransAttr = delegator.makeValue("FinAccountTransAttribute");        	 
+	                        	newTransAttr.set("finAccountTransId", eachfinAccountTransId);
+	                        	newTransAttr.set("attrName", "INFAVOUR_OF");
+	                        	newTransAttr.set("attrValue", "FATR_CONTRA");
+	                        	delegator.createOrStore(newTransAttr);
+	        		        	
+	        		        }
 		  			}
 		  		}
 		  		 totalAmount = totalAmount.add(depositAmt);
