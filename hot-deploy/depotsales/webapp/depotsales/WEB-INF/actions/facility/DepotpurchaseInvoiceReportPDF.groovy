@@ -35,6 +35,25 @@ purchaseInvoiceAdjustmtsMap=[:];
 branchContext=[:];
 supplierDetailsMap=[:];
 purchasePartyDetailsMap=[:];
+
+
+conditionList = [];
+
+conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, invoiceId));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
+if(OrderItemBilling)
+	itemOrderId  = OrderItemBilling[0].orderId;
+OrderHeader = delegator.findOne("OrderHeader",[orderId : itemOrderId] , false);
+if(OrderHeader)
+	facilityId=OrderHeader.originFacilityId;
+facilityName="";
+FacilityList = delegator.findOne("Facility",[facilityId : facilityId] , false);
+if(FacilityList)
+	facilityName = FacilityList.get("facilityName");
+context.facilityName = facilityName;
+
 invoiceDetails = delegator.findOne("Invoice",[invoiceId : invoiceId] , false);
 
 shipmentId=invoiceDetails.get("shipmentId");
