@@ -173,7 +173,19 @@
         <make-value entity-name="PartyRole" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <entity-one entity-name="PartyRole" value-field="partyRole" auto-field-map="true"/>
+        <entity-condition list="partyRoleDetails" entity-name="PartyRole">
+        	<condition-list>
+				<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+				<condition-expr field-name="roleTypeId" operator="not-equals" value="EMPLOYEE"/>
+			 </condition-list>
+		</entity-condition>
+		 <if-not-empty field="partyRoleDetails">
+        	<add-error>
+                    <fail-message message="Employee Type already exists"/>
+                 </add-error>
+                 <check-errors/>
+        </if-not-empty>
+         <entity-one entity-name="PartyRole" value-field="partyRole" auto-field-map="true"/> 
         <if>
             <condition>
                 <and>
