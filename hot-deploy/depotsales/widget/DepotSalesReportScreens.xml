@@ -1400,6 +1400,83 @@
 				</section>
 			</widgets>
 		</section>
+	</screen>
+	<screen name="agencyOutstandingReportPDF">
+		<section>
+			<actions>
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+				<set field="flag" from-field="parameters.Agencyreport"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/agencyOutstandingReportPDF.groovy" />	
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<section>
+							<condition>
+								<if-compare operator="equals" value="ABSTRACT" field="flag"/>
+							</condition>
+							<widgets>
+							   <platform-specific>
+									<xsl-fo>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/agencyOutstandingReportPDF.fo.ftl" />
+									</xsl-fo>
+								</platform-specific>
+							</widgets>
+						</section>
+						<section>
+							<condition>
+								<if-compare operator="equals" value="DETAILED" field="flag"/>
+							</condition>
+							<widgets>
+								<platform-specific>
+									<xsl-fo>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/DetailedagencyOutstandingReportPDF.fo.ftl" />
+									</xsl-fo>
+								</platform-specific>
+							</widgets>
+	          			 </section>
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="agencyOutstandingReportCSV">
+		<section>
+			<actions>
+				<property-map resource="OrderUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="PartyUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+					<set field="flag" from-field="parameters.Agencyreport"/>
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/agencyOutstandingReportPDF.groovy" /> 		</actions>
+			<widgets>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="ABSTRACT" field="flag"/>
+					</condition>		
+					<widgets>
+						<include-form name="agencyOutstandingReportCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+				<section>
+					<condition>
+						<if-compare operator="equals" value="DETAILED" field="flag"/>
+					</condition>
+				<widgets>
+						<include-form name="DetailedagencyOutstandingReportCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
+				</widgets>
+	          	</section>
+			</widgets>
+		</section>
 	</screen>	
 </screens>
 
