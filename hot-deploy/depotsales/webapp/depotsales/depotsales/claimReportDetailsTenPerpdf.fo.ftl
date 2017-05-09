@@ -74,7 +74,7 @@ under the License.
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
 					            </fo:table-cell >
 					              <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BILL NO</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VARIETY AND COUNT OF YARN</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
@@ -103,7 +103,7 @@ under the License.
 								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold"  white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("invoiceId")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("productName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            
 								            <fo:table-cell  border-style="solid">
@@ -143,7 +143,7 @@ under the License.
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
 					            </fo:table-cell >
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BILL NO</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VARIETY AND COUNT OF YARN</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
@@ -172,7 +172,7 @@ under the License.
 								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 											<fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("invoiceId")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("productName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
@@ -208,7 +208,7 @@ under the License.
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
 					            </fo:table-cell >
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BILL NO</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VARIETY AND COUNT OF YARN</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
@@ -237,7 +237,7 @@ under the License.
 								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("invoiceId")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("productName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            
 								            <fo:table-cell  border-style="solid">
@@ -274,7 +274,7 @@ under the License.
 										<fo:block  text-align="center" font-size="10pt"  font-weight="bold" white-space-collapse="false">NAME OF USER AGENCIES</fo:block>
 					            </fo:table-cell >
 					             <fo:table-cell border-style="solid">
-					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">BILL NO</fo:block>
+					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">VARIETY AND COUNT OF YARN</fo:block>
 					            </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block   text-align="center" font-size="10pt" font-weight="bold" white-space-collapse="false">QUANTITY SUPPLEID IN Kg</fo:block>
@@ -303,7 +303,7 @@ under the License.
 								            	<fo:block  text-align="left" font-size="9pt" font-weight="bold" white-space-collapse="false">${invoice.get("partyName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
-								            	<fo:block  text-align="right" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("invoiceId")?if_exists}</fo:block>
+								            	<fo:block  text-align="left" font-size="9pt"   font-weight="bold"  white-space-collapse="false">${invoice.get("productName")?if_exists}</fo:block>
 								            </fo:table-cell >
 								            <fo:table-cell  border-style="solid">
 								            	<fo:block  text-align="right" font-size="9pt"  font-weight="bold"  white-space-collapse="false">${invoice.get("totInvQty")?if_exists}</fo:block>
