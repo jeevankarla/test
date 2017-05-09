@@ -854,7 +854,7 @@
     <field name="roleTypeId" title="Employee Type" tooltip="${uiLabelMap.CommonRequired}" required-field="true" widget-style="required">
     	<drop-down allow-empty="true">
 				<entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
-					<entity-constraint name="roleTypeId" value="DEPUTATION_EMPLY" />
+					<entity-constraint name="parentTypeId" value="EMPLOYEE_TYPE" />
 				</entity-options>
 			</drop-down>
     </field>
@@ -867,7 +867,7 @@
 		<entity-condition entity-name="PartyRole">
 			<condition-list combine="and" >
 		 		<condition-expr field-name="partyId" from-field="partyId"/>
-		 		<condition-expr field-name="roleTypeId"  value="DEPUTATION_EMPLY"/>
+		 		<condition-expr field-name="roleTypeId" operator="not-equals" value="EMPLOYEE"/>
 		 	</condition-list>
 		</entity-condition>
 	</actions>
