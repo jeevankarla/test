@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+<SecurityGroup description="Allow to Access for Trust Accounts" groupId="TRUSTACCOUNTS_ADMIN"/>
+    <SecurityPermission description="View operations in the TrustAccounts Component." permissionId="TRUSTACCOUNTS_VIEW"/>
+    <SecurityPermission description="Create operations in the TrustAccounts Component." permissionId="TRUSTACCOUNTS_CREATE"/>
+    <SecurityPermission description="Update operations in the TrustAccounts Component." permissionId="TRUSTACCOUNTS_UPDATE"/>
+    <SecurityPermission description="Delete operations in the TrustAccounts Component." permissionId="TRUSTACCOUNTS_DELETE"/>
+    <SecurityPermission description="ALL operations in the TrustAccounts Component." permissionId="TRUSTACCOUNTS_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TRUSTACCOUNTS_ADMIN"/>
+    <SecurityGroupPermission groupId="TRUSTACCOUNTS_ADMIN" permissionId="TRUSTACCOUNTS_CREATE"/>
+    <SecurityGroupPermission groupId="TRUSTACCOUNTS_ADMIN" permissionId="TRUSTACCOUNTS_DELETE"/>
+    <SecurityGroupPermission groupId="TRUSTACCOUNTS_ADMIN" permissionId="TRUSTACCOUNTS_UPDATE"/>
+    <SecurityGroupPermission groupId="TRUSTACCOUNTS_ADMIN" permissionId="TRUSTACCOUNTS_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="TRUSTACCOUNTS_VIEW"/>
+    <SecurityGroupPermission groupId="BIZADMIN" permissionId="TRUSTACCOUNTS_ADMIN"/>
+</entity-engine-xml>
