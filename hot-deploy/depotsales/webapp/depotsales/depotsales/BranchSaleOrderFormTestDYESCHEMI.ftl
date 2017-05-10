@@ -600,7 +600,7 @@
 		       	  				   var partyType=contactDetails["partyType"];
 		       	  				    var storeSize=contactDetails["storeSize"];
 			       	  			 
-			       	  			 
+			       	  			 /*
 			       	  			   if( storeSize != undefined && storeSize != "" && storeSize == 1){
 			       	  					$('#productStoreId').focus().val(prodStoreId);
 			       	  					jQuery("#branchName").html(prodStoreId);
@@ -612,6 +612,7 @@
 										} });
 			       	  			   
 			       	  			   }
+			       	  			   */
 			       	  				
 		       	  				   
 		       	  				  var postalCode=contactDetails["postalCode"];
@@ -860,7 +861,7 @@
 	          					data: {
 	            					ajaxLookup: "Y",
 	            					term : request.term,
-	            					productStoreId : productStoreId
+	            					//productStoreId : productStoreId
 	          					},
 	          					success: function( data ) {
 	          						var dom = $(data);
