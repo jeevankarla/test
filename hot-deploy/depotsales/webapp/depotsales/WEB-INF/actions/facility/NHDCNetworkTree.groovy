@@ -23,7 +23,7 @@
 	//hrefNode.put("onClick","callDocument('/partymgr/control/viewprofile?partyId=" + company.partyId + "')");
 	dataNode.put("attr", hrefNode);
 	hoNode.put("data", dataNode);
-	
+	  
 	populateHOTree(company, hoNode);
 	//populateROTree(company, strNode);
 	mainNodesList.add(hoNode);
@@ -108,7 +108,12 @@
 	def populateBranchesTree(facilityId, branchParties, treeNode) {
 		JSONArray clasifNodesList= new JSONArray();
 		
-		branchParties.each { branchParty ->
+		//branchParties.each { branchParty ->
+			
+			for(int i=0;i<branchParties.size();i++)
+			{
+				
+				branchParty = branchParties.get(i);
 			
 			conditionList = [];
 			conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.IN, UtilMisc.toList("DEPOT", "WAREHOUSE", "CFC")));
@@ -157,8 +162,12 @@
 		
 		JSONArray childNodesList= new JSONArray();
 		
-		depotList.each { eachDepot ->
+		//depotList.each { eachDepot ->
 			
+			for(int i=0;i<depotList.size();i++)
+			{
+				
+				eachDepot = depotList.get(i);
 			
 			//studentDetails = EntityUtil.filterByAnd(catApplicationList, UtilMisc.toMap("partyId", eachStudent));
 			JSONObject studentNode = new JSONObject();

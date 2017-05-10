@@ -192,7 +192,12 @@
 	
 	orderDetailsMap=[:];
 	Set partyIdsSet=new HashSet();
-	orderHeader.each{ eachHeader ->
+	//orderHeader.each{ eachHeader ->
+	
+	for (int i=0; i <orderHeader.size(); i++) {
+		
+		eachHeader = orderHeader.get(i);
+	
 		orderId = eachHeader.orderId;
 		orderParty = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
 		partyId = "";
@@ -339,7 +344,7 @@
 	
 	//all suppliers shipping address Json
 	JSONObject supplierAddrJSON = new JSONObject();
-	
+	  
 	shippingPartyList = EntityUtil.filterByCondition(orderRoles, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SHIP_TO_CUSTOMER"));
 	if(shippingPartyList){
 		shippingPartyList.each{ supplier ->
@@ -521,7 +526,7 @@
 	context.paymentSatusMap = paymentSatusMap;
  
 	
-	sortedOrderMap =  [:]as TreeMap;
+	/*sortedOrderMap =  [:]as TreeMap;
     for (eachList in orderList) {
 		sortedOrderMap.put(eachList.orderId, eachList);
 	}
@@ -529,4 +534,4 @@
 	List basedList = [];
 	basedList.addAll(allValues);
 	context.orderList = basedList.reverse();
-	context.orderListSize = orderList.size();
+	context.orderListSize = orderList.size();*/

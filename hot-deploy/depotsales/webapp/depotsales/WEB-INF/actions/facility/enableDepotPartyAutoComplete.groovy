@@ -124,7 +124,12 @@
 		context.productStoreId = productStoreIds.get(0);
 		parameters.productStoreId = productStoreIds.get(0);
 	}
-	productStoreIds.each{ productStoreId ->
+//	productStoreIds.each{ productStoreId ->
+		
+		for(int i=0;i<productStoreIds.size();i++){
+			
+			productStoreId = productStoreIds.get(i);
+		
 		JSONArray brcpartyJSON = new JSONArray();
 		customersList=[];
 		JSONObject newbranchObj = new JSONObject();
@@ -154,7 +159,7 @@
 			}
 		branchPartyObj.put(productStoreId, brcpartyJSON);*/
 		
-		}
+		}  
 	//Debug.log("branchPartyObj====================="+branchPartyObj);
 	/*
 	conditionListForPsbNum = [];
@@ -201,7 +206,12 @@
 	partyIdsFromSuppList = EntityUtil.getFieldListFromEntityList(supplierList, "partyId", true);
 	
 	if(supplierList){
-		supplierList.each{ supplier ->
+		//supplierList.each{ supplier ->
+		
+		  for(int i=0;i<supplierList.size();i++){
+		
+			 supplier = supplierList.get(i);
+			  
 			JSONObject newObj = new JSONObject();
 			
 			condList.clear();
@@ -224,10 +234,10 @@
 			supplierIdJson.put(supplier.partyId, partyName);
 			supplierJSON.add(newObj);
 			String supplierGeoId = null;
-			List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, supplier.partyId, false, "TAX_CONTACT_MECH");
+			/*List supplierContactMechValueMaps = (List) ContactMechWorker.getPartyContactMechValueMaps(delegator, supplier.partyId, false, "TAX_CONTACT_MECH");
 			if(UtilValidate.isNotEmpty(supplierContactMechValueMaps)){
 				supplierGeoId = (String)((GenericValue) ((Map) supplierContactMechValueMaps.get(0)).get("contactMech")).get("infoString");
-			}
+			}*/
 			   partyGeoObj.put(supplier.partyId,supplierGeoId);
 			}
 			
@@ -275,8 +285,13 @@
 	facilityDepoListIds = EntityUtil.getFieldListFromEntityList(societyList, "partyId", true);
 	
 	if(societyList){
-		societyList.each{ society ->
-			JSONObject newObj = new JSONObject();
+		//societyList.each{ society ->
+		
+		for(int i=0;i<societyList.size();i++){
+			
+			society = societyList.get(i);
+			
+				JSONObject newObj = new JSONObject();
 			newObj.put("value",society.partyId);
 			partyName=PartyHelper.getPartyName(delegator, society.partyId, false);
 			custPartyName=partyName+"["+society.partyId+"]"
@@ -304,7 +319,12 @@
 	Condition = EntityCondition.makeCondition([EntityCondition.makeCondition("facilityTypeId", "DEPOT")],EntityOperator.AND);
 	depotList=delegator.findList("Facility",Condition,null,null,null,false);
 	if(depotList){
-		depotList.each{ depot ->
+		//depotList.each{ depot ->
+		
+		for(int i=0;i<depotList.size();i++){
+			
+			depot = depotList.get(i);
+		
 			JSONObject newObj = new JSONObject();
 			newObj.put("value",depot.ownerPartyId);
 			depotName=depot.facilityName;
@@ -319,7 +339,12 @@
 	
 	List<GenericValue> countries= org.ofbiz.common.CommonWorkers.getCountryList(delegator);
 	JSONArray countryListJSON = new JSONArray();
-	countries.each{ eachCountry ->
+	//countries.each{ eachCountry ->
+		
+		for(int i=0;i<countries.size();i++){
+			
+			eachCountry = countries.get(i);
+		
 			JSONObject newObj = new JSONObject();
 			newObj.put("value",eachCountry.geoId);
 			newObj.put("label",eachCountry.geoName);
@@ -343,7 +368,13 @@
 	
 	
 	JSONArray stateListJSON = new JSONArray();
-	statesList.each{ eachState ->
+	//statesList.each{ eachState ->
+		
+		for(int i=0;i<statesList.size();i++){
+			
+			eachState = statesList.get(i);
+		
+		
 			JSONObject newObj = new JSONObject();
 			newObj.put("value",eachState.geoId);
 			newObj.put("label",eachState.geoName);
