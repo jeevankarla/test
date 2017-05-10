@@ -3076,9 +3076,23 @@ under the License.
         </field> 
     </form>
     <form name="FindCPFAccounts" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
-        
-       
+      <field name="groupId"><text-find ignore-case="true"/></field> 
+      <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form> 
+    
+   
+      <form name="ListCPFPaymentGroups" type="list" separate-columns="true" list-name="paymentcpfList" paginate-target="findcpfAccounts" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+        </actions>
+        <field name="finAccntTransGroupId"><display/></field>
+        <field name="amount"><display/></field>
+        <field name="issuingAuthority"><display/></field>
+        <field name="contraRefNum"><display/></field>
+        <field name="finAccntTransDate"><display/></field>
+        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        
+    </form>
     
     <form name="FindBankGuaranteeReceived" type="single" target="BankGuaranteeReceipt" header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>

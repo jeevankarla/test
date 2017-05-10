@@ -2408,14 +2408,15 @@
             </condition>
 			<link target="apGroupPayment"></link>
 		</menu-item> 
-		<!-- <menu-item name="cpfAccounts" title="CPF Accounts">
+		<menu-item name="cpfAccounts" title="CPF Accounts">
 		     <condition>
-				<or>
+				<and>
+				    <if-has-permission permission="ACC_" action="CPF" />
 				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
-            	</or>            
+            	</and>            
             </condition>
 			<link target="cpfAccounts"></link>
-		</menu-item>  -->
+		</menu-item>
 		<menu-item name="Reports" title="Reports">
 		     <condition>
 				<or>
@@ -4358,6 +4359,9 @@
 	 <menu name="cpfAccuntsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
         <menu-item name="cpfAccounts" title="CPF Accounts">
             <link target="cpfAccounts"/>
+        </menu-item>
+         <menu-item name="findcpfAccounts" title="Find CPF Accounts">
+            <link target="findcpfAccounts"/>
         </menu-item>
      </menu>
      
