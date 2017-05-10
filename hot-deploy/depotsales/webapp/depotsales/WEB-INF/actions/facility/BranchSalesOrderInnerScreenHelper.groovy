@@ -456,11 +456,11 @@ import org.ofbiz.party.contact.ContactMechWorker;
 	condsList = [];
 	//condsList.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
 	condsList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, schemeCategoryIds));
-	/*if(effectiveDate){
+	if(effectiveDate){
 		condsList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, effectiveDate));
 		condsList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR,
 				EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, effectiveDate)));
-	}*/
+	}
 	prodCategoryMembers = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(condsList,EntityOperator.AND), null, null, null, true);	  
 	    
 	//productCategoriesList = EntityUtil.getFieldListFromEntityList(prodCategoryMembers, "productCategoryId", true);
@@ -509,7 +509,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
 		}
 		transactionTypeTaxMap.putAt(titleTransferEnumId, applicableTaxList);
 	}
-	Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
+	//Debug.log("transactionTypeTaxMap =================="+transactionTypeTaxMap);
 	
 	context.transactionTypeTaxMap = transactionTypeTaxMap;
 	context.productQuotaJSON = productQuotaJSON;
