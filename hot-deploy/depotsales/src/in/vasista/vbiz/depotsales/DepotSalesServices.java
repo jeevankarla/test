@@ -12420,6 +12420,19 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 		
 		String salesChannelEnumId = (String) context.get("salesChannelEnumId");	
 		String schemeCategory="MGPS_10Pecent";
+		
+		 String statusId ="";
+		 if(UtilValidate.isNotEmpty(orderId)){
+		  GenericValue	OrderHeader =null;
+		  try{
+			  	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", orderId), false);				  
+			    statusId = OrderHeader.getString("statusId");
+		  }catch(Exception e){
+			  
+		  }
+		 }
+		
+		
 		try{
 			if(UtilValidate.isNotEmpty(orderId)){
 				result = dispatcher.runSync("massCancelOrders", UtilMisc.<String, Object>toMap("orderIdList", UtilMisc.toList(orderId),"userLogin", userLogin));
@@ -12515,15 +12528,10 @@ public static Map<String, Object> processBranchSalesOrderDyes(DispatchContext dc
 		
 			  
 	       //============================increase inventory================================
-			  String statusId ="";
-			  GenericValue	OrderHeader =null;
-			  try{
-				  	OrderHeader = delegator.findOne("OrderHeader",UtilMisc.toMap("orderId", orderId), false);				  
-				    statusId = OrderHeader.getString("statusId");
-			  }catch(Exception e){
+			 
 				  
-			  }
-				  
+			  
+			  Debug.log("statusId================="+statusId);
 			  
 			  if(!statusId.equals("ORDER_CREATED")){
 			  
