@@ -1582,16 +1582,41 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	                        String finAccountTransId = (String)createResult.get("finAccountTransId");
 	                      
 	                        finAccountTransIds.add(finAccountTransId);
-	                        
-	        		        for(String eachfinAccountTransId:finAccountTransIds){
-	        		        	GenericValue newTransAttr = delegator.makeValue("FinAccountTransAttribute");        	 
-	                        	newTransAttr.set("finAccountTransId", eachfinAccountTransId);
-	                        	newTransAttr.set("attrName", "INFAVOUR_OF");
-	                        	newTransAttr.set("attrValue", "FATR_CONTRA");
-	                        	delegator.createOrStore(newTransAttr);
 	        		        	
-	        		        }
 		  			}
+		 			
+		 			List withdrawfinAcctrans = FastList.newInstance();
+                    List transconditionList = FastList.newInstance();
+               	    transconditionList.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS ,"WITHDRAWAL"));
+	  			    if(UtilValidate.isNotEmpty(finAccountTransIds)){
+	  				    transconditionList.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.IN,UtilMisc.toList(finAccountTransIds)));
+	  	  		    }
+	  			        EntityCondition transcondition = EntityCondition.makeCondition(transconditionList,EntityOperator.AND); 		
+		  		        List<GenericValue> withdrawfinAcctransList = delegator.findList("FinAccountTrans", transcondition, null, null, null, false);
+		  		        withdrawfinAcctrans = EntityUtil.getFieldListFromEntityList(withdrawfinAcctransList, "finAccountTransId", true);
+		  		   
+		  		   
+		  		   List transconditionList1 = FastList.newInstance();
+          	    transconditionList1.add(EntityCondition.makeCondition("finAccountTransTypeId", EntityOperator.EQUALS ,"DEPOSIT"));
+			    if(UtilValidate.isNotEmpty(finAccountTransIds)){
+				    transconditionList1.add(EntityCondition.makeCondition("finAccountTransId", EntityOperator.IN,UtilMisc.toList(finAccountTransIds)));
+	  		    }
+			        EntityCondition transcondition1 = EntityCondition.makeCondition(transconditionList1,EntityOperator.AND); 		
+	  		        List<GenericValue> depositfinAcctransList = delegator.findList("FinAccountTrans", transcondition1, null, null, null, false);
+	  		   String eachdepositfinAccountTransId = null;        
+	  		   if(UtilValidate.isNotEmpty(depositfinAcctransList)){
+	  			GenericValue depositfinAcctranss = EntityUtil.getFirst(depositfinAcctransList);
+	  		    eachdepositfinAccountTransId = depositfinAcctranss.getString("finAccountTransId");
+       	      }
+		  		  	for(int w=0;w<withdrawfinAcctrans.size();w++){
+		  		  		String eachfinAccountTransId = (String)withdrawfinAcctrans.get(w);
+		  		  		
+			        		        	GenericValue newTransAttr = delegator.makeValue("FinAccountTransAttribute");        	 
+			                        	newTransAttr.set("finAccountTransId", eachfinAccountTransId);
+			                        	newTransAttr.set("attrName", "INFAVOUR_OF");
+			                        	newTransAttr.set("attrValue", eachdepositfinAccountTransId);
+			                        	delegator.createOrStore(newTransAttr);
+		  		  	}	
 		  		}
 		  		 totalAmount = totalAmount.add(depositAmt);
         	if(UtilValidate.isNotEmpty(finAccountTransIds) && finAccountTransIds.size() > 0 ){
