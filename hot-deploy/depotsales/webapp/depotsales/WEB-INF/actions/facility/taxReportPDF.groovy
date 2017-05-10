@@ -149,6 +149,13 @@ context.dayend = dayend;
 
 daystart = UtilDateTime.getDayStart(fromDate);
 dayend = UtilDateTime.getDayEnd(thruDate);
+
+fromDateForFtl=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
+thruDateForFtl=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
+
+context.fromDateForFtl=fromDateForFtl;
+context.thruDateForFtl=thruDateForFtl;
+
 BOAddress="";
 BOEmail="";
 if(branchIdForAdd){
@@ -199,6 +206,10 @@ else if(taxType=="ENTRY_TAX"){
 	taxPercentageList=taxPercentageList.componentRate;
 }
 
+totalBaseValue=0;
+totalTaxValue=0
+totalSurChrgValue=0
+totalValue=0;
 if(branchList){
 	
 	for(eachTaxPer in taxPercentageList){
@@ -224,12 +235,12 @@ if(branchList){
 					else{
 						condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE","DIES_AND_CHEM_SALE","DEPOT_DIES_CHEM_SALE"]));
 					}
-					condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"purchaseTaxType"));
+					condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"purchaseTitleTransferEnumId"));
 					if(taxType=="VAT_PUR"){
-						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Intra-State"));
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"NO_E2_FORM"));
 					}
 					else{
-						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Inter-State"));
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.NOT_IN,["NO_E2_FORM","EXEMPTED_GOODS"]));
 					}
 					cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 					invWithAllPer = delegator.findList("InvoiceAndAttribute",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
@@ -292,7 +303,7 @@ if(branchList){
 			invItemsList=[];
 			while (eachInvoice = invoiceIterator.next()) {
 				invoiceValue=0;
-				SURCHARGE=0;
+				surcharge=0;
 				baseValue=0;
 				totalAmt=0;
 				taxValue=0;
@@ -381,21 +392,29 @@ if(branchList){
 							invItemsWithVatSur=EntityUtil.getFirst(invoiceItemsWithVatSur);
 						
 						if(UtilValidate.isNotEmpty(invItemsWithCstSur)){
-							SURCHARGE=invItemsWithCstSur.itemValue;
+							surcharge=invItemsWithCstSur.itemValue;
 							taxSurChgPer=invItemsWithCstSur.sourcePercentage;
 						}
 						else if(UtilValidate.isNotEmpty(invItemsWithVatSur)){		
-							SURCHARGE=invItemsWithVatSur.itemValue;
+							surcharge=invItemsWithVatSur.itemValue;
 							taxSurChgPer=invItemsWithVatSur.sourcePercentage;
 						}
 					}
 					baseValue=eachInvoiceItem.itemValue;
+					totalBaseValue=totalBaseValue+baseValue;
+					totalTaxValue=totalTaxValue+taxValue;
+					totalSurChrgValue=totalSurChrgValue+surcharge;
+					
 					invoiceDetailMap.put("baseValue", baseValue);
 					invoiceDetailMap.put("taxValue", taxValue);
 					invoiceDetailMap.put("taxPercentage", taxPercentage);
-					invoiceDetailMap.put("taxSurChargeValue", SURCHARGE);
-					invoiceDetailMap.put("taxSurChgPer", taxSurChgPer);
-					totalAmt=invoiceDetailMap["taxValue"]+invoiceDetailMap["taxSurChargeValue"]+baseValue;
+					if(taxType=="VAT_PUR" || taxType=="CST_PUR"){
+						invoiceDetailMap.put("taxSurChargeValue", surcharge);
+						invoiceDetailMap.put("taxSurChgPer", taxSurChgPer);
+					}
+					//totalAmt=invoiceDetailMap["taxValue"]+invoiceDetailMap["taxSurChargeValue"]+baseValue;
+					totalAmt=taxValue+surcharge+baseValue;
+					totalValue=totalValue+totalAmt;
 					invoiceDetailMap.put("total", totalAmt);
 					
 					invItemsList.add(invoiceDetailMap);
@@ -415,5 +434,93 @@ if(branchList){
 
 context.finalMap=finalMap;
 
+finalList=[];
+
+stylesMap=[:];
+
+stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
+stylesMap.put("mainHeader2", "Purchase Tax Report");
+stylesMap.put("mainHeader3", "From  "+fromDateForFtl +" to "+thruDateForFtl);
+stylesMap.put("mainHeaderFontName","Arial");
+stylesMap.put("mainHeadercellHeight",300);
+stylesMap.put("mainHeaderFontSize",10);
+stylesMap.put("mainHeadingCell",1);
+stylesMap.put("mainHeaderBold",true);
+stylesMap.put("columnHeaderBgColor",false);
+stylesMap.put("columnHeaderFontName","Arial");
+stylesMap.put("columnHeaderFontSize",10);
+stylesMap.put("autoSizeCell",true);
+stylesMap.put("columnHeaderCellHeight",300);
+request.setAttribute("stylesMap", stylesMap);
+request.setAttribute("enableStyles", true);
+finalList.add(stylesMap);
+
+headingMap=[:];
+headingMap.put("partyTinNo", "Buyer Tin No");
+headingMap.put("partyIdFromName", "Name of Buyer");
+headingMap.put("supplierInvId", "Invoice No");
+headingMap.put("invoiceDate", "Invoice Date");
+headingMap.put("productId", "Commodity Code");
+headingMap.put("baseValue", "Purchase Value");
+if(taxType=="VAT_PUR"){
+	headingMap.put("taxValue", "Vat Amount");
+	headingMap.put("taxPercentage", "Vat Percentage");
+}
+else if(taxType=="CST_PUR"){
+	headingMap.put("taxValue", "Cst Amount");
+	headingMap.put("taxPercentage", "Cst Percentage");
+}
+else if(taxType=="EXCISE_DUTY"){
+	headingMap.put("taxValue", "Excise Amount");
+	headingMap.put("taxPercentage", "Excise Percentage");
+}
+else if(taxType=="ENTRY_TAX"){
+	headingMap.put("taxValue", "Entry Tax Amount");
+	headingMap.put("taxPercentage", "Entry Tax Percentage");
+}
+if(taxType=="VAT_PUR" || taxType=="CST_PUR"){
+	if(taxType=="VAT_PUR"){
+		headingMap.put("taxSurChargeValue", "Vat Surcharge Amount");
+		headingMap.put("taxSurChgPer", "Vat Surcharge Percentage");
+	}
+	else if(taxType=="CST_PUR"){
+		headingMap.put("taxSurChargeValue", "Cst Surcharge Amount");
+		headingMap.put("taxSurChgPer", "Cst Surcharge Percentage");
+	}
+}
+headingMap.put("total", "Total Amount");
+
+finalList.add(headingMap);
+
+finalMapEntryList = finalMap.entrySet();
+//Debug.log("finalMapEntryList====================="+finalMapEntryList);
+for(eachEntry in finalMapEntryList){
+	taxPer=eachEntry.getKey();
+	branchWiseList=eachEntry.getValue();
+	for(eachBranch in branchWiseList){
+		invList= eachBranch.getKey();
+		invoiceWiseList = eachBranch.getValue();
+		for(eachValue in invoiceWiseList){
+			//Debug.log("eachValue====================="+eachValue);
+			finalList.add(eachValue);
+		}
+		
+	}
+	
+}
+
+tempToMap=[:];
+tempToMap.put("partyTinNo", "Total");
+tempToMap.put("baseValue", totalBaseValue);
+tempToMap.put("taxValue", totalTaxValue);
+if(taxType=="VAT_PUR" || taxType=="CST_PUR"){
+	tempToMap.put("taxSurChargeValue", totalSurChrgValue);
+}
+tempToMap.put("total", totalValue);
+
+finalList.add(tempToMap);
+
+
+context.finalList=finalList;
 
 
