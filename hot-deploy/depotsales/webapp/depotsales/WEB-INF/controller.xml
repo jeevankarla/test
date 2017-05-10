@@ -3222,9 +3222,17 @@
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="claimReportDetailsTDpdf"/>
     </request-map>
+    <request-map uri="claimReportDetailsTD.xls">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="claimReportDetailsTDcsv"/>
+    </request-map>
      <request-map uri="claimReportDetailsTenPer.pdf">
 	        <security https="true" auth="true"/>
 	        <response name="success" type="view" value="claimReportDetailsTenPerpdf"/>
+    </request-map>
+    <request-map uri="claimReportDetailsTenPer.xls">
+	        <security https="true" auth="true"/>
+	        <response name="success" type="view" value="claimReportDetailsTenPercsv"/>
     </request-map>
     <request-map uri="claimReportDetails.pdf">
 	        <security https="true" auth="true"/>
@@ -3776,6 +3784,8 @@
 	<view-map name="CustomerDetails" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#CustomerDetails" content-type="text/csv"/>
 	<view-map name="claimReportDetailsPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsPDF" content-type="application/pdf"/>
 	<view-map name="claimReportDetailsTDpdf" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsTDpdf" content-type="application/pdf"/>
+	<view-map name="claimReportDetailsTDcsv" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsTDcsv" content-type="text/csv"/>
+	<view-map name="claimReportDetailsTenPercsv" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsTenPercsv" content-type="text/csv"/>
 	<view-map name="claimReportDetailsTenPerpdf" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#claimReportDetailsTenPerpdf" content-type="application/pdf"/>
 	<view-map name="billWiseSalesReport" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#billWiseSalesReport" content-type="application/pdf"/>
 	<view-map name="billWisePurchaseReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#billWisePurchaseReportCSV" content-type="text/csv"/>

@@ -52,7 +52,6 @@ rounding = RoundingMode.HALF_UP;
 dctx = dispatcher.getDispatchContext();
 fromDateTime = null;
 thruDateTime = null;
-finalList = [];
 def sdf = new SimpleDateFormat("yyyy, MMM dd");
 try {
 	fromDateTime = new java.sql.Timestamp(sdf.parse(claimFromDate).getTime());
@@ -147,6 +146,42 @@ if(UtilValidate.isNotEmpty(branchId)){
 	}
 	
 }
+
+finalList=[];
+if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
+	
+	stylesMap=[:];   //stylesMap
+	stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD. ");  //mainHeader
+	stylesMap.put("mainHeader2", "STATEMENT FOR CLAIMING REIMBURSEMENT OF THE COST OF TRANSPORTATION AND OVERHEADS TOWARDS");
+	stylesMap.put("mainHeader3", "THE QUANTUM OF YARN SUPPLIED UNDER MILL GATE PRICE SCHEME FOR THE PERIOD");
+	stylesMap.put("mainHeader4", "TRANSPORTATION AND DEPOT EXPENSES FOR THE PERIOD FROM "+ claimFromDate +" TO "+claimThruDate);
+	stylesMap.put("mainHeadercellHeight",300);  //mainHeadercellHeight
+	stylesMap.put("mainHeaderfontName","Arial");  //URW Chancery L
+	stylesMap.put("mainHeaderFontSize",10);
+	stylesMap.put("mainHeadingCell",4);
+	stylesMap.put("mainHeaderBold",true);
+	stylesMap.put("columnHeaderBgColor",false);  //column_header
+	stylesMap.put("columnHeaderFontName","Arial");
+	stylesMap.put("columnHeaderFontSize",10);
+	stylesMap.put("autoSizeCell",true);
+	stylesMap.put("columnHeaderCellHeight",300);//columnHeaderCellHeight
+	
+	request.setAttribute("stylesMap", stylesMap);
+	request.setAttribute("enableStyles", true);
+	
+	headingMap=[:];
+	headingMap.put("sNo", "SNO");
+	headingMap.put("partyName", "NAME OF USER AGENCIES");
+	headingMap.put("totInvQty", "QUANTITY SUPPLEID IN Kg");
+	headingMap.put("totInvValue", "VALUE OF YARN SUPPLIED Rs");
+	headingMap.put("actualFrightCharges","YARN SUBSIDY @10% ON YARN VALUE BEFORE SUBSIDY(IN RS)");
+	headingMap.put("frightCharges","SERVICE CHARGES @0.5% OF YARN VALUE BEFORE SUBSIDY(IN RS)");
+	headingMap.put("depotCharges","DEPOT  Charges");
+	headingMap.put("mgpsServiceCharge","TOTAL CLAIM FOR YARN SUBSIDY AND SERVICE CHARGES (IN RS)");
+	
+	finalList.add(stylesMap);
+	finalList.add(headingMap);
+	}
 
 silkDepotList=[]
 silkNonDepotList=[]
@@ -283,6 +318,14 @@ def generateBillWiseReport()
 	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	invoiceIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"invoiceId", true);
 	
+	tempMapSD=[:]
+	tempMapSND=[:]
+	tempMapCD=[:]
+	tempMapCND=[:]
+	tempMapJD=[:]
+	tempMapJND=[:]
+	tempMapOD=[:]
+	tempMapOND=[:]
 	for(invoiceId in invoiceIds)
 	{
 		String partyName = "";
@@ -391,6 +434,13 @@ def generateBillWiseReport()
 	silkNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	silkNonDepotList.add(silkNonDepottotalsMap);
+	
+	tempMapSD.put("partyName","Silk Depot");
+	finalList.add(tempMapSD);
+	finalList.addAll(silkDepotList);
+	tempMapSND.put("partyName","Silk Non Depot");
+	finalList.add(tempMapSND);
+	finalList.addAll(silkNonDepotList);
 	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
@@ -532,6 +582,13 @@ def generateBillWiseReport()
 	cottonNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	cottonNonDepotList.add(cottonNonDepottotalsMap);
+	
+	tempMapCD.put("partyName","Cotton Depot");
+	finalList.add(tempMapCD);
+	finalList.addAll(cottonDepotList);
+	tempMapCND.put("partyName","Cotton Non Depot");
+	finalList.add(tempMapCND);
+	finalList.addAll(cottonNonDepotList);
 	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
@@ -675,6 +732,13 @@ def generateBillWiseReport()
 	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	juteNonDepotList.add(juteNonDepottotalsMap);
 	
+	tempMapJD.put("partyName","Jute Depot");
+	finalList.add(tempMapJD);
+	finalList.addAll(juteDepotList);
+	tempMapJND.put("partyName","Jute Non Depot");
+	finalList.add(tempMapJND);
+	finalList.addAll(juteNonDepotList);
+	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
@@ -816,6 +880,13 @@ def generateBillWiseReport()
 	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	otherNonDepotList.add(otherNonDepottotalsMap);
 	
+	tempMapOD.put("partyName","Other Depot");
+	finalList.add(tempMapOD);
+	finalList.addAll(otherDepotList);
+	tempMapOND.put("partyName","Other Non Depot");
+	finalList.add(tempMapOND);
+	finalList.addAll(otherNonDepotList);
+	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
@@ -954,6 +1025,15 @@ def generatePartyWiseReport()
 	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	silkPartyIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"partyId", true);
 	
+	tempMapSD=[:]
+	tempMapSND=[:]
+	tempMapCD=[:]
+	tempMapCND=[:]
+	tempMapJD=[:]
+	tempMapJND=[:]
+	tempMapOD=[:]
+	tempMapOND=[:]
+	
 	for(eachParty in silkPartyIds)
 	{
 		String partyName = "";
@@ -1060,6 +1140,13 @@ def generatePartyWiseReport()
 	silkNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	silkNonDepotList.add(silkNonDepottotalsMap);
+	
+	tempMapSD.put("partyName","Silk Depot");
+	finalList.add(tempMapSD);
+	finalList.addAll(silkDepotList);
+	tempMapSND.put("partyName","Silk Non Depot");
+	finalList.add(tempMapSND);
+	finalList.addAll(silkNonDepotList);
 	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
@@ -1198,6 +1285,13 @@ def generatePartyWiseReport()
 	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	cottonNonDepotList.add(cottonNonDepottotalsMap);
 	
+	tempMapCD.put("partyName","Cotton Depot");
+	finalList.add(tempMapCD);
+	finalList.addAll(cottonDepotList);
+	tempMapCND.put("partyName","Cotton Non Depot");
+	finalList.add(tempMapCND);
+	finalList.addAll(cottonNonDepotList);
+	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
@@ -1331,6 +1425,13 @@ def generatePartyWiseReport()
 	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	juteNonDepotList.add(juteNonDepottotalsMap);
 	
+	tempMapJD.put("partyName","Jute Depot");
+	finalList.add(tempMapJD);
+	finalList.addAll(juteDepotList);
+	tempMapJND.put("partyName","Jute Non Depot");
+	finalList.add(tempMapJND);
+	finalList.addAll(juteNonDepotList);
+	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
@@ -1463,6 +1564,13 @@ def generatePartyWiseReport()
 	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	otherNonDepotList.add(otherNonDepottotalsMap);
 	
+	tempMapOD.put("partyName","Other Depot");
+	finalList.add(tempMapOD);
+	finalList.addAll(otherDepotList);
+	tempMapOND.put("partyName","Other Non Depot");
+	finalList.add(tempMapOND);
+	finalList.addAll(otherNonDepotList);
+	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
@@ -1532,6 +1640,15 @@ def generateSummaryReport(stateGeoIds)
 	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","shipmentId","quantity","productId","costCenterId"] as Set;
 	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	silkPartyIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"partyId", true);
+	
+	tempMapSD=[:]
+	tempMapSND=[:]
+	tempMapCD=[:]
+	tempMapCND=[:]
+	tempMapJD=[:]
+	tempMapJND=[:]
+	tempMapOD=[:]
+	tempMapOND=[:]
 	
 	for(eachState in stateGeoIds)
 	{
@@ -1709,6 +1826,13 @@ def generateSummaryReport(stateGeoIds)
 	silkNonDepottotalsMap.put("depotCharges",totalDepotChargesND);
 	silkNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	silkNonDepotList.add(silkNonDepottotalsMap);
+	
+	tempMapSD.put("partyName","Silk Depot");
+	finalList.add(tempMapSD);
+	finalList.addAll(silkDepotList);
+	tempMapSND.put("partyName","Silk Non Depot");
+	finalList.add(tempMapSND);
+	finalList.addAll(silkNonDepotList);
 	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
@@ -1917,6 +2041,13 @@ def generateSummaryReport(stateGeoIds)
 	cottonNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	cottonNonDepotList.add(cottonNonDepottotalsMap);
 	
+	tempMapCD.put("partyName","Cotton Depot");
+	finalList.add(tempMapCD);
+	finalList.addAll(cottonDepotList);
+	tempMapCND.put("partyName","Cotton Non Depot");
+	finalList.add(tempMapCND);
+	finalList.addAll(cottonNonDepotList);
+	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
@@ -2121,6 +2252,13 @@ def generateSummaryReport(stateGeoIds)
 	juteNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	juteNonDepotList.add(juteNonDepottotalsMap);
 	
+	tempMapJD.put("partyName","Jute Depot");
+	finalList.add(tempMapJD);
+	finalList.addAll(juteDepotList);
+	tempMapJND.put("partyName","Jute Non Depot");
+	finalList.add(tempMapJND);
+	finalList.addAll(juteNonDepotList);
+	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
@@ -2324,6 +2462,13 @@ def generateSummaryReport(stateGeoIds)
 	otherNonDepottotalsMap.put("mgpsServiceCharge",totalSerChargesND);
 	otherNonDepotList.add(otherNonDepottotalsMap);
 	
+	tempMapOD.put("partyName","Other Depot");
+	finalList.add(tempMapOD);
+	finalList.addAll(otherDepotList);
+	tempMapOND.put("partyName","Other Non Depot");
+	finalList.add(tempMapOND);
+	finalList.addAll(otherNonDepotList);
+	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
@@ -2332,7 +2477,7 @@ def generateSummaryReport(stateGeoIds)
 	context.balanceAmount=balanceAmount
 }
 
-
+context.finalList=finalList;
 context.silkDepotList=silkDepotList
 context.silkNonDepotList=silkNonDepotList
   
