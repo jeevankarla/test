@@ -1159,7 +1159,7 @@
 			</drop-down>
 		</field> -->
 		<field name="costCenterId" title="${uiLabelMap.Branch}" >
-              <drop-down allow-empty="false">
+              <drop-down allow-empty="true">
                   <list-options key-name="payToPartyId" list-name="branchList" description="${storeName}"/>
               </drop-down>
         </field>
@@ -4486,6 +4486,8 @@
          <field name="invoiceSeqId" title="_"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
           <field name="shipmentId" title="_"><display/></field>
+          <field name="supplierInvoiceId" title="_"><display/></field>
+          <field name="supplierInvoiceDate" title="_"><display/></field>
          <field name="partyIdFrom" title="_"><display/></field>
          <field name="partyIdTo" title="_"><display/></field>
          <field name="quantity" title="_"><display/></field>
