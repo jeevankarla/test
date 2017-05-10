@@ -28,6 +28,7 @@ under the License.
 
     <fo:page-sequence master-reference="main">
     <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
+    	<fo:block text-align="right" font-size="11pt" font-weight="bold">DEPOT BILL</fo:block>
 	    <#if invoiceItemDetails?has_content>
 			<#assign invoiceItemTypeId=invoiceItemDetails[0].invoiceItemTypeId?if_exists>
 	    </#if>

@@ -100,7 +100,7 @@ context.BOEmail=BOEmail;
 Debug.log("partyId==========="+partyId);
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS, partyId));
-conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
+//conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
 fcond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 
 FacilityList = delegator.findList("Facility", fcond, null, null, null, false);
