@@ -221,9 +221,15 @@ under the License.
             </hyperlink>
         </field> 
          <field name="createNewOther" title="Other adjustment" widget-style="buttontext">
-        	<hyperlink target="EditFinAccountTrans" description="Other Adjustment" target-window="_BLANK"  also-hidden="false">
+        	<hyperlink target="EditFinAccountTrans" description="P&amp;L Adjustment" target-window="_BLANK"  also-hidden="false">
 	            <parameter param-name="finAccountId" from-field="finAccountId"/>                           			
 	            <parameter param-name="entryType" value="Other"/>
+            </hyperlink>
+        </field>
+        <field name="createNewAL" title="Other adjustment" widget-style="buttontext">
+        	<hyperlink target="EditFinAccountTrans" description="Asset &amp; liability transfer " target-window="_BLANK"  also-hidden="false">
+	            <parameter param-name="finAccountId" from-field="finAccountId"/>                           			
+	            <parameter param-name="entryType" value="AssetLiability"/>
             </hyperlink>
         </field>
         <field name="transactionView" widget-style="buttontext" >
@@ -871,7 +877,6 @@ under the License.
             <drop-down allow-empty="false">
             <option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>               
             </drop-down>
         </field>
          <field name="contraFinAccountId"  title="To Financial Account"  >
@@ -1202,7 +1207,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1266,7 +1270,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1336,7 +1339,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
          </field>
         <field name="costCenterId" title="RO">
@@ -1531,7 +1533,7 @@ under the License.
         <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
         	<drop-down allow-empty="true">
                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">                   
-                   <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE,COMMON"/>
+                   <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE"/>
                </entity-options>
            </drop-down>
         </field>
@@ -1774,7 +1776,7 @@ under the License.
         <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
 	           	<drop-down allow-empty="true">
 	                  <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
-	                      <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE,COMMON"/>
+	                      <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE"/>
 	                  </entity-options>
 	              </drop-down>
         </field>
@@ -2487,7 +2489,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type"  required-field="true">
@@ -2602,7 +2603,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type" required-field="true">
