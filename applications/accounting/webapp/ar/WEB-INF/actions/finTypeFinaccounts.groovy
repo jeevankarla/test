@@ -49,8 +49,20 @@ finAccountTypelist.each{ eachfinAcc ->
 	finAccountTypeJSON.put(eachfinAcc.finAccountTypeId,finAccIdsJSON);
 }
 context.finAccountTypeJSON=finAccountTypeJSON;
+entryType = parameters.entryType;
 List<String> orderBy = UtilMisc.toList("description");
+
 glAccountconditionList = [];
-glAccountconditionList.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, UtilMisc.toList("EXPENSE","INCOME", "REVENUE", "SGA_EXPENSE")));
-List glAccountList = delegator.findList("GlAccount", EntityCondition.makeCondition(glAccountconditionList, EntityOperator.AND), null, orderBy, null, false);
-context.glAccountList = glAccountList;
+if(entryType && entryType == "Other"){
+	glAccountconditionList.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, UtilMisc.toList("EXPENSE","INCOME", "REVENUE", "SGA_EXPENSE")));
+	List glAccountList = delegator.findList("GlAccount", EntityCondition.makeCondition(glAccountconditionList, EntityOperator.AND), null, orderBy, null, false);
+	context.glAccountList = glAccountList;
+}
+if(entryType && entryType == "AssetLiability"){
+	List glAccountClass = delegator.findList("GlAccountClass", EntityCondition.makeCondition("parentClassId", EntityOperator.IN, UtilMisc.toList("ASSET","LIABILITY", "EQUITY")), null, null, null, false);
+	if(glAccountClass){
+		glClassIdlist= EntityUtil.getFieldListFromEntityList(glAccountClass,"glAccountClassId", true);
+		List glAccountList = delegator.findList("GlAccount", EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, glClassIdlist), null, orderBy, null, false);
+		context.glAccountList = glAccountList;
+	}
+}
