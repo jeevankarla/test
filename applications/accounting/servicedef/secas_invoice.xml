@@ -44,9 +44,9 @@ under the License.
     </eca> 
    
   
-    <eca service="createInvoiceAttribute" event="commit">
+   <!--  <eca service="createInvoiceAttribute" event="commit">
         <action service="createTaxInvoiceSequenceNew" mode="sync"/>
-    </eca> 
+    </eca>  -->
     
     
     <!-- <eca service="createInvoice" event="commit">
