@@ -1567,6 +1567,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
   	      try {
 		  		if(UtilValidate.isNotEmpty(finTransCreationMap)){
 		  			 List withdrawfinAcctrans = FastList.newInstance();
+		  			List depositfinAcctransList = FastList.newInstance();
 		  			 Iterator tempIter = finTransCreationMap.entrySet().iterator();
 		 			while (tempIter.hasNext()) {
 		 				Entry tempEntry = (Entry) tempIter.next();
@@ -1579,7 +1580,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 							   return "error";
 					        }
 	                        String finAccountTransId = (String)createResult.get("finAccountTransId");
-	    		 			List depositfinAcctransList = FastList.newInstance();
+	    		 			
 	    		 			GenericValue finAccountTransTypes = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", finAccountTransId), false);
 	    		 			String wdfinAccountTransTypeId = (String)finAccountTransTypes.get("finAccountTransTypeId");
 	    		 			if(wdfinAccountTransTypeId.equals("WITHDRAWAL")){
