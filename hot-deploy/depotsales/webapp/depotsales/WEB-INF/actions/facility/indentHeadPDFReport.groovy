@@ -349,7 +349,7 @@ totPurInvoiceNetAmt=0;
 
 		purposeTypeId = invoiceList.purposeTypeId;
 
-		if(purposeTypeId == "YARN_SALE"){
+		if(purposeTypeId == "YARN_SALE" || purposeTypeId == "DIES_AND_CHEM_SALE"){
 
 
 			////Debug.log("purposeTypeId=====Branch========"+purposeTypeId);
@@ -1487,7 +1487,7 @@ totPurInvoiceNetAmt=0;
 
 			}
 
-		}else if(purposeTypeId == "DEPOT_YARN_SALE"){
+		}else if(purposeTypeId == "DEPOT_YARN_SALE" || purposeTypeId == "DEPOT_DIES_CHEM_SALE"){
 
 
 			////Debug.log("purposeTypeId============="+purposeTypeId);
