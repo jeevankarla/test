@@ -5275,5 +5275,25 @@
          <field name="taxSurChgPer" title="__"><display/></field>
          <field name="total" title="__"><display/></field>  
      </form> 
+    <form name="claimReportDetailsTDcsv" type="list" list-name="finalList" view-size="99999">
+         <field name="sNo" title="__"><display/></field>
+         <field name="partyName" title="__"><display/></field>
+         <field name="totInvQty" title="__"><display/></field>
+         <field name="totInvValue" title="_"><display/></field>
+         <field name="actualFrightCharges" title="_"><display/></field>
+         <field name="frightCharges" title="_"><display/></field>
+         <field name="depotCharges" title="__"><display/></field>
+         <field name="mgpsServiceCharge" title="__"><display/></field>
+     </form> 
+     <form name="claimReportDetailsTenPercsv" type="list" list-name="finalList" view-size="99999">
+         <field name="sNo" title="__"><display/></field>
+         <field name="partyName" title="__"><display/></field>
+         <field name="productName" title="__"><display/></field>
+         <field name="totInvQty" title="_"><display/></field>
+         <field name="totInvValue" title="_"><display/></field>
+         <field name="actualFrightCharges" title="_"><display/></field>
+         <field name="frightCharges" title="__"><display/></field>
+         <field name="mgpsServiceCharge" title="__"><display/></field>
+     </form>
        
 </forms>
