@@ -5245,16 +5245,33 @@
       <field name="changeUserLogin" title="Changed By"><display></display></field>
       <field name="changeComments" title="Comments"><display></display></field>
      </form>
-     <form name="agencyOutstandingReportCSV" type="list" list-name="invocieList" view-size="99999">
-    	 <field name="partyName" title="-"><display/></field>
-    	 <field name="partyId" title="-"><display/></field>
-         <field name="above3years" title="-"><display/></field>
-    </form>
-    <form name="DetailedagencyOutstandingReportCSV" type="list" list-name="invoiceDetailedList" view-size="99999">
-    	 <field name="partyName" title="-"><display/></field>
-    	 <field name="partyId" title="-"><display/></field>
-    	 <field name="invoiceId" title="-"><display/></field>
-    	 <field name="invoiceDate" title="-"><display/></field>
-         <field name="above3years" title="-"><display/></field>
-    </form>   
+     <form name="taxReportHeading" type="list" list-name="finalList" view-size="99999">
+          
+         <field name="partyTinNo" title="__"><display/></field>
+         <field name="partyIdFromName" title="__"><display/></field>
+         <field name="supplierInvId" title="__"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="productId" title="_"><display/></field>
+         <field name="baseValue" title="_"><display/></field>
+         <field name="taxValue" title="__"><display/></field>
+         <field name="taxPercentage" title="__"><display/></field>
+         <field name="taxSurChargeValue" title="__"><display/></field>
+         <field name="taxSurChgPer" title="__"><display/></field>
+         <field name="total" title="__"><display/></field>
+         
+     </form> 
+     <form name="salesTaxReportHeading" type="list" list-name="finalList" view-size="99999">   
+         <field name="partyTinNo" title="__"><display/></field>
+         <field name="partyIdName" title="__"><display/></field>
+         <field name="buyerInvId" title="__"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="productId" title="_"><display/></field>
+         <field name="baseValue" title="_"><display/></field>
+         <field name="taxValue" title="__"><display/></field>
+         <field name="taxPercentage" title="__"><display/></field>
+         <field name="taxSurChargeValue" title="__"><display/></field>
+         <field name="taxSurChgPer" title="__"><display/></field>
+         <field name="total" title="__"><display/></field>  
+     </form> 
+       
 </forms>
