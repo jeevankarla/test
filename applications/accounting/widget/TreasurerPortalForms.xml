@@ -576,7 +576,7 @@ under the License.
         
         <field name="glReconciliationId"><hidden value="${glReconciliationId}"></hidden></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        
+         <field name="isFormSubmitted"><hidden value="Y"/></field>
         <field name="finAccountId"><hidden value="${finAccountId}"/></field>
         <field name="statusId"><hidden value="FINACT_TRNS_CREATED"/></field>
         <field name="finAccountTransTypeId">
@@ -601,6 +601,7 @@ under the License.
                     description="${glReconciliationName}[[${glReconciliationId}] [${reconciledDate}] [${reconciledBalance}]]"/>
             </drop-down>
         </field> -->
+        <field name="instrumentNo" position="2"><text/></field>
         <field name="fromTransDate"  position="1"><date-time  type="timestamp" /></field>
         <field name="thruTransDate" position="2"><date-time type="timestamp" /></field>
        <!--  <field name="fromEntryDate" position="1"><date-time/></field>

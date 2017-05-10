@@ -1323,11 +1323,12 @@
                 <set field="parameters.finAccountId" value="${finAccountId}"/>
                  <set field="parameters.statusId" value="FINACT_TRNS_CREATED"/>
                  <set field="glReconciliationId" value="${glReconciliationId}"/>
-                   <set field="glReconciliationId" value="${glReconciliationId}"/>
+                   
+                 <set field="fromTransDate" value="${parameters.fromTransactionDate}"/>
+                 <set field="thruTransDate" value="${parameters.thruTransactionDate}"/>
                    <!-- <set field="parameters.fromTrnsactionDate" from-field="parameters.fromTransactionDate" />
                   <set field="parameters.thruTransactionDate" from-field="parameters.thruTransactionDate" /> -->
                <!--   <set field="parameters.noConditionFind" value="Y"/> -->
-                 
                 <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
                 <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
                 <set field="searchedNumberOfRecords" type="Integer" from-field="finAccountTransListAndTotals.searchedNumberOfRecords"/>
@@ -1346,6 +1347,7 @@
                     <field-map field-name="mainAction" value="FINACCOUNTTX_EDIT"/>
                 </service>
                 <set field="hasFinTxEditPermission" from-field="permResult.hasPermission"/> 
+                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/transaction/FilterFinAccountTransactions.groovy"/>
             </actions>
             <widgets>
                <!--   <decorator-screen name="CashierCommonDecorator" location="component://accounting/widget/CommonScreens.xml"> -->
@@ -1367,7 +1369,7 @@
                         </section>
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                              <decorator-section name="search-options" >
-                                 <include-form name="FinAccountTransForReconsile"  share-scope="false" location="component://accounting/widget/TreasurerPortalForms.xml"/> 
+                                 <include-form name="FinAccountTransForReconsile"   location="component://accounting/widget/TreasurerPortalForms.xml"/> 
                             </decorator-section>  
                             <decorator-section name="search-results">
                            <container>

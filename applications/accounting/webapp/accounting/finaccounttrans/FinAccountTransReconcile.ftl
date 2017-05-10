@@ -32,6 +32,21 @@ function togglefinAccountTransId(master) {
     
 }
 
+function calculateTotal(){
+    var invoices = jQuery("#listFinAccTra :checkbox[name='finAccntTransIds']");
+ 	 total=0;
+    jQuery.each(invoices, function() {
+        if (jQuery(this).is(':checked')) {
+        	var domObj = $(this).parent().parent();
+        	var amtObj = $(domObj).find("#amt");
+        	var amt = $(amtObj).val();
+        	 total = (+total) + (+amt);
+        }
+        
+    });
+    jQuery('#finTransRunningTotal').html(total);
+}
+
 function getFinAccountTransRunningTotalAndBalances() {
 
     var isSingle = true;
@@ -93,6 +108,7 @@ function toggleFinAccntTransId(master) {
         jQuery.each(finTransactions, function() {
             this.checked = master.checked;
         });
+         calculateTotal()
     }
     
     function getFinAccountTransInfo() {
@@ -132,6 +148,10 @@ function toggleFinAccntTransId(master) {
         <span class="label" id="showFinAccountTransRunningTotal"></span>
       </div>
     </#if>
+    <div align="center" >
+        <span class="label" font-size="25pt">Selected Total Amount :</span>
+        <span class="label" id="finTransRunningTotal"></span>
+     </div>
     <#--
    <form name="massCancelFinTrans" id="massCancelFinTrans"  method="post" action="setMassFinAccountTransStatus">
       <div align="right">
@@ -331,6 +351,7 @@ function toggleFinAccntTransId(master) {
              <td>${paymentRefNum?if_exists}</td>
              <#--<td>${finAccountTrans.entryDate?if_exists}</td>-->
             <td>${finAccountTrans.amount?if_exists}</td>
+            <input type = "hidden" name = "amt" id = "amt" value = "${finAccountTrans.amount}">
             <td>
               <#if finAccountTrans.paymentId?has_content>
                 <a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>">${finAccountTrans.paymentId}</a>
@@ -360,7 +381,7 @@ function toggleFinAccntTransId(master) {
               <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
                 <td align="center" >
                 <#--><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances();"/>-->
-                <input type="checkbox" id="finAccountTransId_${finAccountTrans.finAccountTransId}" class="chkRecFinTransId" name="finAccntTransIds" value="${finAccountTrans.finAccountTransId}" />
+                <input type="checkbox" id="finAccountTransId_${finAccountTrans.finAccountTransId}" class="chkRecFinTransId" name="finAccntTransIds" value="${finAccountTrans.finAccountTransId}" onclick="javascript:calculateTotal()" />
                 </td>
               </#if>
           </tr>
