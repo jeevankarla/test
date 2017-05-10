@@ -28,11 +28,11 @@ under the License.
 
     <fo:page-sequence master-reference="main">
     <fo:static-content flow-name="xsl-region-before" font-family="Courier,monospace">
-    	<fo:block text-align="right" font-size="11pt" font-weight="bold">DEPOT BILL</fo:block>
     	<fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">PURCHASE INVOICE</fo:block>
     	<fo:block text-align="center" font-size="12pt" font-weight="bold"  white-space-collapse="false">NATIONAL HANDLOOM DEVELOPMENT CORPORATION LIMITED.</fo:block>
     	<fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">${BOAddress?if_exists}</fo:block>
         <fo:block text-align="center" font-size="10pt" font-weight="bold"  white-space-collapse="false">E-MAIL:${BOEmail?if_exists}</fo:block>
+        <fo:block text-align="center" font-size="13pt" font-weight="bold" white-space-collapse="false">DEPOT BILL</fo:block>
     </fo:static-content>
     <fo:flow flow-name="xsl-region-body" font-family="Courier,monospace">
     <#if purchasePartyDetailsMap?has_content>

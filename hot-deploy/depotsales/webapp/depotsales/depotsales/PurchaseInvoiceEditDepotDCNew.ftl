@@ -221,8 +221,8 @@ input[type=button]:hover {
 	          							<option value="Inter-State" selected>Inter State</option>
 	          						</#if> 
 	          					</#if> 
-	          					<#--<option value="Intra-State">With In State</option>
-	          					<option value="Inter-State">Inter State</option>-->
+	          					<option value="Intra-State">With In State</option>
+	          					<option value="Inter-State">Inter State</option>
 	          				</select>
 	          				<#if supplierGeoId?exists && supplierGeoId?has_content>
 					    		<input type="hidden" name="supplierGeoId" id="supplierGeoId" size="18" maxlength="60" value="${supplierGeoId}" readonly/>
@@ -251,10 +251,10 @@ input[type=button]:hover {
 	          					</#if> 
 	          				
 	          				
-	          					<#--<option value="CST_CFORM">Transaction With C Form</option>
+	          					<option value="CST_CFORM">Transaction With C Form</option>
 	          					<option value="CST_NOCFORM">Transaction Without C Form</option>
 	          					<option value="EXEMPTED_GOODS">Exempted Goods</option>
-	          					<option value="NO_E2_FORM"></option>-->
+	          					<option value="NO_E2_FORM"></option>
 	          				</select>
 	          			</td>
 		       		</tr>  
