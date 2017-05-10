@@ -55,24 +55,21 @@ DateMap.put("branchName", branchName);
 branchIdForAdd="";
 branchList = [];
 
-condListb = [];
+conditionList = [];
 if(branchId){
-condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
-condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
-condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
+conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
 
-PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
 
 branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
 if(!branchList){
-	condListb2 = [];
-	//condListb2.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS,"%"));
-	condListb2.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
-	condListb2.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
-	condListb2.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-	cond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
+	conditionList.clear()
+	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, branchId));
+	conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
+	conditionList.add(EntityCondition.makeCondition("roleTypeIdTo", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 	
-	PartyRelationship1 = delegator.findList("PartyRelationship", cond,UtilMisc.toSet("partyIdFrom"), null, null, false);
+	PartyRelationship1 = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdFrom"), null, null, false);
 	branchDetails = EntityUtil.getFirst(PartyRelationship1);
 	branchIdForAdd=branchDetails.partyIdFrom;
 }
@@ -82,29 +79,19 @@ else{
 if(!branchList)
 branchList.add(branchId);
 }
-
-
-
 branchBasedWeaversList = [];
-condListb = [];
+conditionList.clear()
 if(branchId){
-condListb.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
-condListb.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
-condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
+conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
+conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 
-PartyRelationship = delegator.findList("PartyRelationship", condListb,UtilMisc.toSet("partyIdTo"), null, null, false);
+PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
 branchBasedWeaversList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
 
 }
-
-
-
-//Debug.log("branchList=================="+branchList);
 productIds = [];
-
 productCategoryIds = [];
-
-condListCat = [];
+conditionList.clear()
 
 //if(!partyId){
 	if(productCategory == "ALL"){
@@ -124,15 +111,12 @@ condListCat = [];
 		productCategoryIds=EntityUtil.getFieldListFromEntityList(productCategoris, "productCategoryId", true);
 		}
 	
-	condListCat.clear();
-	condListCat.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIds));
-	condList1 = EntityCondition.makeCondition(condListCat, EntityOperator.AND);
-	ProductCategoryMember = delegator.findList("ProductCategoryMember", condList1,UtilMisc.toSet("productId"), null, null, false);
+	conditionList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.IN, productCategoryIds));
+	ProductCategoryMember = delegator.findList("ProductCategoryMember", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("productId"), null, null, false);
 	
 	productIds = EntityUtil.getFieldListFromEntityList(ProductCategoryMember, "productId", true);
 	
 //}
-//Debug.log("productIds================"+productIds.size());
   
 daystart = null;
 dayend = null;
@@ -166,18 +150,13 @@ context.dayend=dayend
   
 daystart = UtilDateTime.getDayStart(fromDate);
 dayend = UtilDateTime.getDayEnd(thruDate);
-
-
 fromDateForCSV=UtilDateTime.toDateString(daystart, "dd/MM/yyyy");
 thruDateForCSV=UtilDateTime.toDateString(dayend, "dd/MM/yyyy");
-
 context.fromDateForCSV=fromDateForCSV;
 context.thruDateForCSV=thruDateForCSV;
 
-
 branchContext=[:];
 branchContext.put("branchId",branchIdForAdd);
-
 BOAddress="";
 BOEmail="";
 try{
@@ -202,123 +181,65 @@ try{
 }
 context.BOAddress=BOAddress;
 context.BOEmail=BOEmail;
-
-
-
 branchpartyIdsList = [];
-
 if(state && !partyId){
-	
-	condListb4 = [];
+	conditionList.cleaar()
 	if(branchBasedWeaversList)
-	condListb4.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
-	condListb4.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
+	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
+	conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "BILLING_LOCATION"));
 	if(state == "IN-TS")
-	condListb4.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, "IN-TNG"));
+	conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, "IN-TNG"));
 	else if(state)
-	condListb4.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, state));
-	condListb = EntityCondition.makeCondition(condListb4, EntityOperator.AND);
-	PartyContactDetailByPurposeList = delegator.find("PartyContactDetailByPurpose", condListb, null, UtilMisc.toSet("partyId"), null, null);
-	
+	conditionList.add(EntityCondition.makeCondition("stateProvinceGeoId", EntityOperator.EQUALS, state));
+	PartyContactDetailByPurposeList = delegator.find("PartyContactDetailByPurpose", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toSet("partyId"), null, null);
 	branchBasedWeaversList = EntityUtil.getFieldListFromEntityListIterator(PartyContactDetailByPurposeList, "partyId", true);
-
-	
 	if(UtilValidate.isEmpty(branchBasedWeaversList)){
 	 return "Selected Worng State";
 	}
 }
-
 isDepotPartyIds = [];
-condListb2 = [];
-condListb2.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
+conditionList.clear()
+conditionList.add(EntityCondition.makeCondition("facilityTypeId", EntityOperator.EQUALS, "DEPOT_SOCIETY"));
 if(branchBasedWeaversList)
-condListb2.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN,branchBasedWeaversList));
-fcond = EntityCondition.makeCondition(condListb2, EntityOperator.AND);
-FacilityList = delegator.find("Facility", fcond, null, UtilMisc.toSet("ownerPartyId"), null, null);
-
+conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN,branchBasedWeaversList));
+FacilityList = delegator.find("Facility", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, UtilMisc.toSet("ownerPartyId"), null, null);
 branchBasedWeaversList = EntityUtil.getFieldListFromEntityListIterator(FacilityList, "ownerPartyId", true);
-
-
-condList = [];
-//condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, "11821"));
-
+conditionList.clear()
 if(UtilValidate.isNotEmpty(daystart)){
-	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
-	condList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
+	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO, daystart));
+	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.LESS_THAN_EQUAL_TO, dayend));
 }
-
-condList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
-
+conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS, "SALES_INVOICE"));
 if(productIds)
-condList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
+conditionList.add(EntityCondition.makeCondition("productId", EntityOperator.IN, productIds));
 
-/*if(branchList)
-condList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
-if(partyId)
-condList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId));
-if(!partyId && branchpartyIdsList)
-condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchpartyIdsList));
-*/
 if(!partyId && branchBasedWeaversList)
-condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
+conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
 
-condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
-
-
-cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-
-////Debug.log("cond================="+cond);
-
-
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+conditionList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS, "YARN_SALE"));
 fieldsToSelect = ["invoiceId"] as Set;
-
-invoice = delegator.find("InvoiceAndItem", cond, null, fieldsToSelect, null, null);
-//////////////Debug.log("invoice========================="+invoice);
+invoice = delegator.find("InvoiceAndItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, fieldsToSelect, null, null);
 invoiceIds=EntityUtil.getFieldListFromEntityListIterator(invoice, "invoiceId", true);
-
-//Debug.log("invoiceIds======2222==========="+invoiceIds.size());
-
-
-conditionList1 = [];
-conditionList1.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
-conditionList1.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-cond = EntityCondition.makeCondition(conditionList1, EntityOperator.AND);
-OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
-
-
+conditionList.clear()
+conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 orderIds=EntityUtil.getFieldListFromEntityList(OrderItemBilling, "orderId", true);
-
-
-//Debug.log("orderIds==============="+orderIds.size());
-
-
-conditionList1.clear();
-conditionList1.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-conditionList1.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "SCHEME_CAT"));
-conditionList1.add(EntityCondition.makeCondition("attrValue", EntityOperator.IN, ["MGPS_10Pecent","MGPS"]));
-
-orderAttr = delegator.findList("OrderAttribute",EntityCondition.makeCondition(conditionList1, EntityOperator.AND), null, null, null, false);
-
+conditionList.clear()
+conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+conditionList.add(EntityCondition.makeCondition("attrName", EntityOperator.EQUALS, "SCHEME_CAT"));
+conditionList.add(EntityCondition.makeCondition("attrValue", EntityOperator.IN, ["MGPS_10Pecent","MGPS"]));
+orderAttr = delegator.findList("OrderAttribute",EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
 orderIds=EntityUtil.getFieldListFromEntityList(orderAttr, "orderId", true);
-
-
 OrderItemBillingFilter = EntityUtil.filterByCondition(OrderItemBilling, EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
-
 invoiceIds=EntityUtil.getFieldListFromEntityList(OrderItemBillingFilter, "invoiceId", true);
+conditionList.clear();
+conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
+Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+customersList=EntityUtil.getFieldListFromEntityList(Invoice, "partyId", true);
 
 
-condList = [];
-condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.IN, invoiceIds));
-Invoice = delegator.findList("Invoice", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, false);
-
-
-
-//Debug.log("invoiceIds================="+invoiceIds.size());
-totQty=0
-totAmt=0
-totdepotChargs=0
-totalsMap=[:];
 finalList = [];
 
 if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
@@ -364,259 +285,135 @@ headingMap.put("lrDate" ,"LR Date")
 finalList.add(stylesMap);
 finalList.add(headingMap);
 }
-
-
-for (eachInvoiceList in Invoice) {
-	
-	
-	
-	tempMap=[:];
-	
-	tempMap.put("invoiceId", eachInvoiceList.invoiceId);
-	
-	
-	billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , eachInvoiceList.invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
-	if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
-		invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
-		invoiceSequence = invoiceSeqDetails.invoiceSequence;
-		
-		//Debug.log("invoiceSequence======2121==========="+invoiceSequence);
-		
-		tempMap.put("billno", invoiceSequence);
-	}else{
-		tempMap.put("billno", eachInvoiceList.invoiceId);
-	}
-	
-	 tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoiceList.invoiceDate,"dd/MM/yyyy"));
-		   
-	 ////Debug.log("eachInvoiceList.invoiceId================="+eachInvoiceList.invoiceId);
-	 
-	 
-   
-	condList.clear();
-	 
-	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
-	//condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,"INV_RAWPROD_ITEM"));
-	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE")));
-	condList.add(EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_EQUAL,null));
-	//condList.add(EntityCondition.makeCondition("productId", EntityOperator.NOT_EQUAL, null));
-	invoiceItemcond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	 
-	InvoiceItem = delegator.findList("InvoiceItem", invoiceItemcond, null, null, null, false);
-  
-	
-	//Debug.log("InvoiceItem================="+InvoiceItem.size());
-	 
-	if(InvoiceItem){
-	double invoiceAMT = 0;
-	double invoiceQTY = 0;
-	for (eachInvoiceItem in InvoiceItem) {
-		
-		invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
-		invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
-		totQty=totQty+eachInvoiceItem.quantity
-		totAmt=totAmt+eachInvoiceItem.itemValue
-		
-	}
-	
-	tempMap.put("invoiceAmount", invoiceAMT);
-	
-	double maxAmt = 0;
-	
-	maxAmt = (invoiceAMT*2)/100;
-	
-	tempMap.put("invoiceQTY", invoiceQTY);
-	
-	
-	////Debug.log("invoiceAMT================="+invoiceAMT);
-	condList.clear();
-	condList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
-	//conditionList.add(EntityCondition.makeCondition("invoiceItemSeqId", EntityOperator.EQUALS, eachItem.invoiceItemSeqId));
-	condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-	cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
-	OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", cond, null, null, null, false);
-   
-	////Debug.log("OrderItemBilling======================"+OrderItemBilling);
-		   
-	 itemOrderId  = OrderItemBilling[0].orderId;
-	 
-	 //Debug.log("itemOrderId================="+itemOrderId);
-	 
-	 conditionList = [];
-	 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId));
-	 conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["SUPPLIER","ON_BEHALF_OF","BILL_TO_CUSTOMER"]));
-	 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-	 OrderRoleList = delegator.findList("OrderRole", expr, null, null, null, false);
-	 
-	 partyId = "";
-	 supplier = "";
-	 
-	 for (eachRole in OrderRoleList) {
-		 
-		 if(eachRole.roleTypeId == "SUPPLIER")
-		  supplier = eachRole.get("partyId");
-		 if(eachRole.roleTypeId == "BILL_TO_CUSTOMER")
-		  partyId = eachRole.get("partyId");
-		
-	 }
-	
-	 
-	 partyName = "";
-	 if(partyId)
-	  partyName = PartyHelper.getPartyName(delegator, partyId, false);
-	 
-	 
-	 supplierName = "";
-	 if(supplier)
-	 supplierName = PartyHelper.getPartyName(delegator, supplier, false);
-	 
-	 //Debug.log("supplierName================="+supplierName);
-	 
-	 tempMap.put("supplierName", supplierName);
-	 
-	 tempMap.put("partyName", partyName);
-	 tempMap.put("depotCharges", maxAmt);
-	 totdepotChargs=totdepotChargs+maxAmt;
-	 shipmentId = eachInvoiceList.shipmentId;
-	 
-	 if(shipmentId){
-		 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
-		 
-		 
-		 
-		 
-		 
+allCustomersMap=[:]
+destinationMap=[:];
+reimbursementMap=[:];
+for(eachCustomer in customersList){
+	eachCustomerList=[]
+	totalsMap=[:];
+	totQty=0
+	totAmt=0
+	sNo=1
+	totdepotChargs=0
+	destAddr=""
+	Invoice1 = EntityUtil.filterByCondition(Invoice, EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, eachCustomer));
+	for (eachInvoiceList in Invoice1) {
+		tempMap=[:];
+		tempMap.put("invoiceId", eachInvoiceList.invoiceId);
+		billOfSalesInvSeqs = delegator.findList("BillOfSaleInvoiceSequence",EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS , eachInvoiceList.invoiceId)  , UtilMisc.toSet("invoiceSequence"), null, null, false );
+		if(UtilValidate.isNotEmpty(billOfSalesInvSeqs)){
+			invoiceSeqDetails = EntityUtil.getFirst(billOfSalesInvSeqs);
+			invoiceSequence = invoiceSeqDetails.invoiceSequence;
+			tempMap.put("billno", invoiceSequence);
+		}else{
+			tempMap.put("billno", eachInvoiceList.invoiceId);
+		}
+		 tempMap.put("invoiceDate",UtilDateTime.toDateString(eachInvoiceList.invoiceDate,"dd/MM/yyyy"));
 		 conditionList.clear();
-		 conditionList.add(EntityCondition.makeCondition("shipmentId", EntityOperator.EQUALS, shipmentId));
-		 expr = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-		 ShipmentReimbursement = delegator.findList("ShipmentReimbursement", expr, null, null, null, false);
-		
-		 double reimbursentAMT = 0;
-		 if(ShipmentReimbursement){
-			 
-			 tempList = [];
-			 for (eachReimbursement in ShipmentReimbursement) {
-				 
-				 tempMap1 = [:];
-				 
-				 reimbursentAMT = reimbursentAMT+Double.valueOf(eachReimbursement.receiptAmount);
-				 
-				 tempMap1.put("shipmentId", eachReimbursement.shipmentId)
-				 if(eachReimbursement.claimId)
-				 tempMap1.put("claimId", eachReimbursement.claimId)
-				 else
-				 tempMap1.put("claimId", "")
-				 if(eachReimbursement.receiptNo)
-				 tempMap1.put("receiptNo", eachReimbursement.receiptNo)
-				 else
-				 tempMap1.put("receiptNo", "")
-				 if(eachReimbursement.receiptAmount)
-				 tempMap1.put("receiptAmount", eachReimbursement.receiptAmount)
-				 else
-				 tempMap1.put("receiptAmount", "")
-				 if(eachReimbursement.receiptDate)
-				 tempMap1.put("receiptDate", eachReimbursement.receiptDate)
-				 else
-				 tempMap1.put("receiptDate", "")
-				 
-				 if(eachReimbursement.description)
-				 tempMap1.put("description", eachReimbursement.description)
-				 else
-				 tempMap1.put("description", "")
-				 
-				 
-				 tempList.add(tempMap1);
-				 
+		 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
+		 conditionList.add(EntityCondition.makeCondition("invoiceItemTypeId",EntityOperator.EQUALS,"INV_FPROD_ITEM"));
+		 InvoiceItem = delegator.findList("InvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		 if(InvoiceItem){
+		 double invoiceAMT = 0;
+		 double invoiceQTY = 0;
+		 for (eachInvoiceItem in InvoiceItem) {
+			invoiceAMT = invoiceAMT+(eachInvoiceItem.itemValue);
+			invoiceQTY = invoiceQTY+(eachInvoiceItem.quantity);
+			totQty=totQty+eachInvoiceItem.quantity
+			totAmt=totAmt+eachInvoiceItem.itemValue
+		}
+		tempMap.put("invoiceAmount", invoiceAMT);
+		double maxAmt = 0;
+		maxAmt = (invoiceAMT*2)/100;
+		tempMap.put("invoiceQTY", invoiceQTY);
+		conditionList.clear();
+		conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS, eachInvoiceList.invoiceId));
+		conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
+		OrderItemBilling = delegator.findList("OrderItemBillingAndInvoiceAndInvoiceItem", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		itemOrderId  = OrderItemBilling[0].orderId;
+		 conditionList.clear()
+		 conditionList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, itemOrderId));
+		 conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.IN, ["SUPPLIER","ON_BEHALF_OF","BILL_TO_CUSTOMER"]));
+		 OrderRoleList = delegator.findList("OrderRole", EntityCondition.makeCondition(conditionList, EntityOperator.AND), null, null, null, false);
+		 partyId = "";
+		 supplier = "";
+		 for (eachRole in OrderRoleList) {
+			 if(eachRole.roleTypeId == "SUPPLIER")
+			  supplier = eachRole.get("partyId");
+			 if(eachRole.roleTypeId == "BILL_TO_CUSTOMER")
+			  partyId = eachRole.get("partyId");
+		 }
+		 partyName = "";
+		 if(partyId) eachInvoiceList
+		 partyName = PartyHelper.getPartyName(delegator, partyId, false);
+		 supplierName = "";
+		 if(supplier)
+		 supplierName = PartyHelper.getPartyName(delegator, supplier, false);
+		 tempMap.put("supplierName", supplierName);
+		 tempMap.put("partyName", partyName);
+		 tempMap.put("depotCharges", maxAmt);
+		 totdepotChargs=totdepotChargs+maxAmt;
+		 shipmentId = eachInvoiceList.shipmentId;
+		 if(shipmentId){
+			 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
+			 primaryOrderId = shipmentList.get("primaryOrderId");
+			 DstAddr = delegator.findOne("OrderAttribute",["orderId":primaryOrderId,"attrName":"DST_ADDR"],false);
+			 if(DstAddr){
+				 destAddr=DstAddr.get("attrValue");
+				 tempMap.put("destAddr", destAddr);
+			 }else{
+				 tempMap.put("destAddr", "");
 			 }
-			 
-			// shipmentReimbursementJson.put(shipmentId, tempList);
-			 
-			 
-		 }
-		 
-		 primaryOrderId = shipmentList.get("primaryOrderId");
-		 
-		 DstAddr = delegator.findOne("OrderAttribute",["orderId":primaryOrderId,"attrName":"DST_ADDR"],false);
-		 if(DstAddr){
-			 destAddr=DstAddr.get("attrValue");
-			 tempMap.put("destAddr", destAddr);
-		 }else{
-			 tempMap.put("destAddr", "");
-		 }
-		 
-		 
-		 lrNumber = shipmentList.get("lrNumber");
-		 
-		 if(lrNumber)
-		 tempMap.put("lrNumber", lrNumber);
-		 else
-		 tempMap.put("lrNumber", "");
-		 
-		 deliveryChallanDate = shipmentList.get("deliveryChallanDate");
-		 
-		 if(deliveryChallanDate)
-		 tempMap.put("lrDate",UtilDateTime.toDateString(deliveryChallanDate,"dd/MM/yyyy") );
-		 else
-		 tempMap.put("lrDate", "");
-		 
-		 
-		 double claimAmt = 0;
-	     estimatedShipCost = shipmentList.get("estimatedShipCost");
-					 
-		 if(estimatedShipCost){
-		 claimAmt = Double.valueOf(estimatedShipCost);
-		 tempMap.put("claim", claimAmt);
-		 } else{
-		 tempMap.put("claim", "");
-		 }
-		 
-		 if(maxAmt > reimbursentAMT)
-		 tempMap.put("eligibleAMT", reimbursentAMT);
-		 else
-		 tempMap.put("eligibleAMT", maxAmt);
-	 
-		 estimatedShipDate = shipmentList.get("estimatedShipDate");
-		 
-		 if(estimatedShipDate)
-		 tempMap.put("estimatedShipDate", UtilDateTime.toDateString(estimatedShipDate,"dd/MM/yyyy"));
-		 else
-		 tempMap.put("estimatedShipDate", "");
-		 
-		 carrierName = shipmentList.get("carrierName");
-		 //Debug.log("carrierName================="+carrierName);
-		 
-		 if(carrierName)
-		 tempMap.put("transporter", carrierName);
-		 else
-		 tempMap.put("transporter", "");
-		 
-		 supplierInvoiceId = ""
-		 supplierInvoiceId = shipmentList.get("supplierInvoiceId");
-		 
-		 if(supplierInvoiceId)
-		 tempMap.put("supplierInvoiceId", supplierInvoiceId);
-		 else
-		 tempMap.put("supplierInvoiceId", "");
-		 
-		 
-		 supplierInvoiceDate = "";
-		 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
-		 
-		 if(supplierInvoiceDate)
-		 tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd-MM-yyyy"));
-		 else
-		 tempMap.put("supplierInvoiceDate", "");
-		 
-		 }
+			
+			 if(estimatedShipDate)
+			 tempMap.put("estimatedShipDate", UtilDateTime.toDateString(estimatedShipDate,"dd/MM/yyyy"));
+			 else
+			 tempMap.put("estimatedShipDate", "");
+			 carrierName = shipmentList.get("carrierName");
+			 if(carrierName)
+			 tempMap.put("transporter", carrierName);
+			 else
+			 tempMap.put("transporter", "");
+			 supplierInvoiceId = ""
+			 supplierInvoiceId = shipmentList.get("supplierInvoiceId");
+			 if(supplierInvoiceId)
+			 tempMap.put("supplierInvoiceId", supplierInvoiceId);
+			 else
+			 tempMap.put("supplierInvoiceId", "");
+			 supplierInvoiceDate = "";
+			 supplierInvoiceDate = shipmentList.get("supplierInvoiceDate");
+			 if(supplierInvoiceDate)
+			 tempMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate,"dd-MM-yyyy"));
+			 else
+			 tempMap.put("supplierInvoiceDate", "");
+			 }
+		 	stateName= dispatcher.runSync("getCustomerState", [partyId:eachCustomer, userLogin: userLogin]);
+			tempMap.put("stateName",stateName);
+			tempMap.put("sNo", sNo);
+	 		tempMap.put("ob", "nill");
+			tempMap.put("obValue", "nill");
+			tempMap.put("otherQty", "nill");
+			tempMap.put("otherValue", "nill");
+			tempMap.put("Mill", "nill");
+			tempMap.put("cbQty", "nill");
+			tempMap.put("cbValue", "nill");
+			sNo=sNo+1
+		}
+		 eachCustomerList.add(tempMap);
 	}
-	 finalList.add(tempMap);
+	totalsMap.put("stateName","TOTAL");
+	totalsMap.put("invoiceQTY",totQty);
+	totalsMap.put("invoiceAmount",totAmt);
+	totalsMap.put("depotCharges",totdepotChargs);
+	eachCustomerList.add(totalsMap);
+	allCustomersMap.put(eachCustomer, eachCustomerList)
+	destinationMap.put(eachCustomer,destAddr)
+	
 }
+context.allCustomersMap=allCustomersMap
+context.customersList=customersList
+context.destinationMap=destinationMap 
 
-totalsMap.put("billno","TOTAL");
-totalsMap.put("invoiceQTY",totQty);
-totalsMap.put("invoiceAmount",totAmt);
-totalsMap.put("depotCharges",totdepotChargs);
-finalList.add(totalsMap);
 context.finalList = finalList;
 
 
