@@ -41,9 +41,9 @@ conditionList = [];
 if(parameters.groupId){
 	conditionList.add(EntityCondition.makeCondition("finAccntTransGroupId", EntityOperator.EQUALS, parameters.groupId));
 }
+List<String> orderBy = UtilMisc.toList("-finAccntTransDate");
 EntityCondition condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-
-	finAccountTransGroup = delegator.findList("FinAccountTransGroup",condition , null, null, null, false);
+	finAccountTransGroup = delegator.findList("FinAccountTransGroup",condition , null, orderBy, null, false);
 
 paymentcpfList = [];
 for(String eachfinAccountTransGroup : finAccountTransGroup){
