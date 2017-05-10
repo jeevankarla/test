@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>	
+		<SecurityPermission permissionId="MYPORTAL_TRUSTACCTS" description="To use the Trust ACCTS component Screens in Myportal."/>
+        <SecurityGroup description="Trust ACCTS user of myportal, Limited access to the Trust ACCTS component" groupId="MYPORTAL_TRUSTACCTS"/>
+	 	<SecurityGroupPermission groupId="MYPORTAL_TRUSTACCTS" permissionId="MYPORTAL_TRUSTACCTS"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_TRUSTACCTS" permissionId="FACILITY_VIEW"/>
+	 	  <SecurityGroupPermission groupId="MYPORTAL_TRUSTACCTS" permissionId="TRUSTACCTS_VIEW"/>
+	 	 <SecurityGroupPermission groupId="MYPORTAL_TRUSTACCTS" permissionId="MYPORTALBASE_ADMIN"/>
+	 	  <SecurityGroupPermission groupId="MYPORTAL_TRUSTACCTS" permissionId="PARTYMGR_UPDATE"/>
+	 	  <SecurityGroupPermission groupId="MYPORTAL_TRUSTACCTS" permissionId="PARTYMGR_VIEW"/>
+		 <PortalPage portalPageId="MYPORTAL_TRUSTACCTS" sequenceNum="0" portalPageName="Main" description="The Trust Accounts Component Main Page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_TRUSTACCTS"/>
+			
+		 <PortalPortlet portalPortletId="TRUSTACCTS" portletName="Trust Accounts"
+        	screenName="MyPortalTrustAccounts"
+        screenLocation="component://trustAccounts/widget/CommonScreens.xml"
+        description="Trust Accounts Portal Main Screen"/>                
+    	<PortletPortletCategory portalPortletId="TRUSTACCTS" portletCategoryId="PRODUCTS"/>
+    	
+    	    	
+    	<PortalPage portalPageId="MYPORTAL_TRUSTACCNTS" sequenceNum="0" portalPageName="TRUSTACCTS" description="Trust Accounts Main Page" ownerUserLoginId="_NA_" securityGroupId="MYPORTAL_TRUSTACCTS"/>
+    	<PortalPageColumn portalPageId="MYPORTAL_TRUSTACCNTS" columnSeqId="00001"/>
+    	<PortalPagePortlet portalPageId="MYPORTAL_TRUSTACCNTS" portalPortletId="TRUSTACCTS" portletSeqId="00001" columnSeqId="00001" sequenceNum="0"/>
+
+</entity-engine-xml>
+
+
+ 
