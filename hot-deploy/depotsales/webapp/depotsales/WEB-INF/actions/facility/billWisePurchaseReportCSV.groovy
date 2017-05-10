@@ -222,6 +222,8 @@ headingMap.put("invoiceId", " ");
 headingMap.put("invoiceSeqId", " ");
 headingMap.put("invoiceDate", " ");
 headingMap.put("shipmentId", " ");
+headingMap.put("supplierInvoiceId", " ");
+headingMap.put("supplierInvoiceDate", " ");
 headingMap.put("partyIdFrom", "___BILL WISE PURCHASE REPORT___");
 headingMap.put("partyIdTo", " ");
 headingMap.put("quantity", " ");
@@ -237,6 +239,8 @@ headingMap1.put("invoiceId", " ");
 headingMap1.put("invoiceSeqId", " ");
 headingMap1.put("invoiceDate", " ");
 headingMap1.put("shipmentId", " ");
+headingMap.put("supplierInvoiceId", " ");
+headingMap.put("supplierInvoiceDate", " ");
 headingMap1.put("partyIdFrom", "From "+ fromDateForCSV +" to "+thruDateForCSV);
 headingMap1.put("partyIdTo", " ");
 headingMap1.put("quantity", " ");
@@ -265,6 +269,8 @@ headingMap3.put("invoiceId", "Invoice Id");
 headingMap3.put("invoiceSeqId", "Invoice Sequence Id");
 headingMap3.put("invoiceDate", "Invoice Date");
 headingMap3.put("shipmentId", "Shipment Id");
+headingMap3.put("supplierInvoiceId", "supplier Invoice Id");
+headingMap3.put("supplierInvoiceDate", "supplier Invoice Date");
 headingMap3.put("partyIdFrom", "From Party");
 headingMap3.put("partyIdTo", "To Party");
 headingMap3.put("quantity", "Quantity");
@@ -304,6 +310,11 @@ if(invoice){
 				
 				estimatedShipCost = ShipmentDetails.get("estimatedShipCost");
 				
+				supplierInvoiceId = ShipmentDetails.get("supplierInvoiceId");
+				supplierInvoiceDate = ShipmentDetails.get("supplierInvoiceDate");
+				
+				invoiceDetailMap.put("supplierInvoiceId",supplierInvoiceId);
+				invoiceDetailMap.put("supplierInvoiceDate", UtilDateTime.toDateString(supplierInvoiceDate, "dd/MM/yyyy"));
 				invoiceDetailMap.put("shipmentId",shipmentId);
 				invoiceDetailMap.put("estimatedShipCost",estimatedShipCost);
 				invoiceDetailMap.put("quantity", eachInvoiceitem.quantity);
