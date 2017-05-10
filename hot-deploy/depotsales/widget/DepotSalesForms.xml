@@ -3677,6 +3677,7 @@
 			<field name="schemeQty" title="Scheme Qty"><display/></field>
 			<field name="subsidyAmt" title="Subsidy Amt"><display/></field>
 			<field name="allAdjWitOutTEN" title="Adjustment Amount"><display/></field>
+			<field name="salevalue" title="Sale Value"><display/></field>
 			<field name="invoiceNetAmt" title="Net Amount"><display/></field>
 			<field name="userAgency" title="User Agency"><display/></field>
 			<field name="partyClassification" title="Party Classification"><display/></field>
@@ -3688,6 +3689,7 @@
 			<field name="Depo" title="Depo"><display/></field>
 			 <field name="scheme" title="Scheme"><display/></field>
 			<field name="orderNo" title="Order No"><display/></field>
+			<field name="referenceNo" title="Reference No"><display/></field>
 			<field name="indentDate" title="Indent Date"><display/></field>
 			<field name="custIndDate" title="CustInd Date"><display/></field>
 			<field name="advance" title="Advance"><display/></field>
