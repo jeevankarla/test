@@ -932,8 +932,8 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="depotReimburcentReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>	
 				<td width="10%"></td>
 				
-				<#--<td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('depotReimburcentReport', '<@ofbizUrl>depotReimburcentReport.pdf</@ofbizUrl>');" class="buttontext"/></td>
-				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('depotReimburcentReport', '<@ofbizUrl>depotReimburcentReport.xls?header=required</@ofbizUrl>');" class="buttontext"/></td>-->        			
+			   <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('depotReimburcentReport', '<@ofbizUrl>depotReimburcentReport.pdf</@ofbizUrl>');" class="buttontext"/></td>
+				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('depotReimburcentReport', '<@ofbizUrl>depotReimburcentReport.xls?header=required</@ofbizUrl>');" class="buttontext"/></td>        			
 				
 			 
            </form>
