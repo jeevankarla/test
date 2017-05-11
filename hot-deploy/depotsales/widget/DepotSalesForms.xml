@@ -3915,6 +3915,7 @@
     	 <field name="prodcatName" title="_"><display/></field>
     	 <field name="productName" title="_"><display/></field>
     	 <field name="partyName" title="_"><display/></field>
+    	 <field name="userAgencyType" title="_"><display/></field>
     	 <field name="orderQty" title="_"><display/></field>
          <!-- <field name="BdlWt" title="__National Handloom__"><display/></field> -->
          <field name="rate" title="_"><display/></field>
@@ -4474,6 +4475,7 @@
          <field name="PoNo" title="_"><display/></field>
          <field name="PoDate" title="__"><display/></field>
          <field name="supplier" title="__"><display/></field>
+         <field name="productName" title="__"><display/></field>
          <field name="shipmentDate" title="__"><display/></field>
          <field name="shipQty" title="__"><display/></field>
          <field name="DurBWSoAndPo" title="__"><display/></field>

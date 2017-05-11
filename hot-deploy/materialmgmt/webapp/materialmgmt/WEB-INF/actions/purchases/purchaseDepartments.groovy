@@ -209,5 +209,26 @@ context.stateListJSON = stateListJSON;
 partyClassificationList = delegator.findList("PartyClassificationGroup", EntityCondition.makeCondition("partyClassificationTypeId", EntityOperator.EQUALS, "CUST_CLASSIFICATION"), UtilMisc.toSet("partyClassificationGroupId","description"), null, null,false);
 context.partyClassificationList = partyClassificationList;
 
+
+JSONArray supplierJSON = new JSONArray();
+condList=[];
+condList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "SUPPLIER"));
+Condition = EntityCondition.makeCondition(condList,EntityOperator.AND);
+supplierlList=delegator.findList("PartyRole",Condition,null,null,null,false);
+supplierIds=supplierlList.partyId;
+//Debug.log("supplierIds=========="+supplierIds);
+
+condList.clear();
+condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, supplierIds));
+Condition = EntityCondition.makeCondition(condList,EntityOperator.AND);
+supplierList=delegator.findList("PartyGroup",Condition,null,null,null,false);
+
+supplierList.each{ eachSupplier ->
+	JSONObject newObj = new JSONObject();
+	newObj.put("value",eachSupplier.partyId);
+	newObj.put("label",eachSupplier.groupName+"["+eachSupplier.partyId+"]");
+	supplierJSON.add(newObj);
+}
+context.supplierJSON = supplierJSON;
 //Debug.log("stateListJSON============"+stateListJSON);
 

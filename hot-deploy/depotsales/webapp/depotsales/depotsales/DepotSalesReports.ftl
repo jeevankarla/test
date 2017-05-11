@@ -73,7 +73,13 @@ $(document).ready(function(){
 		$('#BranchFilterlabel').hide();	
 		
 		$('#branchIdOne').hide();
-		$('#BranchFilter').hide();	
+		$('#BranchFilter').hide();
+		
+		var supplierList = ${StringUtil.wrapString(supplierJSON)!'[]'};
+		$("#supplierPartyId").autocomplete({ source: supplierList }).keydown(function(e){
+		
+		});
+		
 	});
 function makeDatePicker3(fromDateId ,thruDateId){
 	$( "#"+fromDateId ).datepicker({
@@ -503,7 +509,8 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				     <option value='OTHER'>OTHERS</option>
 				  </select>    								
 			  </span></td>
-			  <td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="pendingShipmentsReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>	
+			  <td width="15%">Party Code<input type="text" name="supplierPartyId" id="supplierPartyId" size="10" maxlength="30">
+			 	
 			 	<td width="15%"><span class='h3'>Shipment Status
 				 <select name="shipmentstate" id="shipmentstate">
 				     <option value='Pending'>Pending</option>
