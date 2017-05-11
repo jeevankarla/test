@@ -222,6 +222,7 @@ headerData=[:];
 headerData.put("prodcatName", "Product Category");
 headerData.put("productName", "Product Count");
 headerData.put("partyName", "Party Name");
+headerData.put("userAgencyType", "User Agency Type");
 headerData.put("orderQty", "Order Qty(kgs)");
 /*headerData.put("BdlWt", "BdlWt");*/
 headerData.put("rate", "Rate");
@@ -296,13 +297,16 @@ for(productCategoryId in productCategoryIds){
 				//Debug.log("orderId=================="+orderId);
 				exprList=[];
 				exprList.add(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId));
-				exprList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
+				//exprList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "BILL_FROM_VENDOR"));
 				Condition = EntityCondition.makeCondition(exprList, EntityOperator.AND);
+				orderDetails = delegator.findList("OrderRole", Condition, null,null,null, false);
 				supplierPartyId="";
 				productStoreId="";
-				supplierDetails = EntityUtil.getFirst(delegator.findList("OrderRole", Condition, null,null,null, false));
+				
+				supplierDetails = EntityUtil.filterByCondition(orderDetails, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"BILL_FROM_VENDOR"));
 				//Debug.log("supplierDetails=================="+supplierDetails);
 				if(supplierDetails){
+					supplierDetails=EntityUtil.getFirst(supplierDetails)
 					supplierPartyId=supplierDetails.get("partyId");
 					//Debug.log("supplierPartyId=================="+supplierPartyId);
 				}
@@ -310,7 +314,26 @@ for(productCategoryId in productCategoryIds){
 				if(supplierPartyId){
 					supplierpartyName = PartyHelper.getPartyName(delegator, supplierPartyId, false);
 				}
-				
+				customerDetails = EntityUtil.filterByCondition(orderDetails, EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS,"SHIP_TO_CUSTOMER"));
+				//Debug.log("supplierDetails=================="+supplierDetails);
+				if(customerDetails){
+					customerDetails=EntityUtil.getFirst(customerDetails)
+					customerPartyId=customerDetails.get("partyId");
+					//Debug.log("supplierPartyId=================="+supplierPartyId);
+				}
+				userAgencyType="";
+				//Debug.log("customerPartyId=================="+customerPartyId);
+				if(customerPartyId){
+				conditionList=[];
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, customerPartyId));
+				Condition = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				partyClassification = delegator.findList("PartyClassification", Condition, null,null,null, false);
+				}
+				if(partyClassification){
+					partyClassification=EntityUtil.getFirst(partyClassification);
+					userAgencyType=partyClassification.partyClassificationGroupId;
+				}
+				//Debug.log("userAgencyType=================="+userAgencyType);
 				//Debug.log("supplierpartyName=================="+supplierpartyName);
 				//Debug.log("orderId=================="+orderId);
 		}
@@ -322,6 +345,7 @@ for(productCategoryId in productCategoryIds){
 			tempMap.put("productName", singleCatProductsOrdersDetail.itemDescription);
 			tempMap.put("prodcatName", prodCatName);
 			tempMap.put("partyName", supplierpartyName);
+			tempMap.put("userAgencyType", userAgencyType);
 			tempMap.put("orderQty", orderQty);
 			/*tempMap.put("BdlWt", "");*/
 			tempMap.put("rate", rate);
