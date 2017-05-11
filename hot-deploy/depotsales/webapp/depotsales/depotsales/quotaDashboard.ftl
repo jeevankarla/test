@@ -18,7 +18,7 @@ $(document).ready(function(){
        changeYear: true,
        showButtonPanel: true,
         minDate: new Date("04-01-2016"),
-        maxDate: new Date("03-01-2017"),
+        maxDate: new Date("06-01-2017"),
        dateFormat: 'yy-mm',
        onClose: function(dateText, inst) { 
            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
