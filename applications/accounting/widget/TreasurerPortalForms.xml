@@ -221,9 +221,15 @@ under the License.
             </hyperlink>
         </field> 
          <field name="createNewOther" title="Other adjustment" widget-style="buttontext">
-        	<hyperlink target="EditFinAccountTrans" description="Other Adjustment" target-window="_BLANK"  also-hidden="false">
+        	<hyperlink target="EditFinAccountTrans" description="P&amp;L Adjustment" target-window="_BLANK"  also-hidden="false">
 	            <parameter param-name="finAccountId" from-field="finAccountId"/>                           			
 	            <parameter param-name="entryType" value="Other"/>
+            </hyperlink>
+        </field>
+        <field name="createNewAL" title="Other adjustment" widget-style="buttontext">
+        	<hyperlink target="EditFinAccountTrans" description="Asset &amp; liability transfer " target-window="_BLANK"  also-hidden="false">
+	            <parameter param-name="finAccountId" from-field="finAccountId"/>                           			
+	            <parameter param-name="entryType" value="AssetLiability"/>
             </hyperlink>
         </field>
         <field name="transactionView" widget-style="buttontext" >
@@ -576,7 +582,7 @@ under the License.
         
         <field name="glReconciliationId"><hidden value="${glReconciliationId}"></hidden></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        
+         <field name="isFormSubmitted"><hidden value="Y"/></field>
         <field name="finAccountId"><hidden value="${finAccountId}"/></field>
         <field name="statusId"><hidden value="FINACT_TRNS_CREATED"/></field>
         <field name="finAccountTransTypeId">
@@ -601,6 +607,7 @@ under the License.
                     description="${glReconciliationName}[[${glReconciliationId}] [${reconciledDate}] [${reconciledBalance}]]"/>
             </drop-down>
         </field> -->
+        <field name="instrumentNo" position="2"><text/></field>
         <field name="fromTransDate"  position="1"><date-time  type="timestamp" /></field>
         <field name="thruTransDate" position="2"><date-time type="timestamp" /></field>
        <!--  <field name="fromEntryDate" position="1"><date-time/></field>
@@ -871,7 +878,6 @@ under the License.
             <drop-down allow-empty="false">
             <option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>               
             </drop-down>
         </field>
          <field name="contraFinAccountId"  title="To Financial Account"  >
@@ -1202,7 +1208,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1266,7 +1271,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1336,7 +1340,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
          </field>
         <field name="costCenterId" title="RO">
@@ -1531,7 +1534,7 @@ under the License.
         <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
         	<drop-down allow-empty="true">
                <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">                   
-                   <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE,COMMON"/>
+                   <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE"/>
                </entity-options>
            </drop-down>
         </field>
@@ -1774,7 +1777,7 @@ under the License.
         <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
 	           	<drop-down allow-empty="true">
 	                  <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
-	                      <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE,COMMON"/>
+	                      <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE"/>
 	                  </entity-options>
 	              </drop-down>
         </field>
@@ -2410,7 +2413,7 @@ under the License.
             </drop-down>
         </field> -->
         <field position="1" name="partyIdFrom" title="Party Id" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
-        <field position="2" name="invoiceDate" event="onblur" action="javascript:setInvoiceDateAsDueDate();" required-field="true"><date-time/></field>   
+        <field position="2" name="invoiceDate" id-name="onlineFromDate" title="invoiceDate" event="onblur" action="javascript:setInvoiceDateAsDueDate();" required-field="true"><text size="17"/></field>   
         <field name="dueDate"  ><hidden ></hidden></field>     
         <!-- <field position="1" name="roleTypeId" >   
             <drop-down allow-empty="true">
@@ -2487,7 +2490,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type"  required-field="true">
@@ -2602,7 +2604,6 @@ under the License.
         	<drop-down allow-empty="true">
         	<option key="YARN_SALE" description="YARN SEGMENT"/>
         	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type" required-field="true">
@@ -2612,8 +2613,8 @@ under the License.
                     <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
                 </entity-options>
             </drop-down>
-        </field> -->                          
-        <field position="2" name="invoiceDate" required-field="true"><date-time/></field>
+        </field> -->   
+        <field position="2" name="invoiceDate" id-name="onlineFromDate" title="invoiceDate" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!-- <field use-when="invoice!=null" position="2" name="partyIdTo" entry-name="partyId" parameter-name="partyId" ><lookup target-form-name="LookupPartyName"/></field>
          -->
          <!-- <field position="1" name="roleTypeId" >
@@ -3076,9 +3077,23 @@ under the License.
         </field> 
     </form>
     <form name="FindCPFAccounts" title="" type="single" target="${targetRequest}" header-row-style="header-row" default-table-style="basic-table">
-        
-       
+      <field name="groupId"><text-find ignore-case="true"/></field> 
+      <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form> 
+    
+   
+      <form name="ListCPFPaymentGroups" type="list" separate-columns="true" list-name="paymentcpfList" paginate-target="findcpfAccounts" paginate="true"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <actions>
+        </actions>
+        <field name="finAccntTransGroupId"><display/></field>
+        <field name="amount"><display/></field>
+        <field name="issuingAuthority"><display/></field>
+        <field name="contraRefNum"><display/></field>
+        <field name="finAccntTransDate"><display/></field>
+        <field name="statusId"><display-entity entity-name="StatusItem" description="${description}"/></field>
+        
+    </form>
     
     <form name="FindBankGuaranteeReceived" type="single" target="BankGuaranteeReceipt" header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>

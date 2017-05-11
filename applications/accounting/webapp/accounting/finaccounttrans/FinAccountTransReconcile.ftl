@@ -32,6 +32,21 @@ function togglefinAccountTransId(master) {
     
 }
 
+function calculateTotal(){
+    var invoices = jQuery("#listFinAccTra :checkbox[name='finAccntTransIds']");
+ 	 total=0;
+    jQuery.each(invoices, function() {
+        if (jQuery(this).is(':checked')) {
+        	var domObj = $(this).parent().parent();
+        	var amtObj = $(domObj).find("#amt");
+        	var amt = $(amtObj).val();
+        	 total = (+total) + (+amt);
+        }
+        
+    });
+    jQuery('#finTransRunningTotal').html(total);
+}
+
 function getFinAccountTransRunningTotalAndBalances() {
 
     var isSingle = true;
@@ -93,6 +108,7 @@ function toggleFinAccntTransId(master) {
         jQuery.each(finTransactions, function() {
             this.checked = master.checked;
         });
+         calculateTotal()
     }
     
     function getFinAccountTransInfo() {
@@ -120,8 +136,37 @@ function toggleFinAccntTransId(master) {
         
         $(document).ready(function(){
         		$("#realisationDate_i18n").attr("required","required")
-        	}
-        ); 
+        		
+         });
+	function datePick()
+	{
+	$(document).ready(function(){
+	
+	//for date Picker 
+	makeDatePicker("remitDate","thruDate");
+	makeDatePicker("onlineFromDate","thruDate");
+	makeDatePicker("onlineThruDate","thruDate");
+	});
+
+	function makeDatePicker(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'yy-mm-dd',
+			changeMonth: true,
+			numberOfMonths: 1,
+			
+			maxDate:0,
+			onSelect: function( selectedDate ) {
+				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	}
+	function setFormParams(){
+		$("#onlineFromDate").datepicker( "option", "dateFormat", "yy-mm-dd 00:00:00");
+	}
+	
+}
+
+
 </script>
 
 <div class="screenlet screenlet-body">
@@ -132,6 +177,10 @@ function toggleFinAccntTransId(master) {
         <span class="label" id="showFinAccountTransRunningTotal"></span>
       </div>
     </#if>
+    <div align="center" >
+        <span class="label" font-size="25pt">Selected Total Amount :</span>
+        <span class="label" id="finTransRunningTotal"></span>
+     </div>
     <#--
    <form name="massCancelFinTrans" id="massCancelFinTrans"  method="post" action="setMassFinAccountTransStatus">
       <div align="right">
@@ -143,10 +192,10 @@ function toggleFinAccntTransId(master) {
      
    <form name="newFinTransReconsile" id="newFinTransReconsileId"  method="post" action="createReconsileToFinAccountTrans">
       <div align="right">
-      <b>Bank Realisation Date*<@htmlTemplate.renderDateTimeField name="realisationDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="realisationDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+     <b>Bank Realisation Date<input class='h4' type='text' readonly id='onlineFromDate' name='Bank Realisation Date' onmouseover='datePick()'/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
        <input type="submit" value="Create Reconcile"  class="buttontext" id="bulkReconsileId" name="bulkReconsileName" onclick="javascript:return appendFinTransToReconsileForm();" />
-        <input name="statusId" type="hidden" value="FINACT_TRNS_APPROVED"/>
+         <input name="statusId" type="hidden" value="FINACT_TRNS_APPROVED"/>
          <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
          <input name="organizationPartyId" type="hidden" value="${defaultOrganizationPartyId}"/>
        </div>
@@ -331,6 +380,7 @@ function toggleFinAccntTransId(master) {
              <td>${paymentRefNum?if_exists}</td>
              <#--<td>${finAccountTrans.entryDate?if_exists}</td>-->
             <td>${finAccountTrans.amount?if_exists}</td>
+            <input type = "hidden" name = "amt" id = "amt" value = "${finAccountTrans.amount}">
             <td>
               <#if finAccountTrans.paymentId?has_content>
                 <a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>">${finAccountTrans.paymentId}</a>
@@ -360,7 +410,7 @@ function toggleFinAccntTransId(master) {
               <#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
                 <td align="center" >
                 <#--><input id="finAccountTransId_${finAccountTrans_index}" name="_rowSubmit_o_${finAccountTrans_index}" type="checkbox" value="Y" onclick="javascript:getFinAccountTransRunningTotalAndBalances();"/>-->
-                <input type="checkbox" id="finAccountTransId_${finAccountTrans.finAccountTransId}" class="chkRecFinTransId" name="finAccntTransIds" value="${finAccountTrans.finAccountTransId}" />
+                <input type="checkbox" id="finAccountTransId_${finAccountTrans.finAccountTransId}" class="chkRecFinTransId" name="finAccntTransIds" value="${finAccountTrans.finAccountTransId}" onclick="javascript:calculateTotal()" />
                 </td>
               </#if>
           </tr>
