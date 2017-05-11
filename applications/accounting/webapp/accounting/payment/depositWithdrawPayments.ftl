@@ -105,13 +105,14 @@ document.depositWithdrawPaymentsForm.submit();
                         <td align="right">${uiLabelMap.CommonSelectAll}<input type="checkbox" id="checkAllPayments" name="checkAllPayments" onchange="javascript:togglePaymentId(this);"/></td>
                     </tr>
                     <#assign alt_row = false>
-                    <#list paymentList as payment>                    	
-                    	<#assign  isReceipt= Static["org.ofbiz.accounting.util.UtilAccounting"].isReceipt(payment?if_exists) >                    	
+                    <#list paymentList as payment>           
+                    	 <#assign paymentDetails = delegator.findOne("Payment", {"paymentId" : payment.paymentId}, true)>         	
+                    	<#assign  isReceipt= Static["org.ofbiz.accounting.util.UtilAccounting"].isReceipt(paymentDetails?if_exists) >                    	
                         <tr <#if alt_row> class="alternate-row"</#if>>
                             <td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>">${payment.paymentId}</a></td>
-                            <td>${payment.paymentTypeDesc?if_exists}</td>
-                            <td>${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</td>
-                            <td>${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}</td>
+                            <td>${payment.description?if_exists}</td>
+                            <td>${(payment.partyIdFrom)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</td>
+                            <td>${(payment.partyIdTo)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}</td>
                             <td>${(payment.issuingAuthority)!}</td>
                             
                             <td><@ofbizCurrency amount=payment.amount isoCode=payment.currencyUomId/></td>
