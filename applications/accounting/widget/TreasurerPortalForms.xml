@@ -2413,7 +2413,7 @@ under the License.
             </drop-down>
         </field> -->
         <field position="1" name="partyIdFrom" title="Party Id" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
-        <field position="2" name="invoiceDate" event="onblur" action="javascript:setInvoiceDateAsDueDate();" required-field="true"><date-time/></field>   
+        <field position="2" name="invoiceDate" id-name="onlineFromDate" title="invoiceDate" event="onblur" action="javascript:setInvoiceDateAsDueDate();" required-field="true"><text size="17"/></field>   
         <field name="dueDate"  ><hidden ></hidden></field>     
         <!-- <field position="1" name="roleTypeId" >   
             <drop-down allow-empty="true">
@@ -2613,8 +2613,8 @@ under the License.
                     <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
                 </entity-options>
             </drop-down>
-        </field> -->                          
-        <field position="2" name="invoiceDate" required-field="true"><date-time/></field>
+        </field> -->   
+        <field position="2" name="invoiceDate" id-name="onlineFromDate" title="invoiceDate" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!-- <field use-when="invoice!=null" position="2" name="partyIdTo" entry-name="partyId" parameter-name="partyId" ><lookup target-form-name="LookupPartyName"/></field>
          -->
          <!-- <field position="1" name="roleTypeId" >

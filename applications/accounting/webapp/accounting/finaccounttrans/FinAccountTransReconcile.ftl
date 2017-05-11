@@ -136,8 +136,37 @@ function toggleFinAccntTransId(master) {
         
         $(document).ready(function(){
         		$("#realisationDate_i18n").attr("required","required")
-        	}
-        ); 
+        		
+         });
+	function datePick()
+	{
+	$(document).ready(function(){
+	
+	//for date Picker 
+	makeDatePicker("remitDate","thruDate");
+	makeDatePicker("onlineFromDate","thruDate");
+	makeDatePicker("onlineThruDate","thruDate");
+	});
+
+	function makeDatePicker(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'yy-mm-dd',
+			changeMonth: true,
+			numberOfMonths: 1,
+			
+			maxDate:0,
+			onSelect: function( selectedDate ) {
+				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	}
+	function setFormParams(){
+		$("#onlineFromDate").datepicker( "option", "dateFormat", "yy-mm-dd 00:00:00");
+	}
+	
+}
+
+
 </script>
 
 <div class="screenlet screenlet-body">
@@ -163,10 +192,10 @@ function toggleFinAccntTransId(master) {
      
    <form name="newFinTransReconsile" id="newFinTransReconsileId"  method="post" action="createReconsileToFinAccountTrans">
       <div align="right">
-      <b>Bank Realisation Date*<@htmlTemplate.renderDateTimeField name="realisationDate" event="" action="" value="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="18" maxlength="22" id="realisationDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+     <b>Bank Realisation Date<input class='h4' type='text' readonly id='onlineFromDate' name='Bank Realisation Date' onmouseover='datePick()'/>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
        <input type="submit" value="Create Reconcile"  class="buttontext" id="bulkReconsileId" name="bulkReconsileName" onclick="javascript:return appendFinTransToReconsileForm();" />
-        <input name="statusId" type="hidden" value="FINACT_TRNS_APPROVED"/>
+         <input name="statusId" type="hidden" value="FINACT_TRNS_APPROVED"/>
          <input name="finAccountId" type="hidden" value="${parameters.finAccountId}"/>
          <input name="organizationPartyId" type="hidden" value="${defaultOrganizationPartyId}"/>
        </div>
