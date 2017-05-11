@@ -297,6 +297,7 @@
 				orderAdjustmentsList.push("OTHER_CHARGES");
 				orderAdjustmentsList.push("PACKING_FORWARDIG");
 				orderAdjustmentsList.push("PRICE_DISCOUNT");
+				orderAdjustmentsList.push("EXCISE_DUTY");
 				
 				
 			   	

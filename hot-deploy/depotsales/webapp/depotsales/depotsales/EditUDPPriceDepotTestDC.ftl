@@ -293,6 +293,7 @@ input[type=button]:hover {
 				orderAdjustmentsList.push("OTHER_CHARGES");
 				orderAdjustmentsList.push("PACKING_FORWARDIG");
 				orderAdjustmentsList.push("PRICE_DISCOUNT");
+				orderAdjustmentsList.push("EXCISE_DUTY");
 				
 				
 				dataRow["orderAdjustmentsList"] = orderAdjustmentsList;
@@ -1638,7 +1639,7 @@ input[type=button]:hover {
 		     totaladjValueTaxForEntry = totaladjValueTaxForEntry + parseFloat(adjValue);
 		    
 		   }//end
-		    if(id == "CESS_SALE_AMT" || id == "INSURANCE_CHGS_SALE_AMT" || id == "OTHER_CHARGES_SALE_AMT" || id == "PACKING_FORWARDIG_SALE_AMT" || id == "ROUNDING_CHARGES_SALE_AMT") {
+		    if(id == "CESS_SALE_AMT" || id == "INSURANCE_CHGS_SALE_AMT" || id == "OTHER_CHARGES_SALE_AMT" || id == "PACKING_FORWARDIG_SALE_AMT" || id == "ROUNDING_CHARGES_SALE_AMT" || id=="EXCISE_DUTY_SALE_AMT") {
 		    
 		    
 		     if(id != 'undefined' && id != null && id.length){
@@ -1789,7 +1790,7 @@ input[type=button]:hover {
 		    
 		    
 		   }//end
-		    if(id == "CESS_SALE_AMT" || id == "INSURANCE_CHGS_SALE_AMT" || id == "OTHER_CHARGES_SALE_AMT" || id == "PACKING_FORWARDIG_SALE_AMT" || id == "ROUNDING_CHARGES_SALE_AMT") {
+		    if(id == "CESS_SALE_AMT" || id == "INSURANCE_CHGS_SALE_AMT" || id == "OTHER_CHARGES_SALE_AMT" || id == "PACKING_FORWARDIG_SALE_AMT" || id == "ROUNDING_CHARGES_SALE_AMT" || id=="EXCISE_DUTY_SALE_AMT") {
 		    
 		    
 		     if(id != 'undefined' && id != null && id.length){
@@ -1919,7 +1920,7 @@ input[type=button]:hover {
 		    
 		  if(id == "CST_SALE_AMT" || id == "VAT_SALE_AMT" || id == "ENTRY_TAX_SALE_AMT" || id == "CST_SURCHARGE_SALE_AMT" || id == "VAT_SURCHARGE_SALE_AMT")  
 		    totTax = totTax + parseFloat(adjValueAmt);
-		  if(id == "CESS_SALE_AMT" || id == "INSURANCE_CHGS_SALE_AMT" || id == "OTHER_CHARGES_SALE_AMT" || id == "PACKING_FORWARDIG_SALE_AMT" || id == "ROUNDING_CHARGES_SALE_AMT")    
+		  if(id == "CESS_SALE_AMT" || id == "INSURANCE_CHGS_SALE_AMT" || id == "OTHER_CHARGES_SALE_AMT" || id == "PACKING_FORWARDIG_SALE_AMT" || id == "ROUNDING_CHARGES_SALE_AMT" || id=="EXCISE_DUTY_SALE_AMT")    
 		    totAdj = totAdj + parseFloat(adjValueAmt);
 		  if(id == "OTHER_DISCOUNT_SALE_AMT" || id == "PRICE_DISCOUNT_SALE_AMT" || id == "QTY_DISCOUNT_SALE_AMT" || id == "ROUNDING_OFF_SALE_AMT")     
 		    totDis = totDis + parseFloat(adjValueAmt);
