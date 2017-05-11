@@ -63,7 +63,7 @@ ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("parentTypeId",
 finAccountTypes=delegator.findList("FinAccountType",ecl,null,null,null,false);
 finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);
 conditionList =[];
-if(UtilValidate.isNotEmpty(parameters.finAccountTypeId)){
+if(UtilValidate.isEmpty(parameters.finAccountTypeId) || "ALL".equalsIgnoreCase(parameters.finAccountTypeId)){
 	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.IN,finAccountTypeIds)],EntityOperator.AND));
 }else{
 	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId)],EntityOperator.AND));
@@ -77,11 +77,13 @@ EntityCondition condition = EntityCondition.makeCondition(conditionList ,EntityO
 finAccountList=delegator.findList("FinAccount",condition,null,null,null,false);
 finAccountTypeIdsMap=[:];
 //EmployeeAdvDetails=[];
+finAccountDetailedMap=[:];
 finAccountTypeIdList=[];
 List detailTempList=FastList.newInstance();
 
 finAccntDetailedCsv=[];
-finAccountDetailedMap2=[:];
+finAccountDetailedMap=[:];
+Debug.log("finacctlist===="+finAccountList);
 finAccountList.each{finAccountTypeId->
 	List tempList=FastList.newInstance();
 	
@@ -214,6 +216,17 @@ finAccountList.each{finAccountTypeId->
 	
 	detailTempMap.list=DaywiseMap;
 	detailTempList.add(detailTempMap);
+	
+	if(UtilValidate.isEmpty(finAccountDetailedMap[finAccountTypeId.finAccountTypeId])){
+		finAccountDetailedMap[finAccountTypeId.finAccountTypeId]=detailTempList;
+		detailTempList=UtilMisc.sortMaps(detailTempList, UtilMisc.toList("Name"));
+	}else{
+		List existing = FastList.newInstance();
+		existing=finAccountDetailedMap[finAccountTypeId.finAccountTypeId];
+		existing.add(detailTempMap);
+		existing=UtilMisc.sortMaps(existing, UtilMisc.toList("Name"));
+		finAccountDetailedMap[finAccountTypeId.finAccountTypeId]=existing;
+	}
 	//EmployeeAdvDetails.add(detailTempList);
 	tempMap.currentDebit=currentDebit;
 	tempMap.currentCredit=currentCredit;
@@ -254,10 +267,10 @@ finAccountList.each{finAccountTypeId->
 }
 //finAccountDetailedMap2["finAccountTypeId"]=detailTempList;
 context.finAccountTypeIdsMap=finAccountTypeIdsMap;
-context.detailTempList=detailTempList
-
-tempListkj=finAccountTypeIdsMap.entrySet();
-Debug.log("detailTempList====="+detailTempList);
+context.finAccountDetailedMap=finAccountDetailedMap;
+//Debug.log("finAccountDetailedMap====="+finAccountDetailedMap.size());
+//context.detailTempList=detailTempList
+//Debug.log("finAccountTypeIdsMap====="+finAccountTypeIdsMap.size());
 context.finAccountTypeIdList=finAccountTypeIdList;
 context.finAccntDetailedCsv=finAccntDetailedCsv;
 //Debug.log("finAccountTypeIdList======================"+finAccountTypeIdList);
