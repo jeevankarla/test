@@ -638,8 +638,22 @@ financialAcctgTransList.each{ dayFinAccount ->
 			dayFinAccountMap["transactionDate"] = dayFinAccount.transactionDate;
 			dayFinAccountMap["paymentTransSequenceId"] = dayFinAccount.paymentTransSequenceId;
 			dayFinAccountMap["paymentId"] = dayFinAccount.paymentId;
+			if(UtilValidate.isEmpty(dayFinAccount.paymentId)){
+				dayFinAccountMap["paymentId"] = dayFinAccount.finAccountTransId;
+			}
+			
 			dayFinAccountMap["partyId"] = dayFinAccount.partyId;
-			partyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, dayFinAccount.partyId, false);
+			payment1 = delegator.findOne("Payment", [paymentId : dayFinAccount.paymentId], false);
+			partyIdVal=dayFinAccount.partyId;
+			if(UtilValidate.isNotEmpty(payment1)){
+				if (UtilAccounting.isReceipt(payment1)) {
+					partyIdVal=payment1.partyIdFrom;
+				}else{
+					partyIdVal=payment1.partyIdTo;
+				}
+				dayFinAccountMap["partyId"] = partyIdVal;
+			}
+			partyName = org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyIdVal, false);
 			dayFinAccountMap["partyName"] = partyName;
 			dayFinAccountMap["finAccountOwnerPartyId"] = dayFinAccount.finAccountOwnerPartyId;
 			dayFinAccountMap["finAccountPartyName"] = dayFinAccount.finAccountPartyName;

@@ -717,8 +717,10 @@ under the License.
         <field name="paymentTransSequenceId" title="Sequence Id"><display description="${paymentTransSequenceId}" /></field>
         <field name="transactionDate"><display/></field>
         <field name="paymentId"><display/></field>
+        <field name="description" title="Transaction Type"><display/></field>
         <field name="partyId"><display/></field>
         <field name="partyName"><display/></field>
+        <field name="instrumentNum"><display/></field>
         <!-- <field name="openingBalance"><display/></field> -->
         <field name="openingBalanceTot"><display/></field>
         <field name="debitAmount"><display/></field>
