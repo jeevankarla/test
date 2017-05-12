@@ -357,6 +357,7 @@ for(eachCustomer in customersList){
 		 if(shipmentId){
 			 shipmentList = delegator.findOne("Shipment",[shipmentId : shipmentId] , false);
 			 primaryOrderId = shipmentList.get("primaryOrderId");
+			 estimatedShipDate=shipmentList.get("estimatedShipDate");
 			 DstAddr = delegator.findOne("OrderAttribute",["orderId":primaryOrderId,"attrName":"DST_ADDR"],false);
 			 if(DstAddr){
 				 destAddr=DstAddr.get("attrValue");
@@ -387,8 +388,8 @@ for(eachCustomer in customersList){
 			 else
 			 tempMap.put("supplierInvoiceDate", "");
 			 }
-		 	stateName= dispatcher.runSync("getCustomerState", [partyId:eachCustomer, userLogin: userLogin]);
-			tempMap.put("stateName",stateName);
+		 	result= dispatcher.runSync("getCustomerState", [partyId:eachCustomer, userLogin: userLogin]);
+			tempMap.put("stateName",result.get("StateName"));
 			tempMap.put("sNo", sNo);
 	 		tempMap.put("ob", "nill");
 			tempMap.put("obValue", "nill");
