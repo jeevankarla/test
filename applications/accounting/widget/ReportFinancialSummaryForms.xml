@@ -714,6 +714,7 @@ under the License.
         <field name="closingBalance"><display/></field>
     </form>
     <form name="FinancialAccountTransForMonthCSV" type="list" list-name="dayFinAccountTransList" view-size="99999">
+        <field name="paymentTransSequenceId" title="Sequence Id"><display description="${paymentTransSequenceId}" /></field>
         <field name="transactionDate"><display/></field>
         <field name="paymentId"><display/></field>
         <field name="partyId"><display/></field>
