@@ -232,6 +232,8 @@ under the License.
                 <set field="tabButtonItem" value="FinAccountTrans"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="finAccountTransTypeId" from-field="parameters.finAccountTransTypeId"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/receivableInvoice.js" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/datePickerHelper.js" global="true"/> 
                 <set field="entryType" from-field="parameters.entryType"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <entity-condition entity-name="FinAccountType" list="finAccountTypelist">

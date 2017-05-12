@@ -109,6 +109,31 @@ function datepick()
 			maxDate:0,
 			numberOfMonths: 1});
 		$('#ui-datepicker-div').css('clip', 'auto');
+		$(document).ready(function(){
+	
+			//for date Picker 
+			makeDatePicker("remitDate","thruDate");
+			makeDatePicker("onlineFromDate","thruDate");
+			makeDatePicker("onlineThruDate","thruDate");
+			$('#ui-datepicker-div').css('clip', 'auto');
+	
+			});
+
+function makeDatePicker(fromDateId ,thruDateId){
+	$( "#"+fromDateId ).datepicker({
+			dateFormat:'yy-mm-dd',
+			changeMonth: true,
+			numberOfMonths: 1,
+			
+			maxDate:0,
+			onSelect: function( selectedDate ) {
+				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+				}
+			});
+		}
+function setFormParams(){
+		$("#onlineFromDate").datepicker( "option", "dateFormat", "yy-mm-dd 00:00:00");
+		}
 		
 	}
 	function paymentFieldsOnchange(){
@@ -312,7 +337,7 @@ function datepick()
     		<tr>
     			<input type="hidden" name="paymentGroupTypeId" id="paymentGroupTypeId" value="${roleTypeId?if_exists}">
     			<td><span class="label"> Amount:</span><input class='h3' type='text' id='payAmount' name='payAmount' readonly/></td>
-    			<td><span class="label"> Payment Date (<font color='red'>*</font>):</span><input class='h3' type='text' id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td>
+    			<td><span class="label"> Payment Date (<font color='red'>*</font>):</span><input class='h3' type='text' id='onlineFromDate' name='paymentDate' onmouseover='datepick()'/></td>
     			<#if security.hasEntityPermission("BATCHPAY", "_CREATE", session)>
     				<td><input id="submitButton" type="button"  onclick="javascript:processPayments(this);" value="Make Payment"/></td>
     			</#if>
