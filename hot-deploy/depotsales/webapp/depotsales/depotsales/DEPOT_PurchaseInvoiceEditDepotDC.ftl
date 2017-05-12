@@ -74,7 +74,7 @@ input[type=button]:hover {
 <#assign changeRowTitle = "Changes">                
 
 <#include "PurchaseInvoiceEditDepotInc.ftl"/>
-<#include "EditPurchaseInvoicePrice.ftl"/>
+<#include "EditPurchaseInvoicePriceDC.ftl"/>
 <div class="full">
 	
 		<div class="screenlet-title-bar">

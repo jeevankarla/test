@@ -558,7 +558,7 @@ under the License.
             <#list invoiceRemainigAdjItemList as eachList>
             
             <#--<#if eachList.invoiceItemTypeId != "PRICE_DISCOUNT" && eachList.invoiceItemTypeId != "EXCISE_DUTY">-->
-            <#if eachList.invoiceItemTypeId == "ENTRY_TAX" || eachList.invoiceItemTypeId == "EXCISE_DUTY">
+            <#if eachList.invoiceItemTypeId == "ENTRY_TAX" || eachList.invoiceItemTypeId == "EXCISE_DUTY" || eachList.invoiceItemTypeId == "FREIGHT_CHARGES">
             <#assign remainingAdjustMents = remainingAdjustMents+eachList.itemValue>
 			<fo:table-row white-space-collapse="false">
 				
