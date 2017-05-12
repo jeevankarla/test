@@ -3010,8 +3010,7 @@
 				<set field="glFiscalTypeId" default-value="ACTUAL" />
 				<set field="parameters.TRANSACTION_TIMEOUT" value="10000"/>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TransactionTotalsNew.groovy" />
-				<script
-					location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/newFinancialAccountTrans.groovy" />
 				<service service-name="basicGeneralLedgerPermissionCheck"
 					result-map="permResult">
 					<field-map field-name="mainAction" value="REPORTS" />

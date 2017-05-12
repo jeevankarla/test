@@ -113,14 +113,16 @@ ${setRequestAttribute("OUTPUT_FILENAME", "cashBookReport.pdf")}
 	                		<#assign closingBalance = (finAcctngDetails.get("closingBalance")?if_exists)/>
 	                		<#assign partyName = (finAcctngDetails.get("partyName")?if_exists)/>
 	                		<#if paymentId?has_content>
-                            <#assign paymentDetails = delegator.findOne("Payment", {"paymentId" : paymentId}, true)>
-                            <#assign  isReceipt= Static["org.ofbiz.accounting.util.UtilAccounting"].isReceipt(paymentDetails?if_exists) > 
-                            <#if isReceipt >
+                            <#assign paymentDetails = (delegator.findOne("Payment", {"paymentId" : paymentId}, true))?default("")>
+                            <#if paymentDetails?has_content>
+                            <#assign  isReceipt= Static["org.ofbiz.accounting.util.UtilAccounting"].isReceipt(paymentDetails?if_exists)?default("") > 
+                            <#if isReceipt?if_exists >
                             	<#assign partyId=paymentDetails.get("partyIdFrom")>	                                	
                             <#else>
                             	<#assign partyId=paymentDetails.get("partyIdTo")>
                             </#if>
                             	<#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, false)>
+                            </#if>
                             </#if>
 	                		<#assign description = (finAcctngDetails.get("description")?if_exists)/>
 	                		<#assign comments = (finAcctngDetails.get("comments")?if_exists)/>
