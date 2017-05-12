@@ -7099,7 +7099,7 @@
                                         	<html><html-template location="component://accounting/webapp/accounting/invoice/massPayments.ftl"/></html>
 											</platform-specific>
 											<platform-specific>
-                                            	<html><html-template location="component://accounting/webapp/accounting/payment/ListBulkPayments.ftl"/></html>
+                                            	<html><html-template location="component://accounting/webapp/accounting/payment/ListBulkChequesofPayments.ftl"/></html>
                                         	</platform-specific>
                                         </screenlet></decorator-section>
                                 </decorator-screen>
