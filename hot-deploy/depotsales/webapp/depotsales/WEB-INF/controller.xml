@@ -158,6 +158,10 @@
       </request-map>
     <request-map uri="DepotSalesOrderNew"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrderNew"/></request-map>
     <request-map uri="DepotSalesOrderNewDC"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrderNewDC"/></request-map>
+    
+    <request-map uri="InventorySalesOrder"><security https="true" auth="true"/><response name="success" type="view" value="InventorySalesOrder"/></request-map>
+     
+     
      
     <request-map uri="processDepotSalesOrder">
         <security https="true" auth="true"/>
@@ -3410,6 +3414,9 @@
     <view-map name="DepotSalesOrderNew" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotSalesOrderNew"/>
     
     <view-map name="DepotSalesOrderNewDC" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#DepotSalesOrderNewDC"/>
+    
+    <view-map name="InventorySalesOrder" type="screen" page="component://depotsales/widget/DyesAndChemicalsDepotSalesScreens.xml#InventorySalesOrder"/>
+    
     
     <view-map name="CottonBranchSalesOrder" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#CottonBranchSalesOrder"/>
     <view-map name="DyesSalesOrder" type="screen" page="component://depotsales/widget/DyesAndChemicalsScreens.xml#DyesSalesOrder"/>

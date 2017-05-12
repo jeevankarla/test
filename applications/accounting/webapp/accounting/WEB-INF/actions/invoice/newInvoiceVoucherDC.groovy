@@ -205,7 +205,7 @@ if(roID){
 	
 	invoiceRemainigAdjItemList = EntityUtil.filterByCondition(invoiceAdjItemList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY")));
 	
-	
+	Debug.log("invoiceRemainigAdjItemList=================="+invoiceRemainigAdjItemList);
 	
 	invoiceItemTypes = delegator.findList("InvoiceItemType", EntityCondition.makeCondition("parentTypeId", EntityOperator.IN, ["ADDITIONAL_CHARGES","DISCOUNTS"]), null, null, null, false);
 	invoiceItemTypeIdsList = EntityUtil.getFieldListFromEntityList(invoiceItemTypes, "invoiceItemTypeId", true);
@@ -219,6 +219,9 @@ if(roID){
 		if(invoiceRemainigAdj){
 			
 			adjType = invoiceRemainigAdj[0].invoiceItemTypeId;
+			
+			Debug.log("adjType=================="+adjType);
+			
 			
 			totAmt = 0;
 			tempMap = [:];
@@ -337,7 +340,7 @@ if(roID){
 			  }
 			  
 			  //if(eachItem.invoiceItemTypeId == "INVOICE_ITM_ADJ" || eachItem.invoiceItemTypeId == "PRICE_DISCOUNT" || eachItem.invoiceItemTypeId=="EXCISE_DUTY"){
-			  if(eachItem.invoiceItemTypeId!="CST_SALE" && eachItem.invoiceItemTypeId!="VAT_SALE" && eachItem.invoiceItemTypeId!="CST_SURCHARGE" && eachItem.invoiceItemTypeId!="VAT_SURCHARGE" && eachItem.invoiceItemTypeId!="ENTRY_TAX" && eachItem.invoiceItemTypeId!="EXCISE_DUTY"){
+			  if(eachItem.invoiceItemTypeId!="CST_SALE" && eachItem.invoiceItemTypeId!="VAT_SALE" && eachItem.invoiceItemTypeId!="CST_SURCHARGE" && eachItem.invoiceItemTypeId!="VAT_SURCHARGE" && eachItem.invoiceItemTypeId!="ENTRY_TAX" && eachItem.invoiceItemTypeId!="EXCISE_DUTY" && eachItem.invoiceItemTypeId!="FREIGHT_CHARGES"){
 				  
 				  unitPriceIncTax=unitPriceIncTax+(eachItem.amount/eachList.quantity);
 			 }

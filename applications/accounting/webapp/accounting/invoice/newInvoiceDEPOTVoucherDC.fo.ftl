@@ -511,14 +511,14 @@ under the License.
 		
             <#list invoiceRemainigAdjItemList as eachList>
 			<fo:table-row white-space-collapse="false">
-			 <#if eachList.invoiceItemTypeId == "ENTRY_TAX" || eachList.invoiceItemTypeId == "EXCISE_DUTY">
+			 <#if eachList.invoiceItemTypeId == "ENTRY_TAX" || eachList.invoiceItemTypeId == "EXCISE_DUTY" || eachList.invoiceItemTypeId == "FREIGHT_CHARGES">
 			<#--<#if eachList.invoiceItemTypeId != "ENTRY_TAX" && eachList.invoiceItemTypeId != "INVOICE_ITM_ADJ" && eachList.invoiceItemTypeId != "PRICE_DISCOUNT">-->
 			 <fo:table-cell >
 				<fo:block text-align="left"    font-size="10pt" >OTHER CHARGES</fo:block>
 				</fo:table-cell>
 				</#if>
 				<fo:table-cell >
-				<#if eachList.invoiceItemTypeId == "ENTRY_TAX" || eachList.invoiceItemTypeId == "EXCISE_DUTY">
+				<#if eachList.invoiceItemTypeId == "ENTRY_TAX" || eachList.invoiceItemTypeId == "EXCISE_DUTY" || eachList.invoiceItemTypeId == "FREIGHT_CHARGES">
 				<#--<#if eachList.invoiceItemTypeId != "ENTRY_TAX" && eachList.invoiceItemTypeId != "INVOICE_ITM_ADJ" && eachList.invoiceItemTypeId != "PRICE_DISCOUNT">-->
 				<#assign remainingAdjustMents = remainingAdjustMents+(eachList.itemValue)>
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.description?has_content>${eachList.description?if_exists}<#else>${eachList.invoiceItemTypeId?if_exists}</#if></fo:block>
@@ -532,7 +532,7 @@ under the License.
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>-->
 				<#--<#if eachList.invoiceItemTypeId != "ENTRY_TAX" && eachList.invoiceItemTypeId != "INVOICE_ITM_ADJ" && eachList.invoiceItemTypeId != "PRICE_DISCOUNT">-->
-				<#if eachList.invoiceItemTypeId == "ENTRY_TAX" || eachList.invoiceItemTypeId == "EXCISE_DUTY">
+				<#if eachList.invoiceItemTypeId == "ENTRY_TAX" || eachList.invoiceItemTypeId == "EXCISE_DUTY" || eachList.invoiceItemTypeId == "FREIGHT_CHARGES">
 				<fo:block text-align="right"    font-size="10pt" ><#if eachList.amount?has_content>${(eachList.itemValue)?string("#0.00")}</#if></fo:block>
 				</#if>
 				</fo:table-cell>

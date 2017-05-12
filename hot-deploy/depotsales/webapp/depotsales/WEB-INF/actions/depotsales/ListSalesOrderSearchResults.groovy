@@ -27,6 +27,7 @@
 	
 	partyId = userLogin.get("partyId");
 	
+	
 	salesChannel = parameters.salesChannelEnumId;
 	
 /*	if(UtilValidate.isNotEmpty(parameters.salesChannelEnumId)){
@@ -181,6 +182,8 @@
 	
 	vendorBasedOrderIds = EntityUtil.getFieldListFromEntityList(billFromVendorOrderRoles, "orderId", true);
 	orderHeader = EntityUtil.filterByCondition(orderHeader, EntityCondition.makeCondition("orderId", EntityOperator.IN, vendorBasedOrderIds));
+	
+	
 	
 	// orderId
 	// Delivery Date
@@ -525,6 +528,7 @@
 	context.orderPreferenceMap = orderPreferenceMap;
 	context.paymentSatusMap = paymentSatusMap;
  
+	context.orderList = orderList;
 	
 	/*sortedOrderMap =  [:]as TreeMap;
     for (eachList in orderList) {
