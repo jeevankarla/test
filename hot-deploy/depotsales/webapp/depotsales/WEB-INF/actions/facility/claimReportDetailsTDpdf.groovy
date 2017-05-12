@@ -35,17 +35,6 @@ claimFromDate=parameters.claimFromDateTD;
 claimThruDate=parameters.claimThruDateTD;
 geoId = parameters.geoId;
 branchId = parameters.branchId;
-rowiseTsPercentageMap=[:];
-hydRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2.5,"COIR_YARN",10, "OTHER",2.5,"serCharge",2);
-cmbRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
-kolRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
-kanRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
-vjyRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
-panRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
-gwhRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1.5,"COTTON",5,"COIR_YARN",10, "OTHER",5,"serCharge",1.25);
-varRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
-bhuRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
-rowiseTsPercentageMap= UtilMisc.toMap("INT1",varRoMap,"INT2",panRoMap,"INT3",kolRoMap,"INT4",cmbRoMap,"INT5",hydRoMap,"INT6",kanRoMap,"INT26",bhuRoMap,"INT28",gwhRoMap,"INT47",vjyRoMap);
 
 rounding = RoundingMode.HALF_UP;
 
@@ -260,6 +249,74 @@ if(reportTypeFlag=="BILL_WISE"){
 
 	generateSummaryReport(stateGeoIds);
 }
+
+def getSchemePercentage(customerId,productId,roid)
+{
+	schemePercentage=0;
+	rowiseTsPercentageMap=[:];
+	rowiseTsPercentageMap2=[:];
+	hydRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2.5,"COIR_YARN",10, "OTHER",2.5,"serCharge",2);
+	cmbRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+	kolRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+	kanRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+	vjyRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+	
+	panRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2.5,"COIR_YARN",10, "OTHER",2.5,"serCharge",2);
+	panRoMapHill=UtilMisc.toMap("JUTE_YARN",10,"SILK",1.5,"COTTON",2.5,"COIR_YARN",10, "OTHER",2.5,"serCharge",1.5);
+	
+	gwhRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1.5,"COTTON",5,"COIR_YARN",10, "OTHER",5,"serCharge",1.25);
+	varRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+	bhuRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
+	rowiseTsPercentageMap= UtilMisc.toMap("INT1",varRoMap,"INT2",panRoMap,"INT3",kolRoMap,"INT4",cmbRoMap,"INT5",hydRoMap,"INT6",kanRoMap,"INT26",bhuRoMap,"INT28",gwhRoMap,"INT47",vjyRoMap);
+	rowiseTsPercentageMap2= UtilMisc.toMap("INT2",panRoMapHill);
+	
+	resultMap=[:];
+	remoteAreasList=["534","535","550","552"];
+	hilliStatesList=["IN-JK","IN-HP"];
+	
+	product = delegator.findOne("Product",[productId : productId] , false);
+	productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
+	productCategoryId=productCategory.primaryParentCategoryId
+	
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,customerId));
+	conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId",EntityOperator.EQUALS,"BILLING_LOCATION"));
+	fieldsToSelect = ["stateProvinceGeoId","districtGeoId","partyId"] as Set;
+	partyContactDetails= delegator.findList("PartyContactDetailByPurpose",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
+	partyContactDetail = EntityUtil.getFirst(partyContactDetails);
+	stateGeoId=partyContactDetail.stateProvinceGeoId
+	distictGeoId=partyContactDetail.districtGeoId
+	
+	if(roid=="INT2"){
+		if(hilliStatesList.contains(stateGeoId) || remoteAreasList.contains(distictGeoId))
+		{
+			roSchemePertagesMap=rowiseTsPercentageMap2.get(roid);
+			schemePercentage=roSchemePertagesMap.get(productCategoryId)
+			servicePercentage=roSchemePertagesMap.get("serCharge")
+			if(UtilValidate.isEmpty(schemePercentage)){
+				schemePercentage=roSchemePertagesMap.get("OTHER")
+			}
+			resultMap.putAt("schemePercentage",schemePercentage)
+			resultMap.putAt("serviceChrgPer",servicePercentage)
+		}
+	}else{
+		roSchemePertagesMap=rowiseTsPercentageMap.get(roid);
+		schemePercentage=roSchemePertagesMap.get(productCategoryId)
+		servicePercentage=roSchemePertagesMap.get("serCharge")
+		if(UtilValidate.isEmpty(schemePercentage)){
+			schemePercentage=roSchemePertagesMap.get("OTHER")
+		}
+		resultMap.putAt("schemePercentage",schemePercentage)
+		resultMap.putAt("serviceChrgPer",servicePercentage)
+	}
+	
+	return resultMap;
+	
+}
+
+
+
+
 def generateBillWiseReport()
 {
 	indexD=1;
@@ -354,13 +411,10 @@ def generateBillWiseReport()
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
@@ -368,10 +422,8 @@ def generateBillWiseReport()
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
-				if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				}
+				
 				
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
@@ -501,13 +553,10 @@ def generateBillWiseReport()
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
@@ -515,10 +564,8 @@ def generateBillWiseReport()
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
-				if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				}
+				
 				
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
@@ -650,13 +697,10 @@ def generateBillWiseReport()
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
@@ -664,10 +708,8 @@ def generateBillWiseReport()
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
-				if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				}
+				
 				
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
@@ -799,13 +841,10 @@ def generateBillWiseReport()
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
@@ -813,10 +852,8 @@ def generateBillWiseReport()
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
-				if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				}
+				
 				
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
@@ -1061,13 +1098,10 @@ def generatePartyWiseReport()
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
@@ -1075,7 +1109,6 @@ def generatePartyWiseReport()
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
-				serviceChrgPercentage=roPercentagesMap.get("serCharge")
 				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				
 				invoiceValue=invoiceValue.add(invoiceAmount);
@@ -1206,13 +1239,10 @@ def generatePartyWiseReport()
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+			    result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
@@ -1220,7 +1250,6 @@ def generatePartyWiseReport()
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
 				
-				serviceChrgPercentage=roPercentagesMap.get("serCharge")
 				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
 				invoiceValue=invoiceValue.add(invoiceAmount);
@@ -1349,20 +1378,16 @@ def generatePartyWiseReport()
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
 				}else{
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
-				serviceChrgPercentage=roPercentagesMap.get("serCharge")
 				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
 				invoiceValue=invoiceValue.add(invoiceAmount);
@@ -1488,20 +1513,16 @@ def generatePartyWiseReport()
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
 				}else{
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
-				serviceChrgPercentage=roPercentagesMap.get("serCharge")
 				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
 				invoiceValue=invoiceValue.add(invoiceAmount);
@@ -1694,15 +1715,11 @@ def generateSummaryReport(stateGeoIds)
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				//}
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -1759,15 +1776,11 @@ def generateSummaryReport(stateGeoIds)
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				//}
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -1910,15 +1923,11 @@ def generateSummaryReport(stateGeoIds)
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				//}
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -1976,15 +1985,11 @@ def generateSummaryReport(stateGeoIds)
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				//}
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -2123,15 +2128,11 @@ def generateSummaryReport(stateGeoIds)
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				//}
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -2188,15 +2189,11 @@ def generateSummaryReport(stateGeoIds)
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				//}
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -2333,15 +2330,11 @@ def generateSummaryReport(stateGeoIds)
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 			//	if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 			//	}
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
@@ -2398,15 +2391,11 @@ def generateSummaryReport(stateGeoIds)
 			}
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
-				product = delegator.findOne("Product",[productId : invoice.productId] , false);
-				productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
-				roPercentagesMap=rowiseTsPercentageMap.get(invoice.partyIdFrom)
-				schemePercentage=roPercentagesMap.get(productCategory.primaryParentCategoryId)
-				if(schemePercentage==null){
-					schemePercentage=roPercentagesMap.get("OTHER")
-				}
+			    result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				schemePercentage=result.getAt("schemePercentage")
+				serviceChrgPercentage=result.getAt("serviceChrgPer")
+				
 				//if(mgpsInvoiceIds.contains(invoice.invoiceId)){
-					serviceChrgPercentage=roPercentagesMap.get("serCharge")
 					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				//}
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
