@@ -1970,10 +1970,24 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindDepotReimbursementBilling"/>
      </request-map>
-      <request-map uri="FindTenPerSubAndSerchrgReimbursementBilling">
+      <request-map uri="generateReimbursementBilling">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindTenPerSubAndSerchrgReimbursementBilling"/>
+        <response name="success" type="view" value="generateReimbursementBilling"/>
      </request-map>
+    
+      <request-map uri="createPeriodBilling">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createPeriodBilling"/>
+     </request-map>
+      <request-map uri="generateBilling">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="generateBilling"/>
+     </request-map>
+      <request-map uri="findBillingInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findBillingInvoice"/>
+     </request-map>
+     
      <request-map uri="createSchemeBillingTimePeriod">
         <security https="true" auth="true"/>
         <event type="groovy" path="component://depotsales/webapp/depotsales/WEB-INF/actions/facility/" invoke="createSchemeBillingTimePeriod.groovy"/>
@@ -1996,13 +2010,13 @@
     </request-map>
      <request-map uri="FindShipmentReimbursementBilling">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindTenPerSubAndSerchrgReimbursementBilling"/>
+        <response name="success" type="view" value="generateReimbursementBilling"/>
      </request-map>
      <request-map uri="createSchemeTimePeriod">
         <security auth="true" https="true"/>
         <event type="service" invoke="createSchemeTimePeriod"/>
-        <response name="success" type="view" value="FindTenPerSubAndSerchrgReimbursementBilling"/>
-        <response name="error" type="view" value="FindTenPerSubAndSerchrgReimbursementBilling"/>
+        <response name="success" type="view" value="generateReimbursementBilling"/>
+        <response name="error" type="view" value="generateReimbursementBilling"/>
     </request-map>
      <request-map uri="createDepotReimbursementBilling">
         <security https="true" auth="true"/>
@@ -3772,7 +3786,13 @@
     <view-map name="Rounding" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#Rounding"/>
     <view-map name="DepotReimbursement" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#DepotReimbursement"/>
     <view-map name="FindShipmentReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindShipmentReimbursementBilling"/>
-    <view-map name="FindTenPerSubAndSerchrgReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindTenPerSubAndSerchrgReimbursementBilling"/>
+    
+       
+    <view-map name="createPeriodBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#generateReimbursementBilling"/>
+    <view-map name="generateBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#generateBilling"/>
+    <view-map name="findBillingInvoice" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#findBillingInvoice"/>
+    
+    <view-map name="generateReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#generateReimbursementBilling"/>
     <view-map name="ProdConvBilling" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#ProdConvBilling"/>
     <view-map name="FindDepotReimbursementBilling" type="screen" page="component://depotsales/widget/DepotSalesReimbursement.xml#FindDepotReimbursementBilling"/>
 	<view-map name="DepotPurchaseInvoiceView" type="screen" page="component://depotsales/widget/DepotSalesScreens.xml#DepotPurchaseInvoiceView"/>
