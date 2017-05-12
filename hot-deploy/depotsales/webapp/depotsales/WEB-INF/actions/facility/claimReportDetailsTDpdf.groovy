@@ -279,7 +279,19 @@ def getSchemePercentage(customerId,productId,roid)
 	
 }
 
-
+def getTotalFrightAmount(shipmentId)  
+{
+	BigDecimal actualFrightAmount= BigDecimal.ZERO;
+	conditionList.clear();
+	conditionList.add(EntityCondition.makeCondition("shipmentId",EntityOperator.EQUALS,shipmentId));
+	fieldsToSelect = ["receiptAmount"] as Set;
+	frightAmountDetailsList= delegator.findList("ShipmentReimbursement",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
+	for(eachReceipt in frightAmountDetailsList)
+	{
+		actualFrightAmount=actualFrightAmount.add(eachReceipt.receiptAmount)
+	}
+	return actualFrightAmount
+}
 
 
 def generateBillWiseReport()
@@ -360,11 +372,9 @@ def generateBillWiseReport()
 			partyId=invoice.partyId
 			invoiceQty=invoiceQty.add(invoice.quantity);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			
+            actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
+			
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
@@ -495,11 +505,7 @@ def generateBillWiseReport()
 			partyId=invoice.partyId
 			invoiceQty=invoiceQty.add(invoice.quantity);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
@@ -632,11 +638,7 @@ def generateBillWiseReport()
 			partyId=invoice.partyId
 			invoiceQty=invoiceQty.add(invoice.quantity);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
@@ -769,11 +771,7 @@ def generateBillWiseReport()
 			partyId=invoice.partyId
 			invoiceQty=invoiceQty.add(invoice.quantity);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
@@ -1010,11 +1008,7 @@ def generatePartyWiseReport()
 			invoiceQty=invoiceQty.add(invoice.quantity);
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
@@ -1145,11 +1139,7 @@ def generatePartyWiseReport()
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 			    result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
@@ -1277,11 +1267,7 @@ def generatePartyWiseReport()
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
@@ -1405,11 +1391,7 @@ def generatePartyWiseReport()
 			invoiceQty=invoiceQty.add(invoice.quantity);
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
@@ -1590,11 +1572,7 @@ def generateSummaryReport(stateGeoIds)
 			invoiceQty=invoiceQty.add(invoice.quantity);
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
@@ -1652,11 +1630,7 @@ def generateSummaryReport(stateGeoIds)
 			invoiceQty=invoiceQty.add(invoice.quantity);
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
@@ -1792,11 +1766,7 @@ def generateSummaryReport(stateGeoIds)
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
@@ -1854,11 +1824,7 @@ def generateSummaryReport(stateGeoIds)
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
@@ -1990,11 +1956,7 @@ def generateSummaryReport(stateGeoIds)
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
@@ -2051,11 +2013,7 @@ def generateSummaryReport(stateGeoIds)
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
@@ -2185,11 +2143,7 @@ def generateSummaryReport(stateGeoIds)
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
@@ -2246,11 +2200,7 @@ def generateSummaryReport(stateGeoIds)
 			//invoiceAmount = InvoiceWorker.getInvoiceTotal(delegator,invoice.invoiceId);
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			
-			shipment = delegator.findOne("Shipment",[shipmentId : invoice.shipmentId] , false);
-			actulFrgtAmt=0
-			if(UtilValidate.isNotEmpty(shipment.estimatedShipCost)){
-				actulFrgtAmt=shipment.estimatedShipCost
-			}
+		 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 			    result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
