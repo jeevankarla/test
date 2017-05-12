@@ -2280,8 +2280,8 @@
         	<link target="FindDepotReimbursementBilling">
         	</link>
         </menu-item>
-         <menu-item name="FindTenPerSubAndSerchrgReimbursementBilling" title="Generate Ten Per And Ser charg Reimbursement Bill">
-        	<link target="FindTenPerSubAndSerchrgReimbursementBilling">
+         <menu-item name="generateReimbursementBilling" title="Generate Reimbursement Bill">
+         	<link target="generateReimbursementBilling">
         	</link>
         </menu-item>
         <menu-item name="ReimbursementReports" title="Reimbursement Reports">
@@ -2290,6 +2290,22 @@
         </menu-item>
         
       </menu>
+      
+      <menu name="billingSubTab" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem8">
+       		<menu-item name="createPeriodBilling" title="Create Billing Period">
+            	<link target="createPeriodBilling">
+            	</link>
+        	</menu-item>
+        	<menu-item name="generateBilling1" title="Generate Billing">
+            	<link target="generateBilling">
+            	</link>
+        	</menu-item>
+        	<menu-item name="findBillingInvoice" title="Find Reimbursement Bills">
+            	<link target="findBillingInvoice">
+            	</link>
+        	</menu-item>
+      </menu>
+    
        <menu name="BillingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem8">
        	<menu-item name="prodConvBilling" title="Billing Generation">
         	<link target="ProdConvBilling"/>

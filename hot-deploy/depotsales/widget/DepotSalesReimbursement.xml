@@ -291,21 +291,26 @@
                </decorator-screen>    
             </widgets>
         </section>
-    </screen>
-    <screen name="FindTenPerSubAndSerchrgReimbursementBilling">
+    </screen> 
+    <screen name="generateReimbursementBilling">
 		<section>
 			<actions>
-				<set field="titleProperty" value="Billing Period" />
+				<set field="titleProperty" value="Create New Billing Period" />
 				<set field="tabButtonItem" value="ShippingReimbursement" />
-				<set field="tabButtonItem2" value="FindTenPerSubAndSerchrgReimbursementBilling" />
+				<set field="tabButtonItem2" value="createPeriodBilling" />
+				<set field="tabButtonItem3" value="createPeriodBilling" />
+				<set field="screenFlag" value="createPeriodBilling" />
+				<set field="layoutSettings.javaScripts[]" value="/depotsales/webapp/depotsales/depotsales/reimbursementBilling.js" global="true"/>
 				<script location="component:/depotsales/webapp/depotsales/WEB-INF/actions/depotsales/generateBillForTenPerAndSerchrg.groovy"/>
 			</actions>
 			<widgets>
 				<decorator-screen name="DepotSalesCommonDecorator"
 					location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="body">
+					<decorator-section name="body"> 
 						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
 							name="ReimbursementTabBar" />
+							<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="billingSubTab" />
 						<section>
 							<widgets>
 								<platform-specific>
@@ -321,6 +326,109 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="createPeriodBilling">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Create New Billing Period" />
+				<set field="tabButtonItem" value="ShippingReimbursement" />
+				<set field="tabButtonItem2" value="generateReimbursementBilling" />
+				<set field="tabButtonItem3" value="createPeriodBilling" />
+				<set field="screenFlag" value="createPeriodBilling" />
+				<script location="component:/depotsales/webapp/depotsales/WEB-INF/actions/depotsales/generateBillForTenPerAndSerchrg.groovy"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body"> 
+						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="ReimbursementTabBar" />
+							<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="billingSubTab" />
+						<section>
+							<widgets>
+								<platform-specific>
+									 <html>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/generateBillForTenPerAndSerchrg.ftl" />
+									</html>
+								</platform-specific>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	  
+	<screen name="generateBilling">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Generate Billing for Period" />
+				<set field="tabButtonItem" value="ShippingReimbursement" />
+				<set field="tabButtonItem2" value="generateReimbursementBilling" />
+				<set field="tabButtonItem3" value="generateBilling1" />
+				<set field="screenFlag" value="generateBilling" />
+				<script location="component:/depotsales/webapp/depotsales/WEB-INF/actions/depotsales/generateBillForTenPerAndSerchrg.groovy"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body"> 
+						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="ReimbursementTabBar" />
+							<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="billingSubTab" />
+						<section>
+							<widgets>
+								<platform-specific>
+									 <html>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/generateBillForTenPerAndSerchrg.ftl" />
+									</html>
+								</platform-specific>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="findBillingInvoice">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Find Reimbursement Bills" />
+				<set field="tabButtonItem" value="ShippingReimbursement" />
+				<set field="tabButtonItem2" value="generateReimbursementBilling" />
+				<set field="tabButtonItem3" value="findBillingInvoice" />
+				<set field="screenFlag" value="findBillingInvoice" />
+				<script location="component:/depotsales/webapp/depotsales/WEB-INF/actions/depotsales/generateBillForTenPerAndSerchrg.groovy"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="DepotSalesCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body"> 
+						<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="ReimbursementTabBar" />
+							<include-menu location="component://depotsales/widget/DepotSalesMenus.xml"
+							name="billingSubTab" />
+						<section>
+							<widgets>
+								<platform-specific>
+									 <html>
+										<html-template
+											location="component://depotsales/webapp/depotsales/depotsales/generateBillForTenPerAndSerchrg.ftl" />
+									</html>
+								</platform-specific>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
     <screen name="depotReimburcentSummaryReportPDF">
         <section>
             <actions>

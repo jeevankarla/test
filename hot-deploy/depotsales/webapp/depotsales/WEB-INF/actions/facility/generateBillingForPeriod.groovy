@@ -76,7 +76,6 @@ roPartIds.each{ eachRo ->
 	}
 	partyIdToList.add(eachRo);
 }
-
 boolean beganTransaction = false;
 try {
 	beganTransaction = TransactionUtil.begin();
@@ -137,7 +136,6 @@ try {
 		request.setAttribute("_ERROR_MESSAGE_","Error while creating invoicItem For Ten Percent subsidy item");
 		return "error";
 	}
-	
 	Map<String, Object> inputItem2 = UtilMisc.toMap("userLogin", userLogin)
 	inputItem2.put("invoiceId", invoiceId)
 	inputItem2.put("invoiceItemTypeId","SER_CHRG_REMB");

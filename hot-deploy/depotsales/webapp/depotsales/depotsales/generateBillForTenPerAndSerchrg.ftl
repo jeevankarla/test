@@ -1,6 +1,3 @@
-
-<input type="hidden" name="partyClassificationGroupId" id="partyClassificationGroupId" value="${partyClassificationGroupId}">
-
 <script type="application/javascript">
      var billingListOpen;
      var billingListClose;
@@ -45,7 +42,7 @@
                 optionList2 += "<option value = " + innerList['value'] + " >" +innerList['label']+" </option>";          			
       		}//end of main list2 for loop
       	}
-      	$("#billingPeriod").html(optionList);
+      	//$("#billingPeriod").html(optionList);
       	$("#findbillingPeriod").html(optionList2);
 	});
     function generateBillingForPeriod()
@@ -245,24 +242,32 @@
       	$("#"+periodId).html(optionList);
     }
 </script>
+
+
+
+<input type="hidden" name="partyClassificationGroupId" id="partyClassificationGroupId" value="${partyClassificationGroupId}">
+
+
 <form name="updateForm" id="updateForm"   method="post"  action="createOrUpdateWeaversPartyClassification"> </form>
  
+<#if screenFlag=="createPeriodBilling">
 <form name="tenPerBillingForm" id="tenPerBillingForm"   method="post">
      <table id="coreTable" class="basic-table" cellspacing="0">
        <thead>
            <tr class="header-row-2">
 	          <td align="center"><h3>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;CREATE NEW PERIOD FOR BILLING</h3></td>
-	          <td align="center"><h3>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;GENERATE BILLING FOR PERIODS </h3></td>
-	          <td align="center"><h3>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;FIND REIMBURSEMENT INVOICES </h3></td>
 	          <td> &#160;</td>
 	        </tr>
 		</thead>
      <tbody>
         <tr>
-			<td><b>Billing Type:</b> &#160; &#160;<select name="periodTypeId_create" id="periodTypeId_create">  <option value =""></option> 
-																					<option value ="TEN_SUB_REIMB_PRD">Ten% And Service Reimbursement</option> 
-																				    <option value ="DEP_SHIP_REIMB_PRD"> Depot And Shipment Reimbursement</option>
-																										</select>  </td>
+			<td><b>Billing Type:</b> &#160; &#160;
+				<select name="periodTypeId_create" id="periodTypeId_create">
+					<option value =""></option> 
+					<option value ="TEN_SUB_REIMB_PRD">Ten% And Service Reimbursement</option> 
+					<option value ="DEP_SHIP_REIMB_PRD"> Depot And Shipment Reimbursement</option>
+				</select> 
+			</td>
 			<td >&#160;</td>
 			<td >&#160;</td>
 		</tr>
@@ -273,10 +278,97 @@
 		</tr>
 		<tr>
 		  	<td ><b>From Date :</b>&#160; &#160;&#160; <input type="text" name="fromDate" id="fromDate" size="18" maxlength="40"   /></td> 
+		</tr>
+		<tr>
+		  	<td ><b>To Date :</b>&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160; <input type="text" name="toDate" id="toDate" size="18" maxlength="40"   /></td> 
+		</tr>
+		<tr>
+		  	<td ></td>
+		  	 
+		</tr>
+		<tr>
+		  	<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<input type="button" name="create" value="create" onClick="javascript:createSchemeTimePeriod();"/></td>
+		</tr>
+		<tr>
+			<td> &#160;</td>
+			<td> &#160;</td>
+			<td> &#160;</td>
+        </tr>
+       
+     	<tr>
+     		<td> <div align='center' name ='responseMsg' id='responseMsg' style="display:none"><h1 style="font-color:Green">Billing Period Updated Successfully..<h1> </div> </td>
+			<td> </td>
+     		<td> </td>
+     	</tr>
+      </tbody>
+    </table>
+  </form>
+</#if>
+
+<#if screenFlag=="generateBilling">
+<form name="generateBillingForm" id="generateBillingForm"   method="post">
+     <table id="coreTable" class="basic-table" cellspacing="0">
+       <thead>
+           <tr class="header-row-2">
+	          <td align="center"><h3>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;GENERATE BILLING FOR PERIODS </h3></td>
+	          <td> &#160;</td>
+	        </tr>
+		</thead>
+     <tbody>
+        
+		
+		<tr>
 		  	<td><b>Billing Type:</b> &#160; &#160;<select name="periodTypeId_generate" id="periodTypeId_generate" onChange="javascript:getActiveBillingPeriods(this);">  <option value =""></option> 
 																					<option value ="TEN_SUB_REIMB_PRD">Ten% And Service Reimbursement</option> 
 																				    <option value ="DEP_SHIP_REIMB_PRD"> Depot And Shipment Reimbursement</option>
 																										</select>  </td>
+		</tr>
+		<tr>
+		  	<td ><b>Billing Period</b>
+				<select name="billingPeriod" id="billingPeriod">
+				</select>
+			</td>
+		</tr>
+		<tr>
+		  	<td ></td>
+		  	 
+		</tr>
+		<tr>
+		  	<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<input  type="button" name="GenerateBilling" value="Generate Billing" onClick="javascript:generateBillingForPeriod();"/></td>
+		</tr>
+		<tr>
+			<td> &#160;</td>
+			<td> &#160;</td>
+			<td> &#160;</td>
+        </tr>
+       
+     	<tr>
+     		<td> <div align='center' name ='responseMsg1' id='responseMsg1' style="display:none"><h1 style="font-color:Green">Billing Successfully Generated For the Slected Period..<h1> </div> </td>
+     		<td> </td>
+     		
+     		<td> </td>
+     	</tr>
+      	
+      </tbody>
+    </table>
+  </form>
+  </#if>
+  
+  
+  
+  <#if screenFlag=="findBillingInvoice">
+  <form name="findInvoices" id="findInvoices"   method="post">
+     <table id="coreTable" class="basic-table" cellspacing="0">
+       <thead>
+           <tr class="header-row-2">
+	          <td align="center"><h3>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;FIND REIMBURSEMENT INVOICES </h3></td>
+	          <td> &#160;</td>
+	        </tr>
+		</thead>
+     <tbody>
+        
+		
+		<tr>
 			
 			<td><b>Billing Type:</b> &#160; &#160;<select name="periodTypeId_find" id="periodTypeId_find" onChange="javascript:getActiveBillingPeriods(this);">  <option value =""></option> 
 																					<option value ="TEN_SUB_REIMB_PRD">Ten% And Service Reimbursement</option> 
@@ -284,11 +376,6 @@
 																										</select>  </td>
 		</tr>
 		<tr>
-		  	<td ><b>To Date :</b>&#160;&#160;&#160;&#160;&#160;&#160; &#160;&#160; <input type="text" name="toDate" id="toDate" size="18" maxlength="40"   /></td> 
-		  	<td ><b>Billing Period</b>
-				<select name="billingPeriod" id="billingPeriod">
-				</select>
-			</td>
 			<td ><b>Billing Period</b>
 				<select name="findbillingPeriod" id="findbillingPeriod">
 				</select>
@@ -299,8 +386,6 @@
 		  	 
 		</tr>
 		<tr>
-		  	<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<input type="button" name="create" value="create" onClick="javascript:createSchemeTimePeriod();"/></td>
-		  	<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<input  type="button" name="GenerateBilling" value="Generate Billing" onClick="javascript:generateBillingForPeriod();"/></td>
 		  	<td>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<input  type="button" name="find" value="find" onClick="javascript:getInvoicesForForPeriod();"/></td>
 		</tr>
 		<tr>
@@ -309,29 +394,21 @@
 			<td> &#160;</td>
         </tr>
        
-     	<tr>
-     		<td> </td>
-     		<td> <div align='center' name ='displayMsg' id='pastDues_spinner'/> </td>
-     		<td> </td>
-     	</tr>
-     	<tr>
-     		<td> </td>
-     		<td> <div align='center' name ='responseMsg' id='responseMsg' style="display:none"><h1 style="font-color:Green">Billing Period Updated Successfully..<h1> </div> </td>
-     		<td> </td>
-     	</tr>
-     	<tr>
-     		<td> </td>
-     		<td> <div align='center' name ='responseMsg1' id='responseMsg1' style="display:none"><h1 style="font-color:Green">Billing Successfully Generated For the Slected Period..<h1> </div> </td>
-     		<td> </td>
-     	</tr>
       	<tr>
-     		<td> </td>
+     		
      		<td> <div align='center' name ='responseMsg2' id='responseMsg2' style="display:none"><h1 style="font-color:Green">Invoice Already Generated for Selected Period..<h1> </div> </td>
+     		<td> </td>
      		<td> </td>
      	</tr>
       </tbody>
     </table>
   </form>
+  
+ </#if> 
+  
+<div align='center' name ='displayMsg' id='pastDues_spinner'>
+
+</div> 
 
 <div id="displayInvoiceList">
 
