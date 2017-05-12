@@ -141,6 +141,11 @@ under the License.
 					             <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false"><#if orderList.get("PurunitPrice")?has_content>${orderList.get("PurunitPrice")?if_exists?string("#0.00")}${orderList.get("Uom")?if_exists}<#else>${"0.00"}</#if></fo:block>
 					            	<fo:block  keep-together="always" text-align="right" font-size="9pt" white-space-collapse="false"><#if orderList.get("Uom") == "/Bale">${orderList.get("baleQuantity")*40}(Bundles)<#elseif orderList.get("Uom") == "/Half-Bale">${orderList.get("baleQuantity")*20}(Bundles)<#elseif orderList.get("Uom") == "/Bundle">${orderList.get("baleQuantity")}(Bundles)</#if></fo:block> 
+						        <#if orderList.get("Uom") == "/Bundle">
+   					            <#if orderList.get("bundleUnitPrice") != 0>
+   					            	<fo:block   text-align="right" font-size="9pt" white-space-collapse="false">${orderList.get("bundleUnitPrice")?if_exists}(Bundle Price)</fo:block>
+   					            </#if>
+   					            </#if>
 						         </fo:table-cell>
 					            <fo:table-cell border-style="solid">
 					            	<fo:block  keep-together="always" text-align="left" font-size="11pt" white-space-collapse="false"> </fo:block>
