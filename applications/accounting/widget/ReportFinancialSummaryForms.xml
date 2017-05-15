@@ -95,9 +95,7 @@ under the License.
        	<field name="purposeTypeId" title="Segment" id-name="purposeTypeId">       		
         	<drop-down allow-empty="true">
        			<option key="All" description="All"/>
-                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-                     <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
-                 </entity-options>
+                 <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
 	        </drop-down>
        	</field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
@@ -789,9 +787,7 @@ under the License.
        	<field name="segment" title="Segment" id-name="Segment">       		
         	<drop-down allow-empty="true">
        			<option key="All" description="All"/>
-                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-                     <entity-constraint name="enumCode" operator="in" value="DIES_AND_CHEM_SALE,YARN_SALE"/>
-                 </entity-options>
+                <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
 	        </drop-down>
        	</field>
         <field name="skipDecorator"><hidden/></field>

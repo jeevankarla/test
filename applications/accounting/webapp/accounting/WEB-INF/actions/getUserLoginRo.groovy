@@ -43,6 +43,20 @@ else{
 	}
 }
 
+PartyAcctgPreferenceSegmentList = [];
+segmentconditionList = [];
+if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){
+	segmentconditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, parameters.ownerPartyId));
+}
+PartyAcctgPreferenceSegmentList = delegator.findList("PartyAcctgPreferenceSegment", EntityCondition.makeCondition(segmentconditionList,EntityOperator.AND),null, null, null, false);
+
+segmentIds=EntityUtil.getFieldListFromEntityList(PartyAcctgPreferenceSegmentList, "segmentId", true);
+enumconditionList = [];
+segmentList = [];
+enumconditionList.add(EntityCondition.makeCondition("enumId", EntityOperator.IN, segmentIds));
+segmentList = delegator.findList("Enumeration", EntityCondition.makeCondition(enumconditionList,EntityOperator.AND),null, null, null, false);
+context.segmentList=segmentList;
+
 orgPartyIdList = [];
 conditionList.clear();
 if(UtilValidate.isNotEmpty(parameters.ownerPartyId)){

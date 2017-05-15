@@ -398,10 +398,10 @@ function reportTypeChangeFunc() {
 				  	  </td>
                <td width="30%">Segment 
 				  	   <select name="segmentId" id="segmentId" >
-				  	  <option value="ALL">All</option>
-				  	  <option value="YARN_SALE">YARN SEGMENT</option>
-				  	  <option value="DIES_AND_CHEM_SALE">DIES AND CHEM SEGMENT</option>
-				  	  <option value="COMMON">COMMON</option>
+				  	    	 <option value="ALL">All</option>
+				  	       <#list segmentList as seg> 
+								<option value='${seg.description?if_exists}'>${seg.description?if_exists}</option>
+	          		   		</#list>
                </select>
 				  	  </td>
 				  	  <td width="30%">RO Selection
@@ -438,10 +438,10 @@ function reportTypeChangeFunc() {
 				  	  </td>
                <td width="30%">Segment
 				  	  <select name="segmentId" id="segmentId" >
-				  	  <option value="ALL">All</option>
-				  	  <option value="YARN_SALE">YARN SEGMENT</option>
-				  	  <option value="DIES_AND_CHEM_SALE">DIES AND CHEM SEGMENT</option>
-				  	  <option value="COMMON">COMMON</option>
+				  	   <option value="ALL">All</option>
+				  	       <#list segmentList as seg> 
+								<option value='${seg.description?if_exists}'>${seg.description?if_exists}</option>
+	          		   		</#list>
                </select>
 				  	  </td>
 				  	  <td width="30%">RO Selection

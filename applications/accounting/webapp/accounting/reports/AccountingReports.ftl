@@ -388,12 +388,10 @@ function reportTypeChangeFunc() {
  			<td  width="20">Segment
  			  	  	<select name='segment' id ="segment" onchange="javascript:setOrgPartyId();">	
  			  	  			<option value=""></option>	
- 			  	  			<option value="All">All</option>
- 			  	  			<option value="DIES_AND_CHEM_SALE">Dies And Chemicals Segment</option>
- 			  	  			<option value="YARN_SALE">Yarn Segment</option>
- 						<#list segmentList as segment>	
- 							<option value='${segment.enumId}'>${segment.description?if_exists}</option>
-           		   		</#list>
+ 			  	  			<option value="ALL">All</option>
+				  	        <#list segmentList as seg> 
+								<option value='${seg.description?if_exists}'>${seg.description?if_exists}</option>
+	          		   		</#list>
  				 	</select>
  			  	  </td>
           	</tr>      	   	      	                 

@@ -238,9 +238,7 @@ under the License.
         </field>
         <field name="purposeTypeId">
         	<drop-down  allow-empty="true">
-               <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">                   
-                   <entity-constraint name="enumCode" operator="in" value="DIES_AND_CHEM_SALE,YARN_SALE"/>
-               </entity-options>
+             <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
             </drop-down>
         </field>
         <field name="RO" id-name="organizationPartyId" parameter-name="partyIdFrom" event="onchange" action="javascript:getBOsForRO();" >
@@ -786,9 +784,7 @@ under the License.
         </field>
         <field name="purposeTypeId">
         	<drop-down current="selected" allow-empty="false">
-               <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">                   
-                   <entity-constraint name="enumCode" operator="in" value="COMMON,DIES_AND_CHEM_SALE,YARN_SALE"/>
-               </entity-options>
+              <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
             </drop-down>
         </field>
         <field name="costCenterId">

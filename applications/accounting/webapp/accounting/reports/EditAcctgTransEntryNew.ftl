@@ -361,9 +361,10 @@ under the License.
 							
 			               <td>							
 							  <select name="purposeTypeId" id="purposeTypeId">
-						          <option value='COMMON'>COMMON</option>
-						          <option value='DIES_AND_CHEM_SALE'>DYES AND CHEMICALS SEGMENT</option>
-						          <option value='YARN_SALE'>YARN SEGMENT</option>
+						          <option value="ALL">All</option>
+				  	        <#list segmentList as seg> 
+								<option value='${seg.description?if_exists}'>${seg.description?if_exists}</option>
+	          		   		</#list>
 							  </select> 							     
 				          </td>
 			               <td>
