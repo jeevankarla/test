@@ -238,7 +238,7 @@ under the License.
         </field>
         <field name="purposeTypeId">
         	<drop-down  allow-empty="true">
-             <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+             <list-options key-name="enumId" list-name="segmentList" description="${description}"/>
             </drop-down>
         </field>
         <field name="RO" id-name="organizationPartyId" parameter-name="partyIdFrom" event="onchange" action="javascript:getBOsForRO();" >
@@ -784,7 +784,7 @@ under the License.
         </field>
         <field name="purposeTypeId">
         	<drop-down current="selected" allow-empty="false">
-              <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+              <list-options key-name="enumId" list-name="segmentList" description="${description}"/>
             </drop-down>
         </field>
         <field name="costCenterId">

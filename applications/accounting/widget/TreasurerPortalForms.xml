@@ -876,7 +876,7 @@ under the License.
          <field name="statusId"   ><hidden value="FINACT_TRNS_CREATED"/></field>    
           <field name="segmentId" title="Segment Id" required-field="true">
         	<drop-down allow-empty="false">
-        	<list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
          <field name="contraFinAccountId"  title="To Financial Account"  >
@@ -1205,7 +1205,7 @@ under the License.
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="segmentId" title="Payment PurposeType" required-field="true">
         	<drop-down allow-empty="true">
-        	<list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1267,7 +1267,7 @@ under the License.
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="segmentId" title="Payment PurposeType" required-field="true">
         	<drop-down allow-empty="true">
-        	<list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1335,7 +1335,7 @@ under the License.
          </field> -->
          <field name="segmentId" title="Payment PurposeType" required-field="true"> 
         	<drop-down allow-empty="true">
-        	<list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
          </field>
         <field name="costCenterId" title="RO">
@@ -1529,7 +1529,7 @@ under the License.
         <field name="transactionDate" position="1" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
         <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
         	<drop-down allow-empty="true">
-              <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+              <list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>       
@@ -1770,7 +1770,7 @@ under the License.
         <field name="transactionDate" position="1" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
         <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
 	           	<drop-down allow-empty="true">
-	                <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+	                <list-options key-name="enumId" list-name="segmentList" description="${description}"/>
 	              </drop-down>
         </field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>          
@@ -2527,7 +2527,8 @@ under the License.
         <field position="2" name="referenceDate" title="Refrence Date"><date-time/></field>                            
         <field name="purposeTypeId" title="Purpose Type" required-field="true">
         	<drop-down allow-empty="true">
-        	<list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+        	<list-options list-name="segmentList" key-name="enumId" description="${description}"/>
+        	
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type"  required-field="true">
@@ -2640,7 +2641,7 @@ under the License.
         <field position="2" name="dueDate" required-field="true"><date-time/></field>
         <field name="purposeTypeId" title="Purpose Type" required-field="true">
         	<drop-down allow-empty="true">
-        	<list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type" required-field="true">
@@ -3346,7 +3347,7 @@ under the License.
         <field name="finAccountId"><hidden value="${parameters.finAccountId}"/></field>
         <field name="purposeTypeId" title="Purpose Type" required-field="true">
         	<drop-down allow-empty="true">
-        	<list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <field position="1" name="partyIdFrom" title="Party Name" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
