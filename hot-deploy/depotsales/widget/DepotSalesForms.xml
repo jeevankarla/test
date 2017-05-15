@@ -5249,10 +5249,41 @@
       <field name="changeUserLogin" title="Changed By"><display></display></field>
       <field name="changeComments" title="Comments"><display></display></field>
      </form>
-     <form name="taxReportHeading" type="list" list-name="finalList" view-size="99999">
+     <form name="taxReportHeading" type="list" view-size="99999">
           
          <field name="partyTinNo" title="__"><display/></field>
-         <field name="partyIdFromName" title="__"><display/></field>
+         <field name="partyIdFromName" title="NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD"><display/></field>
+         <field name="supplierInvId" title="__"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="productId" title="_"><display/></field>
+         <field name="baseValue" title="_"><display/></field>
+         <field name="taxValue" title="__"><display/></field>
+         <field name="taxPercentage" title="__"><display/></field>
+         <field name="taxSurChargeValue" title="__"><display/></field>
+         <field name="taxSurChgPer" title="__"><display/></field>
+         <field name="total" title="__"><display/></field>
+         
+     </form>
+     <form name="taxReportHeadingCSV" type="list" view-size="99999">
+          
+         <field name="partyTinNo" title="__"><display/></field>
+         <field name="partyIdFromName" title="PURCHASE TAX REPORT"><display/></field>
+         <field name="supplierInvId" title="__"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="productId" title="_"><display/></field>
+         <field name="baseValue" title="_"><display/></field>
+         <field name="taxValue" title="__"><display/></field>
+         <field name="taxPercentage" title="__"><display/></field>
+         <field name="taxSurChargeValue" title="__"><display/></field>
+         <field name="taxSurChgPer" title="__"><display/></field>
+         <field name="total" title="__"><display/></field>
+         
+     </form>  
+     
+     <form name="taxReportCSV" type="list" list-name="finalList" view-size="99999">
+          
+         <field name="partyTinNo" title="__"><display/></field>
+         <field name="partyIdFromName" title="_"><display/></field>
          <field name="supplierInvId" title="__"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
          <field name="productId" title="_"><display/></field>
@@ -5264,9 +5295,10 @@
          <field name="total" title="__"><display/></field>
          
      </form> 
-     <form name="salesTaxReportHeading" type="list" list-name="finalList" view-size="99999">   
+     <form name="salesTaxReportHeading" type="list" view-size="99999">   
          <field name="partyTinNo" title="__"><display/></field>
-         <field name="partyIdName" title="__"><display/></field>
+         <field name="partyIdName" title="_NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD_"><display/></field>
+         <field name="partyRegNo" title="__"><display/></field>
          <field name="buyerInvId" title="__"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
          <field name="productId" title="_"><display/></field>
@@ -5275,7 +5307,47 @@
          <field name="taxPercentage" title="__"><display/></field>
          <field name="taxSurChargeValue" title="__"><display/></field>
          <field name="taxSurChgPer" title="__"><display/></field>
-         <field name="total" title="__"><display/></field>  
+         <field name="total" title="__"><display/></field>
+          <field name="invoiceId" title="__"><display/></field>
+           
+     </form> 
+      <form name="salesTaxReportHeadingCSV" type="list" view-size="99999">   
+         <field name="partyTinNo" title="__"><display/></field>
+         <field name="partyIdName" title="_SALES TAX REPORT__"><display/></field>
+         <field name="partyRegNo" title="__"><display/></field>
+         <field name="buyerInvId" title="__"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="productId" title="_"><display/></field>
+         <field name="baseValue" title="_"><display/></field>
+         <field name="taxValue" title="__"><display/></field>
+         <field name="taxPercentage" title="__"><display/></field>
+         <field name="taxSurChargeValue" title="__"><display/></field>
+         <field name="taxSurChgPer" title="__"><display/></field>
+         <field name="total" title="__"><display/></field>
+          <field name="invoiceId" title="__"><display/></field>
+           
+     </form> 
+      <form name="salesTaxReportCSV" type="list" list-name="finalList" view-size="99999">   
+         <field name="partyTinNo" title="__"><display/></field>
+         <field name="partyIdName" title="__"><display/></field>
+         <field name="partyRegNo" title="__"><display/></field>
+         <field name="buyerInvId" title="__"><display/></field>
+         <field name="invoiceDate" title="_"><display/></field>
+         <field name="productId" title="_"><display/></field>
+         <field name="baseValue" title="_"><display/></field>
+         <field name="taxValue" title="__"><display/></field>
+         <field name="taxPercentage" title="__"><display/></field>
+         <field name="taxSurChargeValue" title="__"><display/></field>
+         <field name="taxSurChgPer" title="__"><display/></field>
+         <field name="total" title="__"><display/></field>
+          <field name="invoiceId" title="__"><display/></field>
+           
+     </form>
+     <form name="salesTaxSummaryReportHeading" type="list" list-name="finalList" view-size="99999">   
+         <field name="taxType" title="__"><display/></field>
+         <field name="baseValue" title="__"><display/></field>
+         <field name="taxValue" title="__"><display/></field>
+                    
      </form> 
     <form name="claimReportDetailsTDcsv" type="list" list-name="finalList" view-size="99999">
          <field name="sNo" title="__"><display/></field>
