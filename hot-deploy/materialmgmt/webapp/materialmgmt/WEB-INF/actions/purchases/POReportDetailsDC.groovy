@@ -258,6 +258,8 @@ if(TransactionTypeId){
 		TransactionTypevalue = "Transaction With C Form";
 	}else if(TransactionType == "EXEMPTED_GOODS"){
 		TransactionTypevalue = "Transaction With exempted goods";
+	}else if(TransactionType == "NO_E2_FORM"){
+		TransactionTypevalue = "Transaction Against VAT";
 	}else{
 		TransactionTypevalue = "Transaction Without C Form";
 	}

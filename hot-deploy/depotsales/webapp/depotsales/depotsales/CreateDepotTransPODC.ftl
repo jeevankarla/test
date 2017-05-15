@@ -627,7 +627,7 @@ function makeDatePicker(fromDateId ,thruDateId){
 	          							<option value="NO_E2_FORM"></option>
 	          						</#if>
 	          						<#if orderInfo.get("purchaseTitleTransferEnumId") == "NO_E2_FORM">
-	          							<option value="NO_E2_FORM" selected></option>
+	          							<option value="NO_E2_FORM" selected>Transaction Against VAT</option>
 	          							<option value="CST_NOCFORM">Transaction Without C Form</option>
 	          							<option value="CST_CFORM">Transaction With C Form</option>
 	          							<option value="EXEMPTED_GOODS">Exempted Goods</option>
