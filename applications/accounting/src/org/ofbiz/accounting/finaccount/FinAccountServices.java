@@ -1370,6 +1370,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
   	  String instrumentDateStr = "";
   	  String paymentDateStr = "";
   	  String paymentRefNum = "";
+  	  String receivepartyId = "";
   	  String partyId = "";
   	  String partyIdFrom = "";
   	  String paymentGroupId = "";
@@ -1380,6 +1381,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
   	  instrumentDateStr = (String) paramMap.get("instrumentDate");
   	  paymentDateStr = (String) paramMap.get("paymentDate");
   	  paymentRefNum = (String) paramMap.get("paymentRefNum");
+  	  receivepartyId = (String) paramMap.get("receivepartyId");
   	  paymentGroupTypeId = (String) paramMap.get("paymentGroupTypeId");
   	  depositAmtStr = (String) paramMap.get("depositAmt");
   	  Timestamp instrumentDate=UtilDateTime.nowTimestamp();
@@ -1615,6 +1617,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 		  		  serviceCtx.put("finAccntTransDate", paymentDate);
 		  		  serviceCtx.put("fromDate", paymentDate);
 		  		  serviceCtx.put("contraRefNum", paymentRefNum);
+		  		  serviceCtx.put("partyId", receivepartyId);
 		  		  serviceCtx.put("issuingAuthority", finAccountId);
 		  		  serviceCtx.put("amount", totalAmount);
 		  		  serviceCtx.put("statusId", "FNACTTRNSGRP_CREATED");
