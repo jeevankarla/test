@@ -396,7 +396,7 @@ under the License.
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="RECEIPT"/></field>
          <field name="segmentId"  title="Segment Id">
             <drop-down>
-                <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+                <list-options key-name="enumId" list-name="segmentList" description="${description}"/>
             </drop-down>
         </field>
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field>

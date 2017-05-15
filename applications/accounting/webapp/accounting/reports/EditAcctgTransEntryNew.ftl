@@ -363,7 +363,7 @@ under the License.
 							  <select name="purposeTypeId" id="purposeTypeId">
 						          <option value="ALL">All</option>
 				  	        <#list segmentList as seg> 
-								<option value='${seg.description?if_exists}'>${seg.description?if_exists}</option>
+								<option value='${seg.enumId?if_exists}'>${seg.description?if_exists}</option>
 	          		   		</#list>
 							  </select> 							     
 				          </td>

@@ -95,7 +95,7 @@ under the License.
        	<field name="purposeTypeId" title="Segment" id-name="purposeTypeId">       		
         	<drop-down allow-empty="true">
        			<option key="All" description="All"/>
-                 <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+                 <list-options key-name="enumId" list-name="segmentList" description="${description}"/>
 	        </drop-down>
        	</field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
@@ -787,7 +787,7 @@ under the License.
        	<field name="segment" title="Segment" id-name="Segment">       		
         	<drop-down allow-empty="true">
        			<option key="All" description="All"/>
-                <list-options key-name="segmentId" list-name="segmentList" description="${description}"/>
+                <list-options key-name="enumId" list-name="segmentList" description="${description}"/>
 	        </drop-down>
        	</field>
         <field name="skipDecorator"><hidden/></field>
