@@ -192,7 +192,10 @@ headingMap.put("partyRegNo", "Party Reg No");
 headingMap.put("partyIdName", "Name of Buyer");
 headingMap.put("buyerInvId", "Invoice No");
 headingMap.put("invoiceDate", "Invoice Date");
-headingMap.put("productId", "Commodity Code");
+//headingMap.put("productId", "Commodity Code");
+headingMap.put("productCategoryId", "Product Category");
+headingMap.put("productDescription", "Product Description");
+
 headingMap.put("baseValue", "Sale Value");
 if(taxType=="VAT_SALE"){
 	headingMap.put("taxValue", "Vat Amount");
@@ -498,6 +501,20 @@ if(branchList){
 						productId=eachInvoiceItem.productId;
 						invoiceDetailMap.put("productId", productId);
 					}
+					
+					productDetails = delegator.findOne("Product",[productId : productId] , false);
+					productCategoryId="";
+					productDescription="";
+					Debug.log("productDetails===================="+productDetails);
+					if(productDetails){
+						productCategoryId=productDetails.primaryProductCategoryId;
+						productDescription=productDetails.description;
+						Debug.log("productCategoryId=========="+productCategoryId);
+						Debug.log("productDescription=========="+productDescription);
+					}
+					invoiceDetailMap.put("productCategoryId", productCategoryId);
+					invoiceDetailMap.put("productDescription", productDescription);
+					
 					conditionList.clear();
 					//conditionList=[];
 					conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS,eachInvoiceItem.invoiceId));

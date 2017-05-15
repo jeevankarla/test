@@ -5315,7 +5315,9 @@
          <field name="partyRegNo" title="__"><display/></field>
          <field name="buyerInvId" title="__"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
-         <field name="productId" title="_"><display/></field>
+        <!--  <field name="productId" title="_"><display/></field> -->
+         <field name="productCategoryId" title="_"><display/></field>
+         <field name="productDescription" title="_"><display/></field>
          <field name="baseValue" title="_"><display/></field>
          <field name="taxValue" title="__"><display/></field>
          <field name="taxPercentage" title="__"><display/></field>
@@ -5331,7 +5333,9 @@
          <field name="partyRegNo" title="__"><display/></field>
          <field name="buyerInvId" title="__"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
-         <field name="productId" title="_"><display/></field>
+         <!-- <field name="productId" title="_"><display/></field> -->
+         <field name="productCategoryId" title="_"><display/></field>
+         <field name="productDescription" title="_"><display/></field>
          <field name="baseValue" title="_"><display/></field>
          <field name="taxValue" title="__"><display/></field>
          <field name="taxPercentage" title="__"><display/></field>
@@ -5347,7 +5351,9 @@
          <field name="partyRegNo" title="__"><display/></field>
          <field name="buyerInvId" title="__"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
-         <field name="productId" title="_"><display/></field>
+        <!--  <field name="productId" title="_"><display/></field> -->
+        <field name="productCategoryId" title="_"><display/></field>
+         <field name="productDescription" title="_"><display/></field>
          <field name="baseValue" title="_"><display/></field>
          <field name="taxValue" title="__"><display/></field>
          <field name="taxPercentage" title="__"><display/></field>
