@@ -3188,6 +3188,20 @@
             <key-map field-name="oldOrderSequenceEnumId" rel-field-name="enumId"/>
         </relation>
     </entity>
+    <entity entity-name="PartyAcctgPreferenceSegment"
+        package-name="org.ofbiz.accounting.ledger"
+        title="Party (organization) accounting preferences segment">
+        <field name="partyId" type="id-ne"/>
+        <field name="segmentId" type="id-ne"/>       
+        <prim-key field="partyId"/>
+        <prim-key field="segmentId"/>
+        <relation type="one" rel-entity-name="Party" fk-name="ACTG_PREFSEG_PTY">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="ACTGPREF_SEG" title="segmentId" rel-entity-name="Enumeration">
+            <key-map field-name="segmentId" rel-field-name="enumId"/>
+        </relation>        
+    </entity>
 	<entity entity-name="ProductAverageCost" package-name="org.ofbiz.accounting.ledger"
 		title="Running tally of average cost">
 		<description>Running tally of a product's average cost in a particular company and facility</description>
