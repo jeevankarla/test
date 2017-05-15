@@ -725,6 +725,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				 		<option value=''></option>
 						<option value='YARN_SALE'>Branch Sales</option>
 						<option value='DEPOT_YARN_SALE'>Depot Sales</option>
+						<option value='B_DEPOT'>Yarn Sales</option>
 				  </select>    								
 			  </span></td>	
 				<td width="10%"></td> 

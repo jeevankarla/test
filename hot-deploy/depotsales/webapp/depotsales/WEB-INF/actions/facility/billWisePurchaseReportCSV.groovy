@@ -171,7 +171,9 @@ condList.add(EntityCondition.makeCondition("costCenterId", EntityOperator.IN,bra
 	condList.add(EntityCondition.makeCondition("partyId", EntityOperator.IN, branchBasedWeaversList));
 }*/
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
-if(purposeType){
+if(purposeType && purposeType =="B_DEPOT")
+condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE"]));
+else if(purposeType){
 	condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.EQUALS,purposeType));
 }
 else{
