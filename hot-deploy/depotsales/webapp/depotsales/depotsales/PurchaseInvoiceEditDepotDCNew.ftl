@@ -246,7 +246,7 @@ input[type=button]:hover {
 	          							<option value="EXEMPTED_GOODS" selected>Exempted Goods</option>
 	          						</#if>
 	          						<#if purchaseTitleTransferEnumId == "NO_E2_FORM">
-	          							<option value="NO_E2_FORM" selected></option>
+	          							<option value="NO_E2_FORM" selected>Transaction Against VAT</option>
 	          						</#if> 
 	          					</#if> 
 	          				
