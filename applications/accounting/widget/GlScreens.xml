@@ -312,7 +312,7 @@
 				<entity-condition entity-name="PartyAcctgPrefAndGroup" list="intOrgList">
 	                <order-by field-name="groupName"/>
 	            </entity-condition>
-	            <!-- <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/> -->
+	            <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 	            <script	location="component://accounting/webapp/accounting/WEB-INF/actions/getAllCostCenterIds.groovy" />
 			</actions>
 			<widgets>
