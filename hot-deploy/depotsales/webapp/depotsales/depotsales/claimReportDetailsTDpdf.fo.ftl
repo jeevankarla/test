@@ -60,6 +60,13 @@ under the License.
 	                    <fo:table-column column-width="13.1%"/>
 	                    <fo:table-column column-width="13.1%"/>
 			            <fo:table-body>
+                             <#if errorMessage?has_content>
+											<fo:table-row>
+								 				<fo:table-cell number-columns-spanned="7">
+													<fo:block  text-align="center" font-size="14pt"  font-weight="bold" white-space-collapse="false">${errorMessage?if_exists}</fo:block>
+					            				</fo:table-cell >
+											</fo:table-row> 
+                             <#else>
 		            		 <fo:table-row>
 								 <fo:table-cell number-columns-spanned="7">
 										<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">SILK DEPOT</fo:block>
@@ -630,6 +637,7 @@ under the License.
 								            	<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">DATE:06-05-2017</fo:block>
 								            </fo:table-cell >
 										</fo:table-row> 
+								</#if>
 						</fo:table-body>
 					</fo:table>
 				</fo:block>
