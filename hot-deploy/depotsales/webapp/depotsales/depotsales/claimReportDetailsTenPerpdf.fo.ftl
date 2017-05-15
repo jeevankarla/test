@@ -42,9 +42,9 @@ under the License.
 				<fo:block  text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="12pt" font-weight="bold">${BOEmail?if_exists}</fo:block>
         		<fo:block  keep-together="always" text-align="center" font-family="Courier,monospace" white-space-collapse="false" font-size="5pt">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</fo:block>
                 <fo:block text-align="right"    font-size="10pt" >Page - <fo:page-number/></fo:block> 
-				<fo:block text-align="center" font-size="12pt" font-weight="bold" >STATEMENT FOR CLAIMING REIMBURSEMENT OF THE COST OF TRANSPORTATION AND OVERHEADS TOWARDS </fo:block>
-				<fo:block text-align="center" font-size="12pt" font-weight="bold" >THE QUANTUM OF YARN SUPPLIED UNDER MILL GATE PRICE SCHEME FOR THE PERIOD </fo:block>
-				<fo:block text-align="center" font-size="12pt" font-weight="bold" >TRANSPORTATION AND DEPOT EXPENSES FOR THE PERIOD FROM ${fromDate?if_exists} to ${thruDate?if_exists} </fo:block>
+				<fo:block text-align="center" font-size="12pt" font-weight="bold" >STATEMENT FOR CLAIMING REIMBURSEMENT UNDER 10% HANK YARN SUBSIDY CLAIMS</fo:block>
+				<fo:block text-align="center" font-size="12pt" font-weight="bold" >and THE QUANTUM OF YARN SUPPLIED UNDER 10% HANK YARN SUBSIDY</fo:block>
+				<fo:block text-align="center" font-size="12pt" font-weight="bold" >FOR THE PERIOD FROM ${fromDate?if_exists} to ${thruDate?if_exists} </fo:block>
 				
                 <fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 		       
@@ -338,7 +338,7 @@ under the License.
 										</fo:table-row> 
 										<fo:table-row>
 										    <fo:table-cell  number-columns-spanned="7">
-								            	<fo:block  text-align="right" font-size="12pt"  font-weight="bold" white-space-collapse="false">Amount of Reimburesment Claimed Under MGPS:</fo:block>
+								            	<fo:block  text-align="right" font-size="12pt"  font-weight="bold" white-space-collapse="false">Amount of Reimbursement Claimed Under 10% HANK YARN SUBSIDY</fo:block>
 								            </fo:table-cell >
 											<fo:table-cell>
 								            	<fo:block  text-align="right" font-size="12pt"  font-weight="bold" white-space-collapse="false"> ${totalReimbursementAmount?if_exists}</fo:block>
@@ -373,7 +373,7 @@ under the License.
 										</fo:table-row> 
 										<fo:table-row>
 										    <fo:table-cell   number-columns-spanned="7">
-								            	<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">HYDERABAD</fo:block>
+								            	<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">${branchName?if_exists}</fo:block>
 								            </fo:table-cell >
 											
 										</fo:table-row> 
