@@ -620,7 +620,7 @@ under the License.
 										</fo:table-row> 
 										<fo:table-row>
 										    <fo:table-cell   number-columns-spanned="7">
-								            	<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">HYDERABAD</fo:block>
+								            	<fo:block  text-align="left" font-size="12pt"  font-weight="bold" white-space-collapse="false">${branchName?if_exists}</fo:block>
 								            </fo:table-cell >
 											
 										</fo:table-row> 
