@@ -2299,7 +2299,7 @@ under the License.
     </request-map>
     <request-map uri="createAdvanceDepositPaidFinAccountAndDeposit">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createDepositFinAccountAndDeposit"/>
+        <event type="service" path="" invoke="createEmployeeAdvance"/>
         <!-- <response name="success" type="request" value="FindDepositAccount"/>
         <response name="error" type="view" value="FindDepositAccount"/> -->
         <response name="success" type="request-redirect" value="FindEmployeeAdv">
