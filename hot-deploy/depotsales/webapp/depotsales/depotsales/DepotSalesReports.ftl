@@ -725,6 +725,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				 		<option value=''></option>
 						<option value='YARN_SALE'>Branch Sales</option>
 						<option value='DEPOT_YARN_SALE'>Depot Sales</option>
+						<option value='B_DEPOT'>Yarn Sales</option>
 				  </select>    								
 			  </span></td>	
 				<td width="10%"></td> 
@@ -1327,7 +1328,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
         </tr> 
         
         
-        <#--<tr class="alternate-row">
+        <tr class="alternate-row">
       	   <form id="salesTaxSummaryReport" name="salesTaxSummaryReport" method="post" action="<@ofbizUrl>salesTaxSummaryReport.xls</@ofbizUrl>" target="_blank">        
              <td width="35%">Sales Tax Summary Report</td>
              <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="salesTaxSummaryReportFRO" readonly  name="partyfromDate"/></br>
@@ -1360,7 +1361,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
              <td width="10%"></td>
              <td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('salesTaxSummaryReport', '<@ofbizUrl>salesTaxSummaryReport.xls</@ofbizUrl>');" class="buttontext"/>
            </form>
-        </tr>--> 
+        </tr>
       </#if>
       
       
