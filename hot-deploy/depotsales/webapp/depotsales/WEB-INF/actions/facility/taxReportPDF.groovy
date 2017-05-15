@@ -184,6 +184,46 @@ if(branchIdForAdd){
 	context.BOAddress=BOAddress;
 	context.BOEmail=BOEmail;
 	}
+
+finalList=[];
+headingMap=[:];
+headingMap.put("partyTinNo", "Seller Tin No");
+headingMap.put("partyIdFromName", "Name of Seller");
+headingMap.put("supplierInvId", "Invoice No");
+headingMap.put("invoiceDate", "Invoice Date");
+headingMap.put("productId", "Commodity Code");
+headingMap.put("baseValue", "Purchase Value");
+if(taxType=="VAT_PUR"){
+	headingMap.put("taxValue", "Vat Amount");
+	headingMap.put("taxPercentage", "Vat Percentage");
+}
+else if(taxType=="CST_PUR"){
+	headingMap.put("taxValue", "Cst Amount");
+	headingMap.put("taxPercentage", "Cst Percentage");
+}
+else if(taxType=="EXCISE_DUTY"){
+	headingMap.put("taxValue", "Excise Amount");
+	headingMap.put("taxPercentage", "Excise Percentage");
+}
+else if(taxType=="ENTRY_TAX"){
+	headingMap.put("taxValue", "Entry Tax Amount");
+	headingMap.put("taxPercentage", "Entry Tax Percentage");
+}
+if(taxType=="VAT_PUR" || taxType=="CST_PUR"){
+	if(taxType=="VAT_PUR"){
+		headingMap.put("taxSurChargeValue", "Vat Surcharge Amount");
+		headingMap.put("taxSurChgPer", "Vat Surcharge Percentage");
+	}
+	else if(taxType=="CST_PUR"){
+		headingMap.put("taxSurChargeValue", "Cst Surcharge Amount");
+		headingMap.put("taxSurChgPer", "Cst Surcharge Percentage");
+	}
+}
+headingMap.put("total", "Total Amount");
+
+finalList.add(headingMap);
+
+
 finalMap=[:];
 conditionList = [];
 conditionList.add(EntityCondition.makeCondition("componentType", EntityOperator.IN,["ENTRY_TAX","CST_PUR","VAT_PUR","EXCISE_DUTY"]));
@@ -302,6 +342,8 @@ if(branchList){
 			partyIdFrom="";
 			invItemsList=[];
 			while (eachInvoice = invoiceIterator.next()) {
+				//exciseDutyAmount=0;
+				//invoiceAdjValue=0;
 				invoiceValue=0;
 				surcharge=0;
 				baseValue=0;
@@ -374,8 +416,19 @@ if(branchList){
 					conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS,eachInvoiceItem.invoiceId));
 					conditionList.add(EntityCondition.makeCondition("parentInvoiceItemSeqId", EntityOperator.EQUALS,eachInvoiceItem.invoiceItemSeqId));
 					invoiceItemsList = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
-						
+					
+					//invoiceAdjItemList = EntityUtil.filterByCondition(invoiceItemsList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.NOT_IN,UtilMisc.toList("VAT_SALE","CST_SALE","CST_SURCHARGE","VAT_SURCHARGE","TEN_PERCENT_SUBSIDY","ROUNDING_ADJUSTMENT","EXCISE_DUTY")));
+					//exciseDutyList = EntityUtil.filterByCondition(invoiceItemsList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,UtilMisc.toList("EXCISE_DUTY")));
+					
 					invoiceItemsWithTax= EntityUtil.filterByCondition(invoiceItemsList, EntityCondition.makeCondition("invoiceItemTypeId", EntityOperator.EQUALS,taxType));
+					
+					/*if(exciseDutyList)
+						exciseDutyList=EntityUtil.getFirst(exciseDutyList);
+					exciseDutyAmount=exciseDutyList.itemValue;
+					if(invoiceAdjItemList)
+						invoiceAdjItemList=EntityUtil.getFirst(invoiceAdjItemList);
+					invoiceAdjValue=invoiceAdjItemList.itemValue;*/
+					
 					if(invoiceItemsWithTax)
 						invoiceItemsWithTax=EntityUtil.getFirst(invoiceItemsWithTax);
 					if(invoiceItemsWithTax.itemValue)
@@ -404,7 +457,6 @@ if(branchList){
 					totalBaseValue=totalBaseValue+baseValue;
 					totalTaxValue=totalTaxValue+taxValue;
 					totalSurChrgValue=totalSurChrgValue+surcharge;
-					
 					invoiceDetailMap.put("baseValue", baseValue);
 					invoiceDetailMap.put("taxValue", taxValue);
 					invoiceDetailMap.put("taxPercentage", taxPercentage);
@@ -412,12 +464,15 @@ if(branchList){
 						invoiceDetailMap.put("taxSurChargeValue", surcharge);
 						invoiceDetailMap.put("taxSurChgPer", taxSurChgPer);
 					}
+					invoiceDetailMap.put("exciseDutyAmount", exciseDutyAmount);
+					invoiceDetailMap.put("invoiceAdjValue", invoiceAdjValue);
 					//totalAmt=invoiceDetailMap["taxValue"]+invoiceDetailMap["taxSurChargeValue"]+baseValue;
 					totalAmt=taxValue+surcharge+baseValue;
 					totalValue=totalValue+totalAmt;
 					invoiceDetailMap.put("total", totalAmt);
 					
 					invItemsList.add(invoiceDetailMap);
+					finalList.add(invoiceDetailMap);
 				}
 				
 			}
@@ -434,9 +489,9 @@ if(branchList){
 
 context.finalMap=finalMap;
 
-finalList=[];
 
-stylesMap=[:];
+
+/*stylesMap=[:];
 
 stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
 stylesMap.put("mainHeader2", "Purchase Tax Report");
@@ -453,46 +508,11 @@ stylesMap.put("autoSizeCell",true);
 stylesMap.put("columnHeaderCellHeight",300);
 request.setAttribute("stylesMap", stylesMap);
 request.setAttribute("enableStyles", true);
-finalList.add(stylesMap);
+finalList.add(stylesMap);*/
 
-headingMap=[:];
-headingMap.put("partyTinNo", "Buyer Tin No");
-headingMap.put("partyIdFromName", "Name of Buyer");
-headingMap.put("supplierInvId", "Invoice No");
-headingMap.put("invoiceDate", "Invoice Date");
-headingMap.put("productId", "Commodity Code");
-headingMap.put("baseValue", "Purchase Value");
-if(taxType=="VAT_PUR"){
-	headingMap.put("taxValue", "Vat Amount");
-	headingMap.put("taxPercentage", "Vat Percentage");
-}
-else if(taxType=="CST_PUR"){
-	headingMap.put("taxValue", "Cst Amount");
-	headingMap.put("taxPercentage", "Cst Percentage");
-}
-else if(taxType=="EXCISE_DUTY"){
-	headingMap.put("taxValue", "Excise Amount");
-	headingMap.put("taxPercentage", "Excise Percentage");
-}
-else if(taxType=="ENTRY_TAX"){
-	headingMap.put("taxValue", "Entry Tax Amount");
-	headingMap.put("taxPercentage", "Entry Tax Percentage");
-}
-if(taxType=="VAT_PUR" || taxType=="CST_PUR"){
-	if(taxType=="VAT_PUR"){
-		headingMap.put("taxSurChargeValue", "Vat Surcharge Amount");
-		headingMap.put("taxSurChgPer", "Vat Surcharge Percentage");
-	}
-	else if(taxType=="CST_PUR"){
-		headingMap.put("taxSurChargeValue", "Cst Surcharge Amount");
-		headingMap.put("taxSurChgPer", "Cst Surcharge Percentage");
-	}
-}
-headingMap.put("total", "Total Amount");
 
-finalList.add(headingMap);
 
-finalMapEntryList = finalMap.entrySet();
+/*finalMapEntryList = finalMap.entrySet();
 //Debug.log("finalMapEntryList====================="+finalMapEntryList);
 for(eachEntry in finalMapEntryList){
 	taxPer=eachEntry.getKey();
@@ -507,7 +527,7 @@ for(eachEntry in finalMapEntryList){
 		
 	}
 	
-}
+}*/
 
 tempToMap=[:];
 tempToMap.put("partyTinNo", "Total");

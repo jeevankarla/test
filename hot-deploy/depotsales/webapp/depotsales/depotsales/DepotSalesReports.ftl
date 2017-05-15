@@ -66,7 +66,9 @@ $(document).ready(function(){
 	    makeDatePicker1("IndentRegisterEntryFromDate","IndentRegisterEntryThruDate");
 	    makeDatePicker1("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
 	    makeDatePicker1("TaxReportFRO","TaxReportTHRU");
-	    makeDatePicker1("SalesTaxReportFRO","SalesTaxReportTHRU");  
+	    makeDatePicker1("SalesTaxReportFRO","SalesTaxReportTHRU");
+	    makeDatePicker1("salesTaxSummaryReportFRO","salesTaxSummaryReportTHRU");
+	      
 		$('#ui-datepicker-div').css('clip', 'auto');
 		
 		$('#branchId3').hide();
@@ -1235,7 +1237,7 @@ function makeDatePicker3(fromDateId ,thruDateId){
 			  <#--<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="TaxReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>-->	
              <td width="10%"></td>
              <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('TaxReport', '<@ofbizUrl>taxReport.pdf</@ofbizUrl>');" class="buttontext"/>
-             <td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('TaxReport', '<@ofbizUrl>taxReport.xls</@ofbizUrl>');" class="buttontext"/>
+             <td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('TaxReport', '<@ofbizUrl>taxReport.csv</@ofbizUrl>');" class="buttontext"/>
            </form>
         </tr> 
         
@@ -1297,13 +1299,46 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				  </select> 
 			  </span></td> 
 			  <#--<td width="15%">Party Code<@htmlTemplate.lookupField size="10" maxlength="22" formName="TaxReport" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>-->	
-             <td width="10%"></td>
              <td width="10%"><input type="submit" value="PDF" onClick="javascript:appendParams('SalesTaxReport', '<@ofbizUrl>SalesTaxReport.pdf</@ofbizUrl>');" class="buttontext"/>
-             <td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('SalesTaxReport', '<@ofbizUrl>SalesTaxReport.xls</@ofbizUrl>');" class="buttontext"/>
+             <td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('SalesTaxReport', '<@ofbizUrl>SalesTaxReport.csv</@ofbizUrl>');" class="buttontext"/>
            </form>
         </tr> 
-      
-      
+        
+        
+        <#--<tr class="alternate-row">
+      	   <form id="salesTaxSummaryReport" name="salesTaxSummaryReport" method="post" action="<@ofbizUrl>salesTaxSummaryReport.xls</@ofbizUrl>" target="_blank">        
+             <td width="35%">Sales Tax Summary Report</td>
+             <td width="10%">&nbsp;From</br><input  type="text" size="15pt" id="salesTaxSummaryReportFRO" readonly  name="partyfromDate"/></br>
+      		 To</br><input  type="text" size="15pt" id="salesTaxSummaryReportTHRU" readonly  name="partythruDate"/></td>
+      		 <td width="15%"><span class='h3'>RO
+				<select name="branchId" id="branchId4" onchange="javascript:disableFields(this,'geoId3');">
+					<option value=""></option>
+					<option value="ALL">All</option>
+					<#list  formatRList as formatRList>
+						<option value='${formatRList.payToPartyId?if_exists}'>${formatRList.productStoreName?if_exists}</option>
+					</#list> 
+				</select>    								
+			</span></br>
+  			<span class='h3'>State</br>
+				<select name="geoId" id="geoId3" onchange="javascript:disableFields(this,'branchId4');">
+				    <option value=""></option>
+					<option value="ALL">ALL</option>
+					<#list  statesList as eachState>
+						<option value='${eachState.geoId?if_exists}'>${eachState.geoName?if_exists}</option>
+					</#list> 
+				</select>    								
+			</span></td>        
+			  <td width="15%"><span class='h3'>Purpose Type</br>
+				 <select name="purposeTypeId" id="purposeTypeId">
+				 <option value="ALL">All</option>
+					<option value="YARN_SALE">Yarn</option>
+				    <option value="DIES_AND_CHEM_SALE">Dyes and Chemicals</option>
+				  </select> 
+			  </span></td>
+             <td width="10%"></td>
+             <td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('salesTaxSummaryReport', '<@ofbizUrl>salesTaxSummaryReport.xls</@ofbizUrl>');" class="buttontext"/>
+           </form>
+        </tr>--> 
       </#if>
       
       
