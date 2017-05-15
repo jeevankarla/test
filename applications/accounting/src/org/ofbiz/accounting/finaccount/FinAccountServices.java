@@ -1599,7 +1599,7 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	    		  		  		
 	    			        		        	GenericValue newTransAttr = delegator.makeValue("FinAccountTransAttribute");        	 
 	    			                        	newTransAttr.set("finAccountTransId", eachfinAccountTransId);
-	    			                        	newTransAttr.set("attrName", "INFAVOUR_OF");
+	    			                        	newTransAttr.set("attrName", "FATR_CONTRA");
 	    			                        	newTransAttr.set("attrValue", eachdepositfinAccountTransId);
 	    			                        	delegator.createOrStore(newTransAttr);
 	    		  		  	}	
