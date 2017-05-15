@@ -112,6 +112,31 @@
 			changeMonth: false,
 			numberOfMonths: 1});		
 		$('#ui-datepicker-div').css('clip', 'auto');
+		$(document).ready(function(){
+	
+			//for date Picker 
+			makeDatePicker("remitDate","thruDate");
+			makeDatePicker("onlineFromDate","thruDate");
+			makeDatePicker("onlineThruDate","thruDate");
+			$('#ui-datepicker-div').css('clip', 'auto');
+	
+			});
+
+function makeDatePicker(fromDateId ,thruDateId){
+		$( "#"+fromDateId ).datepicker({
+			dateFormat:'yy-mm-dd',
+			changeMonth: true,
+			numberOfMonths: 1,
+			
+			maxDate:0,
+			onSelect: function( selectedDate ) {
+				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	}
+function setFormParams(){
+		$("#onlineFromDate").datepicker( "option", "dateFormat", "yy-mm-dd 00:00:00");
+		}
 	}
 	
 	//disable the generate button once the form submited
@@ -184,7 +209,7 @@
 		      		}
 		if(paymentMethodType == 'FUND_TRANSFER' || paymentMethodType == 'CHEQUE_PAYIN' || paymentMethodType == 'CHEQUE' || paymentMethodType == 'FT_PAYIN' || paymentMethodType == 'CHEQUE_PAYOUT'|| paymentMethod == 'PAYMENTMETHOD4' || paymentMethod == 'PAYMENTMETHOD6'){      		
 			message +=  "<tr class='h3'><td align='left' class='h3' width='40%'>Instrument Number:</td><td align='left' width='60%'><input class='h4' type='text' class='required' id='paymentRefNum' name='paymentRefNum'/></td></tr>";
-			message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Instrument Date:</td><td align='left' width='60%'><input class='h4' type='text' class='required' readonly id='instrumentDate' name='instrumentDate' onmouseover='datepick1()' required /></td></tr>";
+			message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Instrument Date:</td><td align='left' width='60%'><input class='h4' type='text' class='required' readonly id='onlineFromDate' name='instrumentDate' onmouseover='datepick1()' required /></td></tr>";
 			if(paymentMethod == 'PAYMENTMETHOD4' || paymentMethodType == 'CHEQUE_PAYIN'){
 					message +=	"<tr class='h3'><td align='left' class='h3' width='40%'>Cheque In favour of:</td><td align='left' width='60%'><input class='h4' type='text'  id='inFavourOf' name='inFavourOf'value='${chequeInFavour?if_exists}'/></td></tr>";
 			}
