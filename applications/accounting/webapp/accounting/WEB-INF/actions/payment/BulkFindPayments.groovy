@@ -65,7 +65,7 @@ if(paymentTypeId){
 	conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.EQUALS, paymentTypeId));
 }
 
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, [ "PMNT_RECEIVED","PMNT_PAID","PMNT_SENT"]));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, [ "PMNT_RECEIVED","PMNT_PAID","PMNT_CONFIRMED"]));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 Debug.log("condi====="+cond);
 paymentList = delegator.findList("Payment", cond, null, null, null, false);

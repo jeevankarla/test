@@ -41,7 +41,6 @@ context.thruDate=thruDate;
 Timestamp fromdate1=null;
 Timestamp thrudate1=null;
 
-Debug.log("Date======"+parameters.ownerPartyId+userLogin);
 if(UtilValidate.isNotEmpty(fromDate)||UtilValidate.isNotEmpty(thruDate)){
 	def sdf = new SimpleDateFormat("yy-MM-dd");
 	
@@ -84,7 +83,7 @@ if(invoiceTypeId){
 	conditionList.add(EntityCondition.makeCondition("invoiceTypeId", EntityOperator.EQUALS,invoiceTypeId));
 }
 conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.NOT_LIKE,"%OB%"));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, [ "INVOICE_READY","INVOICE_PAID"]));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["INVOICE_READY","INVOICE_PAID"]));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 Debug.log("condi====="+cond);
 invoiceItemList = delegator.findList("InvoiceAndType", cond, null, null, null, false);

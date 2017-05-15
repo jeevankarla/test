@@ -25,29 +25,23 @@ under the License.
         jQuery.each(payments, function() {
             this.checked = master.checked;
         });
-        getInvoiceRunningTotal();
+        calculateTotal();
     }
-
-    function getInvoiceRunningTotal() {
-		var checkedInvoices = jQuery("input[name='invoiceIds']:checked");
-        if(checkedInvoices.size() > 0) {
-            jQuery.ajax({
-                url: 'getInvoiceRunningTotal',
-                type: 'POST',
-                async: true,
-                data: jQuery('#listInvoices').serialize(),
-                success: function(data) { jQuery('#showInvoiceRunningTotal').html(data.invoiceRunningTotal + '  (' + checkedInvoices.size() + ')') }
-            });
-
-            if(jQuery('#serviceName').val() != "") {
-            	jQuery('#submitButton').removeAttr('disabled');                
-            }
-
-        } else {
-            jQuery('#submitButton').attr('disabled', 'disabled');
-            jQuery('#showInvoiceRunningTotal').html("");
-        }
-    }
+function calculateTotal(){
+     var invoices = jQuery("#listPayments :checkbox[name='paymentIds']");
+  	 total=0;
+     jQuery.each(invoices, function() {
+         if (jQuery(this).is(':checked')) {
+         	var domObj = $(this).parent().parent();
+         	var amtObj = $(domObj).find("#amt");
+         	var amt = $(amtObj).val();
+         	 total = (+total) + (+amt);
+         }
+         
+     });
+     jQuery('#showPaymentRunningTotal').html(total);
+ }
+    
 
     function setServiceName(selection) {
         jQuery('#submitButton').attr('disabled' , 'disabled');    
@@ -107,36 +101,22 @@ function setVoidPaymentParameters(currentPayment){
     
     }
 </script>
-<#if paymentList?has_content>
-<#else>
-<#if payments?has_content>
-  <#assign paymentList  =  payments.getCompleteList() />
-  <#assign eliClose = payments.close() />
-</#if>
-</#if>
 <#if paymentList?has_content && (parameters.noConditionFind)?if_exists == 'Y'>
   <div>
-    <span class="label">Total Payments :${paymentList?size}</span>  
+    <span class="label">Total Payments :${paymentList?size}</span> <span class="label">Selected Payments Total:</span> 
+     <span class="label" id="showPaymentRunningTotal"></span> 
   </div>
-  
-  <#if isCashierPortalScreen?has_content>
-    <form name="cancelPayment" id="cancelPayment"  method="post" action="voidCashPayment">
-  <#else>
-   <form name="cancelPayment" id="cancelPayment"  method="post" action="voidPayment">
-  </#if>
- 
-  </form>
   <form name="listPayments" id="listPayments"  method="post" action="">
     <div align="right">
-   <!--   <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
+    <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
         <option value="">${uiLabelMap.AccountingSelectAction}</option>
-        <option value="<@ofbizUrl>PrintPayments</@ofbizUrl>">Print Payments</option>
-        <option value="massPaymentsToSent">Status To 'Sent'</option>
+        <option value="<@ofbizUrl>paymentAccountingTrans1.pdf</@ofbizUrl>">Accounting Report</option>
+        <#--  <option value="massPaymentsToSent">Status To 'Sent'</option>
         <option value="massPaymentsToVoid">Status To 'Void'</option>
         <option value="massPaymentsToCancel">Status To 'Cancelled'</option>
-        <option value="massPaymentsToReceived">Status To 'Received'</option>
+        <option value="massPaymentsToReceived">Status To 'Received'</option>-->
       </select>
-      <input id="submitButton" type="button"  onclick="javascript:jQuery('#listPayments').submit();" value="${uiLabelMap.CommonRun}" disabled="disabled" /> -->
+      <input id="submitButton" type="button"  onclick="javascript:jQuery('#listPayments').submit();" value="${uiLabelMap.CommonRun}" disabled="disabled" /> 
       <input type="hidden" name="organizationPartyId" value="${defaultOrganizationPartyId}"/>
       <input type="hidden" name="partyIdFrom" value="${parameters.partyIdFrom?if_exists}"/>
       <input type="hidden" name="statusId" id="statusId" value="${parameters.statusId?if_exists}"/>
@@ -144,7 +124,7 @@ function setVoidPaymentParameters(currentPayment){
       <input type="hidden" name="thruInvoiceDate" value="${parameters.thruInvoiceDate?if_exists}"/>
       <input type="hidden" name="fromDueDate" value="${parameters.fromDueDate?if_exists}"/>
       <input type="hidden" name="thruDueDate" value="${parameters.thruDueDate?if_exists}"/>
-      <input type="hidden" name="paymentStatusChange" id="paymentStatusChange" value="<@ofbizUrl>massChangePaymentStatus</@ofbizUrl>"/>
+      <#--  <input type="hidden" name="paymentStatusChange" id="paymentStatusChange" value="<@ofbizUrl>massChangePaymentStatus</@ofbizUrl>"/>-->
     </div>
 
     <table class="basic-table hover-bar" cellspacing="0">
@@ -209,7 +189,7 @@ function setVoidPaymentParameters(currentPayment){
               <td><#if payment.effectiveDate?has_content>${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.effectiveDate ,"dd/MM/yyyy")}</#if></td>              
               <td><@ofbizCurrency amount=payment.amount isoCode=defaultOrganizationPartyCurrencyUomId/></td>
               <td><@ofbizCurrency amount=amountToApply isoCode=defaultOrganizationPartyCurrencyUomId/></td>
-             
+             <input type = "hidden" name = "amt" id = "amt" value = "${amountToApply}">
               <#if hasPaymentCancelPermission?has_content && nowDate?has_content && payment.effectiveDate?has_content>
               <#assign paymentDateCompare= Static["org.ofbiz.base.util.UtilDateTime"].toDateString(payment.effectiveDate ,"yyyy-MM-dd")>
               <td>
@@ -226,7 +206,7 @@ function setVoidPaymentParameters(currentPayment){
               </td>
                
              
-               <td align="right"><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:getInvoiceRunningTotal();"/></td> 
+               <td align="right"><input type="checkbox" id="paymentId_${payment_index}" name="paymentIds" value="${payment.paymentId}" onclick="javascript:calculateTotal();"/></td> 
             </tr>
             <#-- toggle the row color -->
             <#assign alt_row = !alt_row>

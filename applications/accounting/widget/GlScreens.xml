@@ -1566,6 +1566,7 @@ reportType:byAccount -->
 				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
 					global="true" />
 					<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+					<set field="paymentIds" from-field="parameters.paymentIds" type="List"/>
 				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/paymentAccountingTrans.groovy"/>
 			</actions>
 			<widgets>
@@ -1573,6 +1574,25 @@ reportType:byAccount -->
 					<xsl-fo>
 					<html-template
 							location="component://accounting/webapp/accounting/reports/AccountingReportOverviewScreen.fo.ftl" />
+					</xsl-fo>
+				</platform-specific>
+			</widgets>
+		</section>
+	</screen>
+	<screen name="PaymentAccountingTransPdf1">
+		<section>
+			<actions>
+				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
+					global="true" />
+					<set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+					<set field="paymentIds" from-field="parameters.paymentIds" type="List"/>
+				<script	location="component://accounting/webapp/accounting/WEB-INF/actions/reports/paymentAccountingTrans1.groovy"/>
+			</actions>
+			<widgets>
+				<platform-specific>
+					<xsl-fo>
+					<html-template
+							location="component://accounting/webapp/accounting/reports/AccountingReportOverviewScreen1.fo.ftl" />
 					</xsl-fo>
 				</platform-specific>
 			</widgets>

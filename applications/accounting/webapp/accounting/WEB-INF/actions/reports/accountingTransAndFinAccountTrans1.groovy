@@ -286,6 +286,8 @@ if(UtilValidate.isNotEmpty(parameters.reportTypeFlag)){
 }
 context.partyIdForAdd=partyIdForAdd;
 
+Debug.log("partyIdForAddress===="+partyIdForAdd);
+
 /*invSequenceNum = "";
 
 if(parameters.invoiceId){

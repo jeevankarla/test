@@ -21,7 +21,7 @@ context.thruDate=thruDate;
 Timestamp fromdate1=null;
 Timestamp thrudate1=null;
 
-Debug.log("Date======"+parameters.ownerPartyId);
+//Debug.log("Date======"+parameters.ownerPartyId);
 if(UtilValidate.isNotEmpty(fromDate)||UtilValidate.isNotEmpty(thruDate)){
 	def sdf = new SimpleDateFormat("yy-MM-dd");
 	
@@ -56,7 +56,8 @@ if(thrudate1){
 	conditionList.add(EntityCondition.makeCondition("paymentDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.getDayEnd(thruDateEnd)));
 }
 conditionList.add(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.IN, ["CHEQUE_PAYOUT","FT_PAYOUT"]));
-conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, [ "PMNT_RECEIVED","PMNT_PAID"]));
+conditionList.add(EntityCondition.makeCondition("paymentTypeId", EntityOperator.LIKE, "%_PAYOUT"));
+conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["PMNT_CONFIRMED","PMNT_PAID"]));
 cond = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
 Debug.log("condi====="+cond);
 paymentList = delegator.findList("Payment", cond, null, null, null, false);
