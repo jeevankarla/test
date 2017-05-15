@@ -61,7 +61,6 @@ conditionList = [];
 conditionList.add(EntityCondition.makeCondition("partyClassificationGroupId",EntityOperator.EQUALS,"REGIONAL_OFFICE"));
 partyClassification = delegator.findList("PartyClassification",EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyId"), null, null, false );
 roPartIds = EntityUtil.getFieldListFromEntityList(partyClassification, "partyId", true);
-
 // getting branchs from state 
 if(UtilValidate.isNotEmpty(geoId)){
 	conditionList.clear();
@@ -135,7 +134,6 @@ if(UtilValidate.isNotEmpty(branchId)){
 	}
 	
 }
-
 finalList=[];
 if(UtilValidate.isNotEmpty(parameters.header)&&parameters.header.equals("required")){
 	
@@ -269,36 +267,34 @@ def getSchemePercentage(customerId,productId,roid)
 	bhuRoMap=UtilMisc.toMap("JUTE_YARN",10,"SILK",1,"COTTON",2,"COIR_YARN",10, "OTHER",2,"serCharge",3);
 	rowiseTsPercentageMap= UtilMisc.toMap("INT1",varRoMap,"INT2",panRoMap,"INT3",kolRoMap,"INT4",cmbRoMap,"INT5",hydRoMap,"INT6",kanRoMap,"INT26",bhuRoMap,"INT28",gwhRoMap,"INT47",vjyRoMap);
 	rowiseTsPercentageMap2= UtilMisc.toMap("INT2",panRoMapHill);
-	
 	resultMap=[:];
 	remoteAreasList=["534","535","550","552"];
 	hilliStatesList=["IN-JK","IN-HP"];
-	
 	product = delegator.findOne("Product",[productId : productId] , false);
 	productCategory = delegator.findOne("ProductCategory",[productCategoryId : product.primaryProductCategoryId] , false);
 	productCategoryId=productCategory.primaryParentCategoryId
-	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,customerId));
 	conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId",EntityOperator.EQUALS,"BILLING_LOCATION"));
 	fieldsToSelect = ["stateProvinceGeoId","districtGeoId","partyId"] as Set;
 	partyContactDetails= delegator.findList("PartyContactDetailByPurpose",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
+	if(UtilValidate.isEmpty(partyContactDetails)){
+		Debug.log("stateProvinceGeoId is not configured for the customer: "+ customerId);
+		resultMap.put("errorMessage","stateProvinceGeoId is not configured for the customer: "+ customerId);
+		return resultMap;
+	}
 	partyContactDetail = EntityUtil.getFirst(partyContactDetails);
 	stateGeoId=partyContactDetail.stateProvinceGeoId
 	distictGeoId=partyContactDetail.districtGeoId
-	
-	if(roid=="INT2"){
-		if(hilliStatesList.contains(stateGeoId) || remoteAreasList.contains(distictGeoId))
-		{
-			roSchemePertagesMap=rowiseTsPercentageMap2.get(roid);
-			schemePercentage=roSchemePertagesMap.get(productCategoryId)
-			servicePercentage=roSchemePertagesMap.get("serCharge")
-			if(UtilValidate.isEmpty(schemePercentage)){
-				schemePercentage=roSchemePertagesMap.get("OTHER")
-			}
-			resultMap.putAt("schemePercentage",schemePercentage)
-			resultMap.putAt("serviceChrgPer",servicePercentage)
+	if(roid=="INT2" && (hilliStatesList.contains(stateGeoId) || remoteAreasList.contains(distictGeoId)) ){
+		roSchemePertagesMap=rowiseTsPercentageMap2.get(roid);
+		schemePercentage=roSchemePertagesMap.get(productCategoryId)
+		servicePercentage=roSchemePertagesMap.get("serCharge")
+		if(UtilValidate.isEmpty(schemePercentage)){
+			schemePercentage=roSchemePertagesMap.get("OTHER")
 		}
+		resultMap.putAt("schemePercentage",schemePercentage)
+		resultMap.putAt("serviceChrgPer",servicePercentage)
 	}else{
 		roSchemePertagesMap=rowiseTsPercentageMap.get(roid);
 		schemePercentage=roSchemePertagesMap.get(productCategoryId)
@@ -309,7 +305,6 @@ def getSchemePercentage(customerId,productId,roid)
 		resultMap.putAt("schemePercentage",schemePercentage)
 		resultMap.putAt("serviceChrgPer",servicePercentage)
 	}
-	
 	return resultMap;
 	
 }
@@ -386,7 +381,6 @@ def generateBillWiseReport()
 	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","shipmentId","quantity","productId","costCenterId","itemValue","invoiceGrandTotal"] as Set;
 	silkinvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	invoiceIds=EntityUtil.getFieldListFromEntityList(silkinvoicesAndItems,"invoiceId", true);
-	
 	tempMapSD=[:]
 	tempMapSND=[:]
 	tempMapCD=[:]
@@ -408,7 +402,6 @@ def generateBillWiseReport()
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
 		schemePercentage=0;
-		
 		for(invoice in silkinvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
@@ -422,9 +415,12 @@ def generateBillWiseReport()
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
-				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
@@ -432,9 +428,7 @@ def generateBillWiseReport()
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				
-				
+				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
@@ -534,7 +528,6 @@ def generateBillWiseReport()
 	fieldsToSelect = ["invoiceId","partyIdFrom","partyId","shipmentId","quantity","productId","costCenterId","itemValue","invoiceGrandTotal"] as Set;
 	cottonInvoicesAndItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	invoiceIds=EntityUtil.getFieldListFromEntityList(cottonInvoicesAndItems,"invoiceId", true);
-	
 	for(invoiceId in invoiceIds)
 	{
 		String partyName = "";
@@ -548,7 +541,6 @@ def generateBillWiseReport()
 		BigDecimal depotCharges = BigDecimal.ZERO;
 		BigDecimal mgpsServiceCharge = BigDecimal.ZERO;
 		schemePercentage=0;
-		
 		for(invoice in cottonInvoicesAndItems1)
 		{
 			partyName=PartyHelper.getPartyName(delegator,invoice.partyId,false);
@@ -557,12 +549,14 @@ def generateBillWiseReport()
 			invoiceAmount=getInvocieAmount(invoice.invoiceId)
 			 actulFrgtAmt=getTotalFrightAmount(invoice.shipmentId);
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
-				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
-				
 				eligFrgtAmt=(invoiceAmount.multiply(schemePercentage)).divide(100);
 				if(actulFrgtAmt>=eligFrgtAmt){
 					eligibleFrightCharges=eligibleFrightCharges.add(eligFrgtAmt);
@@ -570,9 +564,7 @@ def generateBillWiseReport()
 					eligibleFrightCharges=eligibleFrightCharges.add(actulFrgtAmt);
 				}
 				depotCharges=depotCharges.add((invoiceAmount.multiply(2)).divide(100))
-					mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
-				
-				
+				mgpsServiceCharge=mgpsServiceCharge.add((invoiceAmount.multiply(serviceChrgPercentage)).divide(100))
 				invoiceValue=invoiceValue.add(invoiceAmount);
 				duplicateInvoiceIds.add(invoice.invoiceId);
 			}
@@ -585,7 +577,6 @@ def generateBillWiseReport()
 		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
 		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
 		tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
-		
 		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyId), UtilMisc.toSet("facilityId"), null, null, false );
 		
 		if(UtilValidate.isNotEmpty(facility)){
@@ -660,7 +651,6 @@ def generateBillWiseReport()
 	totalFrightChargesND = BigDecimal.ZERO;
 	totalDepotChargesND = BigDecimal.ZERO;
 	totalSerChargesND=BigDecimal.ZERO;
-	
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("invoiceDate", EntityOperator.GREATER_THAN_EQUAL_TO,dayBegin))
 	conditionList.add(EntityCondition.makeCondition("invoiceDate",EntityOperator.LESS_THAN_EQUAL_TO, dayEnd))
@@ -700,6 +690,10 @@ def generateBillWiseReport()
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -782,7 +776,6 @@ def generateBillWiseReport()
 	tempMapJND.put("partyName","Jute Non Depot");
 	finalList.add(tempMapJND);
 	finalList.addAll(juteNonDepotList);
-	
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesD)
 	totalReimbursementAmount=totalReimbursementAmount.add(totalSerChargesND)
 	
@@ -840,6 +833,10 @@ def generateBillWiseReport()
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -865,7 +862,6 @@ def generateBillWiseReport()
 		mgpsServiceCharge=mgpsServiceCharge.add(eligibleFrightCharges)
 		mgpsServiceCharge=mgpsServiceCharge.add(depotCharges)
 		tempMap.put("mgpsServiceCharge", twoDForm.format(mgpsServiceCharge) );
-		
 		facility = delegator.findList("Facility",EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,partyId), UtilMisc.toSet("facilityId"), null, null, false );
 		if(UtilValidate.isNotEmpty(facility)){
 			
@@ -896,7 +892,6 @@ def generateBillWiseReport()
 		}
 	}
 	duplicateInvoiceIds.clear()
-	
 	otherDepottotalsMap.put("partyName","TOTAL");
 	otherDepottotalsMap.put("totInvQty",totalInvoiceQtyD);
 	otherDepottotalsMap.put("totInvValue",totalInvoiceValueD);
@@ -1093,6 +1088,10 @@ def generatePartyWiseReport()
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -1230,6 +1229,10 @@ def generatePartyWiseReport()
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 			    result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -1365,6 +1368,10 @@ def generatePartyWiseReport()
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -1496,6 +1503,10 @@ def generatePartyWiseReport()
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -1694,6 +1705,10 @@ def generateSummaryReport(stateGeoIds)
 				
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -1751,6 +1766,10 @@ def generateSummaryReport(stateGeoIds)
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -1894,6 +1913,10 @@ def generateSummaryReport(stateGeoIds)
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -1952,6 +1975,10 @@ def generateSummaryReport(stateGeoIds)
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -2091,6 +2118,10 @@ def generateSummaryReport(stateGeoIds)
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -2148,6 +2179,10 @@ def generateSummaryReport(stateGeoIds)
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -2285,6 +2320,10 @@ def generateSummaryReport(stateGeoIds)
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 				result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				
@@ -2342,6 +2381,14 @@ def generateSummaryReport(stateGeoIds)
 			if(!duplicateInvoiceIds.contains(invoice.invoiceId)){
 				actualFrightCharges=actualFrightCharges.add(actulFrgtAmt)
 			    result=getSchemePercentage(invoice.partyId,invoice.productId,invoice.partyIdFrom)
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
+				if(UtilValidate.isNotEmpty(resultMap.getAt("errorMessage"))){
+					context.errorMessage=resultMap.getAt("errorMessage");
+					return "error";
+				}
 				schemePercentage=result.getAt("schemePercentage")
 				serviceChrgPercentage=result.getAt("serviceChrgPer")
 				

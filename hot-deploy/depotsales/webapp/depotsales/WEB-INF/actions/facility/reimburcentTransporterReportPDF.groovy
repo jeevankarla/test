@@ -49,7 +49,6 @@ DateMap.put("partythruDate", partythruDate);
 DateList.add(DateMap);
 context.DateList=DateList;
 branchId = parameters.branchId;
- 
 branchName = "";
  
 if(branchId){
@@ -60,17 +59,15 @@ DateMap.put("branchName", branchName);
 branchList = [];
  
 conditionList = [];
-if(branchId){
+
 conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, branchId));
 conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "PARENT_ORGANIZATION"));
 PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
 branchList=EntityUtil.getFieldListFromEntityList(PartyRelationship, "partyIdTo", true);
-if(!branchList)
-	branchList.add(branchId);
-}
+branchList.add(branchId);
 branchBasedWeaversList = [];
 conditionList.clear()
-if(branchId){
+if(branchList){
 	conditionList.add(EntityCondition.makeCondition("partyIdFrom", EntityOperator.IN, branchList));
 	conditionList.add(EntityCondition.makeCondition("roleTypeIdFrom", EntityOperator.EQUALS, "ORGANIZATION_UNIT"));
 	PartyRelationship = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND),UtilMisc.toSet("partyIdTo"), null, null, false);
