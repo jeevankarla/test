@@ -10,8 +10,100 @@
             <widgets>
                 <decorator-screen name="TrustAccountsCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    
+                    <include-menu name="TrustAccountsMenuTabBar" location="component://trustAccounts/widget/TrustAccountsMenus.xml"/>
                     </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="cpfAccounts">
+        <section>
+            <actions>
+               <set field="titleProperty" value="CPF Accounts"/>              
+			   <set field="tabButtonItem" value="cpfAccounts" />
+			   <set field="tabButtonItem2" value="cpfAccounts" />
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/fixedasset/CPFAccounts.groovy"/>
+                <entity-condition entity-name="FinAccount" list="companyFinAccountsList" >
+	    			<condition-list>
+	    				<condition-expr field-name="ownerPartyId" value="Company"/>
+	    				<condition-expr field-name="statusId" value="FNACT_ACTIVE"/>
+	    				<condition-expr field-name="finAccountTypeId" value="BANK_ACCOUNT"/>
+	    			</condition-list>
+    			</entity-condition>
+				<set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
+				<entity-condition list="finAccountList" entity-name="FinAccount">
+					<having-condition-list combine="and">
+<!-- 						<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+						<!-- <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/> -->
+						<condition-expr field-name="finAccountTypeId" operator="in"  from-field="finAccountTypeIds"/>
+						<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+					</having-condition-list>
+					<order-by field-name="finAccountName"/>
+				</entity-condition>
+            </actions>
+            <widgets> <decorator-screen name="TrustAccountsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                     <decorator-section name="body">
+            	 	 <include-menu name="TrustAccountsMenuTabBar" location="component://trustAccounts/widget/TrustAccountsMenus.xml"/>
+            	 	 <include-menu name="cpfAccuntsSubTabBar" location="component://trustAccounts/widget/TrustAccountsMenus.xml"/>
+            	 	<section>
+						<widgets>
+							
+							<section>
+								<widgets>
+									<screenlet title="List CPF Accounts">
+               							<platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/ListCPFAccounts.ftl"/></html></platform-specific>
+               						</screenlet>
+								</widgets>
+							</section>
+						</widgets>
+					</section>
+					</decorator-section> 
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="findcpfAccounts">
+        <section>
+            <actions>
+               <set field="titleProperty" value="CPF Accounts"/>              
+			    <set field="tabButtonItem" value="cpfAccounts" />
+			   <set field="tabButtonItem2" value="findcpfAccounts" />
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/fixedasset/findCPFAccounts.groovy"/>
+                <entity-condition entity-name="FinAccount" list="companyFinAccountsList" >
+	    			<condition-list>
+	    				<condition-expr field-name="ownerPartyId" value="Company"/>
+	    				<condition-expr field-name="statusId" value="FNACT_ACTIVE"/>
+	    				<condition-expr field-name="finAccountTypeId" value="BANK_ACCOUNT"/>
+	    			</condition-list>
+    			</entity-condition>
+				<set field="finAccountTypeIds" value="${groovy:import org.ofbiz.base.util.*; return UtilMisc.toList(&quot;BANK_ACCOUNT&quot;,&quot;CASH&quot;);}" type="List"/>
+				<entity-condition list="finAccountList" entity-name="FinAccount">
+					<having-condition-list combine="and">
+<!-- 						<condition-expr field-name="ownerPartyId" operator="equals" value="Company"/> -->
+						<!-- <condition-expr field-name="finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/> -->
+						<condition-expr field-name="finAccountTypeId" operator="in"  from-field="finAccountTypeIds"/>
+						<condition-expr field-name="statusId" operator="equals" value="FNACT_ACTIVE"/>
+					</having-condition-list>
+					<order-by field-name="finAccountName"/>
+				</entity-condition>
+            </actions>
+            <widgets>
+             <decorator-screen name="TrustAccountsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+            	 <decorator-section name="body">
+            	  <include-menu name="cpfAccuntsSubTabBar" location="component://trustAccounts/widget/TrustAccountsMenus.xml"/>
+            	 	<section>
+						<widgets>
+							<screenlet title="Find CPF Accounts">
+								<include-form name="FindCPFAccounts" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+							</screenlet>
+							<screenlet title="List CPF Payments">
+             					<include-form name="ListCPFPaymentGroups" location="component://accounting/widget/TreasurerPortalForms.xml"/>
+             				</screenlet>
+						</widgets>
+					</section>
+					</decorator-section> 
                 </decorator-screen>
             </widgets>
         </section>
