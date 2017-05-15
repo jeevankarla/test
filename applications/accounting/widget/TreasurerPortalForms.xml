@@ -1353,7 +1353,7 @@ under the License.
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="EmployeelookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
-        <field name="onlineFromDate" id-name="onlineFromDate" title="Adv Date" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
+        <field name="transactionDate" id-name="onlineFromDate" title="Adv Date" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!-- <field name="contraFinAccountId"  title="From Account">
             <drop-down>
             	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
@@ -2294,19 +2294,30 @@ under the License.
         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>       
         <!-- <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field> -->
-        <field name="invoiceDate"><date-find type="timestamp"/></field>
+        <field name="invoiceDate"><date-find type="date" /></field>
         <field name="dueDate"><hidden/></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="FindApInvoices" type="single" target="ApInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/TreasurerPortalForms.xml">
-		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
-		<!-- <field name="invoiceTypeId" position="2">
-			<drop-down allow-empty="true">
-				<entity-options entity-name="InvoiceType" description="${description}">
-					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
-				</entity-options>
-			</drop-down>
-		</field> -->
+    <form name="FindApInvoices" type="single" target="ApInvoices" extends-resource="component://accounting/widget/TreasurerPortalForms.xml">
+		
+		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <!-- <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field> -->
+        <field name="invoiceTypeId"><display/></field>
+        <field name="subTabButtonValue"><hidden/></field>
+        <field name="actionSubTabButtonValue"><hidden/></field>
+        <!-- <field position="1" name="invoiceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="InvoiceType"/>
+            </drop-down>
+        </field> -->
+        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>       
+        <!-- <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field> -->
+        <field name="invoiceDate"><date-find type="date" default-option-from="greaterThanFromDayStart"/></field>
+        <field name="dueDate"><hidden/></field>
+		
 		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;PURCHASE_INVOICE&quot;)"
 			position="3" tooltip="use Ctrl for multi selection">
 			<drop-down allow-empty="true" allow-multiple="true">
@@ -2331,13 +2342,21 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="dueDate"><date-find type="timestamp"/></field>
+		<field name="parentTypeId"><hidden value="PURCHASE_INVOICE"/></field>
+		<!-- <field name="invoiceTypeId" position="2">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="InvoiceType" description="${description}">
+					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+				</entity-options>
+			</drop-down>
+		</field> -->
 			<field name="billingAccountId">
 			<hidden />
 		</field>
 		<field name="billingAccountId"><hidden/></field>
+		<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
-	<form name="FindArInvoices" type="single" target="ArInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/TreasurerPortalForms.xml">
+	<form name="FindArInvoices" type="single" target="ArInvoices" extends-resource="component://accounting/widget/TreasurerPortalForms.xml">
 		<field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
 		<!-- <field name="invoiceTypeId" position="1">
 			<drop-down allow-empty="true">
