@@ -1113,6 +1113,8 @@
                 <set field="tabButtonItem"  value="FindEmployeeAdv"/>
                 <set field="tabButtonItem2" value="EditEmployeeAdvFinAccount"/>
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/receivableInvoice.js" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/datePickerHelper.js" global="true"/> 
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="INR"/>
                 <service service-name="acctgFinAcctPermissionCheck" result-map="permResult">
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>

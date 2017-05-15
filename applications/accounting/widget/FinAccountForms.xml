@@ -391,7 +391,7 @@ under the License.
             </drop-down>
         </field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="transactionDate"> <date-time/> </field>
+        <field name="transactionDate" id-name="onlineFromDate" title="transactionDate" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <field name="entryDate"><date-time/><hidden/></field>
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="RECEIPT"/></field>
          <field name="segmentId"  title="Segment Id">

@@ -83,6 +83,31 @@
 			changeMonth: false,
 			numberOfMonths: 1});		
 		$('#ui-datepicker-div').css('clip', 'auto');
+		$(document).ready(function(){
+	
+			//for date Picker 
+			makeDatePicker("remitDate","thruDate");
+			makeDatePicker("onlineFromDate","thruDate");
+			makeDatePicker("onlineThruDate","thruDate");
+			$('#ui-datepicker-div').css('clip', 'auto');
+	
+			});
+
+function makeDatePicker(fromDateId ,thruDateId){
+		$( "#"+fromDateId ).datepicker({
+			dateFormat:'yy-mm-dd',
+			changeMonth: true,
+			numberOfMonths: 1,
+			
+			maxDate:0,
+			onSelect: function( selectedDate ) {
+				$( "#"+thruDateId ).datepicker( "option", "minDate", selectedDate );
+			}
+		});
+	}
+function setFormParams(){
+		$("#onlineFromDate").datepicker( "option", "dateFormat", "yy-mm-dd 00:00:00");
+		}
 	}
 	
 	function createdisbursement(form) {
@@ -108,7 +133,7 @@
 							"<#if finAccountList?has_content><#list finAccountList as finAccount><option value='${finAccount.finAccountId?if_exists}' >${finAccount.finAccountName?if_exists}</option></#list></#if>"+            
 							"</select></td></tr>";
 						
-		   message += "<tr class='h2'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='instrumentDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
+		   message += "<tr class='h2'><td align='left' class='h3' width='60%'>Cheque Date:</td><td align='left' width='60%'><input class='h4' type='text' readonly id='onlineFromDate' name='instrumentDate' onmouseover='datepick()'/></td></tr>" +
 					  "<tr class='h2'><td align='left' class='h3' width='60%'>Cheque No:</td><td align='left' width='60%'><input class='h4' type='text'  id='contraRefNum' name='contraRefNum'/></tr>" +
  					  "<tr class='h2'><td align='left' class='h3' width='60%'>Cheque InFavour:</td><td align='left' width='60%'><input class='h4' type='text'  id='inFavourOf' name='inFavourOf'/></tr>" +
  					  "<tr class='h2'><td align='left' class='h3' width='60%'>Description:</td><td align='left' width='60%'><input class='h4' type='text'  id='description' name='description'/></tr>" ;

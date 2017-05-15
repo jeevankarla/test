@@ -1349,7 +1349,7 @@ under the License.
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="EmployeelookupPartyName" target-parameter="roleTypeId"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
-        <field name="transactionDate" title="Adv Date"> <date-time/> </field>
+        <field name="transactionDate" id-name="onlineFromDate" title="Adv Date" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!-- <field name="contraFinAccountId"  title="From Account">
             <drop-down>
             	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
