@@ -168,7 +168,7 @@ under the License.
         var instrumentDate = $("#instrumentDate").val();
         
         var paymentRefNum = $("#paymentRefNum").val();
-        
+        var receivepartyId = $("#party").val();
         var paymentGroupTypeId = $("#paymentGroupTypeId").val();
         
         var finAccountId = $("#finAccountId").val();
@@ -198,6 +198,7 @@ under the License.
     	//appeStr += "<input type=hidden name=paymentGroupTypeId value='"+ paymentGroupTypeId +"' />";
     	appeStr += "<input type=hidden name=instrumentDate value='"+ instrumentDate +"' />";
     	appeStr += "<input type=hidden name=paymentRefNum value='"+ paymentRefNum +"' />";
+    	appeStr += "<input type=hidden name=receivepartyId value='"+ receivepartyId +"' />";
     	appeStr += "<input type=hidden name=finAccountId value='"+ finAccountId +"' />";
     	appeStr += "<input type=hidden name=depositAmt value='"+ depositAmt +"' />";
     	
@@ -227,6 +228,18 @@ under the License.
     				</#if>
     				</select>
     			</td>
+    			<td><span class="label">PartyId</span>
+    				<select name="party" id="party" style="width:50%">
+    				<option value=""></option>
+    			 <#list reqPartyIds as eachparty>
+               <#assign partyName= Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator,eachparty, false)?if_exists/>
+    			<option value="${eachparty?if_exists}">${partyName?if_exists}[${eachparty?if_exists}]</option>	
+              </#list>
+              </select>
+    			</td>
+              <input type = "hidden" name = "partyId" id = "partyId" value = "${eachParty?if_exists}">
+              <td>
+    			
     			<input type="hidden" name="paymentGroupTypeId" id="paymentGroupTypeId" value="${roleTypeId?if_exists}">
     			<td><span class="label">${roleTypeId?if_exists} Amount:</span><input class='h3' type='text' id='payAmount' name='payAmount' readonly/></td>
     			<td><span class="label"> Payment Date (<font color='red'>*</font>):</span><input class='h3' type='text' id='paymentDate' name='paymentDate' onmouseover='datepick()'/></td>
