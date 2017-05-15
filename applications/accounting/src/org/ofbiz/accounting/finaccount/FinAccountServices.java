@@ -1566,7 +1566,8 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 	  		finTransCreationMap.put(finAccountId,depositFinTransMap);
   	      try {
 		  		if(UtilValidate.isNotEmpty(finTransCreationMap)){
-		  			
+		  			 List withdrawfinAcctrans = FastList.newInstance();
+		  			List depositfinAcctransList = FastList.newInstance();
 		  			 Iterator tempIter = finTransCreationMap.entrySet().iterator();
 		 			while (tempIter.hasNext()) {
 		 				Entry tempEntry = (Entry) tempIter.next();
@@ -1578,20 +1579,33 @@ public static String makeCPFFinAccTrans(HttpServletRequest request, HttpServletR
 							   request.setAttribute("_ERROR_MESSAGE_", "Error in service batchDepositContraFinAccTrans");
 							   return "error";
 					        }
-					       
 	                        String finAccountTransId = (String)createResult.get("finAccountTransId");
-	                      
+	    		 			
+	    		 			GenericValue finAccountTransTypes = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", finAccountTransId), false);
+	    		 			String wdfinAccountTransTypeId = (String)finAccountTransTypes.get("finAccountTransTypeId");
+	    		 			if(wdfinAccountTransTypeId.equals("WITHDRAWAL")){
+	    		 				withdrawfinAcctrans.add(finAccountTransId);
+	    		 			}
+	    		 			if(wdfinAccountTransTypeId.equals("DEPOSIT")){
+	    		 				depositfinAcctransList.add(finAccountTransId);
+	    		 			}
+	    	  		   String eachdepositfinAccountTransId = null;        
+	    	  		   if(UtilValidate.isNotEmpty(depositfinAcctransList)){
+	    	  			   
+	    	  		    eachdepositfinAccountTransId = (String) depositfinAcctransList.get(0);
+	           	      }
+	    		  		  	for(int w=0;w<withdrawfinAcctrans.size();w++){
+	    		  		  		String eachfinAccountTransId = (String)withdrawfinAcctrans.get(w);
+	    		  		  		
+	    			        		        	GenericValue newTransAttr = delegator.makeValue("FinAccountTransAttribute");        	 
+	    			                        	newTransAttr.set("finAccountTransId", eachfinAccountTransId);
+	    			                        	newTransAttr.set("attrName", "FATR_CONTRA");
+	    			                        	newTransAttr.set("attrValue", eachdepositfinAccountTransId);
+	    			                        	delegator.createOrStore(newTransAttr);
+	    		  		  	}	
 	                        finAccountTransIds.add(finAccountTransId);
-	                        
-	        		        for(String eachfinAccountTransId:finAccountTransIds){
-	        		        	GenericValue newTransAttr = delegator.makeValue("FinAccountTransAttribute");        	 
-	                        	newTransAttr.set("finAccountTransId", eachfinAccountTransId);
-	                        	newTransAttr.set("attrName", "INFAVOUR_OF");
-	                        	newTransAttr.set("attrValue", "FATR_CONTRA");
-	                        	delegator.createOrStore(newTransAttr);
-	        		        	
-	        		        }
 		  			}
+		 			
 		  		}
 		  		 totalAmount = totalAmount.add(depositAmt);
         	if(UtilValidate.isNotEmpty(finAccountTransIds) && finAccountTransIds.size() > 0 ){
