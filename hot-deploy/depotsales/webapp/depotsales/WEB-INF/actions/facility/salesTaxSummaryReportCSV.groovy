@@ -155,11 +155,18 @@ headingMap.put("taxType", "Tax Type");
 headingMap.put("baseValue", "Assessable Value");
 headingMap.put("taxValue", "Tax Amount");
 finalList.add(headingMap);
+
 headingMap1=[:];
 headingMap1.put("taxType", "Sales");
 headingMap1.put("baseValue", " ");
 headingMap1.put("taxValue", " ");
 finalList.add(headingMap1);
+
+/*headingMap2=[:];
+headingMap2.put("taxType", "Output Tax");
+headingMap2.put("baseValue", " ");
+headingMap2.put("taxValue", " ");
+finalList.add(headingMap2);*/
 
 
 conditionList = [];
@@ -169,14 +176,13 @@ taxPurList = delegator.findList("OrderTaxTypeComponentMap", condListb,null, null
 
 
 
-
-
 taxList=[["CST_SALE","VAT_SALE"],["CST_PUR","VAT_PUR"]];
 
 if(branchList){
 	for(eachTaxList in taxList){
 		tempToMap=[:];
 		tempMap=[:];
+		totTempMap=[:];
 		totalOutputBaseVal=0;
 		totalOutputTaxVal=0;
 		for(eachTax in eachTaxList){
@@ -192,8 +198,8 @@ if(branchList){
 			}
 			
 			for(eachTaxPer in taxPercentageList){
-				Debug.log("eachTax============"+eachTax);
-				Debug.log("eachTaxPer============"+eachTaxPer);
+				//Debug.log("eachTax============"+eachTax);
+				//Debug.log("eachTaxPer============"+eachTaxPer);
 				
 				if(eachTaxPer == 0){
 					condList=[];
@@ -304,7 +310,7 @@ if(branchList){
 					invoiceItems = delegator.findList("InvoiceAndItem",EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false );
 					
 						for(eachInvoiceItem in invoiceItems){
-							Debug.log("invoiceId============"+eachInvoiceItem.invoiceId);
+							//Debug.log("invoiceId============"+eachInvoiceItem.invoiceId);
 							invoiceId=eachInvoiceItem.invoiceId;
 							conditionList.clear();
 							//conditionList=[];
@@ -318,7 +324,7 @@ if(branchList){
 							if(invoiceItemsWithTax.itemValue)
 								taxValue= taxValue+invoiceItemsWithTax.itemValue;
 							baseValue=baseValue+eachInvoiceItem.itemValue;
-							Debug.log("baseValue============"+baseValue);
+							//Debug.log("baseValue============"+baseValue);
 						}
 						//Debug.log("invoiceId============"+eachInvoice.invoiceId);
 						
@@ -332,16 +338,19 @@ if(branchList){
 				
 				
 				if((eachTax=="CST_SALE" || eachTax=="CST_PUR") && eachTaxPer!=0 ){
-				invoiceDetailMap.put("taxType", "CST"+""+"@"+eachTaxPer);
+				invoiceDetailMap.put("taxType", "CST"+""+"@"+new BigDecimal(eachTaxPer));
 				}
 				if(eachTax=="CST_SALE" && eachTaxPer==0){
 					invoiceDetailMap.put("taxType", "Inter- State Sales - Exempted");
+				}
+				if((eachTax=="CST_SALE" || eachTax=="CST_PUR") && eachTaxPer==2 ){
+				invoiceDetailMap.put("taxType", "CST"+""+"@"+new BigDecimal(eachTaxPer)+" Against Form C");
 				}
 				if(eachTax=="CST_PUR" && eachTaxPer==0){
 					invoiceDetailMap.put("taxType", "Inter- State Purchases - Exempted");
 				}
 				if((eachTax=="VAT_SALE" || eachTax=="VAT_PUR") && eachTaxPer!=0){
-					invoiceDetailMap.put("taxType", "VAT"+""+"@"+eachTaxPer);
+					invoiceDetailMap.put("taxType", "VAT"+""+"@"+new BigDecimal(eachTaxPer));
 				}
 				if(eachTax=="VAT_SALE" && eachTaxPer==0){
 					invoiceDetailMap.put("taxType", "Sales - Exempt");
@@ -357,11 +366,28 @@ if(branchList){
 				//Debug.log("finalList============"+finalList);
 				
 			}
-			
+			totalOutputBaseVal=totalOutputBaseVal+totalBaseVal;
+			totalOutputTaxVal=totalOutputTaxVal+totalTaxVal;
+			if(eachTax=="VAT_SALE"){
+				totTempMap.put("taxType", "Total Output Tax");
+				totTempMap.put("baseValue", totalOutputBaseVal);
+				totTempMap.put("taxValue", totalOutputTaxVal);
+				finalList.add(totTempMap);
+			}
+			if(eachTax=="VAT_SALE"){
+				tempMap.put("taxType", " ");
+				finalList.add(tempMap);
+			}
 			
 			if(eachTax=="VAT_SALE"){
 				tempToMap.put("taxType", "Purchases");
 				finalList.add(tempToMap);
+			}
+			if(eachTax=="VAT_PUR"){
+				totTempMap.put("taxType", "Total Input Credit");
+				totTempMap.put("baseValue", totalOutputBaseVal);
+				totTempMap.put("taxValue", totalOutputTaxVal);
+				finalList.add(totTempMap);
 			}
 			
 		}
