@@ -34,7 +34,7 @@ condListb = EntityCondition.makeCondition(condListb, EntityOperator.AND);
 fieldToSelect = UtilMisc.toSet("partyId");
 EntityListIterator partyRoleList = delegator.find("PartyRole",condListb,null,fieldToSelect,null,null);
 partyIds=EntityUtil.getFieldListFromEntityListIterator(partyRoleList, "partyId", true);
-//context.empPartyIds=partyIds;
+context.reqPartyIds=partyIds;
 partyRoleList.close();
 condList=[];
 condList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.IN, partyIds));
