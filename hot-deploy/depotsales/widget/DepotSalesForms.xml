@@ -3668,6 +3668,20 @@
         <field name="statusId" title="_"><display/></field>
         <field name="orderTotal" title="_"><display/></field> -->
     </form>
+     <form name="purchaseOrderReportCSV" type="list" list-name="orderList" view-size="99999">
+        <field name="orderNo" title="_"><display/></field> 
+        <field name="indentRefNo" title="_"><display/></field>
+        <field name="weaverName" title="_"><display/></field>
+        <field name="poSquenceNo" title="_" ><display /></field>
+         <field name="poNo" title="_" ><display /></field>
+        <field name="poDate" title="_"><display/></field>
+        <field name="productName" title="_"><display/></field>
+        <field name="poQty" title="_"><display/></field>
+         <field name="poUnitPrice" title="_"><display/></field>
+          <field name="poAmount" title="_"><display/></field>
+        <field name="supplierName" title="_"><display/></field>
+        
+    </form>
     
    <form name="salePurchaseReport" type="list" list-name="salesAndPurchaseList" view-size="99999">
 			<field name="invoiceId" title="Invoice Id"><display/></field>

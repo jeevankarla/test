@@ -132,6 +132,24 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="purchaseOrderReportCSV">
+		<section>
+			<actions>
+				<set field="titleProperty" value="${uiLabelMap.ProcessIndent}" />
+				<set field="tabButtonItem" value="processOrdersBranchSales" />
+				<set field="tabButtonItem2" value="processOrdersBranchSales" />
+				<script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/purchaseOrderReportCSV.groovy" />
+			</actions>
+			<widgets>
+				<section>
+					<widgets>
+						<include-form name="purchaseOrderReportCSV" location="component://depotsales/widget/DepotSalesForms.xml" />
+					</widgets>
+				</section>
+			</widgets>
+		</section>
+	</screen>
     <screen name="DepotSalesBookAbstractReportPDF">
 		<section>
 			<actions>

@@ -65,6 +65,7 @@ $(document).ready(function(){
 	    makeDatePicker1("IndentRegisterFromDate","IndentRegisterThruDate");
 	    makeDatePicker1("IndentRegisterEntryFromDate","IndentRegisterEntryThruDate");
 	    makeDatePicker1("purchaseRegisterReportDateFrom","purchaseRegisterReportDateThru");
+	    makeDatePicker1("purchaseOrderReportDateFrom","purchaseOrderReportDateThru");
 	    makeDatePicker1("TaxReportFRO","TaxReportTHRU");
 	    makeDatePicker1("SalesTaxReportFRO","SalesTaxReportTHRU");
 	    makeDatePicker1("salesTaxSummaryReportFRO","salesTaxSummaryReportTHRU");
@@ -614,6 +615,27 @@ function makeDatePicker3(fromDateId ,thruDateId){
 				<td width="10%"></td>
 				<td width="10%"></td>
 				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('purchaseRegister', '<@ofbizUrl>purchaseRegister.xls</@ofbizUrl>');" class="buttontext"/></td>         			
+			</form>
+          </tr>
+          <tr class="alternate-row">
+			<form id="purchaseOrderReport" name="purchaseOrderReport" method="post" action="<@ofbizUrl>purchaseOrderReport.xls</@ofbizUrl>" target="_blank">	
+				<td width="30%">Purchase Order Report</td>
+						<td width="15%">From<input  type="text" size="18pt" id="purchaseOrderReportDateFrom" readonly  name="fromDate"/></td>
+			    <td width="15%">Thru<input  type="text" size="18pt" id="purchaseOrderReportDateThru" readonly  name="thruDate"/></td>
+				<td width="15%"></td>
+			    <td width="15%">Customer<@htmlTemplate.lookupField size="10" maxlength="22" formName="purchaseRegister" name="partyId" id="partyId" fieldFormName="LookupPartyName"/></td>
+			    <td width="15%"><span class='h3'>Branch
+							    <select name="branchId" id="branchId">
+							        <option value=""></option>
+							        <#list  formatList as formatList>
+							          <option value='${formatList.payToPartyId?if_exists}'>${formatList.productStoreName?if_exists}</option>
+							        </#list> 
+							    </select>    								
+					  	 </span></td>
+					  	 <td width="10%"></td>
+				<td width="10%"></td>
+				<td width="10%"></td>
+				<td width="10%"><input type="submit" value="CSV" onClick="javascript:appendParams('purchaseOrderReport', '<@ofbizUrl>purchaseOrderReport.xls</@ofbizUrl>');" class="buttontext"/></td>         			
 			</form>
           </tr>
 

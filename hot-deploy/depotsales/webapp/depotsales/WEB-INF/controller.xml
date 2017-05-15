@@ -156,6 +156,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="purchaseRegisterCSV"/>
       </request-map>
+      <request-map uri="purchaseOrderReport.xls">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="purchaseOrderReportCSV"/>
+      </request-map>
+      
     <request-map uri="DepotSalesOrderNew"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrderNew"/></request-map>
     <request-map uri="DepotSalesOrderNewDC"><security https="true" auth="true"/><response name="success" type="view" value="DepotSalesOrderNewDC"/></request-map>
      
@@ -3610,6 +3615,7 @@
     <view-map name="IndentPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentPDF" content-type="application/pdf"/>
     <view-map name="IndentCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#IndentCSV" content-type="text/csv"/>
     <view-map name="purchaseRegisterCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#purchaseRegisterCSV" content-type="text/csv"/>
+     <view-map name="purchaseOrderReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#purchaseOrderReportCSV" content-type="text/csv"/>
     <view-map name="agencyWiseInvoiceOutstandingReportCSV" type="screencsv" page="component://depotsales/widget/DepotSalesReportScreens.xml#agencyWiseInvoiceOutstandingReportCSV" content-type="text/csv"/>
     <view-map name="agencyWiseInvoiceOutstandingReportPDF" type="screenfop" page="component://depotsales/widget/DepotSalesReportScreens.xml#agencyWiseInvoiceOutstandingReportPDF" content-type="application/pdf"/>
    
