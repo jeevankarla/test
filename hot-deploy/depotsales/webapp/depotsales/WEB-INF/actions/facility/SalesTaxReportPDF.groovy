@@ -306,12 +306,21 @@ if(branchList){
 					else{
 						condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE","DIES_AND_CHEM_SALE","DEPOT_DIES_CHEM_SALE"]));
 					}
-					condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"saleTitleTransferEnumId"));
+					/*condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"saleTitleTransferEnumId"));
 					if(taxType=="VAT_SALE"){
 						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"NO_E2_FORM"));
 					}
 					else{
 						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.NOT_IN,["NO_E2_FORM","EXEMPTED_GOODS"]));
+					}*/
+					//condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"saleTitleTransferEnumId"));
+					condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"saleTaxType"));
+					if(taxType=="VAT_SALE"){
+						
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Intra-State"));
+					}
+					else{
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Inter-State"));
 					}
 					cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 					invWithAllPer = delegator.findList("InvoiceAndAttribute",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
@@ -505,12 +514,12 @@ if(branchList){
 					productDetails = delegator.findOne("Product",[productId : productId] , false);
 					productCategoryId="";
 					productDescription="";
-					Debug.log("productDetails===================="+productDetails);
+					//Debug.log("productDetails===================="+productDetails);
 					if(productDetails){
 						productCategoryId=productDetails.primaryProductCategoryId;
 						productDescription=productDetails.description;
-						Debug.log("productCategoryId=========="+productCategoryId);
-						Debug.log("productDescription=========="+productDescription);
+						//Debug.log("productCategoryId=========="+productCategoryId);
+						//Debug.log("productDescription=========="+productDescription);
 					}
 					invoiceDetailMap.put("productCategoryId", productCategoryId);
 					invoiceDetailMap.put("productDescription", productDescription);
@@ -578,47 +587,6 @@ if(branchList){
 }
 
 context.finalMap=finalMap;
-
-
-
-
-/*stylesMap=[:];
-
-stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
-stylesMap.put("mainHeader2", "Sales Tax Report");
-stylesMap.put("mainHeader3", "From  "+fromDateForFtl +" to "+thruDateForFtl);
-stylesMap.put("mainHeaderFontName","Arial");
-stylesMap.put("mainHeadercellHeight",300);
-stylesMap.put("mainHeaderFontSize",10);
-stylesMap.put("mainHeadingCell",1);
-stylesMap.put("mainHeaderBold",true);
-stylesMap.put("columnHeaderBgColor",false);
-stylesMap.put("columnHeaderFontName","Arial");
-stylesMap.put("columnHeaderFontSize",10);
-stylesMap.put("autoSizeCell",true);
-stylesMap.put("columnHeaderCellHeight",300);
-request.setAttribute("stylesMap", stylesMap);
-request.setAttribute("enableStyles", true);
-finalList.add(stylesMap);*/
-
-//finalList.add(headingMap);
-
-/*finalMapEntryList = finalMap.entrySet();
-//Debug.log("finalMapEntryList====================="+finalMapEntryList);
-for(eachEntry in finalMapEntryList){
-	taxPer=eachEntry.getKey();
-	branchWiseList=eachEntry.getValue();
-	for(eachBranch in branchWiseList){
-		invList= eachBranch.getKey();
-		invoiceWiseList = eachBranch.getValue();
-		for(eachValue in invoiceWiseList){
-			//Debug.log("eachValue====================="+eachValue);
-			finalList.add(eachValue);
-		}
-		
-	}
-	
-}*/
 
 tempToMap=[:];
 tempToMap.put("partyTinNo", "Total");

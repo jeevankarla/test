@@ -222,12 +222,17 @@ if(branchList){
 					else{
 						condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE","DIES_AND_CHEM_SALE","DEPOT_DIES_CHEM_SALE"]));
 					}
-					condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.IN,["saleTitleTransferEnumId","purchaseTitleTransferEnumId"]));
+					if(eachTax=="VAT_SALE" || eachTax=="CST_SALE"){
+					condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"saleTaxType"));
+					}
+					if(eachTax=="VAT_PUR" || eachTax=="CST_PUR"){
+						condList.add(EntityCondition.makeCondition("invoiceAttrName",  EntityOperator.EQUALS,"purchaseTaxType"));
+					}
 					if(eachTax=="VAT_SALE" || eachTax=="VAT_PUR"){
-						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"NO_E2_FORM"));
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Intra-State"));
 					}
 					else if(eachTax=="CST_SALE" || eachTax=="CST_PUR"){
-						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.NOT_IN,["NO_E2_FORM","EXEMPTED_GOODS"]));
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Inter-State"));
 					}
 					cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 					invWithAllPer = delegator.findList("InvoiceAndAttribute",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
