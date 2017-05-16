@@ -191,7 +191,9 @@ headingMap.put("partyTinNo", "Seller Tin No");
 headingMap.put("partyIdFromName", "Name of Seller");
 headingMap.put("supplierInvId", "Invoice No");
 headingMap.put("invoiceDate", "Invoice Date");
-headingMap.put("productId", "Commodity Code");
+//headingMap.put("productId", "Commodity Code");
+headingMap.put("productCategoryId", "Product Category");
+headingMap.put("productDescription", "Product Description");
 headingMap.put("baseValue", "Purchase Value");
 if(taxType=="VAT_PUR"){
 	headingMap.put("taxValue", "Vat Amount");
@@ -220,6 +222,7 @@ if(taxType=="VAT_PUR" || taxType=="CST_PUR"){
 	}
 }
 headingMap.put("total", "Total Amount");
+headingMap.put("invoiceId", "Internal Invoice Id");
 
 finalList.add(headingMap);
 
@@ -275,12 +278,20 @@ if(branchList){
 					else{
 						condList.add(EntityCondition.makeCondition("purposeTypeId", EntityOperator.IN, ["YARN_SALE","DEPOT_YARN_SALE","DIES_AND_CHEM_SALE","DEPOT_DIES_CHEM_SALE"]));
 					}
-					condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"purchaseTitleTransferEnumId"));
+					/*condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"purchaseTitleTransferEnumId"));
 					if(taxType=="VAT_PUR"){
 						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"NO_E2_FORM"));
 					}
 					else{
 						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.NOT_IN,["NO_E2_FORM","EXEMPTED_GOODS"]));
+					}*/
+					condList.add(EntityCondition.makeCondition("invoiceAttrName", EntityOperator.EQUALS,"purchaseTaxType"));
+					if(taxType=="VAT_PUR"){
+						
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Intra-State"));
+					}
+					else{
+						condList.add(EntityCondition.makeCondition("invoiceAttrValue", EntityOperator.EQUALS,"Inter-State"));
 					}
 					cond = EntityCondition.makeCondition(condList, EntityOperator.AND);
 					invWithAllPer = delegator.findList("InvoiceAndAttribute",EntityCondition.makeCondition(condList,EntityOperator.AND), null, null, null, false );
@@ -411,6 +422,19 @@ if(branchList){
 						productId=eachInvoiceItem.productId;
 						invoiceDetailMap.put("productId", productId);
 					}
+										
+					productDetails = delegator.findOne("Product",[productId : productId] , false);
+					productCategoryId="";
+					productDescription="";
+					//Debug.log("productDetails===================="+productDetails);
+					if(productDetails){
+						productCategoryId=productDetails.primaryProductCategoryId;
+						productDescription=productDetails.description;
+						//Debug.log("productCategoryId=========="+productCategoryId);
+						//Debug.log("productDescription=========="+productDescription);
+					}
+					invoiceDetailMap.put("productCategoryId", productCategoryId);
+					invoiceDetailMap.put("productDescription", productDescription);
 					
 					conditionList=[];
 					conditionList.add(EntityCondition.makeCondition("invoiceId", EntityOperator.EQUALS,eachInvoiceItem.invoiceId));
@@ -464,8 +488,8 @@ if(branchList){
 						invoiceDetailMap.put("taxSurChargeValue", surcharge);
 						invoiceDetailMap.put("taxSurChgPer", taxSurChgPer);
 					}
-					invoiceDetailMap.put("exciseDutyAmount", exciseDutyAmount);
-					invoiceDetailMap.put("invoiceAdjValue", invoiceAdjValue);
+					//invoiceDetailMap.put("exciseDutyAmount", exciseDutyAmount);
+					//invoiceDetailMap.put("invoiceAdjValue", invoiceAdjValue);
 					//totalAmt=invoiceDetailMap["taxValue"]+invoiceDetailMap["taxSurChargeValue"]+baseValue;
 					totalAmt=taxValue+surcharge+baseValue;
 					totalValue=totalValue+totalAmt;
@@ -489,45 +513,6 @@ if(branchList){
 
 context.finalMap=finalMap;
 
-
-
-/*stylesMap=[:];
-
-stylesMap.put("mainHeader1", "NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD.");
-stylesMap.put("mainHeader2", "Purchase Tax Report");
-stylesMap.put("mainHeader3", "From  "+fromDateForFtl +" to "+thruDateForFtl);
-stylesMap.put("mainHeaderFontName","Arial");
-stylesMap.put("mainHeadercellHeight",300);
-stylesMap.put("mainHeaderFontSize",10);
-stylesMap.put("mainHeadingCell",1);
-stylesMap.put("mainHeaderBold",true);
-stylesMap.put("columnHeaderBgColor",false);
-stylesMap.put("columnHeaderFontName","Arial");
-stylesMap.put("columnHeaderFontSize",10);
-stylesMap.put("autoSizeCell",true);
-stylesMap.put("columnHeaderCellHeight",300);
-request.setAttribute("stylesMap", stylesMap);
-request.setAttribute("enableStyles", true);
-finalList.add(stylesMap);*/
-
-
-
-/*finalMapEntryList = finalMap.entrySet();
-//Debug.log("finalMapEntryList====================="+finalMapEntryList);
-for(eachEntry in finalMapEntryList){
-	taxPer=eachEntry.getKey();
-	branchWiseList=eachEntry.getValue();
-	for(eachBranch in branchWiseList){
-		invList= eachBranch.getKey();
-		invoiceWiseList = eachBranch.getValue();
-		for(eachValue in invoiceWiseList){
-			//Debug.log("eachValue====================="+eachValue);
-			finalList.add(eachValue);
-		}
-		
-	}
-	
-}*/
 
 tempToMap=[:];
 tempToMap.put("partyTinNo", "Total");
