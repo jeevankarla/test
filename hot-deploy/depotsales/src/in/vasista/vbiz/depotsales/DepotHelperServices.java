@@ -6043,28 +6043,28 @@ public static Map<String, Object> getInvoiceSequenceForTransaction(DispatchConte
 
 
 
-public static Map<String, Object> getCustomerState(DispatchContext dctx, Map context) {
-	GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
-	LocalDispatcher dispatcher = dctx.getDispatcher();
-	Map<String, Object> result = ServiceUtil.returnSuccess();
-	GenericValue userLogin = (GenericValue) context.get("userLogin");
-	
-	String partyId = (String) context.get("partyId");
-	List conditionList = FastList.newInstance();
-	 List<GenericValue> partyIdFromList = null;
-	 List<GenericValue> stateProvinceGeoIdList = null;
-	 
-	 String partyIdFrom = "";
-	 String stateProvinceGeoId = "";
-	 String geoName = "";
-	 GenericValue BranchList=null;
-	 GenericValue StateIdsList=null;
-	 GenericValue StateList=null;
-	 
+	public static Map<String, Object> getCustomerState(DispatchContext dctx, Map context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		String partyId = (String) context.get("partyId");
+		List conditionList = FastList.newInstance();
+		List<GenericValue> partyIdFromList = null;
+		List<GenericValue> stateProvinceGeoIdList = null;
+		 
+		String partyIdFrom = ""; 
+		String stateProvinceGeoId = "";
+		String districtGeoId = "";
+		String geoName = "";
+		GenericValue BranchList=null;
+		GenericValue StateIdsList=null;
+		GenericValue StateList=null;
+		 
 	 	conditionList.add(EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId));
 	 	try{
 	 		partyIdFromList = delegator.findList("PartyRelationship", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyIdFrom"), null, null, false);
-	 	
 	 	}catch(GenericEntityException e){
 			Debug.logError(e, "Failed to retrive partyIdFromList ", module);
 	 	}
@@ -6074,17 +6074,17 @@ public static Map<String, Object> getCustomerState(DispatchContext dctx, Map con
 	 	conditionList.clear();
 	 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom));
 	 	try{
-	 		stateProvinceGeoIdList = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("stateProvinceGeoId"), null, null, false);
-	 	
+	 		stateProvinceGeoIdList = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("stateProvinceGeoId","districtGeoId"), null, null, false);
 	 	}catch(GenericEntityException e){
 	 		Debug.logError(e, "Failed to retrive stateProvinceGeoIdList ", module);
 		}
 	 	if(UtilValidate.isNotEmpty(stateProvinceGeoIdList)){
 	 		StateIdsList = EntityUtil.getFirst(stateProvinceGeoIdList);
 	 		stateProvinceGeoId = StateIdsList.getString("stateProvinceGeoId");
+	 		districtGeoId = StateIdsList.getString("districtGeoId");
 	 	}
 	 	if(UtilValidate.isEmpty(stateProvinceGeoId)){
- 			return ServiceUtil.returnError("State not configured for this party.");
+			return ServiceUtil.returnError("State not configured for this party.");
 		}
 	 	try{
 	 		GenericValue geoNameList = delegator.findOne("Geo", UtilMisc.toMap("geoId", stateProvinceGeoId), false);
@@ -6094,9 +6094,114 @@ public static Map<String, Object> getCustomerState(DispatchContext dctx, Map con
 			Debug.logError(e, "Failed to retrive geoNameList ", module);
 	 	}
 	 	result.put("StateName",geoName);
+	 	result.put("stateProvinceGeoId",stateProvinceGeoId);
+	 	result.put("districtGeoId",districtGeoId);
 	 	return result;
 	}
 
-
+	public static Map<String, Object> generatePassBook(DispatchContext dctx, Map<String, Object> context) {
+		GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String customerId = (String) context.get("customerId");
+		List conditionList = FastList.newInstance();
+		GenericValue sequenceDetailsForSeq=null;
+		BigDecimal seqId= BigDecimal.ZERO;
+		Long seqIdlong;
+		String passBookNumber = "";
+		String stateGeoId = "";
+		String districtGeoId = "";
+		String stateCode = "";
+		String districtCode = "";
+		String seqName="";
+		String sequenceId="";
+		String customerTypeSeqId="";
+		String customerType="";
+	 	try{
+	 		Map<String,Object> serviceResult = dispatcher.runSync("getCustomerState", UtilMisc.toMap("partyId",customerId));
+	        if(ServiceUtil.isError(serviceResult)){
+				Debug.logError("Unable to get state details..." + ServiceUtil.getErrorMessage(serviceResult), module);
+				return ServiceUtil.returnError("Unable to get state details..."+ ServiceUtil.getErrorMessage(serviceResult));
+			}
+	        stateGeoId =(String)serviceResult.get("stateProvinceGeoId");
+	        districtGeoId =(String)serviceResult.get("districtGeoId");
+	        if(UtilValidate.isEmpty(districtGeoId)){
+	        	Debug.logError("District Geo Id is not Configured for Party : "+ customerId, module);
+	 			return ServiceUtil.returnError("District Geo Id is not Configured for Party :"+ customerId);
+	        }
+	 	}catch (GenericServiceException e) {
+            Debug.logError(e, "Error While running getCustomerState Service", module);
+            return ServiceUtil.returnError("Error While running getCustomerState Service");
+	 	} 
+	 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, customerId));
+	 	conditionList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+	 	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
+	 	try{
+	 		List<GenericValue> customerTypeList= delegator.findList("PartyClassification", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("partyClassificationGroupId"), null, null, false);
+	 		if(UtilValidate.isEmpty(customerTypeList)){
+	        	Debug.logError("Customer Type is Not configured in PartyClassification for Party"+ customerId, module);
+	 			return ServiceUtil.returnError("Customer Type is Not configured in PartyClassification for Party "+ customerId);
+	        }
+	 		customerType = (String)EntityUtil.getFirst(customerTypeList).get("partyClassificationGroupId");
+	 	}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive PartyClassification ", module);
+	 	}
+	 	try{
+	 		GenericValue stateDetails = delegator.findOne("Geo", UtilMisc.toMap("geoId", stateGeoId), false);
+	 		GenericValue districtDetails = delegator.findOne("Geo", UtilMisc.toMap("geoId", districtGeoId), false);
+	 		stateCode = (String)stateDetails.get("geoSecCode");
+	 		districtCode = (String)districtDetails.get("geoCode");
+	 		if(UtilValidate.isEmpty(stateCode)){
+	        	Debug.logError("State Code is Not Configured for StateGeo Id : "+ stateGeoId, module);
+	 			return ServiceUtil.returnError("State Code is Not Configured for StateGeo Id : "+ stateGeoId);
+	        }
+	 		if(UtilValidate.isEmpty(districtGeoId)){
+	        	Debug.logError("District Code is Not Configured for districtGeo Id : "+ districtGeoId, module);
+	 			return ServiceUtil.returnError("District Code is Not Configured for districtGeo Id : "+ districtGeoId);
+	        }
+	 		seqName=stateCode+districtCode;
+	 	}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive Geo Entity...", module);
+			return ServiceUtil.returnError("Failed to retrive Geo Entity... ");
+	 	}
+	 	try{
+	 		sequenceDetailsForSeq = delegator.findOne("SequenceValueItem", UtilMisc.toMap("seqName", seqName), false);
+	 		if(UtilValidate.isEmpty(sequenceDetailsForSeq)){
+	        	Debug.logError("Please set exsisted sequence in SequenceValueItem "+ districtGeoId, module);
+	 			return ServiceUtil.returnError("Please set exsisted sequence in SequenceValueItem");
+	        }
+	 		GenericValue sequenceDetailsForCustType = delegator.findOne("SequenceValueItem", UtilMisc.toMap("seqName", customerType), false);
+	 		if(UtilValidate.isEmpty(sequenceDetailsForCustType)){
+	        	Debug.logError("Customer Type sequence is missing in SequenceValueItem for customer Type: "+ customerType, module);
+	 			return ServiceUtil.returnError("Customer Type sequence is missing in SequenceValueItem for customer Type: "+ customerType);
+	        }
+	 	    seqId =new BigDecimal(sequenceDetailsForSeq.get("seqId").toString());
+	 		seqId=seqId.add(BigDecimal.ONE);
+	 		seqIdlong=seqId.longValue();
+	 		sequenceId =seqId.toString(); 
+	 		for(int i=1; i<=sequenceId.length(); i++)
+	 		{
+	 			sequenceId="0"+sequenceId;
+	 			if(sequenceId.length()==5){
+	 				break;
+	 			}
+	 		}
+	 		BigDecimal custTypeSeqId = new BigDecimal(sequenceDetailsForCustType.get("seqId").toString());
+	 		customerTypeSeqId =custTypeSeqId.toString(); 
+	 	}catch(GenericEntityException e){
+			Debug.logError(e, "Failed to retrive SequenceValueItem Entity...", module);
+			return ServiceUtil.returnError("Failed to retrive SequenceValueItem Entity...");
+	 	}
+ 		try{
+ 			sequenceDetailsForSeq.set("seqId",seqIdlong);
+ 			sequenceDetailsForSeq.store();
+     	}catch(GenericEntityException e){
+ 			Debug.logError(e, "Failed to Populate SequenceValueItem ", module);
+ 		}
+	 	passBookNumber=stateCode+districtCode+customerTypeSeqId+sequenceId;
+	 	result.put("passBookNumber",passBookNumber);
+	 	return result;
+	}
   	
 }
