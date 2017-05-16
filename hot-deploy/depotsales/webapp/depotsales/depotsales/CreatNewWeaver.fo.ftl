@@ -639,9 +639,9 @@ function datepick()	{
 		       			       <td align='left' valign='middle' nowrap="nowrap"><div class='h2'>Loom Details</div></td>
 					      </tr>
 					       <tr>
-						 <td class="label"><b> PassBook :</b></td>
+						 <td class="label"><b> Issue PassBook :</b></td>
 				        <td>
-        		 			<input class="h3" type="text" size="18" maxlength="100" name="passBook" id="passBook"  onblur="javascript:passBookIssueDateVal(this);"/>
+        		 			<input class="h3" type="checkbox" name="passBook" id="passBook" />
           				</td>
           				 <td class="label" id="issueDatelabel"><b> PassBook IssueDate:</b></td>
 				        <td>

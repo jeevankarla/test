@@ -7314,11 +7314,12 @@ catch(Exception e){
 		  		return ServiceUtil.returnError(e.toString());
 	  		}
         }
+        Timestamp issueDate = null;
      try{
 		     if(UtilValidate.isNotEmpty(panId)){
 		       	 dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PAN_NUMBER","idValue",panId,"partyId",partyId,"userLogin", context.get("userLogin")));
 		  	  }
-		     Timestamp issueDate = null;
+		     
 		     if(UtilValidate.isNotEmpty(passBook)){
 		    	 if(UtilValidate.isNotEmpty(context.get("passBookIssueDate"))){
 		    		  SimpleDateFormat SimpleDF1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -7336,7 +7337,6 @@ catch(Exception e){
 				 }else{
 					 issueDate= UtilDateTime.nowTimestamp();
 				 }
-		        dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue",passBook,"partyId",partyId,"issueDate",issueDate,"userLogin", context.get("userLogin")));
 		 	  }else{
 			    dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue","_NA_","partyId",partyId,"userLogin", context.get("userLogin")));
 		 	  }
@@ -7349,7 +7349,6 @@ catch(Exception e){
 		     if(UtilValidate.isNotEmpty(cstNumber)){
 		         dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","CST_NUMBER","idValue",cstNumber,"partyId",partyId,"userLogin", context.get("userLogin")));
 		   	 }
-		    
         }catch(GenericServiceException e){
 	  		Debug.logError(e, e.toString(), module);
 	  		return ServiceUtil.returnError(e.toString());
@@ -7369,10 +7368,17 @@ catch(Exception e){
             	 	Debug.logError("faild service create party RelationShip:"+ServiceUtil.getErrorMessage(outMap), module);
             	 	return ServiceUtil.returnError(ServiceUtil.getErrorMessage(outMap));
              }
+             if("on".equals(passBook)){
+             	Map<String, Object> passBookResult =  dispatcher.runSync("generatePassBook", UtilMisc.toMap("customerId",partyId));
+             	String passBookNumber=(String)passBookResult.get("passBookNumber");
+             	dispatcher.runSync("createPartyIdentification", UtilMisc.toMap("partyIdentificationTypeId","PSB_NUMER","idValue",passBookNumber,"partyId",partyId,"issueDate",issueDate,"userLogin", context.get("userLogin")));
+             }
+        	 
         } catch (GenericServiceException e) {
         	Debug.logError(e, e.toString(), module);
 	  		return ServiceUtil.returnError(e.toString());
         }
+        
         Iterator entries = loomsMap.entrySet().iterator();
         
         
@@ -7508,10 +7514,6 @@ catch(Exception e){
 				return ServiceUtil.returnError("Error while creating  Bank Details" + e);	
 			}
         }
-        
-        
-        
-        
         
         result.put("partyId",partyId);
 			

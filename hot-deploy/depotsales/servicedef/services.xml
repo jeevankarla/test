@@ -957,9 +957,16 @@
          <attribute name="sequenceList" type="List" mode="OUT" optional="false"/>
    </service>
    <service name="getCustomerState" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="getCustomerState" transaction-timeout="6000000000000000">
-        <description>Get State Name</description>
+        <description>Get State Name</description>  
          <attribute name="partyId" type="String" mode="IN" optional="false"/>
          <attribute name="StateName" type="String" mode="OUT" optional="false"/>
+         <attribute name="stateProvinceGeoId" type="String" mode="OUT" optional="false"/>
+         <attribute name="districtGeoId" type="String" mode="OUT" optional="true"/>
+   </service>
+   <service name="generatePassBook" engine="java" location="in.vasista.vbiz.depotsales.DepotHelperServices" invoke="generatePassBook" transaction-timeout="6000000000000000">
+        <description>Generate PassBook for Customer</description>  
+         <attribute name="customerId" type="String" mode="IN" optional="false"/>
+         <attribute name="passBookNumber" type="String" mode="OUT" optional="false"/>
    </service>
    
    <service name="getTenPercentageSubsidyAmount"  engine="java"
