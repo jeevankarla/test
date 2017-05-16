@@ -867,7 +867,7 @@ under the License.
             </drop-down>
         </field>
        <!--  <field name="partyId"><lookup target-form-name="LookupPartyName"/></field> -->
-        <field name="transactionDate"> <date-time/> </field>
+       	<field name="transactionDate" id-name="onlineFromDate" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!--  <field name="entryDate"><date-time/></field>  -->
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="RECEIPT"/></field>
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field> 
@@ -1215,7 +1215,7 @@ under the License.
         </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
-        <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
+        <field name="transactionDate" id-name="onlineFromDate" title="Receipt Date" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!-- <field name="contraFinAccountId"  title="From Account">
             <drop-down>
             	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
@@ -1277,7 +1277,7 @@ under the License.
         </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
-        <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
+        <field name="transactionDate" id-name="onlineFromDate" title="Receipt Date" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!-- <field name="contraFinAccountId"  title="From Account">
             <drop-down>
             	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>

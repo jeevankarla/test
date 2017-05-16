@@ -969,6 +969,8 @@
                 </service>
                 <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
                 <set field="screenFlag" value="N"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/receivableInvoice.js" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/datePickerHelper.js" global="true"/> 
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
@@ -1043,6 +1045,8 @@
                     <field-map field-name="mainAction" value="FINACCOUNT_EDIT"/>
                 </service>
                 <set field="screenFlag" value="N"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/receivableInvoice.js" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/datePickerHelper.js" global="true"/> 
                 <set field="screenFlag" value="DEPOSIT_ACCOUNT"/>
                 <set field="hasFinEditPermission" from-field="permResult.hasPermission"/> 
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
@@ -2057,6 +2061,8 @@
                 <set field="entryType" from-field="parameters.entryType"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/images/paymentTransaction.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/accounting/images/receivableInvoice.js" global="true"/>
+				<set field="layoutSettings.javaScripts[]" value="/accounting/images/datePickerHelper.js" global="true"/> 
                 <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
             </actions>           
             <widgets>
