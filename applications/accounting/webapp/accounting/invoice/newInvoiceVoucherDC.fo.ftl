@@ -98,7 +98,7 @@ under the License.
 	<fo:table-column column-width="8%"/>
 	<fo:table-column column-width="7%"/>
 	<fo:table-column column-width="7%"/>
-	<fo:table-column column-width="7%"/>
+	<fo:table-column column-width="10%"/>
 	<fo:table-column column-width="8%"/>
 	<fo:table-column column-width="11%"/>
 	<fo:table-column column-width="8%"/>
@@ -315,9 +315,11 @@ under the License.
 				<fo:table-cell border-style="solid">
 				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${invoiceDetail.get("packQuantity")?if_exists} </fo:block>
 				</fo:table-cell>
-				<#assign totPackets=totPackets+invoiceDetail.get("packets")>
+				<#--<#assign totPackets=totPackets+invoiceDetail.get("packets")>-->
+				<#assign packetsNo = 0>
+				<#assign packetsNo=invoiceDetail.get("quantity")/invoiceDetail.get("packQuantity")>
 				<fo:table-cell border-style="solid">
-				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${invoiceDetail.get("packets")?if_exists} </fo:block>
+				<fo:block  keep-together="always" text-align="right" font-size="11pt" white-space-collapse="false">${packetsNo?string("#0.00")}</fo:block>
 				</fo:table-cell>
 				<fo:table-cell border-style="solid">
 					
@@ -587,6 +589,8 @@ under the License.
 	   	          <#--  <#if scheme != "General"> --> 
 	                <#--<fo:block text-align="left"    font-size="10pt" >Purchase Value (RS):<#if purInvoiceTOt?has_content>${purInvoiceTOt?string("#0.00")}</#if></fo:block>-->
 	   			<#--	</#if>-->
+	   				<fo:block text-align="left">Transaction Type: ${TransactionTypevalue?if_exists}</fo:block>
+	   				<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	
 	   				 <fo:block text-align="left"    font-size="10pt" >Delivery Challan Date : ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(deliveryChallanDate, "dd-MMM-yyyy")} </fo:block>
 	        		 <fo:block text-align="left"    font-size="10pt" >Delivery Challan No : ${deliveryChallanNumber?if_exists}</fo:block>

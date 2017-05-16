@@ -503,7 +503,11 @@ under the License.
 					</fo:table-row>
 				 <fo:table-row white-space-collapse="false" >
 						<fo:table-cell  border-style-right="hidden">
-						<fo:block text-align="left"  font-size="10pt" >Destination       :${destination?if_exists}</fo:block>
+						<#if branchId=="INT55">
+							<fo:block text-align="left"  font-size="10pt" >Destination       : Balarampuram</fo:block>
+						<#else>
+							<fo:block text-align="left"  font-size="10pt" >Destination       :${destination?if_exists}</fo:block>
+						</#if>
 						</fo:table-cell>
 						<fo:table-cell  border-style-right="hidden">
 						<fo:block text-align="left" keep-together="always"    font-size="10pt" >&#160;&#160;</fo:block>
