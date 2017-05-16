@@ -100,7 +100,7 @@
 	        //    $('#transactionDate').val(onlyDate);
 	        //},
 	        changeMonth: false,
-			minDate:startDate,
+			
 			numberOfMonths: 1});		
 		$('#ui-datepicker-div').css('clip', 'auto');
 	}
