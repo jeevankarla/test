@@ -6071,8 +6071,9 @@ public static Map<String, Object> getInvoiceSequenceForTransaction(DispatchConte
 	 	BranchList = EntityUtil.getFirst(partyIdFromList);
 	 	partyIdFrom = BranchList.getString("partyIdFrom");
 	 	
-	 	conditionList.clear();
+	 	conditionList.clear(); 
 	 	conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyIdFrom));
+	 	conditionList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
 	 	try{
 	 		stateProvinceGeoIdList = delegator.findList("PartyAndPostalAddress", EntityCondition.makeCondition(conditionList, EntityOperator.AND), UtilMisc.toSet("stateProvinceGeoId","districtGeoId"), null, null, false);
 	 	}catch(GenericEntityException e){
