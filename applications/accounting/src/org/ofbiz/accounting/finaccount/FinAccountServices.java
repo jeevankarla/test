@@ -2072,5 +2072,238 @@ public static Map<String, Object> createEmployeeAdvance(DispatchContext dctx, Ma
     return result;
 }
 
+public static String makeInterestTransaction(HttpServletRequest request, HttpServletResponse response) {
+	  Delegator delegator = (Delegator) request.getAttribute("delegator");
+	  LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+	  Locale locale = UtilHttp.getLocale(request);
+	  Map<String, Object> result = ServiceUtil.returnSuccess();
+	  HttpSession session = request.getSession();
+	  GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+    Timestamp nowTimeStamp = UtilDateTime.nowTimestamp();	 
+    Timestamp todayDayStart = UtilDateTime.getDayStart(nowTimeStamp);
+	  Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+	  BigDecimal totalAmount = BigDecimal.ZERO;
+	  List paymentIds = FastList.newInstance();
+  	
+	  int rowCount = UtilHttp.getMultiFormRowCount(paramMap);
+	  if (rowCount < 1) {
+		  Debug.logError("No rows to process, as rowCount = " + rowCount, module);
+		  request.setAttribute("_ERROR_MESSAGE_", "No rows to process");	  		  
+		  return "error";
+	  }
+	  String paymentMethodId = "";
+	  String paymentType = "";
+	  String finAccountId = "";
+	  String paymentDateStr = "";
+	  String receivepartyId = "";
+	  String partyId = "";
+	  String partyIdFrom = "";
+	  String paymentGroupId = "";
+	  String description = "";
+	  String paymentGroupTypeId="";
+	  String depositAmtStr="";
+	  String glAccountId =  null;
+	  glAccountId = (String) paramMap.get("glAccountId");
+	  description = (String) paramMap.get("description");
+	  paymentDateStr = (String) paramMap.get("paymentDate");
+	  receivepartyId = (String) paramMap.get("receivepartyId");
+	  paymentGroupTypeId = (String) paramMap.get("paymentGroupTypeId");
+	  depositAmtStr = (String) paramMap.get("depositAmt");
+
+	  
+     Timestamp paymentDate=UtilDateTime.nowTimestamp();
+     if (UtilValidate.isNotEmpty(paymentDateStr)) {
+		    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			try {
+				paymentDate = new java.sql.Timestamp(sdf.parse(paymentDateStr).getTime());
+			} catch (ParseException e) {
+				Debug.logError(e, "Cannot parse date string: "+ paymentDateStr, module);
+			} catch (NullPointerException e) {
+				Debug.logError(e, "Cannot parse date string: "	+ paymentDateStr, module);
+			}
+	   }
+      BigDecimal totInvoiceAMount = BigDecimal.ZERO;
+	  	Map invoiceAmountMap = FastMap.newInstance();
+	  	List invoicesList = FastList.newInstance();
+	  	boolean beganTransaction = false;
+      Map finaccountAmountMap = FastMap.newInstance();
+      Map finTransCreationMap = FastMap.newInstance();
+      List<String>finAccountTransIds = FastList.newInstance();
+
+	  	//EntityListIterator finIdsList = null;
+		for (int i = 0; i < rowCount; i++){
+		  	  Map paymentMap = FastMap.newInstance();
+	  		  String thisSuffix = UtilHttp.MULTI_ROW_DELIMITER + i;
+	  		  BigDecimal amount = BigDecimal.ZERO;
+	  		  String amountStr = "";
+	  		  BigDecimal employeeFinAmount=BigDecimal.ZERO;
+	  		  BigDecimal employeerFinAmount=BigDecimal.ZERO;
+	  		  BigDecimal vpfFinAmount=BigDecimal.ZERO;
+	  		  if (paramMap.containsKey("empCon"+ thisSuffix)) {
+	  			employeeFinAmount = new BigDecimal((String)paramMap.get("empCon"+thisSuffix));
+	  		  }
+	  		  if (paramMap.containsKey("emprCon"+ thisSuffix)) {
+	  			employeerFinAmount = new BigDecimal((String) paramMap.get("emprCon"+thisSuffix));
+	  		  }
+
+	  		  if (paramMap.containsKey("vpfCon"+ thisSuffix)) {
+	  			vpfFinAmount = new BigDecimal((String)paramMap.get("vpfCon"+thisSuffix));
+	  		  }
+	  		  if (paramMap.containsKey("partyId"+ thisSuffix)) {
+	  			  partyId = (String) paramMap.get("partyId"+thisSuffix);
+	  		  }
+	  		 
+	  		 try {
+	  		
+	  			 List conditionList = FastList.newInstance();
+	  			if(UtilValidate.isNotEmpty(partyId)){
+	  	  		  conditionList.add(EntityCondition.makeCondition("ownerPartyId", EntityOperator.EQUALS ,partyId));
+	  	  		  }
+	  			conditionList.add(EntityCondition.makeCondition("finAccountTypeId",EntityOperator.IN,UtilMisc.toList("EMP_CONTRI","EMPR_CONTRI","VPF_CONTRI")));
+	  			EntityCondition condition = EntityCondition.makeCondition(conditionList,EntityOperator.AND); 		
+		  		  List<GenericValue> finAccList = delegator.findList("FinAccount", condition, null, null, null, false);
+	  			 
+		  		String employeefinAccountId =  null;
+		  		List<GenericValue> employeefinAccountList = EntityUtil.filterByCondition(finAccList, EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,"EMP_CONTRI"));
+	  			employeefinAccountId = EntityUtil.getFirst(employeefinAccountList).getString("finAccountId");
+	  			
+	  			String employerfinAccountId =  null;
+	  			List<GenericValue> employerconditionList = EntityUtil.filterByCondition(finAccList, EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "EMPR_CONTRI"));
+	  			employerfinAccountId = EntityUtil.getFirst(employerconditionList).getString("finAccountId");
+	  			
+	  			String volunteerfinAccountId =  null;
+	  			List<GenericValue> volunteerfinAccountList = EntityUtil.filterByCondition(finAccList, EntityCondition.makeCondition("finAccountTypeId", EntityOperator.EQUALS, "VPF_CONTRI"));
+	  			volunteerfinAccountId = EntityUtil.getFirst(volunteerfinAccountList).getString("finAccountId");
+	  			
+	  			
+		  		
+	  	  		Map employeefinMap = FastMap.newInstance();
+		  	  		employeefinMap.put("partyId",partyId);
+		  	  	if(UtilValidate.isNotEmpty(employeefinAccountId)){   
+		  	  		employeefinMap.put("finAccountId",employeefinAccountId);
+		  	  	}  
+		  	  		employeefinMap.put("transactionDate",paymentDate);
+		  	  		employeefinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  		employeefinMap.put("reasonEnumId","INTEREST_PAID");
+		  	  	    employeefinMap.put("statusId","FINACT_TRNS_CREATED");
+		  	  	    employeefinMap.put("costCenterId","Company");
+		  	  	    employeefinMap.put("segmentId","CPF_TRUST");
+		  	  	    employeefinMap.put("glAccountId",glAccountId);
+		  	  	    employeefinMap.put("statusId","FINACT_TRNS_CREATED");
+		  	  		employeefinMap.put("userLogin", userLogin);
+		  	  		employeefinMap.put("amount",employeeFinAmount);
+	  	  		Map employeerfinMap = FastMap.newInstance();
+		  	  		employeerfinMap.put("partyId",partyId);
+		  	 if(UtilValidate.isNotEmpty(employerfinAccountId)){  		
+		  	  		employeerfinMap.put("finAccountId",employerfinAccountId);
+	  		 }
+		  	  		employeerfinMap.put("transactionDate",paymentDate);
+		  	  		employeerfinMap.put("statusId","FINACT_TRNS_CREATED");
+		  	  		employeerfinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  	    employeerfinMap.put("reasonEnumId","FATR_CONTRA");
+		  	  	    employeerfinMap.put("costCenterId","Company");
+	  	  	        employeerfinMap.put("segmentId","CPF_TRUST");
+		  	  	    employeerfinMap.put("glAccountId",glAccountId);
+//		  	  		employeerfinMap.put("entryType","Adjustment");
+		  	  		//employeerfinMap.put("contraRefNum", contraRefNum);
+		  	  		employeerfinMap.put("userLogin", userLogin);
+		  	  		employeerfinMap.put("amount",employeerFinAmount);
+	  		
+	  		
+	  	  		Map vpffinMap = FastMap.newInstance();
+		  	  		vpffinMap.put("partyId",partyId);
+		  	  	if(UtilValidate.isNotEmpty(volunteerfinAccountId)){
+		  	  		vpffinMap.put("finAccountId",volunteerfinAccountId);
+		  	  	}
+		  	  		vpffinMap.put("transactionDate",paymentDate);
+		  	  		vpffinMap.put("finAccountTransTypeId","WITHDRAWAL");
+		  	  	    vpffinMap.put("glAccountId",glAccountId);
+		  	  	    vpffinMap.put("reasonEnumId","FATR_CONTRA");
+		  	  		vpffinMap.put("statusId","FINACT_TRNS_CREATED");
+		  	  	    vpffinMap.put("costCenterId","Company");
+		  	        vpffinMap.put("segmentId","CPF_TRUST");
+		  	  		vpffinMap.put("userLogin", userLogin);
+		  	  		vpffinMap.put("amount",vpfFinAmount);
+
+		  	  	finTransCreationMap.put(employeefinAccountId,employeefinMap);
+		  	  	finTransCreationMap.put(employerfinAccountId,employeerfinMap);
+		  	  	finTransCreationMap.put(volunteerfinAccountId,vpffinMap);
+	  		}catch (GenericEntityException e) {
+	  	  		  try {
+	  	  			  // only rollback the transaction if we started one...
+	  	  			  TransactionUtil.rollback(beganTransaction, "Error Fetching data", e);
+	  	  		  } catch (GenericEntityException e2) {
+	  	  			  Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+	  	  		  }
+	  	  		  Debug.logError("An entity engine error occurred while fetching data", module);
+	  	  	  }
+		}
+	  			 
+		BigDecimal depositAmt=BigDecimal.ZERO;
+		 if(UtilValidate.isNotEmpty(depositAmtStr)){
+		  try {
+			  depositAmt = new BigDecimal(depositAmtStr);
+		  } catch (Exception e) {
+			  Debug.logError(e, "Problems parsing amount string: " + depositAmtStr, module);
+			  request.setAttribute("_ERROR_MESSAGE_", "Problems parsing amount string: " + depositAmtStr);
+			return "error";
+		  }
+	  }
+		 
+	      try {
+		  		if(UtilValidate.isNotEmpty(finTransCreationMap)){
+		  			 List withdrawfinAcctrans = FastList.newInstance();
+		  			List depositfinAcctransList = FastList.newInstance();
+		  			 Iterator tempIter = finTransCreationMap.entrySet().iterator();
+		 			while (tempIter.hasNext()) {
+		 				Entry tempEntry = (Entry) tempIter.next();
+		 				String tempFinAccountId = (String) tempEntry.getKey();
+		 				Map FinAccountTransMap = (Map) tempEntry.getValue();
+			        	 Map<String, Object> createResult = dispatcher.runSync("createFinAccountTrans", FinAccountTransMap);
+			        	 if (ServiceUtil.isError(createResult)) {
+					       	   Debug.logError("Problems in service batchDepositContraFinAccTrans", module);
+							   request.setAttribute("_ERROR_MESSAGE_", "Error in service batchDepositContraFinAccTrans");
+							   return "error";
+					        }
+	                        String finAccountTransId = (String)createResult.get("finAccountTransId");
+	    		 			
+	                        finAccountTransIds.add(finAccountTransId);
+		  			}
+		 			
+		  		}
+		  		 totalAmount = totalAmount.add(depositAmt);
+      	if(UtilValidate.isNotEmpty(finAccountTransIds) && finAccountTransIds.size() > 0 ){
+		  		  Map serviceCtx = FastMap.newInstance();
+		  		  serviceCtx.put("finAccountTransIds", finAccountTransIds);
+		  		  serviceCtx.put("finAccntTransDate", paymentDate);
+		  		  serviceCtx.put("fromDate", paymentDate);
+		  		  serviceCtx.put("partyId", receivepartyId);
+		  		  serviceCtx.put("issuingAuthority", finAccountId);
+		  		  serviceCtx.put("amount", totalAmount);
+		  		  serviceCtx.put("statusId", "FNACTTRNSGRP_CREATED");
+		  		  serviceCtx.put("finAccountId", finAccountId);
+		  		  serviceCtx.put("finAcntTrnsGrpTypeId", "FIN_ACNT_TRNS_BATCH");
+		  		  serviceCtx.put("createdDate", UtilDateTime.nowTimestamp());
+		  		  serviceCtx.put("lastModifiedDate", UtilDateTime.nowTimestamp());
+		  		  serviceCtx.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+		  		  serviceCtx.put("createdByUserLogin", userLogin.getString("userLoginId"));
+		  		  serviceCtx.put("userLogin", userLogin);
+	  			  Map resultCtx = dispatcher.runSync("createFinAccountTransGroupAndMember", serviceCtx);
+		  		  if(ServiceUtil.isError(resultCtx)){
+		    			Debug.logError("Error while creating fin account trans group: " + ServiceUtil.getErrorMessage(resultCtx), module);
+		    			request.setAttribute("_ERROR_MESSAGE_", "Error while creating fin account trans group");
+			  			TransactionUtil.rollback();
+			  			return "error";
+		  		  }
+			  	  String finAccntTransGroupId = (String)resultCtx.get("finAccntTransGroupId");
+		  	  }	
+      } catch (Exception ex) {
+	  		    return "error";
+	     }
+			 result = ServiceUtil.returnSuccess("Transaction Completed successfully...!");
+			 request.setAttribute("_EVENT_MESSAGE_", "Transaction Completed successfully...!");
+		     return "success"; 
+	  	 }  
+
 
 }

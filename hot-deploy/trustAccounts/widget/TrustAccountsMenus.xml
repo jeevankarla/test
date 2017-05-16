@@ -14,6 +14,14 @@
             </condition>
 			<link target="cpfAccounts"></link>
 		</menu-item>
+		<menu-item name="interestAccounts" title="Interest Accounts">
+		     <condition>
+				<and>
+				    <if-has-permission permission="ACCOUNTING"  action="_TREASURER"/>
+            	</and>            
+            </condition>
+			<link target="interestAccounts"></link>
+		</menu-item>
     </menu>
     
     
@@ -23,6 +31,15 @@
         </menu-item>
          <menu-item name="findcpfAccounts" title="Find CPF Accounts">
             <link target="findcpfAccounts"/>
+        </menu-item>
+     </menu>
+     
+     <menu name="interestAccountsSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="interestAccounts" title="Interest Accounts">
+            <link target="interestAccounts"/>
+        </menu-item>
+         <menu-item name="findinterestAccounts" title="Find Interest Accounts">
+            <link target="findinterestAccounts"/>
         </menu-item>
      </menu>
     
