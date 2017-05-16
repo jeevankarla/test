@@ -19,9 +19,10 @@ import javolution.util.FastList;
 
 acountingTransEntriesMap=[:];
 if(UtilValidate.isNotEmpty(paymentIds)){
-	
-Debug.log("paymentIds===="+paymentIds);
-for(paymentId in paymentIds){
+	paymentIds1=paymentIds;
+}
+Debug.log("paymentIds===="+paymentIds1);
+for(paymentId in paymentIds1){
 	acctgTransId = "";
 	accountingTransEntryList = [];
 	accountingTransEntries = [:];
@@ -44,7 +45,7 @@ if(UtilValidate.isNotEmpty(paymentId)){
 	}
 }
 partyIdForAdd="";
-
+Debug.log("paymentIds===="+parameters.invoiceId);
 if(UtilValidate.isNotEmpty(parameters.invoiceId)){
 invoice = delegator.findOne("Invoice",[invoiceId : parameters.invoiceId] , false);
 if(UtilValidate.isNotEmpty(invoice)){
@@ -66,9 +67,9 @@ if(UtilValidate.isNotEmpty(newList)){
 	FinAccountTransList = EntityUtil.getFirst(newList);
 }
 context.put("FinAccountTransList",FinAccountTransList);
-acountingTransEntriesMap.put(paymentId,FinAccountTransList);
 
-//Debug.log("FinAccountTransList======"+FinAccountTransList);
+
+Debug.log("paymentId======"+paymentId);
 paymentDetails = delegator.findOne("Payment",[paymentId : paymentId] , false);
 if (UtilAccounting.isReceipt(paymentDetails)) {
 	partyIdForAdd=paymentDetails.partyIdTo;
@@ -77,7 +78,7 @@ if (UtilAccounting.isReceipt(paymentDetails)) {
 	partyIdForAdd=paymentDetails.partyIdFrom;
 	context.partyIdForAdd=partyIdForAdd;
 }
-acountingTransEntriesMap.put(paymentId,partyIdForAdd);
+
 GenericValue finAccntTransSequenceEntry;
 if(UtilValidate.isNotEmpty(acctgTransId)){
 	accountingTransEntries = delegator.findOne("AcctgTrans",[acctgTransId : acctgTransId] , false);
@@ -89,13 +90,12 @@ if(UtilValidate.isNotEmpty(finAccntTransSequenceEntry)){
 }
 context.finAccntTransSequence = finAccntTransSequence;
 context.put("accountingTransEntries",accountingTransEntries);
-acountingTransEntriesMap.put(paymentId,accountingTransEntries);
+
 if(UtilValidate.isNotEmpty(acctgTransId)){
 	accountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS , acctgTransId)  , null, null, null, false );
 }
 context.put("accountingTransEntryList",accountingTransEntryList);
-acountingTransEntriesMap.put(paymentId,accountingTransEntryList);
-//Debug.log("accountingTransEntryList======"+accountingTransEntryList);
+
 //for Deposit
 payAcctgTransId = "";
 payAccountingTransEntryList = [];
@@ -124,8 +124,7 @@ if(UtilValidate.isNotEmpty(acctgTransList) && acctgTransList.size()>0){
 		}
 		context.payFinAccntTransSequence = payFinAccntTransSequence;
 		context.put("payAccountingTransEntries",payAccountingTransEntries);
-		acountingTransEntriesMap.put(paymentId,payFinAccntTransSequence);
-		acountingTransEntriesMap.put(paymentId,payAccountingTransEntries);
+		
 		if(UtilValidate.isNotEmpty(payAcctgTransId)){
 			payAccountingTransEntryList = delegator.findList("AcctgTransEntry",EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS , payAcctgTransId)  , null, null, null, false );
 			}
@@ -150,14 +149,8 @@ if(finAccntTransSequenceEntry){
 }
 
 context.finAccntTransSequence = finAccntTransSequence;
-acountingTransEntriesMap.put(paymentId,finAccntTransSequence);
 context.BankName=BankName;
-acountingTransEntriesMap.put(paymentId,BankName);
 context.put("finalMap",finalMap);
-acountingTransEntriesMap.put(paymentId,finalMap);
 context.put("entryList",entryList);
-acountingTransEntriesMap.put(paymentId,entryList);
-Debug.log("values======="+acountingTransEntriesMap);
-}
-
+acountingTransEntriesMap(paymentId,)
 }
