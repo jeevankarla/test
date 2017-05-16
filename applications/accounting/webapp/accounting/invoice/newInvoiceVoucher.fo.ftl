@@ -434,6 +434,10 @@ under the License.
 				<fo:table-cell number-columns-spanned="2" >
          			 <fo:block text-align="center"    font-size="10pt" >&#160;&#160;&#160;&#160;</fo:block>
 	   	          <#--  <#if scheme != "General"> --> 
+	   	          	<#if branchId == "INT6" || branchId == "INT12">
+        				<fo:block>Transaction Type: ${TransactionTypevalue?if_exists}</fo:block>
+        			</#if>
+        			<fo:block linefeed-treatment="preserve">&#xA;</fo:block>
 	                <fo:block text-align="left"    font-size="10pt" >Purchase Value (RS):<#if purInvoiceTOt?has_content>${purInvoiceTOt?string("#0.00")}</#if></fo:block>
 	   			<#--	</#if>-->
 	   				<fo:block text-align="left"    font-size="10pt" >Mill Inv No/Date :${supplierInvoiceId?if_exists}<#if supplierInvoiceDate?has_content>/ ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(supplierInvoiceDate, "dd-MMM-yyyy")}</#if></fo:block>	   

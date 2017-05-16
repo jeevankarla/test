@@ -456,6 +456,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 		branchId=productStore.payToPartyId;
 		
 	}
+	context.branchId=branchId;
 	partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , branchId)  , null, null, null, false );
 	if(UtilValidate.isNotEmpty(partyIdentification)){
 		tinNumber="";
@@ -580,6 +581,21 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3" || roID.partyI
 		context.indentNo = orderNo;
 	}
 	
+	TransactionTypevalue="";
+	TransactionTypeId=delegator.findOne("InvoiceAttribute",["invoiceId":invoiceId,"attrName":"saleTitleTransferEnumId"],false);
+	if(TransactionTypeId){
+		TransactionType=TransactionTypeId.get("attrValue");
+		if(TransactionType == "CST_CFORM"){
+			TransactionTypevalue = "Transaction With C Form";
+		}else if(TransactionType == "EXEMPTED_GOODS"){
+			TransactionTypevalue = "Transaction With exempted goods";
+		}else if(TransactionType == "NO_E2_FORM"){
+			TransactionTypevalue = "Transaction Against VAT";
+		}else{
+			TransactionTypevalue = "Transaction Without C Form";
+		}
+	}
+context.TransactionTypevalue=TransactionTypevalue;
 	
 	
 	OrderHeader = [];
@@ -1569,6 +1585,7 @@ if (productStoreId) {
 	branchId=productStore.payToPartyId;
 	
 }
+context.branchId=branchId;
 partyIdentification = delegator.findList("PartyIdentification",EntityCondition.makeCondition("partyId", EntityOperator.EQUALS , branchId)  , null, null, null, false );
 if(UtilValidate.isNotEmpty(partyIdentification)){
 	tinNumber="";
@@ -1702,6 +1719,21 @@ if(UtilValidate.isNotEmpty(orderHeaderSequences)){
 	context.indentNo = orderNo;
 }
 
+TransactionTypevalue="";
+TransactionTypeId=delegator.findOne("InvoiceAttribute",["invoiceId":invoiceId,"attrName":"saleTitleTransferEnumId"],false);
+if(TransactionTypeId){
+	TransactionType=TransactionTypeId.get("attrValue");
+	if(TransactionType == "CST_CFORM"){
+		TransactionTypevalue = "Transaction With C Form";
+	}else if(TransactionType == "EXEMPTED_GOODS"){
+		TransactionTypevalue = "Transaction With exempted goods";
+	}else if(TransactionType == "NO_E2_FORM"){
+		TransactionTypevalue = "Transaction Against VAT";
+	}else{
+		TransactionTypevalue = "Transaction Without C Form";
+	}
+}
+context.TransactionTypevalue=TransactionTypevalue;
 
 
 OrderHeader = [];

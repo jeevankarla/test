@@ -496,7 +496,7 @@ if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 		branchId=productStore.payToPartyId;
 		
 	}
-	
+	context.branchId=branchId;
 	//get Report Header
 	branchContext=[:];
 	
@@ -1518,7 +1518,7 @@ if (productStoreId) {
 	branchId=productStore.payToPartyId;
 	
 }
-
+context.branchId=branchId;
 //get Report Header
 branchContext=[:];
 
