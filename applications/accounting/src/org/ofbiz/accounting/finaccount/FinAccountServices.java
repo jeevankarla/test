@@ -2200,7 +2200,7 @@ public static String makeInterestTransaction(HttpServletRequest request, HttpSer
 		  	  		employeerfinMap.put("transactionDate",paymentDate);
 		  	  		employeerfinMap.put("statusId","FINACT_TRNS_CREATED");
 		  	  		employeerfinMap.put("finAccountTransTypeId","WITHDRAWAL");
-		  	  	    employeerfinMap.put("reasonEnumId","FATR_CONTRA");
+		  	  	    employeerfinMap.put("reasonEnumId","INTEREST_PAID");
 		  	  	    employeerfinMap.put("costCenterId","Company");
 	  	  	        employeerfinMap.put("segmentId","CPF_TRUST");
 		  	  	    employeerfinMap.put("glAccountId",glAccountId);
@@ -2218,7 +2218,7 @@ public static String makeInterestTransaction(HttpServletRequest request, HttpSer
 		  	  		vpffinMap.put("transactionDate",paymentDate);
 		  	  		vpffinMap.put("finAccountTransTypeId","WITHDRAWAL");
 		  	  	    vpffinMap.put("glAccountId",glAccountId);
-		  	  	    vpffinMap.put("reasonEnumId","FATR_CONTRA");
+		  	  	    vpffinMap.put("reasonEnumId","INTEREST_PAID");
 		  	  		vpffinMap.put("statusId","FINACT_TRNS_CREATED");
 		  	  	    vpffinMap.put("costCenterId","Company");
 		  	        vpffinMap.put("segmentId","CPF_TRUST");
