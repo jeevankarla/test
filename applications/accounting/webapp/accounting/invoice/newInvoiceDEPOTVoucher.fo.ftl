@@ -20,7 +20,7 @@ under the License.
   <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
     <fo:layout-master-set>
       <fo:simple-page-master master-name="main" page-height="12in" page-width="10in" margin-top=".1in" margin-bottom=".1in" margin-left=".3in" margin-right=".5in">
-          <fo:region-body margin-top="1.8in"/>
+          <fo:region-body margin-top="1.98in"/>
           <fo:region-before extent="1in"/>
           <fo:region-after extent="1in"/>
       </fo:simple-page-master>
@@ -62,12 +62,17 @@ under the License.
 			<fo:table-row white-space-collapse="false">
 				<fo:table-cell >
 				<fo:block text-align="left"  font-weight="bold"  font-size="10pt" >${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyId, true)} <#if regNo?has_content>[${regNo?if_exists}] </#if></fo:block>
-				<#list finalAddresList as eachDetail>
-				<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
-				</#list>
-				<fo:block text-align="left"  font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>
-				<#if tinNo?has_content>
-				<fo:block text-align="left"  font-size="10pt" >Tin No : ${tinNo?if_exists}</fo:block>
+				<#if partyIdFrom=="INT55">
+					<fo:block text-align="left" font-weight="bold"  font-size="10pt" >${facilityName?if_exists}</fo:block>
+				</#if>
+				<#if partyIdFrom!="INT55">
+					<#list finalAddresList as eachDetail>
+						<fo:block text-align="left"    font-size="10pt" >${eachDetail.key2?if_exists}</fo:block>
+					</#list>
+					<fo:block text-align="left"  font-size="10pt" >PassBook No : ${passNo?if_exists}</fo:block>
+					<#if tinNo?has_content>
+						<fo:block text-align="left"  font-size="10pt" >Tin No : ${tinNo?if_exists}</fo:block>
+					</#if>
 				</#if>
 				</fo:table-cell>
 				<fo:table-cell >
