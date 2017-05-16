@@ -111,7 +111,7 @@ function setVoidPaymentParameters(currentPayment){
     <div align="right">
  	   <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
         <option value="">${uiLabelMap.AccountingSelectAction}</option>
-        <option value="<@ofbizUrl>printChecks.pdf</@ofbizUrl>">Print Cheques</option>
+        <option value="<@ofbizUrl>printChecks1.pdf</@ofbizUrl>">Print Cheques</option>
         <#-- <option value="massPaymentsToSent">Status To 'Sent'</option>
         <option value="massPaymentsToVoid">Status To 'Void'</option>
         <option value="massPaymentsToCancel">Status To 'Cancelled'</option>

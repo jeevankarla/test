@@ -588,6 +588,7 @@ under the License.
                 <!-- pass in paymentId to print one check, otherwise use multi form input -->
                 <set field="paymentId" from-field="parameters.paymentId"/>
                 <set field="reportTypeFlag" from-field="parameters.reportTypeFlag"/>
+                <set field="paymentIds" from-field="parameters.paymentIds" type="List"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/PrintChecks.groovy"/>
@@ -598,6 +599,24 @@ under the License.
             <widgets>
                 <platform-specific>
                    <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/newPrintCheque.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="BulkPrintChecks">
+        <section>
+            <actions>
+                <set field="paymentIds" from-field="parameters.paymentIds" type="List"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/payment/BulkPrintChecks.groovy"/>
+                <entity-condition entity-name="InvoiceItemType" list="PayrolGroup">
+                    <condition-expr field-name="parentTypeId" value="PAYROL"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                   <xsl-fo><html-template location="component://accounting/webapp/accounting/payment/BulkPrintCheque.fo.ftl"/></xsl-fo>
                 </platform-specific>
             </widgets>
         </section>
