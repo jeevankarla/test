@@ -53,6 +53,8 @@ branchRo = delegator.findList("PartyRelationship",EntityCondition.makeCondition(
 roID = EntityUtil.getFirst(branchRo);
 
 context.partyId = partyId;
+
+context.partyIdFrom = partyIdFrom;
 if(roID &&  (roID.partyIdFrom=="INT6" || roID.partyIdFrom=="INT3")){
 	
 	kanAndKalRo="yes";
