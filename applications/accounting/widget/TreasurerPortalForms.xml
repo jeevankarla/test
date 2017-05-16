@@ -867,18 +867,17 @@ under the License.
             </drop-down>
         </field>
        <!--  <field name="partyId"><lookup target-form-name="LookupPartyName"/></field> -->
-        <field name="transactionDate"> <date-time/> </field>
+       	<field name="transactionDate" id-name="onlineFromDate" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!--  <field name="entryDate"><date-time/></field>  -->
         <field name="parentPaymentTypeId" parameter-name="parentTypeId"><hidden value="RECEIPT"/></field>
         <field name="paymentId" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;" required-field="true"><lookup target-form-name="LookupPayment" target-parameter="parentTypeId"/></field> 
         <field name="amount" required-field="true" use-when="&quot;${entryType}&quot;!=&quot;Payment&quot;"><text/></field>
         <field name="amount" use-when="&quot;${entryType}&quot;==&quot;Payment&quot;"><text/></field>
          <field name="statusId"   ><hidden value="FINACT_TRNS_CREATED"/></field>    
-         <field name="segmentId"  title="Segment Id" required-field="true">
-            <drop-down allow-empty="false">
-            <option key="YARN_SALE" description="YARN SEGMENT"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-            </drop-down>
+          <field name="segmentId" title="Segment Id" required-field="true">
+        	<drop-down allow-empty="false">
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
+           </drop-down>
         </field>
          <field name="contraFinAccountId"  title="To Financial Account"  >
             <drop-down allow-empty="true">
@@ -1206,8 +1205,7 @@ under the License.
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="segmentId" title="Payment PurposeType" required-field="true">
         	<drop-down allow-empty="true">
-        	<option key="YARN_SALE" description="YARN SEGMENT"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1217,7 +1215,7 @@ under the License.
         </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
-        <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
+        <field name="transactionDate" id-name="onlineFromDate" title="Receipt Date" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!-- <field name="contraFinAccountId"  title="From Account">
             <drop-down>
             	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
@@ -1269,8 +1267,7 @@ under the License.
         <!-- <field name="postToGlAccountId" required-field="true"><lookup target-form-name="LookupGlAccount"/></field> -->
         <field name="segmentId" title="Payment PurposeType" required-field="true">
         	<drop-down allow-empty="true">
-        	<option key="YARN_SALE" description="YARN SEGMENT"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <field name="costCenterId" title="RO">
@@ -1280,7 +1277,7 @@ under the License.
         </field>
         <field name="ownerPartyId" title="From/To PartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field name="entryType"><hidden value="Contra"/></field>
-        <field name="transactionDate" title="Receipt Date"> <date-time/> </field>
+        <field name="transactionDate" id-name="onlineFromDate" title="Receipt Date" event="onblur" action="javascript:datepick();" required-field="true"><text size="17"/></field>
         <!-- <field name="contraFinAccountId"  title="From Account">
             <drop-down>
             	<list-options key-name="finAccountId" list-name="companyAccountsList" description="${finAccountName}"/>
@@ -1338,8 +1335,7 @@ under the License.
          </field> -->
          <field name="segmentId" title="Payment PurposeType" required-field="true"> 
         	<drop-down allow-empty="true">
-        	<option key="YARN_SALE" description="YARN SEGMENT"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
          </field>
         <field name="costCenterId" title="RO">
@@ -1533,9 +1529,7 @@ under the License.
         <field name="transactionDate" position="1" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
         <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
         	<drop-down allow-empty="true">
-               <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">                   
-                   <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE"/>
-               </entity-options>
+              <list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>       
@@ -1776,9 +1770,7 @@ under the License.
         <field name="transactionDate" position="1" title="Tally Reference Date"><date-time type="timestamp"></date-time></field>
         <field name="paymentPurposeType" position="2" title="Payment PurposeType" required-field="true"><text/>
 	           	<drop-down allow-empty="true">
-	                  <entity-options entity-name="Enumeration" key-field-name="enumId" description="${enumId}">
-	                      <entity-constraint name="enumCode" operator="in" value="YARN_SALE,DIES_AND_CHEM_SALE"/>
-	                  </entity-options>
+	                <list-options key-name="enumId" list-name="segmentList" description="${description}"/>
 	              </drop-down>
         </field>
         <field name="issuingAuthority" position="2" title="${uiLabelMap.issuingAuthority}"><text></text></field>          
@@ -2377,6 +2369,34 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field> -->
+		
+			<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <!-- <field name="facilityId" title="${uiLabelMap.OrderFacilityBooth}"><text-find ignore-case="true"/></field> -->
+        <field name="invoiceTypeId"><display/></field>
+        <field name="subTabButtonValue"><hidden/></field>
+        <field name="actionSubTabButtonValue"><hidden/></field>
+        <!-- <field position="1" name="invoiceTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="InvoiceType"/>
+            </drop-down>
+        </field> -->
+        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>       
+        <!-- <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field> -->
+        <field name="invoiceDate"><date-find type="date" default-option-from="greaterThanFromDayStart"/></field>
+        <field name="dueDate"><hidden/></field>
+		
+		
+		<!-- <field name="invoiceTypeId" position="2">
+			<drop-down allow-empty="true">
+				<entity-options entity-name="InvoiceType" description="${description}">
+					<entity-constraint name="parentTypeId" value="PURCHASE_INVOICE"/>
+				</entity-options>
+			</drop-down>
+		</field> -->
+		
 		<field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoiceTypeId.equals(&quot;SALES_INVOICE&quot;)"
 			position="3" tooltip="use Ctrl for multi selection">
 			<drop-down allow-empty="true" allow-multiple="true">
@@ -2401,7 +2421,7 @@ under the License.
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="dueDate"><date-find type="timestamp"/></field>
+		<field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	<form name="CreateAPInvoice" type="single" target="UpdateAPInvoice" title="Edit Invoice Header" default-map-name="invoice"
         header-row-style="header-row" default-table-style="basic-table">
@@ -2507,8 +2527,8 @@ under the License.
         <field position="2" name="referenceDate" title="Refrence Date"><date-time/></field>                            
         <field name="purposeTypeId" title="Purpose Type" required-field="true">
         	<drop-down allow-empty="true">
-        	<option key="YARN_SALE" description="YARN SEGMENT"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<list-options list-name="segmentList" key-name="enumId" description="${description}"/>
+        	
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type"  required-field="true">
@@ -2621,8 +2641,7 @@ under the License.
         <field position="2" name="dueDate" required-field="true"><date-time/></field>
         <field name="purposeTypeId" title="Purpose Type" required-field="true">
         	<drop-down allow-empty="true">
-        	<option key="YARN_SALE" description="YARN SEGMENT"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <!-- <field name="purposeType" title="Purpose Type" required-field="true">
@@ -3328,9 +3347,7 @@ under the License.
         <field name="finAccountId"><hidden value="${parameters.finAccountId}"/></field>
         <field name="purposeTypeId" title="Purpose Type" required-field="true">
         	<drop-down allow-empty="true">
-        	<option key="YARN_SALE" description="YARN SEGMENT"/>
-        	<option key="DIES_AND_CHEM_SALE" description="DYES AND CHEMICALS SEGMENT"/>
-        	<option key="COMMON" description="COMMON"/>
+        	<list-options key-name="enumId" list-name="segmentList" description="${description}"/>
            </drop-down>
         </field>
         <field position="1" name="partyIdFrom" title="Party Name" required-field="true"><lookup target-form-name="LookupPartyName" target-parameter="roleTypeId,invoiceTypeId"/></field>
