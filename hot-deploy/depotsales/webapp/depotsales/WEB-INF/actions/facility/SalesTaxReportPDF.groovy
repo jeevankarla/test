@@ -188,7 +188,7 @@ if(branchIdForAdd){
 finalList=[];
 headingMap=[:];
 headingMap.put("partyTinNo", "Buyer Tin No");
-headingMap.put("partyRegNo", "Party Reg No");
+//headingMap.put("partyRegNo", "Party Reg No");
 headingMap.put("partyIdName", "Name of Buyer");
 headingMap.put("buyerInvId", "Invoice No");
 headingMap.put("invoiceDate", "Invoice Date");
@@ -459,7 +459,12 @@ if(branchList){
 					if(partyId){
 						partyIdName = PartyHelper.getPartyName(delegator, partyId, false);
 					}
-					invoiceDetailMap.put("partyIdName", partyIdName);
+					if(UtilValidate.isNotEmpty(regNo)){
+						invoiceDetailMap.put("partyIdName", partyIdName+"   ["+regNo+"]");
+					}
+					else{
+						invoiceDetailMap.put("partyIdName", partyIdName);
+					}
 					if(eachInvoiceItem.invoiceDate){
 						invoiceDate=UtilDateTime.toDateString(eachInvoiceItem.invoiceDate, "dd/MM/yyyy");
 						invoiceDetailMap.put("invoiceDate", invoiceDate);
