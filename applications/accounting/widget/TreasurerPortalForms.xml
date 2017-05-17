@@ -180,6 +180,8 @@ under the License.
               <field name="ownerPartyId"><ignored></ignored></field>
                <field name="isRefundable"><ignored></ignored></field>
                 <field name="finAccountId"><ignored></ignored></field>
+                <field name="actualBalance"><ignored></ignored></field>
+                <field name="availableBalance"><ignored></ignored></field>
                  <field name="replenishPaymentId"><ignored></ignored></field>
                   <field name="replenishLevel"><ignored></ignored></field>
                    <field name="finAccountTypeId"><ignored></ignored></field>
