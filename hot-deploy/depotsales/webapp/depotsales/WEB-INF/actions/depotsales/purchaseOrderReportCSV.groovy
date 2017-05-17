@@ -24,6 +24,7 @@ import org.ofbiz.service.ServiceUtil;
 import in.vasista.vbiz.facility.util.FacilityUtil;
 import org.ofbiz.service.GenericServiceException;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 BranchList=[];
 	branchMap = [:];
@@ -224,9 +225,12 @@ BranchList=[];
 	orderList.add(headerData);
 	
 	tempTotMap=[:];
-	BigDecimal totPoQty=0;
-	BigDecimal totPoUnitPrice=0;
-	BigDecimal totPoAmount=0;
+	
+	DecimalFormat twoDForm = new DecimalFormat("#.##");
+	//BigDecimal totPoQty=0;
+	totPoQty=0;
+	BigDecimal totPoUnitPrice=BigDecimal.ZERO;
+	BigDecimal totPoAmount=BigDecimal.ZERO;
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
 		custOrderRoles.clear();
@@ -283,9 +287,9 @@ BranchList=[];
 		}
 		productStoreId=eachHeader.productStoreId;
 		poId="";
-		BigDecimal poQty=0;
-		BigDecimal poUnitPrice=0;
-		BigDecimal poAmount=0;
+		poQty=0;
+		BigDecimal poUnitPrice=BigDecimal.ZERO;
+		BigDecimal poAmount=BigDecimal.ZERO;
 		//poUnitPrice=0;
 		//poAmount=0;
 		productName="";
@@ -317,10 +321,11 @@ BranchList=[];
 						if(orderItem.itemDescription)
 							productName=orderItem.itemDescription;
 	
-						tempData.put("poQty",poQty.setScale(2, rounding));
+						tempData.put("poQty",poQty);
 						//tempData.put("poUnitPrice", poUnitPrice);
 						//tempData.put("poAmount",poAmount);
-						tempData.put("poUnitPrice", poUnitPrice.setScale(2, rounding));
+						
+						tempData.put("poUnitPrice", twoDForm.format(poUnitPrice));
 						tempData.put("poAmount",poAmount.setScale(2, rounding));
 						tempData.put("weaverName", partyName);
 						tempData.put("poNo", poId);
@@ -349,8 +354,8 @@ BranchList=[];
 		
 	}
 	tempTotMap.put("orderNo", "TOTAL");
-	tempTotMap.put("poQty", totPoQty.setScale(2, rounding));
-	tempTotMap.put("poUnitPrice", totPoUnitPrice.setScale(2, rounding));
+	tempTotMap.put("poQty", totPoQty);
+	tempTotMap.put("poUnitPrice", twoDForm.format(totPoUnitPrice));
 	tempTotMap.put("poAmount", totPoAmount.setScale(2, rounding));
 	orderList.add(tempTotMap);
 	
