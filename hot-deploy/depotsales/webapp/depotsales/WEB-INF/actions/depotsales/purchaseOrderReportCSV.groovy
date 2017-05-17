@@ -196,7 +196,7 @@ BranchList=[];
 	}
 	stylesMap.put("mainHeaderFontName","Arial");
 	stylesMap.put("mainHeadercellHeight",300);
-	stylesMap.put("mainHeadingCell",4);
+	stylesMap.put("mainHeadingCell",2);
 	stylesMap.put("mainHeaderFontSize",10);
 	stylesMap.put("mainHeaderBold",true);
 	stylesMap.put("columnHeaderBgColor",false);
@@ -223,9 +223,12 @@ BranchList=[];
 	headerData.put("productName","Product Name");
 	orderList.add(headerData);
 	
+	tempTotMap=[:];
+	BigDecimal totPoQty=0;
+	BigDecimal totPoUnitPrice=0;
+	BigDecimal totPoAmount=0;
 	orderHeader.each{ eachHeader ->
 		orderId = eachHeader.orderId;
-		
 		custOrderRoles.clear();
 		partyId = "";
 		if(UtilValidate.isEmpty(partyId)){
@@ -237,11 +240,11 @@ BranchList=[];
 													
 		}
 			//custBasededOrderIds = EntityUtil.getFieldListFromEntityList(custOrderRoles, "partyId", true);
-			if(custOrderRoles)
+		if(custOrderRoles)
 			partyId = EntityUtil.getFirst(custOrderRoles).get("partyId");
 		
 		if(partyId)	
-		partyName = PartyHelper.getPartyName(delegator, partyId, false);
+			partyName = PartyHelper.getPartyName(delegator, partyId, false);
 		
 		tempData=[:];
 		orderNo ="NA";
@@ -280,11 +283,11 @@ BranchList=[];
 		}
 		productStoreId=eachHeader.productStoreId;
 		poId="";
-		poQty=0;
-		//BigDecimal poUnitPrice=0;
-		//BigDecimal poAmount=0;
-		poUnitPrice=0;
-		poAmount=0;
+		BigDecimal poQty=0;
+		BigDecimal poUnitPrice=0;
+		BigDecimal poAmount=0;
+		//poUnitPrice=0;
+		//poAmount=0;
 		productName="";
 		custCondList.clear();
 		custCondList.add(EntityCondition.makeCondition("toOrderId",  EntityOperator.EQUALS, orderId));
@@ -308,14 +311,17 @@ BranchList=[];
 						poUnitPrice=orderItem.unitPrice;
 						//poUnitPrice=Math.round(poUnitPrice * 100) / 100;
 						poAmount=(poUnitPrice)*(poQty);
+						totPoQty=totPoQty+poQty;
+						totPoUnitPrice=totPoUnitPrice+poUnitPrice;
+						totPoAmount=totPoAmount+poAmount;
 						if(orderItem.itemDescription)
 							productName=orderItem.itemDescription;
 	
-						tempData.put("poQty",poQty);
-						tempData.put("poUnitPrice", poUnitPrice);
-						tempData.put("poAmount",poAmount);
-						//tempData.put("poUnitPrice", poUnitPrice.setScale(2, rounding));
-						//tempData.put("poAmount",poAmount.setScale(2, rounding));
+						tempData.put("poQty",poQty.setScale(2, rounding));
+						//tempData.put("poUnitPrice", poUnitPrice);
+						//tempData.put("poAmount",poAmount);
+						tempData.put("poUnitPrice", poUnitPrice.setScale(2, rounding));
+						tempData.put("poAmount",poAmount.setScale(2, rounding));
 						tempData.put("weaverName", partyName);
 						tempData.put("poNo", poId);
 						tempData.put("poSquenceNo", poSquenceNo);
@@ -328,9 +334,9 @@ BranchList=[];
 						}
 						
 						if(eachHeader.externalId)
-						tempData.put("indentRefNo", eachHeader.externalId);
+							tempData.put("indentRefNo", eachHeader.externalId);
 					   else
-						tempData.put("indentRefNo", "");
+							tempData.put("indentRefNo", "");
 						orderList.add(tempData);
 					}
 					
@@ -342,7 +348,11 @@ BranchList=[];
 		
 		
 	}
-	
+	tempTotMap.put("orderNo", "TOTAL");
+	tempTotMap.put("poQty", totPoQty.setScale(2, rounding));
+	tempTotMap.put("poUnitPrice", totPoUnitPrice.setScale(2, rounding));
+	tempTotMap.put("poAmount", totPoAmount.setScale(2, rounding));
+	orderList.add(tempTotMap);
 	
 	
 	context.orderList=orderList;
