@@ -45,4 +45,6 @@ ownerPartyIds=EntityUtil.getFieldListFromEntityListIterator(finAccountList, "own
 context.empPartyIds=ownerPartyIds;
 iter = finAccountList.iterator();
 
-
+List conditionList=[];
+List glAccountIdsList = delegator.findList("GlAccount", null, null,["accountCode"],null,false);
+context.glAccountIdsList=glAccountIdsList;

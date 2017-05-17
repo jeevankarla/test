@@ -39,9 +39,27 @@
         <response name="error" type="request-redirect-noparam" value="cpfAccounts"/>
     </request-map>
     
+     <request-map uri="interestAccounts">
+     	<security https="true" auth="true"/>     	
+        <response name="success" type="view" value="interestAccounts"/>
+        <response name="error" type="view" value="interestAccounts"/>
+    </request-map>
+     <request-map uri="findinterestAccounts">
+     	<security https="true" auth="true"/>     	
+        <response name="success" type="view" value="findinterestAccounts"/>
+        <response name="error" type="view" value="findinterestAccounts"/>
+    </request-map>
+     <request-map uri="makeInterestTransaction">
+     	<security https="true" auth="true"/>
+     	<event type="java"  path="org.ofbiz.accounting.finaccount.FinAccountServices"  invoke="makeInterestTransaction" global-transaction="true"/>
+     	<response name="success" type="request-redirect-noparam" value="interestAccounts"/>
+        <response name="error" type="request-redirect-noparam" value="interestAccounts"/>
+    </request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://trustAccounts/widget/TrustAccountsScreens.xml#main"/>
     <view-map name="cpfAccounts" type="screen" page="component://trustAccounts/widget/TrustAccountsScreens.xml#cpfAccounts"/>
    <view-map name="findcpfAccounts" type="screen" page="component://trustAccounts/widget/TrustAccountsScreens.xml#findcpfAccounts"/>
+    <view-map name="interestAccounts" type="screen" page="component://trustAccounts/widget/TrustAccountsScreens.xml#interestAccounts"/>
+    <view-map name="findinterestAccounts" type="screen" page="component://trustAccounts/widget/TrustAccountsScreens.xml#findinterestAccounts"/>
 </site-conf>
