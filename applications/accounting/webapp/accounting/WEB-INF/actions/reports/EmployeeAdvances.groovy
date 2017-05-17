@@ -59,16 +59,16 @@ thruDate = UtilDateTime.getDayEnd(thruDateTs, timeZone, locale);
 context.fromDate = fromDate;
 context.thruDate = thruDate;
 employeeIds=[];
-/*ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"LOAN_ACCOUNT")],EntityOperator.AND);
+ecl=EntityCondition.makeCondition([EntityCondition.makeCondition("parentTypeId",EntityOperator.EQUALS,"EMPLOYEE_ADV")],EntityOperator.AND);
 finAccountTypes=delegator.findList("FinAccountType",ecl,null,null,null,false);
-finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);*/
+finAccountTypeIds = EntityUtil.getFieldListFromEntityList(finAccountTypes, "finAccountTypeId", true);
 conditionList =[];
-/*if(UtilValidate.isEmpty(parameters.finAccountTypeId)){
+if(UtilValidate.isEmpty(parameters.finAccountTypeId) || "ALL".equalsIgnoreCase(parameters.finAccountTypeId)){
 	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.IN,finAccountTypeIds)],EntityOperator.AND));
 }else{
 	conditionList.add(EntityCondition.makeCondition([EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId)],EntityOperator.AND));
-}*/
-	conditionList.add(EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId));
+}
+//	conditionList.add(EntityCondition.makeCondition("finAccountTypeId",EntityOperator.EQUALS,parameters.finAccountTypeId));
 if(UtilValidate.isNotEmpty(parameters.partyId)){
 	conditionList.add(EntityCondition.makeCondition("ownerPartyId",EntityOperator.EQUALS,parameters.partyId));
 }
@@ -77,6 +77,7 @@ EntityCondition condition = EntityCondition.makeCondition(conditionList ,EntityO
 finAccountList=delegator.findList("FinAccount",condition,null,null,null,false);
 finAccountTypeIdsMap=[:];
 //EmployeeAdvDetails=[];
+finAccountDetailedMap=[:];
 finAccountTypeIdList=[];
 List detailTempList=FastList.newInstance();
 
@@ -219,7 +220,7 @@ finAccountList.each{finAccountTypeId->
 	tempMap.currentCredit=currentCredit;
 	
 	finAccntTotMap=[:]
-	finAccntTotMap["Name"]="Total-"+finAccountTypeId.ownerPartyId;
+	finAccntTotMap["Name"]="Total-"+finAccountTypeId.actualBalance;
 	finAccntTotMap["debit"]=currentDebit;
 	finAccntTotMap["credit"]=currentCredit;
 	finAccntDetailedCsv.addAll(finAccntTotMap);
@@ -233,7 +234,7 @@ finAccountList.each{finAccountTypeId->
 	  tempMap.finalClosing=0;
 	}
 	finAccntClosingMap=[:]
-	finAccntClosingMap["Name"]="ClosingBal-"+finAccountTypeId.ownerPartyId;
+	finAccntClosingMap["Name"]="ClosingBal-"+finAccountTypeId.actualBalance;
 	finAccntClosingMap["closingDebit"]=closingDebit;
 	finAccntClosingMap["closingCredit"]=closingCredit;
 	finAccntDetailedCsv.addAll(finAccntClosingMap);
@@ -251,9 +252,19 @@ finAccountList.each{finAccountTypeId->
 		finAccountTypeIdList=existing;
 		finAccountTypeIdsMap[finAccountTypeId.finAccountTypeId]=existing;
 	}
+	if(UtilValidate.isEmpty(finAccountDetailedMap[finAccountTypeId.finAccountTypeId])){
+		finAccountDetailedMap[finAccountTypeId.finAccountTypeId]=tempList;
+		tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("Name"));
+	}else{
+		List existing = FastList.newInstance();
+		existing=finAccountDetailedMap[finAccountTypeId.finAccountTypeId];
+		existing.add(tempMap);
+		existing=UtilMisc.sortMaps(existing, UtilMisc.toList("Name"));
+		finAccountDetailedMap[finAccountTypeId.finAccountTypeId]=existing;
+	}
 }
 context.finAccountTypeIdsMap=finAccountTypeIdsMap;
-context.detailTempList=detailTempList
+context.finAccountDetailedMap=finAccountDetailedMap;
 context.finAccountTypeIdList=finAccountTypeIdList;
 context.finAccntDetailedCsv=finAccntDetailedCsv;
 //Debug.log("finAccountTypeIdList======================"+finAccountTypeIdList);
