@@ -150,7 +150,7 @@ $(function(){
 });
 
 
-
+var passBookNumber;
 var branchId = $("#branchId").val();
 var partyId = $("#partyId").val();
 var passbookNumber = $("#passbookNumber").val();
@@ -212,6 +212,30 @@ function drawTable(data) {
     
 }
 
+function generatePassBookEvent(customerId)
+{
+	
+    if (confirm("Are You Sure you want to generate passBook?") == true) {
+		var dataJson = {"customerId":customerId};
+ 		jQuery.ajax({
+        url: 'generatePassBook',
+        type: 'POST',
+        data: dataJson,
+        dataType: 'json',
+        success: function(result){
+			if(result["_ERROR_MESSAGE_"] || result["_ERROR_MESSAGE_LIST_"]){
+			    alert("Error in creating PassBook ");
+			}else{
+			    $("#generatePassBook").hide();
+				passBookNumber = result["passBookNumber"];
+				$("#gpbId").text(passBookNumber);
+				
+       		}
+       	  }							
+		});
+	
+	}
+}
 
 
 function drawRow(rowData) {
@@ -220,6 +244,9 @@ function drawRow(rowData) {
     $("#coreTable tr:even").css("background-color", "#F4F4F8");
     
     var partyOverView = '<a class="buttontext" href="<@ofbizUrl>EditProcProducer?partyId='+rowData.partyId+'</@ofbizUrl>" target="_blank">'+rowData.partyId+'</a>';
+	var generatePassBook = '<input class="buttontext" type="button" value="GeneratePassBook" onClick </input>';
+	var passBookMethod = "javascript:generatePassBookEvent("+rowData.partyId +")";
+	var generatePassBook ='<input type=button name="generatePassBook" id=generatePassBook value="GeneratePassBook" onclick="'+passBookMethod+'">';
     
     row.append($("<td>" +  partyOverView  +"</td>"));  
     
@@ -229,7 +256,13 @@ function drawRow(rowData) {
     row.append($("<td>" + rowData.state + "</td>"));
     row.append($("<td>" + rowData.district + "</td>"));
     row.append($("<td>" + rowData.isDepot + "</td>"));
-    row.append($("<td>" + rowData.passNo + "</td>"));
+    if(rowData.passNo=="_NA_"){
+    	row.append($("<td id='gpbId'>"+generatePassBook+"</td>"));
+    }else{
+    	row.append($("<td>" + rowData.passNo + "</td>"));
+    }
+    
+    
     row.append($("<td>" + rowData.loomDetail + "</td>"));
     
       

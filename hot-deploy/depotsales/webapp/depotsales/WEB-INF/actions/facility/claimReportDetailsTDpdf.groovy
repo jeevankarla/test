@@ -275,9 +275,8 @@ def getSchemePercentage(customerId,productId,roid)
 	productCategoryId=productCategory.primaryParentCategoryId
 	conditionList.clear();
 	conditionList.add(EntityCondition.makeCondition("partyId",EntityOperator.EQUALS,customerId));
-	conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId",EntityOperator.EQUALS,"BILLING_LOCATION"));
 	fieldsToSelect = ["stateProvinceGeoId","districtGeoId","partyId"] as Set;
-	partyContactDetails= delegator.findList("PartyContactDetailByPurpose",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
+	partyContactDetails= delegator.findList("PartyAndPostalAddress",EntityCondition.makeCondition(conditionList, EntityOperator.AND), fieldsToSelect, null, null, false );
 	if(UtilValidate.isEmpty(partyContactDetails)){
 		Debug.log("stateProvinceGeoId is not configured for the customer: "+ customerId);
 		resultMap.put("errorMessage","stateProvinceGeoId is not configured for the customer: "+ customerId);
