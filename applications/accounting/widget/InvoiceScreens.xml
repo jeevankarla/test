@@ -1171,12 +1171,13 @@
 				<property-map resource="AccountingUiLabels" map-name="uiLabelMap"
 					global="true" />            
                 <set field="filterByDate" value="true"/>
-                <service service-name="performFind" result-map="result">
+                <!-- <service service-name="performFind" result-map="result">
                     <field-map field-name="inputFields" from-field="parameters"/>
                     <field-map field-name="entityName" value="InvoiceAndType"/>
                     <field-map field-name="orderBy" value="invoiceDate DESC"/>
-                </service>
-                <set field="invoices" from-field="result.listIt"/>
+                </service> -->
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/invoicesList.groovy"/>
+                <set field="invoices" from-field="invoiceList"/>
                 <script location="component://depotsales/webapp/depotsales/WEB-INF/actions/depotsales/SalesInvoiceCSV.groovy" />
             </actions>
 			<widgets>
