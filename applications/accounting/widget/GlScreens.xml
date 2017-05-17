@@ -784,6 +784,7 @@ reportType:byAccount -->
 				<set field="acctgTransEntry" value="${acctgTransEntry1}"/>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/organizationGLForJournalVocher.groovy"/>
 				<script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/AutoCompleateGlAccountType.groovy"/>
+				<script location="component://accounting/webapp/accounting/WEB-INF/actions/getUserLoginRo.groovy"/>
 				<set field="layoutSettings.javaScripts[]" value="/accounting/images/autoCompleteGl.js" global="true"/>
             </actions>
             <widgets>
