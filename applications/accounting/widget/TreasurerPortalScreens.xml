@@ -3186,7 +3186,7 @@
             							<screenlet title="Invoices List">  
             								<section>   
             									<condition>
-            										<not><if-empty field="invoices" /></not>
+            										<not><if-empty field="invoiceList" /></not>
             									</condition>
             									<widgets>                        
 		            								<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
@@ -3797,7 +3797,7 @@
             							<screenlet title="Invoices List"> 
             								<section>   
             									<condition>
-            										<not><if-empty field="invoices" /></not>
+            										<not><if-empty field="invoiceList" /></not>
             									</condition>
             									<widgets>              							                                   
 		            								<link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext"
