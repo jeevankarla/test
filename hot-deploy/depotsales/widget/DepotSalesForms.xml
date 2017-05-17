@@ -5318,7 +5318,7 @@
      <form name="salesTaxReportHeading" type="list" view-size="99999">   
          <field name="partyTinNo" title="__"><display/></field>
          <field name="partyIdName" title="_NATIONAL HANDLOOM DEVELOPMENT CORPORATION LTD_"><display/></field>
-         <field name="partyRegNo" title="__"><display/></field>
+         <!-- <field name="partyRegNo" title="__"><display/></field> -->
          <field name="buyerInvId" title="__"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
         <!--  <field name="productId" title="_"><display/></field> -->
@@ -5336,7 +5336,7 @@
       <form name="salesTaxReportHeadingCSV" type="list" view-size="99999">   
          <field name="partyTinNo" title="__"><display/></field>
          <field name="partyIdName" title="_SALES TAX REPORT__"><display/></field>
-         <field name="partyRegNo" title="__"><display/></field>
+         <!-- <field name="partyRegNo" title="__"><display/></field> -->
          <field name="buyerInvId" title="__"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
          <!-- <field name="productId" title="_"><display/></field> -->
@@ -5354,7 +5354,7 @@
       <form name="salesTaxReportCSV" type="list" list-name="finalList" view-size="99999">   
          <field name="partyTinNo" title="__"><display/></field>
          <field name="partyIdName" title="__"><display/></field>
-         <field name="partyRegNo" title="__"><display/></field>
+         <!-- <field name="partyRegNo" title="__"><display/></field> -->
          <field name="buyerInvId" title="__"><display/></field>
          <field name="invoiceDate" title="_"><display/></field>
         <!--  <field name="productId" title="_"><display/></field> -->
