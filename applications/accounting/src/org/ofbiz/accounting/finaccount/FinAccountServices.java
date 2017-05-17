@@ -2129,7 +2129,6 @@ public static String makeInterestTransaction(HttpServletRequest request, HttpSer
       Map finaccountAmountMap = FastMap.newInstance();
       Map finTransCreationMap = FastMap.newInstance();
       List<String>finAccountTransIds = FastList.newInstance();
-
 	  	//EntityListIterator finIdsList = null;
 		for (int i = 0; i < rowCount; i++){
 		  	  Map paymentMap = FastMap.newInstance();
@@ -2152,7 +2151,6 @@ public static String makeInterestTransaction(HttpServletRequest request, HttpSer
 	  		  if (paramMap.containsKey("partyId"+ thisSuffix)) {
 	  			  partyId = (String) paramMap.get("partyId"+thisSuffix);
 	  		  }
-	  		 
 	  		 try {
 	  		
 	  			 List conditionList = FastList.newInstance();
@@ -2187,6 +2185,7 @@ public static String makeInterestTransaction(HttpServletRequest request, HttpSer
 		  	  		employeefinMap.put("reasonEnumId","INTEREST_PAID");
 		  	  	    employeefinMap.put("statusId","FINACT_TRNS_CREATED");
 		  	  	    employeefinMap.put("costCenterId","Company");
+		  	  	    employeefinMap.put("comments",description);
 		  	  	    employeefinMap.put("segmentId","CPF_TRUST");
 		  	  	    employeefinMap.put("glAccountId",glAccountId);
 		  	  	    employeefinMap.put("statusId","FINACT_TRNS_CREATED");
@@ -2202,6 +2201,7 @@ public static String makeInterestTransaction(HttpServletRequest request, HttpSer
 		  	  		employeerfinMap.put("finAccountTransTypeId","WITHDRAWAL");
 		  	  	    employeerfinMap.put("reasonEnumId","INTEREST_PAID");
 		  	  	    employeerfinMap.put("costCenterId","Company");
+		  	  	    employeerfinMap.put("comments",description);
 	  	  	        employeerfinMap.put("segmentId","CPF_TRUST");
 		  	  	    employeerfinMap.put("glAccountId",glAccountId);
 //		  	  		employeerfinMap.put("entryType","Adjustment");
@@ -2221,6 +2221,7 @@ public static String makeInterestTransaction(HttpServletRequest request, HttpSer
 		  	  	    vpffinMap.put("reasonEnumId","INTEREST_PAID");
 		  	  		vpffinMap.put("statusId","FINACT_TRNS_CREATED");
 		  	  	    vpffinMap.put("costCenterId","Company");
+		  	  	    vpffinMap.put("comments",description);
 		  	        vpffinMap.put("segmentId","CPF_TRUST");
 		  	  		vpffinMap.put("userLogin", userLogin);
 		  	  		vpffinMap.put("amount",vpfFinAmount);
