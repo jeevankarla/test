@@ -82,8 +82,7 @@ finAccountTypeIdList=[];
 List detailTempList=FastList.newInstance();
 
 finAccntDetailedCsv=[];
-finAccountDetailedMap=[:];
-Debug.log("finacctlist===="+finAccountList);
+
 finAccountList.each{finAccountTypeId->
 	List tempList=FastList.newInstance();
 	
@@ -216,23 +215,12 @@ finAccountList.each{finAccountTypeId->
 	
 	detailTempMap.list=DaywiseMap;
 	detailTempList.add(detailTempMap);
-	
-	if(UtilValidate.isEmpty(finAccountDetailedMap[finAccountTypeId.finAccountTypeId])){
-		finAccountDetailedMap[finAccountTypeId.finAccountTypeId]=detailTempList;
-		detailTempList=UtilMisc.sortMaps(detailTempList, UtilMisc.toList("Name"));
-	}else{
-		List existing = FastList.newInstance();
-		existing=finAccountDetailedMap[finAccountTypeId.finAccountTypeId];
-		existing.add(detailTempMap);
-		existing=UtilMisc.sortMaps(existing, UtilMisc.toList("Name"));
-		finAccountDetailedMap[finAccountTypeId.finAccountTypeId]=existing;
-	}
 	//EmployeeAdvDetails.add(detailTempList);
 	tempMap.currentDebit=currentDebit;
 	tempMap.currentCredit=currentCredit;
 	
 	finAccntTotMap=[:]
-	finAccntTotMap["Name"]="Total-"+finAccountTypeId.ownerPartyId;
+	finAccntTotMap["Name"]="Total-"+finAccountTypeId.actualBalance;
 	finAccntTotMap["debit"]=currentDebit;
 	finAccntTotMap["credit"]=currentCredit;
 	finAccntDetailedCsv.addAll(finAccntTotMap);
@@ -246,7 +234,7 @@ finAccountList.each{finAccountTypeId->
 	  tempMap.finalClosing=0;
 	}
 	finAccntClosingMap=[:]
-	finAccntClosingMap["Name"]="ClosingBal-"+finAccountTypeId.ownerPartyId;
+	finAccntClosingMap["Name"]="ClosingBal-"+finAccountTypeId.actualBalance;
 	finAccntClosingMap["closingDebit"]=closingDebit;
 	finAccntClosingMap["closingCredit"]=closingCredit;
 	finAccntDetailedCsv.addAll(finAccntClosingMap);
@@ -264,13 +252,19 @@ finAccountList.each{finAccountTypeId->
 		finAccountTypeIdList=existing;
 		finAccountTypeIdsMap[finAccountTypeId.finAccountTypeId]=existing;
 	}
+	if(UtilValidate.isEmpty(finAccountDetailedMap[finAccountTypeId.finAccountTypeId])){
+		finAccountDetailedMap[finAccountTypeId.finAccountTypeId]=tempList;
+		tempList=UtilMisc.sortMaps(tempList, UtilMisc.toList("Name"));
+	}else{
+		List existing = FastList.newInstance();
+		existing=finAccountDetailedMap[finAccountTypeId.finAccountTypeId];
+		existing.add(tempMap);
+		existing=UtilMisc.sortMaps(existing, UtilMisc.toList("Name"));
+		finAccountDetailedMap[finAccountTypeId.finAccountTypeId]=existing;
+	}
 }
-//finAccountDetailedMap2["finAccountTypeId"]=detailTempList;
 context.finAccountTypeIdsMap=finAccountTypeIdsMap;
 context.finAccountDetailedMap=finAccountDetailedMap;
-//Debug.log("finAccountDetailedMap====="+finAccountDetailedMap.size());
-//context.detailTempList=detailTempList
-//Debug.log("finAccountTypeIdsMap====="+finAccountTypeIdsMap.size());
 context.finAccountTypeIdList=finAccountTypeIdList;
 context.finAccntDetailedCsv=finAccntDetailedCsv;
 //Debug.log("finAccountTypeIdList======================"+finAccountTypeIdList);
