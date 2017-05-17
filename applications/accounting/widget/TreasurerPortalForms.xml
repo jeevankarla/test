@@ -3357,17 +3357,11 @@ under the License.
         <field name="dueDate"  ><hidden ></hidden></field>     
         
          
-       <field position="1" name="organizationPartyId" id-name="organizationPartyId" parameter-name="partyId" required-field="true" event="onchange" action="javascript:getBOsForRO();" >
-            <drop-down allow-empty="true">
-              <entity-options entity-name="PartyRelationshipAndDetail" key-field-name="partyId" description="${groupName}" filter-by-date="false">
-                   <entity-constraint name="partyIdFrom" operator="equals" value="Company"/>
-                   <entity-constraint name="roleTypeIdFrom" operator="equals" value="PARENT_ORGANIZATION"/>
-                   <entity-constraint name="roleTypeIdTo" operator="equals" value="ORGANIZATION_UNIT"/>
-                   <entity-constraint name="partyRelationshipTypeId" operator="equals" value="GROUP_ROLLUP"/>
-                   <entity-order-by field-name="groupName"/>
-               </entity-options>
-            </drop-down>
-        </field>  
+       <field position="1" name="organizationPartyId" id-name="organizationPartyId" parameter-name="partyId" event="onchange" action="javascript:getBOsForRO();" >
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+				<list-options key-name="partyId" list-name="intOrgList" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false);}[${partyId}]"/>
+			</drop-down>
+        </field>
           <field position="2" name="costCenterId" id-name="costCenterId" parameter-name="costCenterId" required-field="true">
             <drop-down allow-empty="true">
 				<list-options key-name="partyIdTo" list-name="orderList" description="${groupName}"  />
