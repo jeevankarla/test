@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.sql.Timestamp;
-
 import org.ofbiz.accounting.AccountingException;
 import org.ofbiz.accounting.period.PeriodServices;
 import org.ofbiz.base.util.Debug;
@@ -335,7 +334,7 @@ public class UtilAccounting {
         return result;
     }
     
-    public static Map getLastClosedGlBalanceForCostCenter(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericEntityException {
+    public static Map getLastClosedGlBalanceForCostCenter(DispatchContext dctx, Map<String, Object> context) throws GenericEntityException {
     	Delegator delegator = dctx.getDelegator();
     	Locale locale = (Locale) context.get("locale");
     	String organizationPartyId =(String)context.get("organizationPartyId");
@@ -382,7 +381,7 @@ public class UtilAccounting {
      			lastClosedPeriodId = customTimePeriodId;
      		}
          }
-    	
+     	Debug.log("===========condition============"+openingGlHistory);
     	if(UtilValidate.isNotEmpty(lastClosedPeriodId)){
     		
     		GenericValue assetGlAccountClass = delegator.findOne("GlAccountClass", UtilMisc.toMap("glAccountClassId","ASSET"), true);
@@ -427,12 +426,13 @@ public class UtilAccounting {
     		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,liabilityAccountClassIds)));
     		orCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("glAccountClassId",EntityOperator.IN,equityAccountClassIds)));
     		condList.add(EntityCondition.makeCondition(orCondList,EntityOperator.OR));*/
+    		Debug.log("===========condition============"+condList);
     		openingGlHistory = delegator.findList("GlAccountAndPartyHistoryTotals", EntityCondition.makeCondition(condList,EntityOperator.AND),
                     null,null, null, false);
     	}
     	Map result = FastMap.newInstance();
     	result.put("openingGlHistory", openingGlHistory);
-
+    	Debug.log("===========condition============"+openingGlHistory);
         return result;
     }    
 

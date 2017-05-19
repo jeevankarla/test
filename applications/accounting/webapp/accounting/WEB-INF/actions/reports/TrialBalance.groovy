@@ -83,8 +83,8 @@ asOnDate = parameters.asOnDate;
 lastClosedGlBalanceList =[];
 //lastClosedGlBalanceList = lastClosedGlBalances.get("openingGlHistory");
 
-Set<String> partySet = new HashSet<String>(partyIds);
-
+//Set<String> partySet = new HashSet<String>(partyIds);
+Debug.log("in Trial Balance====="+parameters.customTimePeriodId);
 Map lastClosedGlBalances;
 if(roId.equals("Company") && segmentId.equals("All")){
 	lastClosedGlBalances = UtilAccounting.getLastClosedGlBalanceForCostCenter(dctx, UtilMisc.toMap("organizationPartyId", "Company","customTimePeriodId",parameters.customTimePeriodId, "costCenterId", null, "segmentId", null, "isTrailBalance", "Y"));
@@ -103,7 +103,7 @@ else{
 	lastClosedGlBalanceList.addAll(lastClosedGlBalances.get("openingGlHistory"));
 }
 
-
+Debug.log("in Trial Balance  lastClosedGlBalanceList====="+lastClosedGlBalanceList.size());
 tempGlAccountAndHistories.each { tempGlAccountAndHistory ->
 	 
 	 tempGlAccountAndHistoryMap =[:];

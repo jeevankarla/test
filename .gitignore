@@ -7,3 +7,5 @@ runtime/logs/*
 specialpurpose/**/build/*
 tools/build/**/*
 vasistautils/datapop/build/*
+*.jar
+*.class

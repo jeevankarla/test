@@ -58,9 +58,9 @@ roId = parameters.division;
 	 }
  }
  
-//Debug.log("ACCOUNT CODE=======From==NEw==GROOVY=============="+glAccountId);
+Debug.log("ACCOUNT CODE=======From==NEw==GROOVY=============="+glAccountId);
  GenericValue customTimePeriod = delegator.findOne("CustomTimePeriod", [customTimePeriodId : parameters.customTimePeriodId], false);
- //Debug.log("tempDetails===================="+tempDetails);
+// Debug.log("tempDetails===================="+tempDetails);
  fromDate=customTimePeriod.fromDate;
  thruDate=customTimePeriod.thruDate;
  openingBalance = 0;
@@ -114,7 +114,7 @@ if(segmentId.equals("YARN_SALE"))
  conditionList.add(EntityCondition.makeCondition("glAccountId" , EntityOperator.EQUALS,glAccountId));
  conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO,UtilDateTime.getDayStart(UtilDateTime.toTimestamp(fromDate))));
  conditionList.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN_EQUAL_TO,UtilDateTime.getDayEnd(UtilDateTime.toTimestamp(thruDate))));
- //Debug.log("conditionList========="+conditionList);
+ Debug.log("conditionList========="+conditionList);
  acctgTransEntryListIter = delegator.find("AcctgTransAndEntries", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, ['transactionDate','postedDate'], findOpts);
  // List acctgTransEntryList = delegator.find("AcctgTransAndEntries", EntityCondition.makeCondition(conditionList,EntityOperator.AND), null, null, null, false);
  // filterByCondition
@@ -124,9 +124,10 @@ if(segmentId.equals("YARN_SALE"))
 	 BigDecimal totCrdtAmount = BigDecimal.ZERO;
      Map totalDebtMap= FastMap.newInstance();
 	 Map totalCrdtMap= FastMap.newInstance();
-	// Debug.log("acctgTransEntryListIter===================="+acctgTransEntryListIter);
+//	 Debug.log("acctgTransEntryListIter===================="+acctgTransEntryListIter);
 	 while(acctgTransEntry= acctgTransEntryListIter.next()) {
 	  acctgTransEntryList.addAll(acctgTransEntry);
+	  Debug.log("acctgTransEntryList===================="+acctgTransEntryList);
 	  if(UtilValidate.isNotEmpty(acctgTransEntry.debitCreditFlag) && (acctgTransEntry.debitCreditFlag).equals("C")){
 		  totCrdtAmount=totCrdtAmount+acctgTransEntry.amount;
 	  }
@@ -154,7 +155,7 @@ if(segmentId.equals("YARN_SALE"))
  //invIterator.close();
 
  
- //Debug.log("allAcctgCodeTransEntryMap===================="+allAcctgCodeTransEntryMap);
+ Debug.log("allAcctgCodeTransEntryMap===================="+allAcctgCodeTransEntryMap);
   context.allAcctgCodeTransEntryMap=allAcctgCodeTransEntryMap;
   context.fromDate=fromDate;
   context.thruDate=thruDate;
